@@ -1,0 +1,40 @@
+genericBrace: \ p0 p1 height aEnd rEndFactor aMid rMidFactor extendLimitFactor .>
+{
+  rEnd: height * rEndFactor
+  rMid: height * rMidFactor
+  extendLimit: height * extendLimitFactor
+  r: p1 - p0
+  a0: [angle r]
+  n: [[rotate ~90°] height * [normalized r]]
+  [if [abs r] < extendLimit
+      p0>(rEnd^a0-aEnd)--(rMid^180°+a0-aMid)<(p0+0.5*r+n)>(rMid^a0+aMid)--(rEnd^180°+a0+aEnd)<p1
+      {
+        r: [normalized ../r] * extendLimit
+        tmp: p0>(rEnd^a0-aEnd)--(rMid^180°+a0-aMid)<(p0+0.5*r+n)>(rMid^a0+aMid)--(rEnd^180°+a0+aEnd)<(p0+r)
+	tmp1: tmp.begin--[tmp 1]
+	slmid: [tmp1 0.5*[abs tmp1]]
+	l1: [continuous_maximizer tmp1.begin--slmid [normalized n]].length
+	l2: slmid.length + [continuous_maximizer slmid--tmp1.end ~[normalized n]].length
+	sl1: tmp.begin + l1
+	sl2: tmp.begin + l2
+	sl3: tmp.end - l2
+	sl4: tmp.end - l1
+	stretchSeg: sl1--sl2
+	(tmp.begin--sl1>(stretchSeg.begin.v/3^))--[[shift 0.5*(../r - r)] (stretchSeg.end.v/3^)<sl2--sl3>(stretchSeg.end.v/3^)]--[[shift ../r - r] (stretchSeg.begin.v/3^)<sl4--tmp.end]
+      }]
+}
+
+heightBrace: [genericBrace aEnd:70° rEndFactor:1.3 aMid:60° rMidFactor:1.6 extendLimitFactor:11 ...]
+
+someBrace: [heightBrace height:4mm ...]
+
+
+closedBrace: \ p0 p1 height width:VOID .>
+{
+  lowHeight: height - [if [typeof width]==Void @width width]
+  lowBrace:  [reverse [genericBrace p0 p1 aEnd:70° rEndFactor:1.3 aMid:55° rMidFactor:1.6 extendLimitFactor:11 height:lowHeight]]
+  highBrace:          [genericBrace p0 p1 aEnd:80° rEndFactor:1.3 aMid:50° rMidFactor:1.6 extendLimitFactor:11 height:height]
+  lowBrace--highBrace--cycle
+}
+
+someClosedBrace: [closedBrace height:5mm ...]

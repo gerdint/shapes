@@ -1,0 +1,46 @@
+#needs rtlogo_elements
+
+rulerLength: 15cm
+
+|** Give the line you want to measure as the first argument to bboxed, and
+|** look in the resulting graphics to measure the text in <textSize> units.
+
+@<< [bboxed line0 [rectangle (0cm,~1cm) (rulerLength,textSize+1cm)]]
+
+
+|** The rest of this file just defines the ruler.
+
+{
+ step: textSize
+[[range 1 rulerLength/step-0.5].foldl
+ \ p e .> {
+   @<< [stroke (e*step,0)--(+(0,~3mm))]
+   @<< [shift (e*step-2mm,~9mm)] [] ( HotText << @text_size:8bp | [kerning [sprintf `%gsz´ e]] )
+   p
+ }
+ VOID]
+}
+
+{
+ step: 0.1*textSize
+@width:0.3bp
+|
+[[range 1 rulerLength/step-0.5].foldl
+ \ p e .> {
+   @<< [stroke (e*step,textSize)--((+0mm),~1mm)]
+   p
+ }
+ VOID]
+}
+
+{
+ step: 0.5*textSize
+@width:0.5bp
+|
+[[range 1 rulerLength/step-0.5].foldl
+ \ p e .> {
+   @<< [stroke (e*step,0.5*textSize)--((+0mm),~3mm)]
+   p
+ }
+ VOID]
+}

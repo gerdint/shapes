@@ -1,0 +1,46 @@
+str: HotString <<
+msg: HotString <<
+str << `Say´ << ` ´
+msg << `Say´ << ` ´
+str << `hello!´
+msg << `goodbye!´
+str;
+msg;
+stderr << str << `¢n´ << msg << `¢n´
+
+stderr << ( HotString << `a ´ << `b¢n´ )
+
+dst1: HotString <<
+dst2: HotString <<
+
+dst1 << `1:´
+dst2 << `2:´
+
+say_y: \ dstStr .> { dstStr << `y´ }
+
+dynamic @dfoo I stderr
+
+foo: \ .> { @dfoo << ` x ´   [say_y (@dfoo <<)] }
+
+@dfoo: (dst1 <<)
+| [foo]
+@dfoo: (dst2 <<)
+| [foo]
+@dfoo: (dst1 <<)
+| [foo]
+
+endline: \ os .> { os << `(endl)¢n´ }
+
+[endline (dst1 <<)]
+[endline (dst2 <<)]
+dst1;
+dst2;
+
+stderr << dst1 << dst2
+
+/* Just to prevent the empty-output-error:
+ */
+
+dummyStroke: \ dst2D .> { dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
+
+[dummyStroke @<<]

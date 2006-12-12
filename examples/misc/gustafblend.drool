@@ -1,0 +1,14 @@
+#needs circle
+
+r: 1cm
+
+@<< [shift (1*4*r,0*4*r)] []
+  ( @blend: BLEND_DIFFERENCE
+    &
+    @blendspace: DEVICE_RGB
+    |
+    ( Hot2D << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+            << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+	    << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
+    )
+  )

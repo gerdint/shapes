@@ -1,0 +1,82 @@
+#needs circle
+#needs arrowheads
+
+intersectionCircle: \ pth1 pth2 .>
+  ( @stroking:RGB_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
+
+@<< [shift (0cm,4cm)] [] [TeX `\parbox{4cm}{Lines start at black circles, and at their first intersection there's a red circle.}´]
+
+/**
+pth1straight: (0cm,0cm)--(3cm,4cm)
+|** pth1curved: (0cm,0cm)>(1%c^0°)--(3cm,4cm)
+pth1curved: (0cm,0cm)>(1cm,0cm)--(4cm,4cm)
+
+pth2straight: (1cm,~2cm)--(2cm,5cm)
+|** pth2curved: (1cm,~2cm)>(1%c^0°)--(2cm,5cm)
+pth2curved: (3cm,0cm)>(2cm,0cm)--(0cm,4cm)
+
+@<< [stroke pth1straight]
+@<< [stroke pth1curved]
+@<< [stroke pth2straight]
+@<< [stroke pth2curved]
+
+@<< [intersectionCircle pth1straight pth2straight]
+@<< [intersectionCircle pth1straight pth2curved]
+stderr << `t: ´ << [intersection pth1curved pth2straight].time << `¢n´
+@<< [intersectionCircle pth1curved pth2straight]
+@<< [intersectionCircle pth1curved pth2curved]
+
+pth3faraway: (5cm,5cm)>(5cm,6cm)--(7cm,7cm)
+@<< [stroke pth3faraway]
+
+|** This will break the program by means of the default @handler_NoIntersection:
+|** @<< [intersectionCircle pth1curved pth3faraway]
+
+|** This will draw nothing, since the handler returns NULL to the insertion continuation
+@<< (continuation cont
+      @handler_NoIntersection: \ pth1 pth2 .> (continue cont NULL)
+      |
+      [intersectionCircle pth1curved pth3faraway]
+    )
+
+**/
+
+randPath: \ n .>
+ [scale 5] []
+  [[range '1 n].foldl
+   \ pile e .>  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
+   EMPTYPATH2D]
+
+{
+  sh: [shift (5cm,0cm)]
+  pth: sh [] [randPath '10]
+  @<< @stroking:RGB_RED | [stroke pth head: MetaPostArrow]
+|**  @<< @stroking:[gray 0.7] | [stroke controlling [] pth]
+
+  @width: 0.2bp
+  |
+  [[range '1 '10].foldl
+   \ pile e .>
+   {
+    pth2: sh [] [randPath 4]
+
+/**
+    stderr << `pth: ´ << [point pth 2] << `>(´ << [speed pth 2] << `^´ << 180/180° * [angle [direction pth 2]] << `°)¢n´
+    stderr << `pth: ´ << [point pth 3] << `>(´ << [reversespeed pth 3] << `^´ << 180/180° * [angle [reversedirection pth 3]] << `°)¢n´
+
+    stderr << `pth2: ´ << [point pth2 0] << `>(´ << [speed pth2 0] << `^´ << 180/180° * [angle [direction pth2 0]] << `°)¢n´
+    stderr << `pth2: ´ << [point pth2 1] << `>(´ << [reversespeed pth2 1] << `^´ << 180/180° * [angle [reversedirection pth2 1]] << `°)¢n´
+**/
+
+    @<< [stroke pth2 tail: \ p .> { @<< [stroke [shift p.begin.p][][circle 3mm]]  0mm }]
+|**    @<< @stroking:[gray 0.7] | [stroke controlling [] pth2]
+    @<< (continuation cont
+      @handler_NoIntersection: \ pth1 pth2 .> (continue cont [stroke [shift pth1.begin.p][][circle 4mm]])
+      |
+      [intersectionCircle pth2 pth]
+    )
+    pile
+   }
+   VOID
+  ]
+}

@@ -1,0 +1,64 @@
+MetaPostArrow: \ p ahLength:VOID ahAngle:30° fillAsStroking:true .>
+ (@blend:BLEND_NORMAL
+  |
+  { z: [p 0].p
+    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    l: [min theLength 0.9*[abs p]]
+    e: [p 0]--[p l]
+    @<< @nonstroking:[if fillAsStroking @stroking @nonstroking]
+        |
+        [fill [[shift z]*[rotate ahAngle*0.5]*[shift ~z] e]--[reverse [[shift z]*[rotate ~ahAngle*0.5]*[shift ~z] e]]--cycle]
+    2*@width
+  }
+ )
+
+triangleArrow: \ p ahLength:VOID ahAngle:30° fillAsStroking:true .>
+ (@blend:BLEND_NORMAL
+  |
+  { sl: [p 0]
+    z: sl.p
+    d: [angle sl.T]
+    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    @<< @nonstroking:[if fillAsStroking @stroking @nonstroking]
+        |
+        [fill (z+[dir d - ahAngle/2]*theLength)--z--(z+[dir d + ahAngle/2]*theLength)--cycle]
+    2*@width
+  }
+ )
+
+#needs circle
+
+twoCircles3DArrow:
+{
+  ztf: \ z0 .>
+  {
+    z: [normalized z0]
+    x: [orthogonal z]
+    y: [cross z x]
+    [affinetransform3D x y z (0cm,0cm,0cm)]
+  }
+
+  \ p ahLength:VOID ahAngle:30° .>
+    { z: [p 0]
+      theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+      l: [min theLength*[cos ahAngle] 0.9*[abs p]]
+      e: [p 0]--[p l]
+      @<< [stroke [[shift [p 0.5*theLength*[cos ahAngle]].p]*[ztf [direction p 0.5*theLength*[cos ahAngle]]] [immerse [circle 0.5*theLength*[sin ahAngle]]]]]
+      @<< [stroke [[shift [p theLength*[cos ahAngle]].p]*[ztf [direction p theLength*[cos ahAngle]]] [immerse [circle theLength*[sin ahAngle]]]]]
+      0mm
+    }
+}
+
+MetaPostArrow3D: \ normal p ahLength:VOID ahAngle:30° .>
+  { z: [p 0].p
+    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    l: [min theLength 0.9*[abs p]]
+    e: [p 0]--[p l]
+    stderr << e << `¢n´
+    stderr << [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e] << `¢n´
+    stderr << [reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]] << `¢n´
+    rev: [reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]
+    @<< [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--rev--cycle]
+    @<< [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--[reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]--cycle]
+    2*@width
+  }

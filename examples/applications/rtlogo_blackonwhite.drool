@@ -1,0 +1,17 @@
+|***************************************************************************
+|** This is a file that is used to generate a particular form of the logo.
+|**
+|** This form of the logo is simply the square box itself.
+|***************************************************************************
+#author Henrik Tidefelt
+
+#needs rtlogo_elements
+
+@<< [bboxed NULL [rectangle (~1r,0cm) (1r,2r)]]
+
+  @stroking:GRAY_BLACK
+& @nonstroking:GRAY_BLACK
+|
+{
+  ![makeRegulator]
+}

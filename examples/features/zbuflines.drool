@@ -1,0 +1,35 @@
+leaf: \ a .>
+(
+  @nonstroking:[gray a / 360°]
+  |
+  [rotate3D angle:a dir:(0,0,1)] [] [fill (0.5cm,~4cm,0cm)--(2.5cm,~4cm,0cm)--(1.5cm,5cm,0.5cm)--cycle]
+)
+
+stick: \ a .>
+(
+  @stroking:[gray a / 360°]
+  |
+  [rotate3D angle:a dir:(0,0,1)] [] [stroke (1.5cm,~4cm,0cm)--(1.5cm,5cm,0.5cm)]
+)
+
+zbuf: HotZBuf <<
+
+zbuf << [leaf 0°]
+zbuf << [stick 120°] 
+zbuf << [stick 240°]
+
+{
+  p: (3cm,0cm,0cm)--(7cm,0cm,2cm)
+  zbuf << @nonstroking:[gray 0.7] | [fill (8cm,~1cm,0cm)--(8cm,1cm,0cm)--(4cm,0cm,2cm)--cycle]
+       << @nonstroking:[gray 0.3] | [stroke p]
+       << @nonstroking:[gray 0.3] | [shift (0.3cm,0cm,0cm)] [] [stroke [p 2.5cm].p--p.end.p]
+       << @nonstroking:[gray 0.3] | [shift (0.6cm,0cm,0cm)] [] [stroke p.begin.p--(p.end-1.8cm).p]
+       << @nonstroking:[gray 0.3] | [shift (0.9cm,0cm,0cm)] [] [stroke [p 2.0cm].p--(p.end-1.8cm).p]
+}
+
+zbuf;
+
+
+tf: [rotate3D (1,0,0) 60°]
+|**tf: [affinetransform3D (0,4,7) (2,5,8) (3,6,9) (0cm,0cm,0cm)]
+@<< [view  tf [] zbuf]

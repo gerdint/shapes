@@ -1,0 +1,135 @@
+#needs blockdraw_wfo
+#needs centering
+#needs shiftoff
+
+
+junction: \ txt .> [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
+
+pjunction:
+{
+  res: [junction [TeX `p´]]
+  \ .> res
+}
+
+sjunction:
+{
+  res: [junction [TeX `s´]]
+  \ .> res
+}
+
+junctionlbl: \ txt arrowdir lbl doArrow .>
+{
+  ahLength: 1.5mm
+  ahAngle: 30°
+  tmppic: [junction txt]
+  thebb: [bbox tmppic]
+  pOffset: 0bp           |**  @connectionlw + ahLength*[sin 0.5*ahAngle]
+  p: [if arrowdir == to_lft [[shift (0,pOffset)] ([xmax thebb],[ymax thebb])--([xmin thebb],[ymax thebb])]
+      [if arrowdir == to_rt [[shift (0,pOffset)] ([xmin thebb],[ymax thebb])--([xmax thebb],[ymax thebb])]
+       [if arrowdir == to_bot [[shift (pOffset,0)] ([xmax thebb],[ymax thebb])--([xmax thebb],[ymin thebb])]
+        [if arrowdir == to_top [[shift (pOffset,0)] ([xmax thebb],[ymin thebb])--([xmax thebb],[ymax thebb])]
+	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
+  d: [if arrowdir == to_lft to_top
+      [if arrowdir == to_rt to_top
+       [if arrowdir == to_bot to_rt
+        [if arrowdir == to_top to_rt
+	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
+
+  [symbboxed
+    (Hot2D << [if doArrow
+	          [stroke p head: [triangleArrow ahLength:ahLength ahAngle:ahAngle...]]
+ 	          NULL]
+           << [conlabel d lbl [mspoint p 0.5]]
+	   << tmppic )]
+}
+
+tfjunction: \ arrowdir lbl .> [junctionlbl [TeX `TF´] arrowdir lbl true]
+gyjunction: \ arrowdir lbl .> [junctionlbl [TeX `GY´] arrowdir lbl false]
+
+
+	      
+
+putblockTerminal: \ newBlock z oldBlock .>
+{
+  r: [normalized z - [centerof oldBlock]]
+  res: [[shift z] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
+  [if @implicitdraw
+    { @<< res }]
+  res
+}
+
+bgconnect: \ pica picb .>
+{
+  ca: [centerof pica]
+  cb: [centerof picb]
+  d: [if [abs ca - cb] == 0bp
+         (1,0)
+	 [normalized cb - ca]]
+  (ca + d * @smallblockr)--(cb - d * @smallblockr)
+}
+
+dynamic @bgArrowWidth I 4bp
+
+bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true .>
+ (@blend:BLEND_NORMAL
+  |
+  { theLength: @bgArrowWidth / [sin ahAngle]
+    hook:
+    {
+      sl: [p theLength]
+      z: sl.p - sl.N * theLength * [sin ahAngle]
+      @nonstroking:[if fillAsStroking @stroking @nonstroking]
+      |
+      [fill [[shift sl.N * 0.5 * @width] [p 0]--sl]--z--cycle]
+    }
+    causal:
+    {
+      sl: [p 0]
+      z: sl.p + sl.rT * @width
+      r: sl.N * theLength * [sin ahAngle]
+      @width: 1.5*@width
+      |
+      [stroke (z-r)--(z+r)]
+    }
+    @<< [if doHook
+    	    hook
+ 	    NULL]
+    @<< [if doCausal
+    	    causal
+ 	    NULL]
+
+    |** Finally, we return the length to cut off the stroke
+    [if doHook
+        0.8 * theLength
+	@width]
+  }
+ )
+
+hbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true doCausal:true ...]] )
+tbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...] tail:[bondgraphArrow doCausal:true ...]] )
+
+|**  the midpoint has typically singular direction, so we can't do the obvious:
+|**  draw( conlabel( to_dir( dir( angle( direction (0.5*length(p)) of p ) - 90 ) ), txt, mspoint( p, 0.5, 0 ) ) )
+|**  Actually, the above comment is a relic from the MetaPost implementation, and I no longer understand it as I
+|**  think that bond graph connections are _typically_ just straight lines.
+flowlabel: \ p txt .>
+  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] - 90°]] txt [mspoint p 0.5]]
+
+effortlabel: \ p txt .>
+  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] + 90°]] txt [mspoint p 0.5]]
+
+
+/** The following two functions are conventience functions that factors out the oldBlock which appears at two places.
+ ** They return the path so that it can be labeled.
+ **/
+terminalfrom: \ oldBlock pos newBlock  .>
+{
+  t: [putblockTerminal newBlock pos oldBlock]
+  [bgconnect oldBlock t]
+}
+terminalto: \ oldBlock pos newBlock .>
+{
+  t: [putblockTerminal newBlock pos oldBlock]
+  [bgconnect t oldBlock]
+}
+

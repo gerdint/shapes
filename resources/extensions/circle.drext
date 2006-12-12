@@ -1,0 +1,6 @@
+circle :
+{
+   p1cm: @defaultunit:1%c
+	 | (^)<(1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(~1cm,0cm)>(^)--(^)<(0cm,~1cm)>(^)--cycle
+   \ r .> [[scale r / 1cm] p1cm]
+}

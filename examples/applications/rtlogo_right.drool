@@ -1,0 +1,19 @@
+|***************************************************************************
+|** This is a file that is used to generate a particular form of the logo.
+|**
+|** It is basically only a few simple positioning commands that should
+|** be clear to anyone who has studied the rtlogo_elements.drext file.
+|**
+|** This version is a banner logo with light gray background, with the square
+|** box placed to the right.
+|***************************************************************************
+#needs rtlogo_elements
+
+xText: bannerWidth - ( squareSpace + squareSide + textXSpace )
+
+@<< @nonstroking:lightGray | [fill backgroundRectangle]
+@<< [shift (bannerWidth-(squareSide+squareSpace),0)] [] squareLogo
+
+@<< [shift (xText,[yText 0])] [] [centerxat line0 1]
+@<< [shift (xText,[yText 1])] [] [centerxat line1 1]
+@<< [shift (xText,[yText 2])] [] [centerxat line2 1]

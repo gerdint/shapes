@@ -1,0 +1,26 @@
+#needs arrowheads
+
+pth: (~1cm,~1cm,~1cm)--(~1cm,1cm,~1cm)--(1cm,1cm,~1cm)--(1cm,~1cm,~1cm)--(1cm,~1cm,1cm)--(1cm,1cm,1cm)--(~1cm,1cm,1cm)--(~1cm,~1cm,1cm)
+pt1: (~1cm,~1cm,~1cm)
+pt2: (~1cm,~1cm,1cm)
+pt3: (~1cm,1cm,~1cm)
+pt4: (1cm,~1cm,~1cm)
+
+theDash: @dash:[dashpattern 2mm 1mm]
+
+rottest: \ dir angle .>
+{ tf:[rotate3D dir:dir angle:angle]
+  @eyez:10cm &
+  @width:0.3bp
+  |
+  ( Hot2D << theDash|[stroke [view pth]] << [stroke [view (0cm,0cm,0cm)--(1.3cm*[normalized dir])] head:MetaPostArrow] << [stroke [view [tf pth]]]
+ 	  << @width:1bp|[stroke [view pt1--[tf pt1]] head:MetaPostArrow]
+ 	  << @width:1bp|[stroke [view pt2--[tf pt2]] head:MetaPostArrow]
+ 	  << @width:1bp|[stroke [view pt3--[tf pt3]] head:MetaPostArrow]
+ 	  << @width:1bp|[stroke [view pt4--[tf pt4]] head:MetaPostArrow]
+  )
+}
+
+@<< [[shift (0cm,0cm)] [rottest (1,0,0) 15°]]
+@<< [[shift (5cm,0cm)] [rottest (0,1,0) 15°]]
+@<< [[shift (10cm,0cm)] [rottest (0,0,1) 15°]]

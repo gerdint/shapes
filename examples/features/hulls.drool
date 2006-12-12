@@ -1,0 +1,16 @@
+#needs circle
+#needs arrowheads
+
+randPath: \ n .>
+ [[range '1 n].foldl
+  \ pile e .>  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
+  EMPTYPATH2D]
+
+{
+  sh: [shift (0cm,0cm)]
+  pth: sh [] [randPath '10]
+  @<< [stroke pth]
+  @<< @stroking:RGB_RED | [stroke controlling [] pth]
+  hull: [controlling_hull pth]
+  @<< @width:0.3bp | [stroke hull]
+}

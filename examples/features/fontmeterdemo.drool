@@ -1,0 +1,18 @@
+myFont: @text_font:FONT_HELVETICA & @text_size:2cm
+
+bbdraw: \ obj .>
+{
+  @<< obj << @stroking:[gray 0.5] & @width:0.3bp | [stroke [bbox obj]]
+}
+
+![bbdraw [[rotate 25°] myFont | (HotText << `å´ )]]
+
+![bbdraw [[shift (0,~3cm)]*[rotate ~15°] myFont | (HotText << `Hej´ << @text_rise:0.5 | [kerning `mar´] << [kerning `d´ ~0.5 `u bra?´] )]]
+
+![bbdraw [[shift (2.5cm,2cm)] myFont | (HotText << [shift (6cm,~3cm)]*[rotate 30°] << [kerning `brY´ 0.3 `n¢nRadX´] )]]
+
+![bbdraw [[shift (0,~7cm)]*[rotate ~5°] myFont & @text_leading:1.5 | (HotText << `Rad1 e lang¢nRad2´ )]]
+
+![bbdraw [[shift (4cm,3cm)] myFont & @text_horizontalscaling:0.8 & @text_characterspacing:10bp & @text_wordspacing:50bp | (HotText << [kerning `sparse  words´] )]]
+![bbdraw [[shift (4cm,5cm)] myFont | (HotText << [kern `AUTOMATIC (automatic kerning)´] )]]
+![bbdraw [[shift (4cm,7cm)] myFont | (HotText << [kerning `AUTOMATIC (no kerning)´] )]]

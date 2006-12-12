@@ -1,0 +1,11 @@
+#preamble \usepackage{amsmath}
+#preamble \usepackage{fancybox}
+
+@<< [TeX `
+\fbox{\begin{Beqnarray*}
+&\begin{aligned}
+  x &= 1 \\
+  y &= 2
+\end{aligned}
+\end{Beqnarray*}}
+´]

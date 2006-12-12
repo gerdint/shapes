@@ -1,0 +1,19 @@
+a: 1
+{
+  a: 2
+  {
+    a: 3
+    stderr << `a0 = ´ << a << `¢n´
+    stderr << `a1 = ´ << ../a << `¢n´
+    stderr << `a2 = ´ << ../../a << `¢n´
+  }
+}
+
+{
+  odd: \ n .> [if n == 0 false [even n-1]]
+  even: \ n .> [if n == 0 true [odd n-1]]
+  stderr << `Is 0 odd? --> ´ << [odd 0] << `¢n´
+  stderr << `Is 4 even? --> ´ << [even 4] << `¢n´
+}
+
+@<< [stroke (0cm,0cm)--(1cm,1cm)]

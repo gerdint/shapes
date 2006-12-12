@@ -1,0 +1,1 @@
+The idea is that this directory should only contain source files which are not interpreted correctly, or causes other problems.  Hence, once a file in this directory is successfully compiled, it should be moved away from here, or just deleted.

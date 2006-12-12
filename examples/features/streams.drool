@@ -1,0 +1,25 @@
+/*
+fibsFrom: \ n1 n2 .>
+{ 
+  stderr << `eval:´ << n1 << `, ´ << n2 << `¢n´
+  [cons n2 [fibsFrom n2 n1+n2]]
+}
+
+Fib: [fibsFrom 0 1]
+*/
+
+streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
+Fib : [cons 0 [cons 1 [streamadd Fib Fib.cdr]]]
+
+/*
+Fib: [cons 11 [cons 12 [cons 13 [cons 14 [list]]]]]
+*/
+
+nth: \ lst n .> [if n == 0 lst.car [nth lst.cdr n-1]]
+
+stderr << [nth Fib 0] << `¢n´
+stderr << [nth Fib 1] << `¢n´
+stderr << [nth Fib 2] << `¢n´
+stderr << [nth Fib 3] << `¢n´
+
+@<< [stroke (0cm,0cm)--(1cm,1cm)]

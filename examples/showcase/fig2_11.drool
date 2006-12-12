@@ -1,0 +1,63 @@
+|** preamble \RequirePackage{../sigsysnotation}
+
+#needs ./pipefigprefs
+#needs ./blockdraw_wfo
+#needs ./examplesprefs
+
+examplesprefs & @defaultunit:1%c
+|
+{
+
+longblockrx: 1cm
+longblockry: 5mm
+
+TANK_W: 3cm
+TANK_H: 1.5cm
+TANK_L: TANK_H * 0.76
+
+y1: TANK_H + 1cm
+y2: TANK_H + 1mm
+R: 5mm
+
+inflow: \ x1 x2 txt doValve .>
+{
+  d: [normalized x2 - x1]
+  @<< [stroke (x1,y1+@PIPE_WIDTH/2)--(x2-d*(R+@PIPE_WIDTH/2),y1+@PIPE_WIDTH/2)>(^[angle (d,0)])--(^90°)<(x2+d*@PIPE_WIDTH/2,y1-@PIPE_WIDTH/2-R)--(x2+d*@PIPE_WIDTH/2,y2)]
+  @<< [stroke (x1,y1-@PIPE_WIDTH/2)--(x2-d*(R+@PIPE_WIDTH/2),y1-@PIPE_WIDTH/2)>(^[angle (d,0)])--(^90°)<(x2-d*@PIPE_WIDTH/2,y1-@PIPE_WIDTH/2-R)--(x2-d*@PIPE_WIDTH/2,y2)]
+  p: (x2-d*(R+7mm),y1)--(x2-d*(R+2mm),y1)
+  @<<[stroke p head:MetaPostArrow]
+  @<< [[shift (x1+d*3mm,y1-@PIPE_WIDTH/2-3mm)] [centerat [TeX txt] (0,1)]]
+  @<< [if doValve
+        [[shift ([mediate 0.4 x1 x2],y1)]*[rotate 90°] [VALVE]]
+	NULL]
+}
+
+[inflow ~2.5cm TANK_W/3 `Acid process flow´ false]
+[inflow TANK_W+2.5cm TANK_W*2/3 `NaOH solution´ true]
+
+@<< @nonstroking: [gray 0.8] |
+ [fill (0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_L)--(0cm,TANK_L)--cycle]
+{
+    hdl: (3mm^45°)
+    lambda: (TANK_W) / 4
+    @<< @width: 0.5bp & @dash: [dashpattern 3mm 1mm] | [stroke (0,TANK_L)>hdl--(^)<(lambda,TANK_L)>hdl--(^)<(2*lambda,TANK_L)>hdl--(^)<(3*lambda,TANK_L)>hdl--(^)<(4*lambda,TANK_L)>hdl]
+}
+
+{
+ r: 6mm
+ xc: TANK_W*0.5
+ yc: 5mm
+ a: 60°
+ @<< [stroke (xc,y1+5mm)--(xc,yc)>(^a)--(^180°-a)<(xc+r,yc)>(^180°+a)--(^~a)<(xc,yc)>(^180°-a)--(^a)<(xc-r,yc)>(^~a)--(^180°+a)<(xc,yc)]
+}
+
+@<< [stroke (0cm,TANK_H)--(0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_H)]
+@<< [stroke (TANK_W/2,0cm)--(TANK_W/2,~1.5cm)]
+@<< [stroke (TANK_W/2+@PIPE_WIDTH,0cm)--(TANK_W/2+@PIPE_WIDTH,~1.5cm)]
+{
+ p: (TANK_W/2+@PIPE_WIDTH/2,~5mm)--(TANK_W/2+@PIPE_WIDTH/2,~10mm)
+ @<< [stroke p head:MetaPostArrow]
+ @<< [putlabelRight [TeX `Flow with desired pH´] [p 0.5].p+(@PIPE_WIDTH/2,0) 0]
+}
+
+}

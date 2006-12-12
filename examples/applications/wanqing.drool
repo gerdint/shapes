@@ -1,0 +1,13 @@
+#needs blockdraw_wfo
+
+a: ! putblockOrigin [] [shift (100bp,0bp)] [] [sizedblock [TeX `
+\begin{minipage}{80bp}
+\centering
+Channel\\
+Encoder
+\end{minipage}
+´]
+						  90bp 30bp]
+@<< [putlabelBelow [TeX `$u v$´] [toppoint a 3 1] 0]
+@<< [putlabelBelow [TeX `$x - y$´] [toppoint a 3 2] 0]
+@<< [putlabelBelow [TeX `$27$´] [toppoint a 3 3] 0]

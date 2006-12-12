@@ -1,0 +1,37 @@
+facetProperties:
+    @nonstroking:[gray 0.8]
+  & @reflections:[phong 1]
+  & @shadeorder:'0
+  & @facetresolution:1cm
+
+
+leaf: \ a .>
+(
+  facetProperties
+  |
+  [rotate3D angle:a dir:(0,0,1)] [] [facet (0.5cm,~4cm,0cm)--(2.5cm,~4cm,0cm)--(1.5cm,5cm,1.5cm)--cycle]
+)
+
+zbuf: HotZBuf <<
+
+[[range 0° 359° 120°].foldl
+ \ p e .> !{ zbuf << [leaf e]  p }
+ VOID]
+
+facetProperties
+|
+{
+  zbuf << @nonstroking:[gray 0.2] | [facet [shift (0cm,0cm,~1cm)] [] immerse [] [rectangle (~6cm,~5cm) (9cm,5.4cm)]]
+}
+
+zbuf << facetProperties | [facet (3cm,~2cm,0cm)--(3cm,2cm,0cm)--(7cm,0cm,2cm)--cycle]
+     << facetProperties | [facet (8cm,~1cm,0cm)--(8cm,1cm,0cm)--(4cm,0cm,2cm)--cycle]
+
+zbuf << [shift (5cm,1cm,10cm)] [] [specular_light [gray 0.9]]
+
+zbuf;
+
+
+tf: [rotate3D (1,0,0) 60°]
+|**tf: [affinetransform3D (0,4,7) (2,5,8) (3,6,9) (0cm,0cm,0cm)]
+@<< [view  zbuf]

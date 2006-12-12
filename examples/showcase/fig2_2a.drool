@@ -1,0 +1,25 @@
+#needs blockdraw_wfo
+
+G1: [putblockOrigin [longblock [TeX `Amp´]]]
+G2: [putblockNearRight [longblock [TeX `Motor´]] G1]
+F:  [putblockNearLeft [longblock [TeX `$K$´]] G1]
+S:  [putblockNearLeft [sumpicture] F]
+
+sy: [putblockVeryNearRight [splitdot] G2]
+
+ty: [putblockFarRight POINTPICTURE G2]
+tr: [putblockFarLeft POINTPICTURE S]
+
+[ignore [connect tr S]]
+@<< [leftpointsign S `+´]
+{ p: [connect S F]
+  @<< [putlabelAbove [TeX `$e$´] [mspoint p 0.5] 0] }
+{p: [connect F G1]
+ @<< [putlabelAbove [TeX `$u$´] [mspoint p 0.5] 0] }
+[ignore [connect G1 G2]]
+[ignore [connect G2 ty]]
+[ignore [bbconnect sy S 0.5cm]]
+@<< [bottompointsign S `-´]
+
+@<< [putlabelAbove [TeX `$r$´] [toppoint tr 1 1] ~1]
+@<< [putlabelAbove [TeX `$y$´] [toppoint ty 1 1] 1]

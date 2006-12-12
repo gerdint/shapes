@@ -1,0 +1,31 @@
+#needs conssupport
+
+lst: [range begin:'4 end:'10]
+
+stderr << `OK¢n´
+
+stderr << `Length: ´ << [lst.foldl (\ p e .> '1+p) 0] << `¢n´
+stderr << [lst.foldl \ p e .> { stderr << e   p } VOID]
+stderr << [lst.foldr \ p e .> { stderr << e   p } VOID]
+stderr << `¢n´
+
+streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
+Fib: [cons '0 [cons '1 [streamadd Fib Fib.cdr]]]
+
+map: \ f lst .> [if [isnull lst] [list] [cons [f lst.car] [map f lst.cdr]]]
+Fib2: [map (\ x .> x*x) Fib]
+
+
+nth: \ lst n .> [if n == '0 lst.car [nth lst.cdr n-'1]]
+
+stderr << `Check C¢n´
+
+stderr << [nth Fib '0] << `¢n´
+
+stderr << `Check¢n´
+
+stderr << [nth Fib2 '1] << `¢n´
+stderr << [nth Fib2 '2] << `¢n´
+stderr << [nth Fib2 '3] << `¢n´
+stderr << [nth Fib2 '4] << `¢n´
+

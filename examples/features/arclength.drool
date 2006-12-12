@@ -1,0 +1,25 @@
+#needs circle
+
+/**
+pth: (0cm,0cm)--(2cm,3cm)--(3cm,2cm)
+
+@<< [stroke pth]
+[[range '0 '10].foldl \ p e .> { @<< [stroke [[shift [point pth [arctime pth e*0.1*[abs pth]]]] [circle 2mm]]]   p } VOID]
+**/
+
+@dash:[dashpattern 2.5cm 3mm 8mm 1cm]
+|
+{
+  r: 15cm
+  viewRot: [rotate3D dir:(~1,0,0) angle:30°]
+  @<< [view [stroke [viewRot [immerse [[rotate 10°] (~r,~r)--(~r,r)--(r,r)--(r,~r)--cycle]]]]]
+  @<< [view @dash:[dashpattern]|[stroke [viewRot [immerse [[rotate 10°]*[shift (~r,~r)] [circle 7mm]]]]]]
+  a: 5°
+  @<< [view [stroke [viewRot [immerse @defaultunit:1%c|[[rotate 10°] (^~a)<(~r,~r)>(^90°+a)--(^~90°-a)<(~r,r)>(^a)--(^180°-a)<(r,r)>(^~90°+a)--(^90°-a)<(r,~r)>(^~180°+a)--cycle]]]]]
+  @<< view [] stroke [] viewRot [] immerse [] [circle 5mm]
+  @<< view [] stroke [] viewRot [] immerse [] [circle 10mm]
+  @<< view [] stroke [] viewRot [] immerse [] [circle 15mm]
+  @<< view [] stroke [] viewRot [] immerse [] [circle 20mm]
+  @<< view [] stroke [] viewRot [] immerse [] [circle 25mm]
+  @<< view () stroke [] viewRot [] immerse [] [circle 30mm]
+}

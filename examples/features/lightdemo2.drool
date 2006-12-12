@@ -1,0 +1,35 @@
+#needs centering
+
+zbuf: HotZBuf <<
+
+r: 10cm
+#unit w = 3.4cm
+obj:
+    @nonstroking:[gray 0.8]
+  & @reflections:[phong 1]
+  & @autointensity:[gray 0.05]
+  & @autoscattering:[phong 0.2]
+  & @shadeorder:'0
+  & @facetresolution:1cm
+  |
+  [facet (r,~5cm,~0.5w)--(r,5cm,~0.5w)--(r,5cm,0.5w)--(r,~5cm,0.5w)--cycle
+         [facetnormal (r,0cm,~1cm) [normalized (r,0cm,~1cm)]]
+	 [facetnormal (r,0cm,1cm) [normalized (r,0cm,1cm)]]]
+
+[[range 20° 360° 20°].foldl
+ \ p e .> 
+  !{
+    zbuf << [rotate3D (0,1,0) ~e] [] obj
+    p
+  }
+ VOID]
+
+zbuf << [shift (10cm,3cm,10cm)] [] [specular_light [gray 0.9]]
+zbuf << [shift (~15cm,~3cm,20cm)] [] [specular_light [gray 0.3]]
+
+zbuf;
+
+tmp: [enlargebbox [view [rotate3D (0,1,0) 15°] [] zbuf] (5mm,5mm)]
+
+@<< @nonstroking:GRAY_BLACK | [fill [bbox tmp]]
+@<< tmp

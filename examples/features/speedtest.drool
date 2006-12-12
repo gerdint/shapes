@@ -1,0 +1,28 @@
+/**
+ * This example shows the difference between
+ * 1)  handle (control point) radius
+ * 2)  speed
+ * At junctions, the speed is 3 times the radius.
+ **/
+
+#needs circle
+
+pth: [rotate 1][][circle 5cm]
+
+@width:0.1bp
+|
+{
+@<< @stroking:RGB_RED|[stroke [controlling pth]]
+@<< [stroke pth]
+
+[[range '1 '5].foldr
+ \ p i .> {
+   t: 1 / i
+   a: ([point pth 0]+[direction pth 0]*[speed pth 0]*t)
+   @<< [stroke [point pth t]--a]
+   @<< [shift a] [] (@stroking:RGB_BLUE|[stroke [circle 1mm]])
+   @<< [shift a + (2mm,2mm)] [] [TeX [sprintf `$1/%d$´ i]]
+   p
+}
+ VOID]
+}

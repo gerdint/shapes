@@ -1,0 +1,12 @@
+hwidth: 0.3bp
+hdash: [dashpattern 1.0mm 1mm]
+hdash1: [dashpattern 2.5mm 1mm]
+hstyle: @width:hwidth & @dash:hdash
+hstyle1: @width:hwidth & @dash:hdash1
+hboxmargin: 3mm
+hboxmargin1: 2mm
+
+bookprefs:
+@connectionlw: 0.8bp
+&
+@blocklw: 0.8bp

@@ -1,0 +1,32 @@
+#needs blockdraw_wfo
+#needs circuitparts
+
+#needs bookprefs
+
+bookprefs & @defaultunit:1%c
+|
+{ |** book preferences active
+
+t1: [putblockOrigin [termcircle]]
+
+R: [putblockNearRight [resistance] t1]
+L: [putblockNearRight [inductance] R]
+h: [putblockNearRight POINTPICTURE L]
+C: [putblockNearBelow [[rotate 90°] [capacitance]] h]
+
+t2: [putblockNearBelow [termcircle] C]
+ 
+@<< [putlabelAbove [TeX `$R$´] [toppoint R] 0]
+@<< [putlabelAbove [TeX `$L$´] [toppoint L] 0]
+@<< [putlabelLeft [TeX `$C$´] [leftpoint C] 0]
+
+@implicitdraw: false & @width:@connectionlw  |** We don't wan't the usual arrowheads on the connections
+|
+{
+  @<< [stroke [connect t1 R]]
+  @<< [stroke [connect R L]]
+  @<< [stroke [connect L C]]
+  @<< [stroke [connect C t2]]
+}
+
+} |** end of book preferences

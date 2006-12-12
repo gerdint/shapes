@@ -1,0 +1,28 @@
+|** The glyph's code must be correct for the font metrics to work (that's by my design).
+|** The glyph's name must be correct for it to be painted.  However, the code can be wrong, but it will still print if the name is correct.
+|** I wonder if the names can be deduced automatically somehow...
+
+myfont: HotFont <<
+
+myfont << [tag 'FontName 'Honko] << [tag 'FullName `Honko Ponko´]
+myfont << [tag 'ItalicAngle ~10°]
+myfont << [tag 'size 1cm]
+myfont << [basicglyph char:`a´ width:1.1cm glyph:[stroke (0cm,0cm)--(1cm,1cm)]]
+myfont << [basicglyph char:`b´ width:1.1cm glyph:[stroke (0cm,1cm)--(1cm,0cm)]]
+myfont << [basicglyph char:`å´ width:0.1cm glyph:(@width:1mm | [stroke (0cm,~0.1cm)--(0cm,1.1cm)])]
+
+|** This glyph is not given a character code, only a name.  It will not be measurable...
+myfont << [basicglyph name:'foobar width:0.2cm glyph:(@width:1mm | [stroke (0cm,~0.1cm)--(0cm,1.1cm)])]
+
+|** This glyph gets its name from a character:
+myfont << [basicglyph name:`ä´ width:0.3cm glyph:(@width:1mm | [stroke (0cm,~0.1cm)--(0cm,1.1cm)])]
+
+myfont;
+
+@<< @text_font:myfont | ( HotText << [kerning `aåa´ 1 `b´] )
+
+/**
+yourfont: [importfont `yourfont.pdf´]
+
+@<< [shift (0,1cm)] [] ( @text_font:yourfont | ( HotText << `abaabb´ ) )
+**/

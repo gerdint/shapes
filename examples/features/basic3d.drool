@@ -1,0 +1,32 @@
+tf: [scale3D x:1.3]
+
+rot: [rotate3D (1,1,1) 30°]
+
+pth: (0cm,0cm,0cm)--(0cm,1cm,0cm)--(1cm,1cm,0cm)--(1cm,0cm,0cm)--(1cm,0cm,1cm)--(1cm,1cm,1cm)--(0cm,1cm,1cm)--(0cm,0cm,1cm)
+
+pth2: [rot*tf pth]
+
+screwSeg: (~1cm,1cm,~1cm)<(~1cm,0cm,~1cm)>(~1cm,~1cm,~1cm)--(1cm,~1cm,~2cm)<(1cm,0cm,~2cm)>(1cm,1cm,~2cm)
+deeper: \ n .> [shift (0cm,0cm,n*~2cm)]
+screw: (1cm,~1cm,0cm)<(1cm,0cm,0cm)>(1cm,1cm,0cm)--screwSeg--[[deeper 1] screwSeg]--[[deeper 2] screwSeg]--cycle
+screw2: [rot screw]
+
+@eyez:10cm
+|
+{
+stderr << `Length of screw in 3D: ´ << [duration screw] << `¢n´
+stderr << `Length of screw view: ´ << [duration [view screw]] << `¢n´
+
+@<< [stroke [view pth2]]
+@<< [stroke [view screw2]]
+
+mark: \ z .> ( @stroking:RGB_RED & @width:0.3bp | { @<< [stroke [view (z-(0.5mm,0.5mm,0mm))--(z+(0.5mm,0.5mm,0mm))]] << [stroke [view (z+(~0.5mm,0.5mm,0mm))--(z+(0.5mm,~0.5mm,0mm))]] } )
+
+[[range 0.15 [duration pth2]-1 0.3].foldl \ p e .> { [mark [pth2 e].p]   p } VOID]
+[[range 0.15 [duration screw2]-1 0.3].foldl \ p e .> { [mark [screw2 e].p]   p } VOID]
+
+
+/**
+@<< @eyez:∞ | [view [stroke pth]]
+**/
+}

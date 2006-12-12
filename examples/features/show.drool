@@ -1,0 +1,26 @@
+#needs no-utf-8
+
+stdout << `
+Hi drooler!
+
+´
+stdout << `The value of pi is ´ << pi << `¢n´
+
+add: \ x .> \ y .> x + y
+stdout << add << [[add 1cm] 2cm] << `¢n´
+stdout << `Bye¢n´
+{
+  add: \ x .> 2*x
+  stdout << [add 5] << `¢n´
+}
+stdout << [[add '5] '8] << `¢n´
+
+{
+  a: { stdout << `Initializing a¢n´  4 }
+  b: !{ stdout << `Initializing b¢n´  5 }
+  c: { stdout << `Initializing c¢n´  6 }
+  stdout << c << a << b << `¢n´
+}
+
+|** Just to prevent the empty-output-error:
+@<< [stroke (0cm,0cm)--(1cm,1cm)]

@@ -1,0 +1,8 @@
+dynamic @a I 8
+f : \ b .> @a + b
+stderr << [f 2] << `¢n´
+stderr << @a:6 | [f 2] << `¢n´
+stderr << [f 2] << `¢n´
+
+@<< [stroke (0cm,0cm)--(1cm,1cm)]
+

@@ -1,0 +1,4 @@
+examplesprefs: @connectionlw: 0.8bp & @blocklw: 0.8bp
+
+hwidth: 0.3bp
+hdash: [dashpattern 1.5mm 1mm]

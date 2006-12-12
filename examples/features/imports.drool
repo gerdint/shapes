@@ -1,0 +1,9 @@
+#needs centering
+
+pic: [import `davidvin.pdf´] [] '0   |** import all pages, and select page 0
+
+{
+ bb: [bbox pic]
+ @<< [scale 20cm/([xmax bb] - [xmin bb])] [] pic
+}
+

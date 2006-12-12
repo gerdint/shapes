@@ -1,0 +1,271 @@
+|***************************************************************************
+|** This is the file containing the Drool source for the elements that
+|** are used to generate various forms of the logo.
+|**
+|** The intention is that this file shall have rich enough comments
+|** to function as a verbal, yet almost exact, description of the logo.
+|** It should enable other persons not only to understand the contents,
+|** but to convert this description into their drawing language/tool of
+|** preference.
+|**
+|** What makes this description not quite exact is the use of path-
+|** construction primitives from the Drool language.  However, these
+|** are probably quite easily approximated in any other drawing tool
+|** by looking at the visual results.
+|***************************************************************************
+#author Henrik Tidefelt
+
+
+|** This file relies only on one simple Drool extension file, <circle.drext>.
+|** It defines the function <circle> which maps a distance to a circle with
+|** that distance as its radius, centered at the origin.
+|** Actually, it's not _quite_ a circle, but you can't see the difference!
+#needs circle
+
+|***************************************************************************
+|** In the first section of this file, various lengths are defined.
+|***************************************************************************
+
+|** The unit <r> is defined by the square box having the dimensions 2<r> by 2<r>.
+#unit r = 80bp
+
+|** The width of the landscape graphics used to be 670bp to contain the text "LINKÖPINGS TEKNISKA HÖGSKOLA",
+|** but we don't need all that width anymore, so it was changed to the following value:
+bannerWidth: 605bp
+
+|** This is the space around the square box.
+squareSpace: 10bp
+
+|** This is the distance from the square box to the text.
+textXSpace: 10mm
+
+|** The text size is of course relative to all the other distances, but with the other distances inherited
+|** from previous versions, the following text size was found to yield good looks.
+textSize: 36bp
+
+|** The vertical distance from one line of text to the next is <textSize> + <textSep>; this defines <textSep>.
+textSep: 10bp
+
+|** In order to do proper vertical layout of the text, I need the true height of the characters.
+|** This is the difference between the font size and the height of characters, meaning that the height of the
+|** characters is estimated to be ( 1 - 0.15 )<textSize>.
+textVSpace: 0.15 * textSize
+
+
+|***************************************************************************
+|** Other simple constants.
+|***************************************************************************
+
+|** These colors are inherited from previous versions of the logo.
+darkGray: [gray 0.561]
+lightGray: [gray 0.902]
+
+|** The use of Helvetica is inherited from previous versions of the logo.  This is good, since Helvetica
+|** need not be included in a pdf, which makes the Drool to pdf compilation easier.
+|** The horizontal scaling was chosen to give a similar visual impression to the previous version of the logo.
+theFont: @text_font:FONT_HELVETICA & @text_size:textSize & @text_horizontalscaling:0.8
+
+|** This is by the definition of <r>:
+squareSide: 2r
+
+|** I give a name to the golden ratio:
+golden: ( 1 + [sqrt 5] ) / 2
+
+
+|***************************************************************************
+|** makeRegulator
+|***************************************************************************
+
+|** This is a procedure that produces the centrifugal regulator, positioned centered
+|** around (0,1<r>).  The size of the drawn object is tailored for unscaled use in
+|** <squareLogo> below, which means that it fits (with some space around) in a square
+|** box width side 2<r>.
+
+|** <makeRegulator> does not specify any colors; both stroking and non-stroking
+|** colors are taken from the dynamic environment.
+
+makeRegulator: \ .>
+(
+@cap:CAP_BUTT &
+@join:JOIN_ROUND &
+@defaultunit:1%c
+|
+{
+    |** The elements are drawn in an order such that the rods are drawn behind the other objects.
+    |** This is the reasonable order in case non-stroking and stroking colors differ.
+    |** (Note that the rods are stroked, and the other objects filled.)
+
+    |** I use two widths, related by the golden ratio.  <w1> is the thicker, used
+    |** for the bar, and <w2> is used for the arms.
+    w1: 0.10r
+    w2: w1 / golden
+
+    |** Draw the vertical bar.
+    @<< @width:w1 | [stroke (0,w1)--(0,squareSide-w1)]
+
+    |** <yTop> is the height where the regulator is hinged.
+    yTop: 2r - 0.4r
+
+    |** <a> is the angle from the vertical bar to the arms.
+    a: 53°
+
+    |** These are the lengths of the arms; <l1> is the length of the part from the hinge to
+    |** the joint, and <l2> is the length from the joint to the weight.
+    l1: 0.5r
+    l2: 1.35r
+
+    |** The sizes of all the circles are related by the golden ratio.  The circles are,
+    |** in order, starting with the biggest, the weight <r3>, the hinge <r2>, and the joint<r1>.
+    r3: 0.2r
+    r2: r3 / golden
+    r1: r2 / golden
+
+    |** Next, we have two symmetric arms to draw, and we define one of them in <oneArm>.
+    oneArm:
+      {
+        |** This is the path that describes both parts of the arm, starting at the hinge.
+        armPth: (0,yTop)--(+(l1*[sin a],~l1*[cos a]))--(+(~l2*[sin a],~l2*[cos a]))
+
+	|** This piece of graphics is now composing the stroked path with one circle
+	|** for the joint, and another circle for the weight.  The locations for the circles
+	|** are specified by counting "control points" along the path.
+        ( Hot2D << @width:w2 | [stroke armPth]
+                << [fill [shift [armPth 1].p] [] [circle r1]]
+                << [fill [shift [armPth 2].p] [] [circle r3]]
+	         )
+      }
+
+    |** Now we draw <oneArm> and its mirror image.
+    @<< oneArm << [scale x:~1] [] oneArm
+
+    |** Draw the hinge.
+    @<< fill [] [shift (0,yTop)] [] [circle r2]
+
+    |** It remains to draw the slider box.  <r4> is a "roundrect parameter", and <r5> is half the height
+    |** of the object (it is centered where the arms intersect with the vertical bar).  The width
+    |** of this object is chosen to be the same as that of the circle at the hinge, that is, <r2>.
+    r4: 0.2*r2
+    r5: 1.3*r2
+    
+    |** I first construct the right side of the path.  Here's where the "not exact" description
+    |** enters the picture, since the "(^)--(^)" and "(^)--(^0°)" are rather complicated Drool
+    |** constructs.  Best way to see what it means here is to look at the result.
+    midPath: (0,r5)--(r2-r4,(+0cm))>(^)--(^)<(+(r4,~r4))--((+0cm),~r5+r4)>(^)--(^0°)<(0,~r5)
+
+    |** Finally, I make a closed path by joining <midPath> with its revered mirror path, and then
+    |** fill the path.
+    @<< [shift (0,yTop-2*l1*[cos a])] [] [fill midPath--([scale x:~1][][reverse midPath])--cycle]
+}
+)
+
+|***************************************************************************
+|** squareLogo
+|***************************************************************************
+
+|** This is the square box with the centrifugal regulator in it.
+|** It is placed with the origin at its lower left corner.
+|** It has size 2<r> by 2<r>.
+
+|** The positioning is obtained by first drawing the graphics with the vertical
+|** axis of symmetry at x=0, and then shifting by 1<r> to the right.
+|**
+|** All the lengths use here are specified relative to <r>.
+
+squareLogo:
+[shift (1r,0)] []
+{
+  |** res is the variable to hold the image we're building up.
+  res: Hot2D <<
+
+  |** First we draw the background.
+  res << @nonstroking:darkGray | [fill [rectangle (~1r,0cm) (1r,squareSide)]]
+
+  |** Next we set some of the graphics parameters that shall be applied to
+  |** the things we draw inside the scope that follows the pipe ("|") sign.
+  |** The @defaultunit setting means that we like circular shapes, please ask
+  |** me if you are curious about this detail!
+  @stroking:GRAY_WHITE &
+  @nonstroking:GRAY_WHITE &
+  @<<: res
+  |
+  {
+    ![makeRegulator]
+  }
+  
+  |** This means that we promise not to add any more objects to <res>, which makes <res> a variable
+  |** that can be read...
+  res;
+
+  |** ... so that we can return its value:
+  res
+}
+
+
+|***************************************************************************
+|** backgroundRectangle
+|***************************************************************************
+
+|** This is defined as a path.  In some of the logos, this will be filled with
+|** light gray.  In others it will merely be used to manipulate the bounding
+|** box to be the same as if it had been filled with light gray.
+backgroundRectangle: [rectangle (0cm,~squareSpace) (bannerWidth,squareSide+squareSpace)]
+
+
+|***************************************************************************
+|** Text positioning
+|***************************************************************************
+
+|** This function takes a text line number (in the range 0 to 2), and returns the y coordinate
+|** for the baseline of that line of text.
+|** Assuming that <textSep> is correct, this will make the glyphs vertically centered on the banner.
+yText: \ i .> 0.5 * ( squareSide - ( 3 * textSize + 2 * textSep - textVSpace ) ) + ( 2 - i ) * ( textSize + textSep )
+
+|** Next, the three lines of text are defined.  Since Drool does not support correct font metrics
+|** for characters like `Ö´, I have to measure the last line of text manually.  For an example of how to do this,
+|** run the file <measuretext.drool>.  The widths of the text lines are then stored in variables
+|** with logical names.
+
+|** The kerning of the text is clearly manual, and I am not an expert in this field, so
+|** it is surely possible to do better.
+
+line0: theFont | ( HotText << [kern `AUTOMATIC CONTROL´] )
+
+line1: theFont | ( HotText << [kern `REGLERTEKNIK´] )
+
+|** When the text has been measured in the textSize unit, it is wrapped in a correctly sized bounding box,
+|** and can then be used as any other line.
+|** Further, the kerning of `KÖ´ could be borrowed from `KO´, but I don't like the result for some reason,
+|** so I override:
+|** kernKO: theFont | ( [xmax bbox[]( HotText << `KO´ )] - [xmax bbox[]( HotText << [kern `KO´] )] ) / textSize
+kernKO: 0.05
+|** Also note how to apply automatic kerning everywhere but between `K´ and `Ö´.  Placing kernKO among the
+|** arguments to kern would add kernKO to the default kerning, resulting in too much kerning should
+|** automatic kerning of `KÖ´ begin to work in the future.
+line2: [bboxed theFont | ( HotText << [kerning [kern `LINK´] kernKO [kern `ÖPINGS UNIVERSITET´]] )
+               [rectangle (0cm,0cm) (10.33*textSize,textSize)]]
+
+
+|***************************************************************************
+|** Stuff from centering.drext
+|***************************************************************************
+
+|** The following was copied from the file I call centering.drext.
+|** The function centerxat is used to position text to the right of a given point.
+
+xmax: \ p .> [continuous_maximizer p (1,0)].p.x
+xmin: \ p .> [continuous_maximizer p (~1,0)].p.x
+ymax: \ p .> [continuous_maximizer p (0,1)].p.y
+ymin: \ p .> [continuous_maximizer p (0,~1)].p.y
+
+centerxat: \ obj x .>
+ {
+  thebb: [bbox obj]
+  [[shift ( 0.5*([xmin thebb]*(x-1) - [xmax thebb]*(x+1)),
+  	    0cm )]
+   obj]
+ }
+
+
+|***************************************************************************
+|** That's it!  This is the end of the file.
+|***************************************************************************

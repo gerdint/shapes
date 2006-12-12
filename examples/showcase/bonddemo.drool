@@ -1,0 +1,39 @@
+#needs bondgraph
+
+#unit u = 2cm
+
+@connectionlw: 0.6bp
+|
+{
+  j1: [putblockOrigin [shift (1u,1u)] [] [sjunction]]
+  j2: [putblockOrigin [shift (2u,1u)] [] [gyjunction to_rt [TeX `$\mu$´]]]
+  j3: [putblockOrigin [shift (3u,1u)] [] [sjunction]]
+  j4: [putblockOrigin [shift (4u,1u)] [] [tfjunction to_rt [TeX `$r$´]]]
+  j5: [putblockOrigin [shift (5u,1u)] [] [pjunction]]
+  j6: [putblockOrigin [shift (5u,~0.5u)][] [sjunction]]
+  j7: [putblockOrigin [shift (5u,2u)] [] [sjunction]]
+  
+  @<< tbond [] [bgconnect j1 j2]
+  @<< hbond [] [bgconnect j2 j3]
+  @<< tbond [] [bgconnect j3 j4]
+  @<< tbond [] [bgconnect j4 j5]
+  @<< hbond [] [bgconnect j5 j6]
+  @<< tbond [] [bgconnect j5 j7]
+
+  @<< tbond [] [terminalfrom j1 (1u,0u) [TeX `R: $\phi_{1}(\bullet)$´]]
+  @<< hbond [] [terminalfrom j1 (1u,2u) [TeX `I: $m_{1}$´]]
+  @<< hbond [] [terminalfrom j3 (3u,2u) [TeX `I: $m_{2}$´]]
+  @<< tbond [] [terminalfrom j3 ( [centerof j3]+1u*[dir ~120°] ) [TeX `R: $R_{2}$´]]
+  @<< tbond [] [terminalfrom j3 ( [centerof j3]+1u*[dir ~60°] ) [TeX `R: $R_{3}$´]]
+  @<< hbond [] [terminalto   j6 ( [centerof j6]+(~1u,0u) ) [TeX `$S_{\mathrm{e}}$´]]
+  @<< hbond [] [terminalfrom j6 ( [centerof j6]+(1u,0u) ) [TeX `I: $m_{3}$´]]
+  @<< tbond [] [terminalfrom j7 (4u,2u) [TeX `C: $C_{1}$´]]
+  @<< tbond [] [terminalfrom j7 (6u,2u) [TeX `R: $R_{1}$´]]
+
+  {
+    con: [terminalto j1 (0u,1u) [TeX `$S_{\mathrm{e}}$´]]
+    @<< hbond [] con
+    @<< [flowlabel con [TeX `f´]]
+    @<< [effortlabel con [TeX `e´]]
+  }
+}

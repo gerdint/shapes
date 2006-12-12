@@ -1,0 +1,35 @@
+resistance: \ .>
+(
+@width:@connectionlw & @cap:CAP_SQUARE
+|
+{
+ lambda: @longblockrx / 3
+ r: 0.75 * lambda
+ [stroke (~2.5*lambda-@width,0)--(~2.5*lambda,0)--(~2*lambda,r)--(~1.5*lambda,~r)--(~1*lambda,r)--(~0.5*lambda,~r)--(0*lambda,r)--
+            (0.5*lambda,~r)--(1*lambda,r)--(1.5*lambda,~r)--(2*lambda,r)--(2.5*lambda,0)--(2.5*lambda+@width,0)]
+}
+)
+
+inductance: \ .>
+(
+@width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
+|
+{
+ lambda: @longblockrx / 3
+ r: 0.75 * lambda
+ [stroke (~2.5*lambda-@width,0)--(~2.5*lambda,0)>(^80°)--(lambda/3^)<(~2*lambda,r)>(r^0°)
+--(^)<(~1.5*lambda,~r)>(r^180°)--(^)<(~1*lambda,r)>(r^0°)--(^)<(~0.5*lambda,~r)>(r^180°)--(^)<(0*lambda,r)>(r^0°)--
+            (^)<(0.5*lambda,~r)>(r^180°)--(^)<(1*lambda,r)>(r^0°)--(^)<(1.5*lambda,~r)>(r^180°)--(r^)<(2*lambda,r)>(lambda/3^0°)--(^100°)<(2.5*lambda,0)--(2.5*lambda,0)--(2.5*lambda+@width,0)]
+}
+)
+
+capacitance: \ .>
+(
+@width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
+|
+{
+  rh: @longblockry
+  rw: @longblockrx / 8
+  [stroke (~rw,~rh)--(~rw,rh) & (rw,~rh)--(rw,rh)]
+}
+)

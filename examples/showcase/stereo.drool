@@ -1,0 +1,13 @@
+#preamble \usepackage{amsmath}
+#preamble \usepackage{SIunits}
+
+pth: [[scale3D 2] (0cm,0cm,0cm)>(+3cm*(1,1,0))--(+3cm*(~1,1,0))<(1cm,0cm,1cm)]
+
+eyew: 5cm
+
+@eyez:25cm
+|
+{
+@<< [stroke [view pth]] << [stroke [[shift (2*eyew,0cm)] [view [[shift (~eyew,0cm,0cm)] pth]]]]
+@<< [[shift (5cm,9cm)] [TeX `\begin{minipage}{4cm}\begin{align*}´ + [sprintf `w_{\mathrm{eye}} &= \unit{%g}{\centi\meter}\\´ eyew/1cm] + [sprintf `z_{\mathrm{eye}} &= \unit{%g}{\centi\meter}´ @eyez/1cm] + `\end{align*}\end{minipage}´]]
+}

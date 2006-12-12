@@ -1,0 +1,7 @@
+#needs newline
+
+stdout << π << newline
+stdout << ∞ << newline
+
+|** Just to prevent the empty-output-error:
+@<< [stroke (0cm,0cm)--(1cm,1cm)]

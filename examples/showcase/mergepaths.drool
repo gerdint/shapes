@@ -1,0 +1,74 @@
+#needs linkpaths
+
+|** The mergepaths function turned out difficult to implement since the subpath function
+|** does not return the control point at the free end of the cut (this is often a desirable
+|** behavior).  Instead the function meetpaths was added to the kernel.
+/**
+pathpoint: \ p t .>
+  (+[reversespeed p t]*[reversedirection p t])<
+  [point p t]
+  >(+[speed p t]*[direction p t])
+
+mergepaths: \ p1 p2 .>
+  [if [duration p1]>1
+      { t:([duration p1]-1)  [subpath p1 0 t]>(+[speed p1 t]*[direction p1 t]) }
+      [pathpoint p1 0]]
+  --
+  (+[reversespeed p1 ∞]*[reversedirection p1 ∞])<
+  ( 0.5 * ( [point p1 ∞] + [point p2 0] ) )
+  >(+[speed p2 0]*[direction p2 0])
+  --
+  [if [duration p2]>1
+      (+[reversespeed p 1]*[reversedirection p 1])<[subpath p2 1 ∞]
+      [pathpoint p2 ∞]]
+**/
+
+@defaultunit: 1%c
+|
+{
+  pth1: (~1cm,0cm)--(^)<(0cm,0cm)>(1cm,1cm)--(2cm,3cm)<(4cm,4cm)>(^)
+  pth2: (^)<(5cm,4cm)>(5cm,5cm)--(1cm^180°)<(7cm,3cm)>(^)--(7cm,2cm)
+
+  @stroking:[gray 0.7]
+  |
+  {
+    @<< [stroke pth1]
+    @<< [stroke pth2]
+  }
+
+  @<< [stroke [meetpaths pth1 pth2]]
+}
+
+@defaultunit: 1%c
+|
+{
+  pth1: (0cm,~3cm)>(2cm^70°)--(5cm,5cm)
+  pth2: (3cm,~2cm)>(2cm^140°)--(0cm,4cm)
+
+  @stroking:[gray 0.7]
+  |
+  {
+    @<< [stroke pth1] << [stroke pth2]
+  }
+
+  @<< [stroke [linkpaths pth1 pth2]]
+}
+
+{
+#needs linkpaths
+#needs conssupport
+#needs circle
+  subpath: \ pth t1 t2 .> [pth t1]--[pth t2]
+  seg: \ a .> [shift (5cm,0)][][rotate a][][shift (0,~1.2cm)][]reverse[] [subpath [circle 1cm] 0 1.5]
+  c1: [seg 0°]
+  c2: [seg 90°]
+  c3: [seg 180°]
+  c4: [seg 270°]
+  @<< [stroke c1]
+  pths: consify [] [list c1 c2 c3 c4]
+
+  [foreach (\ e .> { @<< [stroke e] }) pths]
+
+  scaleAroundCenter: \ factor pth .> { c: [continuous_mean pth]  [shift c][][scale factor][][shift ~c][]pth }
+  @<< @stroking: RGB_RED | [stroke [scaleAroundCenter 1.3 ...][] [buildchain pths]--cycle]
+}
