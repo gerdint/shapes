@@ -1,0 +1,4 @@
+foo :: [-> x1 ] [ stroke (x1,0mm)--(30mm,30mm) ];
+
+[foo 10mm]
+

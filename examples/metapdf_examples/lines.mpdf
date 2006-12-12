@@ -1,0 +1,28 @@
+mark :: [-> z] {
+  [width 1bp]
+  [stroking RGB_BLACK]
+  [stroke (z-(0cm,0.5cm))--(z+(0cm,0.5cm))]
+  [stroke (z-(0.5cm,0cm))--(z+(0.5cm,0cm))]
+};
+
+testline :: [-> z] {
+  z2 :: (z+(0cm,2cm));
+  z3 :: (z+(1cm,1cm));
+  [stroke z--z2--z3]
+  [mark z]
+  [mark z2]
+  [mark z3]
+};
+{
+  [width 2mm]
+  [testline (1cm,0.3cm)]
+  {
+    [cap CAP_SQUARE]
+    [join JOIN_ROUND]
+    
+    [testline (3cm,0.3cm)]
+  }
+  [stroking [cmyk 1 0 0 0]]
+  [dash [dashpattern 3mm 1mm]+1mm]
+  [testline (5cm,0.3cm)]
+}

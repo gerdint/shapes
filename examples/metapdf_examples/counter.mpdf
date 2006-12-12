@@ -1,0 +1,36 @@
+/* This demonstrates how to work with class objects.
+ * They have a name, and can tell whether they have inherited some other class.
+ * They may also be tested for equality (not demonstrated here).
+ */
+[show MetaClass.name]
+[show [MetaClass.isa Object]]
+
+
+/* Next, a simple (final) class is created.
+ * The members of a final class may be accessed without class specifier.
+ */
+
+[ Counter ::
+  [class (`Counter´ c) isa ((Object))
+   final
+   (__members__
+    (c c set))
+   (__prepare__
+    [c := c + 4])
+   (__methods__
+    ([inc] [c := c + 1])
+    ([get] c))
+  ]
+]
+
+[show Counter]
+
+[ ctr :: [Counter.new 7] ]
+[show ctr]
+[ctr.Counter#inc]
+[show [ctr.get]] /* the class Counter is final, so "Counter#" may be omitted */
+[ctr.c := 3]
+[show [ctr.get]] /* the class Counter is final, so "Counter#" may be omitted */
+
+/* Just draw anything to avoid empty-output error */
+[stroke (0cm,0cm)--(1cm,1cm)]

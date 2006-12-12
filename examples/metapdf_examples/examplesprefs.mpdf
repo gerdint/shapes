@@ -1,0 +1,6 @@
+[ connectionlw := 0.8bp ]
+[ blocklw := connectionlw ]
+
+[ hwidth :: 0.3bp ]
+[ hdash :: [dashpattern 1.5mm 1mm]]
+

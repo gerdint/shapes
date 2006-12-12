@@ -1,0 +1,23 @@
+[shift :: [-> dx dy ] [affinetransform 1 0 0 1 dx dy ]]
+[rotation :: [-> a ] [affinetransform [cos a] [sin a] (-[sin a]) [cos a] 0cm 0cm]]
+[scaling :: [-> f ] [affinetransform f 0 0 f 0cm 0cm]]
+
+[p :: (~1cm,~1cm)--(~1cm,6cm)--(4cm,6cm)--(4cm,~1cm)--cycle]
+
+[stroke p]
+
+[defaultunit 1%c]
+
+[ testfun :: [-> y0 x ] {
+  [ p2 :: (0cm,y0)>(^90°)--(^)<(x,y0+2cm)>(^)--(^90°)<(4cm,y0)]
+  [stroke p2]
+  [stroking RGB_RED]
+  [stroke [controlling p2]]
+}]
+
+[draw [TeX `Hej, Anna $\int_{0}^{23}\chi^{2}(t)\mathrm{d}t$´]]
+
+[testfun ~0.5cm 0cm]
+[testfun 1.5cm 1cm]
+[testfun 2.5cm 2cm]
+

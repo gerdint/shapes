@@ -1,0 +1,39 @@
+[let ( f: [\ x a:4 b:5 ] x + a * b )
+  {
+    [show [f 0 a:6]]
+    [show [f 0 b:6]]
+    [show [f 0]]
+  }
+]
+
+[ ABC :: [class (`ABC´ a:1 b:2 c:3) isa ((Object)) final (__members__ (a a get) (b b get) (c c get))] ]
+
+[let ( o: [ABC.new b:9] )
+  {
+    [show o.a]
+    [show o.b]
+    [show o.c]
+  }
+]
+
+[hypot :: [\ x y scale:1] scale*(x++y)]
+
+[let ( t: [cos 180° ...] )
+  [show [t]]]
+
+[let* ( t: [\ a b] 2*a + b
+        f: [t 1 ...]
+        g: [t VOID 1 ...]
+      )
+  {
+    [show [f 2]]
+    [show [g 2]]
+  }
+]
+
+[let ( inc: [(+) 1 ...] )
+  [show [inc 1]]]
+
+[show [(-) 10 3]]
+
+[stroke (0cm,0cm)--(1cm,1cm)]

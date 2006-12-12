@@ -1,0 +1,109 @@
+[stroking RGB_BLACK]
+
+mark :: [-> c]{
+  [stroke (c+((-0.2cm),(-0.2cm)))--(c+(0.2cm,0.2cm))]
+  [stroke (c+((-0.2cm),0.2cm))--(c+(0.2cm,(-0.2cm)))]
+};
+
+heading :: [-> p t] {
+  tmp :: [point p t];
+  [stroke tmp--(tmp+0.4cm*[direction p t])]
+};
+
+antiheading :: [-> p t] {
+  tmp :: [point p t];
+  [stroke tmp--(tmp+0.4cm*[reversedirection p t])]
+};
+
+dp :: (0cm,3cm)>(^90°)--(^(-160°))<(2cm,5cm)>(^(-20°))--(^90°)<(4cm,3cm)--cycle;
+
+normal :: [-> p k] {
+  z :: [point p [continuous_maximizer p k]];
+  [stroke z--(z+[normalized k]*0.5cm)]
+};
+
+{
+  dp2 :: [[zshift (0cm,3cm)] dp];
+  [stroke dp2]
+  [normal dp2 [dir 160°]] 
+  [normal dp2 [dir 140°]]
+  [normal dp2 [dir 130°]]
+  [normal dp2 [dir 120°]]
+  [normal dp2 [dir 100°]]
+  [normal dp2 [dir 80°]]
+  [normal dp2 [dir 60°]]
+  [normal dp2 [dir 50°]]
+  [normal dp2 [dir 40°]]
+  [normal dp2 [dir 20°]]
+}
+
+{
+  dp2 :: [[zshift (3cm,2cm)] dp];
+  sp :: [subpath dp2 1cm 2cm];
+  [show [abs sp]]
+  [show [sprintf `%%g points´ [duration sp]]]
+  [stroke sp]
+}
+
+[stroke dp]
+[stroke [controlling dp]]
+[mark [point dp 0.5]]
+[mark [point dp 1.5]]
+{
+  [stroking RGB_YELLOW]
+  [heading dp 0]
+  [heading dp 0.5]
+  [heading dp 1]
+  [heading dp 2]
+}
+{
+  [stroking RGB_GREEN]
+  [antiheading dp 0]
+  [antiheading dp 1]
+  [antiheading dp 1.5]
+  [antiheading dp 2]
+}
+
+z0 :: (0cm,0cm);
+z1 :: (1cm,1cm);
+z2 :: (2cm,(-1cm));
+z3 :: (4cm,(-0.5cm));
+
+p :: z0>(^(-90°))--(^)<z1>(^0)--(^)<z2>(^0)--(^(-90°))<z3--cycle;
+p2 :: z0--z1--z2--z3--cycle;
+
+[stroke p]
+[stroke [controlling p]]
+
+/*
+  [show [abs [point p 0] - [point p 1]] + [abs [point p 1] - [point p 2]] + [abs [point p 2] - [point p 3]] + [abs [point p 3] - [point p 0]]]
+  [show [abs p2]]
+  [show [abs p]]
+*/
+
+[mark [point p [arctime p 1cm]]]
+[mark [point p [arctime p 2cm]]]
+[mark [point p [arctime p 3cm]]]
+[mark [point p [arctime p 4cm]]]
+[mark [point p [arctime p oo*1bp]]]
+
+{
+  [stroking RGB_GREEN]
+  [mark [discrete_mean p]]
+}
+
+{
+  [stroking RGB_YELLOW]
+  [mark [continuous_mean p]]
+}
+
+/*
+[mark [point p 0.0]]
+[mark [point p 0.5]]
+[mark [point p 0.8]]
+[mark [point p 1.0]]
+[mark [point p 1.3]]
+[mark [point p 2.0]]
+*/
+
+

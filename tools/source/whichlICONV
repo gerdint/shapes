@@ -1,0 +1,8 @@
+#!/bin/bash
+ 
+if test -e /usr/lib/libiconv.la
+then
+    echo -liconv
+else
+    echo -L/home/rt/tidefelt/sw/lib -liconv
+fi

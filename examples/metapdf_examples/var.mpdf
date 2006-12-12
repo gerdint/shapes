@@ -1,0 +1,8 @@
+[ a :: 1 ]
+[show a]
+{
+  [show a]
+  [ a :: 2 ]
+  [show a]
+}
+[show a]

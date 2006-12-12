@@ -1,0 +1,150 @@
+This file contains notes on the size of the binary.
+
+           |       Platform    | 
+Date       |   Mac   |  Cent   |  Comment 
+=========================================
+2006-10-31 |  56 MB  |         | 
+2006-11-01 |  60 MB  |         | Added the Integer type.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======================
+Details
+=======================
+
+--------------( 2006-10-31 )-----------------------
+-rw-r--r--   1 tidde  tidde  3173204 Oct 30 22:56 drawabletypes.o
+-rw-r--r--   1 tidde  tidde  2671748 Oct 30 23:10 metapdfastexpr.o
+-rw-r--r--   1 tidde  tidde  2500788 Oct 30 23:01 metapdfparser.o
+-rw-r--r--   1 tidde  tidde  2245324 Oct 29 22:57 metapdfvalue.o
+-rw-r--r--   1 tidde  tidde  1989700 Oct 30 23:35 coreoperators.o
+-rw-r--r--   1 tidde  tidde  1907212 Oct 30 23:36 classtypes.o
+-rw-r--r--   1 tidde  tidde  1891152 Oct 30 23:36 metapdfastclass.o
+-rw-r--r--   1 tidde  tidde  1854264 Oct 30 22:54 elementarypath2D.o
+-rw-r--r--   1 tidde  tidde  1801912 Oct 30 22:56 functiontypes.o
+-rw-r--r--   1 tidde  tidde  1722296 Oct 30 22:54 elementarypath3D.o
+-rw-r--r--   1 tidde  tidde  1631604 Oct 30 23:01 environment.o
+-rw-r--r--   1 tidde  tidde  1575452 Oct 30 22:52 statetypes.o
+-rw-r--r--   1 tidde  tidde  1474860 Oct 30 22:53 pathtypes.o
+-rw-r--r--   1 tidde  tidde  1448836 Oct 30 23:03 coredraw.o
+-rw-r--r--   1 tidde  tidde  1406068 Oct 30 22:58 metapdfexceptions.o
+-rw-r--r--   1 tidde  tidde  1384032 Oct 30 23:02 coreconstruct.o
+-rw-r--r--   1 tidde  tidde  1333332 Oct 30 22:57 hottypes.o
+-rw-r--r--   1 tidde  tidde  1326284 Oct 30 22:52 texttypes.o
+-rw-r--r--   1 tidde  tidde  1293616 Oct 30 23:05 metapdfastfun.o
+-rw-r--r--   1 tidde  tidde  1276028 Oct 30 22:50 simplepdfo.o
+-rw-r--r--   1 tidde  tidde  1190836 Oct 30 23:06 metapdfastvar.o
+-rw-r--r--   1 tidde  tidde  1177252 Oct 30 22:49 metapdfyylex.o
+-rw-r--r--   1 tidde  tidde  1109284 Oct 30 22:50 globals.o
+-rw-r--r--   1 tidde  tidde  1057808 Oct 30 22:51 elementarytypes.o
+-rw-r--r--   1 tidde  tidde  1050108 Oct 30 22:56 pdffunctiontypes.o
+-rw-r--r--   1 tidde  tidde  1049092 Oct 30 23:04 texlabelmanager.o
+-rw-r--r--   1 tidde  tidde  1043368 Oct 30 23:02 dynamicenvironment.o
+-rw-r--r--   1 tidde  tidde  1035080 Oct 30 22:51 continuations.o
+-rw-r--r--   1 tidde  tidde  1026268 Oct 30 23:36 main.o
+-rw-r--r--   1 tidde  tidde  1010972 Oct 30 23:03 coremisc.o
+-rw-r--r--   1 tidde  tidde   965968 Oct 30 23:03 corepath.o
+-rw-r--r--   1 tidde  tidde   945916 Oct 30 23:02 coreelem.o
+-rw-r--r--   1 tidde  tidde   943332 Oct 30 23:03 corepoint.o
+-rw-r--r--   1 tidde  tidde   941768 Oct 30 23:04 corestate.o
+-rw-r--r--   1 tidde  tidde   936536 Oct 30 22:57 lighttypes.o
+-rw-r--r--   1 tidde  tidde   916092 Oct 30 22:57 containertypes.o
+-rw-r--r--   1 tidde  tidde   886128 Oct 30 23:02 metapdfcore.o
+-rw-r--r--   1 tidde  tidde   882600 Oct 30 23:05 metapdfastvalues.o
+-rw-r--r--   1 tidde  tidde   878968 Oct 30 22:55 pathslider3D.o
+-rw-r--r--   1 tidde  tidde   872860 Oct 30 22:55 pathslider2D.o
+-rw-r--r--   1 tidde  tidde   869384 Oct 30 22:51 facetnormals.o
+-rw-r--r--   1 tidde  tidde   858156 Oct 30 23:05 metapdfast.o
+-rw-r--r--   1 tidde  tidde   814856 Oct 30 23:35 metapdfastflow.o
+-rw-r--r--   1 tidde  tidde   763852 Oct 30 22:51 gettypeid.o
+-rw-r--r--   1 tidde  tidde   757576 Oct 30 22:52 facettypes.o
+-rw-r--r--   1 tidde  tidde   731272 Oct 30 23:04 computeelementarypath.o
+-rw-r--r--   1 tidde  tidde   691728 Oct 30 22:50 pdfstructure.o
+-rw-r--r--   1 tidde  tidde   478876 Oct 30 22:50 simplepdfi.o
+-rw-r--r--   1 tidde  tidde   457732 Oct 30 22:57 metapdfscanner.o
+-rw-r--r--   1 tidde  tidde   223272 Oct 30 22:51 concretecolors.o
+-rw-r--r--   1 tidde  tidde   175836 Oct 30 23:36 errorhandlers.o
+-rw-r--r--   1 tidde  tidde   158696 Oct 30 22:52 elementarycoords.o
+-rw-r--r--   1 tidde  tidde   109320 Oct 30 22:50 pdfyylex.o
+-rw-r--r--   1 tidde  tidde    71404 Oct 30 22:50 consts.o
+-rw-r--r--   1 tidde  tidde    68680 Oct 30 22:50 pdfscanner.o
+-rw-r--r--   1 tidde  tidde    65372 Oct 30 23:04 specialunits.o
+-rw-r--r--   1 tidde  tidde    58616 Oct 30 22:57 sourcelocation.o
+-rw-r--r--   1 tidde  tidde     1896 Oct 30 23:04 angleselect.o
+
+
+--------------( 2006-11-01 )-----------------------
+-rw-r--r--   1 tidde  tidde  3173352 Nov  1 19:59 drawabletypes.o
+-rw-r--r--   1 tidde  tidde  2559064 Nov  1 20:39 metapdfparser.o
+-rw-r--r--   1 tidde  tidde  2330456 Nov  1 20:36 metapdfvalue.o
+-rw-r--r--   1 tidde  tidde  2246564 Nov  1 22:01 metapdfastexpr.o
+-rw-r--r--   1 tidde  tidde  2046732 Nov  1 21:09 coreoperators.o
+-rw-r--r--   1 tidde  tidde  1907392 Nov  1 21:11 classtypes.o
+-rw-r--r--   1 tidde  tidde  1891296 Nov  1 21:12 metapdfastclass.o
+-rw-r--r--   1 tidde  tidde  1854428 Nov  1 19:55 elementarypath2D.o
+-rw-r--r--   1 tidde  tidde  1825104 Nov  1 20:08 functiontypes.o
+-rw-r--r--   1 tidde  tidde  1722444 Nov  1 19:56 elementarypath3D.o
+-rw-r--r--   1 tidde  tidde  1637148 Nov  1 21:36 environment.o
+-rw-r--r--   1 tidde  tidde  1575596 Nov  1 19:55 statetypes.o
+-rw-r--r--   1 tidde  tidde  1513124 Nov  1 22:26 metapdfastexpr_arithmetic.o
+-rw-r--r--   1 tidde  tidde  1475160 Nov  1 19:55 pathtypes.o
+-rw-r--r--   1 tidde  tidde  1448984 Nov  1 20:54 coredraw.o
+-rw-r--r--   1 tidde  tidde  1441576 Nov  1 20:53 coreconstruct.o
+-rw-r--r--   1 tidde  tidde  1406216 Nov  1 20:36 metapdfexceptions.o
+-rw-r--r--   1 tidde  tidde  1333488 Nov  1 20:09 hottypes.o
+-rw-r--r--   1 tidde  tidde  1326432 Nov  1 19:54 texttypes.o
+-rw-r--r--   1 tidde  tidde  1293760 Nov  1 20:55 metapdfastfun.o
+-rw-r--r--   1 tidde  tidde  1276172 Nov  1 19:52 simplepdfo.o
+-rw-r--r--   1 tidde  tidde  1231988 Nov  1 22:30 metapdfastexpr_relational.o
+-rw-r--r--   1 tidde  tidde  1190980 Nov  1 20:55 metapdfastvar.o
+-rw-r--r--   1 tidde  tidde  1178948 Nov  1 19:51 metapdfyylex.o
+-rw-r--r--   1 tidde  tidde  1109460 Nov  1 19:52 globals.o
+-rw-r--r--   1 tidde  tidde  1062896 Nov  1 19:53 elementarytypes.o
+-rw-r--r--   1 tidde  tidde  1050412 Nov  1 20:09 pdffunctiontypes.o
+-rw-r--r--   1 tidde  tidde  1049224 Nov  1 20:54 texlabelmanager.o
+-rw-r--r--   1 tidde  tidde  1043528 Nov  1 20:40 dynamicenvironment.o
+-rw-r--r--   1 tidde  tidde  1035228 Nov  1 19:53 continuations.o
+-rw-r--r--   1 tidde  tidde  1026416 Nov  1 21:12 main.o
+-rw-r--r--   1 tidde  tidde  1011116 Nov  1 20:53 coremisc.o
+-rw-r--r--   1 tidde  tidde   979936 Nov  1 21:36 coreelem.o
+-rw-r--r--   1 tidde  tidde   966116 Nov  1 20:53 corepath.o
+-rw-r--r--   1 tidde  tidde   955284 Nov  1 22:05 metapdfastexpr_unary.o
+-rw-r--r--   1 tidde  tidde   943476 Nov  1 20:53 corepoint.o
+-rw-r--r--   1 tidde  tidde   941916 Nov  1 20:54 corestate.o
+-rw-r--r--   1 tidde  tidde   936704 Nov  1 20:09 lighttypes.o
+-rw-r--r--   1 tidde  tidde   916240 Nov  1 20:09 containertypes.o
+-rw-r--r--   1 tidde  tidde   886272 Nov  1 20:40 metapdfcore.o
+-rw-r--r--   1 tidde  tidde   882744 Nov  1 20:55 metapdfastvalues.o
+-rw-r--r--   1 tidde  tidde   879112 Nov  1 19:57 pathslider3D.o
+-rw-r--r--   1 tidde  tidde   873004 Nov  1 19:56 pathslider2D.o
+-rw-r--r--   1 tidde  tidde   869536 Nov  1 19:54 facetnormals.o
+-rw-r--r--   1 tidde  tidde   858304 Nov  1 20:54 metapdfast.o
+-rw-r--r--   1 tidde  tidde   815000 Nov  1 21:10 metapdfastflow.o
+-rw-r--r--   1 tidde  tidde   765348 Nov  1 19:53 gettypeid.o
+-rw-r--r--   1 tidde  tidde   757720 Nov  1 19:54 facettypes.o
+-rw-r--r--   1 tidde  tidde   731416 Nov  1 20:54 computeelementarypath.o
+-rw-r--r--   1 tidde  tidde   691728 Nov  1 19:51 pdfstructure.o
+-rw-r--r--   1 tidde  tidde   478876 Nov  1 19:52 simplepdfi.o
+-rw-r--r--   1 tidde  tidde   457732 Nov  1 20:36 metapdfscanner.o
+-rw-r--r--   1 tidde  tidde   223272 Nov  1 19:53 concretecolors.o
+-rw-r--r--   1 tidde  tidde   175984 Nov  1 21:12 errorhandlers.o
+-rw-r--r--   1 tidde  tidde   158840 Nov  1 19:54 elementarycoords.o
+-rw-r--r--   1 tidde  tidde   109320 Nov  1 19:52 pdfyylex.o
+-rw-r--r--   1 tidde  tidde    71404 Nov  1 19:53 consts.o
+-rw-r--r--   1 tidde  tidde    68680 Nov  1 19:52 pdfscanner.o
+-rw-r--r--   1 tidde  tidde    65372 Nov  1 20:54 specialunits.o
+-rw-r--r--   1 tidde  tidde    58616 Nov  1 20:36 sourcelocation.o
+-rw-r--r--   1 tidde  tidde     1896 Nov  1 20:54 angleselect.o

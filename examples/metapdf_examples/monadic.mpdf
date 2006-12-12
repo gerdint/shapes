@@ -1,0 +1,82 @@
+f : [\ x m<<] { m << x  <<< x  0 }
+
+{
+  b : 5 ;
+  a : Sum <<
+  a << b << 7
+  a << 2
+  stderr << [f 2 a]      /*  ==> 2, provided that stderr can handle numbers */
+  a ;
+  dummy : Picture <<
+  [ignore [f [circle 1cm] dummy]]  /* Draws the circle to dummy and to <<< */
+  stderr << [show a]     /*  ==> 16 */
+}
+
+/*
+Notes:
+  Some common objects with incremental construction:
+
+ Type         Piece-types
+------------------------------------
+ Sum          numbers
+ Product      numbers
+ 2D	      2D
+ 3D	      3D
+ stderr	      strings (primarily), anything
+ LongBlock    
+ CallCount
+*/
+
+/* The basic way of creating incremental construction is the monad (correct use of the word?).
+   It is the triple ( init increment result )
+*/
+Sum : [monad 0 [\ s t] s + t [\ s] s]
+Last : [monad VOID [\ m obj] obj [\ m] m]
+First : [monad VOID [\ m val] [if [typeof m]==Void val m] [\m val] val]
+
+/* More complex monads that take messages can also be built that way, but then it's probably better to use a warm instance of a user-defined class instead
+*/
+
+*/ They can be used like this
+*/
+{
+  s : Sum <<
+  f : First <<
+  l : Last <<
+
+  s << 3 << 4 << 5 ;
+  f << 3 << 4 << 5 ;
+  l << 3 << 4 << 5 ;
+
+  stderr << s           /* ==> 12 */
+  stderr << f           /* ==> 3 */
+  stderr << l           /* ==> 5 */
+}
+
+/* Now the Sum monad can be used inside other classes to create more complex monads:
+*/
+CallCount
+: [class (`CallCount´ f) isa ((Object))
+   __members__
+     f: f ;
+     c: Sum << get
+   __methods__
+     ([call arg] { c << 1  [f arg] })
+]
+/* Note that there is no assignment operator used here */
+
+/*
+The syntax
+  cf << [.insert thing1 thing2] << [.add stuff] << 78 ;
+does not allow return values, while as
+  [cf<< call 12]
+may (must?!) return a value.
+*/
+
+{
+  f : [\ x] x + 2 ;
+  cf : [CallCount.new f] <<
+  stderr << [cf<< call 3] << [cf<< call 4] << [cf<< call 5]  /* ==> 567 */
+  cf ;
+  stderr << cf.c					     /* ==> 3 */
+}

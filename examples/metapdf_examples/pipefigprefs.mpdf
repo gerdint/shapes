@@ -1,0 +1,29 @@
+[defaultunit 1%c]
+
+[PIPE_WIDTH :: 3mm]
+
+[VALVE :: { > <
+  [u :: 1.3 * PIPE_WIDTH]
+  [z11 :: (~u,~u)]
+  [z12 :: (~u,u)]
+  [z21 :: (u,~u)]
+  [z22 :: (u,u)]
+  [c :: 0.5*(z11+z22)]
+  [v :: c+(4*u,0cm)]
+  {[nonstroking GRAY_WHITE]
+   [fill z11--z12--z22--z21--cycle]
+  }
+  {[stroking GRAY_BLACK]
+   [stroke z11--z22--z12--z21--cycle]
+   [stroke c--v]
+   [stroke (v+(0cm,u))>(^~20°)--(^20°)<(v-(0cm,u))--cycle]
+  }
+}]
+
+[arrow :: [-> p ahLength ahAngle]{
+  [z :: [point p oo]]
+  [d :: [angle [reversedirection p oo]]]
+  (z+[dir d - ahAngle/2]*ahLength)--z--(z+[dir d + ahAngle/2]*ahLength)--cycle
+}]
+
+[drawarrow :: [-> p] { [nonstroking [STROKING]] [stroke [subpath p 0 [abs p]-2*[WIDTH]]] [fill [arrow p [max 1.5mm [WIDTH]*6] 30°]] } ]

@@ -1,0 +1,88 @@
+preamble \RequirePackage{sigsysnotation}
+
+include ./pipefigprefs.mpdf
+include ./transforms.mpdf
+include ./blockdraw.mpdf
+include ./examplesprefs.mpdf
+
+[ longblockrx := 1cm ]
+[ longblockry := 5mm ]
+
+[ TANK_W :: 3cm ]
+[ TANK_H :: 1.5cm ]
+[ TANK_L :: TANK_H * 0.76 ]
+
+[ x1 :: ~4cm ]
+[ x2 :: ~1cm ]
+[ x3 :: TANK_W + 5mm ]
+[ y1 :: ~1.5cm ]
+[ y2 :: 0.5cm ]
+[ y3 :: 3.5cm ]
+
+[ tank :: { > <
+  { [nonstroking [gray 0.8]]
+    [fill (0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_L)--(0cm,TANK_L)--cycle]
+  }
+  [stroke (0cm,TANK_H)--(0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_H)]
+  [ p :: (TANK_W+5mm,0cm)--(TANK_W+5mm,TANK_L) ]
+  [drawarrow p]
+  [draw [[shift [point p 0.5]+(1mm,0mm)] [TeX `$h$´]]]
+  {[nonstroking GRAY_WHITE]
+   [draw [[shift (TANK_W/2, TANK_L/2)] [centerlabel [TeX `Tank´]]]]}
+}]
+
+[draw tank]
+
+[ measurement :: { > < [ r :: 1mm ] [ p :: (^)<(~r,0cm)>(^)--(^)<(0cm,r)>(^)--(^)<(r,0cm)>(^)--(^)<(0cm,~r)>(^)--cycle ] [nonstroking GRAY_WHITE] [fill p] [stroke p] } ]
+
+[ Fh :: [[shift (x2,y2)] pointpicture] ]
+[ Fv :: [[shift (x1,y1)] pointpicture] ]
+
+[ m :: [[shift (2mm, 0.5cm)] measurement]]
+[draw m]
+{[p :: [connect m Fh]]
+ [draw [[shift [point p 0.7] + (0cm,2mm)] [centerx [TeX `$h$´]]]]}
+[draw [[shift [leftpoint Fh 1 1]+(~1mm,0mm)] [centerat [TeX `\parbox{1.5cm}{\flushright To controller}´] (1,0)]]]
+
+[ S :: [putblockOrigin [[shift (x1,y2)] pointpicture]] ]
+[draw [[shift [bottompoint S 1 1]+(0mm,~1mm)] [centerat [TeX `\parbox{1.5cm}{\centering From controller}´] (0,1)]]]
+
+{ [ R :: 1cm ]
+  [stroke (x1-1.5cm,y3+PIPE_WIDTH/2)--(TANK_W/2-R,y3+PIPE_WIDTH/2)>(^0°)--(^90°)<(TANK_W/2,y3+PIPE_WIDTH/2-R)--(TANK_W/2,TANK_H+3mm)]
+  [stroke (x1-1.5cm,y3-PIPE_WIDTH/2)--(TANK_W/2-R,y3-PIPE_WIDTH/2)>(^0°)--(^90°)<(TANK_W/2-PIPE_WIDTH,y3+PIPE_WIDTH/2-R)--(TANK_W/2-PIPE_WIDTH,TANK_H+3mm)] }
+{ [ p :: (x2+5mm,y3)--(x2+15mm,y3) ]
+  [drawarrow p]
+  [draw [[shift [point p 0.5]+(0mm,PIPE_WIDTH/2+2mm)] [centerx [TeX `$q$´]]]]}
+[draw [[shift (x1-1cm,y3-PIPE_WIDTH/2-2mm)] [centerat [TeX `Inflow´] (0,1)]]]
+
+[ m3 :: [[shift (TANK_W/2-PIPE_WIDTH/2,TANK_H+10mm) ] measurement]]
+[draw m3]
+[ t3 :: [[shift (x2,TANK_H+10mm)] pointpicture] ]
+[ignore [connect m3 t3]]
+[draw [[shift [leftpoint t3 1 1]+(~1mm,0mm)] [centerat [TeX `\parbox{1.5cm}{\flushright To controller}´] (1,0)]]]
+
+[ V :: [[shift (x1,y3)]*[rotate ~90°] VALVE] ]
+[draw V]
+[draw [[shift (x1,[ymax [bbox V]]+2mm)] [centerx [TeX `Valve´]]]]
+
+{[p :: [connect S V]]
+ [draw [[shift [point p 0.5] + (1mm,0mm)] [TeX `$u$´]]]}
+
+[ Rout :: 0.5cm ]
+[stroke (TANK_W/2-PIPE_WIDTH/2,0cm)--(TANK_W/2-PIPE_WIDTH/2,y1+Rout)>(^~90°)--(^180°)<(TANK_W/2+Rout,y1-PIPE_WIDTH/2)--(5cm,y1-PIPE_WIDTH/2)]
+[stroke (TANK_W/2+PIPE_WIDTH/2,0cm)--(TANK_W/2+PIPE_WIDTH/2,y1+Rout)>(^~90°)--(^180°)<(TANK_W/2+Rout,y1+PIPE_WIDTH/2)--(5cm,y1+PIPE_WIDTH/2)]
+{[p :: (TANK_W/2,~3mm)--(TANK_W/2,~10mm)]
+ [drawarrow p]
+ [draw [[shift [point p 0.5] + (PIPE_WIDTH/2+1mm,0mm)] [TeX `$v$´]]]}
+
+[ m2 :: [[shift (TANK_W/2+Rout,y1) ] measurement]]
+[draw m2]
+[ignore [connect m2 Fv]]
+[draw [[shift [leftpoint Fv 1 1]+(~1mm,0mm)] [centerat [TeX `\parbox{1.5cm}{\flushright To controller}´] (1,0)]]]
+
+[stroke (x3-8mm,y1-1cm)--(x3,y1-3mm)--(x3+8mm,y1-1cm)--cycle]
+{ [ c :: [[shift (x3,y1)][circle 7mm]] ]
+  [nonstroking GRAY_WHITE]
+  [fill c]
+  [stroke c] }
+[draw [[shift (x3,y1-12mm)] [centerat [TeX `Pump´] (0,1)]]]

@@ -1,0 +1,24 @@
+[defaultunit 1%c]
+
+[ p :: (0cm,0cm)--(10cm,3cm) ]
+
+[delta_t := 0.01]
+
+[show [abs p]]
+[show [abs [point p 0] - [point p 1]]]
+
+[ mark :: [-> c]{
+  [stroke (c+((-0.2cm),(-0.2cm)))--(c+(0.2cm,0.2cm))]
+  [stroke (c+((-0.2cm),0.2cm))--(c+(0.2cm,(-0.2cm)))]
+}]
+
+[stroke p]
+[mark [point p 0.1]]
+[mark [point p 0.2]]
+[mark [point p 0.3]]
+[mark [point p 0.4]]
+[mark [point p 0.5]]
+[mark [point p 0.6]]
+[mark [point p 0.7]]
+[mark [point p 0.8]]
+[mark [point p 0.9]]

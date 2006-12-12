@@ -1,0 +1,61 @@
+[ TwoPairs ::
+  [class (`TwoPairs´ _p1 _p2) isa ((Object))
+    final
+    (__members__
+     (p1 _p1 get)
+     (p2 _p2 get transforming))
+    (__methods__
+     (^ [mid] 0.5 * ( p1 + p2 ))
+     ([md] [mid]))
+  ]
+]
+
+[ TwoPairsB ::
+  [class (`TwoPairsB´ _p1 _p2) isa ((Object))
+    (__members__
+     (p1 _p1 p_get)
+     (p2 _p2 p_get))
+    (__methods__
+     (^ [mid] 0.5 * ( p1 + p2 ))
+     ([md] [mid]))
+  ]
+]
+
+[ SubCls ::
+  [class (`SubCls´ _p1 _p2) isa ((TwoPairsB _p1 _p2))
+    (__methods__
+     ([get_p1] (#TwoPairsB).p1)
+     (^ [get_p2] (#TwoPairsB).p2)
+    )
+  ]
+]
+
+[ a :: [TwoPairs.new (1cm,0) (0,1cm)] ]
+
+[ tf :: [rotate 30°] ]
+
+[show a.p1]
+[show [tf a].p1]
+[show [tf a.p1]]
+
+[show a.p2]
+[show [tf a].p2]
+[show [tf a.p2]]
+
+[show 0.5 * ( [tf a].p1 + [tf a].p2 )]
+[show [tf [a.mid]]]
+[show [[tf a].mid]]
+[show [tf [a.md]]]
+[show [[tf a].md]]
+
+[show `Time for class SubCls!´]
+
+[ b :: [SubCls.new (1cm,0) (0,1cm)] ]
+
+[show [[tf b].SubCls#get_p1]]
+[show [[tf b].SubCls#get_p2]]
+
+[show [tf [b.TwoPairsB#mid]]]
+[show [[tf b].TwoPairsB#mid]]
+[show [tf [b.TwoPairsB#md]]]
+[show [[tf b].TwoPairsB#md]]

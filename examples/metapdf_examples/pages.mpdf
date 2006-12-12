@@ -1,0 +1,10 @@
+[pgs :: [import `magic.pdf´]]
+
+[draw [pgs 1]]
+[stroke [bbox [pgs 1]]]
+
+[stroking RGB_BLACK]
+[stroke ((-0.5cm),(-0.5cm))--(0.5cm,0.5cm)]
+[stroke ((-0.5cm),0.5cm)--(0.5cm,(-0.5cm))]
+
+[draw [[shift (1cm,0.5cm)] [pgs 2]]]

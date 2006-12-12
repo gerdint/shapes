@@ -1,0 +1,38 @@
+include circle.mpdf
+
+[ Box ::
+  [class (`Box´ _ll _ur) isa ((Drawable))
+  (__members__
+   (ll _ll)
+   (ur _ur))
+  (__methods__
+   (^ [leftpoint n i] (i/(n+1))*ll+(1-i/(n+1))*(ll.x,ur.y))
+  )
+  (__overrides< Drawable >__
+   ([bbox] [rectangle ll ur])
+   ([draw] [stroke [rectangle ll ur]])
+  )
+  ]
+]
+
+[ mark :: [-> p] {[stroking RGB_RED] [width 0.3bp] [stroke [[shift p] [circle 0.5mm]]]} ]
+
+[width 0.25bp]
+
+[ b :: [Box.new (0.5cm,0.7cm) (1.3cm,0.9cm)] ]
+[ tb :: [[shift (~5mm,3mm)]*[rotate 15°] b] ]
+
+[width 5bp]
+
+[draw tb]
+[draw b]
+
+[mark [b.Box#leftpoint 3 1]]
+[mark [b.Box#leftpoint 3 3]]
+
+[mark [tb.Box#leftpoint 3 1]]
+[mark [tb.Box#leftpoint 3 3]]
+
+
+/* Just draw anything to avoid empty-output error */
+[stroke (0cm,0cm)--(1cm,1cm)]

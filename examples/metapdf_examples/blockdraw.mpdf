@@ -1,0 +1,239 @@
+[ longblockrx :: 0.7cm ]
+[ longblockry :: 0.4cm ]
+[ smallblockr :: 0.3cm ]
+[ fracblockry :: 0.5cm ]
+
+[ connectionlw :: 0.8bp ]
+[ blocklw :: connectionlw ]
+
+[ abovelabelmargin :: 1.5mm ]
+[ belowlabelmargin :: 1.5mm ]
+[ leftrightlabelmargin :: 1mm ]
+[ signmarginslide :: 1.5mm ]
+[ signmarginoffset :: 2mm ]
+
+[ blockspaceverynear :: 3mm ]
+[ blockspacenear :: 6mm ]
+[ blockspacefar :: 10mm ]
+[ blockspaceveryfar :: 15mm ]
+
+[ textscaling :: [scale 1] ]
+
+[ implicitdraw :: true ]
+
+/* Annouce that the labels `$+$´ and `$-$´ always be typeset.
+ */
+[ignore [TeX `$\scriptsize +$´]]
+[ignore [TeX `$\scriptsize -$´]]
+
+[ centerlabel :: [-> obj] [centerx [centeryX obj]] ]
+
+[ putlabelAbove :: [-> lbl z x ] [[shift z + (0cm,abovelabelmargin)] [centerxat lbl x]] ]
+[ putlabelBelow :: [-> lbl z x ] [[shift z + (0cm,~belowlabelmargin)] [centeryatX [centerxat lbl x] 1]] ]
+[ putlabelLeft :: [-> lbl z y ] [[shift z + (~leftrightlabelmargin,0cm)] [centeryatX [centerxat lbl 1] y]] ]
+[ putlabelRight :: [-> lbl z y ] [[shift z + (leftrightlabelmargin,0cm)] [centeryatX lbl y]] ]
+[ leftpointsign :: [-> obj n i str ] [[shift [leftpoint obj n i] + (~signmarginslide,~signmarginoffset)] [centerat [TeX [sprintf `$\scriptsize %%s$´ str]] (0,0)]] ]
+[ rightpointsign :: [-> obj n i str ] [[shift [rightpoint obj n i] + (signmarginslide,signmarginoffset)] [centerat [TeX [sprintf `$\scriptsize %%s$´ str]] (0,0)]] ]
+[ bottompointsign :: [-> obj n i str ] [[shift [bottompoint obj n i] + (signmarginoffset,~signmarginslide)] [centerat [TeX [sprintf `$\scriptsize %%s$´ str]] (0,0)]] ]
+[ toppointsign :: [-> obj n i str ] [[shift [toppoint obj n i] + (~signmarginoffset,signmarginslide)] [centerat [TeX [sprintf `$\scriptsize %%s$´ str]] (0,0)]] ]
+
+[ putblockOrigin :: [-> newBlock] {
+  [if implicitdraw
+    [draw newBlock]]
+  newBlock
+}]
+
+[ putblockLeft :: [-> newBlock oldBlock dist] {
+  [ res :: [[shift [leftpoint oldBlock 1 1]+(~dist,0)] [centerxat newBlock 1]] ]
+  [if implicitdraw
+    [draw res]]
+  res
+}]
+[ putblockNearLeft :: [-> newBlock oldBlock] [putblockLeft newBlock oldBlock blockspacenear] ]
+[ putblockFarLeft :: [-> newBlock oldBlock] [putblockLeft newBlock oldBlock blockspacefar] ]
+[ putblockVeryNearLeft :: [-> newBlock oldBlock] [putblockLeft newBlock oldBlock blockspaceverynear] ]
+[ putblockVeryFarLeft :: [-> newBlock oldBlock] [putblockLeft newBlock oldBlock blockspaceveryfar] ]
+
+[ putblockRight :: [-> newBlock oldBlock dist] {
+  [ res :: [[shift [rightpoint oldBlock 1 1]+(dist,0)] [centerxat newBlock ~1]] ]
+  [if implicitdraw
+    [draw res]]
+  res
+}]
+[ putblockNearRight :: [-> newBlock oldBlock] [putblockRight newBlock oldBlock blockspacenear] ]
+[ putblockFarRight :: [-> newBlock oldBlock] [putblockRight newBlock oldBlock blockspacefar] ]
+[ putblockVeryNearRight :: [-> newBlock oldBlock] [putblockRight newBlock oldBlock blockspaceverynear] ]
+[ putblockVeryFarRight :: [-> newBlock oldBlock] [putblockRight newBlock oldBlock blockspaceveryfar] ]
+
+[ putblockBelow :: [-> newBlock oldBlock dist] {
+  [ res :: [[shift [bottompoint oldBlock 1 1]+(0,~dist)] [centeryat newBlock 1]] ]
+  [if implicitdraw
+    [draw res]]
+  res
+}]
+[ putblockNearBelow :: [-> newBlock oldBlock] [putblockBelow newBlock oldBlock blockspacenear] ]
+[ putblockFarBelow :: [-> newBlock oldBlock] [putblockBelow newBlock oldBlock blockspacefar] ]
+[ putblockVeryNearBelow :: [-> newBlock oldBlock] [putblockBelow newBlock oldBlock blockspaceverynear] ]
+[ putblockVeryFarBelow :: [-> newBlock oldBlock] [putblockBelow newBlock oldBlock blockspaceveryfar] ]
+
+[ putblockAbove :: [-> newBlock oldBlock dist] {
+  [ res :: [[shift [toppoint oldBlock 1 1]+(0,dist)] [centeryat newBlock ~1]] ]
+  [if implicitdraw
+    [draw res]]
+  res
+}]
+[ putblockNearAbove :: [-> newBlock oldBlock] [putblockAbove newBlock oldBlock blockspacenear] ]
+[ putblockFarAbove :: [-> newBlock oldBlock] [putblockAbove newBlock oldBlock blockspacefar] ]
+[ putblockVeryNearAbove :: [-> newBlock oldBlock] [putblockAbove newBlock oldBlock blockspaceverynear] ]
+[ putblockVeryFarAbove :: [-> newBlock oldBlock] [putblockAbove newBlock oldBlock blockspaceveryfar] ]
+
+[circle ::
+ { [defaultunit 1%c]
+   [ p1cm :: (^)<(1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(~1cm,0cm)>(^)--(^)<(0cm,~1cm)>(^)--cycle ]
+   [-> r] [[scale r / 1cm] p1cm]
+ }
+]
+ 
+[ sizedblock :: [-> txt rx ry ]
+ { > <
+   [draw [centerlabel [textscaling txt]]]
+   [width blocklw]
+   [stroke (~rx,~ry)--(~rx,ry)--(rx,ry)--(rx,~ry)--cycle] }
+]
+
+[ longblock :: [-> txt] [sizedblock txt longblockrx longblockry] ]
+[ squareblock :: [-> txt] [sizedblock txt smallblockr smallblockr] ]
+[ fracblock :: [-> txt] [sizedblock txt longblockrx fracblockry] ]
+
+[ longenoughblock :: [-> txt] [sizedblock txt [max longblockrx 1mm+0.5*([xmax [bbox txt]]-[xmin [bbox txt]])] longblockry] ]
+[ longenoughfracblock :: [-> txt] [sizedblock txt [max longblockrx 1mm+0.5*([xmax [bbox txt]]-[xmin [bbox txt]])] fracblockry] ]
+
+[ roundblock :: [-> txt ]
+  { > <
+    [draw [centerat [textscaling txt] (0,0)]]
+    [width blocklw]
+    [stroke [circle smallblockr]] }
+]
+
+[ sumpicture :: [-> ] [roundblock [TeX `$\Sigma$´]] ]
+
+[ splitdot :: [-> ]{ > <
+  [nonstroking [STROKING]]
+  [fill [circle 2.5 * connectionlw]] }
+]
+
+[ termcircle :: [-> ]{ > <
+  [width connectionlw]
+  [stroke [circle 7 * connectionlw]] }
+]
+  
+[ pointpicture :: POINTPICTURE ] /* just an alias for backwards compatibility... */
+
+[ mspoint :: [-> pth mediation slide ] [point pth mediation * [abs pth] + slide] ]
+
+[ hhconnect :: [-> pa pb mediation slide ]
+  { [ mid :: [mediate mediation pa.x pb.x] + [if pb.x > pa.x 1 ~1] * slide ]
+    [ respath :: pa--( mid, pa.y )--( mid, pb.y )--pb ]
+    [if implicitdraw
+      {
+      [width connectionlw]
+      [drawarrow respath]
+      }]
+    respath
+  }
+]
+[ vvconnect :: [-> pa pb mediation slide ]
+  { [ mid :: [mediate mediation pa.y pb.y] + [if pb.y > pa.y 1 ~1 ] * slide ]
+    [ respath :: pa--( pa.x, mid )--( pb.x, mid )--pb ]
+    [if implicitdraw
+      {
+      [width connectionlw]
+      [drawarrow respath]
+      }]
+    respath
+  }
+]
+[ hvconnect :: [-> pa pb ]
+  { [ respath :: pa--( pb.x, pa.y )--pb ]
+    [if implicitdraw
+      {
+      [width connectionlw]
+      [drawarrow respath]
+      }]
+    respath
+  }
+]
+[ vhconnect :: [-> pa pb ]
+  { [ respath :: pa--( pa.x, pb.y )--pb ]
+    [if implicitdraw
+      {
+      [width connectionlw]
+      [drawarrow respath]
+      }]
+    respath
+  }
+]
+
+[ conlabel :: [-> shiftdir txt z ] [error `conlabel not implemented´] ]
+/*
+tmppic := shiftoffwlm( txt scaled textscale, shiftdir ) shifted z;
+    [if implicitdraw
+      [draw tmppic]]
+    tmppic
+    */
+
+[ leftpoint :: [-> pic n i ] {[bb :: [bbox pic]] ([xmin bb], [mediate i/(n+1) [ymin bb] [ymax bb]])} ]
+[ rightpoint :: [-> pic n i ] {[bb :: [bbox pic]] ([xmax bb], [mediate i/(n+1) [ymin bb] [ymax bb]])} ]
+[ bottompoint :: [-> pic n i ] {[bb :: [bbox pic]] ([mediate i/(n+1) [xmin bb] [xmax bb]], [ymin bb])} ]
+[ toppoint :: [-> pic n i ] {[bb :: [bbox pic]] ([mediate i/(n+1) [xmin bb] [xmax bb]], [ymax bb])} ]
+
+[ llconnect :: [-> pica picb slide ] { [z1::[leftpoint pica 1 1]] [z2::[leftpoint picb 1 1]] [hhconnect z1 z2 [if z1.x<z2.x 0 1] slide] } ]
+[ rrconnect :: [-> pica picb slide ] { [z1::[rightpoint pica 1 1]] [z2::[rightpoint picb 1 1]] [hhconnect z1 z2 [if z1.x>z2.x 0 1] slide] } ]
+[ bbconnect :: [-> pica picb slide ] { [z1::[bottompoint pica 1 1]] [z2::[bottompoint picb 1 1]] [vvconnect z1 z2 [if z1.x<z2.x 0 1] slide] } ]
+[ ttconnect :: [-> pica picb slide ] { [z1::[toppoint pica 1 1]] [z2::[toppoint picb 1 1]] [vvconnect z1 z2 [if z1.x>z2.x 0 1] slide] } ]
+
+[ lrconnect :: [-> pica picb ] [hhconnect [leftpoint pica 1 1] [rightpoint picb 1 1] 0.5 0cm] ]
+[ rlconnect :: [-> pica picb ] [hhconnect [rightpoint pica 1 1] [leftpoint picb 1 1] 0.5 0cm] ]
+[ btconnect :: [-> pica picb ] [vvconnect [bottompoint pica 1 1] [toppoint picb 1 1] 0.5 0cm] ]
+[ tbconnect :: [-> pica picb ] [vvconnect [toppoint pica 1 1] [bottompoint picb 1 1] 0.5 0cm] ]
+
+[ ltconnect :: [-> pica picb ] [hvconnect [leftpoint pica 1 1] [toppoint picb 1 1]] ]
+[ lbconnect :: [-> pica picb ] [hvconnect [leftpoint pica 1 1] [bottompoint picb 1 1]] ]
+[ rtconnect :: [-> pica picb ] [hvconnect [rightpoint pica 1 1] [toppoint picb 1 1]] ]
+[ rbconnect :: [-> pica picb ] [hvconnect [rightpoint pica 1 1] [bottompoint picb 1 1]] ]
+[ tlconnect :: [-> pica picb ] [vhconnect [toppoint pica 1 1] [leftpoint picb 1 1]] ]
+[ trconnect :: [-> pica picb ] [vhconnect [toppoint pica 1 1] [rightpoint picb 1 1]] ]
+[ blconnect :: [-> pica picb ] [vhconnect [bottompoint pica 1 1] [leftpoint picb 1 1]] ]
+[ brconnect :: [-> pica picb ] [vhconnect [bottompoint pica 1 1] [rightpoint picb 1 1]] ]
+
+[ connect :: [-> pica picb ]
+{ [ bba :: [bbox pica] ]
+  [ bbb :: [bbox picb] ]
+  [ rxa :: 0.5 * ( [xmax bba] - [xmin bba] ) ]
+  [ rxb :: 0.5 * ( [xmax bbb] - [xmin bbb] ) ]
+  [ rya :: 0.5 * ( [ymax bba] - [ymin bba] ) ]
+  [ ryb :: 0.5 * ( [ymax bbb] - [ymin bbb] ) ]
+  [ ca :: [discrete_mean bba] ]
+  [ cb :: [discrete_mean bbb] ]
+  [if ca.x < cb.x - ( rxa + rxb )
+      [if ca.y < cb.y - ( rya + ryb )
+      	[rbconnect pica picb]
+      elseif ca.y > cb.y + ( rya + ryb )
+	[rtconnect pica picb]
+	[rlconnect pica picb]
+      ]
+   elseif ca.x > cb.x + ( rxa + rxb )
+      [if ca.y < cb.y - ( rya + ryb )
+	[lbconnect pica picb]
+      elseif ca.y > cb.y + ( rya + ryb )
+	[ltconnect pica picb]
+	[lrconnect pica picb]
+      ]
+      [if ca.y < cb.y - ( rya + ryb )
+	[tbconnect pica picb]
+      elseif ca.y > cb.y + ( rya + ryb )
+	[btconnect pica picb]
+	[hvconnect ca cb]
+      ]
+    ]
+}]

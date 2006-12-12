@@ -1,0 +1,18 @@
+testline :: [-> z]
+  [stroke z--(z+(3cm,0cm))];
+evenly :: [dashpattern 3mm (3mm)];
+{
+  [width 2mm]
+  [cap CAP_BUTT]
+  [testline (0.5cm,0.3cm)]
+  [dash evenly]
+  [testline (0.5cm,0.8cm)]
+  [dash 1mm + evenly]
+  [testline (0.5cm,1.3cm)]
+  [dash (evenly*3)]
+  [testline (0.5cm,1.8cm)]
+  [dash (evenly*3)+1mm]
+  [testline (0.5cm,2.3cm)]
+  [dash (evenly+1mm)*3]
+  [testline (0.5cm,2.8cm)]
+}

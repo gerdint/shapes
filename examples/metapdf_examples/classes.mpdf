@@ -1,0 +1,48 @@
+/* This file shows some inheritance stuff...
+ */
+
+[ Bar ::
+  [class (`Bar´ _c) isa ((Object))
+   (__members__
+    (c _c)
+    (pr 69 p_set))
+   (__methods__
+    ([inc] [ c := c + 1 ])
+    ([disp] [show [sprintf `The value of pr is %%g´ pr]]))
+   (__protected__
+    ([apa] [self.Foo#crazy]))
+  ]
+]
+
+[ Foo ::
+  [class (`Foo´) isa ((Bar 0))
+    (__methods__
+     ([dispme] { [(#Bar).Bar#apa] [show (#Bar).pr] [(#Bar).Bar#disp] [(#).Bar#disp]}))
+    (__overrides< Bar >__
+     ([disp] [show `I override!´]))
+    (__methods__
+     ([crazy] [show `oalala´]))
+  ]
+]
+
+
+/* One important difference between Bar and Foo is that the latter may be a repeated base since its constructor takes no arguments */
+[show Bar]
+[show Foo]
+
+[ my :: [Foo.new] ]
+
+[show my]
+[my.Bar#disp]
+[my.Foo#dispme]
+
+[my.Bar#inc]
+[my.Bar#inc]
+[my.Bar#inc]
+[my.Bar#disp]
+
+[show my]
+
+
+/* Just draw anything to avoid empty-output error */
+[stroke (0cm,0cm)--(1cm,1cm)]

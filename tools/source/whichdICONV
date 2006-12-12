@@ -1,0 +1,16 @@
+#!/bin/bash
+ 
+if test -e /home/rt/tidefelt/sw/include/iconv.h
+then
+    echo -n -I/home/rt/tidefelt/sw/include/
+    if test -n "`grep 'The GNU LIBICONV Library is free software' /home/rt/tidefelt/sw/include/iconv.h`"
+    then
+	echo -n " " -DICONV_IS_POSIX
+    fi
+else
+    if test -n "`grep __restrict /usr/include/iconv.h`"
+    then
+	echo -n -DICONV_IS_POSIX
+    fi
+fi
+

@@ -1,0 +1,47 @@
+[defaultunit 0.4%D]
+
+[draw [TeX `Hello world!´]]
+
+[xyshift :: [-> dx dy ] [affinetransform 1 0 0 1 dx dy ]]
+[zshift :: [-> dxy ] [xyshift dxy*(1,0) dxy*(0,1)]]
+[rotation :: [-> a ] [affinetransform [cos a] [sin a] ~[sin a] [cos a] 0cm 0cm]]
+
+/*
+[show [clocktime]]
+[draw [[zshift (1cm,~0.5cm)][TeX [clocktime]]]]
+*/
+
+[o2 :: [TeX `This is MetaPDF´]]
+[tf :: [rotation ~30°]]
+[o3 :: [tf o2]]
+[stroking RGB_RED]
+[draw o3]
+[stroke [bbox o3]]
+[evenly :: [dashpattern 3mm (3mm)]]
+{
+  [stroking RGB_BLACK]
+  [dash evenly]
+  [width 0.5bp]
+  [stroke [tf [bbox o2]]]
+}
+
+[z1 :: [point [bbox o3] 0]]
+[z2 :: [point [bbox o3] 3]]
+[d1 :: [normalized z2 - z1]]
+[a1 :: [angle d1]]
+[a2 :: a1 - 90°]
+[d2 :: [dir a2]]
+
+[med :: [-> m x0 x1] (1-m) * x0 + m * x1]
+
+[pth :: z1>(^a1-90°)--(^)<([med 0.25 z1 z2] + d2*1mm)>(^a1)--(^a2-2)<([med 0.5 z1 z2] + d2*2mm)>(^a2+2)
+  --(^)<([med 0.75 z1 z2] + d2*1mm)>(^a1)--(^a1-90°)<z2]
+{
+  [stroking RGB_BLACK]
+  [width 0.3bp]
+  [stroke pth]
+}
+
+[centershift :: [-> pic] [[zshift ~ [discrete_mean [bbox pic]]] pic]]
+
+[draw [[zshift [point pth 2] + d2*2mm] [tf [centershift [TeX [sprintf `%%.2gcm´ [abs z2 - z1]/1cm]]]]]]

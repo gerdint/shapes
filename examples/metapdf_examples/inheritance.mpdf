@@ -1,0 +1,13 @@
+[show [Float.isa Object]]
+
+[show [[typeof 3.14].isa Float]]
+[show [[typeof 3.14].isa Object]]
+[show [[typeof 3.14].isa String]]
+
+[show [typeof RGB_RED].name]
+[show [typeof typeof].name]
+
+[show [[typeof typeof].isa Function]]
+
+/* Just draw anything to avoid empty-output error */
+[stroke (0cm,0cm)--(1cm,1cm)]

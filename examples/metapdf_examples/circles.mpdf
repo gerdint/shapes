@@ -1,0 +1,40 @@
+include basic.meta
+
+unit u :: 100bp;
+
+z0 :: (0u,0u);
+z1 :: (1u,1u);
+z2 :: (2u,0u);
+z3 :: (1u,(-1u));
+
+[defaultunit 1%C]
+
+p :: (^)<z0>(^90°)--(^)<z1>(^)--(^)<z2>(^)--(^)<z3>(^);
+p2 :: (3mm^)<z0>(3mm^90°)--(3mm^)<z1>(3mm^)--(3mm^)<z2>(3mm^)--(3mm^)<z3>(3mm^);
+
+rectangle :: [-> x1 y1 x2 y2 ] (x1,y1)--(x1,y2)--(x2,y2)--(x2,y1)--cycle;
+
+[draw [bboxed { > <
+      	        [stroke p]
+		}
+  [rectangle (-1u) (-2u) 3u 2u ]]]
+
+/*
+[draw [[xyshift 3u 0.3u]  grp]]
+*/
+
+dot :: [-> z] { [cap CAP_ROUND] [stroke z--z] };
+
+{
+  [stroking RGB_RED]
+  [dot (1u,0u)+1u*[dir 175°]]
+  [dot (1u,0u)+1u*[dir 170°]]
+  [dot (1u,0u)+1u*[dir 165°]]
+  [dot (1u,0u)+1u*[dir 160°]]
+  [dot (1u,0u)+1u*[dir 155°]]
+  [dot (1u,0u)+1u*[dir 150°]]
+  [dot (1u,0u)+1u*[dir 145°]]
+  [dot (1u,0u)+1u*[dir 140°]]
+  [dot (1u,0u)+1u*[dir 135°]]
+  [dot (1u,0u)+1u*[dir 130°]]
+}
