@@ -1,0 +1,23 @@
+CC = g++
+LD = g++
+AR = ld
+
+PROGRAM = fpdf
+OBJECTS = main.o simplepdfo.o /home/rt/tidefelt/source/miscfiles/autoonoff.o
+
+CFLAGS = -g -Wall
+ARFLAGS = -static
+INCS = -I/tidefelt/include -I/tidefelt/source/DTForth3 -I/tidefelt/sw/include
+LIBS = -L. -L/tidefelt/lib -lm -lc -ll -ldtforth
+
+all:$(PROGRAM)
+
+.cc.o :
+	$(CC) $(CFLAGS) -c  -o $@ $< $(INCS)
+
+$(PROGRAM):$(OBJECTS)
+	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJECTS) $(LIBS) $(INCS) 
+clean: 
+	rm -f *.o $(THELIB) $(PROGRAM) 
+install:
+	mv $(PROGRAM) /tidefelt/bin/

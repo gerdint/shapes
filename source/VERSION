@@ -1,0 +1,21 @@
+0.1
+The first line of this file shall be the current version string.
+
+  Version history
+===================
+
+
+====( 0.1 )====
+2006-12-12
+
+First named version.
+
+I'd say this is far too late for the introduction of a version number.  The reason not to make a named version has been that rather big changes in the language syntax have been expected.  However, these changes are still expected, but today I was really curious to know what binary I had installed, and this is what made me take this step.
+
+To give an idea of how long this project has been running I'll mention two things.  First, the initial import of the project into subversion dates back to 2005-09-23.  Second, there's now 395 kB of zipped source code for the compiler.  In addition, there are many examples and language extension files.
+
+There still not much at all of documentation.  Comments in the source are sparse, much too sparse.  A user's guide hsa been initiated, but the files have not yet entered the project repository.  There is no laguage definition either, but this is partly because the language is still expected to change substantially.
+
+A few words about testing:  The testing is without structure so far.  I generate examples to test the features I'm currently working on, but I do not generate tests that can be checked automatically.  This probably says something about the quality of this version.  That I plan automatize testing soon does not make this version better.
+
+The list of features that exist in this version is much too long for me to think of right now.  The first such a list I expect to create will be the user documentation, so until then the examples is as close as one gets.

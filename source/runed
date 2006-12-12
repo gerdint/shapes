@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in `grep -l makeBinding *.h *.cc`; do
+  echo Fixing $i
+  cat edprogram | ed -s $i
+done
