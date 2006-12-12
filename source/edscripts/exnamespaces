@@ -1,0 +1,4 @@
+":%s/\(\(::\)\{0,1\}MetaPDF::\)\{0,1\}Lang::Length/Lang::Length/g
+:%s! SEVERAL_TYPES! Interaction::SEVERAL_TYPES!g
+"
+:wq

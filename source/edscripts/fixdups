@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for i in `ls ../examples/*.drool ../examples/*.drext`; do
+  echo Fixing $i
+  cat $i | ./rmdupesc > tmp
+  mv tmp $i
+done

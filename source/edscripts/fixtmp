@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in `ls *.drool *.drext`; do
+  echo Fixing $i
+  cat /home/rt/tidefelt/svnco/metapdf/edscripts/edtmp | ed -s $i
+done
