@@ -231,9 +231,13 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define yywrap() 1
 #define YY_SKIP_YYWRAP
+
+#define FLEX_DEBUG
 typedef unsigned char YY_CHAR;
 #define yytext_ptr yytext
 #define YY_INTERACTIVE
+
+#define FLEX_DEBUG
 
 /* The must-not-be-called yyFlexLexer::yylex definition was removed by lexerfixer */
 
@@ -379,6 +383,13 @@ static yyconst short int yy_chk[190] =
        77,   77,   77,   77,   77,   77,   77,   77,   77
     } ;
 
+static yyconst short int yy_rule_linenum[23] =
+    {   0,
+       64,   70,   80,   90,   96,  135,  140,  145,  159,  245,
+      246,  247,  248,  249,  250,  251,  253,  254,  256,  260,
+      291,  293
+    } ;
+
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
  */
@@ -423,7 +434,7 @@ using namespace SimplePDF;
 */
 #define StringState 1
 
-#line 431 "lex.yy.cc"
+#line 442 "lex.yy.cc"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -553,7 +564,7 @@ YY_DECL
 #line 62 "pdfyylex.l"
 
 
-#line 561 "lex.yy.cc"
+#line 572 "lex.yy.cc"
 
 	if ( yy_init )
 		{
@@ -626,6 +637,20 @@ yy_find_action:
 
 do_action:	/* This label is used only to access EOF actions. */
 
+		if ( yy_flex_debug )
+			{
+			if ( yy_act == 0 )
+				cerr << "--scanner backing up\n";
+			else if ( yy_act < 23 )
+				cerr << "--accepting rule at line " << yy_rule_linenum[yy_act] <<
+				         "(\"" << yytext << "\")\n";
+			else if ( yy_act == 23 )
+				cerr << "--accepting default rule (\"" << yytext << "\")\n";
+			else if ( yy_act == 24 )
+				cerr << "--(end of buffer or a NUL)\n";
+			else
+				cerr << "--EOF (start condition " << YY_START << ")\n";
+			}
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
@@ -948,7 +973,7 @@ YY_RULE_SETUP
 #line 295 "pdfyylex.l"
 ECHO;
 	YY_BREAK
-#line 956 "lex.yy.cc"
+#line 981 "lex.yy.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(StringState):
 	yyterminate();

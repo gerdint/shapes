@@ -1,23 +1,23 @@
 CC = g++
 LD = g++
 AR = ar
-YACC = $(shell tools/source/whichYACC)
+YACC = $(shell ../tools/source/whichYACC)
 LEX = flex++
-LEXERFIXER = tools/source/lexerfixer
-LBLAS = $(shell tools/source/whichlBLAS)
-LLAPACK = $(shell tools/source/whichlLAPACK)
-ILAPACK := $(shell tools/source/whichiLAPACK)
-LICONV = $(shell tools/source/whichlICONV)
-DICONV = $(shell tools/source/whichdICONV)
+LEXERFIXER = ../tools/source/lexerfixer
+LBLAS = $(shell ../tools/source/whichlBLAS)
+LLAPACK = $(shell ../tools/source/whichlLAPACK)
+ILAPACK := $(shell ../tools/source/whichiLAPACK)
+LICONV = $(shell ../tools/source/whichlICONV)
+DICONV = $(shell ../tools/source/whichdICONV)
 DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
--D'VERSION_REVISION="$(shell svnversion -n)"' \
+-D'VERSION_REVISION="$(shell svnversion . -n)"' \
 -D'VERSION_NUMBER="$(shell cat VERSION | sed -e '2,$$ d')"'
 
-PROGRAM = drool
+PROGRAM = ../bin/drool
 OBJECTS = metapdfyylex.o \
 pdfstructure.o pdfscanner.o pdfyylex.o simplepdfo.o simplepdfi.o consts.o \
-tools/source/autoonoff.o \
-tools/source/physical.o \
+../tools/source/autoonoff.o \
+../tools/source/physical.o \
 continuations.o \
 gettypeid.o elementarytypes.o concretecolors.o facetnormals.o facettypes.o texttypes.o \
 pagecontentstates.o \
@@ -39,7 +39,7 @@ globals.o main.o
 FONTMETER = fontmeter
 FONTMETEROBJECTS = testers/fontmeter.o strrefdup.o fontmetrics.o afmscanner.o afmyylex.o
 
-NONCOMPILED := $(patsubst %.o,%.cc, $(filter-out tools/source/autoonoff.o $(wildcard *.o), $(OBJECTS) ) )
+NONCOMPILED := $(patsubst %.o,%.cc, $(filter-out ../tools/source/autoonoff.o $(wildcard *.o), $(OBJECTS) ) )
 BUTmetapdfvalue := $(filter-out metapdfvalue.o, $(OBJECTS) )
 
 
@@ -58,9 +58,9 @@ YACCFLAGS = -dvt
 ARFLAGS = -r
 
 # The order here is important in order for clapack.h to be taken from the framework in case it exists there,
-# and only otherwise from tools/include.
+# and only otherwise from ../tools/include.
 # $(ILAPACK) is no longer used since I use gsl instead.
-INCS = -Itools/include
+INCS = -I../tools/include
 
 LIBS = -lm -lc -ll -lz -lgsl $(LBLAS) $(LICONV)
 
@@ -101,7 +101,7 @@ clean:
 cleansome: 
 	rm -f metapdfyylex.cc $(BUTmetapdfvalue) $(THELIB) $(PROGRAM) 
 
-$(LEXERFIXER): tools/source/lexerfixer.l
+$(LEXERFIXER): ../tools/source/lexerfixer.l
 	flex $<
 	$(CC) $(CFLAGS) -o $@ lex.yy.c
 
@@ -110,7 +110,7 @@ gettypeid.o: classtree1.h classtree2.h
 # metapdfparser.o: metapdfast*.h
 metapdfyylex.cc: metapdfparser.tab.h
 
-tools/bin/unbalanced: tools/source/unbalanced.l
+tools/bin/unbalanced: ../tools/source/unbalanced.l
 	flex $<
 	$(CC) $(CFLAGS) -o $@ lex.yy.c
 
