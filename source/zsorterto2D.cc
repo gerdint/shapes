@@ -47,26 +47,169 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
       throw Exceptions::MiscellaneousRequirement( "Shadow lights cannot be used in a z-sorter." );
     }
 
-  size_t debugCounter = 0;
-
   // There is one queue per original object.  This structure will be where all the
   // triangles resides at the beginning of the treatment of each shadow light or the
   // view occlusion computation.
   //
   // We begin by initializing these queues.
-  std::list< std::list< Computation::ZBufTriangle > * > triangleLists;
+  typedef std::list< Computation::ZBufTriangle > CompoundObject;
+
+  // This variable is only used teporarily; in the end, it will be empty and
+  // there will be no pointers in it that needs to be freed.
+  const size_t pileSize = pile_->size( );
+  std::vector< CompoundObject * > triangleMem;
+  triangleMem.reserve( pileSize );
   {
     typedef typeof *pile_ PileType;
     for( PileType::const_iterator src = pile_->begin( ); src != pile_->end( ); ++src )
       {
 	std::list< Computation::ZBufTriangle > * triangleQueue = new std::list< Computation::ZBufTriangle >;
 	(*src)->push_zBufTriangles( tf, eyez, triangleQueue );
-	triangleLists.push_back( triangleQueue );
+	triangleMem.push_back( triangleQueue );
       }
   }
 
   // ==============================================
+  // When sorting the objects, each list of ZBufTriable objects is treated as a single object.
+  // I keep track of which objects an object has to be drawn after.  The objects that are not
+  // waiting for other objects to be drawn are kept in a special list.
+  // To do this efficiently, each object need to know how many objects it is waiting for to be 
+  // drawn.  It must also know what objects to update when it has been drawn.  An object is identified
+  // by the pointer to its list, so the additional information must be kept in a separate structure.
+  // As usual, objects are identified by their position in a memory vector.
+  // At this state, "to draw" an object means to place it in triangleLists.
+  std::list< CompoundObject * > triangleLists;
+  {
+    std::vector< size_t > waitCounters;
+    waitCounters.resize( pileSize, 0 );
+    std::vector< std::list< size_t > > waitingObjects;
+    waitingObjects.resize( pileSize );
 
+    // We begin by setting up waitingObjects and waitCounters.
+    // This involves testing each object against all other objects.
+    for( size_t i0 = 0; i0 < pileSize - 1; ++i0 )
+      {
+	CompoundObject * obj0 = triangleMem[ i0 ];
+	for( size_t i1 = i0 + 1; i1 < pileSize; ++i1 )
+	  {
+	    CompoundObject * obj1 = triangleMem[ i1 ];
+	    bool overlaps = false;
+	    {
+	      for( CompoundObject::const_iterator t0 = obj0->begin( ); t0 != obj0->end( ); ++t0 )
+		{
+		  for( CompoundObject::const_iterator t1 = obj1->begin( ); t1 != obj1->end( ); ++t1 )
+		    {
+		      if( t0->overlaps( *t1 ) )
+			{
+			  overlaps = true;
+			  goto foundOverlap;
+			}
+		    }
+		}
+	    }
+	  foundOverlap:
+	    if( overlaps )
+	      {
+		size_t iNormal = i0;
+		size_t iVertexes = i1;
+		bool ordered = false;
+		for( size_t doTwice = 0; doTwice < 2; ++doTwice, iNormal = i1, iVertexes = i0 )
+		  {
+		    const Computation::ZBufTriangle & planeObj = triangleMem[ iNormal ]->front( );
+		    const CompoundObject * vertexObj = triangleMem[ iVertexes ];
+		    
+		    // The following two variables are named with as if they belonged to the set of vertexes.
+		    bool allInFront = true;
+		    bool allBehind = true;
+		   
+		    for( CompoundObject::const_iterator j = vertexObj->begin( );
+			 j != vertexObj->end( ) && ( allInFront || allBehind ); ++j )
+		      {
+			typedef typeof j->points_ PointsType;
+			for( PointsType::const_iterator k = j->points_.begin( );
+			     k != j->points_.end( );
+			     ++k )
+			  {
+			    if( planeObj.isOnTopOfAt( *j, *k ) )
+			      {
+				// The plane is in front of the vertextes, so all vertexes are not in front.
+				allInFront = false;
+			      }
+			    else
+			      {
+				// Opposite situation.
+				allBehind = false;
+			      }
+			  }
+		      }
+ 
+		    if( allInFront )
+		      {
+			waitingObjects[ iNormal ].push_back( iVertexes );
+			++waitCounters[ iVertexes ];
+			ordered = true;
+			break;
+		      }
+		    if( allBehind )
+		      {
+			waitingObjects[ iVertexes ].push_back( iNormal );
+			++waitCounters[ iNormal ];
+			ordered = true;
+			break;
+		      }
+		  }
+
+		if( ! ordered )
+		  {
+		    throw Exceptions::MiscellaneousRequirement( "It is suspected that you placed intersecting objects in a z-sorter.  That's forbidden.  The z-buffer is the solution if you really need intersecting objects." );
+		  }
+
+	      }
+	  }
+      }
+
+    // Then the queue of objects to be "drawn" is initialized.
+    std::list< size_t > drawQueue;
+    {
+      std::vector< size_t >::iterator wi = waitCounters.begin( );
+      for( size_t i = 0; i < pileSize; ++i, ++wi )
+	{
+	  if( *wi == 0 )
+	    {
+	      drawQueue.push_back( i );
+	    }
+	}
+    }
+
+    size_t drawnCount = 0;
+    while( drawQueue.size( ) > 0 )
+      {
+	size_t i = drawQueue.front( );
+	drawQueue.pop_front( );
+	++drawnCount;
+
+	if( triangleMem[ i ] == 0 )
+	  {
+	    throw Exceptions::InternalError( "Attempt to draw an object again!" );
+	  }
+	triangleLists.push_back( triangleMem[ i ] );
+	triangleMem[ i ] = 0;
+
+	const std::list< size_t > & waitList = waitingObjects[ i ];
+	for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
+	  {
+	    --waitCounters[ *j ];
+	    if( waitCounters[ *j ] == 0 )
+	      {
+		drawQueue.push_back( *j );
+	      }
+	  }
+      }
+    if( drawnCount < pileSize )
+      {
+	throw Exceptions::MiscellaneousRequirement( "It is suspected that you placed objects with cyclic overlaps in a z-sorter.  That's forbidden.  The z-buffer is the solution if you really need cyclic overlaps." );
+      }
+  }
   // The sort goes here.
 
   // ==============================================

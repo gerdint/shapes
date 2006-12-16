@@ -47,17 +47,17 @@ jointThickness: 0.5u  |** Take this times two to obtain the total height.
 jointSurface:
     @nonstroking:[gray 0.8]
   & @reflections:0.3*[phong 25] + 0.7*[phong 0.5]
-  & @facetresolution:1u
+  & @facetresolution:0.5u
 
 
-zbuf: HotZBuf <<
+zbuf: HotZSorter <<
 
 jointSides: '15
 
-joint: jointSurface | ( Hot3D |** << [cylinderWall jointRadius 2*jointThickness jointSides]
+joint: jointSurface | ( Hot3D << [cylinderWall jointRadius 2*jointThickness jointSides]
                               << [cylinderLid jointRadius 0bp jointSides 0.3*jointRadius]
                               << [cylinderLid jointRadius 2*jointThickness jointSides 0.3*jointRadius]
-			      << @nonstroking:[gray 1] | [stroke (0cm,~0.5cm,~2.5*jointThickness)--(0cm,~0.5cm,4.5*jointThickness)]
+			      << @nonstroking:[gray 1] | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
                         )
 
 zbuf << [rotate3D (1,0,0) ~50°] [] joint

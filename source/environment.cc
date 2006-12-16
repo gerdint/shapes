@@ -395,6 +395,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "Hot2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
   selfDefine( "Hot3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
   selfDefine( "HotZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
+  selfDefine( "HotZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
   selfDefine( "HotString", Kernel::ValueRef( new Lang::HotDefault< Kernel::Warm_ostringstream > ) );
   selfDefine( "HotLights", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroupLights > ) );
   selfDefine( "HotTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
