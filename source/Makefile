@@ -27,7 +27,7 @@ lighttypes.o containertypes.o hottypes.o tagtypes.o metapdfvalue.o \
 metapdfscanner.o sourcelocation.o metapdfexceptions.o strrefdup.o \
 metapdfparser.o environment.o dynamicenvironment.o \
 metapdfcore.o coreelem.o coreconstruct.o corepoint.o corepath.o coremisc.o coredraw.o corestate.o \
-angleselect.o texlabelmanager.o specialunits.o trianglefunctions.o \
+angleselect.o texlabelmanager.o specialunits.o trianglefunctions.o basicsimplex.o \
 computeelementarypath.o \
 zbuftriangle.o zbufline.o zbufto2D.o zbufinternals.o zsorterto2D.o \
 metapdfast.o metapdfastfun.o metapdfastvalues.o metapdfastvar.o metapdfastexpr.o \

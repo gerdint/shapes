@@ -128,6 +128,7 @@ namespace MetaPDF
       Concrete::Length zAt( const Concrete::Coords2D & p ) const;
       bool isOnTopOfAt( const Computation::ZBufTriangle & other, const Concrete::Coords2D & p ) const;
       bool overlaps( const ZBufTriangle & other ) const;
+      bool overlaps( const ZBufTriangle & other, Concrete::Coords2D * commonPoint, Concrete::Length tol ) const; // tol shall be positive, and gives the smallest acceptable distance from commonPoint to the intersection boundary.
       bool contains( const Concrete::Coords2D & p ) const;
       bool contains( const Concrete::Coords2D & p, Concrete::Length tol ) const;
       static void splice( const ZBufTriangle & tOld, const ZBufTriangle & tNew, std::list< Computation::ZBufTriangle > * oldDisjointTriangles, std::list< Computation::ZBufTriangle > * oldOccludedTriangles, std::list< Computation::ZBufTriangle > * newDisjointTriangles, std::list< Computation::ZBufTriangle > * newOccludedTriangles, std::list< Computation::ZBufTriangle > * triangleQueue );

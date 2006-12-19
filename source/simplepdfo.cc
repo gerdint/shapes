@@ -46,7 +46,7 @@ PDF_Resources::writeTo( std::ostream & os ) const
     }
   if( procSetsVector->vec.size( ) > 0 )
     {
-      dic[ "ProcSet" ] = MetaPDF::Kernel::the_pdfo->indirect( procSetsVector );
+      dic[ "ProcSet" ] = procSetsVector;
     }
   if( shadings->dic.size( ) > 0 )
     {

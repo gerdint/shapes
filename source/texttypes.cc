@@ -1795,7 +1795,6 @@ Kernel::TextState::synchFontAndSize( std::ostream & os, const Kernel::TextState 
 	}
       font_ = ref->font_;
       size_ = ref->size_;
-      std::cerr << "Resource being used: " << resources << std::endl ;
       os << resources->nameofFont( font_->resource( ) ) << " " << Concrete::Length::offtype( size_ ) << " Tf " ;
       return true;
     }

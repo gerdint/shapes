@@ -1,6 +1,8 @@
 #ifndef MetaPDF_Computation_decls_h
 #define MetaPDF_Computation_decls_h
 
+#include <cstddef> // For size_t
+
 namespace MetaPDF
 {
   namespace Computation
@@ -16,6 +18,7 @@ namespace MetaPDF
 
     class FacetInterpolatorGray;
 
+    class BasicSimplex;
   }
 }
 

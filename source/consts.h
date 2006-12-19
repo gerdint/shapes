@@ -6,7 +6,7 @@
 #include "elementarylength.h"
 
 #include "refcount.h"
-#include <iostream> /* for size_t...  Why do I need to do this? */
+#include <cstddef> // For size_t.
 
 
 

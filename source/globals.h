@@ -42,7 +42,7 @@ namespace MetaPDF
     extern Concrete::Length theTrixelizeOverlapTol;
     extern RefCountPtr< const Computation::PaintedPolygon3D > THE_NULL_POLYGON3D;
     extern bool fontMetricGuessIsError;
-
+    extern Computation::BasicSimplex theTwoTriangleSimplex;
   }
 
   namespace Kernel

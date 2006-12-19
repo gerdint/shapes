@@ -189,7 +189,6 @@ Computation::ZBufTriangle::overlaps( const Computation::ZBufTriangle & other ) c
   return true;
 }
 
-
 // To be consistent with the tolerance interpretation in ZBufTriangle::overlaps, which returns true only if the triangles
 // overlaps by some positive amount, this function shall rather return false than true.
 // This means that we should prefer not to unflag allOutside.
@@ -255,6 +254,43 @@ Computation::ZBufTriangle::oneWayOverlap( const std::vector< Concrete::Coords2D 
    */
   return true;
 }
+
+// tol shall be positive, and gives the smallest acceptable distance from commonPoint to the intersection boundary.
+bool
+Computation::ZBufTriangle::overlaps( const ZBufTriangle & other, Concrete::Coords2D * commonPoint, Concrete::Length tol ) const
+{
+  // We set up a linear program, and use simplex to solve it.
+
+  // The linear program is to maximize the distance from the common point to the intersection boundary,
+  // and if the distance becomes greater than tol during the search, we're happy without locating the optimum.
+
+  static double c[ 3 ] = { 0, 0, 1 };
+  static double a[ 18 ] = { 0, 0, 0,
+			    0, 0, 0,
+			    0, 0, 0,
+			    0, 0, 0,
+			    0, 0, 0,
+			    0, 0, 0 };
+  static double b[ 6 ];
+  static double x[ 3 ];
+
+  Concrete::Length xmin = HUGE_VAL;
+  Concrete::Length ymin = HUGE_VAL;
+
+  throw Exceptions::NotImplemented( "overlaps with linear program" );
+
+  double optRes;
+  bool res = Computation::theTwoTriangleSimplex::maximize( & x,
+							   & optRes, tol,
+							   c, a, b );
+  
+  commonPoint->x = xmin + Concrete::Length( x[ 0 ] );
+  commonPoint->x = ymin + Concrete::Length( x[ 1 ] );
+
+  return res;
+}
+
+
 
 std::ostream &
 Computation::operator << ( std::ostream & os, const Computation::ZBufTriangle & self )
