@@ -12,7 +12,7 @@
 xText: bannerWidth - ( squareSpace + squareSide + textXSpace )
 
 @<< @nonstroking:lightGray | [fill backgroundRectangle]
-@<< [shift (bannerWidth-(squareSide+squareSpace),0)] [] squareLogo
+@<< [shift (bannerWidth-(squareSide+squareSpace),0)] [] [squareLogo]
 
 @<< [shift (xText,[yText 0])] [] [centerxat line0 1]
 @<< [shift (xText,[yText 1])] [] [centerxat line1 1]

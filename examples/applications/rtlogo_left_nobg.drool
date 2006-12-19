@@ -16,7 +16,7 @@ xText: ( squareSpace + squareSide + textXSpace )
 |** We set the size of the banner simply by drawing a "nothing" with the desired bounding box.
 @<< [bboxed NULL backgroundRectangle]
 
-@<< [shift ((squareSpace),0)] [] squareLogo
+@<< [shift ((squareSpace),0)] [] [squareLogo]
 
 @<< [shift (xText,[yText 0])] [] line0
 @<< [shift (xText,[yText 1])] [] line1

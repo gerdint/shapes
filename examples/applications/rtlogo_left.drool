@@ -12,7 +12,7 @@
 xText: ( squareSpace + squareSide + textXSpace )
 
 @<< @nonstroking:lightGray | [fill backgroundRectangle]
-@<< [shift ((squareSpace),0)] [] squareLogo
+@<< [shift ((squareSpace),0)] [] (@RT_AT_LIU:true | [squareLogo])
 
 @<< [shift (xText,[yText 0])] [] line0
 @<< [shift (xText,[yText 1])] [] line1

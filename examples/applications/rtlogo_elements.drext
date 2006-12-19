@@ -84,6 +84,20 @@ golden: ( 1 + [sqrt 5] ) / 2
 |** <makeRegulator> does not specify any colors; both stroking and non-stroking
 |** colors are taken from the dynamic environment.
 
+|** The following is not official.
+#needs centering
+dynamic @RT_AT_LIU I false
+liuLogo: \ r .>
+{
+  tmp: [import `LiU_staende_neg.pdf´] [] '0
+  bb: [bbox tmp]
+  r0: 0.5 * ( [xmax bb] - [xmin bb] )
+  |** The bounding box is a little bit too large, but the following is just chosen to make the result look good.
+  [scale 1.35] []
+    [clip [shift (0,r)] [] [centerat [[scale r/r0] tmp] (0,1)]
+          [rectangle (~r,~r) (r,r)]]
+}
+
 makeRegulator: \ .>
 (
 @cap:CAP_BUTT &
@@ -121,22 +135,28 @@ makeRegulator: \ .>
     r1: r2 / golden
 
     |** Next, we have two symmetric arms to draw, and we define one of them in <oneArm>.
-    oneArm:
+
+    |** They're not really symmetric when the LiU logo is used...    
+    |** This is the path that describes both parts of the arm, starting at the hinge.
+    armPth: (0,yTop)--(+(l1*[sin a],~l1*[cos a]))--(+(~l2*[sin a],~l2*[cos a]))
+
+    oneArm: \ armPth .>
       {
-        |** This is the path that describes both parts of the arm, starting at the hinge.
-        armPth: (0,yTop)--(+(l1*[sin a],~l1*[cos a]))--(+(~l2*[sin a],~l2*[cos a]))
 
 	|** This piece of graphics is now composing the stroked path with one circle
 	|** for the joint, and another circle for the weight.  The locations for the circles
 	|** are specified by counting "control points" along the path.
         ( Hot2D << @width:w2 | [stroke armPth]
                 << [fill [shift [armPth 1].p] [] [circle r1]]
-                << [fill [shift [armPth 2].p] [] [circle r3]]
+                << [shift [armPth 2].p] []
+ 		          [if @RT_AT_LIU
+			      [rotate [angle [armPth 1.5].rT] - 90°][][liuLogo r3]
+			      [fill [circle r3]]]
 	         )
       }
 
     |** Now we draw <oneArm> and its mirror image.
-    @<< oneArm << [scale x:~1] [] oneArm
+    @<< [oneArm armPth] << [oneArm [scale x:~1] [] armPth]
 
     |** Draw the hinge.
     @<< fill [] [shift (0,yTop)] [] [circle r2]
@@ -171,7 +191,8 @@ makeRegulator: \ .>
 |**
 |** All the lengths use here are specified relative to <r>.
 
-squareLogo:
+|** It's a function, so that the value of @RT_AT_LIU affects the result
+squareLogo: \ .>
 [shift (1r,0)] []
 {
   |** res is the variable to hold the image we're building up.
@@ -252,6 +273,7 @@ line2: [bboxed theFont | ( HotText << [kerning [kern `LINK´] kernKO [kern `ÖPI
 |** The following was copied from the file I call centering.drext.
 |** The function centerxat is used to position text to the right of a given point.
 
+/**
 xmax: \ p .> [continuous_maximizer p (1,0)].p.x
 xmin: \ p .> [continuous_maximizer p (~1,0)].p.x
 ymax: \ p .> [continuous_maximizer p (0,1)].p.y
@@ -264,7 +286,7 @@ centerxat: \ obj x .>
   	    0cm )]
    obj]
  }
-
+**/
 
 |***************************************************************************
 |** That's it!  This is the end of the file.
