@@ -146,7 +146,7 @@ makeRegulator: \ .>
 	|** This piece of graphics is now composing the stroked path with one circle
 	|** for the joint, and another circle for the weight.  The locations for the circles
 	|** are specified by counting "control points" along the path.
-        ( Hot2D << @width:w2 | [stroke armPth]
+        ( Hot2D << @width:w2 | [stroke armPth.begin--(armPth.end-0.45*r3)]
                 << [fill [shift [armPth 1].p] [] [circle r1]]
                 << [shift [armPth 2].p] []
  		          [if @RT_AT_LIU
