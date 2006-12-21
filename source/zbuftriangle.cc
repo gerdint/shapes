@@ -12,6 +12,7 @@
 #include "shadingtypes.h"
 #include "globals.h"
 #include "trianglefunctions.h"
+#include "basicsimplex.h"
 
 #include <ctype.h>
 #include <list>
@@ -265,31 +266,99 @@ Computation::ZBufTriangle::overlaps( const ZBufTriangle & other, Concrete::Coord
   // and if the distance becomes greater than tol during the search, we're happy without locating the optimum.
 
   static double c[ 3 ] = { 0, 0, 1 };
-  static double a[ 18 ] = { 0, 0, 0,
-			    0, 0, 0,
-			    0, 0, 0,
-			    0, 0, 0,
-			    0, 0, 0,
-			    0, 0, 0 };
+  static double a[ 18 ] = { 0, 0, 1,
+			    0, 0, 1,
+			    0, 0, 1,
+			    0, 0, 1,
+			    0, 0, 1,
+			    0, 0, 1 };
   static double b[ 6 ];
   static double x[ 3 ];
 
   Concrete::Length xmin = HUGE_VAL;
   Concrete::Length ymin = HUGE_VAL;
 
-  throw Exceptions::NotImplemented( "overlaps with linear program" );
+  typedef typeof points_ ListType;
+  for( ListType::const_iterator i = points_.begin( ); i != points_.end( ); ++i )
+    {
+      xmin = std::min( xmin, i->x_ );
+      ymin = std::min( ymin, i->y_ );
+    }
+  for( ListType::const_iterator i = other.points_.begin( ); i != other.points_.end( ); ++i )
+    {
+      xmin = std::min( xmin, i->x_ );
+      ymin = std::min( ymin, i->y_ );
+    }
+  Concrete::Coords2D llCorner( xmin, ymin );
+
+  addTriangleConstraints( llCorner, & a[ 0 ], & b[ 0 ] );
+  other.addTriangleConstraints( llCorner, & a[ 9 ], & b[ 3 ] );
+
+  // bShift is the amount _added_ to the right hand side in order to make the initial point feasible.
+  // It is computed via its additive inverse, and then the sign is changed.
+  // (The initial point will be feasible if the right hand side has no negative elements.)
+  double bShift = b[ 0 ];
+  for( const double * src = & b[ 1 ]; src != b + 6; ++src )
+    {
+      bShift = std::min( bShift, *src );
+    }
+  bShift = - bShift;
+
+  for( double * dst = & b[ 0 ]; dst != b + 6; ++dst )
+    {
+      *dst += bShift;
+    }
+
 
   double optRes;
-  bool res = Computation::theTwoTriangleSimplex::maximize( & x,
-							   & optRes, tol,
-							   c, a, b );
+  bool res = Computation::theTwoTriangleSimplex.maximize( & x[0],
+							  & optRes, static_cast< double >( Concrete::Length::offtype( tol ) ) + bShift,
+							  & c[0], & a[0], & b[0] );
   
-  commonPoint->x = xmin + Concrete::Length( x[ 0 ] );
-  commonPoint->x = ymin + Concrete::Length( x[ 1 ] );
+  if( optRes < bShift )
+    {
+      std::cerr << "Simplex couldn't find a truly feasible point: " << optRes << " < " << bShift << std::endl ;
+    }
+
+  commonPoint->x_ = xmin + Concrete::Length( x[ 0 ] );
+  commonPoint->y_ = ymin + Concrete::Length( x[ 1 ] );
 
   return res;
 }
 
+
+void
+Computation::ZBufTriangle::addTriangleConstraints( Concrete::Coords2D llCorner, double * a, double * b ) const
+{
+  typedef typeof points_ ListType;
+  ListType::const_iterator i0 = points_.begin( );
+  ListType::const_iterator i1 = i0;
+  ++i1;
+  ListType::const_iterator i2 = i1;
+  ++i2;
+  
+  // Note that a is increased by 3 since one position holds a constant 1.
+  for( ; i0 != points_.end( ); i1 = i2, i2 = i0, ++i0, a += 3, ++b )
+    {
+      // It's important that the normal be normalized, for otherwise the interpretation of the common slack (the third variable) will be wrong.
+      Concrete::UnitFloatPair n = i0->normalizedOrthogonal( *i1 );
+
+      if( Concrete::inner( n, *i2 - *i0 ) < 0 )
+	{
+	  // The normal points out.
+	  *a = n.x_;
+	  *(a+1) = n.y_;
+	  *b = Concrete::Length::offtype( Concrete::inner( n, *i0 - llCorner ) );
+	}
+      else
+	{
+	  // The normal points in -- reverse everything.
+	  *a = - n.x_;
+	  *(a+1) = - n.y_;
+	  *b = - Concrete::Length::offtype( Concrete::inner( n, *i0 - llCorner ) );
+	}
+    }
+}
 
 
 std::ostream &

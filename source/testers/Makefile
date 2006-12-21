@@ -7,9 +7,9 @@ simplex.o
 
 CFLAGS = -Wall -Wsynth -g
 
-INCS = -I../../tools/include
+INCS = -I../../tools/include -I/home/rt/tidefelt/source/DTForth3 -I/home/rt/tidefelt/include
 
-LIBS = -lm -lc -ll
+LIBS = -lm -lc -ll -L/home/rt/tidefelt/lib -ldtforth
 
 all:simplex
 

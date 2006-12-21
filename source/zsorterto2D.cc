@@ -101,70 +101,29 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 		    {
 		      if( t0->overlaps( *t1 ) )
 			{
-			  overlaps = true;
+			  Concrete::Coords2D commonPoint( 0, 0 );
+			  if( ! t0->overlaps( *t1, & commonPoint, Computation::theTrixelizeOverlapTol ) )
+			    {
+			      // Too little overlap.
+			      continue;
+			    }
+			  if( t0->isOnTopOfAt( *t1, commonPoint ) )
+			    {
+			      waitingObjects[ i1 ].push_back( i0 );
+			      ++waitCounters[ i0 ];
+			    }
+			  else
+			    {
+			      waitingObjects[ i0 ].push_back( i1 );
+			      ++waitCounters[ i1 ];
+			    }
 			  goto foundOverlap;
 			}
 		    }
 		}
 	    }
 	  foundOverlap:
-	    if( overlaps )
-	      {
-		size_t iNormal = i0;
-		size_t iVertexes = i1;
-		bool ordered = false;
-		for( size_t doTwice = 0; doTwice < 2; ++doTwice, iNormal = i1, iVertexes = i0 )
-		  {
-		    const Computation::ZBufTriangle & planeObj = triangleMem[ iNormal ]->front( );
-		    const CompoundObject * vertexObj = triangleMem[ iVertexes ];
-		    
-		    // The following two variables are named with as if they belonged to the set of vertexes.
-		    bool allInFront = true;
-		    bool allBehind = true;
-		   
-		    for( CompoundObject::const_iterator j = vertexObj->begin( );
-			 j != vertexObj->end( ) && ( allInFront || allBehind ); ++j )
-		      {
-			typedef typeof j->points_ PointsType;
-			for( PointsType::const_iterator k = j->points_.begin( );
-			     k != j->points_.end( );
-			     ++k )
-			  {
-			    if( planeObj.isOnTopOfAt( *j, *k ) )
-			      {
-				// The plane is in front of the vertextes, so all vertexes are not in front.
-				allInFront = false;
-			      }
-			    else
-			      {
-				// Opposite situation.
-				allBehind = false;
-			      }
-			  }
-		      }
- 
-		    if( allInFront )
-		      {
-			waitingObjects[ iNormal ].push_back( iVertexes );
-			++waitCounters[ iVertexes ];
-			ordered = true;
-			break;
-		      }
-		    if( allBehind )
-		      {
-			waitingObjects[ iVertexes ].push_back( iNormal );
-			++waitCounters[ iNormal ];
-			ordered = true;
-			break;
-		      }
-		  }
-
-		if( ! ordered )
-		  {
-		    throw Exceptions::MiscellaneousRequirement( "It is suspected that you placed intersecting objects in a z-sorter.  That's forbidden.  The z-buffer is the solution if you really need intersecting objects." );
-		  }
-
-	      }
+	    overlaps = overlaps; // A no-op to jump to.
 	  }
       }
 

@@ -136,6 +136,9 @@ namespace MetaPDF
       RefCountPtr< const Lang::Drawable2D > debugFrame( ) const;
       void pushLines( std::vector< Computation::SplicingLine > * dst ) const;
       void pushIntersection( std::vector< Computation::SplicingLine > * dst, const Computation::ZBufTriangle & other ) const;
+      
+      void addTriangleConstraints( Concrete::Coords2D llCorner, double * a, double * b ) const; // To be used by overlaps.
+
     private:
       static bool oneWayOverlap( const std::vector< Concrete::Coords2D > & poly1, const std::vector< Concrete::Coords2D > & poly2 );
       void pushIfUnique( std::vector< Computation::SplicingLine > * dst, const Concrete::Coords3D p0, const Concrete::Coords3D p1, bool isTriangleSide = true ) const;

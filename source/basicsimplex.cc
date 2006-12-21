@@ -50,6 +50,8 @@ Computation::BasicSimplex::minimize( double * xdst,
 {
   // Setup extended formulation with equality constraints and slack variables:
   
+  bool infeasibleStart = false;
+
   {
     // Initialize c;
     double * end = c_ + nVars_;
@@ -59,14 +61,14 @@ Computation::BasicSimplex::minimize( double * xdst,
       {
 	for( ; dst != end; ++dst, ++src )
 	  {
-	    *dst = - *src;
+	    *dst = *src;
 	  }
       }
     else
       {
 	for( ; dst != end; ++dst, ++src )
 	  {
-	    *dst = *src;
+	    *dst = - *src;
 	  }
       }
     end += nEqns_;
@@ -93,6 +95,10 @@ Computation::BasicSimplex::minimize( double * xdst,
     for( size_t eq = 0; eq < nEqns_; ++eq, ++srcb, ++dstb )
       {
 	*dstb = *srcb;
+	if( *dstb < 0 )
+	  {
+	    infeasibleStart = true;
+	  }
 
 	double * dst = a_ + eq * ( nExt_ );
 	const double * src = a + eq * nVars_;
@@ -117,11 +123,65 @@ Computation::BasicSimplex::minimize( double * xdst,
       }
   }
 
+  double objective;
+  if( infeasibleStart )
+    {
+      if( phaseOne( ) )
+	{
+	  objective = phaseTwo( xdst, objGoal );
+	}
+      else
+	{
+	  objective = HUGE_VAL;
+	}
+    }
+  else
+    {
+      objective = phaseTwo( xdst, objGoal );
+    }
+
+  if( changeSign )
+    {
+      *objdst = - objective;
+    }
+  else
+    {
+      *objdst = objective;
+    }
+  return objective < objGoal;
+}
+
+
+bool
+Computation::BasicSimplex::maximize( double * xdst,
+				     double * objdst, double objGoal,
+				     const double * c, const double * a, const double * b ) const
+{
+  return minimize( xdst,
+		   objdst, -objGoal,
+		   c, a, b,
+		   true );
+}
+
+
+// Function to compute a feasible tableau.
+bool
+Computation::BasicSimplex::phaseOne( ) const
+{
+  std::cerr << "Simple phase one is not implemented!" << std::endl ;
+  exit( 1 );
+}
+
+// Function for minimizing given a feasible initial tableau.
+double
+Computation::BasicSimplex::phaseTwo( double * xdst, double objGoal ) const
+{
   double objective = 0;
 
   while( true )
     {
 
+      if( false )
       {
 	// Debug print.
 	std::cerr << "Simplex tableau:" << std::endl ;
@@ -345,25 +405,5 @@ Computation::BasicSimplex::minimize( double * xdst,
 	  }
       }
   }
-  if( changeSign )
-    {
-      *objdst = - objective;
-    }
-  else
-    {
-      *objdst = objective;
-    }
-  return objective < objGoal;
-}
-
-
-bool
-Computation::BasicSimplex::maximize( double * xdst,
-				     double * objdst, double objGoal,
-				     const double * c, const double * a, const double * b ) const
-{
-  return minimize( xdst,
-		   objdst, -objGoal,
-		   c, a, b,
-		   true );
+  return objective;
 }

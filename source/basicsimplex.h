@@ -36,6 +36,10 @@ namespace MetaPDF
       bool maximize( double * xdst,
 		     double * objdst, double objGoal,
 		     const double * c, const double * a, const double * b ) const;
+
+    protected:
+      bool phaseOne( ) const;
+      double phaseTwo( double * xdst, double objGoal ) const;
     };
   }
 }
