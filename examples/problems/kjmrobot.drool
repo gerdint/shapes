@@ -54,17 +54,37 @@ zbuf: HotZSorter <<
 
 jointSides: '15
 
-joint: jointSurface | ( Hot3D << [cylinderWall jointRadius 2*jointThickness jointSides]
-                              << [cylinderLid jointRadius 0bp jointSides 0.3*jointRadius]
-                              << [cylinderLid jointRadius 2*jointThickness jointSides 0.3*jointRadius]
-			      << @nonstroking:[gray 1] | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
-                        )
+joint: [rotate3D (1,0,0) ~90°] []
+         ( jointSurface | ( Hot3D << [cylinderWall jointRadius 2*jointThickness jointSides]
+                                  << [cylinderLid jointRadius 0bp jointSides 0.3*jointRadius]
+                                  << [cylinderLid jointRadius 2*jointThickness jointSides 0.3*jointRadius]
+		     	          << @stroking:[gray 1] | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
+                            ) )
 
-zbuf << [rotate3D (1,0,0) ~50°] [] joint
+|** Numbers seen in figure:
+a0: 5u
+alpha0: 15°
+a1: 6.5u
+theta1: 25°
+alpha1: 0°
+
+/** Setup frames according to figure.  The tf_a transforms define the frame after a joint,
+ ** and the tf_b transforms define the frame just before the next joint.  The difference between
+ ** adjacent tf_b and tf_a is thus a shift in the y-direction and a rotation about the y-axis.
+ **/
+tf0a: [rotate3D (1,0,0) 15°] * [rotate3D (0,1,0) ~5°]
+tf0b: tf0a * [shift (a0,0u,0u)] * [rotate3D (1,0,0) alpha0]
+tf1a: tf0b * [shift (0u,2*jointThickness+0.1u,0u)] * [rotate3D (0,1,0) theta1]
+tf1b: tf1a * [shift (a1,0u,0u)] * [rotate3D (1,0,0) alpha1]
+
+zbuf << tf0a [] joint
+zbuf << tf0b [] joint
+zbuf << tf1a [] joint
+zbuf << tf1b [] joint
 
 zbuf << [shift (0cm,0cm,10cm)] [] [specular_light [gray 0.9]]
 zbuf << [ambient_light [gray 0.3]]
 zbuf;
 
 @<< @nonstroking:RGB_GREEN | [fill [rectangle (~3u,~3u) (3u,3u)]]
-@<< @eyez:25u|[view zbuf]
+@<< @eyez:40u|[view zbuf]
