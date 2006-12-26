@@ -169,9 +169,6 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	throw Exceptions::MiscellaneousRequirement( "It is suspected that you placed objects with cyclic overlaps in a z-sorter.  That's forbidden.  The z-buffer is the solution if you really need cyclic overlaps." );
       }
   }
-  // The sort goes here.
-
-  // ==============================================
 
   
   // It is now time to take care of the lines.

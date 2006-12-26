@@ -29,9 +29,13 @@ cylinderWall: \ radius height sides .>
 }
 
 polyDisc: \ radius sides .>
- [[range '0 sides-'1].foldl
-  \ pile e .>  pile--( radius * [dir (360°/sides) * e] )
-  EMPTYPATH2D]--cycle
+{
+  deltaAngle: 360° / sides
+  r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
+  [[range '0 sides-'1].foldl
+   \ pile e .>  pile--( r * [dir deltaAngle * e] )
+   EMPTYPATH2D]--cycle
+}
 
 cylinderLid: \ radius height sides smallRadius .>
 {
@@ -52,13 +56,13 @@ jointSurface:
 
 zbuf: HotZSorter <<
 
-jointSides: '15
+jointSides: '5
 
 joint: [rotate3D (1,0,0) ~90°] []
          ( jointSurface | ( Hot3D << [cylinderWall jointRadius 2*jointThickness jointSides]
                                   << [cylinderLid jointRadius 0bp jointSides 0.3*jointRadius]
                                   << [cylinderLid jointRadius 2*jointThickness jointSides 0.3*jointRadius]
-		     	          << @stroking:[gray 1] | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
+		     	          << @stroking:RGB_RED | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
                             ) )
 
 |** Numbers seen in figure:

@@ -131,19 +131,20 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
     Concrete::UnitFloatPair normal = p0_.normalizedOrthogonal( p1_ );
 
     Concrete::Length l0 = Concrete::inner( other.points_[ 0 ], normal );
-    if( l0 < -Computation::theTrixelizeOverlapTol )
+    Concrete::Length m = Concrete::inner( p0_, normal );
+    if( l0 < m - Computation::theTrixelizeOverlapTol )
       {
-	if( Concrete::inner( other.points_[ 1 ], normal ) < - Computation::theTrixelizeOverlapTol &&
-	    Concrete::inner( other.points_[ 2 ], normal ) < - Computation::theTrixelizeOverlapTol )
+	if( Concrete::inner( other.points_[ 1 ], normal ) < m - Computation::theTrixelizeOverlapTol &&
+	    Concrete::inner( other.points_[ 2 ], normal ) < m - Computation::theTrixelizeOverlapTol )
 	  {
 	    return false;
 	  }
       }
     
-    if( l0 > Computation::theTrixelizeOverlapTol )
+    if( l0 > m + Computation::theTrixelizeOverlapTol )
       {
-	if( Concrete::inner( other.points_[ 1 ], normal ) > Computation::theTrixelizeOverlapTol &&
-	    Concrete::inner( other.points_[ 2 ], normal ) > Computation::theTrixelizeOverlapTol )
+	if( Concrete::inner( other.points_[ 1 ], normal ) > m + Computation::theTrixelizeOverlapTol &&
+	    Concrete::inner( other.points_[ 2 ], normal ) > m + Computation::theTrixelizeOverlapTol )
 	  {
 	    return false;
 	  }
@@ -405,9 +406,16 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 	}
     }
 
+  if( tIn > tOut )
+    {
+      // This means that the line is enclosed in the triangle.
+      tIn = -HUGE_VAL;
+      tOut = HUGE_VAL;
+    }
+
   {
     // We now compute the intersection of the triangle and the line.
-    // It is no harm to add this point whether or not if lies inside the triangle,
+    // It is no harm to add this point whether or not it lies inside the triangle,
     // since the processing below will join adjacent segments that are visible.
 
     try
