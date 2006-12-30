@@ -56,7 +56,7 @@ jointSurface:
 
 zbuf: HotZSorter <<
 
-jointSides: '5
+jointSides: '15
 
 joint: [rotate3D (1,0,0) ~90°] []
          ( jointSurface | ( Hot3D << [cylinderWall jointRadius 2*jointThickness jointSides]
@@ -64,6 +64,73 @@ joint: [rotate3D (1,0,0) ~90°] []
                                   << [cylinderLid jointRadius 2*jointThickness jointSides 0.3*jointRadius]
 		     	          << @stroking:RGB_RED | [stroke (0cm,0cm,~2.5*jointThickness)--(0cm,0cm,4.5*jointThickness)]
                             ) )
+
+armTwist: 45°
+armPath: \ tfStart tfEnd .>
+{
+  pStart: tfStart [] (0u,jointThickness,0u)
+  pEnd: tfEnd [] (0u,jointThickness,0u)
+  hr: 0.4 * [abs pEnd - pStart]
+
+  pStart > (tfStart [] ([rotate3D (0,1,0) ~armTwist] [] (hr,jointThickness,0u)))
+  --
+  (tfEnd [] ([rotate3D (0,1,0) armTwist] [] (~hr,jointThickness,0u))) < pEnd
+}
+
+edgyCylinder: \ pth0 pth1 .>
+{
+  res: Hot3D <<
+
+  ![if [duration pth0] <> [duration pth1]
+       [error `edgyCylinder: Paths don't have the same duration.´]]
+
+  ![[range '0 [duration pth0]-'1].foldl
+   \ p e .>
+    !{
+      res << [facet [pth0 e*1].p--[pth0 (e+'1)*1].p--[pth1 (e+'1)*1].p--cycle]
+      res << [facet [pth0 e*1].p--[pth1 (e+'1)*1].p--[pth1 e*1].p--cycle]
+      p
+    }
+   VOID]
+
+  res;
+  res
+}
+
+paintArm: \ pth width height steps .>
+{
+  lStep: [abs pth] / steps
+
+  res: Hot3D <<
+
+  ![[range '0 steps-'1].foldl
+   \ p e .>
+    !{
+      pth0:
+      {
+        sl: [pth e*lStep]
+	dx: sl.N * 0.5 * width
+	dy: sl.B * 0.5 * height
+	[shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+      }
+
+      pth1:
+      {
+        sl: [pth (e+'1)*lStep]
+	dx: sl.N * 0.5 * width
+	dy: sl.B * 0.5 * height
+	[shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+      }
+
+      res << [edgyCylinder pth0 pth1]
+
+      p
+    }
+   VOID]
+
+  res;
+  res
+}
 
 |** Numbers seen in figure:
 a0: 5u
@@ -85,6 +152,9 @@ zbuf << tf0a [] joint
 zbuf << tf0b [] joint
 zbuf << tf1a [] joint
 zbuf << tf1b [] joint
+
+zbuf << jointSurface | [paintArm [armPath tf0a tf0b] 0.5*jointRadius 0.2*jointRadius '10]
+|** zbuf << jointSurface | [paintArm [armPath tf1a tf1b] 0.5*jointRadius 0.2*jointRadius '10]
 
 zbuf << [shift (0cm,0cm,10cm)] [] [specular_light [gray 0.9]]
 zbuf << [ambient_light [gray 0.3]]

@@ -129,9 +129,12 @@ namespace MetaPDF
       bool isOnTopOfAt( const Computation::ZBufTriangle & other, const Concrete::Coords2D & p ) const;
       bool overlaps( const ZBufTriangle & other ) const;
       bool overlaps( const ZBufTriangle & other, Concrete::Coords2D * commonPoint, Concrete::Length tol ) const; // tol shall be positive, and gives the smallest acceptable distance from commonPoint to the intersection boundary.
+      bool intersection( const Computation::ZBufTriangle & other, Computation::SplicingLine * line ) const;
+      bool overlapsAlong( const ZBufTriangle & other, const Computation::SplicingLine & line, Concrete::Length tol ) const; // tol shall be positive, and gives the smallest acceptable distance from commonPoint to the intersection boundary.
       bool contains( const Concrete::Coords2D & p ) const;
       bool contains( const Concrete::Coords2D & p, Concrete::Length tol ) const;
       static void splice( const ZBufTriangle & tOld, const ZBufTriangle & tNew, std::list< Computation::ZBufTriangle > * oldDisjointTriangles, std::list< Computation::ZBufTriangle > * oldOccludedTriangles, std::list< Computation::ZBufTriangle > * newDisjointTriangles, std::list< Computation::ZBufTriangle > * newOccludedTriangles, std::list< Computation::ZBufTriangle > * triangleQueue );
+      std::list< Computation::ZBufTriangle >::iterator spliceAlong( const Computation::SplicingLine & line, std::list< Computation::ZBufTriangle > * dst ) const;
       RefCountPtr< const Lang::ElementaryPath2D > toPath( ) const;
       RefCountPtr< const Lang::Drawable2D > debugFrame( ) const;
       void pushLines( std::vector< Computation::SplicingLine > * dst ) const;
@@ -139,9 +142,12 @@ namespace MetaPDF
       
       void addTriangleConstraints( Concrete::Coords2D llCorner, double * a, double * b ) const; // To be used by overlaps.
 
+      Concrete::Area area( ) const;
+
     private:
       static bool oneWayOverlap( const std::vector< Concrete::Coords2D > & poly1, const std::vector< Concrete::Coords2D > & poly2 );
       void pushIfUnique( std::vector< Computation::SplicingLine > * dst, const Concrete::Coords3D p0, const Concrete::Coords3D p1, bool isTriangleSide = true ) const;
+      bool intersectionLinePoints( const Computation::ZBufTriangle & other, Concrete::Coords3D * p0, Concrete::Coords3D * p1 ) const;
       friend std::ostream & operator << ( std::ostream & os, const Computation::ZBufTriangle & self );
     };
 

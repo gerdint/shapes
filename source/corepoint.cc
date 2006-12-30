@@ -29,7 +29,7 @@ Lang::Core_duration::call( Kernel::EvalState * evalState, Kernel::Arguments & ar
       typedef const Lang::ElementaryPath2D ArgType;
       RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( 0 ) );
       Kernel::ContRef cont = evalState->cont_;
-      cont->takeValue( Kernel::ValueRef( new Lang::Float( arg->duration( ) ) ),
+      cont->takeValue( Kernel::ValueRef( new Lang::Integer( arg->duration( ) ) ),
 		       evalState );
       return;
     }
@@ -44,7 +44,7 @@ Lang::Core_duration::call( Kernel::EvalState * evalState, Kernel::Arguments & ar
       typedef const Lang::ElementaryPath3D ArgType;
       RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( 0 ) );
       Kernel::ContRef cont = evalState->cont_;
-      cont->takeValue( Kernel::ValueRef( new Lang::Float( arg->duration( ) ) ),
+      cont->takeValue( Kernel::ValueRef( new Lang::Integer( arg->duration( ) ) ),
 		       evalState );
       return;
     }

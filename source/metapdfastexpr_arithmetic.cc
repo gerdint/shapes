@@ -1222,7 +1222,7 @@ Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const 
 RefCountPtr< const Lang::Value >
 Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
 {
-  return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) * static_cast< double >( arg2->val_ ) ) );
+  return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) / static_cast< double >( arg2->val_ ) ) );
 }
 
 
