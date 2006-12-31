@@ -472,6 +472,7 @@ Escape "¢"|"¤"
 "../" { return T_surrounding; }
 "->" { return T_bindto; }
 "[]" { return T_emptybrackets; }
+"[...]" { return T_dddotbrackets; }
 "()" { return T_compose; }
 
 [\{\}\(\)\[\]\<\>] { return yytext[0]; }
@@ -496,8 +497,6 @@ Escape "¢"|"¤"
 "let*" { return T_letstar; }
 "letrec" { return T_letrec; }
 
-"unit" { return T_unit; }
-"defaultunit" { return T_defaultunit; }
 "dynamic" { return T_dynamic; }
 
 "cycle" { return T_cycle; }

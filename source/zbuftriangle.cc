@@ -14,10 +14,12 @@
 #include "trianglefunctions.h"
 #include "basicsimplex.h"
 #include "zbufinternals.h"
+#include "constructorrepresentation.h"
 
 #include <ctype.h>
 #include <list>
 #include <algorithm>
+#include <limits>
 
 using namespace MetaPDF;
 
@@ -475,21 +477,23 @@ Computation::ZBufTriangle::overlaps( const ZBufTriangle & other, Concrete::Coord
   return res;
 }
 
-// tol shall be positive, and gives the smallest acceptable distance from commonPoint to the intersection boundary.
+// tol shall be positive, and gives the smallest acceptable distance from a common point on line to the intersection boundary.
 bool
 Computation::ZBufTriangle::overlapsAlong( const ZBufTriangle & other, const Computation::SplicingLine & line, Concrete::Length tol ) const
 {
-  // This is much simpler than the simplex solution to the general overlap problem.  Here, it is sufficient to keep track of
-  // lower and upper bounds on the time along the line, and exactly if the upper bound is found to be greater than the lower
-  // bound is there an overlap along the line.
+  // This is much simpler than the simplex solution to the general overlap problem.  Unfortunately, it doesn't seem like
+  // just keeping track of an upper and lower bound of the time along the line, since this will very often involve division
+  // by tiny numbers when line is parallel to any of the triangle sides.
+  // 
+  // Instead, I keep track of two points points on the line, initialized far away in both directions.  When comparing against
+  // a triangle side, four situations can occur, given by which of the points that satisfy the constraint.  If none of the points
+  // satisfy the constraint, there is no intersection along the line.  If both satisfy the constraint, the constraint does not
+  // further restrict the points.  In the remaining case, the point which does not satisfy the constraint is moved to the border.
 
-  double upper = HUGE_VAL;
-  double lower = -HUGE_VAL;
+  // The tolerance is implemented by changing all constraints by tol.
 
-  // For quick access I copy the values from line.
-  double p0x = Concrete::Length::offtype( line.p0_.x_ );
-  double p0y = Concrete::Length::offtype( line.p0_.y_ );
-  Concrete::UnitFloatPair d = line.d_;
+  Concrete::Coords2D upper = line.p0_ + ( 0.1 * std::numeric_limits< double >::max( ) ) * line.d_;
+  Concrete::Coords2D lower = line.p0_ - ( 0.1 * std::numeric_limits< double >::max( ) ) * line.d_;
 
   // It is convenient to use the halfspace intersection representation of the triangles, so some
   // code is borrowed from ZBufTriangle::overlaps.
@@ -502,42 +506,74 @@ Computation::ZBufTriangle::overlapsAlong( const ZBufTriangle & other, const Comp
   double * bend = & b[ 0 ] + N_CONSTRAINTS;
 
   Concrete::Coords2D llCorner( 0, 0 );  // This does not matter, so we may take the origin for instance
-  addTriangleConstraints( llCorner, & a[ 0 ], & b[ 0 ] );
   {
+    addTriangleConstraints( llCorner, & a[ 0 ], & b[ 0 ] );
+    // Here's how the tolerance is implemented.  Since the coefficients in are normalized outward normals,
+    // The triangles are shrunk by tol in all directions by subtracting tol from b.
     const double * srca = & a[0];
     for( const double * srcb = & b[ 0 ]; srcb != bend; ++srcb, srca += N_VARIABLES )
       {
-	double tmp1 = *( srca ) * d.x_ + *( srca + 1 ) * d.y_;
-	double tmp2 = *srcb - ( *( srca ) * p0x + *( srca + 1 ) * p0y );
-	if( tmp1 > 0 )
+	Concrete::UnitFloatPair n( *( srca ), *( srca + 1 ), bool( ) );
+	Concrete::Length m = Concrete::Length( *srcb ) - tol;
+	bool upperInside = Concrete::inner( n, upper ) < m;
+	bool lowerInside = Concrete::inner( n, lower ) < m;
+
+	if( upperInside && lowerInside )
 	  {
-	    upper = std::min( upper, tmp2 / tmp1 );
+	    continue;
 	  }
-	else if( tmp1 < 0 )
+	if( upperInside )
 	  {
-	    lower = std::max( lower, tmp2 / tmp1 );
+	    // Move lower.
+	    // That is, with lower = line.p0_ + t * line.d_, for some t, it shall also satisfy
+	    //   Concrete::inner( n, lower ) == m
+	    lower = line.p0_ + ( ( m - Concrete::inner( n, line.p0_ ) ) / Concrete::inner( n, line.d_ ) ) * line.d_;
+	    continue;
 	  }
+	if( lowerInside )
+	  {
+	    // Move upper, see above.
+	    upper = line.p0_ + ( ( m - Concrete::inner( n, line.p0_ ) ) / Concrete::inner( n, line.d_ ) ) * line.d_;
+	    continue;
+	  }
+	// None of the points did satisfy the constraint.  Infeasible.  No overlap.
+	return false;
       }
   }
-  other.addTriangleConstraints( llCorner, & a[ 0 ], & b[ 0 ] );
   {
+    other.addTriangleConstraints( llCorner, & a[ 0 ], & b[ 0 ] );
     const double * srca = & a[0];
     for( const double * srcb = & b[ 0 ]; srcb != bend; ++srcb, srca += N_VARIABLES )
       {
-	double tmp1 = *( srca ) * d.x_ + *( srca + 1 ) * d.y_;
-	double tmp2 = *srcb - ( *( srca ) * p0x + *( srca + 1 ) * p0y );
-	if( tmp1 > 0 )
+	Concrete::UnitFloatPair n( *( srca ), *( srca + 1 ), bool( ) );
+	Concrete::Length m = Concrete::Length( *srcb ) - tol;
+	bool upperInside = Concrete::inner( n, upper ) < m;
+	bool lowerInside = Concrete::inner( n, lower ) < m;
+
+	if( upperInside && lowerInside )
 	  {
-	    upper = std::min( upper, tmp2 / tmp1 );
+	    continue;
 	  }
-	else if( tmp1 < 0 )
+	if( upperInside )
 	  {
-	    lower = std::max( lower, tmp2 / tmp1 );
+	    // Move lower.
+	    // That is, with lower = line.p0_ + t * line.d_, for some t, it shall also satisfy
+	    //   Concrete::inner( n, lower ) == m
+	    lower = line.p0_ + ( ( m - Concrete::inner( n, line.p0_ ) ) / Concrete::inner( n, line.d_ ) ) * line.d_;
+	    continue;
 	  }
+	if( lowerInside )
+	  {
+	    // Move upper, see above.
+	    upper = line.p0_ + ( ( m - Concrete::inner( n, line.p0_ ) ) / Concrete::inner( n, line.d_ ) ) * line.d_;
+	    continue;
+	  }
+	// None of the points did satisfy the constraint.  Infeasible.  No overlap.
+	return false;
       }
   }
 
-  return upper - lower > Concrete::Length::offtype( tol ); // This is actually a very bad interpretation of tol...
+  return true;
 }
 
 void
@@ -1265,10 +1301,8 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 	    // Parameterize the line segment from p1 to p2 as ( p1 + t * d )
 	    Concrete::Coords2D d = *i2 - *i1;
 	    // Then t can be computed easily using the equation of the line.
-	    double t = ( line.r_ - Concrete::inner( line.n_, *i1 ) ) / Concrete::inner( line.n_, d );
-	    
-	    Concrete::Coords2D pa = *i1 + t * d;
-	    
+	    Concrete::Coords2D pa = *i1 + ( ( line.r_ - Concrete::inner( line.n_, *i1 ) ) / Concrete::inner( line.n_, d ) ) * d;
+
 	    dst->push_back( Computation::ZBufTriangle( painter_,
 						       zMap_,
 						       *i1, *i, pa) );
@@ -1296,7 +1330,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
     const Concrete::Length * distSrc = & lineDists[ 0 ];
     for( std::vector< Concrete::Coords2D >::const_iterator i = points_.begin( ); i != points_.end( ); ++i, ++distSrc )
       {
-	if( ( *distSrc < 0 ) == p0sign )
+	if( ( *distSrc > 0 ) == p0sign )
 	  {
 	    // We have p0 being *i
 

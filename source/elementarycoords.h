@@ -25,7 +25,7 @@ namespace MetaPDF
       {
 	if( x == 0 && y == 0 )
 	  {
-	    throw Exceptions::InternalError( "An UnitFloatPair was initialized with a zero vector." );
+	    throw Exceptions::InternalError( "A UnitFloatPair was initialized with a zero vector." );
 	  }
 	double tmp = 1. / hypot( x, y );
 	x_ = tmp * x;

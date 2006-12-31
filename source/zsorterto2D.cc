@@ -12,6 +12,7 @@
 #include "shadingtypes.h"
 #include "globals.h"
 #include "zbufinternals.h"
+#include "constructorrepresentation.h"
 
 #include <ctype.h>
 #include <list>
@@ -95,7 +96,6 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	(*src)->push_zBufTriangles( tf, eyez, tmpList );
 	for( CompoundObject::iterator i = tmpList->begin( ); i != tmpList->end( ); ++i )
 	  {
-	    bool wasSplit = false;
 	    typedef std::vector< CompoundObject * >::iterator ObjectIterator;
 	    for( ObjectIterator o = compoundMem.begin( ); o != compoundMem.end( ); ++o )
 	      {
@@ -105,7 +105,6 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			j->overlapsAlong( *i, spliceLine, Computation::theTrixelizeOverlapTol ) )
 		      {
 			job.push_back( Computation::SplitJob( i, o, j ) );
-			wasSplit = true;
 			goto splitFound1;
 		      }
 		  }
@@ -118,21 +117,23 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	    Computation::SplitJob & currentJob = job.front( );
 	    if( ! currentJob.splitted_->intersection( *currentJob.splitting_, & spliceLine ) )
 	      {
-		throw Exceptions::InternalError( "These triangles were known to intsersect, and now they don't!" );
+		throw Exceptions::InternalError( "These triangles were known to intsersect, and now they're parallel!" );
 	      }
 	    
-	    // The iterator to the first new triangle is returned.
+	    // New triangles are added to the end of tmpList, and the iterator to the first new triangle is returned.
 	    CompoundObject::iterator i = currentJob.splitted_->spliceAlong( spliceLine, tmpList );
 
 	    // Now the procedure from above is repeated, but not comparing against triangles that have already been checked.
 	    for( ; i != tmpList->end( ); ++i )
 	      {
-		bool wasSplit = false;
 		CompoundObject::iterator j = currentJob.splitting_;
 		++j;
 		typedef std::vector< CompoundObject * >::iterator ObjectIterator;
 		for( ObjectIterator o = currentJob.splittingObject_; o != compoundMem.end( ); ++o )
 		  {
+		    // For the splitting object object (the first in this loop), the first triangle to compare against
+		    // was set above.  For the other object, all triangles shall be compared against (that is, j starts from
+		    // the beginning).
 		    if( o != currentJob.splittingObject_ )
 		      {
 			j = (*o)->begin( );
@@ -143,7 +144,6 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			    j->overlapsAlong( *i, spliceLine, Computation::theTrixelizeOverlapTol ) )
 			  {
 			    job.push_back( Computation::SplitJob( i, o, j ) );
-			    wasSplit = true;
 			    goto splitFound2;
 			  }
 		      }
@@ -275,6 +275,10 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	    ListType::iterator ti = triangleMem.begin( );
 	    for( size_t i = 0; i < triangleCount; ++i, ++ti )
 	      {
+		if( *ti == 0 )
+		  {
+		    continue;
+		  }
 		Concrete::Area tmpArea = (*ti)->area( );
 		if( tmpArea < bestArea )
 		  {
@@ -283,11 +287,12 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 		  }
 	      }
 	    drawQueue.push_back( besti );
+	    waitCounters[ besti ] = 0;  // This will avoid that this is drawn again, since the counter will never _reach_ 0 now.
 	  }
       }
   }
 
-  
+
   // It is now time to take care of the lines.
   // The first thing we shall do is to remove what is occluded by triangles.
   // Note that triangles will be drawn before the lines, and that is the only way lines

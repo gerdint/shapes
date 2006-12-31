@@ -124,9 +124,9 @@ void metapdferror( char * msg )
  */
 
 %token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle
-%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_declaretype
+%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_declaretype
 %token <tokenID> T_let T_letstar T_letrec
-%token <tokenID> T_unit T_defaultunit T_tex T_dynamic T_continuation T_continue
+%token <tokenID> T_tex T_dynamic T_continuation T_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
  // %token <tokenID>  T_letdst T_plusassign T_minusassign T_starassign T_slashassign
 
@@ -175,6 +175,7 @@ void metapdferror( char * msg )
 %nonassoc '!'
 %left '|'
 %right T_mapsto T_emptybrackets
+%left T_dddotbrackets
 %left '&'
 %nonassoc T_dynamiccolon
 %left T_or T_xor
@@ -413,6 +414,24 @@ CallExpr
   $$ = new Ast::CallExpr( @$,
 			      $1,
 			      args );
+}
+| Expr T_dddotbrackets Expr
+{
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  args->orderedExprs_->push_back( $3 );
+  $$ = new Ast::CallExpr( @$,
+			  $1,
+			  args,
+			  true );  /* true means Curry */
+}
+| Expr T_dddotbrackets T_identifier ':' Expr %prec T_dynamiccolon
+{
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  (*args->namedExprs_)[ $3 ] = $5;
+  $$ = new Ast::CallExpr( @$,
+			  $1,
+			  args,
+			  true );  /* true means Curry */
 }
 ;
 
