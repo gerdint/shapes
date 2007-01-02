@@ -5,6 +5,7 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.1.1 )====
+2007-01-02
 
 Testing has been automated.  The tests are divided into two cathegories depending on whether it is the graphical or textual program output that is to be compared against a given output.  See the Makefile's in the ./test directory and its subdirectories to learn how to run the tests or add new tests.
 
@@ -12,7 +13,7 @@ The z-buffer idea has been postponed.  Instead, a z-sorter has been implemented.
 
 There are lots of bugfixes and small enhancements over the previous version.  One of the enhancements is the "[...]"-syntax for evaluated cuts along one argument.
 
-This is planned to be the the last version that uses hot variables.
+This is planned to be the the last usable version with hot variables.
 
 
 ====( 0.1 )====
