@@ -230,6 +230,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
       
       // Then the queue of objects to be "drawn" is initialized.
       std::list< size_t > drawQueue;
+      std::map< const Computation::PaintedPolygon3D *, size_t > trianglesInPolygon;
       {
 	std::vector< size_t >::iterator wi = waitCounters.begin( );
 	for( size_t i = 0; i < triangleCount; ++i, ++wi )
@@ -237,35 +238,84 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	    if( *wi == 0 )
 	      {
 		drawQueue.push_back( i );
+		++trianglesInPolygon[ triangleMem[ i ]->painter_ ];
 	      }
 	  }
       }
       
+      // Now, when the triangles are "drawn", that is, placed in drawOrder, they shall be placed so
+      // in such a way that triangles that belong to the same polygon appear in sequence as often as possible.
+      // While there is probably accurate ways to treat this problem, I resort to some simple heuristics here.
+      // The question is basically how to pick a polygon among those than contain a triangle that may be drawn.
+
       size_t drawnCount = 0;
       while( drawnCount < triangleCount )
 	{
 	  while( drawQueue.size( ) > 0 )
 	    {
-	      size_t i = drawQueue.front( );
-	      drawQueue.pop_front( );
-	      ++drawnCount;
+	      // First, use find the polygon whith the most triangles in drawQueue.
+	      const Computation::PaintedPolygon3D * painter = 0;
+
+	      // Note that triangles that belong to the same polygon will never overlap, and hence drawing triangles that belong
+	      // to painter will not make other triangles that belong to painter ready to be drawn.  This algorithm depends on
+	      // this!
+
+	      size_t bestCount = 0;
+	      {
+		typedef typeof trianglesInPolygon MapType;
+		MapType::iterator best_j;
+		for( MapType::iterator j = trianglesInPolygon.begin( ); j != trianglesInPolygon.end( ); ++j )
+		  {
+		    if( j->second > bestCount )
+		      {
+			bestCount = j->second;
+			best_j = j;
+		      }
+		  }
+		painter = best_j->first;
+		trianglesInPolygon.erase( best_j ); // If we need this again it will be re-created.
+	      }
 	      
-	      if( triangleMem[ i ] == 0 )
+	      // Soon, bestCount triangles will have been drawn, but the value of bestCount will then be destroyed.
+	      drawnCount += bestCount;
+
+	      // There shall be bestCount triangles to draw, so by counting the number of triangles we find we may not
+	      // have to search all of drawQueue.
+	      for( std::list< size_t >::iterator ii = drawQueue.begin( ); bestCount > 0; )
 		{
-		  throw Exceptions::InternalError( "Attempt to draw an object again!" );
-		}
-	      drawOrder.push_back( triangleMem[ i ] );
-	      triangleMem[ i ] = 0;
-	      
-	      const std::list< size_t > & waitList = waitingObjects[ i ];
-	      for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
-		{
-		  --waitCounters[ *j ];
-		  if( waitCounters[ *j ] == 0 )
+		  size_t i = *ii;
+		  if( triangleMem[ i ]->painter_ != painter )
 		    {
-		      drawQueue.push_back( *j );
+		      ++ii;
+		      continue;
 		    }
+
+		  std::list< size_t >::iterator erase_i = ii;
+		  ++ii;
+		  drawQueue.erase( erase_i );
+		  --bestCount;
+
+		  drawOrder.push_back( triangleMem[ i ] );
+		  triangleMem[ i ] = 0;
+		  
+		  const std::list< size_t > & waitList = waitingObjects[ i ];
+		  for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
+		    {
+		      --waitCounters[ *j ];
+		      if( waitCounters[ *j ] == 0 )
+			{
+			  drawQueue.push_back( *j );
+			  // Note that it is assumed that ( triangleMem[ *j ]->painter_ != painter ) !
+// 			  if( triangleMem[ *j ]->painter_ == painter )
+// 			    {
+// 			      throw Exceptions::InternalError( "Triangle waiting for another triangle in the same polygon!" );
+// 			    }
+			  ++trianglesInPolygon[ triangleMem[ *j ]->painter_ ];
+			}
+		    }
+		  
 		}
+	      
 	    }
 	  if( drawnCount < triangleCount )
 	    {
@@ -290,6 +340,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 		    }
 		}
 	      drawQueue.push_back( besti );
+	      ++trianglesInPolygon[ triangleMem[ besti ]->painter_ ];
 	      waitCounters[ besti ] = 0;  // This will avoid that this is drawn again, since the counter will never _reach_ 0 now.
 	    }
 	}
@@ -404,31 +455,29 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
     {
       // This is the standard mode
 
-      // At the moment, triangles are not grouped such that they are drawn as bigger polygons.
+      // Remember that the grouping of triangles into polygons can probably be improved!
 
-      size_t commonLightCount = commonLights.size( );
-      
       typedef typeof drawOrder ListType;
-      for( ListType::iterator i = drawOrder.begin( ); i != drawOrder.end( ); ++i )
+      for( ListType::iterator i = drawOrder.begin( ); i != drawOrder.end( ); ) // Note that i shall not be incremented here.
 	{
 	  std::list< Computation::ZBufTriangle > regions;
 	  // This is a hideous copy!
 	  regions.push_back( **i );
+	  
+	  // Now we'll simply join the triangle **i with the immediately following triangles sharing the same painter.
+	  // The job of joining triangles thus consists in placing them in a good order in drawOrder.
 
-	  // Here is where we should seek for other triangles with the same painter and that be moved to the front
-	  // of drawOrder...
+	  const Computation::PaintedPolygon3D * painter = (*i)->painter_;
+	  ++i;
+	  for( ; i != drawOrder.end( ) && (*i)->painter_ == painter; ++i )
+	    {
+	      // Another hideous copy!
+	      regions.push_back( **i );
+	    }
 
-	  typedef std::list< RefCountPtr< const Lang::LightSource > > ShadowLightListType;
-	  const ShadowLightListType & shadowLights = (*i)->shadowLights_;
-	  for( ShadowLightListType::const_iterator l = shadowLights.begin( ); l != shadowLights.end( ); ++l )
-	    {
-	      commonLights.push_back( *l );
-	    }
-	  RefCountPtr< const Lang::PaintedPolygon2D > tmp = (*i)->painter_->polygon_to2D( dyn, tf, commonLights );
-	  while( commonLights.size( ) > commonLightCount )
-	    {
-	      commonLights.pop_back( );
-	    }
+	  // If this would have been a z-buffer, we should add the common lights to the shadow lights here,
+	  // but in a z-sorter there are no shadow lights.
+	  RefCountPtr< const Lang::PaintedPolygon2D > tmp = painter->polygon_to2D( dyn, tf, commonLights );
 
 	  // The following statement will consume the objects in regions.
 	  res = RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( tmp->clip( & regions, tmp ),
