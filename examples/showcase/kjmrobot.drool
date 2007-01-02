@@ -41,6 +41,7 @@ polyDisc: \ radius sides .>
 
 cylinderLid: \ radius height sides smallRadius .>
   [shift (0cm,0cm,height)] [] ( Hot3D << [facet [immerse [polyDisc radius sides]]]
+                                      << [stroke [immerse [polyDisc radius sides]]]
                                       << @nonstroking:[gray 0.3] | [facet [immerse [polyDisc smallRadius sides]] tiebreaker:1bp]
                                 )
 
@@ -50,11 +51,14 @@ jointRadius: 0.7u
 jointThickness: 0.5u  |** Take this times two to obtain the total height.
 jointSurface:
     @nonstroking:[gray 0.8]
+  & @width:0.01u            |** used to fill in object edges
+  & @stroking:[gray 0.8]    |** used to fill in object edges
   & @reflections:0.3*[phong 25] + 0.7*[phong 0.5]
-  & @facetresolution:0.2u
+  & @facetresolution:0.5u
+  & @shadeorder:'0          |** use '2 when targeting Adobe Reader or other viewers that can deal with gradient fills.
 
 
-jointSides: '15
+jointSides: '30
 
 joint: jointSurface | ( Hot3D << [shift (0m,0m,~jointThickness)] [] [cylinderWall jointRadius 2*jointThickness jointSides]
                               << [cylinderLid jointRadius ~jointThickness jointSides 0.3*jointRadius]
@@ -87,6 +91,14 @@ edgyCylinder: \ pth0 pth1 .>
     !{
       res << [facet [pth0 e*1].p--[pth0 (e+'1)*1].p--[pth1 (e+'1)*1].p--cycle]
       res << [facet [pth0 e*1].p--[pth1 (e+'1)*1].p--[pth1 e*1].p--cycle]
+      p
+    }
+   VOID]
+
+  ![[range '0 [duration pth0]].foldl
+   \ p e .>
+    !{
+      res << [stroke [pth0 e*1].p--[pth1 e*1].p]
       p
     }
    VOID]

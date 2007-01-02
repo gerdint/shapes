@@ -436,6 +436,9 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 
   {  
     // We now have the times in increasing order, and it is time to identify visible segments.
+
+    Concrete::Length halfWidth = painter_->getMetaState( )->width_;
+
     bool visible = false;
     Concrete::Coords2D pStart( 0, 0 );
     typedef typeof times TimesType;
@@ -449,7 +452,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 	if( tIn < tMid && tMid < tOut )
 	  {
 	    Concrete::Coords2D pMid = p0_ + tMid * d_;
-	    newVisible = zAt( pMid ) > triangle.zAt( pMid );
+	    newVisible = zAt( pMid ) + halfWidth > triangle.zAt( pMid );  // the halfWidth is like a tiebreaker for a line.
 	  }
 	if( newVisible )
 	  {
