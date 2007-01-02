@@ -539,6 +539,11 @@ Lang::ElementaryPath3D::normal( Concrete::Time globalTime ) const
   const Concrete::PathPoint3D * p2;
   findSegment( globalTime, &t, &p1, &p2 );
 
+  if( p1->front_ == p1->mid_ && p2->rear_ == p2->mid_ )
+    {
+      throw Exceptions::OutOfRange( "The normal is undefined along straigt segments." );
+    }
+
   Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
   Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
   Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -652,6 +657,11 @@ Lang::ElementaryPath3D::reverse_normal( Concrete::Time globalTime ) const
   const Concrete::PathPoint3D * p1;
   const Concrete::PathPoint3D * p2;
   findSegmentReverse( globalTime, &t, &p1, &p2 );
+
+  if( p1->front_ == p1->mid_ && p2->rear_ == p2->mid_ )
+    {
+      throw Exceptions::OutOfRange( "The normal is undefined along straigt segments." );
+    }
 
   Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
   Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
@@ -3075,11 +3085,23 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
       Concrete::Length z2new = k0z + ( 2 * k1z + k2z ) / 3;
       Concrete::Length z3new = k0z + k1z + k2z + k3z;
 
+
+      /* In case the path was logically straight, we don't want to produce a path which is not
+       * logically straight.  Of course, it is a bit inefficient to take this into account now,
+       * but the code becomes very intuitive.
+       */
+
       Concrete::PathPoint3D * ptmp = new Concrete::PathPoint3D( x0new, y0new, z0new );
-      ptmp->front_ = new Concrete::Coords3D( x1new, y1new, z1new );
+      if( p1->front_ != p1->mid_ || p2->rear_ != p2->mid_ )
+	{
+	  ptmp->front_ = new Concrete::Coords3D( x1new, y1new, z1new );
+	}
       res->push_back( ptmp );
       ptmp = new Concrete::PathPoint3D( x3new, y3new, z3new );
-      ptmp->rear_ = new Concrete::Coords3D( x2new, y2new, z2new );
+      if( p1->front_ != p1->mid_ || p2->rear_ != p2->mid_ )
+	{
+	  ptmp->rear_ = new Concrete::Coords3D( x2new, y2new, z2new );
+	}
       res->push_back( ptmp );
 
       return RefCountPtr< const Lang::ElementaryPath3D >( res );
@@ -3163,11 +3185,26 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 
       /* Now, reverse time again! */
 
+      /* In case the path was logically straight, we don't want to produce a path which is not
+       * logically straight.  Of course, it is a bit inefficient to take this into account now,
+       * but the code becomes very intuitive.
+       */
+
       p1 = new Concrete::PathPoint3D( x3new.offtype< 0, -3 >( ), y3new.offtype< 0, -3 >( ), z3new.offtype< 0, -3 >( ) );
-      p1->front_ = new Concrete::Coords3D( x2new.offtype< 0, -3 >( ), y2new.offtype< 0, -3 >( ), z2new.offtype< 0, -3 >( ) );
+      if( (*i1)->front_ != (*i1)->mid_ || (*i2)->rear_ != (*i2)->mid_ )
+	{
+	  p1->front_ = new Concrete::Coords3D( x2new.offtype< 0, -3 >( ), y2new.offtype< 0, -3 >( ), z2new.offtype< 0, -3 >( ) );
+	}
+
       p2 = new Concrete::PathPoint3D( x0new.offtype< 0, -3 >( ), y0new.offtype< 0, -3 >( ), z0new.offtype< 0, -3 >( ) );  /* This point must be the same as before. */
-      p2->rear_ = new Concrete::Coords3D( x1new.offtype< 0, -3 >( ), y1new.offtype< 0, -3 >( ), z1new.offtype< 0, -3 >( ) );
-      p2->front_ = new Concrete::Coords3D( *(*i2)->front_ );
+      if( (*i1)->front_ != (*i1)->mid_ || (*i2)->rear_ != (*i2)->mid_ )
+	{
+	  p2->rear_ = new Concrete::Coords3D( x1new.offtype< 0, -3 >( ), y1new.offtype< 0, -3 >( ), z1new.offtype< 0, -3 >( ) );
+	}
+      if( (*i2)->front_ != (*i2)->mid_ )
+	{
+	  p2->front_ = new Concrete::Coords3D( *(*i2)->front_ );
+	}
   }
   
   /* At this point we know that the rest of this segment shall be included, since the cuts are not on the
@@ -3200,6 +3237,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
       Concrete::Length xn1 = p1->rear_->x_; /* "n" for negative index.  We save these values now, so that we can delete p1 and p2 soon. */
       Concrete::Length yn1 = p1->rear_->y_;
       Concrete::Length zn1 = p1->rear_->z_;
+      bool doBackHandle = p1->rear_ != p1->mid_;
 
       Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
       Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
@@ -3213,6 +3251,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
       Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
       Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
       Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
+      bool doInHandles = p1->front_ != p1->mid_ || p2->rear_ != p2->mid_;
 
       delete p1;
       delete p2;
@@ -3250,10 +3289,19 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
       Concrete::Bezier z3new = k0z + k1z + k2z + k3z;
       
       p1 = new Concrete::PathPoint3D( x0new.offtype< 0, -3 >( ), y0new.offtype< 0, -3 >( ), z0new.offtype< 0, -3 >( ) );
-      p1->front_ = new Concrete::Coords3D( x1new.offtype< 0, -3 >( ), y1new.offtype< 0, -3 >( ), z1new.offtype< 0, -3 >( ) );
-      p1->rear_ = new Concrete::Coords3D( xn1, yn1, zn1 );
+      if( doInHandles )
+	{
+	  p1->front_ = new Concrete::Coords3D( x1new.offtype< 0, -3 >( ), y1new.offtype< 0, -3 >( ), z1new.offtype< 0, -3 >( ) );
+	}
+      if( doBackHandle )
+	{
+	  p1->rear_ = new Concrete::Coords3D( xn1, yn1, zn1 );
+	}
       p2 = new Concrete::PathPoint3D( x3new.offtype< 0, -3 >( ), y3new.offtype< 0, -3 >( ), z3new.offtype< 0, -3 >( ) );
-      p2->rear_ = new Concrete::Coords3D( x2new.offtype< 0, -3 >( ), y2new.offtype< 0, -3 >( ), z2new.offtype< 0, -3 >( ) );
+      if( doInHandles )
+	{
+	  p2->rear_ = new Concrete::Coords3D( x2new.offtype< 0, -3 >( ), y2new.offtype< 0, -3 >( ), z2new.offtype< 0, -3 >( ) );
+	}
 
       res->push_back( p1 );
       res->push_back( p2 );

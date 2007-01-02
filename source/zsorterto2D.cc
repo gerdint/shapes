@@ -86,6 +86,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
   compoundMem.reserve( pileSize );
 
   // Then we fill it with triangles that don't intersect.
+  // Note that it is a responsibility of push_zBufTriangles to not push any tiny triangles.
   {
     Computation::SplicingLine spliceLine;
     std::list< Computation::SplitJob > job;
@@ -93,7 +94,8 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
     for( PileType::const_iterator src = pile_->begin( ); src != pile_->end( ); ++src )
       {
 	std::list< Computation::ZBufTriangle > * tmpList = new std::list< Computation::ZBufTriangle >;
-	(*src)->push_zBufTriangles( tf, eyez, tmpList );
+	// Since there cannot be shadow lights in a z sorter, it is OK not to include the backsides of single sided facets.
+	(*src)->push_zBufTriangles( tf, eyez, tmpList, true ); // true means allow dropping back sides of single sided objects
 	for( CompoundObject::iterator i = tmpList->begin( ); i != tmpList->end( ); ++i )
 	  {
 	    typedef std::vector< CompoundObject * >::iterator ObjectIterator;
@@ -189,110 +191,111 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
   // At this state, "to draw" an object means to place it in drawOrder.
 
   std::list< const Computation::ZBufTriangle * > drawOrder;
-  {
-    std::vector< size_t > waitCounters;
-    waitCounters.resize( triangleCount, 0 );
-    std::vector< std::list< size_t > > waitingObjects;
-    waitingObjects.resize( triangleCount );
-
-    // We begin by setting up waitingObjects and waitCounters.
-    // This involves testing each object against all other objects.
-    for( size_t i0 = 0; i0 < triangleCount - 1; ++i0 )
+  if( triangleCount > 0 )  // This avoids a bug that would otherwise occur due to computing triangleCount - 1
+    {
+      std::vector< size_t > waitCounters;
+      waitCounters.resize( triangleCount, 0 );
+      std::vector< std::list< size_t > > waitingObjects;
+      waitingObjects.resize( triangleCount );
+      
+      // We begin by setting up waitingObjects and waitCounters.
+      // This involves testing each object against all other objects.
+      for( size_t i0 = 0; i0 < triangleCount - 1; ++i0 )  // Ugly bug if triangleCount == 0
+	{
+	  const Computation::ZBufTriangle * t0 = triangleMem[ i0 ];
+	  for( size_t i1 = i0 + 1; i1 < triangleCount; ++i1 )
+	    {
+	      const Computation::ZBufTriangle * t1 = triangleMem[ i1 ];
+	      if( t0->overlaps( *t1 ) )
+		{
+		  Concrete::Coords2D commonPoint( 0, 0 );
+		  if( ! t0->overlaps( *t1, & commonPoint, Computation::theTrixelizeOverlapTol ) )
+		    {
+		      // Too little overlap.
+		      continue;
+		    }
+		  if( t0->isOnTopOfAt( *t1, commonPoint ) )
+		    {
+		      waitingObjects[ i1 ].push_back( i0 );
+		      ++waitCounters[ i0 ];
+		    }
+		  else
+		    {
+		      waitingObjects[ i0 ].push_back( i1 );
+		      ++waitCounters[ i1 ];
+		    }
+		}
+	    }
+	}
+      
+      // Then the queue of objects to be "drawn" is initialized.
+      std::list< size_t > drawQueue;
       {
-	const Computation::ZBufTriangle * t0 = triangleMem[ i0 ];
-	for( size_t i1 = i0 + 1; i1 < triangleCount; ++i1 )
+	std::vector< size_t >::iterator wi = waitCounters.begin( );
+	for( size_t i = 0; i < triangleCount; ++i, ++wi )
 	  {
-	    const Computation::ZBufTriangle * t1 = triangleMem[ i1 ];
-	    if( t0->overlaps( *t1 ) )
+	    if( *wi == 0 )
 	      {
-		Concrete::Coords2D commonPoint( 0, 0 );
-		if( ! t0->overlaps( *t1, & commonPoint, Computation::theTrixelizeOverlapTol ) )
-		  {
-		    // Too little overlap.
-		    continue;
-		  }
-		if( t0->isOnTopOfAt( *t1, commonPoint ) )
-		  {
-		    waitingObjects[ i1 ].push_back( i0 );
-		    ++waitCounters[ i0 ];
-		  }
-		else
-		  {
-		    waitingObjects[ i0 ].push_back( i1 );
-		    ++waitCounters[ i1 ];
-		  }
+		drawQueue.push_back( i );
 	      }
 	  }
       }
-
-    // Then the queue of objects to be "drawn" is initialized.
-    std::list< size_t > drawQueue;
-    {
-      std::vector< size_t >::iterator wi = waitCounters.begin( );
-      for( size_t i = 0; i < triangleCount; ++i, ++wi )
+      
+      size_t drawnCount = 0;
+      while( drawnCount < triangleCount )
 	{
-	  if( *wi == 0 )
+	  while( drawQueue.size( ) > 0 )
 	    {
-	      drawQueue.push_back( i );
+	      size_t i = drawQueue.front( );
+	      drawQueue.pop_front( );
+	      ++drawnCount;
+	      
+	      if( triangleMem[ i ] == 0 )
+		{
+		  throw Exceptions::InternalError( "Attempt to draw an object again!" );
+		}
+	      drawOrder.push_back( triangleMem[ i ] );
+	      triangleMem[ i ] = 0;
+	      
+	      const std::list< size_t > & waitList = waitingObjects[ i ];
+	      for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
+		{
+		  --waitCounters[ *j ];
+		  if( waitCounters[ *j ] == 0 )
+		    {
+		      drawQueue.push_back( *j );
+		    }
+		}
+	    }
+	  if( drawnCount < triangleCount )
+	    {
+	      // Resolve cyclic overlap the hard way...
+	      std::cerr << "A cyclic overlap situation in a z sorter required a small triangle to be drawn too deep." << std::endl ;
+	      Concrete::Area bestArea = HUGE_VAL;
+	      size_t besti;
+	      // This search is a somewhat expensive since we must search the whole list.
+	      typedef typeof triangleMem ListType;
+	      ListType::iterator ti = triangleMem.begin( );
+	      for( size_t i = 0; i < triangleCount; ++i, ++ti )
+		{
+		  if( *ti == 0 )
+		    {
+		      continue;
+		    }
+		  Concrete::Area tmpArea = (*ti)->area( );
+		  if( tmpArea < bestArea )
+		    {
+		      bestArea = tmpArea;
+		      besti = i;
+		    }
+		}
+	      drawQueue.push_back( besti );
+	      waitCounters[ besti ] = 0;  // This will avoid that this is drawn again, since the counter will never _reach_ 0 now.
 	    }
 	}
     }
-
-    size_t drawnCount = 0;
-    while( drawnCount < triangleCount )
-      {
-	while( drawQueue.size( ) > 0 )
-	  {
-	    size_t i = drawQueue.front( );
-	    drawQueue.pop_front( );
-	    ++drawnCount;
-	    
-	    if( triangleMem[ i ] == 0 )
-	      {
-		throw Exceptions::InternalError( "Attempt to draw an object again!" );
-	      }
-	    drawOrder.push_back( triangleMem[ i ] );
-	    triangleMem[ i ] = 0;
-	    
-	    const std::list< size_t > & waitList = waitingObjects[ i ];
-	    for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
-	      {
-		--waitCounters[ *j ];
-		if( waitCounters[ *j ] == 0 )
-		  {
-		    drawQueue.push_back( *j );
-		  }
-	      }
-	  }
-	if( drawnCount < triangleCount )
-	  {
-	    // Resolve cyclic overlap the hard way...
-	    std::cerr << "A cyclic overlap situation in a z sorter required a small triangle to be drawn too deep." << std::endl ;
-	    Concrete::Area bestArea = HUGE_VAL;
-	    size_t besti;
-	    // This search is a somewhat expensive since we must search the whole list.
-	    typedef typeof triangleMem ListType;
-	    ListType::iterator ti = triangleMem.begin( );
-	    for( size_t i = 0; i < triangleCount; ++i, ++ti )
-	      {
-		if( *ti == 0 )
-		  {
-		    continue;
-		  }
-		Concrete::Area tmpArea = (*ti)->area( );
-		if( tmpArea < bestArea )
-		  {
-		    bestArea = tmpArea;
-		    besti = i;
-		  }
-	      }
-	    drawQueue.push_back( besti );
-	    waitCounters[ besti ] = 0;  // This will avoid that this is drawn again, since the counter will never _reach_ 0 now.
-	  }
-      }
-  }
-
-
+  
+  
   // It is now time to take care of the lines.
   // The first thing we shall do is to remove what is occluded by triangles.
   // Note that triangles will be drawn before the lines, and that is the only way lines

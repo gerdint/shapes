@@ -290,14 +290,16 @@ namespace MetaPDF
     protected:
       std::list< Concrete::Coords3D > points_;
       // The following two members define the plane in which all points are required to be
+      bool singleSided_; // If true, normal_ is the outward normal of the surface of a solid object.  I false, this area has two opposite outward normals.
       Concrete::UnitFloatTriple normal_;
       Concrete::Length m_;
       Concrete::Length tiebreaker_;
     public:
-      PaintedPolygon3D( const Concrete::UnitFloatTriple & normal, Concrete::Length m, Concrete::Length tiebreaker );
+      PaintedPolygon3D( bool singleSided, const Concrete::UnitFloatTriple & normal, Concrete::Length m, Concrete::Length tiebreaker );
       virtual ~PaintedPolygon3D( );
       void pushPoint( const Concrete::Coords3D & p );
-      void push_zBufTriangles( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< Computation::ZBufTriangle > * triangleQueue ) const;
+      void push_zBufTriangles( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< Computation::ZBufTriangle > * triangleQueue, bool respectSingleSided = false ) const;
+
       virtual RefCountPtr< const Lang::PaintedPolygon2D > polygon_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const = 0;
       virtual RefCountPtr< const Lang::Color > getColor( ) const = 0;
 
@@ -423,6 +425,7 @@ namespace MetaPDF
     Computation::FacetShadeOrder shadeOrder_;  // legal values: { 0, 1, 2 }
   public:
     GraySingleSidedPolygon3D( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+			      bool singleSided, // Confusingly, this type is sometimes used also for double-sided polygons.
 			      const Concrete::UnitFloatTriple & polygonUnitNormal,
 			      Concrete::Length m,
 			      Concrete::Length tiebreaker,
@@ -826,6 +829,7 @@ namespace MetaPDF
 
     RefCountPtr< const Lang::ElementaryPath3D > points_;
     RefCountPtr< const Computation::FacetInterpolatorGray > interpolator_;
+    bool singleSided_;
     Concrete::UnitFloatTriple polygonUnitNormal_;
     Concrete::Length m_;
     Concrete::Length tiebreaker_;  // This is used to break ties in the z-buffer.
@@ -834,6 +838,7 @@ namespace MetaPDF
   public:
     SingleSided3DGray( const RefCountPtr< const Lang::ElementaryPath3D > & points,
 		       const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+		       bool singleSided,  // Confusing, but true; this type is curretly sometimes used also for double-sided objects.
 		       const Concrete::UnitFloatTriple & polygonUnitNormal,
 		       Concrete::Length m,
 		       Concrete::Length tiebreaker,

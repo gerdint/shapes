@@ -1107,6 +1107,7 @@ Lang::Core_facet::Core_facet( const char * title )
   formals_->appendEvaluatedCoreFormal( "n2", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "n3", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "tiebreaker", Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( Concrete::ZERO_LENGTH ) ) ) ) );
+  formals_->appendEvaluatedCoreFormal( "double", Kernel::THE_VOID_VARIABLE );
 }
 
 void
@@ -1114,15 +1115,19 @@ Lang::Core_facet::call( Kernel::EvalState * evalState, Kernel::Arguments & args,
 {
   args.applyDefaults( );
 
+  // Note that the <double> defaults to false if and only if there is at least one normal specifyed, and all normals agree on what is the outward normal.
+
   typedef const Lang::ElementaryPath3D PathType;
   typedef const Lang::FacetNormalGray NormalType;
   typedef const Lang::Length TiebreakerType;
+  typedef const Lang::Boolean DoubleSidedType;
 
   RefCountPtr< PathType > path = Helpers::elementaryPathCast3D( title_, args, 0, callLoc );
   RefCountPtr< NormalType > n1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
   RefCountPtr< NormalType > n2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
   RefCountPtr< NormalType > n3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
   RefCountPtr< TiebreakerType > tiebreaker = Helpers::down_cast_CoreArgument< TiebreakerType >( title_, args, 4, callLoc );
+  RefCountPtr< DoubleSidedType > doubleSided = Helpers::down_cast_CoreArgument< DoubleSidedType >( title_, args, 5, callLoc, true );
 
   if( path->size( ) < 3 )
     {
@@ -1197,6 +1202,46 @@ Lang::Core_facet::call( Kernel::EvalState * evalState, Kernel::Arguments & args,
       return;
     }
 
+  bool isDoubleSided;
+  if( doubleSided != NullPtr< DoubleSidedType >( ) )
+    {
+      isDoubleSided = doubleSided->val_;
+    }
+  else
+    {
+      if( numNormals == 0 )
+	{
+	  isDoubleSided = true;
+	}
+      else
+	{
+	  bool allAgree = true;
+	  bool n1Agree = Concrete::inner( normal, n1->normal( ) ) > 0;
+	  if( n2 != NullPtr< NormalType >( ) )
+	    {
+	      allAgree = allAgree && ( ( Concrete::inner( normal, n2->normal( ) ) > 0 ) == n1Agree );
+	    }
+	  if( n3 != NullPtr< NormalType >( ) )
+	    {
+	      allAgree = allAgree && ( ( Concrete::inner( normal, n3->normal( ) ) > 0 ) == n1Agree );
+	    }
+	  if( allAgree )
+	    {
+	      if( ! n1Agree )
+		{
+		  normal = normal.reverse( );
+		}
+	      isDoubleSided = false;
+	    }
+	  else
+	    {
+	      std::cerr << "Warning: A facet without explicitly specified double-sidedness had normals pointing in crazy directions, making it double sided." << std::endl ;
+	      isDoubleSided = true;
+	    }
+	}
+    }
+
+
   RefCountPtr< const Computation::FacetInterpolatorGray > interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >( NullPtr< const Computation::FacetInterpolatorGray >( ) );
   if( numNormals == 0 )
     {
@@ -1254,7 +1299,9 @@ Lang::Core_facet::call( Kernel::EvalState * evalState, Kernel::Arguments & args,
  done:
   RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
  
-  cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DGray( path, interpolator, normal, Concrete::inner( normal, p0 ),
+  cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DGray( path, interpolator,
+								  ! isDoubleSided,  // Note that this argument refers to single-sidedness
+								  normal, Concrete::inner( normal, p0 ),
 								  tiebreaker->get( ),
 								  facetState->viewResolution_,
 								  facetState->shadeOrder_ ) ),

@@ -1175,8 +1175,8 @@ Lang::Facing2Din3D::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Computation::PaintedPolygon3D::PaintedPolygon3D( const Concrete::UnitFloatTriple & normal, Concrete::Length m, Concrete::Length tiebreaker )
-  : normal_( normal ), m_( m ), tiebreaker_( tiebreaker )
+Computation::PaintedPolygon3D::PaintedPolygon3D( bool singleSided, const Concrete::UnitFloatTriple & normal, Concrete::Length m, Concrete::Length tiebreaker )
+  : singleSided_( singleSided ), normal_( normal ), m_( m ), tiebreaker_( tiebreaker )
 { }
 
 Computation::PaintedPolygon3D::~PaintedPolygon3D( )
@@ -1195,8 +1195,10 @@ Computation::PaintedPolygon3D::pushPoint( const Concrete::Coords3D & p )
 }
 
 void
-Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< Computation::ZBufTriangle > * triangleQueue ) const
+Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< Computation::ZBufTriangle > * triangleQueue, bool respectSingleSided ) const
 {
+  // This function shall not push tiny triangles!
+
   // Note that the ZBufTriangles pushed are not completely transformed, since *this is the painter, and not transformed by tf.
   // The ugly solution to this is that tf must also be specified when painting the area.
 
@@ -1210,6 +1212,14 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
   typedef Computation::ZBufTriangle::ZMap ZMapType;
   if( tf.isIdentity( ) )
     {
+      if( respectSingleSided && singleSided_ )
+	{
+	  if( normal_.z_ <= 0 )
+	    {
+	      return;
+	    }
+	}
+
       RefCountPtr< const ZMapType > zMap( new ZMapType( normal_, m_, tiebreaker_, eyez ) );
       typedef typeof points_ ListType;
       ListType::const_iterator i = points_.begin( );
@@ -1220,9 +1230,13 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
       for( ; i != points_.end( ); ++i )
 	{
 	  Concrete::Coords2D p2 = i->make2DAutomatic( eyez );
-	  triangleQueue->push_back( Computation::ZBufTriangle( this,
-							       zMap,
-							       p0, p1, p2 ) );
+	  // This tolerance test assures that we don't produce tiny-tiny triangles.  It is an inscribed circle test.
+	  if( Computation::triangleArea( p0, p1, p2 ) > Computation::theTrixelizeOverlapTol * Computation::triangleSemiPerimeter( p0, p1, p2 ) )
+	    {
+	      triangleQueue->push_back( Computation::ZBufTriangle( this,
+								   zMap,
+								   p0, p1, p2 ) );
+	    }
 	  p1 = p2;
 	}
     }
@@ -1231,6 +1245,13 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
       RefCountPtr< const ZMapType > zMap = RefCountPtr< const ZMapType >( NullPtr< const ZMapType >( ) );
       {
 	Concrete::UnitFloatTriple Tnormal = tf.transformPlaneUnitNormal( normal_ );
+	if( respectSingleSided && singleSided_ )
+	  {
+	    if( Tnormal.z_ <= 0 )
+	      {
+		return;
+	      }
+	  }
 
 	double ax = fabs( normal_.x_ );
 	double ay = fabs( normal_.y_ );
@@ -1263,9 +1284,13 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
       for( ; i != points_.end( ); ++i )
 	{
 	  Concrete::Coords2D p2 = i->transformed( tf ).make2DAutomatic( eyez );
-	  triangleQueue->push_back( Computation::ZBufTriangle( this,
-							       zMap,
-							       p0, p1, p2 ) );
+	  // This tolerance test assures that we don't produce tiny-tiny triangles.  It is an inscribed circle test.
+	  if( Computation::triangleArea( p0, p1, p2 ) > Computation::theTrixelizeOverlapTol * Computation::triangleSemiPerimeter( p0, p1, p2 ) )
+	    {
+	      triangleQueue->push_back( Computation::ZBufTriangle( this,
+								   zMap,
+								   p0, p1, p2 ) );
+	    }
 	  p1 = p2;
 	}
     }
@@ -1692,7 +1717,7 @@ Computation::StrokedLine3D::push_zBufLine( const Lang::Transform3D & tf, const C
 Computation::FilledPolygon3D::FilledPolygon3D( const RefCountPtr< const Kernel::GraphicsState > & metaState,
 					       const Concrete::UnitFloatTriple & normal, Concrete::Length m,
 					       Concrete::Length tiebreaker )
-  : Computation::PaintedPolygon3D( normal, m, tiebreaker ), metaState_( metaState )
+  : Computation::PaintedPolygon3D( false, normal, m, tiebreaker ), metaState_( metaState )  // false means not single-sided.
 { }
 
 Computation::FilledPolygon3D::~FilledPolygon3D( )
@@ -1740,7 +1765,7 @@ Computation::FilledPolygon3D::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 Computation::NullPolygon3D::NullPolygon3D(  )
-  : Computation::PaintedPolygon3D( Concrete::UnitFloatTriple( 1., 0., 0., 1. ), 0, Concrete::ZERO_LENGTH )
+  : Computation::PaintedPolygon3D( true, Concrete::UnitFloatTriple( 1., 0., 0., 1. ), 0, Concrete::ZERO_LENGTH )
 { }
 
 Computation::NullPolygon3D::~NullPolygon3D( )
@@ -1765,12 +1790,13 @@ Computation::NullPolygon3D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Computation::GraySingleSidedPolygon3D::GraySingleSidedPolygon3D( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+								 bool singleSided,
 								 const Concrete::UnitFloatTriple & polygonUnitNormal,
 								 Concrete::Length m,
 								 Concrete::Length tiebreaker,
 								 Concrete::Length viewResolution,
 								 Computation::FacetShadeOrder shadeOrder )
-  : Computation::PaintedPolygon3D( polygonUnitNormal, m, tiebreaker ),
+  : Computation::PaintedPolygon3D( singleSided, polygonUnitNormal, m, tiebreaker ),
     interpolator_( interpolator ),
     viewResolution_( viewResolution ),
     shadeOrder_( shadeOrder )
@@ -2502,12 +2528,13 @@ Lang::PaintedPath3D::gcMark( Kernel::GCMarkedSet & marked )
 
 Lang::SingleSided3DGray::SingleSided3DGray( const RefCountPtr< const Lang::ElementaryPath3D > & points,
 					    const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+					    bool singleSided,
 					    const Concrete::UnitFloatTriple & polygonUnitNormal,
 					    Concrete::Length m,
 					    Concrete::Length tiebreaker,
 					    Concrete::Length viewResolution,
 					    Computation::FacetShadeOrder shadeOrder )
-  : points_( points ), interpolator_( interpolator ), polygonUnitNormal_( polygonUnitNormal ), m_( m ), tiebreaker_( tiebreaker ),
+  : points_( points ), interpolator_( interpolator ), singleSided_( singleSided ), polygonUnitNormal_( polygonUnitNormal ), m_( m ), tiebreaker_( tiebreaker ),
     viewResolution_( viewResolution ), shadeOrder_( shadeOrder )
 { }
 
@@ -2549,6 +2576,7 @@ Lang::SingleSided3DGray::polygonize( std::list< RefCountPtr< Computation::Painte
   RefCountPtr< Computation::GraySingleSidedPolygon3D > res =
     RefCountPtr< Computation::GraySingleSidedPolygon3D >
     ( new Computation::GraySingleSidedPolygon3D( interpolator_->transformed( tf ),
+						 singleSided_,
 						 Tnormal,
 						 Tm,
 						 tiebreaker_,

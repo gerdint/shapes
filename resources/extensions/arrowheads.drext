@@ -54,11 +54,24 @@ MetaPostArrow3D: \ normal p ahLength:VOID ahAngle:30° .>
     theLength: [if [typeof ahLength]==Void @width*5 ahLength]
     l: [min theLength 0.9*[abs p]]
     e: [p 0]--[p l]
-    stderr << e << `¢n´
-    stderr << [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e] << `¢n´
-    stderr << [reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]] << `¢n´
     rev: [reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]
     @<< [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--rev--cycle]
     @<< [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--[reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]--cycle]
+    2*@width
+  }
+
+TriangleArrow3D: \ p normal:(0,0,1) ahLength:VOID ahAngle:30° .>
+  { sl: [p 0]
+    z: sl.p
+    l: [if [typeof ahLength]==Void @width*5 ahLength]
+    rotDir1: [cross sl.T [orthogonal sl.T]]
+    {
+      rotDir: rotDir1
+      @<< fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle )
+    }
+    {
+      rotDir: [cross sl.T rotDir1]
+      @<< fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle )
+    }
     2*@width
   }
