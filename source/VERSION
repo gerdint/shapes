@@ -1,8 +1,13 @@
-0.1.1
+0.1.2
 The first line of this file shall be the current version string.  It shall be incremented at least after each tagging.  Thus, when tagging, one can either use the current version string, or increment.  If incrementing, note that it makes no sense to increment only the least significant part of the version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
+
+====( 0.1.2 )====
+
+This version is to be used during the early phases of the transition from hot variables to temporary states.  One the program becomes useful again, the version number shall be incremented.
+
 
 ====( 0.1.1 )====
 2007-01-02

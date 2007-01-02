@@ -87,7 +87,7 @@ all:$(PROGRAM) $(LEXERFIXER)
 classtree2.h: classtree1.h
 	cat $< | sed -e 's/CLASSTREE1/CLASSTREE2/' > $@
 
-$(PROGRAM): classtree2.h $(OBJECTS)
+$(PROGRAM): classtree2.h $(OBJECTS) VERSION
 	$(CC) $(CFLAGS) -c -o version.o version.c $(DVERSION)
 	$(LD) -o $(PROGRAM) $(OBJECTS) version.o $(LIBS)
 
