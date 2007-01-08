@@ -482,7 +482,7 @@ Lang::Core_intersection::call( Kernel::EvalState * evalState, Kernel::Arguments 
     {
       if( idKey == 0 )
 	{
-	  idKey = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( callLoc, Lang::HANDLER_NO_INTERSECTION ) );
+	  idKey = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( callLoc, Lang::HANDLER_NO_INTERSECTION ) );
 	}
 
       const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( *idKey );

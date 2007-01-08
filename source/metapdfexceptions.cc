@@ -757,54 +757,107 @@ Exceptions::UserArityMismatch::display( std::ostream & os ) const
 }
 
 
-Exceptions::NamedArgumentMismatch::NamedArgumentMismatch( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name )
-  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), name( _name )
+Exceptions::NamedFormalMismatch::NamedFormalMismatch( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, Exceptions::NamedFormalMismatch::Type type )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), name( _name ), type_( type )
 { }
 
-Exceptions::NamedArgumentMismatch::~NamedArgumentMismatch( )
-{ }
-
-void
-Exceptions::NamedArgumentMismatch::display( std::ostream & os ) const
-{
-  os << "Function with formals at " << formalsLoc << " has no named argument called " << name << "." << std::endl ;
-}
-
-
-Exceptions::NamedArgumentAlreadySpecified::NamedArgumentAlreadySpecified( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, size_t _pos )
-  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), name( _name ), pos( _pos )
-{ }
-
-Exceptions::NamedArgumentAlreadySpecified::~NamedArgumentAlreadySpecified( )
+Exceptions::NamedFormalMismatch::~NamedFormalMismatch( )
 { }
 
 void
-Exceptions::NamedArgumentAlreadySpecified::display( std::ostream & os ) const
+Exceptions::NamedFormalMismatch::display( std::ostream & os ) const
 {
-  os << "The formal named " << name << ", defined at " << formalsLoc << " is already defined by order, at position " << pos << "." << std::endl ;
+  os << "Function with formals at " << formalsLoc << " has no named ";
+  switch( type_ )
+    {
+    case VARIABLE:
+      os << "variable" ;
+      break;
+    case STATE:
+      os << "state" ;
+      break;
+    default:
+      os << "<?ERROR?" ;
+    }
+  os << " called " << name << "." << std::endl ;
 }
 
-Exceptions::MissingArguments::MissingArguments( const Ast::SourceLocation _formalsLoc, std::map< size_t, RefCountPtr< const char > > * _missingArgs )
-  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), missingArgs( _missingArgs )
+
+Exceptions::NamedFormalAlreadySpecified::NamedFormalAlreadySpecified( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, size_t _pos, Exceptions::NamedFormalAlreadySpecified::Type type )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), name( _name ), pos( _pos ), type_( type  )
+{ }
+
+Exceptions::NamedFormalAlreadySpecified::~NamedFormalAlreadySpecified( )
+{ }
+
+void
+Exceptions::NamedFormalAlreadySpecified::display( std::ostream & os ) const
+{
+  os << "The formal " ;
+  switch( type_ )
+    {
+    case VARIABLE:
+      os << "variable" ;
+      break;
+    case STATE:
+      os << "state" ;
+      break;
+    default:
+      os << "<?ERROR?" ;
+    }
+  os << " named " << name << ", defined at " << formalsLoc << " is already defined by order, at position " << pos << "." << std::endl ;
+}
+
+Exceptions::MissingArguments::MissingArguments( const Ast::SourceLocation _formalsLoc, std::map< size_t, RefCountPtr< const char > > * _missingVariables, std::map< size_t, RefCountPtr< const char > > * _missingStates )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), missingVariables( _missingVariables ), missingStates( _missingStates )
 { }
 
 Exceptions::MissingArguments::~MissingArguments( )
 {
-  delete missingArgs;
+  if( missingVariables != 0 )
+    {
+      delete missingVariables;
+    }
+  if( missingStates != 0 )
+    {
+      delete missingStates;
+    }
 }
 
 void
 Exceptions::MissingArguments::display( std::ostream & os ) const
 {
-  os << "Among the formals at " << formalsLoc << ", the following arguments are missing:" ;
-  typedef typeof *missingArgs MapType;
-  for( MapType::const_iterator i = missingArgs->begin( ); i != missingArgs->end( ); ++i )
+  os << "Among the formals at " << formalsLoc ;
+  if( missingVariables != 0 )
     {
-      if( i != missingArgs->begin( ) )
+      os << ", the following variables are missing:" ;
+      typedef typeof *missingVariables MapType;
+      for( MapType::const_iterator i = missingVariables->begin( ); i != missingVariables->end( ); ++i )
 	{
-	  os << "," ;
+	  if( i != missingVariables->begin( ) )
+	    {
+	      os << "," ;
+	    }
+	  os << " (" << i->first << ")" << i->second.getPtr( ) ;
 	}
-      os << " (" << i->first << ")" << i->second.getPtr( ) ;
+    }
+  if( missingStates != 0 )
+    {
+      os << ", " ;
+      if( missingVariables != 0 )
+	{
+	  os << "and " ;
+	}
+      os << "the following states are missing:" ;
+      typedef typeof *missingStates MapType;
+      for( MapType::const_iterator i = missingStates->begin( ); i != missingStates->end( ); ++i )
+	{
+	  if( i != missingStates->begin( ) )
+	    {
+	      os << "," ;
+	    }
+	  os << " (" << i->first << ")" << i->second.getPtr( ) ;
+	}
     }
   os << "." << std::endl ;
 }
@@ -843,19 +896,19 @@ Exceptions::CoreArityMismatch::display( std::ostream & os ) const
 }
 
 
-Exceptions::CoreNoNamedArguments::CoreNoNamedArguments( const char * _title )
+Exceptions::CoreNoNamedFormals::CoreNoNamedFormals( const char * _title )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), title( _title ), titleMem( NullPtr< const char >( ) )
 { }
 
-Exceptions::CoreNoNamedArguments::CoreNoNamedArguments( const RefCountPtr< const char > & _title )
+Exceptions::CoreNoNamedFormals::CoreNoNamedFormals( const RefCountPtr< const char > & _title )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), title( _title.getPtr( ) ), titleMem( _title )
 { }
 
-Exceptions::CoreNoNamedArguments::~CoreNoNamedArguments( )
+Exceptions::CoreNoNamedFormals::~CoreNoNamedFormals( )
 { }
 
 void
-Exceptions::CoreNoNamedArguments::display( std::ostream & os ) const
+Exceptions::CoreNoNamedFormals::display( std::ostream & os ) const
 {
   os << "Core function " << title << " does not accept named arguments." << std::endl ;
 }
@@ -1251,45 +1304,45 @@ Exceptions::UndefinedEscapeContinuation::display( std::ostream & os ) const
 }
 
 
-Exceptions::TackingOnCold::TackingOnCold( )
+Exceptions::TackingOnDead::TackingOnDead( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }
 
-Exceptions::TackingOnCold::~TackingOnCold( )
+Exceptions::TackingOnDead::~TackingOnDead( )
 { }
 
 void
-Exceptions::TackingOnCold::display( std::ostream & os ) const
+Exceptions::TackingOnDead::display( std::ostream & os ) const
 {
-  os << "The destination variable is frozen." << std::endl ;
+  os << "The destination state is dead." << std::endl ;
 }
 
 
-Exceptions::ReFreezing::ReFreezing( )
+Exceptions::UnFreezable::UnFreezable( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }
 
-Exceptions::ReFreezing::~ReFreezing( )
+Exceptions::UnFreezable::~UnFreezable( )
 { }
 
 void
-Exceptions::ReFreezing::display( std::ostream & os ) const
+Exceptions::UnFreezable::display( std::ostream & os ) const
 {
-  os << "The variable is already frozen." << std::endl ;
+  os << "The state cannot be frozen." << std::endl ;
 }
 
 
-Exceptions::WarmAccess::WarmAccess( )
+Exceptions::UnPeekable::UnPeekable( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }
 
-Exceptions::WarmAccess::~WarmAccess( )
+Exceptions::UnPeekable::~UnPeekable( )
 { }
 
 void
-Exceptions::WarmAccess::display( std::ostream & os ) const
+Exceptions::UnPeekable::display( std::ostream & os ) const
 {
-  os << "The accessed variable is still warm." << std::endl ;
+  os << "The state cannot be peeked.  Consider freezing it." << std::endl ;
 }
 
 
@@ -1303,7 +1356,7 @@ Exceptions::UninitializedAccess::~UninitializedAccess( )
 void
 Exceptions::UninitializedAccess::display( std::ostream & os ) const
 {
-  os << "The accessed variable has not been initialized yet." << std::endl ;
+  os << "The accessed variable or state has not been initialized yet." << std::endl ;
 }
 
 

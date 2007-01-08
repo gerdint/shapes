@@ -39,9 +39,13 @@ namespace MetaPDF
     class Arguments
     {
       const Kernel::EvaluatedFormals * formals_;
-      RefCountPtr< std::vector< Kernel::HandleType > > variables_;
+      Environment::ValueVector variables_;
       std::vector< const Ast::Expression * > locations_;
       size_t dst_;
+
+      Environment::StateVector states_;   // This type must match that used in Environment
+      std::vector< const Ast::Expression * > stateLocations_;
+      size_t stateDst_;
       
     public:
       Arguments( const Kernel::EvaluatedFormals * formals );
@@ -51,6 +55,9 @@ namespace MetaPDF
       
       void addOrderedArgument( const Kernel::HandleType & arg, Ast::Expression * loc );
       void addNamedArgument( const char * id, const Kernel::HandleType & arg, Ast::Expression * loc );
+
+      void addOrderedState( const Kernel::StateHandleType & state, Ast::Expression * loc );
+      void addNamedState( const char * id, const Kernel::StateHandleType & state, Ast::Expression * loc );
       
       void applyDefaults( );
       

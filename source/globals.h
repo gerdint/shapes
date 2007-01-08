@@ -63,6 +63,8 @@ namespace MetaPDF
     extern HandleType THE_TRUE_VARIABLE;
     extern HandleType THE_VOID_VARIABLE;
 
+    extern StateHandleType THE_SLOT_STATE;
+
   }
 
   namespace Lang

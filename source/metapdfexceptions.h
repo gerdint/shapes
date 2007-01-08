@@ -509,33 +509,42 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class NamedArgumentMismatch : public RuntimeError
+    class NamedFormalMismatch : public RuntimeError
     {
+    public:
+      enum Type{ VARIABLE, STATE };
+    private:
       const Ast::SourceLocation formalsLoc;    
       RefCountPtr< const char > name;
+      Type type_;
     public:
-      NamedArgumentMismatch( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name );
-      virtual ~NamedArgumentMismatch( );
+      NamedFormalMismatch( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, Type type );
+      virtual ~NamedFormalMismatch( );
       virtual void display( std::ostream & os ) const;
     };
 
-    class NamedArgumentAlreadySpecified : public RuntimeError
+    class NamedFormalAlreadySpecified : public RuntimeError
     {
+    public:
+      enum Type{ VARIABLE, STATE };
+    private:
       const Ast::SourceLocation formalsLoc;    
       RefCountPtr< const char > name;
       size_t pos;
+      Type type_;
     public:
-      NamedArgumentAlreadySpecified( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, size_t _pos );
-      virtual ~NamedArgumentAlreadySpecified( );
+      NamedFormalAlreadySpecified( const Ast::SourceLocation _formalsLoc, RefCountPtr< const char > _name, size_t _pos, Type type );
+      virtual ~NamedFormalAlreadySpecified( );
       virtual void display( std::ostream & os ) const;
     };
 
     class MissingArguments : public RuntimeError
     {
       const Ast::SourceLocation formalsLoc;
-      std::map< size_t, RefCountPtr< const char > > * missingArgs;
+      std::map< size_t, RefCountPtr< const char > > * missingVariables;
+      std::map< size_t, RefCountPtr< const char > > * missingStates;
     public:
-      MissingArguments( const Ast::SourceLocation _formalsLoc, std::map< size_t, RefCountPtr< const char > > * _missingArgs );
+      MissingArguments( const Ast::SourceLocation _formalsLoc, std::map< size_t, RefCountPtr< const char > > * _missingVariables, std::map< size_t, RefCountPtr< const char > > * _missingStates );
       ~MissingArguments( );
       virtual void display( std::ostream & os ) const;
     };
@@ -556,14 +565,14 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class CoreNoNamedArguments : public RuntimeError
+    class CoreNoNamedFormals : public RuntimeError
     {
       const char * title;
       RefCountPtr< const char > titleMem;
     public:
-      CoreNoNamedArguments( const char * _title );
-      CoreNoNamedArguments( const RefCountPtr< const char > & _title );
-      virtual ~CoreNoNamedArguments( );
+      CoreNoNamedFormals( const char * _title );
+      CoreNoNamedFormals( const RefCountPtr< const char > & _title );
+      virtual ~CoreNoNamedFormals( );
       virtual void display( std::ostream & os ) const;
     };
 
@@ -820,27 +829,27 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class TackingOnCold : public RuntimeError
+    class TackingOnDead : public RuntimeError
     {
     public:
-      TackingOnCold( );
-      virtual ~TackingOnCold( );
+      TackingOnDead( );
+      virtual ~TackingOnDead( );
       virtual void display( std::ostream & os ) const;
     };
 
-    class ReFreezing : public RuntimeError
+    class UnFreezable : public RuntimeError
     {
     public:
-      ReFreezing( );
-      virtual ~ReFreezing( );
+      UnFreezable( );
+      virtual ~UnFreezable( );
       virtual void display( std::ostream & os ) const;
     };
 
-    class WarmAccess : public RuntimeError
+    class UnPeekable : public RuntimeError
     {
     public:
-      WarmAccess( );
-      virtual ~WarmAccess( );
+      UnPeekable( );
+      virtual ~UnPeekable( );
       virtual void display( std::ostream & os ) const;
     };
 

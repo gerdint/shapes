@@ -832,16 +832,16 @@ Kernel::Environment::getVarHandle( size_t pos )
 }
 
 size_t
-Kernel::Environment::findLocalPositionDynamic( const Ast::SourceLocation & loc, const char * id ) const
+Kernel::Environment::findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicKeyBindings_ == 0 )
     {
-      throw Exceptions::InternalError( "Environment::findLocalPositionDynamic called with dynamicKeyBindings_ == 0." );
+      throw Exceptions::InternalError( "Environment::findLocalDynamicPosition called with dynamicKeyBindings_ == 0." );
     }
   MapType::const_iterator i = dynamicKeyBindings_->find( id );
   if( i == dynamicKeyBindings_->end( ) )
     {
-      throw Exceptions::InternalError( loc, "Environment::findLocalPositionDynamic failed" );
+      throw Exceptions::InternalError( loc, "Environment::findLocalDynamicPosition failed" );
     }
   return i->second;
 }
@@ -869,11 +869,11 @@ Kernel::Environment::defineDynamic( const char * debugName, size_t pos, const Re
 }
 
 Kernel::Environment::LexicalKey
-Kernel::Environment::findLexicalKeyDynamic( const Ast::SourceLocation & loc, const char * id ) const
+Kernel::Environment::findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicKeyBindings_ == 0 )
     {
-      return parent_->findLexicalKeyDynamic( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
 
   MapType::const_iterator i = dynamicKeyBindings_->find( id );
@@ -886,7 +886,7 @@ Kernel::Environment::findLexicalKeyDynamic( const Ast::SourceLocation & loc, con
 	  strcpy( msg + 1, id );
 	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ) );
 	}
-      return parent_->findLexicalKeyDynamic( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );

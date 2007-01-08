@@ -161,7 +161,7 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class Freeze : public SequencingNode
+    class Freeze : public Expression
     {
       mutable size_t ** idPos_;
     public:

@@ -14,12 +14,14 @@ using namespace std;
 
 
 Kernel::Formals::Formals( )
-  : seenDefault_( false ), argumentOrder_( new std::map< const char *, size_t, charPtrLess > )
+  : seenDefault_( false ), argumentOrder_( new std::map< const char *, size_t, charPtrLess > ),
+    stateOrder_( new std::map< const char *, size_t, charPtrLess > )
 { }
 
 Kernel::Formals::~Formals( )
 {
   delete argumentOrder_;
+  delete stateOrder_;
 }
 
 void
@@ -180,7 +182,7 @@ Ast::ArgListExprs::ConstIterator::ConstIterator( const Ast::ArgListExprs::ConstI
 { }
 
 Ast::ArgListExprs::ArgListExprs( bool exprOwner )
-  : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > )
+  : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new std::list< const char * > ), namedStates_( new std::map< const char *, const char *, charPtrLess > )
 {
   if( exprOwner_ )
     {
@@ -188,8 +190,8 @@ Ast::ArgListExprs::ArgListExprs( bool exprOwner )
     }
 }
 
-Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs )
-  : exprOwner_( true ), orderedExprs_( orderedExprs ), namedExprs_( namedExprs )
+Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::Expression * > * orderedStates, std::map< const char *, Ast::Expression *, charPtrLess > * namedStates )
+  : exprOwner_( true ), orderedExprs_( orderedExprs ), namedExprs_( namedExprs ), orderedStates_( orderedStates ), namedStates_( namedStates )
 { }
 
 Ast::ArgListExprs::~ArgListExprs( )
@@ -218,10 +220,35 @@ Ast::ArgListExprs::~ArgListExprs( )
       }
     delete namedExprs_;
   }
+
+  {
+    if( exprOwner_ )
+      {
+	typedef list< const char * >::iterator I;
+	for( I i = orderedStates_->begin( ); i != orderedStates_->end( ); ++i )
+	  {
+	    delete *i;
+	  }
+      }
+    delete orderedStates_;
+  }
+
+  {
+    if( exprOwner_ )
+      {
+	typedef std::map< const char *, const char *, charPtrLess >::const_iterator I;
+	for( I i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
+	  {
+	    delete i->first;
+	    delete i->second;
+	  }
+      }
+    delete namedStates_;
+  }
 }
 
 Ast::ArgListExprs::ArgListExprs( size_t numberOfOrderedDummyExprs )
-  : exprOwner_( true ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > )
+  : exprOwner_( true ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new std::list< const char * > ), namedStates_( new std::map< const char *, const char *, charPtrLess > )
 {
   for( size_t i = 0; i < numberOfOrderedDummyExprs; ++i )
     {
@@ -310,7 +337,7 @@ Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & i
 }
 
 void
-Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals ) const
+Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env ) const
 {
   typedef const Lang::SingleListPair ConsType;
 
@@ -352,6 +379,31 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
   /* Here, it could/should be verified that vals is null.  However, it only isn't in case of an internal error...
    */
+
+  /* Next, we turn to the states.  The states need no evaluation, as they are always passed by reference.
+   */
+
+  {
+    Ast::SourceLocation dummy;
+    typedef std::map< const char *, Ast::LexicalState *, charPtrLess >::const_iterator I;
+    I i = namedStates_->begin( );
+    I end = namedStates_->end( );
+    for( ; i != end; ++i )
+      {
+	dst->addNamedState( i->first, i->second->getHandle( env ) , i->second );
+      }
+  }
+
+  {
+    typedef list< Ast::LexicalState * >::const_iterator I;
+    I i = orderedStates_->begin( );
+    I end = orderedStates_->end( );
+    for( ; i != end; ++i )
+      {
+	dst->addOrderedState( i->getHandle( env ), *i );
+      }
+  }
+
 }
 
 Ast::ArgListExprs::ConstIterator
@@ -387,8 +439,8 @@ Ast::FunctionFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 }
 
 
-Kernel::CallCont_last::CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
-  : Kernel::Continuation( callLoc ), fun_( fun ), argList_( argList ), curry_( curry ), dyn_( dyn ), cont_( cont )
+Kernel::CallCont_last::CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( callLoc ), fun_( fun ), argList_( argList ), curry_( curry ), env_( env ), dyn_( dyn ), cont_( cont )
 { }
 
 Kernel::CallCont_last::~CallCont_last( )
@@ -401,7 +453,7 @@ Kernel::CallCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsU
   RefCountPtr< ArgType > vals = Helpers::down_cast< ArgType >( valsUntyped, "< Internal error situation in CallCont_last >" );
   
   Kernel::Arguments args = fun_->newCurriedArguments( );
-  argList_->bind( & args, vals );
+  argList_->bind( & args, vals, env_ );
 
   if( curry_ )
     {
@@ -550,7 +602,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 	  }
 	if( argList_->namedExprs_->size( ) != 0 )
 	  {
-	    throw Exceptions::CoreNoNamedArguments( "<transform application>" );
+	    throw Exceptions::CoreNoNamedFormals( "<transform application>" );
 	  }
 	evalState->expr_ = argList_->orderedExprs_->front( );
 	evalState->env_ = env_;
@@ -574,7 +626,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 	  }
 	if( argList_->namedExprs_->size( ) != 0 )
 	  {
-	    throw Exceptions::CoreNoNamedArguments( "<transform application>" );
+	    throw Exceptions::CoreNoNamedFormals( "<transform application>" );
 	  }
 	evalState->expr_ = argList_->orderedExprs_->front( );
 	evalState->env_ = env_;
@@ -606,7 +658,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
       }
     if( argList_->namedExprs_->size( ) != 0 )
       {
-	throw Exceptions::CoreNoNamedArguments( "<path point selection>" );
+	throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
       }
     
     evalState->expr_ = argList_->orderedExprs_->front( );
@@ -641,7 +693,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
       }
     if( argList_->namedExprs_->size( ) != 0 )
       {
-	throw Exceptions::CoreNoNamedArguments( "<path point selection>" );
+	throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
       }
     
     evalState->expr_ = argList_->orderedExprs_->front( );

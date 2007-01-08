@@ -19,6 +19,7 @@ namespace MetaPDF
       std::map< const char *, size_t, charPtrLess > * argumentOrder_;
       std::vector< Ast::Expression * > defaultExprs_;
       std::vector< bool > forcePos_;
+      std::map< const char *, size_t, charPtrLess > * stateOrder_;
       Formals( );
       ~Formals( );
       void setLoc( Ast::SourceLocation loc );
@@ -63,6 +64,8 @@ namespace MetaPDF
     public:
       std::list< Ast::Expression * > * orderedExprs_;
       std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs_;
+      std::list< Ast::LexicalState * > * orderedStates_;
+      std::map< const char *, Ast::LexicalState *, charPtrLess > * namedStates_;
       
       class ConstIterator
       {
@@ -76,14 +79,14 @@ namespace MetaPDF
       };
       
       ArgListExprs( bool exprOwner );
-      ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs );
+      ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::LexicalState * > * orderedStates, std::map< const char *, Ast::LexicalState *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
       
       ConstIterator begin( ) const;
       
       void evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const;
-      void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals ) const;
+      void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env ) const;
     };
     
     class FunctionFunction : public Lang::Function
@@ -130,10 +133,11 @@ namespace MetaPDF
       RefCountPtr< const Lang::Function > fun_;
       const Ast::ArgListExprs * argList_;
       bool curry_;
+      Kernel::PassedEnv env_;
       Kernel::PassedDyn dyn_;
       Kernel::ContRef cont_;
     public:
-      CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
+      CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
       virtual ~CallCont_last( );
       virtual void takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;

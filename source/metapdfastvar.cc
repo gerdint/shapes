@@ -317,7 +317,7 @@ Ast::DynamicVariable::eval( Kernel::EvalState * evalState ) const
 
       if( *idKey_ == 0 )
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( loc_, id_ ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( loc_, id_ ) );
 	}
       
       const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
@@ -408,7 +408,7 @@ Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
   if( *idKey_ == 0 )
     {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( idLoc_, id_ ) );
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( idLoc_, id_ ) );
     }
 
   const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
@@ -452,7 +452,7 @@ Ast::DynamicBindWarmLexiographicExpr::eval( Kernel::EvalState * evalState ) cons
 {
   if( *dstIdKey_ == 0 )
     {
-      *dstIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( dstLoc_, dstId_ ) );
+      *dstIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( dstLoc_, dstId_ ) );
       *srcIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( srcLoc_, srcId_ ) );
     }
   
@@ -488,8 +488,8 @@ Ast::DynamicBindWarmDynamicExpr::eval( Kernel::EvalState * evalState ) const
 {
   if( *dstIdKey_ == 0 )
     {
-      *dstIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( dstLoc_, dstId_ ) );
-      *srcIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( srcLoc_, srcId_ ) );
+      *dstIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( dstLoc_, dstId_ ) );
+      *srcIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( srcLoc_, srcId_ ) );
     }
 
   const Kernel::DynamicVariableProperties & dstDynProps = evalState->env_->lookupDynamicVariable( **dstIdKey_ );
@@ -561,7 +561,7 @@ Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
 {
   if( *idPos_ == 0 )
     {
-      *idPos_ = new size_t( evalState->env_->findLocalPositionDynamic( idLoc_, id_ ) );
+      *idPos_ = new size_t( evalState->env_->findLocalDynamicPosition( idLoc_, id_ ) );
     }
 
   evalState->expr_ = filterExpr_;
@@ -764,7 +764,7 @@ Ast::DynamicInsertion::eval( Kernel::EvalState * evalState ) const
     {
       if( *idKey_ == 0 )
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKeyDynamic( idLoc_, id_ ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( idLoc_, id_ ) );
 	}
       
       const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
@@ -787,7 +787,9 @@ Ast::DynamicInsertion::eval( Kernel::EvalState * evalState ) const
 
 Ast::Freeze::Freeze( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos )
   : Ast::SequencingNode( idLoc, idLoc, id ), idPos_( idPos )
-{ }
+{
+  immediate_ = true;
+}
 
 Ast::Freeze::~Freeze( )
 {
@@ -804,5 +806,7 @@ Ast::Freeze::eval( Kernel::EvalState * evalState ) const
       *idPos_ = new size_t( evalState->env_->findLocalPosition( idLoc_, id_ ) );
     }
 
-  evalState->env_->freeze( **idPos_, evalState, idLoc_ );
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( evalState->env_->freeze( **idPos_, evalState, idLoc_ ),
+		   evalState );
 }

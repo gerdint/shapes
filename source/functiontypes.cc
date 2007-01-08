@@ -469,8 +469,13 @@ Lang::Transform3D::show( std::ostream & os ) const
 
 
 Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
-  : formals_( formals ), variables_( new std::vector< Kernel::HandleType > ), dst_( 0 )
-{ }
+  : formals_( formals ), variables_( new Environment::ValueVector::ValueType ), dst_( 0 ),
+    states_( new Environment::StateVector::ValueType )
+{
+  // Thinking of all the evaluated cuts, it actually makes some sense not to reserve memory here.
+  //  variables_.reserve( formals_->argumentOrder_->size( ) );
+  //  states_.reserve( formals_->stateOrder_->size( ) );
+}
 
 Kernel::Arguments::~Arguments( )
 { }
@@ -478,6 +483,13 @@ Kernel::Arguments::~Arguments( )
 Kernel::Arguments
 Kernel::Arguments::clone( ) const
 {
+  CHECK(
+	if( states_->size( ) != 0 )
+	  {
+	    throw Exceptions::InternalError( "Arguments with states may not be cloned." );
+	  }
+	);
+
   Kernel::Arguments res( formals_ );
 
   res.variables_->reserve( variables_->size( ) );
@@ -519,24 +531,24 @@ Kernel::Arguments::addOrderedArgument( const Kernel::HandleType & arg, Ast::Expr
 void
 Kernel::Arguments::addNamedArgument( const char * id, const Kernel::HandleType & arg, Ast::Expression * loc )
 {
-  typedef typeof *(formals_->formals_->argumentOrder_) FormalsMapType;
-  FormalsMapType & formalsMap = *(formals_->formals_->argumentOrder_);
-
   if( formals_ == 0 )
     {
-      throw Exceptions::CoreNoNamedArguments( "???" );
+      throw Exceptions::CoreNoNamedFormals( "???" );
     }
+
+  typedef typeof *(formals_->formals_->argumentOrder_) FormalsMapType;
+  FormalsMapType & formalsMap = *(formals_->formals_->argumentOrder_);
 
   FormalsMapType::const_iterator j = formalsMap.find( id );
   if( j == formalsMap.end( ) )
     {
-      throw Exceptions::NamedArgumentMismatch( formals_->formals_->loc( ), strrefdup( id ) );
+      throw Exceptions::NamedFormalMismatch( formals_->formals_->loc( ), strrefdup( id ), Exceptions::NamedFormalMismatch::VARIABLE );
     }
   size_t pos = j->second;
 
   if( pos < dst_ )
     {
-      throw Exceptions::NamedArgumentAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos );
+      throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::VARIABLE );
     }
   
   if( pos >= variables_->size( ) )
@@ -553,7 +565,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::HandleType &
     {
       if( (*variables_)[ pos ] != Kernel::THE_SLOT_VARIABLE )
 	{
-	  throw Exceptions::NamedArgumentAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos );
+	  throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::VARIABLE );
 	}
       (*variables_)[ pos ] = arg;
       locations_[ pos ] = loc;
@@ -564,6 +576,79 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::HandleType &
 	     (*variables_)[ dst_ ] != Kernel::THE_SLOT_VARIABLE )
 	{
 	  ++dst_;
+	}
+    }
+}
+
+void
+Kernel::Arguments::addOrderedState( const Kernel::StateHandleType & state, Ast::Expression * loc )
+{
+  if( stateDst_ == state_->size( ) )
+    {
+      states_->push_back( state );
+      stateLocations_.push_back( loc );
+      ++stateDst_;
+    }
+  else
+    {
+      (*states_)[ stateDst_ ] = state;
+      stateLocations_[ stateDst_ ] = loc;
+      while( stateDst_ < states_->size( ) &&
+	     (*state_)[ stateDst_ ] != Kernel::THE_SLOT_STATE )
+	{
+	  ++stateDst_;
+	}
+    }
+}
+
+void
+Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandleType & state, Ast::Expression * loc )
+{
+  if( formals_ == 0 )
+    {
+      throw Exceptions::CoreNoNamedFormals( "???" );
+    }
+  
+  typedef typeof *(formals_->formals_->stateOrder_) FormalsMapType;
+  FormalsMapType & formalsMap = *(formals_->formals_->stateOrder_);
+
+  FormalsMapType::const_iterator j = formalsMap.find( id );
+  if( j == formalsMap.end( ) )
+    {
+      throw Exceptions::NamedFormalMismatch( formals_->formals_->loc( ), strrefdup( id ), Exceptions::NamedFormalMismatch::STATE );
+    }
+  size_t pos = j->second;
+
+  if( pos < stateDst_ )
+    {
+      throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::STATE );
+    }
+  
+  if( pos >= states_->size( ) )
+    {
+      while( states_->size( ) < pos )
+	{
+	  states_->push_back( Kernel::THE_SLOT_STATE );
+	  stateLocations_.push_back( 0 );
+	}
+      states_->push_back( state );
+      stateLocations_.push_back( loc );
+    }
+  else
+    {
+      if( (*states_)[ pos ] != Kernel::THE_SLOT_STATE )
+	{
+	  throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::STATE );
+	}
+      (*states_)[ pos ] = state;
+      stateLocations_[ pos ] = loc;
+    }
+  if( pos == stateDst_ )
+    {
+      while( stateDst_ < states_->size( ) &&
+	     (*states_)[ stateDst_ ] != Kernel::THE_SLOT_STATE )
+	{
+	  ++stateDst_;
 	}
     }
 }
@@ -582,8 +667,50 @@ Kernel::Arguments::applyDefaults( )
   if( numberOfArguments > formalsSize )
     {
       /* The location of the ball must be set by the caller. */
-      throw Exceptions::UserArityMismatch( formals_->formals_->loc( ), formalsSize, numberOfArguments );
+      throw Exceptions::UserArityMismatch( formals_->formals_->loc( ), formalsSize, numberOfArguments, Exceptions::UserArityMismatch::VARIABLE );
     }
+
+  size_t numberOfStates = states_->size( );
+  size_t formalsStateSize = formals_->formals_->stateOrder_->size( );
+  if( numberOfStates > formalsStateSize )
+    {
+      /* The location of the ball must be set by the caller. */
+      throw Exceptions::UserArityMismatch( formals_->formals_->loc( ), formalsStateSize, numberOfStates, Exceptions::UserArityMismatch::STATE );
+    }
+
+  /* First the easy part:  All states must be specified.
+   */
+  std::map< size_t, RefCountPtr< const char > > * missingStates = 0;
+  {
+    size_t pos = 0;
+    typedef typeof *states_ ListType;
+    for( ListType::const_iterator i = states_->begin( ) i != states_->end( ), ++i, ++pos )
+      {
+	if( *i == Kernel::THE_SLOT_STATE )
+	  {
+	    if( missingStates == 0 )
+	      {
+		missingStates = new typeof *missingStates;
+	      }
+	    typedef typeof *(formals_->formals_->stateOrder_) FormalsMapType;
+	    FormalsMapType & formalsMap = *(formals_->formals_->stateOrder_);
+	    for( FormalsMapType::const_iterator i = formalsMap.begin( ); ; )
+	      {
+		if( i->second == pos )
+		  {
+		    missingStates->insert( missingStates->begin( ), std::pair< size_t, RefCountPtr< const char > >( pos, strrefdup( i->first ) ) );
+		    break;
+		  }
+		++i;
+		if( i == formalsMap.end( ) )
+		  {
+		    throw Exceptions::InternalError( "Failed to find position of missing state." );
+		  }
+	      }
+
+	  }
+      }
+  }
 
   /* Allocate positions in the vector for all arguments.
    */
@@ -597,8 +724,6 @@ Kernel::Arguments::applyDefaults( )
   typedef typeof *variables_ MyListType;
   typedef typeof formals_->defaults_ DefaultListType;
   typedef typeof formals_->locations_ LocationListType;
-  typedef typeof *(formals_->formals_->argumentOrder_) FormalsMapType;
-  FormalsMapType & formalsMap = *(formals_->formals_->argumentOrder_);
   DefaultListType::const_iterator src = formals_->defaults_.begin( );
   LocationListType::const_iterator srcLoc = formals_->locations_.begin( );
   std::map< size_t, RefCountPtr< const char > > * missingArgs = 0;
@@ -616,11 +741,13 @@ Kernel::Arguments::applyDefaults( )
 		{
 		  missingArgs = new typeof *missingArgs;
 		}
+	      typedef typeof *(formals_->formals_->argumentOrder_) FormalsMapType;
+	      FormalsMapType & formalsMap = *(formals_->formals_->argumentOrder_);
 	      for( FormalsMapType::const_iterator i = formalsMap.begin( ); ; )
 		{
 		  if( i->second == pos )
 		    {
-		      missingArgs->insert( missingArgs->begin( ), std::pair< size_t, RefCountPtr< const char > >( pos, strrefdup( i->first ) ) );;
+		      missingArgs->insert( missingArgs->begin( ), std::pair< size_t, RefCountPtr< const char > >( pos, strrefdup( i->first ) ) );
 		      break;
 		    }
 		  ++i;
@@ -638,9 +765,9 @@ Kernel::Arguments::applyDefaults( )
 	}
     }
   
-  if( missingArgs != 0 )
+  if( missingArgs != 0 || missingStates != 0 )
     {
-      throw Exceptions::MissingArguments( formals_->formals_->loc( ), missingArgs );
+      throw Exceptions::MissingArguments( formals_->formals_->loc( ), missingArgs, missingStates );
     }
 }
 

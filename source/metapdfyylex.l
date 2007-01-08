@@ -52,8 +52,11 @@ WhiteSpace [ \t]
 
 UTF8 "π"|"§"
 Float [~]?[0-9]+([.][0-9]*)?
-Letter [a-zA-Z_]|{UTF8}
-Identifier ([_]{Letter}({Letter}|[0-9])*)|({Letter}({Letter}|[0-9])*)
+LowerCaseLetter [a-z_]|{UTF8}
+UpperCaseLetter [A-Z]
+Letter {LowerCaseLetter}|{UpperCaseLetter}
+Identifier {LowerCaseLetter}({Letter}|[0-9])*
+Typename {UpperCaseLetter}({Letter}|[0-9])*
 
 /*
   At the moment, escape characters must occypy exactly 2 bytes.
@@ -87,20 +90,20 @@ Escape "¢"|"¤"
 
 %%
 
-^"#classoption"[ \t]+ { BEGIN( LaTeXOption ); }
-^"#documentclass"[ \t]+ { BEGIN( LaTeXClass ); }
-^"#preamble"[ \t] { BEGIN( LaTeXPreamble ); }
-^"#documenttop"[ \t] { BEGIN( LaTeXDocumentTop ); }
-^"#no-lmodernT1"[\n] { Kernel::theTeXLabelManager.setlmodernT1( metapdflloc, false ); }
-^"#no-utf8"[\n] { Kernel::theTeXLabelManager.setutf8( metapdflloc, false ); }
-^"#seed"[ \t]+ { BEGIN( RandSeed ); }
-^"#unit"[ \t]+ { BEGIN( NewUnitName ); }
-^"#include"[ \t]+ { BEGIN( Incl ); }
-^"#needs"[ \t]+ { BEGIN( Needs ); }
-^"#echo"[ \t] { BEGIN( Echo ); }
-^"#author"[ \t] { BEGIN( Author ); }
-^"#" {
-  throw Exceptions::ScannerError( metapdflloc, strrefdup( "All lines beginning with # must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) );
+^"##classoption"[ \t]+ { BEGIN( LaTeXOption ); }
+^"##documentclass"[ \t]+ { BEGIN( LaTeXClass ); }
+^"##preamble"[ \t] { BEGIN( LaTeXPreamble ); }
+^"##documenttop"[ \t] { BEGIN( LaTeXDocumentTop ); }
+^"##no-lmodernT1"[\n] { Kernel::theTeXLabelManager.setlmodernT1( metapdflloc, false ); }
+^"##no-utf8"[\n] { Kernel::theTeXLabelManager.setutf8( metapdflloc, false ); }
+^"##seed"[ \t]+ { BEGIN( RandSeed ); }
+^"##unit"[ \t]+ { BEGIN( NewUnitName ); }
+^"##include"[ \t]+ { BEGIN( Incl ); }
+^"##needs"[ \t]+ { BEGIN( Needs ); }
+^"##echo"[ \t] { BEGIN( Echo ); }
+^"##author"[ \t] { BEGIN( Author ); }
+^"##" {
+  throw Exceptions::ScannerError( metapdflloc, strrefdup( "All lines beginning with ## must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) );
 }
 
 <LaTeXOption>[^,\n]+ { Kernel::theTeXLabelManager.addDocumentOption( metapdflloc, yytext  ); }
@@ -725,7 +728,17 @@ Escape "¢"|"¤"
 
 "@"{Identifier} {
   metapdflval.str = strdup( yytext + 1 );
-  return T_at_identifier;
+  return T_dynamic_identifier;
+}
+"#"{Identifier} {
+  /* Note: the hash mark is included in the name!  This way, variables and states can live in the same map.
+   */
+  metapdflval.str = strdup( yytext );
+  return T_state_identifier;
+}
+"@#"{Identifier} {
+  metapdflval.str = strdup( yytext + 2 );
+  return T_dynamic_state_identifier;
 }
 "@<<" {
   metapdflval.str = strdup( yytext + 1 );

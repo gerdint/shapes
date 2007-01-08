@@ -134,7 +134,7 @@ void metapdferror( char * msg )
 %token <floatVal> T_float T_length
 %token <expr> T_speciallength
 %token <boolVal> T_bool
-%token <str> T_string T_identifier T_at_identifier T_at_llthan
+%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier T_at_llthan
 
 /* Non-terminal types
  * ------------------
@@ -297,7 +297,7 @@ OneOrMoreArgListItems
   $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( new Ast::LexiographicVariable( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ), true ) );  // true means warm access
 }
-| '(' T_at_identifier T_llthan ')'
+| '(' T_dynamic_identifier T_llthan ')'
 {
   $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( new Ast::DynamicVariable( @2, $2, true ) );  // true means warm access
@@ -317,7 +317,7 @@ OneOrMoreArgListItems
   $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = new Ast::LexiographicVariable( @4, $4, new Kernel::Environment::LexicalKey * ( 0 ), true );   // true means warm access
 }
-| T_identifier ':' '(' T_at_identifier T_llthan ')'
+| T_identifier ':' '(' T_dynamic_identifier T_llthan ')'
 {
   $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = new Ast::DynamicVariable( @4, $4, true );   // true means warm access
@@ -345,7 +345,7 @@ OneOrMoreArgListItems
     }
   $$->orderedExprs_->push_back( new Ast::LexiographicVariable( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ), true ) );  // true means warm access
 }
-| OneOrMoreArgListItems '(' T_at_identifier T_llthan ')'
+| OneOrMoreArgListItems '(' T_dynamic_identifier T_llthan ')'
 {
   $$ = $1;
   if( $$->namedExprs_->size( ) != 0 )
@@ -381,7 +381,7 @@ OneOrMoreArgListItems
     }
   (*$$->namedExprs_)[ $2 ] = new Ast::LexiographicVariable( @5, $5, new Kernel::Environment::LexicalKey * ( 0 ), true );   // true means warm access
 }
-| OneOrMoreArgListItems T_identifier ':' '(' T_at_identifier T_llthan ')'
+| OneOrMoreArgListItems T_identifier ':' '(' T_dynamic_identifier T_llthan ')'
 {
   $$ = $1;
   if( $$->namedExprs_->find( $2 ) != $$->namedExprs_->end( ) )
@@ -694,7 +694,6 @@ ExprExceptConstStrings
       bracket->push_back( new Ast::LexiographicInsertion( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), *i, key ) );
     }
   bracket->push_back( new Ast::Freeze( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
-  bracket->push_back( new Ast::LexiographicVariable( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), key ) );
   $$ = new Ast::CodeBracket( @$, bracket );
 }
 | '(' ':' Expr T_llthan InsertionSequence ')'
@@ -713,7 +712,6 @@ ExprExceptConstStrings
       bracket->push_back( new Ast::LexiographicInsertion( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), *i, key ) );
     }
   bracket->push_back( new Ast::Freeze( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
-  bracket->push_back( new Ast::LexiographicVariable( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), key ) );
   $$ = new Ast::CodeBracket( @$, bracket );
 }
 | T_surrounding Expr
@@ -737,9 +735,14 @@ ExprExceptConstStrings
 			      RefCountPtr< const Lang::Function >( res ),
 			      args );
 }
-| T_at_identifier
+| T_dynamic_identifier
 {
   $$ = new Ast::DynamicVariable( @$, $1 );
+}
+| '(' T_state_identifier ')'
+{
+  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
+  $$ = new Ast::ReadState( @$, $2, key );
 }
 | Expr '.' T_identifier
 {
@@ -884,11 +887,11 @@ ExprExceptConstStrings
 
 
 DynamicBinding
-: T_at_identifier ':' Expr %prec T_dynamiccolon
+: T_dynamic_identifier ':' Expr %prec T_dynamiccolon
 {
   $$ = new Ast::DynamicBindingExpression( @$, $1, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| T_at_identifier ':' '(' T_identifier T_llthan ')'  %prec T_dynamiccolon
+| T_dynamic_identifier ':' '(' T_identifier T_llthan ')'  %prec T_dynamiccolon
 {
   $$ = new Ast::DynamicBindWarmLexiographicExpr( @$, @1, $1, @4, $4 );
 }
@@ -900,15 +903,15 @@ DynamicBinding
 {
   $$ = new Ast::DynamicBindWarmLexiographicExpr( @$, @1, $1, @3, $3 );
 }
-| T_at_identifier ':' '(' T_at_identifier T_llthan ')'  %prec T_dynamiccolon
+| T_dynamic_identifier ':' '(' T_dynamic_identifier T_llthan ')'  %prec T_dynamiccolon
 {
   $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @4, $4 );
 }
-| T_at_llthan ':' '(' T_at_identifier T_llthan ')'  %prec T_dynamiccolon
+| T_at_llthan ':' '(' T_dynamic_identifier T_llthan ')'  %prec T_dynamiccolon
 {
   $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @4, $4 );
 }
-| T_at_llthan ':' T_at_identifier  %prec T_dynamiccolon
+| T_at_llthan ':' T_dynamic_identifier  %prec T_dynamiccolon
 {
   $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @3, $3 );
 }
@@ -992,19 +995,29 @@ GroupElem
   size_t ** pos = new size_t * ( 0 );
   $$ = new Ast::IntroduceCold( @1, $1, $3, pos );
 }
-| T_identifier ':' Expr T_llthan
+| T_state_identifier ':' Expr
 {
   size_t ** pos = new size_t * ( 0 );
-  $$ = new Ast::IntroduceWarm( @1, $1, $3, pos );
+  $$ = new Ast::IntroduceState( @1, $1, $3, pos );
 }
-| T_identifier ';'
+| T_state_identifier ';'
 {
   size_t ** pos = new size_t * ( 0 );
   $$ = new Ast::Freeze( @1, $1, pos );
 }
-| T_dynamic T_at_identifier Expr Expr
+| T_identifier ':' T_state_identifier ';'
+{
+  size_t ** posVar = new size_t * ( 0 );
+  size_t ** posState = new size_t * ( 0 );
+  $$ = new Ast::IntroduceCold( @1, $1, new Ast::Freeze( @3, $3, posState ), posVar );
+}
+| T_dynamic T_dynamic_identifier Expr Expr
 {
   $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4, new size_t * ( 0 ) );
+}
+| T_dynamic T_dynamic_state_identifier Expr
+{
+  $$ = new Ast::DynamicStateDecl( @$, @2, $2, $3, new size_t * ( 0 ) );
 }
 | Expr '.' T_identifier T_llthan InsertionSequence
 {
@@ -1062,7 +1075,7 @@ OneOrMoreGroupElems
     }
   delete $2;
 }
-| T_at_identifier T_llthan InsertionSequence
+| T_dynamic_identifier T_llthan InsertionSequence
 {
   $$ = new list< Ast::Node * >( );
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
@@ -1072,7 +1085,7 @@ OneOrMoreGroupElems
     }
   delete $1;
 }
-| OneOrMoreGroupElems T_at_identifier T_llthan InsertionSequence
+| OneOrMoreGroupElems T_dynamic_identifier T_llthan InsertionSequence
 {
   $$ = $1;
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );

@@ -18,6 +18,9 @@ namespace MetaPDF
     class Variable;
     typedef RefCountPtr< Variable > HandleType;
 
+    class State;
+    typedef State * StateHandleType;
+
     class Continuation;
     typedef RefCountPtr< Continuation > ContRef;
 

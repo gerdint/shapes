@@ -1,7 +1,6 @@
 #!/bin/bash
 
-for i in `ls ../examples/*.drool ../examples/*.drext`; do
+for i in `ls ../../examples/features/*.drool ../../examples/showcase/*.drool ../../examples/problems/*.drool ../../examples/misc/*.drool ../../examples/applications/*.drool ../../resources/extensions/*.drext`; do
   echo Fixing $i
-  cat $i | ./rmdupesc > tmp
-  mv tmp $i
+  cat ./exdroolsource | ex -sC $i
 done

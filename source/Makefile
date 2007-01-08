@@ -43,6 +43,7 @@ NONCOMPILED := $(patsubst %.o,%.cc, $(filter-out ../tools/source/autoonoff.o $(w
 BUTmetapdfvalue := $(filter-out metapdfvalue.o, $(OBJECTS) )
 
 
+# When building a release version, the CHECK macro may be turned off by -DNOCHECK
 #  pagescanner.o pageyylex.o
 CFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE $(DICONV) -g
 

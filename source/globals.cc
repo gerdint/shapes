@@ -88,6 +88,7 @@ Kernel::HandleType Kernel::THE_SLOT_VARIABLE( new Kernel::Variable( RefCountPtr<
 Kernel::HandleType Kernel::THE_VOID_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
 Kernel::HandleType Kernel::THE_FALSE_VARIABLE( new Kernel::Variable( Lang::THE_FALSE ) );
 Kernel::HandleType Kernel::THE_TRUE_VARIABLE( new Kernel::Variable( Lang::THE_TRUE ) );
+Kernel::StateHandleType Kernel::THE_SLOT_STATE( NullPtr< Kernel::State >( ) );
 
 Lang::Transform2D Lang::THE_2D_IDENTITY( 1, 0,
 					 0, 1,
