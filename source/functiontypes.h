@@ -56,8 +56,8 @@ namespace MetaPDF
       void addOrderedArgument( const Kernel::HandleType & arg, Ast::Expression * loc );
       void addNamedArgument( const char * id, const Kernel::HandleType & arg, Ast::Expression * loc );
 
-      void addOrderedState( const Kernel::StateHandleType & state, Ast::Expression * loc );
-      void addNamedState( const char * id, const Kernel::StateHandleType & state, Ast::Expression * loc );
+      void addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc );
+      void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Expression * loc );
       
       void applyDefaults( );
       

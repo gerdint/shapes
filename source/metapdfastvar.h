@@ -131,13 +131,24 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class IntroduceWarm : public BindNode
+    class LexiographicState : public Node
+    {
+      const char * id_;
+      mutable Kernel::Environment::LexicalKey ** idKey_;
+    public:
+      LexiographicState( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
+      virtual ~LexiographicState( );
+      virtual void eval( Kernel::EvalState * evalState ) const;  // illegal to call
+      Kernel::StateHandle getHandle( Kernel::PassedEnv env ) const;
+    };
+    
+    class IntroduceState : public BindNode
     {
       Ast::Expression * expr_;
       mutable size_t ** idPos_;
     public:
-      IntroduceWarm( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
-      virtual ~IntroduceWarm( );
+      IntroduceState( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
+      virtual ~IntroduceState( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     

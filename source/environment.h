@@ -187,7 +187,7 @@ namespace MetaPDF
 	  }
       };
       typedef RefCountPtr< std::vector< HandleType > > ValueVector;
-      typedef RefCountPtr< std::vector< StateHandleType > > StateVector;
+      typedef RefCountPtr< std::vector< StateHandle > > StateVector;
     private:
       Environment * parent_;
       typedef std::map< const char *, size_t, charPtrLess > MapType; /* this is not constant to simplify initialization of the global environment */
@@ -202,7 +202,7 @@ namespace MetaPDF
       void selfDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun );
       void selfDefineHandle( const char * id, const Kernel::HandleType & val );
       void selfDefine( const char * id, const RefCountPtr< const Lang::Value > & val );
-      void selfDefine( const char * id, Kernel::StateHandleType state );
+      void selfDefine( const char * id, Kernel::StateHandle state );
       void selfDefineClass( const RefCountPtr< const Lang::Class > & cls );
 
       void selfDefineDynamic( DynamicVariableProperties * dynProps );
@@ -241,8 +241,8 @@ namespace MetaPDF
       RefCountPtr< const Lang::Value > & freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       RefCountPtr< const Lang::Value > & peek( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       void tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
-      StateHandleType getStateHandle( const LexicalKey & lexKey );
-      StateHandleType getStateHandle( size_t pos );
+      StateHandle getStateHandle( const LexicalKey & lexKey );
+      StateHandle getStateHandle( size_t pos );
 
 
       size_t findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const;

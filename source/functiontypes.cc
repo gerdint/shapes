@@ -581,7 +581,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::HandleType &
 }
 
 void
-Kernel::Arguments::addOrderedState( const Kernel::StateHandleType & state, Ast::Expression * loc )
+Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc )
 {
   if( stateDst_ == state_->size( ) )
     {
@@ -602,7 +602,7 @@ Kernel::Arguments::addOrderedState( const Kernel::StateHandleType & state, Ast::
 }
 
 void
-Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandleType & state, Ast::Expression * loc )
+Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Expression * loc )
 {
   if( formals_ == 0 )
     {

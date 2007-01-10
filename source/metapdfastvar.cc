@@ -697,6 +697,39 @@ Ast::IntroduceCold::eval( Kernel::EvalState * evalState ) const
     }
 }
 
+Ast::LexiographicState::LexiographicState( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey, bool warm )
+  : Ast::Expression( loc ), id_( id ), idKey_( idKey ), warm_( warm )
+{
+  immediate_ = true;
+}
+
+Ast::LexiographicState::~LexiographicState( )
+{
+  delete id_;
+  if( *idKey_ != 0 )
+    {
+      delete *idKey_;
+    }
+  delete idKey_;     //  This can be done only as long as this is not shared!
+}
+
+void
+Ast::LexiographicState::eval( Kernel::EvalState * evalState ) const
+{
+  throw Exceptions::InternalError( "A lexiographic state was evaluated." );
+}
+
+Kernel::StateHandle
+Ast::LexiographicState::getHandle( Kernel::PassedEnv env ) const
+{
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( loc_, id_ ) );
+    }
+
+  evalState->env_->lookup( **idKey_, warm_, evalState );
+}
+
 
 Ast::IntroduceWarm::IntroduceWarm( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos )
   : Ast::BindNode( Ast::SourceLocation( idLoc, expr->loc( ) ), idLoc, id ), expr_( expr ), idPos_( idPos )
