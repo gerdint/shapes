@@ -1,6 +1,6 @@
-#echo This will generate some form XObject objects all of which will use a couple of resources that are placed in the respective Resoruce dictionaries.
+##echo This will generate some form XObject objects all of which will use a couple of resources that are placed in the respective Resoruce dictionaries.
 
-#needs circle
+##needs circle
 
 r: 1cm
 

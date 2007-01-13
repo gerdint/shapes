@@ -1,9 +1,9 @@
-#needs centering
+##needs centering
 
 zbuf: HotZBuf <<
 
 r: 10cm
-#unit w = 3.4cm
+##unit w = 3.4cm
 obj:
     @nonstroking:[gray 0.8]
   & @reflections:[phong 1]

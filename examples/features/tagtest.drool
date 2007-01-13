@@ -1,4 +1,4 @@
-#needs circle
+##needs circle
 
 obj: ( Hot2D << [stroke [circle 2cm]] << [tag 'foo (0.5cm,1cm)] << [tag 'bar (~0.5cm,1cm)] )
 

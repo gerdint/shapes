@@ -1,7 +1,7 @@
-#needs circle
+##needs circle
 
-#echo The resulting graphics is not correctly displayed in Preview.app.
-#echo On the other hand, it doesn't seem right in Adobe Reader either.
+##echo The resulting graphics is not correctly displayed in Preview.app.
+##echo On the other hand, it doesn't seem right in Adobe Reader either.
 
 r: 1cm
 

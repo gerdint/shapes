@@ -1,5 +1,5 @@
-#needs circle
-#needs arrowheads
+##needs circle
+##needs arrowheads
 
 
 |** dbout: [hot 0   \ p e .> { 0 }   \ p .> 0 ] <<
