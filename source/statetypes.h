@@ -27,7 +27,7 @@ namespace MetaPDF
     class DynamicBindings : public Lang::Value
     {
     public:
-      typedef std::map< Kernel::DynamicEnvironmentKeyType, std::pair< Kernel::HandleType, Ast::SourceLocation > > MapType;
+      typedef std::map< Kernel::DynamicEnvironmentKeyType, std::pair< Kernel::VariableHandle, Ast::SourceLocation > > MapType;
       DynamicBindings( );
       virtual ~DynamicBindings( );
       TYPEINFODECL;
@@ -51,9 +51,9 @@ namespace MetaPDF
       Kernel::DynamicEnvironmentKeyType key_;
       const char * id_;
       Ast::SourceLocation loc_;
-      Kernel::HandleType var_;
+      Kernel::VariableHandle var_;
     public:
-      UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & key, const char * id, const Ast::SourceLocation & loc, const Kernel::HandleType & var );
+      UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & key, const char * id, const Ast::SourceLocation & loc, const Kernel::VariableHandle & var );
       virtual ~UserDynamicBinding( );
       virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -405,13 +405,13 @@ namespace MetaPDF
     {
       Kernel::DynamicEnvironmentKeyType key_;
       RefCountPtr< const Lang::Function > filter_;
-      Kernel::HandleType defaultVal_;
+      Kernel::VariableHandle defaultVal_;
     public:
-      UserDynamicVariableProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal );
+      UserDynamicVariableProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
       virtual ~UserDynamicVariableProperties( );
       
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class WidthDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -419,16 +419,16 @@ namespace MetaPDF
     public:
       WidthDynamicVariableProperties( const char * name );
       virtual ~WidthDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class MiterLimitDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:
       MiterLimitDynamicVariableProperties( const char * name );
       virtual ~MiterLimitDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class StrokingDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -436,16 +436,16 @@ namespace MetaPDF
     public:
       StrokingDynamicVariableProperties( const char * name );
       virtual ~StrokingDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class NonStrokingDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:
       NonStrokingDynamicVariableProperties( const char * name );
       virtual ~NonStrokingDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class AlphaDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
@@ -453,8 +453,8 @@ namespace MetaPDF
     public:
       AlphaDynamicVariableProperties( const char * name, bool isStroking );
       virtual ~AlphaDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class DashDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -462,32 +462,32 @@ namespace MetaPDF
     public:
       DashDynamicVariableProperties( const char * name );
       virtual ~DashDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class CapStyleDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:
       CapStyleDynamicVariableProperties( const char * name );
       virtual ~CapStyleDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class JoinStyleDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:
       JoinStyleDynamicVariableProperties( const char * name );
       virtual ~JoinStyleDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     class BlendModeDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:
       BlendModeDynamicVariableProperties( const char * name );
       virtual ~BlendModeDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class GraphicsState

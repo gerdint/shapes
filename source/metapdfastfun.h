@@ -116,12 +116,13 @@ namespace MetaPDF
     {
       const Ast::ArgListExprs * argList_;
       bool curry_;
+      bool procedural_;
       Kernel::PassedEnv env_;
       Kernel::PassedDyn dyn_;
       Kernel::ContRef cont_;
       const Ast::SourceLocation & callLoc_;
     public:
-      CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
+      CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
       virtual ~CallCont_1( );
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -152,7 +153,7 @@ namespace MetaPDF
     public:
       CallCont_n( const Ast::SourceLocation & traceLoc, const RefCountPtr< const Kernel::CallContInfo > & info, const Ast::ArgListExprs::ConstIterator & pos, RefCountPtr< const Lang::SingleList > vals );
       virtual ~CallCont_n( );
-      virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
@@ -165,13 +166,14 @@ namespace MetaPDF
     class CallExpr : public Expression
     {
       bool curry_;
+      bool procedural_;
       RefCountPtr< const Lang::Function > constFun_;
     public:
       Ast::Expression * funExpr_;
       const Ast::ArgListExprs * argList_;
       
-      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false );
-      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false );
+      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false, bool procedura = false );
+      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false, bool procedura = false );
       virtual ~CallExpr( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };

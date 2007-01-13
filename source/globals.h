@@ -58,10 +58,10 @@ namespace MetaPDF
     extern RefCountPtr< const Lang::Function > THE_NO_FUNCTION;
 
     extern Arguments EMPTY_ARGLIST;
-    extern HandleType THE_SLOT_VARIABLE;
-    extern HandleType THE_FALSE_VARIABLE;
-    extern HandleType THE_TRUE_VARIABLE;
-    extern HandleType THE_VOID_VARIABLE;
+    extern VariableHandle THE_SLOT_VARIABLE;
+    extern VariableHandle THE_FALSE_VARIABLE;
+    extern VariableHandle THE_TRUE_VARIABLE;
+    extern VariableHandle THE_VOID_VARIABLE;
 
     extern StateHandle THE_SLOT_STATE;
 

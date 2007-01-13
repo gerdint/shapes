@@ -24,9 +24,9 @@ namespace MetaPDF
     SingleList( );
     virtual ~SingleList( );
     virtual bool isNull( ) const = 0;
-    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
-    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
+    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     TYPEINFODECL;
   };
 
@@ -35,14 +35,14 @@ namespace MetaPDF
   public:
     /* The data is provided public becase it is used in function application
      */
-    Kernel::HandleType car_;
+    Kernel::VariableHandle car_;
     RefCountPtr< const Lang::SingleList > cdr_;
 
-    SingleListPair( const Kernel::HandleType & car, const RefCountPtr< const Lang::SingleList > & cdr );
+    SingleListPair( const Kernel::VariableHandle & car, const RefCountPtr< const Lang::SingleList > & cdr );
     virtual ~SingleListPair( );
     virtual bool isNull( ) const;
-    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const;
-    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
 
@@ -52,8 +52,8 @@ namespace MetaPDF
     SingleListNull( );
     virtual ~SingleListNull( );
     virtual bool isNull( ) const;
-    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const;
-    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
   };
 
@@ -87,13 +87,13 @@ namespace MetaPDF
 
   class ConsPair : public Lang::NoOperatorOverloadValue
   {
-    Kernel::HandleType car_;
-    Kernel::HandleType cdr_;
+    Kernel::VariableHandle car_;
+    Kernel::VariableHandle cdr_;
   public:
-    ConsPair( const Kernel::HandleType & car, const Kernel::HandleType & cdr );
+    ConsPair( const Kernel::VariableHandle & car, const Kernel::VariableHandle & cdr );
     virtual ~ConsPair( );
     virtual void show( std::ostream & os ) const;
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
     TYPEINFODECL;
   };

@@ -441,10 +441,23 @@ namespace MetaPDF
 
     class LookupUnknown : public RuntimeError
     {
+    public:
+      enum Type{ VARIABLE, STATE, DYNAMIC_VARIABLE, DYNAMIC_STATE };
+    private:
+      RefCountPtr< const char > id;
+      Type type_;
+    public:
+      LookupUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id, Type type );
+      virtual ~LookupUnknown( );
+      virtual void display( std::ostream & os ) const;
+    };
+
+    class StateBeyondFunctionBoundary : public RuntimeError
+    {
       RefCountPtr< const char > id;
     public:
-      LookupUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id );
-      virtual ~LookupUnknown( );
+      StateBeyondFunctionBoundary( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id );
+      virtual ~StateBeyondFunctionBoundary( );
       virtual void display( std::ostream & os ) const;
     };
 

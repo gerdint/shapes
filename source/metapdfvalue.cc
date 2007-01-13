@@ -20,7 +20,7 @@ Lang::Value::~Value( )
 
 DISPATCHBASEIMPL
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Value::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   throw Exceptions::ElementaryTypeWithoutFields( getTypeName( ) );
@@ -64,9 +64,9 @@ RefCountPtr< const Lang::Class > Lang::Geometric3D::TypeID = NullPtr< const Lang
 TYPEINFOIMPL( Geometric3D );
 
 
-Kernel::HandleType
+Kernel::VariableHandle
 Helpers::newValHandle( const Lang::Value * val )
 {
-  return Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( val ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( val ) ) );
 }
 

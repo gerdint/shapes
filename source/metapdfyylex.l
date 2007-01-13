@@ -489,6 +489,7 @@ Escape "¢"|"¤"
 ">=" { return T_greatereq; }
 
 "<<" { return T_llthan; }
+">>" { return T_ggthan; }
 
 "@@" { return T_atat; }
 

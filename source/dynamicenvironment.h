@@ -32,7 +32,7 @@ namespace MetaPDF
       RefCountPtr< const Kernel::TextState > textState_;
       Concrete::Length eyez_;
       RefCountPtr< const Kernel::PolarHandlePromise > defaultUnit_;
-      Kernel::HandleType defaultDestination_;
+      Kernel::VariableHandle defaultDestination_;
       RefCountPtr< const Lang::ColorSpace > blendSpace_;
     };
     
@@ -69,7 +69,7 @@ namespace MetaPDF
       
       void tackOn( const KeyType & key, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
       void lookup( const KeyType & key, Kernel::EvalState * evalState ) const;
-      Kernel::HandleType getVarHandle( const KeyType & key ) const;
+      Kernel::VariableHandle getVarHandle( const KeyType & key ) const;
       
       RefCountPtr< Kernel::DynamicEnvironment > selectParent( RefCountPtr< Kernel::DynamicEnvironment > & self, const MapType & newBindings );
       
@@ -80,7 +80,7 @@ namespace MetaPDF
       RefCountPtr< const Kernel::TextState > getTextState( ) const;
       Concrete::Length getEyeZ( ) const;
       RefCountPtr< const Kernel::PolarHandlePromise > getDefaultUnit( ) const;
-      Kernel::HandleType & getDefaultDestination( ) const;
+      Kernel::VariableHandle & getDefaultDestination( ) const;
       Kernel::ContRef getEscapeContinuation( const char * id, const Ast::SourceLocation & loc ) const;
       RefCountPtr< const Lang::ColorSpace > getBlendSpace( ) const;
       
@@ -102,9 +102,9 @@ namespace MetaPDF
     class DefaultDestinationBinding : public Lang::DynamicBindings
     {
       Ast::SourceLocation loc_;
-      Kernel::HandleType val_;
+      Kernel::VariableHandle val_;
     public:
-      DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::HandleType & val );
+      DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val );
       virtual ~DefaultDestinationBinding( );
       virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -153,9 +153,9 @@ namespace MetaPDF
     public:
       DefaultDestinationDynamicVariableProperties( const char * name );
       virtual ~DefaultDestinationDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
       virtual bool forceValue( ) const { return false; };
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
 
     class EyeZDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -163,8 +163,8 @@ namespace MetaPDF
     public:
       EyeZDynamicVariableProperties( const char * name );
       virtual ~EyeZDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
 
     class DefaultUnitDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -172,9 +172,9 @@ namespace MetaPDF
     public:
       DefaultUnitDynamicVariableProperties( const char * name );
       virtual ~DefaultUnitDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
       virtual bool forceValue( ) const { return false; };
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
 
     class BlendSpaceDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -182,8 +182,8 @@ namespace MetaPDF
     public:
       BlendSpaceDynamicVariableProperties( const char * name );
       virtual ~BlendSpaceDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
 
   }

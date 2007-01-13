@@ -55,7 +55,7 @@ Lang::DynamicBindingsPair::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Lang::UserDynamicBinding::UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & _key, const char * _id, const Ast::SourceLocation & _loc, const Kernel::HandleType & _var )
+Lang::UserDynamicBinding::UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & _key, const char * _id, const Ast::SourceLocation & _loc, const Kernel::VariableHandle & _var )
   : key_( _key ), id_( _id ), loc_( _loc ), var_( _var )
 { }
 
@@ -96,7 +96,7 @@ namespace MetaPDF
     { }
     virtual ~UserDynamicBindingContinuation( )
     { }
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
     {
       std::cerr << "Warning: I changed from evalState->cont_ to this->cont_! in UserDynamicBindingContinuation::takeHandle" << std::endl ;
       cont_->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, traceLoc_, val ) ),
@@ -117,14 +117,14 @@ namespace MetaPDF
 }
 
 
-Kernel::UserDynamicVariableProperties::UserDynamicVariableProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal )
+Kernel::UserDynamicVariableProperties::UserDynamicVariableProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal )
   : DynamicVariableProperties( name ), key_( key ), filter_( filter ), defaultVal_( defaultVal )
 { }
 
 Kernel::UserDynamicVariableProperties::~UserDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::UserDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   try
@@ -138,7 +138,7 @@ Kernel::UserDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::UserDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::UserDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   if( filter_ == Lang::THE_IDENTITY )
     {
@@ -205,15 +205,15 @@ Kernel::WidthDynamicVariableProperties::WidthDynamicVariableProperties( const ch
 Kernel::WidthDynamicVariableProperties::~WidthDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::WidthDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
-  return Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( graphicsState->width_ ) ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( graphicsState->width_ ) ) ) );
 }
 
 void
-Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -300,15 +300,15 @@ Kernel::MiterLimitDynamicVariableProperties::MiterLimitDynamicVariableProperties
 Kernel::MiterLimitDynamicVariableProperties::~MiterLimitDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::MiterLimitDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
-  return Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( graphicsState->miterLimit_ ) ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( graphicsState->miterLimit_ ) ) ) );
 }
 
 void
-Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -953,19 +953,19 @@ Kernel::AlphaDynamicVariableProperties::AlphaDynamicVariableProperties( const ch
 Kernel::AlphaDynamicVariableProperties::~AlphaDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::AlphaDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
   if( isStroking_ )
     {
-      return Kernel::HandleType( new Kernel::Variable( graphicsState->strokingAlpha_ ) );
+      return Kernel::VariableHandle( new Kernel::Variable( graphicsState->strokingAlpha_ ) );
     }
-  return Kernel::HandleType( new Kernel::Variable( graphicsState->nonStrokingAlpha_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( graphicsState->nonStrokingAlpha_ ) );
 }
 
 void
-Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1353,15 +1353,15 @@ Kernel::StrokingDynamicVariableProperties::StrokingDynamicVariableProperties( co
 Kernel::StrokingDynamicVariableProperties::~StrokingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::StrokingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
-  return Kernel::HandleType( new Kernel::Variable( graphicsState->strokingColor_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( graphicsState->strokingColor_ ) );
 }
 
 void
-Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1446,15 +1446,15 @@ Kernel::NonStrokingDynamicVariableProperties::NonStrokingDynamicVariableProperti
 Kernel::NonStrokingDynamicVariableProperties::~NonStrokingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::NonStrokingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
-  return Kernel::HandleType( new Kernel::Variable( graphicsState->nonStrokingColor_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( graphicsState->nonStrokingColor_ ) );
 }
 
 void
-Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1539,15 +1539,15 @@ Kernel::DashDynamicVariableProperties::DashDynamicVariableProperties( const char
 Kernel::DashDynamicVariableProperties::~DashDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::DashDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
-  return Kernel::HandleType( new Kernel::Variable( graphicsState->dash_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( graphicsState->dash_ ) );
 }
 
 void
-Kernel::DashDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1630,7 +1630,7 @@ Kernel::CapStyleDynamicVariableProperties::CapStyleDynamicVariableProperties( co
 Kernel::CapStyleDynamicVariableProperties::~CapStyleDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::CapStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
@@ -1638,7 +1638,7 @@ Kernel::CapStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn 
 }
 
 void
-Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1720,7 +1720,7 @@ Kernel::JoinStyleDynamicVariableProperties::JoinStyleDynamicVariableProperties( 
 Kernel::JoinStyleDynamicVariableProperties::~JoinStyleDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::JoinStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
@@ -1728,7 +1728,7 @@ Kernel::JoinStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn
 }
 
 void
-Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -1810,7 +1810,7 @@ Kernel::BlendModeDynamicVariableProperties::BlendModeDynamicVariableProperties( 
 Kernel::BlendModeDynamicVariableProperties::~BlendModeDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::BlendModeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::GraphicsState > graphicsState = dyn->getGraphicsState( );
@@ -1818,7 +1818,7 @@ Kernel::BlendModeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn
 }
 
 void
-Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {

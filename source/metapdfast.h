@@ -42,7 +42,7 @@ namespace MetaPDF
       { }
       virtual ~Continuation( )
       { }
-      virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool callingMyself = false ) const;
+      virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool callingMyself = false ) const;
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool callingMyself = false ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
       const Ast::SourceLocation & traceLoc( ) const;

@@ -316,7 +316,7 @@ Lang::String::show( std::ostream & os ) const
 
 DISPATCHIMPL( FloatPair );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::FloatPair::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "x" ) == 0 )
@@ -345,7 +345,7 @@ Lang::FloatTriple::FloatTriple( const Concrete::UnitFloatTriple & orig )
 
 DISPATCHIMPL( FloatTriple );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::FloatTriple::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "x" ) == 0 )
@@ -387,7 +387,7 @@ Lang::Coords2D::Coords2D( const Concrete::Length & x, const Concrete::Length & y
 
 DISPATCHIMPL( Coords2D );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Coords2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "x" ) == 0 )
@@ -449,7 +449,7 @@ Lang::CornerCoords2D::CornerCoords2D( const Concrete::Length & x, const Concrete
 RefCountPtr< const Lang::Class > Lang::CornerCoords2D::TypeID( new Lang::SystemFinalClass( strrefdup( "CornerCoords2D" ) ) );
 DISPATCHIMPL( CornerCoords2D );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::CornerCoords2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "x" ) == 0 )
@@ -504,7 +504,7 @@ Lang::Coords3D::Coords3D( const Concrete::Length & x, const Concrete::Length & y
 
 DISPATCHIMPL( Coords3D );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Coords3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "x" ) == 0 )

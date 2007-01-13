@@ -508,7 +508,7 @@ Kernel::Arguments::clone( ) const
 
 
 void
-Kernel::Arguments::addOrderedArgument( const Kernel::HandleType & arg, Ast::Expression * loc )
+Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc )
 {
   if( dst_ == variables_->size( ) )
     {
@@ -529,7 +529,7 @@ Kernel::Arguments::addOrderedArgument( const Kernel::HandleType & arg, Ast::Expr
 }
 
 void
-Kernel::Arguments::addNamedArgument( const char * id, const Kernel::HandleType & arg, Ast::Expression * loc )
+Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc )
 {
   if( formals_ == 0 )
     {
@@ -772,7 +772,7 @@ Kernel::Arguments::applyDefaults( )
 }
 
 
-Kernel::HandleType &
+Kernel::VariableHandle &
 Kernel::Arguments::getHandle( size_t i )
 {
   return (*variables_)[ i ];
@@ -826,10 +826,16 @@ Kernel::Arguments::gcMark( Kernel::GCMarkedSet & marked )
   }
 }
 
-RefCountPtr< std::vector< Kernel::HandleType > >
+Environment::ValueVector
 Kernel::Arguments::getVariables( )
 {
   return variables_;
+}
+
+Environment::StateVector
+Kernel::Arguments::getVariables( )
+{
+  return states_;
 }
 
 
@@ -848,7 +854,7 @@ namespace MetaPDF
       : Kernel::Continuation( traceLoc ), fun_( fun ), dyn_( dyn ), cont_( cont )
     { }
     virtual ~FunctionOneHandleCont( ) { }
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
     {
       /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
        * However, this continuation takes handles anyway, since handles is what goes into the argument list.
@@ -883,15 +889,15 @@ namespace MetaPDF
   class FunctionTwoHandlesCont_2 : public Kernel::Continuation
   {
     RefCountPtr< const Lang::Function > fun_;
-    Kernel::HandleType arg1_;
+    Kernel::VariableHandle arg1_;
     Kernel::PassedDyn dyn_;
     Kernel::ContRef cont_;
   public:
-    FunctionTwoHandlesCont_2( const RefCountPtr< const Lang::Function > & fun, const Kernel::HandleType & arg1, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+    FunctionTwoHandlesCont_2( const RefCountPtr< const Lang::Function > & fun, const Kernel::VariableHandle & arg1, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
       : Kernel::Continuation( traceLoc ), fun_( fun ), arg1_( arg1 ), dyn_( dyn ), cont_( cont )
     { }
     virtual ~FunctionTwoHandlesCont_2( ) { }
-    virtual void takeHandle( Kernel::HandleType arg2, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle arg2, Kernel::EvalState * evalState, bool dummy ) const
     {
       /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
        * However, this continuation takes handles anyway, since handles is what goes into the argument list.
@@ -926,16 +932,16 @@ namespace MetaPDF
   class FunctionTwoHandlesCont_1 : public Kernel::Continuation
   {
     RefCountPtr< const Lang::Function > fun_;
-    Kernel::HandleType arg2_;
+    Kernel::VariableHandle arg2_;
     bool forceArg2_;
     Kernel::PassedDyn dyn_;
     Kernel::ContRef cont_;
   public:
-    FunctionTwoHandlesCont_1( const RefCountPtr< const Lang::Function > & fun, const Kernel::HandleType & arg2, bool forceArg2, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+    FunctionTwoHandlesCont_1( const RefCountPtr< const Lang::Function > & fun, const Kernel::VariableHandle & arg2, bool forceArg2, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
       : Kernel::Continuation( traceLoc ), fun_( fun ), arg2_( arg2 ), forceArg2_( forceArg2 ), dyn_( dyn ), cont_( cont )
     { }
     virtual ~FunctionTwoHandlesCont_1( ) { }
-    virtual void takeHandle( Kernel::HandleType arg1, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle arg1, Kernel::EvalState * evalState, bool dummy ) const
     {
       /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
        * However, this continuation takes handles anyway, since handles is what goes into the argument list.
@@ -1001,12 +1007,18 @@ Lang::Function::transformed( const Lang::Transform2D & tf, Kernel::ValueRef self
   return Kernel::ValueRef( new Lang::TransformedFunction2D( tf, self.down_cast< const Lang::Function >( ) ) );
 }
 
+bool
+Lang::Function::isProcedural( ) const
+{
+  return false;
+}
+
 void
 Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::Arguments args = this->newCurriedArguments( );
   
-  args.addOrderedArgument( Kernel::HandleType( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
 
   this->call( evalState, args, callLoc );
 }
@@ -1016,8 +1028,8 @@ Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & ar
 {
   Kernel::Arguments args = this->newCurriedArguments( );
   
-  args.addOrderedArgument( Kernel::HandleType( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
-  args.addOrderedArgument( Kernel::HandleType( new Kernel::Variable( arg2 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg2 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
 
   this->call( evalState, args, callLoc );
 }
@@ -1026,7 +1038,7 @@ Ast::ArgListExprs * Lang::Function::oneExprArgList = new Ast::ArgListExprs( stat
 Ast::ArgListExprs * Lang::Function::twoExprsArgList = new Ast::ArgListExprs( static_cast< size_t >( 2 ) );
 
 void
-Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::HandleType & arg1, const Ast::SourceLocation & callLoc ) const
+Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Ast::SourceLocation & callLoc ) const
 {
   const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::oneExprArgList, *evalState );
   
@@ -1046,7 +1058,7 @@ Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kerne
 }
 
 void
-Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::HandleType & arg1, const Kernel::HandleType & arg2, const Ast::SourceLocation & callLoc ) const
+Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, const Ast::SourceLocation & callLoc ) const
 {
   const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::oneExprArgList, *evalState );
 
@@ -1152,7 +1164,7 @@ Kernel::EvaluatedFormals::newCallContInfo( const Ast::ArgListExprs * argList, co
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::HandleType & defaultVal, const Ast::Expression * loc, bool force )
+Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc, bool force )
 {
   if( ! selectiveForcing_ )
     {
@@ -1165,7 +1177,7 @@ Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::HandleType & defaultVal, const Ast::Expression * loc )
+Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc )
 {
   if( selectiveForcing_ )
     {
@@ -1178,13 +1190,13 @@ Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedCoreFormal( const char * id, const Kernel::HandleType & defaultVal, bool force )
+Kernel::EvaluatedFormals::appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal, bool force )
 {
   appendEvaluatedFormal( id, defaultVal, & Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION, force );
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedCoreFormal( const char * id, const Kernel::HandleType & defaultVal )
+Kernel::EvaluatedFormals::appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal )
 {
   appendEvaluatedFormal( id, defaultVal, & Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION );
 }
@@ -1323,7 +1335,12 @@ void
 Lang::UserFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   args.applyDefaults( );
-  evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, env_, formals_->formals_->argumentOrder_, args.getVariables( ) );
+  evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, env_, formals_->formals_->argumentOrder_, args.getVariables( ), formals_->formals_->stateOrder_, args.getStates( ) );
+
+  if( ! isProcedural )
+    {
+      evalState->env_->activateFunctionBoundary( );
+    }
 
   body_->eval( evalState );
 }
@@ -1332,6 +1349,12 @@ bool
 Lang::UserFunction::isTransforming( ) const
 {
   return ( functionMode_ & Ast::FUNCTION_TRANSFORMING ) != 0;
+}
+
+bool
+Lang::UserFunction::isProcedural( ) const
+{
+  return ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) != 0;
 }
 
 void
@@ -1380,7 +1403,7 @@ Lang::VectorFunction::VectorFunction( const std::vector< Kernel::ValueRef > * me
 Lang::VectorFunction::~VectorFunction( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::VectorFunction::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "size" ) == 0 )

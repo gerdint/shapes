@@ -9,12 +9,12 @@
 using namespace MetaPDF;
 
 
-Ast::Constant::Constant( const Ast::SourceLocation & loc, const Kernel::HandleType & val )
+Ast::Constant::Constant( const Ast::SourceLocation & loc, const Kernel::VariableHandle & val )
   : Ast::Expression( loc ), val_( val )
 { }
 
 Ast::Constant::Constant( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Value > val )
-  : Ast::Expression( loc ), val_( Kernel::HandleType( new Kernel::Variable( val ) ) )
+  : Ast::Expression( loc ), val_( Kernel::VariableHandle( new Kernel::Variable( val ) ) )
 { }
 
 Ast::Constant::Constant( const Ast::SourceLocation & loc, const Lang::Value * val )

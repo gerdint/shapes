@@ -65,7 +65,7 @@ namespace MetaPDF
       Variable( const RefCountPtr< const Lang::Value > & _val );
       Variable( Kernel::Thunk * _thunk );
       ~Variable( );
-      void force( Kernel::HandleType & selfRef, Kernel::EvalState * evalState ) const;
+      void force( Kernel::VariableHandle & selfRef, Kernel::EvalState * evalState ) const;
       RefCountPtr< const Lang::Value > & getUntyped( ) const;
       template< class T >
 	RefCountPtr< T > getVal( ) const
@@ -164,9 +164,9 @@ namespace MetaPDF
       { }
       virtual ~DynamicVariableProperties( );
       const char * getName( ) const { return name_; }
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const = 0;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const = 0;
       virtual bool forceValue( ) const { return true; };
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const = 0;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const = 0;
     };
 
     class Environment
@@ -186,7 +186,7 @@ namespace MetaPDF
 	    return *this;
 	  }
       };
-      typedef RefCountPtr< std::vector< HandleType > > ValueVector;
+      typedef RefCountPtr< std::vector< VariableHandle > > ValueVector;
       typedef RefCountPtr< std::vector< StateHandle > > StateVector;
     private:
       Environment * parent_;
@@ -195,28 +195,31 @@ namespace MetaPDF
       ValueVector values_;
       MapType * dynamicKeyBindings_;
       std::vector< DynamicVariableProperties * > * dynamicKeyValues_;
+      MapType * stateBindings_;
       StateVector states_;
       PtrOwner_back_Access< std::list< const char * > > charPtrDeletionList_;
+      bool functionBoundary_;
 
       void selfDefineCoreFunction( Lang::CoreFunction * fun );
       void selfDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun );
-      void selfDefineHandle( const char * id, const Kernel::HandleType & val );
+      void selfDefineHandle( const char * id, const Kernel::VariableHandle & val );
       void selfDefine( const char * id, const RefCountPtr< const Lang::Value > & val );
       void selfDefine( const char * id, Kernel::StateHandle state );
       void selfDefineClass( const RefCountPtr< const Lang::Class > & cls );
 
       void selfDefineDynamic( DynamicVariableProperties * dynProps );
-      void selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal );
+      void selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
       void selfDefineDynamicHandler( const char * id, const char * msg );
 
       bool gcMarked_;
 
     public:
       Environment( std::list< Kernel::Environment * > & garbageArea );
-      Environment( std::list< Kernel::Environment * > & garbageArea, Environment * _parent, MapType * _bindings, const ValueVector & _values, const StateVector & states );
+      Environment( std::list< Kernel::Environment * > & garbageArea, Environment * _parent, MapType * _bindings, const ValueVector & _values, MapType * _stateBindings, const StateVector & states );
       ~Environment( );
       void setParent( Environment * _parent );
       void setupDynamicKeyVariables( MapType * _dynamicKeyBindings );
+      void activateFunctionBoundary( );
       Kernel::Environment * getParent( );
       const Kernel::Environment * getParent( ) const;
       void clear( );
@@ -229,24 +232,24 @@ namespace MetaPDF
 
       size_t findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const;
       LexicalKey findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const;
-      void define( size_t pos, const Kernel::HandleType & val );
+      void define( size_t pos, const Kernel::VariableHandle & val );
       void lookup( const LexicalKey & lexKey, bool state, Kernel::EvalState * evalState ) const;
       void lookup( size_t pos, bool state, Kernel::EvalState * evalState ) const;
-      HandleType getVarHandle( const LexicalKey & lexKey );
-      HandleType getVarHandle( size_t pos );
+      VariableHandle getVarHandle( const LexicalKey & lexKey );
+      VariableHandle getVarHandle( size_t pos );
 
       size_t findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
       LexicalKey findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const;
       void introduceState( size_t pos, const Kernel::State * state );
-      RefCountPtr< const Lang::Value > & freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
-      RefCountPtr< const Lang::Value > & peek( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
+      void freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
+      void peek( const LexicalKey & lexKey, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       void tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
       StateHandle getStateHandle( const LexicalKey & lexKey );
       StateHandle getStateHandle( size_t pos );
 
 
       size_t findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const;
-      void defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal );
+      void defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
 
       LexicalKey findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const;
       const DynamicVariableProperties & lookupDynamicVariable( const LexicalKey & lexKey ) const;

@@ -6,7 +6,7 @@ using namespace std;
 
 
 void
-Kernel::Continuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool callingMyself ) const
+Kernel::Continuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool callingMyself ) const
 {
   if( val->isThunk( ) )
     {
@@ -29,7 +29,7 @@ Kernel::Continuation::takeValue( const RefCountPtr< const Lang::Value > & val, K
     {
       throw Exceptions::InternalError( strrefdup( "Continuation is just calling itself..." ) );
     }
-  this->takeHandle( Kernel::HandleType( new Kernel::Variable( val ) ), evalState, true );
+  this->takeHandle( Kernel::VariableHandle( new Kernel::Variable( val ) ), evalState, true );
 }
 
 const Ast::SourceLocation &

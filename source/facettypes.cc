@@ -238,15 +238,15 @@ Kernel::ReflectionsDynamicVariableProperties::ReflectionsDynamicVariableProperti
 Kernel::ReflectionsDynamicVariableProperties::~ReflectionsDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::ReflectionsDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::FacetState > facetState = dyn->getFacetState( );
-  return Kernel::HandleType( new Kernel::Variable( facetState->reflections_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( facetState->reflections_ ) );
 }
 
 void
-Kernel::ReflectionsDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ReflectionsDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -262,15 +262,15 @@ Kernel::AutoIntensityDynamicVariableProperties::AutoIntensityDynamicVariableProp
 Kernel::AutoIntensityDynamicVariableProperties::~AutoIntensityDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::AutoIntensityDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::FacetState > facetState = dyn->getFacetState( );
-  return Kernel::HandleType( new Kernel::Variable( facetState->autoIntensity_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( facetState->autoIntensity_ ) );
 }
 
 void
-Kernel::AutoIntensityDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AutoIntensityDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Color > color = val->getVal< const Lang::Color >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -286,15 +286,15 @@ Kernel::AutoScatteringDynamicVariableProperties::AutoScatteringDynamicVariablePr
 Kernel::AutoScatteringDynamicVariableProperties::~AutoScatteringDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::AutoScatteringDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::FacetState > facetState = dyn->getFacetState( );
-  return Kernel::HandleType( new Kernel::Variable( facetState->autoScattering_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( facetState->autoScattering_ ) );
 }
 
 void
-Kernel::AutoScatteringDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AutoScatteringDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -310,7 +310,7 @@ Kernel::ViewResolutionDynamicVariableProperties::ViewResolutionDynamicVariablePr
 Kernel::ViewResolutionDynamicVariableProperties::~ViewResolutionDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::ViewResolutionDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::FacetState > facetState = dyn->getFacetState( );
@@ -318,7 +318,7 @@ Kernel::ViewResolutionDynamicVariableProperties::fetch( const Kernel::PassedDyn 
 }
 
 void
-Kernel::ViewResolutionDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ViewResolutionDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Length > res = val->getVal< const Lang::Length >( loc );
   if( res->get( ) <= 0 )
@@ -337,7 +337,7 @@ Kernel::ShadeOrderDynamicVariableProperties::ShadeOrderDynamicVariableProperties
 Kernel::ShadeOrderDynamicVariableProperties::~ShadeOrderDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::ShadeOrderDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::FacetState > facetState = dyn->getFacetState( );
@@ -345,7 +345,7 @@ Kernel::ShadeOrderDynamicVariableProperties::fetch( const Kernel::PassedDyn & dy
 }
 
 void
-Kernel::ShadeOrderDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ShadeOrderDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Integer > order = val->getVal< const Lang::Integer >( loc );
   if( order->val_ < 0 || order->val_ > 2 )

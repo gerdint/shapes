@@ -162,7 +162,7 @@ namespace MetaPDF
       double x_;
       double y_;
       FloatPair( double x, double y ) : x_( x ), y_( y ) { };
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       TYPEINFODECL;
       virtual void show( std::ostream & os ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
@@ -177,7 +177,7 @@ namespace MetaPDF
       double z_;
       FloatTriple( double x, double y, double z ) : x_( x ), y_( y ), z_( z ) { };
       FloatTriple( const Concrete::UnitFloatTriple & orig );
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       TYPEINFODECL;
       virtual void show( std::ostream & os ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
@@ -201,7 +201,7 @@ namespace MetaPDF
       Coords2D( const Lang::Coords2D & orig );
       Coords2D( const Lang::Length & x, const Lang::Length & y );
       Coords2D( const Concrete::Length & x, const Concrete::Length & y );
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       Coords2D * transformedPtr( const Lang::Transform2D & tf ) const;
       virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
       virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
@@ -218,7 +218,7 @@ namespace MetaPDF
       double a_;
       CornerCoords2D( const Lang::Length & x, const Lang::Length & y, double a );
       CornerCoords2D( const Concrete::Length & x, const Concrete::Length & y, double a );
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       CornerCoords2D * transformedPtr( const Lang::Transform2D & tf ) const;
       virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
       virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
@@ -235,7 +235,7 @@ namespace MetaPDF
       Coords3D( const Coords3D & orig );
       Coords3D( const Lang::Length & x, const Lang::Length & y, const Lang::Length & z );
       Coords3D( const Concrete::Length & x, const Concrete::Length & y, const Concrete::Length & z );
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       Coords3D * transformedPtr( const Lang::Transform3D & tf ) const;
       virtual RefCountPtr< const Lang::Geometric3D > transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const;
       RefCountPtr< const Lang::Coords2D > make2D( Concrete::Length eyez ) const;

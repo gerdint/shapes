@@ -53,15 +53,15 @@ namespace MetaPDF
       
       Kernel::Arguments clone( ) const;
       
-      void addOrderedArgument( const Kernel::HandleType & arg, Ast::Expression * loc );
-      void addNamedArgument( const char * id, const Kernel::HandleType & arg, Ast::Expression * loc );
+      void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc );
+      void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc );
 
       void addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc );
       void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Expression * loc );
       
       void applyDefaults( );
       
-      Kernel::HandleType & getHandle( size_t i );
+      Kernel::VariableHandle & getHandle( size_t i );
       RefCountPtr< const Lang::Value > & getValue( size_t i );
       const Ast::SourceLocation & getLoc( size_t i ) const;
       const Ast::Expression * getExpr( size_t i ) const;
@@ -72,7 +72,8 @@ namespace MetaPDF
       
       void gcMark( Kernel::GCMarkedSet & marked );
       
-      RefCountPtr< std::vector< Kernel::HandleType > > getVariables( ); // This function should only be called when setting up a new environment
+      Environment::ValueVector getVariables( ); // This function should only be called when setting up a new environment
+      Environment::StateVector getStates( ); // This function should only be called when setting up a new environment
     };
 
     class EvaluatedFormals
@@ -81,7 +82,7 @@ namespace MetaPDF
       bool forceAll_;
     public:
       Kernel::Formals * formals_;                     /* it would have been const if it was not for appendEvaluatedFormal */
-      std::vector< Kernel::HandleType > defaults_;
+      std::vector< Kernel::VariableHandle > defaults_;
       std::vector< const Ast::Expression * > locations_;
       
       EvaluatedFormals( Kernel::Formals * _formals );
@@ -89,10 +90,10 @@ namespace MetaPDF
       EvaluatedFormals( const char * _locationString, bool _forceAll );
       ~EvaluatedFormals( );
       
-      void appendEvaluatedFormal( const char * id, const Kernel::HandleType & defaultVal, const Ast::Expression * loc, bool force );
-      void appendEvaluatedFormal( const char * id, const Kernel::HandleType & defaultVal, const Ast::Expression * loc );
-      void appendEvaluatedCoreFormal( const char * id, const Kernel::HandleType & defaultVal, bool force );
-      void appendEvaluatedCoreFormal( const char * id, const Kernel::HandleType & defaultVal );
+      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc, bool force );
+      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc );
+      void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal, bool force );
+      void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal );
       
       RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState ) const;
       RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, const Kernel::Arguments & curryArgs ) const;
@@ -220,13 +221,14 @@ namespace MetaPDF
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const = 0;
       virtual Kernel::ValueRef transformed( const Lang::Transform2D & tf, Kernel::ValueRef self ) const;
       virtual bool isTransforming( ) const = 0;
+      virtual bool isProcedural( ) const;
       virtual RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState ) const;
       virtual RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, const Kernel::Arguments & curryArgs ) const;
       virtual Kernel::Arguments newCurriedArguments( ) const;
       virtual void call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Ast::SourceLocation & callLoc ) const;
       virtual void call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Kernel::ValueRef & arg2, const Ast::SourceLocation & callLoc ) const;
-      virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::HandleType & arg1, const Ast::SourceLocation & callLoc ) const;
-      virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::HandleType & arg1, const Kernel::HandleType & arg2, const Ast::SourceLocation & callLoc ) const;
+      virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Ast::SourceLocation & callLoc ) const;
+      virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, const Ast::SourceLocation & callLoc ) const;
       
       TYPEINFODECL;
       DISPATCHDECL;
@@ -298,7 +300,7 @@ namespace MetaPDF
     public:
       VectorFunction( const std::vector< Kernel::ValueRef > * mem );
       virtual ~VectorFunction( );
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual bool isTransforming( ) const;

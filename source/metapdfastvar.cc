@@ -11,7 +11,7 @@ using namespace std;
 
 
 Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes )
-  : Ast::Expression( loc ), nodes_( nodes ), argumentOrder_( new typeof *argumentOrder_ ), dynamicMap_( 0 )
+  : Ast::Expression( loc ), nodes_( nodes ), argumentOrder_( new typeof *argumentOrder_ ), dynamicMap_( 0 ), stateOrder_( new typeof *stateOrder_ )
 {
   for( std::list< Ast::Node * >::const_iterator i = nodes_->begin( );
        i != nodes_->end( );
@@ -22,6 +22,32 @@ Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::
       if( tmp != 0 )
 	{
 	  const char * name = tmp->id( );
+	  {
+	    typedef const Ast::DefineVariable T;
+	    T * decl = dynamic_cast< T * >( tmp );
+	    if( decl != 0 )
+	      {
+		if( argumentOrder_->find( name ) != argumentOrder_->end( ) )
+		  {
+		    throw Exceptions::IntroducingExisting( tmp->idLoc( ), name );
+		  }
+		argumentOrder_->insert( std::pair< const char *, size_t >( name, argumentOrder_->size( ) ) );
+		continue;
+	      }
+	  }
+	  {
+	    typedef const Ast::IntroduceState T;
+	    T * decl = dynamic_cast< T * >( tmp );
+	    if( decl != 0 )
+	      {
+		if( stateOrder_->find( name ) != stateOrder_->end( ) )
+		  {
+		    throw Exceptions::IntroducingExisting( tmp->idLoc( ), name );
+		  }
+		stateOrder_->insert( std::pair< const char *, size_t >( name, stateOrder_->size( ) ) );
+		continue;
+	      }
+	  }
 	  {
 	    typedef const Ast::DynamicVariableDecl T;
 	    T * dynDecl = dynamic_cast< T * >( tmp );
@@ -39,11 +65,6 @@ Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::
 		continue;
 	      }
 	  }
-	  if( argumentOrder_->find( name ) != argumentOrder_->end( ) )
-	    {
-	      throw Exceptions::IntroducingExisting( tmp->idLoc( ), name );
-	    }
-	  argumentOrder_->insert( std::pair< const char *, size_t >( name, argumentOrder_->size( ) ) );
 	}
     }
 }
@@ -61,6 +82,7 @@ Ast::CodeBracket::~CodeBracket( )
     {
       delete dynamicMap_;
     }
+  delete stateOrder_;
 }
 
 
@@ -72,13 +94,22 @@ Ast::CodeBracket::eval( Kernel::EvalState * evalState ) const
       return;
     }
 
-  std::vector< Kernel::HandleType > * envValues = new std::vector< Kernel::HandleType >;
+  std::vector< Kernel::VariableHandle > * envValues = new std::vector< Kernel::VariableHandle >;
   envValues->reserve( argumentOrder_->size( ) );
   while( envValues->size( ) < argumentOrder_->size( ) )
     {
       envValues->push_back( NullPtr< Kernel::Variable >( ) );
     }
-  evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, evalState->env_, argumentOrder_, RefCountPtr< std::vector< Kernel::HandleType > >( envValues ) );
+
+  std::vector< Kernel::StateHandle > * envStates = new std::vector< Kernel::StateHandle >;
+  envStates->reserve( stateOrder_->size( ) );
+  while( envStates->size( ) < stateOrder_->size( ) )
+    {
+      envStates->push_back( NullPtr< Kernel::State >( ) );
+    }
+
+  evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, evalState->env_, argumentOrder_, RefCountPtr< std::vector< Kernel::VariableHandle > >( envValues ), stateOrder_, RefCountPtr< std::vector< Kernel::StateHandle > >( envStates ) );
+
   if( dynamicMap_ != 0 )
     {
       evalState->env_->setupDynamicKeyVariables( dynamicMap_ );
@@ -322,7 +353,7 @@ Ast::DynamicVariable::eval( Kernel::EvalState * evalState ) const
       
       const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
       
-      Kernel::HandleType res = dynProps.fetch( evalState->dyn_ );
+      Kernel::VariableHandle res = dynProps.fetch( evalState->dyn_ );
 
       if( res->isWarm( ) != warm_ )
 	{
@@ -362,7 +393,7 @@ Kernel::DynamicBindingContinuation::~DynamicBindingContinuation( )
 { }
 
 void
-Kernel::DynamicBindingContinuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::DynamicBindingContinuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   if( val->isThunk( ) )
     {
@@ -420,7 +451,7 @@ Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
     }
   else
     {
-      dynProps.makeBinding( Kernel::HandleType( new Kernel::Variable( new Kernel::Thunk( evalState->env_, evalState->dyn_, expr_ ) ) ),
+      dynProps.makeBinding( Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_, evalState->dyn_, expr_ ) ) ),
 			    idLoc_,
 			    evalState );
     }
@@ -576,7 +607,7 @@ Ast::DynamicVariableDecl::callBack( const RefCountPtr< const Lang::Function > & 
   evalState->env_->defineDynamic( id_,
 				  **idPos_,
 				  filter,
-				  Kernel::HandleType( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
+				  Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
 											       evalState->dyn_,
 											       defaultExpr_ ) ) ) );
   
@@ -657,11 +688,11 @@ Ast::EvalSymbolFunction::call( Kernel::EvalState * evalState, Kernel::Arguments 
 }
 
 
-Ast::IntroduceCold::IntroduceCold( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos )
+Ast::DefineVariable::DefineVariable( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos )
   : Ast::BindNode( Ast::SourceLocation( idLoc, expr->loc( ) ), idLoc, id ), expr_( expr ), idPos_( idPos )
 { }
 
-Ast::IntroduceCold::~IntroduceCold( )
+Ast::DefineVariable::~DefineVariable( )
 {
   delete expr_;
 
@@ -671,7 +702,7 @@ Ast::IntroduceCold::~IntroduceCold( )
 }
 
 void
-Ast::IntroduceCold::eval( Kernel::EvalState * evalState ) const
+Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
 {
   if( *idPos_ == 0 )
     {
@@ -680,7 +711,7 @@ Ast::IntroduceCold::eval( Kernel::EvalState * evalState ) const
   
   if( expr_->immediate_ )
     {
-      evalState->cont_ = Kernel::ContRef( new Kernel::IntroduceColdContinuation( evalState->env_,
+      evalState->cont_ = Kernel::ContRef( new Kernel::DefineVariableContinuation( evalState->env_,
 										  *idPos_,
 										  evalState->cont_,
 										  expr_->loc( ) ) );
@@ -689,7 +720,7 @@ Ast::IntroduceCold::eval( Kernel::EvalState * evalState ) const
   else
     {
       evalState->env_->define( **idPos_,
-			       Kernel::HandleType( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
+			       Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
 											    evalState->dyn_,
 											    expr_ ) ) ) );
       Kernel::ContRef cont = evalState->cont_;
@@ -724,10 +755,10 @@ Ast::LexiographicState::getHandle( Kernel::PassedEnv env ) const
 {
   if( *idKey_ == 0 )
     {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( loc_, id_ ) );
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( loc_, id_ ) );
     }
 
-  evalState->env_->lookup( **idKey_, warm_, evalState );
+  return evalState->env_->getStateHandle( **idKey_ );
 }
 
 
@@ -841,5 +872,32 @@ Ast::Freeze::eval( Kernel::EvalState * evalState ) const
 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( evalState->env_->freeze( **idPos_, evalState, idLoc_ ),
+		   evalState );
+}
+
+
+Ast::Peek::Peek( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos )
+  : Ast::SequencingNode( idLoc, idLoc, id ), idPos_( idPos )
+{
+  immediate_ = true;
+}
+
+Ast::Peek::~Peek( )
+{
+  /* idPos shared and will be a memory leak which must not be deleted.
+   * It would be easy to fix the leak using RefCountPtr< size_t >, but the leakage is constant space, so silly efficiency is prioritized.
+   */
+}
+
+void
+Ast::Peek::eval( Kernel::EvalState * evalState ) const
+{
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( evalState->env_->findLocalPosition( idLoc_, id_ ) );
+    }
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( evalState->env_->peek( **idPos_, evalState, idLoc_ ),
 		   evalState );
 }

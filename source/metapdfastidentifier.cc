@@ -9,7 +9,7 @@ MetaPDF::LiteralIdentifier::~LiteralIdentifier( )
 { }
 
 RefCountPtr< const char >
-MetaPDF::LiteralIdentifier::identifier( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::LiteralIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   return id;
 }
@@ -27,7 +27,7 @@ MetaPDF::SameIdentifier::~SameIdentifier( )
 }
 
 RefCountPtr< const char >
-MetaPDF::SameIdentifier::identifier( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::SameIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   return orig->identifier( dstgroup, pdfo, metaState, env );
 }

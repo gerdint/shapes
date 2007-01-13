@@ -20,7 +20,7 @@ Ast::MethodIdExpr::~MethodIdExpr( )
 { }
 
 // Kernel::MethodId
-// Ast::MethodIdExpr::identifier( Kernel::Environment::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+// Ast::MethodIdExpr::identifier( Kernel::Environment::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 // {
 //   RefCountPtr< const Lang::Value > untypedClass = classPart->value( dstgroup, pdfo, metaState, env );
 //   typedef const Lang::Class ArgType;

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "You don't want to use this script.  You meant to use fixnoncompiled"
-exit
+#echo "You don't want to use this script.  You meant to use fixnoncompiled"
+#exit
 
 for i in `ls *.h *.cc *.l *.y`; do
   echo Fixing $i

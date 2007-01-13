@@ -487,7 +487,7 @@ Lang::Core_intersection::call( Kernel::EvalState * evalState, Kernel::Arguments 
 
       const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( *idKey );
       
-      Kernel::HandleType handler = dynProps.fetch( evalState->dyn_ );
+      Kernel::VariableHandle handler = dynProps.fetch( evalState->dyn_ );
 
       if( handler->isWarm( ) )
 	{

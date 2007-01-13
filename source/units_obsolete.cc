@@ -68,7 +68,7 @@ MetaPDF::IntroduceUnitStmt::~IntroduceUnitStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::IntroduceUnitStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::IntroduceUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;
@@ -105,7 +105,7 @@ MetaPDF::AssignUnitStmt::~AssignUnitStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::AssignUnitStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::AssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;

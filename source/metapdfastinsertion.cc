@@ -14,7 +14,7 @@ MetaPDF::MemberAssignStmt::~MemberAssignStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::MemberAssignStmt::value( Kernel::Environment::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::MemberAssignStmt::value( Kernel::Environment::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   Kernel::ValueRef untypedVar = variable->value( dstgroup, pdfo, metaState, env );
 

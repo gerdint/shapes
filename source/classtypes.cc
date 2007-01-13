@@ -70,7 +70,7 @@ Lang::Instance::prepare( Kernel::EvalState * evalState )
   myClass->prepareInstance( evalState, privateEnv );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Instance::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & dummySelfRef ) const
 {
   if( ! myClass->getFinal( ) )
@@ -81,7 +81,7 @@ Lang::Instance::getField( const char * fieldID, const RefCountPtr< const Lang::V
   return getLocalField( fieldID );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Instance::getLocalField( const char * fieldID ) const
 {
   if( protectedAccess )
@@ -196,7 +196,7 @@ Lang::Instance::getLocalMethod( Kernel::MethodId fieldID ) const
   
   if( fieldID.getClass( ) == myClass )
     {
-      Kernel::HandleType untypedFun = getLocalField( fieldID.getIdentifier( ) );
+      Kernel::VariableHandle untypedFun = getLocalField( fieldID.getIdentifier( ) );
       return untypedFun->getVal< const Lang::Function >( "getLocalMethod:  The user was (almost) able to retrieve member data from super instance." );
     }
 
@@ -301,15 +301,15 @@ Lang::TransformedInstance::TransformedInstance( const Lang::Transform2D & _tf, c
 Lang::TransformedInstance::~TransformedInstance( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::TransformedInstance::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & dummySelfRef ) const
 {
   if( obj->getClass( )->isInTransformingSet( fieldID ) )
     {
-      Kernel::HandleType argUntyped = obj->getField( fieldID, obj );
+      Kernel::VariableHandle argUntyped = obj->getField( fieldID, obj );
       typedef const Lang::Geometric2D ArgType;
       RefCountPtr< ArgType > arg = argUntyped->getVal< ArgType >( "<inside transformed instance getField>" );
-      return Kernel::HandleType( new Kernel::Variable( arg->transformed( tf, arg ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( arg->transformed( tf, arg ) ) );
     }
   return obj->getField( fieldID, obj );
 }
@@ -507,7 +507,7 @@ Lang::Class::show( std::ostream & os ) const
   }
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::Class::getField( const char * fieldId, const RefCountPtr< const Lang::Value > & dummySelfRef ) const
 {
   if( strcmp( fieldId, "new" ) == 0 )
@@ -944,21 +944,21 @@ Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & 
 
   throw Exceptions::NotImplemented( "UserClass::method_new" );
 
-//   //  std::vector< HandleType > * envValues = new std::vector< HandleType >;
+//   //  std::vector< VariableHandle > * envValues = new std::vector< VariableHandle >;
 //   //  envValues->reserve( argumentOrder->size( ) );
 //   //  while( envValues->size( ) < argumentOrder->size( ) )
 //   //    {
 //   //      envValues->push_back( NullPtr< Kernel::Variable >( ) );
 //   //    }
-//   Kernel::PassedEnv instanceEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, evalState->env_, argumentOrder, RefCountPtr< std::vector< HandleType > >( envValues ) ) );
+//   Kernel::PassedEnv instanceEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, evalState->env_, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
 
-//   //  std::vector< HandleType > * envValues = new std::vector< HandleType >;
+//   //  std::vector< VariableHandle > * envValues = new std::vector< VariableHandle >;
 //   //  envValues->reserve( argumentOrder->size( ) );
 //   //  while( envValues->size( ) < argumentOrder->size( ) )
 //   //    {
 //   //      envValues->push_back( NullPtr< Kernel::Variable >( ) );
 //   //    }
-//   Kernel::PassedEnv privateEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, instanceEnv, argumentOrder, RefCountPtr< std::vector< HandleType > >( envValues ) ) );
+//   Kernel::PassedEnv privateEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, instanceEnv, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
 
 //   RefCountPtr< Lang::Instance > instanceSelf = RefCountPtr< Lang::Instance >( new Lang::Instance( instanceEnv, privateEnv, selfRef, false, evalState->dyn_ ) );
 

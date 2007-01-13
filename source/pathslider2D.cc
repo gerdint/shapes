@@ -35,52 +35,52 @@ Lang::PathSlider2D::~PathSlider2D( )
 RefCountPtr< const Lang::Class > Lang::PathSlider2D::TypeID( new Lang::SystemFinalClass( strrefdup( "PathSlider2D" ) ) );
 TYPEINFOIMPL( PathSlider2D );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::PathSlider2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "p" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( point( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( point( ) ) );
     }
   if( strcmp( fieldID, "v" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( speed( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( speed( ) ) );
     }
   if( strcmp( fieldID, "rv" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( reverse_speed( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( reverse_speed( ) ) );
     }
   if( strcmp( fieldID, "T" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( direction( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( direction( ) ) );
     }
   if( strcmp( fieldID, "rT" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( reverse_direction( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( reverse_direction( ) ) );
     }
   if( strcmp( fieldID, "N" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( normal( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( normal( ) ) );
     }
   if( strcmp( fieldID, "rN" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( reverse_normal( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( reverse_normal( ) ) );
     }
   if( strcmp( fieldID, "ik" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( radiusOfCurvature( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( radiusOfCurvature( ) ) );
     }
   if( strcmp( fieldID, "rik" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( reverse_radiusOfCurvature( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( reverse_radiusOfCurvature( ) ) );
     }
   if( strcmp( fieldID, "time" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( time( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( time( ) ) );
     }
   if( strcmp( fieldID, "length" ) == 0 )
     {
-      return Kernel::HandleType( new Kernel::Variable( length( ) ) );
+      return Kernel::VariableHandle( new Kernel::Variable( length( ) ) );
     }
   if( strcmp( fieldID, "past" ) == 0 )
     {

@@ -36,6 +36,7 @@ const Ast::ClassMode Ast::CLASS_MODE_ABSTRACT = 0x0001;
 const Ast::ClassMode Ast::CLASS_MODE_FINAL = 0x0002;
 
 const Ast::FunctionMode Ast::FUNCTION_TRANSFORMING = 0x0001;
+const Ast::FunctionMode Ast::FUNCTION_PROCEDURAL = 0x0002;
 
 const char * Lang::MESSAGE_DRAWABLE_DRAW_ID = "draw";
 

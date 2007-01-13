@@ -66,7 +66,7 @@ Lang::Core_if::Core_if( const char * title )
 {
   formals_->appendEvaluatedCoreFormal( "predicate", Kernel::THE_SLOT_VARIABLE, true );
   formals_->appendEvaluatedCoreFormal( "consequence", Kernel::THE_SLOT_VARIABLE, false );
-  formals_->appendEvaluatedCoreFormal( "alternative", Kernel::HandleType( new Kernel::Variable( Lang::THE_VOID ) ), false );
+  formals_->appendEvaluatedCoreFormal( "alternative", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_VOID ) ), false );
 }
 
 void
@@ -87,11 +87,11 @@ namespace MetaPDF
 
   class AndContinuation : public Kernel::Continuation
   {
-    RefCountPtr< std::vector< Kernel::HandleType > > arguments_;
-    std::vector< Kernel::HandleType >::const_iterator next_;
+    RefCountPtr< std::vector< Kernel::VariableHandle > > arguments_;
+    std::vector< Kernel::VariableHandle >::const_iterator next_;
     Kernel::ContRef cont_;
   public:
-    AndContinuation( const RefCountPtr< std::vector< Kernel::HandleType > > & arguments, const std::vector< Kernel::HandleType >::const_iterator & next, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+    AndContinuation( const RefCountPtr< std::vector< Kernel::VariableHandle > > & arguments, const std::vector< Kernel::VariableHandle >::const_iterator & next, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
       : Kernel::Continuation( traceLoc ), arguments_( arguments ), next_( next ), cont_( cont )
     { }
     virtual ~AndContinuation( ) { }
@@ -104,7 +104,7 @@ namespace MetaPDF
 	  return;
 	}
       
-      std::vector< Kernel::HandleType >::const_iterator nextNext = next_;
+      std::vector< Kernel::VariableHandle >::const_iterator nextNext = next_;
       ++nextNext;
       if( nextNext == arguments_->end( ) )
 	{
@@ -134,11 +134,11 @@ namespace MetaPDF
 
   class OrContinuation : public Kernel::Continuation
   {
-    RefCountPtr< std::vector< Kernel::HandleType > > arguments_;
-    std::vector< Kernel::HandleType >::const_iterator next_;
+    RefCountPtr< std::vector< Kernel::VariableHandle > > arguments_;
+    std::vector< Kernel::VariableHandle >::const_iterator next_;
     Kernel::ContRef cont_;
   public:
-    OrContinuation( const RefCountPtr< std::vector< Kernel::HandleType > > & arguments, const std::vector< Kernel::HandleType >::const_iterator & next, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+    OrContinuation( const RefCountPtr< std::vector< Kernel::VariableHandle > > & arguments, const std::vector< Kernel::VariableHandle >::const_iterator & next, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
       : Kernel::Continuation( traceLoc ), arguments_( arguments ), next_( next ), cont_( cont )
     { }
     virtual ~OrContinuation( ) { }
@@ -151,7 +151,7 @@ namespace MetaPDF
 	  return;
 	}
       
-      std::vector< Kernel::HandleType >::const_iterator nextNext = next_;
+      std::vector< Kernel::VariableHandle >::const_iterator nextNext = next_;
       ++nextNext;
       if( nextNext == arguments_->end( ) )
 	{
@@ -320,7 +320,7 @@ Lang::Core_hot::Core_hot( const char * title )
 {
   formals_->appendEvaluatedCoreFormal( "init", Kernel::THE_SLOT_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "tackon", Kernel::THE_SLOT_VARIABLE );
-  formals_->appendEvaluatedCoreFormal( "freeze", Kernel::HandleType( new Kernel::Variable( Lang::THE_IDENTITY ) ) );
+  formals_->appendEvaluatedCoreFormal( "freeze", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_IDENTITY ) ) );
 }
 
 void

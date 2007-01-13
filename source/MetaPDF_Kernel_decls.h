@@ -16,7 +16,7 @@ namespace MetaPDF
     typedef RefCountPtr< const Lang::Value > ValueRef;
     
     class Variable;
-    typedef RefCountPtr< Variable > HandleType;
+    typedef RefCountPtr< Variable > VariableHandle;
 
     class State;
     typedef State * StateHandle;

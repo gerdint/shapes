@@ -35,7 +35,7 @@ namespace MetaPDF
   public:
     ExitContinuation( bool * done, const Ast::SourceLocation & traceLoc );
     ~ExitContinuation( );
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
@@ -53,28 +53,28 @@ namespace MetaPDF
 
   class IfContinuation : public Kernel::Continuation
   {
-    Kernel::HandleType consequence_;
-    Kernel::HandleType alternative_;
+    Kernel::VariableHandle consequence_;
+    Kernel::VariableHandle alternative_;
     Kernel::ContRef cont_;
   public:
-    IfContinuation( const Kernel::HandleType & consequence, const Kernel::HandleType & alternative, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+    IfContinuation( const Kernel::VariableHandle & consequence, const Kernel::VariableHandle & alternative, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
     ~IfContinuation( );
     virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
 
-  /* IntroduceColdContinuation is used by the expression IntroduceCold.
+  /* DefineVariableContinuation is used by the expression DefineVariable.
    */
-  class IntroduceColdContinuation : public Kernel::Continuation
+  class DefineVariableContinuation : public Kernel::Continuation
   {
     Kernel::PassedEnv env_;
     size_t * pos_;
     Kernel::ContRef cont_;
   public:
-    IntroduceColdContinuation( const Kernel::PassedEnv & _env, size_t * _pos, const Kernel::ContRef & _cont, const Ast::SourceLocation & _traceLoc );
-    ~IntroduceColdContinuation( );
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+    DefineVariableContinuation( const Kernel::PassedEnv & _env, size_t * _pos, const Kernel::ContRef & _cont, const Ast::SourceLocation & _traceLoc );
+    ~DefineVariableContinuation( );
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
@@ -106,19 +106,19 @@ namespace MetaPDF
   public:
     StoreValueContinuation( Kernel::ValueRef * res, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
     ~StoreValueContinuation( );
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
 
   class StoreVariableContinuation : public Kernel::Continuation
   {
-    Kernel::HandleType dst_;
+    Kernel::VariableHandle dst_;
     Kernel::ContRef cont_;
   public:
-    StoreVariableContinuation( const Kernel::HandleType & res, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+    StoreVariableContinuation( const Kernel::VariableHandle & res, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
     ~StoreVariableContinuation( );
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
@@ -127,11 +127,11 @@ namespace MetaPDF
    */
   class InsertionContinuation : public Kernel::Continuation
   {
-    mutable Kernel::HandleType dst_; /* This being mutable is actually quite ugly... */
+    mutable Kernel::VariableHandle dst_; /* This being mutable is actually quite ugly... */
     Kernel::PassedDyn dyn_;
     Kernel::ContRef cont_;
   public:
-    InsertionContinuation( const Kernel::HandleType & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc );
+    InsertionContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc );
     ~InsertionContinuation( );
     virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -154,10 +154,10 @@ namespace MetaPDF
 
   class StmtStoreVariableContinuation : public Kernel::Continuation
   {
-    Kernel::HandleType dst_;
+    Kernel::VariableHandle dst_;
     Kernel::ContRef cont_;
   public:
-    StmtStoreVariableContinuation( const Kernel::HandleType & res, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+    StmtStoreVariableContinuation( const Kernel::VariableHandle & res, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
     ~StmtStoreVariableContinuation( );
     virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -231,7 +231,7 @@ namespace MetaPDF
   public:
     ComposedFunctionCall_cont( const RefCountPtr< const Lang::Function > & second, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
     virtual ~ComposedFunctionCall_cont( );
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };

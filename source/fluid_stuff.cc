@@ -9,7 +9,7 @@
 
 
 
-MetaPDF::ResetVariableStmt::ResetVariableStmt( const Ast::SourceLocation & _idLoc, Kernel::HandleType _var, Kernel::ValueRef _val )
+MetaPDF::ResetVariableStmt::ResetVariableStmt( const Ast::SourceLocation & _idLoc, Kernel::VariableHandle _var, Kernel::ValueRef _val )
   : idLoc( _idLoc ), var( _var ), val( _val )
 { }
 
@@ -17,7 +17,7 @@ MetaPDF::ResetVariableStmt::~ResetVariableStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetVariableStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::ResetVariableStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   var->quickSetVal( val );
   return MetaPDF::THE_VOID;
@@ -44,7 +44,7 @@ MetaPDF::ResetMemberStmt::~ResetMemberStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetMemberStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::ResetMemberStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   var->assignMember( fieldID, val );
   return MetaPDF::THE_VOID;
@@ -71,7 +71,7 @@ MetaPDF::ResetUnitStmt::~ResetUnitStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetUnitStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::ResetUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   env->redefineUnit( idLoc, id, val );
   return MetaPDF::THE_VOID;
@@ -102,10 +102,10 @@ MetaPDF::FluidLetAssignStmt::~FluidLetAssignStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::FluidLetAssignStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::FluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const char > idStr = id->identifier( dstgroup, pdfo, metaState, env );
-  Kernel::HandleType var = env->getVarHandle( idLoc, idStr );
+  Kernel::VariableHandle var = env->getVarHandle( idLoc, idStr );
   metaState->doAtEndOfGroup->push_front( new MetaPDF::ResetVariableStmt( idLoc, var, env->lookup( idLoc, id->identifier( dstgroup, pdfo, metaState, env ) ) ) );
   var->setVal( idLoc, idStr, expr->value( dstgroup, pdfo, metaState, env ) );
   return MetaPDF::THE_VOID;
@@ -138,7 +138,7 @@ MetaPDF::MemberFluidLetAssignStmt::~MemberFluidLetAssignStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::MemberFluidLetAssignStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::MemberFluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   Kernel::ValueRef untypedVar = variable->value( dstgroup, pdfo, metaState, env );
 
@@ -182,7 +182,7 @@ MetaPDF::FluidLetAssignUnitStmt::~FluidLetAssignUnitStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::FluidLetAssignUnitStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::FluidLetAssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;
@@ -242,7 +242,7 @@ MetaPDF::AssignStmt::~AssignStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::AssignStmt::value( Kernel::HandleType dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+MetaPDF::AssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   env->redefine( idLoc, id->identifier( dstgroup, pdfo, metaState, env ), expr->value( dstgroup, pdfo, metaState, env ) );
   return MetaPDF::THE_VOID;

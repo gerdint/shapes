@@ -499,7 +499,7 @@ Lang::Core_rotate3d::call( Kernel::EvalState * evalState, Kernel::Arguments & ar
 Lang::Core_scale::Core_scale( const char * title )
   : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 {
-  Kernel::HandleType one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
+  Kernel::VariableHandle one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
 
   formals_->appendEvaluatedCoreFormal( "r", one );
   formals_->appendEvaluatedCoreFormal( "x", one );
@@ -526,7 +526,7 @@ Lang::Core_scale::call( Kernel::EvalState * evalState, Kernel::Arguments & args,
 Lang::Core_scale3d::Core_scale3d( const char * title )
   : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 {
-  Kernel::HandleType one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
+  Kernel::VariableHandle one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
 
   formals_->appendEvaluatedCoreFormal( "r", one );
   formals_->appendEvaluatedCoreFormal( "x", one );

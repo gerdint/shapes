@@ -124,7 +124,7 @@ void metapdferror( char * msg )
  */
 
 %token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle
-%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_declaretype
+%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype
 %token <tokenID> T_let T_letstar T_letrec
 %token <tokenID> T_tex T_dynamic T_continuation T_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
@@ -412,8 +412,8 @@ CallExpr
   Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
-			      $1,
-			      args );
+			  $1,
+			  args );
 }
 | Expr T_dddotbrackets Expr
 {
@@ -432,6 +432,10 @@ CallExpr
 			  $1,
 			  args,
 			  true );  /* true means Curry */
+}
+| '[' '!' Expr ArgList ']'
+{
+  $$ = new Ast::CallExpr( @$, $2, $3, false, true );  /* false for no curry, true for procedural */
 }
 ;
 
@@ -506,8 +510,8 @@ Function
   Ast::FunctionFunction * res = new Ast::FunctionFunction( @$, $2, $5, $4 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 | '(' OperatorFunction ')'
 {
@@ -935,7 +939,7 @@ NamedLetExpr
     Ast::FunctionFunction * res = new Ast::FunctionFunction( @5, $5, $7, 0 );
     res->push_exprs( args );
     size_t ** pos = new size_t * ( 0 );
-    bracket->push_back( new Ast::IntroduceCold( @3,
+    bracket->push_back( new Ast::DefineVariable( @3,
 						    $3,
 						    new Ast::CallExpr( @$,
 									   RefCountPtr< const Lang::Function >( res ),
@@ -993,7 +997,7 @@ GroupElem
 | T_identifier ':' Expr
 {
   size_t ** pos = new size_t * ( 0 );
-  $$ = new Ast::IntroduceCold( @1, $1, $3, pos );
+  $$ = new Ast::DefineVariable( @1, $1, $3, pos );
 }
 | T_state_identifier ':' Expr
 {
@@ -1009,7 +1013,13 @@ GroupElem
 {
   size_t ** posVar = new size_t * ( 0 );
   size_t ** posState = new size_t * ( 0 );
-  $$ = new Ast::IntroduceCold( @1, $1, new Ast::Freeze( @3, $3, posState ), posVar );
+  $$ = new Ast::DefineVariable( @1, $1, new Ast::Freeze( @3, $3, posState ), posVar );
+}
+| T_identifier ':' T_state_identifier T_ggthan
+{
+  size_t ** posVar = new size_t * ( 0 );
+  size_t ** posState = new size_t * ( 0 );
+  $$ = new Ast::DefineVariable( @1, $1, new Ast::Peek( @3, $3, posState ), posVar );
 }
 | T_dynamic T_dynamic_identifier Expr Expr
 {
@@ -1445,6 +1455,10 @@ FunctionModeSpecifier
 : '^'
 {
   $$ = Ast::FUNCTION_TRANSFORMING;
+}
+| '!'
+{
+  $$ = Ast::FUNCTION_PROCEDURAL;
 }
 ;
 

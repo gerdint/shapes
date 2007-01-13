@@ -9,7 +9,7 @@
 using namespace MetaPDF;
 
 
-Kernel::IfContinuation::IfContinuation( const Kernel::HandleType & consequence, const Kernel::HandleType & alternative, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::IfContinuation::IfContinuation( const Kernel::VariableHandle & consequence, const Kernel::VariableHandle & alternative, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), consequence_( consequence ), alternative_( alternative ), cont_( cont )
 { }
 
@@ -52,15 +52,15 @@ Kernel::IfContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::IntroduceColdContinuation::IntroduceColdContinuation( const Kernel::PassedEnv & env, size_t * pos, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::DefineVariableContinuation::DefineVariableContinuation( const Kernel::PassedEnv & env, size_t * pos, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), env_( env ), pos_( pos ), cont_( cont )
 { }
 
-Kernel::IntroduceColdContinuation::~IntroduceColdContinuation( )
+Kernel::DefineVariableContinuation::~DefineVariableContinuation( )
 { }
 
 void
-Kernel::IntroduceColdContinuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::DefineVariableContinuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   // This continuation is only used when the expression is explicitly forced.
   if( val->isThunk( ) )
@@ -76,14 +76,14 @@ Kernel::IntroduceColdContinuation::takeHandle( Kernel::HandleType val, Kernel::E
 }
 
 void
-Kernel::IntroduceColdContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+Kernel::DefineVariableContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
 {
   trace->push_front( Kernel::Continuation::BackTraceElem( this, "introduce cold" ) );
   cont_->backTrace( trace );
 }
 
 void
-Kernel::IntroduceColdContinuation::gcMark( Kernel::GCMarkedSet & marked )
+Kernel::DefineVariableContinuation::gcMark( Kernel::GCMarkedSet & marked )
 {
   env_->gcMark( marked );
   cont_->gcMark( marked );
@@ -101,7 +101,7 @@ void
 Kernel::IntroduceWarmContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
   RefCountPtr< const Lang::Hot > hot( Helpers::down_cast< const Lang::Hot >( val, traceLoc_ ) );
-  env_->define( *pos_, Kernel::HandleType( new Kernel::Variable( hot->warm( ) ) ) );
+  env_->define( *pos_, Kernel::VariableHandle( new Kernel::Variable( hot->warm( ) ) ) );
   evalState->cont_ = cont_;
   cont_->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
 }
@@ -129,7 +129,7 @@ Kernel::StoreValueContinuation::~StoreValueContinuation( )
 { }
 
 void
-Kernel::StoreValueContinuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::StoreValueContinuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   if( val->isThunk( ) )
     {
@@ -157,7 +157,7 @@ Kernel::StoreValueContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::StoreVariableContinuation::StoreVariableContinuation( const Kernel::HandleType & dst, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::StoreVariableContinuation::StoreVariableContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), dst_( dst ), cont_( cont )
 { }
 
@@ -165,7 +165,7 @@ Kernel::StoreVariableContinuation::~StoreVariableContinuation( )
 { }
 
 void
-Kernel::StoreVariableContinuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::StoreVariableContinuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   if( val->isThunk( ) )
     {
@@ -195,7 +195,7 @@ Kernel::StoreVariableContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::InsertionContinuation::InsertionContinuation( const Kernel::HandleType & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc )
+Kernel::InsertionContinuation::InsertionContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), dst_( dst ), dyn_( dyn ), cont_( cont )
 { }
 
@@ -253,7 +253,7 @@ Kernel::StmtStoreValueContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::StmtStoreVariableContinuation::StmtStoreVariableContinuation( const Kernel::HandleType & dst, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::StmtStoreVariableContinuation::StmtStoreVariableContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), dst_( dst ), cont_( cont )
 { }
 
@@ -324,7 +324,7 @@ Kernel::ExitContinuation::~ExitContinuation( )
 { }
 
 void
-Kernel::ExitContinuation::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::ExitContinuation::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   *done_ = true;
 }
@@ -502,7 +502,7 @@ Kernel::ComposedFunctionCall_cont::~ComposedFunctionCall_cont( )
 { }
 
 void
-Kernel::ComposedFunctionCall_cont::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::ComposedFunctionCall_cont::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   evalState->dyn_ = dyn_;
   evalState->cont_ = cont_;

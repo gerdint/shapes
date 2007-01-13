@@ -1240,15 +1240,15 @@ Kernel::CharacterSpacingDynamicVariableProperties::CharacterSpacingDynamicVariab
 Kernel::CharacterSpacingDynamicVariableProperties::~CharacterSpacingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::CharacterSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->characterSpacing_ ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->characterSpacing_ ) ) );
 }
 
 void
-Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Length > spacing = val->getVal< const Lang::Length >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -1264,15 +1264,15 @@ Kernel::WordSpacingDynamicVariableProperties::WordSpacingDynamicVariableProperti
 Kernel::WordSpacingDynamicVariableProperties::~WordSpacingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::WordSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->wordSpacing_ ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->wordSpacing_ ) ) );
 }
 
 void
-Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Length > spacing = val->getVal< const Lang::Length >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -1288,15 +1288,15 @@ Kernel::HorizontalScalingDynamicVariableProperties::HorizontalScalingDynamicVari
 Kernel::HorizontalScalingDynamicVariableProperties::~HorizontalScalingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::HorizontalScalingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::Float( textState->horizontalScaling_ ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Float( textState->horizontalScaling_ ) ) );
 }
 
 void
-Kernel::HorizontalScalingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::HorizontalScalingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Float > scaling = val->getVal< const Lang::Float >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -1312,15 +1312,15 @@ Kernel::LeadingDynamicVariableProperties::LeadingDynamicVariableProperties( cons
 Kernel::LeadingDynamicVariableProperties::~LeadingDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::LeadingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( new Kernel::Variable( textState->leading( ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable( textState->leading( ) ) );
 }
 
 void
-Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1365,15 +1365,15 @@ Kernel::FontDynamicVariableProperties::FontDynamicVariableProperties( const char
 Kernel::FontDynamicVariableProperties::~FontDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::FontDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( new Kernel::Variable( textState->font_ ) );
+  return Kernel::VariableHandle( new Kernel::Variable( textState->font_ ) );
 }
 
 void
-Kernel::FontDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::FontDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::FontBinding( loc, val->getVal< const Lang::Font >( loc ) ) ),
@@ -1388,15 +1388,15 @@ Kernel::TextSizeDynamicVariableProperties::TextSizeDynamicVariableProperties( co
 Kernel::TextSizeDynamicVariableProperties::~TextSizeDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::TextSizeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->size_ ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->size_ ) ) );
 }
 
 void
-Kernel::TextSizeDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextSizeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Length > size = val->getVal< const Lang::Length >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -1412,15 +1412,15 @@ Kernel::TextRenderingModeDynamicVariableProperties::TextRenderingModeDynamicVari
 Kernel::TextRenderingModeDynamicVariableProperties::~TextRenderingModeDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::TextRenderingModeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::TextRenderingMode( textState->mode_ ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::TextRenderingMode( textState->mode_ ) ) );
 }
 
 void
-Kernel::TextRenderingModeDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextRenderingModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::TextRenderingMode > mode = val->getVal< const Lang::TextRenderingMode >( loc );
   Kernel::ContRef cont = evalState->cont_;
@@ -1436,15 +1436,15 @@ Kernel::TextRiseDynamicVariableProperties::TextRiseDynamicVariableProperties( co
 Kernel::TextRiseDynamicVariableProperties::~TextRiseDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::TextRiseDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( new Kernel::Variable( textState->rise( ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable( textState->rise( ) ) );
 }
 
 void
-Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1489,15 +1489,15 @@ Kernel::TextKnockoutDynamicVariableProperties::TextKnockoutDynamicVariableProper
 Kernel::TextKnockoutDynamicVariableProperties::~TextKnockoutDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::TextKnockoutDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::HandleType( MetaPDF::Helpers::newValHandle( new Lang::Boolean( ( textState->knockout_ & Kernel::TextState::KNOCKOUT_FLAG_BIT ) != 0 ) ) );
+  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Boolean( ( textState->knockout_ & Kernel::TextState::KNOCKOUT_FLAG_BIT ) != 0 ) ) );
 }
 
 void
-Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::Boolean > mode = val->getVal< const Lang::Boolean >( loc );
   Kernel::ContRef cont = evalState->cont_;

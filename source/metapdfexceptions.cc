@@ -564,8 +564,8 @@ Exceptions::ProhibitedTypeChange::display( std::ostream & os ) const
 }
 
 
-Exceptions::LookupUnknown::LookupUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
+Exceptions::LookupUnknown::LookupUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id, Type type )
+  : Exceptions::RuntimeError( _loc ), id( _id ), type_( type )
 { }
 
 Exceptions::LookupUnknown::~LookupUnknown( )
@@ -574,7 +574,37 @@ Exceptions::LookupUnknown::~LookupUnknown( )
 void
 Exceptions::LookupUnknown::display( std::ostream & os ) const
 {
-  os << "The variable " << id << " is unbound" << std::endl ;
+  switch( type_ )
+    {
+    case VARIABLE:
+      os << "The variable " << id << " is unbound." << std::endl ;
+      break;
+    case STATE:
+      os << "There is no state called " << id << " around." << std::endl ;
+      break;
+    case DYNAMIC_VARIABLE:
+      os << "There is no dynamic variable called " << id << " around." << std::endl ;
+      break;
+    case DYNAMIC_STATE:
+      os << "There is no dynamic state called " << id << " around." << std::endl ;
+      break;
+    default:
+      os << "<?ERROR?" ;
+    }
+}
+
+
+Exceptions::StateBeyondFunctionBoundary::StateBeyondFunctionBoundary( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
+  : Exceptions::RuntimeError( _loc ), id( _id )
+{ }
+
+Exceptions::StateBeyondFunctionBoundary::~StateBeyondFunctionBoundary( )
+{ }
+
+void
+Exceptions::StateBeyondFunctionBoundary::display( std::ostream & os ) const
+{
+  os << "The state " << id << " resides outside a function boundary." << std::endl ;
 }
 
 
@@ -588,7 +618,7 @@ Exceptions::IntroducingExistingUnit::~IntroducingExistingUnit( )
 void
 Exceptions::IntroducingExistingUnit::display( std::ostream & os ) const
 {
-  os << "The unit " << id << " is already introduced" << std::endl ;
+  os << "The unit " << id << " is already introduced." << std::endl ;
 }
 
 

@@ -127,7 +127,7 @@ namespace MetaPDF
   public:
     CompositePath2D( );
     virtual ~CompositePath2D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 
     virtual void writePath( std::ostream & os ) const;
     virtual RefCountPtr< const Lang::SubPath2D > typed_transformed( const Lang::Transform2D & tf ) const;
@@ -154,8 +154,8 @@ namespace MetaPDF
     bool allComplete_;
     ElementaryPath2D( );
     virtual ~ElementaryPath2D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::ElementaryPath2D > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::ElementaryPath2D > & selfRef ) const;
 
     virtual void writePath( std::ostream & os ) const;
     virtual void writeInputForm( std::ostream & os ) const;
@@ -220,7 +220,7 @@ namespace MetaPDF
     PathSlider2D( const RefCountPtr< const Lang::ElementaryPath2D > & path );
     PathSlider2D( const RefCountPtr< const Lang::ElementaryPath2D > & path, Concrete::SplineTime t );
     virtual ~PathSlider2D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     RefCountPtr< const Lang::ElementaryPath2D > getPath( ) const { return path_; }
     Concrete::SplineTime getTime( ) const { return t_; }
 
@@ -370,7 +370,7 @@ namespace MetaPDF
   public:
     CompositePath3D( );
     virtual ~CompositePath3D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 
     virtual RefCountPtr< const Lang::ElementaryPath2D > make2D( Concrete::Length eyez ) const;
     virtual RefCountPtr< const Lang::SubPath3D > typed_transformed( const Lang::Transform3D & tf ) const;
@@ -407,8 +407,8 @@ namespace MetaPDF
   public:
     ElementaryPath3D( );
     virtual ~ElementaryPath3D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::ElementaryPath3D > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::ElementaryPath3D > & selfRef ) const;
 
     virtual RefCountPtr< const Lang::ElementaryPath2D > make2D( Concrete::Length eyez ) const;
     void dashifyIn2D( RefCountPtr< const Lang::Group2D > * res, Concrete::Length eyez, const RefCountPtr< const Kernel::GraphicsState > & metaState ) const;
@@ -472,7 +472,7 @@ namespace MetaPDF
     PathSlider3D( const RefCountPtr< const Lang::ElementaryPath3D > & _path );
     PathSlider3D( const RefCountPtr< const Lang::ElementaryPath3D > & _path, Concrete::SplineTime _t );
     virtual ~PathSlider3D( );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     RefCountPtr< const Lang::ElementaryPath3D > getPath( ) const { return path_; }
     Concrete::SplineTime getTime( ) const { return t_; }
 

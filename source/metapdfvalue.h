@@ -54,7 +54,7 @@ namespace MetaPDF
 
       virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
 
-      virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 
       virtual void show( std::ostream & os ) const;
 
@@ -121,7 +121,7 @@ namespace MetaPDF
     /*       return res; */
     /*     } */
 
-    Kernel::HandleType newValHandle( const Lang::Value * val );
+    Kernel::VariableHandle newValHandle( const Lang::Value * val );
 
   }
 }

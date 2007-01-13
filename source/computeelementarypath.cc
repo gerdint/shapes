@@ -68,8 +68,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 	      {
 		newPoint->rear_ = new Concrete::Coords2D( 0, 0 );
 		{
-		  typedef const Lang::Coords2D * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->rear_.getPtr( ) );
+		  typedef const Lang::Coords2D * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->rear_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      *(newPoint->rear_) = Concrete::Coords2D( basePoint, *typedHandle );
@@ -84,8 +84,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		newPoint->rearState_ = Concrete::PathPoint2D::UNFORCED_M;  // This is the normal case, the only exception being rectangular handles
 		pth->allComplete_ = false;
 		{
-		  typedef const Lang::PolarHandle2D * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->rear_.getPtr( ) );
+		  typedef const Lang::PolarHandle2D * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->rear_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->rearModulusPromise_ = typedHandle->rPromise_;
@@ -95,8 +95,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_a * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->rear_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_a * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->rear_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->rearModulusPromise_ = typedHandle->rPromise_;
@@ -105,8 +105,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_r * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->rear_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_r * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->rear_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->rearModulusPromise_ = typedHandle->defaultModulus_;
@@ -116,8 +116,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_ra * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->rear_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_ra * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->rear_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->rearModulusPromise_ = typedHandle->defaultModulus_;
@@ -134,8 +134,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 	      {
 		newPoint->front_ = new Concrete::Coords2D( 0, 0 );
 		{
-		  typedef const Lang::Coords2D * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->front_.getPtr( ) );
+		  typedef const Lang::Coords2D * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->front_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      *(newPoint->front_) = Concrete::Coords2D( basePoint, *typedHandle );
@@ -150,8 +150,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		newPoint->frontState_ = Concrete::PathPoint2D::UNFORCED_M;
 		pth->allComplete_ = false;
 		{
-		  typedef const Lang::PolarHandle2D * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->front_.getPtr( ) );
+		  typedef const Lang::PolarHandle2D * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->front_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->frontModulusPromise_ = typedHandle->rPromise_;
@@ -161,8 +161,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_a * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->front_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_a * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->front_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->frontModulusPromise_ = typedHandle->rPromise_;
@@ -171,8 +171,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_r * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->front_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_r * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->front_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->frontModulusPromise_ = typedHandle->defaultModulus_;
@@ -182,8 +182,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		    }
 		}
 		{
-		  typedef const Lang::PolarHandle2DFree_ra * HandleType;
-		  HandleType typedHandle = dynamic_cast< HandleType >( pathPoint->front_.getPtr( ) );
+		  typedef const Lang::PolarHandle2DFree_ra * VariableHandle;
+		  VariableHandle typedHandle = dynamic_cast< VariableHandle >( pathPoint->front_.getPtr( ) );
 		  if( typedHandle != 0 )
 		    {
 		      newPoint->frontModulusPromise_ = typedHandle->defaultModulus_;

@@ -84,10 +84,10 @@ RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( 
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( "TeX" ) );
 
 Kernel::Arguments Kernel::EMPTY_ARGLIST( new Kernel::EvaluatedFormals( "< the empty arg list >" ) );
-Kernel::HandleType Kernel::THE_SLOT_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
-Kernel::HandleType Kernel::THE_VOID_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
-Kernel::HandleType Kernel::THE_FALSE_VARIABLE( new Kernel::Variable( Lang::THE_FALSE ) );
-Kernel::HandleType Kernel::THE_TRUE_VARIABLE( new Kernel::Variable( Lang::THE_TRUE ) );
+Kernel::VariableHandle Kernel::THE_SLOT_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
+Kernel::VariableHandle Kernel::THE_VOID_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
+Kernel::VariableHandle Kernel::THE_FALSE_VARIABLE( new Kernel::Variable( Lang::THE_FALSE ) );
+Kernel::VariableHandle Kernel::THE_TRUE_VARIABLE( new Kernel::Variable( Lang::THE_TRUE ) );
 Kernel::StateHandle Kernel::THE_SLOT_STATE( NullPtr< Kernel::State >( ) );
 
 Lang::Transform2D Lang::THE_2D_IDENTITY( 1, 0,

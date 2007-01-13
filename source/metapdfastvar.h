@@ -15,6 +15,7 @@ namespace MetaPDF
       std::list< Ast::Node * > * nodes_;
       std::map< const char *, size_t, charPtrLess > * argumentOrder_;
       std::map< const char *, size_t, charPtrLess > * dynamicMap_;
+      std::map< const char *, size_t, charPtrLess > * stateOrder_;
     public:
       CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes );
       virtual ~CodeBracket( );
@@ -64,7 +65,7 @@ namespace MetaPDF
     public:
       DynamicBindingContinuation( const Ast::SourceLocation & traceLoc, const Kernel::PassedEnv & env, const Kernel::Environment::LexicalKey & key, const Ast::SourceLocation & idLoc, const Kernel::ContRef & cont );
       virtual ~DynamicBindingContinuation( );
-      virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
@@ -121,13 +122,13 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class IntroduceCold : public BindNode
+    class DefineVariable : public BindNode
     {
       Ast::Expression * expr_;
       mutable size_t ** idPos_;
     public:
-      IntroduceCold( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
-      virtual ~IntroduceCold( );
+      DefineVariable( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
+      virtual ~DefineVariable( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -178,6 +179,15 @@ namespace MetaPDF
     public:
       Freeze( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos );
       virtual ~Freeze( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class Peek : public Expression
+    {
+      mutable size_t ** idPos_;
+    public:
+      Peek( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos );
+      virtual ~Peek( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     

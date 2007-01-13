@@ -38,8 +38,8 @@ Lang::Core_stroke::Core_stroke( const char * title )
   : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 {
   formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
-  formals_->appendEvaluatedCoreFormal( "head", Kernel::HandleType( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
-  formals_->appendEvaluatedCoreFormal( "tail", Kernel::HandleType( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
+  formals_->appendEvaluatedCoreFormal( "head", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
+  formals_->appendEvaluatedCoreFormal( "tail", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
 }
 
 void
@@ -128,12 +128,12 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::HandleType tailKeepAlive;
+    Kernel::VariableHandle tailKeepAlive;
     Kernel::WarmGroup2D * tailWarm;
     Kernel::ContRef cont;
   public:
     Stroke2DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-		       Kernel::HandleType _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+		       Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
     { }
     virtual ~Stroke2DCont_tail( ) { }
@@ -185,12 +185,12 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::HandleType headKeepAlive;
+    Kernel::VariableHandle headKeepAlive;
     Kernel::WarmGroup2D * headWarm;
     Kernel::ContRef cont;
   public:
     Stroke2DCont_head( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-		       Kernel::HandleType _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+		       Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
     { }
     virtual ~Stroke2DCont_head( ) { }
@@ -243,13 +243,13 @@ namespace MetaPDF
     RefCountPtr< const Lang::ElementaryPath2D > path;
     RefCountPtr< const Lang::Drawable2D > tail;
     Lang::Length cutTail;
-    Kernel::HandleType headKeepAlive;
+    Kernel::VariableHandle headKeepAlive;
     Kernel::WarmGroup2D * headWarm;
     Kernel::ContRef cont;
   public:
     Stroke2DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
 			const RefCountPtr< const Lang::Drawable2D > & _tail, Lang::Length _cutTail,
-			Kernel::HandleType _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+			Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tail( _tail ), cutTail( _cutTail ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
     { }
     virtual ~Stroke2DCont_both2( ) { }
@@ -316,16 +316,16 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::HandleType pathHandle;
+    Kernel::VariableHandle pathHandle;
     RefCountPtr< const Lang::Function > headFunction;
     Kernel::PassedDyn dyn;
-    Kernel::HandleType tailKeepAlive;
+    Kernel::VariableHandle tailKeepAlive;
     Kernel::WarmGroup2D * tailWarm;
     Kernel::ContRef cont;
   public:
     Stroke2DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-			const Kernel::HandleType & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
-			Kernel::HandleType _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+			const Kernel::VariableHandle & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
+			Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), pathHandle( _pathHandle ), headFunction( _headFunction ), dyn( _dyn ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
     { }
     virtual ~Stroke2DCont_both1( ) { }
@@ -338,7 +338,7 @@ namespace MetaPDF
 	}
       
       Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-      Kernel::HandleType dst( new Kernel::Variable( warm ) );
+      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
       evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both2( graphicsState, path, tailWarm->getPile( ), *cutTail, dst, warm, cont, traceLoc_ ) );
       Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
       sysVars->defaultDestination_ = dst;
@@ -389,7 +389,7 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 	  /* There's only an arrow at the head.
 	   */
 	  Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-	  Kernel::HandleType dst( new Kernel::Variable( warm ) );
+	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
 	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_head( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
 	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
 	  sysVars->defaultDestination_ = dst;
@@ -403,7 +403,7 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 	  /* There's only an arrow at the tail.
 	   */
 	  Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-	  Kernel::HandleType dst( new Kernel::Variable( warm ) );
+	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
 	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_tail( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
 	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
 	  sysVars->defaultDestination_ = dst;
@@ -413,7 +413,7 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 	}
 
       Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-      Kernel::HandleType dst( new Kernel::Variable( warm ) );
+      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
       evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both1( evalState->dyn_->getGraphicsState( ), path, args.getHandle( 0 ), arrowHead, evalState->dyn_, dst, warm, evalState->cont_, callLoc ) );
       Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
       sysVars->defaultDestination_ = dst;
@@ -433,12 +433,12 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::HandleType tailKeepAlive;
+    Kernel::VariableHandle tailKeepAlive;
     Kernel::WarmGroup3D * tailWarm;
     Kernel::ContRef cont;
   public:
     Stroke3DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-		       Kernel::HandleType _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+		       Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
     { }
     virtual ~Stroke3DCont_tail( ) { }
@@ -492,12 +492,12 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::HandleType headKeepAlive;
+    Kernel::VariableHandle headKeepAlive;
     Kernel::WarmGroup3D * headWarm;
     Kernel::ContRef cont;
   public:
     Stroke3DCont_head( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-		       Kernel::HandleType _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+		       Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
     { }
     virtual ~Stroke3DCont_head( ) { }
@@ -552,13 +552,13 @@ namespace MetaPDF
     RefCountPtr< const Lang::ElementaryPath3D > path;
     RefCountPtr< const Lang::Drawable3D > tail;
     Lang::Length cutTail;
-    Kernel::HandleType headKeepAlive;
+    Kernel::VariableHandle headKeepAlive;
     Kernel::WarmGroup3D * headWarm;
     Kernel::ContRef cont;
   public:
     Stroke3DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
 			const RefCountPtr< const Lang::Drawable3D > & _tail, Lang::Length _cutTail,
-			Kernel::HandleType _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+			Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tail( _tail ), cutTail( _cutTail ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
     { }
     virtual ~Stroke3DCont_both2( ) { }
@@ -628,16 +628,16 @@ namespace MetaPDF
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::HandleType pathHandle;
+    Kernel::VariableHandle pathHandle;
     RefCountPtr< const Lang::Function > headFunction;
     Kernel::PassedDyn dyn;
-    Kernel::HandleType tailKeepAlive;
+    Kernel::VariableHandle tailKeepAlive;
     Kernel::WarmGroup3D * tailWarm;
     Kernel::ContRef cont;
   public:
     Stroke3DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-			const Kernel::HandleType & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
-			Kernel::HandleType _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+			const Kernel::VariableHandle & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
+			Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), pathHandle( _pathHandle ), headFunction( _headFunction ), dyn( _dyn ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
     { }
     virtual ~Stroke3DCont_both1( ) { }
@@ -650,7 +650,7 @@ namespace MetaPDF
 	}
       
       Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-      Kernel::HandleType dst( new Kernel::Variable( warm ) );
+      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
       evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both2( graphicsState, path, tailWarm->getPile( ), *cutTail, dst, warm, cont, traceLoc_ ) );
       Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
       sysVars->defaultDestination_ = dst;
@@ -702,7 +702,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 	  /* There's only an arrow at the head.
 	   */
 	  Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-	  Kernel::HandleType dst( new Kernel::Variable( warm ) );
+	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
 	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_head( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
 	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
 	  sysVars->defaultDestination_ = dst;
@@ -716,7 +716,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 	  /* There's only an arrow at the tail.
 	   */
 	  Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-	  Kernel::HandleType dst( new Kernel::Variable( warm ) );
+	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
 	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_tail( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
 	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
 	  sysVars->defaultDestination_ = dst;
@@ -726,7 +726,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 	}
 
       Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-      Kernel::HandleType dst( new Kernel::Variable( warm ) );
+      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
       evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both1( evalState->dyn_->getGraphicsState( ), path, args.getHandle( 0 ), arrowHead, evalState->dyn_, dst, warm, evalState->cont_, callLoc ) );
       Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
       sysVars->defaultDestination_ = dst;
@@ -1010,8 +1010,8 @@ Lang::Core_facing2Din3D::Core_facing2Din3D( const char * title )
   : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 {
   formals_->appendEvaluatedCoreFormal( "obj", Kernel::THE_SLOT_VARIABLE );
-  formals_->appendEvaluatedCoreFormal( "scale", Kernel::HandleType( new Kernel::Variable( Lang::THE_FALSE ) ) );
-  formals_->appendEvaluatedCoreFormal( "distort", Kernel::HandleType( new Kernel::Variable( Lang::THE_FALSE ) ) );
+  formals_->appendEvaluatedCoreFormal( "scale", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_FALSE ) ) );
+  formals_->appendEvaluatedCoreFormal( "distort", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_FALSE ) ) );
 }
 
 void
@@ -1106,7 +1106,7 @@ Lang::Core_facet::Core_facet( const char * title )
   formals_->appendEvaluatedCoreFormal( "n1", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "n2", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "n3", Kernel::THE_VOID_VARIABLE );
-  formals_->appendEvaluatedCoreFormal( "tiebreaker", Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( Concrete::ZERO_LENGTH ) ) ) ) );
+  formals_->appendEvaluatedCoreFormal( "tiebreaker", Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( Concrete::ZERO_LENGTH ) ) ) ) );
   formals_->appendEvaluatedCoreFormal( "double", Kernel::THE_VOID_VARIABLE );
 }
 

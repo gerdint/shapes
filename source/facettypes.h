@@ -89,8 +89,8 @@ namespace MetaPDF
     public:
       ReflectionsDynamicVariableProperties( const char * name );
       virtual ~ReflectionsDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class AutoIntensityDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -98,8 +98,8 @@ namespace MetaPDF
     public:
       AutoIntensityDynamicVariableProperties( const char * name );
       virtual ~AutoIntensityDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class AutoScatteringDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -107,8 +107,8 @@ namespace MetaPDF
     public:
       AutoScatteringDynamicVariableProperties( const char * name );
       virtual ~AutoScatteringDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class ViewResolutionDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -116,8 +116,8 @@ namespace MetaPDF
     public:
       ViewResolutionDynamicVariableProperties( const char * name );
       virtual ~ViewResolutionDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class ShadeOrderDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -125,8 +125,8 @@ namespace MetaPDF
     public:
       ShadeOrderDynamicVariableProperties( const char * name );
       virtual ~ShadeOrderDynamicVariableProperties( );
-      virtual Kernel::HandleType fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual void makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
     class FacetState

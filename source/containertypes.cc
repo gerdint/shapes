@@ -19,7 +19,7 @@ Lang::SingleList::~SingleList( )
 RefCountPtr< const Lang::Class > Lang::SingleList::TypeID( new Lang::SystemFinalClass( strrefdup( "SingleList" ) ) );
 TYPEINFOIMPL( SingleList );
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::SingleList::getField( const char * fieldId, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   RefCountPtr< const Lang::SingleList > typedSelfRef = Helpers::down_cast< const Lang::SingleList >( selfRef, "< SingleList::getField >" );
@@ -51,7 +51,7 @@ namespace MetaPDF
       : Kernel::Continuation( traceLoc ), cdr_( cdr ), op_( op ), dyn_( dyn ), cont_( cont )
     { }
     virtual ~SingleFoldLCont( ) { }
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
     {
       evalState->dyn_ = dyn_;
       evalState->cont_ = cont_;
@@ -73,16 +73,16 @@ namespace MetaPDF
 
   class SingleFoldRCont : public Kernel::Continuation
   {
-    Kernel::HandleType car_;
+    Kernel::VariableHandle car_;
     RefCountPtr< const Lang::Function > op_;
     Kernel::PassedDyn dyn_;
     Kernel::ContRef cont_;
   public:
-    SingleFoldRCont( const Kernel::HandleType & car, const RefCountPtr< const Lang::Function > & op, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+    SingleFoldRCont( const Kernel::VariableHandle & car, const RefCountPtr< const Lang::Function > & op, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
       : Kernel::Continuation( traceLoc ), car_( car ), op_( op ), dyn_( dyn ), cont_( cont )
     { }
     virtual ~SingleFoldRCont( ) { }
-    virtual void takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
     {
       evalState->dyn_ = dyn_;
       evalState->cont_ = cont_;
@@ -106,7 +106,7 @@ namespace MetaPDF
 }
 
 
-Lang::SingleListPair::SingleListPair( const Kernel::HandleType & car, const RefCountPtr< const Lang::SingleList > & cdr )
+Lang::SingleListPair::SingleListPair( const Kernel::VariableHandle & car, const RefCountPtr< const Lang::SingleList > & cdr )
   : car_( car ), cdr_( cdr )
 { }
 
@@ -120,7 +120,7 @@ Lang::SingleListPair::isNull( ) const
 }
 
 void
-Lang::SingleListPair::foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const
+Lang::SingleListPair::foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const
 {
   evalState->cont_ = Kernel::ContRef( new Kernel::SingleFoldLCont( cdr_, op, evalState->dyn_, evalState->cont_, callLoc ) );
 
@@ -128,7 +128,7 @@ Lang::SingleListPair::foldl( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Lang::SingleListPair::foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const
+Lang::SingleListPair::foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const
 {
   evalState->cont_ = Kernel::ContRef( new Kernel::SingleFoldRCont( car_, op, evalState->dyn_, evalState->cont_, callLoc ) );
 
@@ -155,7 +155,7 @@ Lang::SingleListNull::isNull( ) const
 }
 
 void
-Lang::SingleListNull::foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const
+Lang::SingleListNull::foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( nullResult,
@@ -163,7 +163,7 @@ Lang::SingleListNull::foldl( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Lang::SingleListNull::foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::HandleType & nullResult, const Ast::SourceLocation & callLoc ) const
+Lang::SingleListNull::foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( nullResult,
@@ -171,7 +171,7 @@ Lang::SingleListNull::foldr( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 
-Lang::ConsPair::ConsPair( const Kernel::HandleType & car, const Kernel::HandleType & cdr )
+Lang::ConsPair::ConsPair( const Kernel::VariableHandle & car, const Kernel::VariableHandle & cdr )
   : car_( car ), cdr_( cdr )
 { }
 
@@ -187,7 +187,7 @@ Lang::ConsPair::show( std::ostream & os ) const
   os << "< a lazy pair >" ;
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::ConsPair::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   if( strcmp( fieldID, "car" ) == 0 )

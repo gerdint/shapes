@@ -47,8 +47,8 @@ namespace MetaPDF
     virtual ~Instance( );
     virtual void gcMark( Kernel::GCMarkedSet & marked );
     void prepare( Kernel::EvalState * evalState );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
-    Kernel::HandleType getLocalField( const char * fieldID ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    Kernel::VariableHandle getLocalField( const char * fieldID ) const;
     virtual void tackOn( const char * fieldID, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
     virtual void tackOnLocal( const char * fieldID, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
     RefCountPtr< const Lang::Function > getMethod( Kernel::MethodId fieldID ) const;
@@ -75,7 +75,7 @@ namespace MetaPDF
     TransformedInstance( const Lang::Transform2D & _tf, const RefCountPtr< const Lang::Instance > & _obj );
     ~TransformedInstance( );
     virtual void gcMark( Kernel::GCMarkedSet & marked );
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     RefCountPtr< const Lang::Function > getMethod( Kernel::MethodId fieldID ) const;
 
     virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
@@ -103,7 +103,7 @@ namespace MetaPDF
     virtual ~Class( );
     void setSelfRef( RefCountPtr< const Lang::Class > _selfRef ) const;
 
-    virtual Kernel::HandleType getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+    virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 
     RefCountPtr< const char > getPrettyName( ) const;
 

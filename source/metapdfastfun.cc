@@ -295,7 +295,7 @@ Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & i
 	  ++next;
 	  evaluate( info,
 		    Ast::ArgListExprs::ConstIterator( next, pos.i2_, pos.index_ + 1 ),
-		    RefCountPtr< const Lang::SingleListPair >( new Lang::SingleListPair( Kernel::HandleType( new Kernel::Variable( new Kernel::Thunk( info->env_, info->dyn_, *pos.i1_ ) ) ),
+		    RefCountPtr< const Lang::SingleListPair >( new Lang::SingleListPair( Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( info->env_, info->dyn_, *pos.i1_ ) ) ),
 											       vals ) ),
 		    evalState );
 	  return;  /* It is not really important that the above compiles to a tail call.  Hopefully, it does, but otherwise it is easy to see that the chain of recursive calls to this function
@@ -327,7 +327,7 @@ Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & i
 	  ++next;
 	  evaluate( info,
 		    Ast::ArgListExprs::ConstIterator( pos.i1_, next, pos.index_ + 1 ),
-		    RefCountPtr< const Lang::SingleListPair >( new Lang::SingleListPair( Kernel::HandleType( new Kernel::Variable( new Kernel::Thunk( info->env_, info->dyn_, pos.i2_->second ) ) ),
+		    RefCountPtr< const Lang::SingleListPair >( new Lang::SingleListPair( Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( info->env_, info->dyn_, pos.i2_->second ) ) ),
 											       vals ) ),
 		    evalState );
 	  return;  /* It is not really important that the above compiles to a tail call.  Hopefully, it does, but otherwise it is easy to see that the chain of recursive calls to this function
@@ -531,7 +531,7 @@ Kernel::CallCont_n::~CallCont_n( )
 { }
 
 void
-Kernel::CallCont_n::takeHandle( Kernel::HandleType val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::CallCont_n::takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 {
   /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
    * However, this continuation takes handles anyway, since handles is what goes into the argument list.
@@ -563,8 +563,8 @@ Kernel::CallCont_n::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::CallCont_1::CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
-  : Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
+Kernel::CallCont_1::CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), procedural_( procedural ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
 { }
 
 Kernel::CallCont_1::~CallCont_1( )
@@ -578,6 +578,14 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
     RefCountPtr< ArgType > fun = funUntyped.down_cast< const Lang::Function >( );
     if( fun != NullPtr< ArgType >( ) )
       {
+	if( procedural_ != fun->procedural( ) )
+	  {
+	    if( procedural_ )
+	      {
+		throw Exceptions::OutOfRange( traceLoc, "Expected procedure." );
+	      }
+	    throw Exceptions::OutOfRange( traceLoc, "Expected function." );
+	  }
 	evalState->env_ = env_;
 	evalState->dyn_ = dyn_;
 	evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, dyn_, cont_, callLoc_ ) );
@@ -731,12 +739,12 @@ Kernel::CallCont_1::gcMark( Kernel::GCMarkedSet & marked )
 
 
 
-Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry )
-  : Ast::Expression( loc ), curry_( curry ), constFun_( Kernel::THE_NO_FUNCTION ), funExpr_( funExpr ), argList_( argList )
+Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry, bool procedural )
+  : Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( Kernel::THE_NO_FUNCTION ), funExpr_( funExpr ), argList_( argList )
 { }
 
-Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry )
-  : Ast::Expression( loc ), curry_( curry ), constFun_( constFun ), funExpr_( 0 ), argList_( argList )
+Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry, bool procedural )
+  : Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( constFun ), funExpr_( 0 ), argList_( argList )
 { }
 
 Ast::CallExpr::~CallExpr( )
@@ -755,10 +763,14 @@ Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
   if( funExpr_ != 0 )
     {
       evalState->expr_ = funExpr_;
-      evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_1( evalState->expr_->loc( ), argList_, curry_, *evalState, loc_ ) );
+      evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_1( evalState->expr_->loc( ), argList_, curry_, procedural_, *evalState, loc_ ) );
     }
   else
     {
+      if( procedural_ )
+	{
+	  throw Exceptions::InternalError( "Function calling syntax should not be procedural." );
+	}
       evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( constFun_, argList_, curry_, evalState->dyn_, evalState->cont_, loc_ ) );
       argList_->evaluate( constFun_->newCallContInfo( argList_, *evalState ),
 			  argList_->begin( ), Lang::THE_CONS_NULL,

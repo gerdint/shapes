@@ -10,9 +10,9 @@ namespace MetaPDF
 
     class Constant : public Expression
     {
-      Kernel::HandleType val_;
+      Kernel::VariableHandle val_;
     public:
-      Constant( const Ast::SourceLocation & loc, const Kernel::HandleType & val );
+      Constant( const Ast::SourceLocation & loc, const Kernel::VariableHandle & val );
       Constant( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Value > val );
       Constant( const Ast::SourceLocation & loc, const Lang::Value * val );
       virtual ~Constant( );

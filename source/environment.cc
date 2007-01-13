@@ -136,7 +136,7 @@ Kernel::Variable::tackOn( Kernel::EvalState * evalState, const RefCountPtr< cons
 }
 
 void
-Kernel::Variable::freeze( Kernel::HandleType & selfRef, Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::Variable::freeze( Kernel::VariableHandle & selfRef, Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   if( state_ != Kernel::Variable::WARM )
     {
@@ -150,7 +150,7 @@ Kernel::Variable::freeze( Kernel::HandleType & selfRef, Kernel::EvalState * eval
 }
 
 void
-Kernel::Variable::force( Kernel::HandleType & selfRef, Kernel::EvalState * evalState ) const
+Kernel::Variable::force( Kernel::VariableHandle & selfRef, Kernel::EvalState * evalState ) const
 {
   if( ( state_ & Kernel::Variable::FREEZING ) != 0 )
     {
@@ -243,17 +243,17 @@ Kernel::DynamicVariableProperties::~DynamicVariableProperties( )
 void
 Kernel::Environment::selfDefineCoreFunction( Lang::CoreFunction * fun )
 {
-  selfDefineHandle( fun->getTitle( ), Kernel::HandleType( new Kernel::Variable( RefCountPtr< const Lang::Value >( fun ) ) ) );
+  selfDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( fun ) ) ) );
 }
 
 void
 Kernel::Environment::selfDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun )
 {
-  selfDefineHandle( fun->getTitle( ), Kernel::HandleType( new Kernel::Variable( fun ) ) );
+  selfDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( fun ) ) );
 }
 
 void
-Kernel::Environment::selfDefineHandle( const char * id, const Kernel::HandleType & val )
+Kernel::Environment::selfDefineHandle( const char * id, const Kernel::VariableHandle & val )
 {
   if( bindings_->find( id ) != bindings_->end( ) )
     {
@@ -268,13 +268,13 @@ Kernel::Environment::selfDefineHandle( const char * id, const Kernel::HandleType
 void
 Kernel::Environment::selfDefine( const char * id, const RefCountPtr< const Lang::Value > & val )
 {
-  selfDefineHandle( id, Kernel::HandleType( new Kernel::Variable( val ) ) );
+  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( val ) ) );
 }
 
 void
 Kernel::Environment::selfDefine( const char * id, Kernel::Warm * warm )
 {
-  selfDefineHandle( id, Kernel::HandleType( new Kernel::Variable( warm ) ) );
+  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( warm ) ) );
 }
 
 void
@@ -283,7 +283,7 @@ Kernel::Environment::selfDefineClass( const RefCountPtr< const Lang::Class > & c
   RefCountPtr< const char > idRef = cls->getPrettyName( );
   const char * id = strdup( idRef.getPtr( ) );
   charPtrDeletionList_.push_back( id );
-  selfDefineHandle( id, Kernel::HandleType( new Kernel::Variable( cls ) ) );
+  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( cls ) ) );
 }
 
 void
@@ -300,7 +300,7 @@ Kernel::Environment::selfDefineDynamic( DynamicVariableProperties * dynProps )
 }
 
 void
-Kernel::Environment::selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal )
+Kernel::Environment::selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal )
 {
   if( dynamicKeyBindings_->find( id ) != dynamicKeyBindings_->end( ) )
     {
@@ -324,9 +324,11 @@ Kernel::Environment::selfDefineDynamicHandler( const char * id, const char * msg
 Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea )
   : parent_( 0 ),
     bindings_( new Kernel::Environment::MapType ),
-    values_( new std::vector< Kernel::HandleType >( ) ),
+    values_( new std::vector< Kernel::VariableHandle >( ) ),
     dynamicKeyBindings_( new Kernel::Environment::MapType ),
-    dynamicKeyValues_( new std::vector< DynamicVariableProperties * > )
+    dynamicKeyValues_( new std::vector< DynamicVariableProperties * > ),
+    stateBindings_( new Kernel::Environment::MapType ),
+    states_( new std::vector< Kernel::StateHandle >( ) )
 {
   garbageArea.push_back( this );
   ++createdCount;
@@ -594,8 +596,8 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 
 }
 
-Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea, Environment * parent, MapType * bindings, const RefCountPtr< std::vector< HandleType > > & values )
-  : parent_( parent ), bindings_( bindings ), values_( values ), dynamicKeyBindings_( 0 )
+Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea, Environment * parent, MapType * bindings, const RefCountPtr< std::vector< VariableHandle > > & values, MapType * stateBindings, const RefCountPtr< std::vector< StateHandle > > & states )
+  : parent_( parent ), bindings_( bindings ), values_( values ), dynamicKeyBindings_( 0 ), stateBindings_( stateBindings ), states_( states )
 				 //, unitMap_( NullPtr< Kernel::Environment::UnitMapType >( ) )
 {
   garbageArea.push_back( this );
@@ -628,6 +630,25 @@ Kernel::Environment::~Environment( )
 	    }
 	}
       delete dynamicKeyValues_;
+    }
+  if( stateBindings_ != 0 )
+    {
+      if( parent_ == 0 )
+	{
+	  /* The condition means that this is the global evironment, which created its own map.
+	   */
+	  delete stateBindings_;
+	}
+      /* However, the values will always be owned by the environment itself, and be defined whenever dynamicKeyBindings != 0
+       */
+      for( std::vector< StateHandle * >::iterator i = states_->begin( ); i != states_->end( ); ++i )
+	{
+	  if( *i != 0 )
+	    {
+	      delete *i;
+	    }
+	}
+      delete states_;
     }
   --liveCount;
 }
@@ -672,6 +693,11 @@ Kernel::Environment::setupDynamicKeyVariables( MapType * dynamicKeyBindings )
     }
 }
 
+void
+Kernel::Environment::activateFunctionBoundary( )
+{
+  functionBoundary_ = true;
+}
 
 void
 Kernel::Environment::clear( )
@@ -735,7 +761,7 @@ Kernel::Environment::findLocalPosition( const Ast::SourceLocation & loc, const c
 }
 
 void
-Kernel::Environment::define( size_t pos, const Kernel::HandleType & val )
+Kernel::Environment::define( size_t pos, const Kernel::VariableHandle & val )
 {
   if( (*values_)[ pos ] != NullPtr< Kernel::Variable >( ) )
     {
@@ -743,19 +769,6 @@ Kernel::Environment::define( size_t pos, const Kernel::HandleType & val )
     }
   
   (*values_)[ pos ] = val;
-}
-
-void
-Kernel::Environment::freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc )
-{
-  if( (*values_)[ pos ] == NullPtr< Kernel::Variable >( ) )
-    {
-      throw Exceptions::FreezingUndefined( Ast::SourceLocation( "< to be determined... >" ), reverseMap( pos ) );
-    }
-  
-  Kernel::HandleType & var = (*values_)[ pos ];
-
-  var->freeze( var, evalState, loc );
 }
 
 Kernel::Environment::LexicalKey
@@ -766,18 +779,12 @@ Kernel::Environment::findLexicalKey( const Ast::SourceLocation & loc, const char
     {
       if( isBaseEnvironment( ) )
 	{
-	  throw Exceptions::LookupUnknown( loc, strrefdup( id ) );
+	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE );
 	}
       return parent_->findLexicalKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
-}
-
-void
-Kernel::Environment::tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc )
-{
-  getVarHandle( lexKey )->tackOn( evalState, piece, evalState->dyn_, callLoc );
 }
 
 void
@@ -795,7 +802,7 @@ Kernel::Environment::lookup( const Kernel::Environment::LexicalKey & lexKey, boo
 void
 Kernel::Environment::lookup( size_t pos, bool warm, Kernel::EvalState * evalState ) const
 {
-  Kernel::HandleType res = (*values_)[ pos ];
+  Kernel::VariableHandle res = (*values_)[ pos ];
   if( res == NullPtr< Kernel::Variable >( ) )
     {
       throw Exceptions::UninitializedAccess( );
@@ -813,7 +820,7 @@ Kernel::Environment::lookup( size_t pos, bool warm, Kernel::EvalState * evalStat
   cont->takeHandle( res, evalState );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::Environment::getVarHandle( const Kernel::Environment::LexicalKey & lexKey )
 { 
   Environment * env = this;
@@ -825,11 +832,103 @@ Kernel::Environment::getVarHandle( const Kernel::Environment::LexicalKey & lexKe
   return env->getVarHandle( lexKey.pos_ );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::Environment::getVarHandle( size_t pos )
 {
   return (*values_)[ pos ];
 }
+
+size_t
+Kernel::Environment::findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const
+{
+  MapType::const_iterator i = stateBindings_->find( id );
+  if( i == stateBindings_->end( ) )
+    {
+      throw Exceptions::InternalError( loc, "Environment::findLocalStatePosition failed" );
+    }
+  return i->second;
+}
+
+LexicalKey
+Kernel::Environment::findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const
+{
+  MapType::const_iterator i = stateBindings_->find( id );
+  if( i == stateBindings_->end( ) )
+    {
+      if( isBaseEnvironment( ) )
+	{
+	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE );
+	}
+      if( isFunctionBoundary )
+	{
+	  // If the state is not found at all, this will throw an error.
+	  return parent_->findLexicalStateKey( loc, id ).oneAbove( );
+	  // If no error is thrown, we inform the user that the state is outside a function boundary.
+	  throw Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) );	  
+	}
+      return parent_->findLexicalStateKey( loc, id ).oneAbove( );
+    }
+  
+  return LexicalKey( 0, i->second );
+}
+
+void
+Kernel::Environment::introduceState( size_t pos, const Kernel::State * state )
+{
+  if( (*states_)[ pos ] != NullPtr< Kernel::State >( ) )
+    {
+      throw Exceptions::InternalError( "Better error message needed when a state is introduced more than once." );
+      //      throw Exceptions::RedefiningLexical( reverseMap( pos ) );
+    }
+  
+  (*states_)[ pos ] = state;
+}
+
+void
+Kernel::Environment::freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc )
+{
+  if( (*values_)[ pos ] == NullPtr< Kernel::Variable >( ) )
+    {
+      throw Exceptions::FreezingUndefined( Ast::SourceLocation( "< to be determined... >" ), reverseMap( pos ) );
+    }
+  
+  Kernel::VariableHandle & var = (*values_)[ pos ];
+
+  var->freeze( var, evalState, loc );
+}
+
+void
+Kernel::Environment::peek( const LexicalKey & lexKey, Kernel::EvalState * evalState, const Ast::SourceLocation & loc )
+{
+  getStateHandle( lexKey )->peek( evalState, piece, evalState->dyn_, loc );
+}
+
+void
+Kernel::Environment::tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc )
+{
+  getStateHandle( lexKey )->tackOn( evalState, piece, evalState->dyn_, callLoc );
+}
+
+StateHandle
+Kernel::Environment::getStateHandle( const LexicalKey & lexKey )
+{
+  Environment * env = this;
+  for( size_t i = lexKey.up_; i > 0; --i )
+    {
+      env = env->getParent( );
+    }
+  
+  std::cerr << "Warning: Not checking that state is in dynamic context." << std::endl ;
+
+  return env->getStateHandle( lexKey.pos_ );
+}
+
+StateHandle
+Kernel::Environment::getStateHandle( size_t pos )
+{
+  return (*states_)[ pos ];
+}
+
 
 size_t
 Kernel::Environment::findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const
@@ -847,7 +946,7 @@ Kernel::Environment::findLocalDynamicPosition( const Ast::SourceLocation & loc, 
 }
 
 void
-Kernel::Environment::defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::HandleType & defaultVal )
+Kernel::Environment::defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal )
 {
   if( dynamicKeyValues_ == 0 )
     {
@@ -884,7 +983,7 @@ Kernel::Environment::findLexicalDynamicKey( const Ast::SourceLocation & loc, con
 	  char * msg = new char[ strlen( id ) + 2 ];
 	  strcpy( msg, "@" );
 	  strcpy( msg + 1, id );
-	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ) );
+	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE );
 	}
       return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }

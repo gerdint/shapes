@@ -43,13 +43,13 @@ DISPATCHIMPL( ElementaryPath3D );
 Lang::ElementaryPath3D::~ElementaryPath3D( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::ElementaryPath3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   return getField( fieldID, selfRef.down_cast< const Lang::ElementaryPath3D >( ) );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::ElementaryPath3D::getField( const char * fieldID, const RefCountPtr< const Lang::ElementaryPath3D > & selfRef ) const
 {
   if( strcmp( fieldID, "begin" ) == 0 )

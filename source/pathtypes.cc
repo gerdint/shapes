@@ -615,7 +615,7 @@ DISPATCHIMPL( CompositePath2D );
 Lang::CompositePath2D::~CompositePath2D( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::CompositePath2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   computeElementaryPath( );
@@ -1139,7 +1139,7 @@ DISPATCHIMPL( CompositePath3D );
 Lang::CompositePath3D::~CompositePath3D( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Lang::CompositePath3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
   computeElementaryPath( );

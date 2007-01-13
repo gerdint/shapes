@@ -238,7 +238,7 @@ Kernel::DynamicEnvironment::lookup( const KeyType & key, Kernel::EvalState * eva
 		    evalState );
 }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::DynamicEnvironment::getVarHandle( const KeyType & key ) const
 {
   MapType::const_iterator i = bindings_.find( key );
@@ -367,7 +367,7 @@ Kernel::DynamicEnvironment::getDefaultUnit( ) const
   return sysBindings_->defaultUnit_;
 }
 
-Kernel::HandleType &
+Kernel::VariableHandle &
 Kernel::DynamicEnvironment::getDefaultDestination( ) const
 {
   if( sysBindings_ == 0 ||
@@ -439,7 +439,7 @@ Kernel::DynamicEnvironment::isBaseEnvironment( ) const
 }
 
 
-Lang::DefaultDestinationBinding::DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::HandleType & val )
+Lang::DefaultDestinationBinding::DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val )
   : loc_( loc ), val_( val )
 { }
 
@@ -478,14 +478,14 @@ Kernel::DefaultDestinationDynamicVariableProperties::DefaultDestinationDynamicVa
 Kernel::DefaultDestinationDynamicVariableProperties::~DefaultDestinationDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::DefaultDestinationDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   throw Exceptions::MiscellaneousRequirement( "The default destination cannot be evaluated as a variable." );
 }
 
 void
-Kernel::DefaultDestinationDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DefaultDestinationDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   if( ! val->isWarm( ) )
     {
@@ -537,14 +537,14 @@ Kernel::EyeZDynamicVariableProperties::EyeZDynamicVariableProperties( const char
 Kernel::EyeZDynamicVariableProperties::~EyeZDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::EyeZDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   return Helpers::newValHandle( new Lang::Length( dyn->getEyeZ( ) ) );
 }
 
 void
-Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   try
     {
@@ -619,14 +619,14 @@ Kernel::DefaultUnitDynamicVariableProperties::DefaultUnitDynamicVariableProperti
 Kernel::DefaultUnitDynamicVariableProperties::~DefaultUnitDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::DefaultUnitDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   throw Exceptions::MiscellaneousRequirement( "The default unit cannot be evaluated as a variable." );
 }
 
 void
-Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   if( ! val->isThunk( ) )
     {
@@ -678,14 +678,14 @@ Kernel::BlendSpaceDynamicVariableProperties::BlendSpaceDynamicVariableProperties
 Kernel::BlendSpaceDynamicVariableProperties::~BlendSpaceDynamicVariableProperties( )
 { }
 
-Kernel::HandleType
+Kernel::VariableHandle
 Kernel::BlendSpaceDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
-  return Kernel::HandleType( new Kernel::Variable(  dyn->getBlendSpace( ) ) );
+  return Kernel::VariableHandle( new Kernel::Variable(  dyn->getBlendSpace( ) ) );
 }
 
 void
-Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::HandleType val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
   RefCountPtr< const Lang::ColorSpace > space = val->getVal< const Lang::ColorSpace >( loc );
   if( ! space->isBlendable( ) )
