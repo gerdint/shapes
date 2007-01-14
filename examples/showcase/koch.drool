@@ -17,8 +17,8 @@ koch: \ pth depth .>
 
 @<< @width:0.3bp | [stroke [koch (0cm,0cm)--(15cm,10cm) 6]]
 
-#needs circle
-#needs centering
+##needs circle
+##needs centering
 c: [shift (5cm,~10cm)][][circle 5cm]
 
 ![[range '0 '5].foldl

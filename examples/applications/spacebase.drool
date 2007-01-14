@@ -1,5 +1,5 @@
-#needs circle
-#needs centering
+##needs circle
+##needs centering
 
 rot: [rotate3D (1,1,1) 30°]
 

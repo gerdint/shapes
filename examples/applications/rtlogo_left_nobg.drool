@@ -7,9 +7,9 @@
 |** This version is a banner logo without background color, with the square
 |** box placed to the left.
 |***************************************************************************
-#author Henrik Tidefelt
+##author Henrik Tidefelt
 
-#needs rtlogo_elements
+##needs rtlogo_elements
 
 xText: ( squareSpace + squareSide + textXSpace )
 

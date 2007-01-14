@@ -1,4 +1,4 @@
-#needs blockdraw_wfo
+##needs blockdraw_wfo
 
 a: ! putblockOrigin [] [shift (100bp,0bp)] [] [sizedblock [TeX `
 \begin{minipage}{80bp}

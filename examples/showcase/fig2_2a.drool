@@ -1,4 +1,4 @@
-#needs blockdraw_wfo
+##needs blockdraw_wfo
 
 G1: [putblockOrigin [longblock [TeX `Amp´]]]
 G2: [putblockNearRight [longblock [TeX `Motor´]] G1]

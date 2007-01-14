@@ -1,8 +1,8 @@
 |** preamble \RequirePackage{../sigsysnotation}
 
-#needs ./pipefigprefs
-#needs ./blockdraw_wfo
-#needs ./examplesprefs
+##needs ./pipefigprefs
+##needs ./blockdraw_wfo
+##needs ./examplesprefs
 
 examplesprefs & @defaultunit:1%c
 |

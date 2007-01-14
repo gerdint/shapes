@@ -1,8 +1,8 @@
 |** This is "blockdraw, Waiting For Object oriented programming
 
-#needs centering
-#needs circle
-#needs arrowheads
+##needs centering
+##needs circle
+##needs arrowheads
 
 dynamic @longblockrx I 0.7cm
 dynamic @longblockry I 0.4cm

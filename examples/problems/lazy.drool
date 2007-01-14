@@ -1,7 +1,7 @@
-#needs braces
+##needs braces
 
-#unit ux = 0.7cm
-#unit uy = ~0.7cm
+##unit ux = 0.7cm
+##unit uy = ~0.7cm
 
 p: ![someBrace (6ux,~0.5uy) (7ux,~0.5uy)]
 stderr << `Typeof p: ´ << [typeof p].name << `¢n´

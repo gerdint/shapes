@@ -491,6 +491,8 @@ Escape "¢"|"¤"
 "<<" { return T_llthan; }
 ">>" { return T_ggthan; }
 
+"!!" { return  T_bangbang; }
+
 "@@" { return T_atat; }
 
 "and" { return T_and; }

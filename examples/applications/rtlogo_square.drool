@@ -3,8 +3,8 @@
 |**
 |** This form of the logo is simply the square box itself.
 |***************************************************************************
-#author Henrik Tidefelt
+##author Henrik Tidefelt
 
-#needs rtlogo_elements
+##needs rtlogo_elements
 
 @<< [squareLogo]

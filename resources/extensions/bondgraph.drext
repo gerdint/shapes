@@ -1,6 +1,6 @@
-#needs blockdraw_wfo
-#needs centering
-#needs shiftoff
+##needs blockdraw_wfo
+##needs centering
+##needs shiftoff
 
 
 junction: \ txt .> [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]

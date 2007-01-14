@@ -1,4 +1,4 @@
-#needs conssupport
+##needs conssupport
 
 linkpaths: \ p1 p2 .>
 {

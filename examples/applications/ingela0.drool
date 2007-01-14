@@ -1,5 +1,5 @@
-#needs arrowheads
-#needs circle
+##needs arrowheads
+##needs circle
 
 IngelasArrow: \ p .> [MetaPostArrow p ahLength:2mm]
 

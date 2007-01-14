@@ -124,7 +124,7 @@ void metapdferror( char * msg )
  */
 
 %token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle
-%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype
+%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
 %token <tokenID> T_let T_letstar T_letrec
 %token <tokenID> T_tex T_dynamic T_continuation T_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
@@ -435,7 +435,7 @@ CallExpr
 }
 | '[' '!' Expr ArgList ']'
 {
-  $$ = new Ast::CallExpr( @$, $2, $3, false, true );  /* false for no curry, true for procedural */
+  $$ = new Ast::CallExpr( @$, $3, $4, false, true );  /* false for no curry, true for procedural */
 }
 ;
 
@@ -656,7 +656,7 @@ ExprExceptConstStrings
 			  Ast::THE_FUNCTION_TeX,
 			  args );
 }
-| '!' Expr
+| T_bangbang Expr
 {
   $$ = $2;
   $$->immediate_ = true;

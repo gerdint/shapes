@@ -7,7 +7,7 @@
 |** This version is a banner logo with light gray background, with the square
 |** box placed to the right.
 |***************************************************************************
-#needs rtlogo_elements
+##needs rtlogo_elements
 
 xText: bannerWidth - ( squareSpace + squareSide + textXSpace )
 

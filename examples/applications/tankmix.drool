@@ -1,9 +1,9 @@
 #preamble \RequirePackage{sigsysnotation}
 
-#needs blockdraw_wfo
-#needs pipefigprefs
+##needs blockdraw_wfo
+##needs pipefigprefs
 
-#needs bookprefs
+##needs bookprefs
 
 bookprefs & @defaultunit:1%c
 |
