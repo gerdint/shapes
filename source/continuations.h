@@ -127,11 +127,11 @@ namespace MetaPDF
    */
   class InsertionContinuation : public Kernel::Continuation
   {
-    mutable Kernel::VariableHandle dst_; /* This being mutable is actually quite ugly... */
+    mutable Kernel::StateHandle dst_; /* This being mutable is actually quite ugly... */
     Kernel::PassedDyn dyn_;
     Kernel::ContRef cont_;
   public:
-    InsertionContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc );
+    InsertionContinuation( const Kernel::StateHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc );
     ~InsertionContinuation( );
     virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;

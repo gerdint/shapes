@@ -16,10 +16,6 @@
 using namespace MetaPDF;
 
 
-Kernel::Warm::~Warm( )
-{ }
-
-
 Lang::Hot::Hot::Hot( )
 { }
 

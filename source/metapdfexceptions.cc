@@ -773,8 +773,8 @@ Exceptions::ExternalError::display( ostream & os ) const
 }
 
 
-Exceptions::UserArityMismatch::UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity )
-  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), functionArity( _functionArity ), callArity( _callArity )
+Exceptions::UserArityMismatch::UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, Type type )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), functionArity( _functionArity ), callArity( _callArity ), type_( type )
 { }
 
 Exceptions::UserArityMismatch::~UserArityMismatch( )
@@ -783,7 +783,19 @@ Exceptions::UserArityMismatch::~UserArityMismatch( )
 void
 Exceptions::UserArityMismatch::display( std::ostream & os ) const
 {
-  os << "Function with formals at " << formalsLoc << " expects " << functionArity << " arguments, not " << callArity << std::endl ;
+  os << "Function with formals at " << formalsLoc << " expects " << functionArity ;
+  switch( type_ )
+    {
+    case VARIABLE:
+      os << " variables" ;
+      break;
+    case STATE:
+      os << " states" ;
+      break;
+    default:
+      os << "<?ERROR?" ;
+    }
+  os << ", not " << callArity << std::endl ;
 }
 
 

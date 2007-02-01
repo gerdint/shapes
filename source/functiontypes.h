@@ -277,6 +277,7 @@ namespace MetaPDF
       virtual ~UserFunction( );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual bool isTransforming( ) const;
+      virtual bool isProcedural( ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
 

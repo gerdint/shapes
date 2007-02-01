@@ -101,7 +101,7 @@ void
 Kernel::IntroduceWarmContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
   RefCountPtr< const Lang::Hot > hot( Helpers::down_cast< const Lang::Hot >( val, traceLoc_ ) );
-  env_->define( *pos_, Kernel::VariableHandle( new Kernel::Variable( hot->warm( ) ) ) );
+  env_->introduceState( *pos_, hot->newState( ) );
   evalState->cont_ = cont_;
   cont_->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
 }
@@ -195,7 +195,7 @@ Kernel::StoreVariableContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::InsertionContinuation::InsertionContinuation( const Kernel::VariableHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc )
+Kernel::InsertionContinuation::InsertionContinuation( const Kernel::StateHandle & dst, const Kernel::ContRef & cont, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), dst_( dst ), dyn_( dyn ), cont_( cont )
 { }
 

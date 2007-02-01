@@ -80,6 +80,7 @@ namespace MetaPDF
 
     typedef unsigned short int FunctionMode;
     extern const FunctionMode FUNCTION_TRANSFORMING;
+    extern const FunctionMode FUNCTION_PROCEDURAL;
 
   }
 

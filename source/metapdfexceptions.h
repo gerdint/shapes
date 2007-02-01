@@ -512,12 +512,15 @@ namespace MetaPDF
 
     class UserArityMismatch : public RuntimeError
     {
+    public:
+      enum Type{ VARIABLE, STATE };
+    private:
       const Ast::SourceLocation formalsLoc;    
       const size_t functionArity;
       const size_t callArity;
     public:
-      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity );
-      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _callArity );
+      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, Type type );
+      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _callArity, Type type );
       virtual ~UserArityMismatch( );
       virtual void display( std::ostream & os ) const;
     };

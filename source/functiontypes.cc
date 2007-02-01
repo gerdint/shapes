@@ -9,6 +9,7 @@
 #include "metapdfastclass.h"
 #include "globals.h"
 #include "continuations.h"
+#include "check.h"
 
 //#include "clapack.h"
 //#include "cblas.h"
@@ -583,7 +584,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHand
 void
 Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc )
 {
-  if( stateDst_ == state_->size( ) )
+  if( stateDst_ == states_->size( ) )
     {
       states_->push_back( state );
       stateLocations_.push_back( loc );
@@ -594,7 +595,7 @@ Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Expr
       (*states_)[ stateDst_ ] = state;
       stateLocations_[ stateDst_ ] = loc;
       while( stateDst_ < states_->size( ) &&
-	     (*state_)[ stateDst_ ] != Kernel::THE_SLOT_STATE )
+	     (*states_)[ stateDst_ ] != Kernel::THE_SLOT_STATE )
 	{
 	  ++stateDst_;
 	}
@@ -684,7 +685,7 @@ Kernel::Arguments::applyDefaults( )
   {
     size_t pos = 0;
     typedef typeof *states_ ListType;
-    for( ListType::const_iterator i = states_->begin( ) i != states_->end( ), ++i, ++pos )
+    for( ListType::const_iterator i = states_->begin( ); i != states_->end( ); ++i, ++pos )
       {
 	if( *i == Kernel::THE_SLOT_STATE )
 	  {
@@ -826,14 +827,14 @@ Kernel::Arguments::gcMark( Kernel::GCMarkedSet & marked )
   }
 }
 
-Environment::ValueVector
+Kernel::Environment::ValueVector
 Kernel::Arguments::getVariables( )
 {
   return variables_;
 }
 
-Environment::StateVector
-Kernel::Arguments::getVariables( )
+Kernel::Environment::StateVector
+Kernel::Arguments::getStates( )
 {
   return states_;
 }
@@ -1337,7 +1338,7 @@ Lang::UserFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
   args.applyDefaults( );
   evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, env_, formals_->formals_->argumentOrder_, args.getVariables( ), formals_->formals_->stateOrder_, args.getStates( ) );
 
-  if( ! isProcedural )
+  if( ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) != 0 )
     {
       evalState->env_->activateFunctionBoundary( );
     }
