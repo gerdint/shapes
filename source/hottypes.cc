@@ -33,8 +33,8 @@ Lang::HotTriple::HotTriple( const RefCountPtr< const Lang::Value > & init, RefCo
 Lang::HotTriple::~HotTriple( )
 { }
 
-Kernel::Warm *
-Lang::HotTriple::warm( ) const
+Kernel::State *
+Lang::HotTriple::newState( ) const
 {
   return new Kernel::WarmTriple( init_, update_, result_ );
 }
@@ -56,7 +56,7 @@ Kernel::WarmTriple::~WarmTriple( )
 { }
 
 void
-Kernel::WarmTriple::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmTriple::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   /* This seems dangerous.  I have not verified that pile will still exist when the continuation below is invoked.
    */
@@ -67,7 +67,15 @@ Kernel::WarmTriple::tackOn( Kernel::EvalState * evalState, const RefCountPtr< co
 }
 
 void
-Kernel::WarmTriple::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTriple::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* The right continuation is set by the calling variable.
+   */
+  result_->call( evalState, pile_, callLoc );
+}
+
+void
+Kernel::WarmTriple::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   /* The right continuation is set by the calling variable.
    */
@@ -83,7 +91,7 @@ Kernel::WarmOstream::~WarmOstream( )
 { }
 
 void
-Kernel::WarmOstream::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmOstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   piece->show( os_ );
   Kernel::ContRef cont = evalState->cont_;
@@ -92,9 +100,15 @@ Kernel::WarmOstream::tackOn( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Kernel::WarmOstream::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmOstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm ostream cannot be frozen." ) );
+}
+
+void
+Kernel::WarmOstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm ostream cannot be peeked." ) );
 }
 
 
@@ -105,7 +119,7 @@ Kernel::Warm_ostringstream::~Warm_ostringstream( )
 { }
 
 void
-Kernel::Warm_ostringstream::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::Warm_ostringstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   piece->show( os_ );
   Kernel::ContRef cont = evalState->cont_;
@@ -114,7 +128,15 @@ Kernel::Warm_ostringstream::tackOn( Kernel::EvalState * evalState, const RefCoun
 }
 
 void
-Kernel::Warm_ostringstream::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::Warm_ostringstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
+		   evalState );
+}
+
+void
+Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
@@ -130,7 +152,7 @@ Kernel::WarmGroup2D::~WarmGroup2D( )
 { }
 
 void
-Kernel::WarmGroup2D::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   typedef const Lang::Drawable2D ArgType;
   RefCountPtr< ArgType > arg = Helpers::down_cast< ArgType >( piece, callLoc );
@@ -158,7 +180,15 @@ Kernel::WarmGroup2D::tackOn( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Kernel::WarmGroup2D::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup2D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( pile_,
+		   evalState );
+}
+
+void
+Kernel::WarmGroup2D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -174,7 +204,7 @@ Kernel::WarmGroup3D::~WarmGroup3D( )
 { }
 
 void
-Kernel::WarmGroup3D::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup3D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   pile_ = RefCountPtr< const Lang::Group3D >( new Lang::GroupPair3D( Helpers::down_cast< const Lang::Drawable3D >( piece, callLoc ),
 								     pile_,
@@ -185,7 +215,15 @@ Kernel::WarmGroup3D::tackOn( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Kernel::WarmGroup3D::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup3D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( pile_,
+		   evalState );
+}
+
+void
+Kernel::WarmGroup3D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -201,7 +239,7 @@ Kernel::WarmGroupLights::~WarmGroupLights( )
 { }
 
 void
-Kernel::WarmGroupLights::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroupLights::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   pile_ = RefCountPtr< const Lang::LightGroup >( new Lang::LightPair( Helpers::down_cast< const Lang::LightSource >( piece, callLoc ),
 								      pile_ ) );
@@ -211,7 +249,15 @@ Kernel::WarmGroupLights::tackOn( Kernel::EvalState * evalState, const RefCountPt
 }
 
 void
-Kernel::WarmGroupLights::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroupLights::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( pile_,
+		   evalState );
+}
+
+void
+Kernel::WarmGroupLights::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -226,7 +272,7 @@ Kernel::WarmZBuf::~WarmZBuf( )
 { }
 
 void
-Kernel::WarmZBuf::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   try
     {
@@ -271,11 +317,17 @@ Kernel::WarmZBuf::tackOn( Kernel::EvalState * evalState, const RefCountPtr< cons
 }
 
 void
-Kernel::WarmZBuf::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmZBuf::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ZBuf( pile_, strokePile_, lightPile_, evalState->dyn_->getGraphicsState( ) ) ),
 		   evalState );
+}
+
+void
+Kernel::WarmZBuf::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-buffer state cannot be peeked." ) );
 }
 
 
@@ -286,7 +338,7 @@ Kernel::WarmZSorter::~WarmZSorter( )
 { }
 
 void
-Kernel::WarmZSorter::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   try
     {
@@ -331,11 +383,17 @@ Kernel::WarmZSorter::tackOn( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
-Kernel::WarmZSorter::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmZSorter::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ZSorter( pile_, strokePile_, lightPile_, evalState->dyn_->getGraphicsState( ) ) ),
 		   evalState );
+}
+
+void
+Kernel::WarmZSorter::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-sorter state cannot be peeked." ) );
 }
 
 
@@ -354,13 +412,31 @@ Kernel::WarmTimer::~WarmTimer( )
 { }
 
 void
-Kernel::WarmTimer::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmTimer::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm timer does not accept values.  Please freeze to obtain the number of seconds since creation." ) );
 }
 
 void
-Kernel::WarmTimer::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTimer::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  rusage ru;
+  int res = getrusage( RUSAGE_SELF, &ru );
+  if( res != 0 )
+    {
+      throw Exceptions::InternalError( strrefdup( "grtrusage failed." ) );
+    }
+  timeval stop = ru.ru_utime;
+  double time1 = start_.tv_usec / 1000000.0 + start_.tv_sec;
+  double time2 = stop.tv_usec  / 1000000.0 + stop.tv_sec;
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Kernel::ValueRef( new Lang::Float( time2 - time1 ) ),
+		   evalState );
+}
+
+void
+Kernel::WarmTimer::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   rusage ru;
   int res = getrusage( RUSAGE_SELF, &ru );
@@ -385,7 +461,7 @@ Kernel::WarmText::~WarmText( )
 { }
 
 void
-Kernel::WarmText::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   try
     {
@@ -473,7 +549,7 @@ Kernel::WarmText::tackOn( Kernel::EvalState * evalState, const RefCountPtr< cons
 }
 
 void
-Kernel::WarmText::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   if( pile_->size( ) == 0 )
     {
@@ -517,6 +593,12 @@ Kernel::WarmText::freeze( Kernel::EvalState * evalState, const Ast::SourceLocati
 		   evalState );
 }
 
+void
+Kernel::WarmText::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A text graphics state cannot be peeked." ) );
+}
+
 
 Kernel::WarmType3Font::WarmType3Font( )
   : metrics_( new FontMetrics::BaseFont( ) ), size_( -1 )
@@ -541,7 +623,7 @@ Kernel::WarmType3Font::~WarmType3Font( )
 { }
 
 void
-Kernel::WarmType3Font::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   try
     {
@@ -891,7 +973,7 @@ Kernel::WarmType3Font::tackOn( Kernel::EvalState * evalState, const RefCountPtr<
 }
 
 void
-Kernel::WarmType3Font::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   if( glyphs_.size( ) == 0 )
     {
@@ -1069,6 +1151,12 @@ Kernel::WarmType3Font::freeze( Kernel::EvalState * evalState, const Ast::SourceL
 						     indirection,
 						     metrics_ ) ),
 		   evalState );
+}
+
+void
+Kernel::WarmType3Font::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A type 3 font state cannot be peeked." ) );
 }
 
 void

@@ -518,6 +518,7 @@ namespace MetaPDF
       const Ast::SourceLocation formalsLoc;    
       const size_t functionArity;
       const size_t callArity;
+      const Type type_;
     public:
       UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, Type type );
       UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _callArity, Type type );

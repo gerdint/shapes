@@ -68,6 +68,7 @@ namespace MetaPDF
       WarmTriple( const RefCountPtr< const Lang::Value > & pile, RefCountPtr< const Lang::Function > update, RefCountPtr< const Lang::Function > result );
       virtual ~WarmTriple( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
     
@@ -78,6 +79,7 @@ namespace MetaPDF
       WarmOstream( std::ostream & os );
       virtual ~WarmOstream( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
     
@@ -88,6 +90,7 @@ namespace MetaPDF
       Warm_ostringstream( );
       virtual ~Warm_ostringstream( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
     
@@ -98,6 +101,7 @@ namespace MetaPDF
       WarmGroup2D( );
       virtual ~WarmGroup2D( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
@@ -109,6 +113,7 @@ namespace MetaPDF
       WarmGroup3D( );
       virtual ~WarmGroup3D( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
@@ -120,6 +125,7 @@ namespace MetaPDF
       WarmGroupLights( );
       virtual ~WarmGroupLights( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       RefCountPtr< const Lang::LightGroup > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
@@ -133,6 +139,7 @@ namespace MetaPDF
       WarmZBuf( );
       virtual ~WarmZBuf( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
     
@@ -145,6 +152,7 @@ namespace MetaPDF
       WarmZSorter( );
       virtual ~WarmZSorter( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
     
@@ -155,6 +163,7 @@ namespace MetaPDF
       WarmTimer( );
       virtual ~WarmTimer( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
 
@@ -165,6 +174,7 @@ namespace MetaPDF
       WarmText( );
       virtual ~WarmText( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
     };
 
@@ -178,6 +188,7 @@ namespace MetaPDF
       WarmType3Font( );
       virtual ~WarmType3Font( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
     private:
