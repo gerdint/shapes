@@ -172,7 +172,7 @@ void metapdferror( char * msg )
 %nonassoc T_assign ':'
 %left ']'
 %left T_llthan
-%nonassoc '!'
+%nonassoc T_bangbang
 %left '|'
 %right T_mapsto T_emptybrackets
 %left T_dddotbrackets
@@ -222,7 +222,7 @@ Program
 Coords
 : '(' Expr ',' Expr ')'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $2 );
   args->orderedExprs_->push_back( $4 );
   $$ = new Ast::CallExpr( @$,
@@ -231,7 +231,7 @@ Coords
 }
 | '(' Expr ',' Expr '^' Expr ')'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $2 );
   args->orderedExprs_->push_back( $4 );
   args->orderedExprs_->push_back( $6 );
@@ -241,7 +241,7 @@ Coords
 }
 | '(' Expr ',' Expr ',' Expr ')'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $2 );
   args->orderedExprs_->push_back( $4 );
   args->orderedExprs_->push_back( $6 );
@@ -263,7 +263,7 @@ PolarHandle
 }
 | '(' '^' Expr ')'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
 			  Ast::THE_FUNCTION_polarHandle2DFree_r,
@@ -271,7 +271,7 @@ PolarHandle
 }
 | '(' '^' ')'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   $$ = new Ast::CallExpr( @$,
 			  Ast::THE_FUNCTION_polarHandle2DFree_ra,
 			  args );
@@ -281,7 +281,7 @@ PolarHandle
 ArgList
 :
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
 }
 | OneOrMoreArgListItems
 ;
@@ -289,42 +289,42 @@ ArgList
 OneOrMoreArgListItems
 : Expr
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( $1 );
 }
 | '(' T_identifier T_llthan ')'
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( new Ast::LexiographicVariable( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ), true ) );  // true means warm access
 }
 | '(' T_dynamic_identifier T_llthan ')'
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( new Ast::DynamicVariable( @2, $2, true ) );  // true means warm access
 }
 | T_at_llthan
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   $$->orderedExprs_->push_back( new Ast::DynamicVariable( @1, 0, true ) );  // true means warm access
 }
 | T_identifier ':' Expr
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = $3;
 }
 | T_identifier ':' '(' T_identifier T_llthan ')'
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = new Ast::LexiographicVariable( @4, $4, new Kernel::Environment::LexicalKey * ( 0 ), true );   // true means warm access
 }
 | T_identifier ':' '(' T_dynamic_identifier T_llthan ')'
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = new Ast::DynamicVariable( @4, $4, true );   // true means warm access
 }
 | T_identifier ':' T_at_llthan
 {
-  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  $$ = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   (*$$->namedExprs_)[ $1 ] = new Ast::DynamicVariable( @3, 0, true );   // true means warm access
 }
 | OneOrMoreArgListItems Expr
@@ -409,7 +409,7 @@ CallExpr
 }
 | Expr T_emptybrackets Expr
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
 			  $1,
@@ -417,7 +417,7 @@ CallExpr
 }
 | Expr T_dddotbrackets Expr
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
 			  $1,
@@ -426,7 +426,7 @@ CallExpr
 }
 | Expr T_dddotbrackets T_identifier ':' Expr %prec T_dynamiccolon
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   (*args->namedExprs_)[ $3 ] = $5;
   $$ = new Ast::CallExpr( @$,
 			  $1,
@@ -641,7 +641,7 @@ ExprExceptConstStrings
 | PolarHandle
 | '[' T_tex ExprExceptConstStrings ']'
 {
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
 			  Ast::THE_FUNCTION_TeX,
@@ -650,7 +650,7 @@ ExprExceptConstStrings
 | '[' T_tex T_string ']'
 {
   Kernel::theTeXLabelManager.announce( string( $3 ) );
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( new Ast::Constant( @3, new Lang::String( $3 ) ) );
   $$ = new Ast::CallExpr( @$,
 			  Ast::THE_FUNCTION_TeX,
@@ -689,7 +689,7 @@ ExprExceptConstStrings
   size_t ** pos = new size_t * ( 0 );
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
 
-  bracket->push_back( new Ast::IntroduceWarm( @3,
+  bracket->push_back( new Ast::IntroduceState( @3,
 					      strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
 					      new Ast::LexiographicVariable( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ) ),
 					      pos ) );
@@ -707,7 +707,7 @@ ExprExceptConstStrings
   size_t ** pos = new size_t * ( 0 );
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
 
-  bracket->push_back( new Ast::IntroduceWarm( @4,
+  bracket->push_back( new Ast::IntroduceState( @4,
 						  strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
 						  $3,
 						  pos ) );
@@ -746,7 +746,7 @@ ExprExceptConstStrings
 | '(' T_state_identifier ')'
 {
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  $$ = new Ast::ReadState( @$, $2, key );
+  $$ = new Ast::Peek( @$, $2, key );
 }
 | Expr '.' T_identifier
 {
@@ -865,7 +865,7 @@ ExprExceptConstStrings
 {
   //  $$ = new Ast::AndExpr( @2, $1, $3 );
 
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $1 );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
@@ -876,7 +876,7 @@ ExprExceptConstStrings
 {
   //  $$ = new Ast::OrExpr( @2, $1, $3 );
 
-  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) );
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) );
   args->orderedExprs_->push_back( $1 );
   args->orderedExprs_->push_back( $3 );
   $$ = new Ast::CallExpr( @$,
@@ -951,7 +951,7 @@ NamedLetExpr
     Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
     bracket->push_back( new Ast::CallExpr( @$,
 					       new Ast::LexiographicVariable( @3, $3, key ),
-					       new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ) ) ) );
+					       new Ast::ArgListExprs( new list< Ast::Expression * >( ), new std::map< const char *, Ast::Expression *, charPtrLess >( ), new list< Ast::LexiographicState * >( ), new std::map< const char *, Ast::LexiographicState *, charPtrLess >( ) ) ) );
   }
 
   $$ = new Ast::CodeBracket( @$, bracket );
@@ -1018,16 +1018,16 @@ GroupElem
 | T_identifier ':' T_state_identifier T_ggthan
 {
   size_t ** posVar = new size_t * ( 0 );
-  size_t ** posState = new size_t * ( 0 );
-  $$ = new Ast::DefineVariable( @1, $1, new Ast::Peek( @3, $3, posState ), posVar );
+  Kernel::Environment::LexicalKey ** keyState = new Kernel::Environment::LexicalKey * ( 0 );
+  $$ = new Ast::DefineVariable( @1, $1, new Ast::Peek( @3, $3, keyState ), posVar );
 }
 | T_dynamic T_dynamic_identifier Expr Expr
 {
   $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4, new size_t * ( 0 ) );
 }
-| T_dynamic T_dynamic_state_identifier Expr
+| T_dynamic T_dynamic_state_identifier T_state_identifier
 {
-  $$ = new Ast::DynamicStateDecl( @$, @2, $2, $3, new size_t * ( 0 ) );
+  $$ = new Ast::DynamicStateDecl( @$, @2, $2, $3, new size_t * ( 0 ), new size_t * ( 0 ) );
 }
 | Expr '.' T_identifier T_llthan InsertionSequence
 {
