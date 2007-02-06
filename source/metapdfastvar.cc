@@ -650,6 +650,33 @@ Kernel::DynamicVariableDeclContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
+Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultLoc, char * defaultId, size_t ** idPos, Kernel::Environment::LexicalKey ** defaultIdKey )
+  : Ast::BindNode( loc, idLoc, id ), defaultLoc_( defaultLoc ), defaultId_( defaultId ), idPos_( idPos ), defaultIdKey_( defaultIdKey )
+{ }
+
+Ast::DynamicStateDecl::~DynamicStateDecl( )
+{
+  delete id_;
+  delete defaultId_;
+}
+
+void
+Ast::DynamicStateDecl::eval( Kernel::EvalState * evalState ) const
+{
+  throw Exceptions::NotImplemented( "Dynamic state declarations" );
+//   if( *idPos_ == 0 )
+//     {
+//       *idPos_ = new size_t( evalState->env_->findLocalDynamicStatePosition( idLoc_, id_ ) );
+//       *defaultPos_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( defaultLoc_, defaultId_ ) );
+//     }
+
+//   evalState->env_->???;
+
+//   Kernel::ContRef cont = evalState->cont_;
+//   cont->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
+}
+
+
 Ast::EvalSymbolFunction::EvalSymbolFunction( const Ast::SourceLocation & loc, Ast::Expression * expr )
   : Lang::Function( new Kernel::EvaluatedFormals( "< symbol evaluation >", true ) ), loc_( loc ), expr_( expr )
 { }
@@ -876,8 +903,8 @@ Ast::Freeze::eval( Kernel::EvalState * evalState ) const
 }
 
 
-Ast::Peek::Peek( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos )
-  : Ast::SequencingNode( idLoc, idLoc, id ), idPos_( idPos )
+Ast::Peek::Peek( const Ast::SourceLocation & idLoc, const char * id, Kernel::Environment::LexicalKey ** idKey )
+  : Ast::SequencingNode( idLoc, idLoc, id ), idKey_( idKey )
 {
   immediate_ = true;
 }
@@ -892,12 +919,12 @@ Ast::Peek::~Peek( )
 void
 Ast::Peek::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
+  if( *idKey_ == 0 )
     {
-      *idPos_ = new size_t( evalState->env_->findLocalPosition( idLoc_, id_ ) );
+      *idKey_ = new size_t( evalState->env_->findLexicalStateKey( idLoc_, id_ ) );
     }
 
   Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( evalState->env_->peek( **idPos_, evalState, idLoc_ ),
+  cont->takeValue( evalState->env_->peek( **idKey_, evalState, idLoc_ ),
 		   evalState );
 }

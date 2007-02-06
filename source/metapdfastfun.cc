@@ -184,10 +184,10 @@ Ast::ArgListExprs::ConstIterator::ConstIterator( const Ast::ArgListExprs::ConstI
 Ast::ArgListExprs::ArgListExprs( bool exprOwner )
   : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new std::list< const char * > ), namedStates_( new std::map< const char *, const char *, charPtrLess > )
 {
-  if( exprOwner_ )
-    {
-      throw Exceptions::InternalError( strrefdup( "Ast::ArgListExprs( bool _exprOwner ) can only be called with false." ) );
-    }
+  //  if( exprOwner_ )
+  //    {
+  //      throw Exceptions::InternalError( strrefdup( "Ast::ArgListExprs( bool _exprOwner ) can only be called with false." ) );
+  //    }
 }
 
 Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::Expression * > * orderedStates, std::map< const char *, Ast::Expression *, charPtrLess > * namedStates )

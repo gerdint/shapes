@@ -184,9 +184,9 @@ namespace MetaPDF
     
     class Peek : public Expression
     {
-      mutable size_t ** idPos_;
+      mutable Kernel::Environment::LexicalKey ** idKey_;
     public:
-      Peek( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos );
+      Peek( const Ast::SourceLocation & idLoc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~Peek( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
@@ -308,6 +308,20 @@ namespace MetaPDF
       virtual ~DynamicVariableDecl( );
       virtual void eval( Kernel::EvalState * evalState ) const;
       void callBack( const RefCountPtr< const Lang::Function > & filter, Kernel::EvalState * evalState ) const;
+    };
+
+    class DynamicStateDecl : public Ast::BindNode
+    {
+      Ast::SourceLocation idLoc_;
+      const char * id_;
+      mutable size_t ** idPos_;
+      Ast::SourceLocation defaultLoc_;
+      const char * defaultId_;
+      mutable Kernel::Environment::LexicalKey ** defaultIdKey_;
+    public:
+      DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultLoc, char * defaultId, size_t ** idPos, Kernel::Environment::LexicalKey ** defaultIdKey );
+      virtual ~DynamicStateDecl( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
     };
 
   }
