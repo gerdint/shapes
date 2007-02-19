@@ -82,6 +82,14 @@ Kernel::WarmTriple::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLo
   result_->call( evalState, pile_, callLoc );
 }
 
+void
+Kernel::WarmTriple::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::Value * >( pile_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Function * >( update_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Function * >( result_.getPtr( ) )->gcMark( marked );
+}
+
 
 Kernel::WarmOstream::WarmOstream( std::ostream & os )
   : os_( os )
@@ -110,6 +118,10 @@ Kernel::WarmOstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
 {
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm ostream cannot be peeked." ) );
 }
+
+void
+Kernel::WarmOstream::gcMark( Kernel::GCMarkedSet & marked )
+{ }
 
 
 Kernel::Warm_ostringstream::Warm_ostringstream( )
@@ -142,6 +154,10 @@ Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::
   cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
 		   evalState );
 }
+
+void
+Kernel::Warm_ostringstream::gcMark( Kernel::GCMarkedSet & marked )
+{ }
 
 
 Kernel::WarmGroup2D::WarmGroup2D( )
@@ -195,6 +211,13 @@ Kernel::WarmGroup2D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
 		   evalState );
 }
 
+void
+Kernel::WarmGroup2D::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::Group2D * >( pile_.getPtr( ) )->gcMark( marked );
+}
+
+
 
 Kernel::WarmGroup3D::WarmGroup3D( )
   : pile_( Lang::THE_NULL3D )
@@ -230,6 +253,12 @@ Kernel::WarmGroup3D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
 		   evalState );
 }
 
+void
+Kernel::WarmGroup3D::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::Group3D * >( pile_.getPtr( ) )->gcMark( marked );
+}
+
 
 Kernel::WarmGroupLights::WarmGroupLights( )
   : pile_( Lang::THE_NULL_LIGHTS )
@@ -262,6 +291,12 @@ Kernel::WarmGroupLights::peekImpl( Kernel::EvalState * evalState, const Ast::Sou
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
 		   evalState );
+}
+
+void
+Kernel::WarmGroupLights::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::LightGroup * >( pile_.getPtr( ) )->gcMark( marked );
 }
 
 
@@ -330,6 +365,32 @@ Kernel::WarmZBuf::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLoca
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-buffer state cannot be peeked." ) );
 }
 
+void
+Kernel::WarmZBuf::gcMark( Kernel::GCMarkedSet & marked )
+{
+  {
+    typedef typeof *pile_ ListType;
+    for( ListType::const_iterator i = pile_->begin( ); i != pile_->end( ); ++i )
+      {
+	const_cast< Computation::PaintedPolygon3D * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+//   {
+//     typedef typeof *strokePile_ ListType;
+//     for( ListType::const_iterator i = strokePile_->begin( ); i != strokePile_->end( ); ++i )
+//       {
+// 	const_cast< Computation::StrokedLine3D * >( i->getPtr( ) )->gcMark( marked );
+//       }
+//   }
+  {
+    typedef typeof *lightPile_ ListType;
+    for( ListType::const_iterator i = lightPile_->begin( ); i != lightPile_->end( ); ++i )
+      {
+	const_cast< Lang::LightSource * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+}
+
 
 Kernel::WarmZSorter::WarmZSorter( )
 { }
@@ -396,6 +457,32 @@ Kernel::WarmZSorter::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-sorter state cannot be peeked." ) );
 }
 
+void
+Kernel::WarmZSorter::gcMark( Kernel::GCMarkedSet & marked )
+{
+  {
+    typedef typeof *pile_ ListType;
+    for( ListType::const_iterator i = pile_->begin( ); i != pile_->end( ); ++i )
+      {
+	const_cast< Computation::PaintedPolygon3D * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+//   {
+//     typedef typeof *strokePile_ ListType;
+//     for( ListType::const_iterator i = strokePile_->begin( ); i != strokePile_->end( ); ++i )
+//       {
+// 	const_cast< Computation::StrokedLine3D * >( i->getPtr( ) )->gcMark( marked );
+//       }
+//   }
+  {
+    typedef typeof *lightPile_ ListType;
+    for( ListType::const_iterator i = lightPile_->begin( ); i != lightPile_->end( ); ++i )
+      {
+	const_cast< Lang::LightSource * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+}
+
 
 Kernel::WarmTimer::WarmTimer( )
 {
@@ -452,6 +539,10 @@ Kernel::WarmTimer::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLoc
   cont->takeValue( Kernel::ValueRef( new Lang::Float( time2 - time1 ) ),
 		   evalState );
 }
+
+void
+Kernel::WarmTimer::gcMark( Kernel::GCMarkedSet & marked )
+{ }
 
 
 Kernel::WarmText::WarmText( )
@@ -599,6 +690,15 @@ Kernel::WarmText::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLoca
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A text graphics state cannot be peeked." ) );
 }
 
+void
+Kernel::WarmText::gcMark( Kernel::GCMarkedSet & marked )
+{
+  typedef typeof *pile_ ListType;
+  for( ListType::const_iterator i = pile_->begin( ); i != pile_->end( ); ++i )
+    {
+      const_cast< Lang::TextOperation * >( i->getPtr( ) )->gcMark( marked );
+    }
+}
 
 Kernel::WarmType3Font::WarmType3Font( )
   : metrics_( new FontMetrics::BaseFont( ) ), size_( -1 )
@@ -1158,6 +1258,26 @@ Kernel::WarmType3Font::peekImpl( Kernel::EvalState * evalState, const Ast::Sourc
 {
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A type 3 font state cannot be peeked." ) );
 }
+
+void
+Kernel::WarmType3Font::gcMark( Kernel::GCMarkedSet & marked )
+{
+  {
+    typedef typeof kernings_ ListType;
+    for( ListType::const_iterator i = kernings_.begin( ); i != kernings_.end( ); ++i )
+      {
+	const_cast< Lang::KernedText * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+  {
+    typedef typeof glyphs_ ListType;
+    for( ListType::const_iterator i = glyphs_.begin( ); i != glyphs_.end( ); ++i )
+      {
+	const_cast< Lang::Type3Glyph * >( i->getPtr( ) )->gcMark( marked );
+      }
+  }
+}
+
 
 void
 Kernel::WarmType3Font::initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues )

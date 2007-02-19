@@ -102,60 +102,71 @@ Kernel::Thunk::printEnv( std::ostream & os ) const
 
 
 Kernel::Variable::Variable( const RefCountPtr< const Lang::Value > & val )
-  : warmObj_( 0 ), thunk_( 0 ), val_( val ), state_( Kernel::Variable::COLD )
-{ }
-
-Kernel::Variable::Variable( Kernel::Warm * warm )
-  : warmObj_( warm ), thunk_( 0 ), val_( NullPtr< const Lang::Value >( ) ), state_( Kernel::Variable::WARM )
+  : thunk_( 0 ), val_( val ), state_( Kernel::Variable::COLD )
 { }
 
 Kernel::Variable::Variable( Kernel::Thunk * thunk )
-  : warmObj_( 0 ), thunk_( thunk ), val_( NullPtr< const Lang::Value >( ) ), state_( Kernel::Variable::THUNK )
+  : thunk_( thunk ), val_( NullPtr< const Lang::Value >( ) ), state_( Kernel::Variable::THUNK )
 { }
 
 Kernel::Variable::~Variable( )
 {
-  if( warmObj_ != 0 )
-    {
-      delete warmObj_;
-    }
   if( thunk_ != 0 )
     {
       delete thunk_;
     }
 }
 
+Kernel::State::State( )
+  : alive_( true )
+{ }
+
+Kernel::State::~State( )
+{ }
+
 void
-Kernel::Variable::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, Kernel::PassedDyn dyn, const Ast::SourceLocation & callLoc )
+Kernel::State::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
-  if( state_ != Kernel::Variable::WARM )
+  if( ! alive_ )
     {
-      throw Exceptions::TackingOnCold( );
+      throw Exceptions::DeadStateAccess( );      
     }
-  warmObj_->tackOn( evalState, piece, dyn, callLoc );
+  this->tackOnImpl( evalState, piece, dyn, callLoc );
 }
 
 void
-Kernel::Variable::freeze( Kernel::VariableHandle & selfRef, Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::State::peek( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  if( state_ != Kernel::Variable::WARM )
+  if( ! alive_ )
     {
-      throw Exceptions::ReFreezing( );
+      throw Exceptions::DeadStateAccess( );      
     }
-  state_ = Kernel::Variable::FREEZING;
-  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
-  warmObj_->freeze( evalState, callLoc );
-  delete warmObj_;
-  warmObj_ = 0;
+  //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
+  this->peekImpl( evalState, callLoc );
 }
+
+void
+Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  if( ! alive_ )
+    {
+      throw Exceptions::DeadStateAccess( );
+    }
+  alive_ = false;
+  //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
+  this->freezeImpl( evalState, callLoc );
+}
+
+bool
+Kernel::State::isAlive( ) const
+{
+  return alive_;
+}
+
 
 void
 Kernel::Variable::force( Kernel::VariableHandle & selfRef, Kernel::EvalState * evalState ) const
 {
-  if( ( state_ & Kernel::Variable::FREEZING ) != 0 )
-    {
-      throw Exceptions::WarmAccess( );
-    }
   if( state_ == Kernel::Variable::THUNK )
     {
       state_ = Kernel::Variable::FORCING;
@@ -189,12 +200,6 @@ Kernel::Variable::getUntyped( ) const
 
 
 bool
-Kernel::Variable::isWarm( ) const
-{
-  return ( state_ & Kernel::Variable::FREEZING ) != 0;
-}
-
-bool
 Kernel::Variable::isThunk( ) const
 {
   return ( state_ & Kernel::Variable::FORCING ) != 0;
@@ -213,10 +218,6 @@ Kernel::Variable::copyThunk( ) const
 void
 Kernel::Variable::gcMark( Kernel::GCMarkedSet & marked )
 {
-  if( warmObj_ != 0 )
-    {
-      return;
-    }
   if( thunk_ != 0 )
     {
       thunk_->gcMark( marked );
@@ -272,9 +273,16 @@ Kernel::Environment::selfDefine( const char * id, const RefCountPtr< const Lang:
 }
 
 void
-Kernel::Environment::selfDefine( const char * id, Kernel::Warm * warm )
+Kernel::Environment::selfDefine( const char * id, Kernel::StateHandle state )
 {
-  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( warm ) ) );
+  if( stateBindings_->find( id ) != stateBindings_->end( ) )
+    {
+      throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< Initialization >" ), id );
+    }
+
+  (*stateBindings_)[ id ] = states_->size( );
+
+  states_->push_back( state );
 }
 
 void
@@ -641,14 +649,13 @@ Kernel::Environment::~Environment( )
 	}
       /* However, the values will always be owned by the environment itself, and be defined whenever dynamicKeyBindings != 0
        */
-      for( std::vector< StateHandle * >::iterator i = states_->begin( ); i != states_->end( ); ++i )
+      for( std::vector< StateHandle >::iterator i = states_->begin( ); i != states_->end( ); ++i )
 	{
 	  if( *i != 0 )
 	    {
 	      delete *i;
 	    }
 	}
-      delete states_;
     }
   --liveCount;
 }
@@ -750,7 +757,7 @@ Kernel::Environment::collect( std::list< Kernel::Environment * > & garbageArea )
 
 
 size_t
-Kernel::Environment::findLocalPosition( const Ast::SourceLocation & loc, const char * id ) const
+Kernel::Environment::findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = bindings_->find( id );
   if( i == bindings_->end( ) )
@@ -765,14 +772,14 @@ Kernel::Environment::define( size_t pos, const Kernel::VariableHandle & val )
 {
   if( (*values_)[ pos ] != NullPtr< Kernel::Variable >( ) )
     {
-      throw Exceptions::RedefiningLexical( reverseMap( pos ) );
+      throw Exceptions::RedefiningLexical( reverseMapVariable( pos ) );
     }
   
   (*values_)[ pos ] = val;
 }
 
 Kernel::Environment::LexicalKey
-Kernel::Environment::findLexicalKey( const Ast::SourceLocation & loc, const char * id ) const
+Kernel::Environment::findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = bindings_->find( id );
   if( i == bindings_->end( ) )
@@ -781,14 +788,14 @@ Kernel::Environment::findLexicalKey( const Ast::SourceLocation & loc, const char
 	{
 	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE );
 	}
-      return parent_->findLexicalKey( loc, id ).oneAbove( );
+      return parent_->findLexicalVariableKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
 }
 
 void
-Kernel::Environment::lookup( const Kernel::Environment::LexicalKey & lexKey, bool warm, Kernel::EvalState * evalState ) const
+Kernel::Environment::lookup( const Kernel::Environment::LexicalKey & lexKey, Kernel::EvalState * evalState ) const
 {
   const Environment * env = this;
   for( size_t i = lexKey.up_; i > 0; --i )
@@ -796,24 +803,16 @@ Kernel::Environment::lookup( const Kernel::Environment::LexicalKey & lexKey, boo
       env = env->getParent( );
     }
   
-  env->lookup( lexKey.pos_, warm, evalState );
+  env->lookup( lexKey.pos_, evalState );
 }
 
 void
-Kernel::Environment::lookup( size_t pos, bool warm, Kernel::EvalState * evalState ) const
+Kernel::Environment::lookup( size_t pos, Kernel::EvalState * evalState ) const
 {
   Kernel::VariableHandle res = (*values_)[ pos ];
   if( res == NullPtr< Kernel::Variable >( ) )
     {
       throw Exceptions::UninitializedAccess( );
-    }
-  if( res->isWarm( ) != warm )
-    {
-      if( warm )
-	{
-	  throw Exceptions::TackingOnCold( );
-	}
-      throw Exceptions::WarmAccess( );
     }
   
   Kernel::ContRef cont = evalState->cont_;
@@ -849,7 +848,7 @@ Kernel::Environment::findLocalStatePosition( const Ast::SourceLocation & loc, co
   return i->second;
 }
 
-LexicalKey
+Kernel::Environment::LexicalKey
 Kernel::Environment::findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = stateBindings_->find( id );
@@ -859,7 +858,7 @@ Kernel::Environment::findLexicalStateKey( const Ast::SourceLocation & loc, const
 	{
 	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE );
 	}
-      if( isFunctionBoundary )
+      if( functionBoundary_ )
 	{
 	  // If the state is not found at all, this will throw an error.
 	  return parent_->findLexicalStateKey( loc, id ).oneAbove( );
@@ -873,7 +872,7 @@ Kernel::Environment::findLexicalStateKey( const Ast::SourceLocation & loc, const
 }
 
 void
-Kernel::Environment::introduceState( size_t pos, const Kernel::State * state )
+Kernel::Environment::introduceState( size_t pos, Kernel::State * state )
 {
   if( (*states_)[ pos ] != NullPtr< Kernel::State >( ) )
     {
@@ -887,20 +886,20 @@ Kernel::Environment::introduceState( size_t pos, const Kernel::State * state )
 void
 Kernel::Environment::freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc )
 {
-  if( (*values_)[ pos ] == NullPtr< Kernel::Variable >( ) )
+  if( (*states_)[ pos ] == NullPtr< Kernel::State >( ) )
     {
-      throw Exceptions::FreezingUndefined( Ast::SourceLocation( "< to be determined... >" ), reverseMap( pos ) );
+      throw Exceptions::FreezingUndefined( Ast::SourceLocation( "< to be determined... >" ), reverseMapState( pos ) );
     }
   
-  Kernel::VariableHandle & var = (*values_)[ pos ];
+  Kernel::StateHandle & state = (*states_)[ pos ];
 
-  var->freeze( var, evalState, loc );
+  state->freeze( evalState, loc );
 }
 
 void
 Kernel::Environment::peek( const LexicalKey & lexKey, Kernel::EvalState * evalState, const Ast::SourceLocation & loc )
 {
-  getStateHandle( lexKey )->peek( evalState, piece, evalState->dyn_, loc );
+  getStateHandle( lexKey )->peek( evalState, loc );
 }
 
 void
@@ -909,7 +908,7 @@ Kernel::Environment::tackOn( const LexicalKey & lexKey, Kernel::EvalState * eval
   getStateHandle( lexKey )->tackOn( evalState, piece, evalState->dyn_, callLoc );
 }
 
-StateHandle
+Kernel::StateHandle
 Kernel::Environment::getStateHandle( const LexicalKey & lexKey )
 {
   Environment * env = this;
@@ -923,7 +922,7 @@ Kernel::Environment::getStateHandle( const LexicalKey & lexKey )
   return env->getStateHandle( lexKey.pos_ );
 }
 
-StateHandle
+Kernel::StateHandle
 Kernel::Environment::getStateHandle( size_t pos )
 {
   return (*states_)[ pos ];
@@ -1015,7 +1014,7 @@ Kernel::Environment::lookupDynamicVariable( size_t pos ) const
 }
 
 const char *
-Kernel::Environment::reverseMap( size_t pos ) const
+Kernel::Environment::reverseMapVariable( size_t pos ) const
 {
   for( MapType::const_iterator i = bindings_->begin( ); i != bindings_->end( ); ++i )
     {
@@ -1024,7 +1023,7 @@ Kernel::Environment::reverseMap( size_t pos ) const
 	  return i->first;
 	}
     }
-  throw Exceptions::InternalError( "Environment::reverseMap failure." );
+  throw Exceptions::InternalError( "Environment::reverseMapVariable failure." );
 }
 
 const char *
@@ -1038,6 +1037,19 @@ Kernel::Environment::reverseMapDynamic( size_t pos ) const
 	}
     }
   throw Exceptions::InternalError( "Environment::reverseMapDynamic failure." );
+}
+
+const char *
+Kernel::Environment::reverseMapState( size_t pos ) const
+{
+  for( MapType::const_iterator i = stateBindings_->begin( ); i != stateBindings_->end( ); ++i )
+    {
+      if( i->second == pos )
+	{
+	  return i->first;
+	}
+    }
+  throw Exceptions::InternalError( "Environment::reverseMapState failure." );
 }
 
 
@@ -1090,10 +1102,6 @@ Kernel::Environment::recursivePrint( std::ostream & os, std::set< MapType::key_t
 	  if( (*values_)[ i->second ] == NullPtr< Kernel::Variable >( ) )
 	    {
 	      os << "< Uninitialized >" ;
-	    }
-	  else if( (*values_)[ i->second ]->isWarm( ) )
-	    {
-	      os << "< Still warm >" ;
 	    }
 	  else if( (*values_)[ i->second ]->isThunk( ) )
 	    {

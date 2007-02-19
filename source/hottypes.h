@@ -70,6 +70,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmOstream : public Kernel::State
@@ -81,6 +82,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class Warm_ostringstream : public Kernel::State
@@ -92,6 +94,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmGroup2D : public Kernel::State
@@ -103,6 +106,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
     
@@ -115,6 +119,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
     
@@ -127,6 +132,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::LightGroup > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
     };
     
@@ -141,6 +147,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmZSorter : public Kernel::State
@@ -154,6 +161,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmTimer : public Kernel::State
@@ -165,6 +173,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
 
     class WarmText : public Kernel::State
@@ -176,6 +185,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
 
     class WarmType3Font : public Kernel::State
@@ -190,6 +200,7 @@ namespace MetaPDF
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
 
     private:
       static void initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues );

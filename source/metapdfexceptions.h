@@ -846,11 +846,11 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class TackingOnDead : public RuntimeError
+    class DeadStateAccess : public RuntimeError
     {
     public:
-      TackingOnDead( );
-      virtual ~TackingOnDead( );
+      DeadStateAccess( );
+      virtual ~DeadStateAccess( );
       virtual void display( std::ostream & os ) const;
     };
 

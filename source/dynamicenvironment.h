@@ -23,7 +23,7 @@ namespace MetaPDF
     {
     public:
       SystemDynamicVariables( );
-      SystemDynamicVariables( Kernel::WarmGroup2D * defaultDestination, const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
+      SystemDynamicVariables( const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
       
       void merge( const SystemDynamicVariables & other );
       
@@ -32,7 +32,6 @@ namespace MetaPDF
       RefCountPtr< const Kernel::TextState > textState_;
       Concrete::Length eyez_;
       RefCountPtr< const Kernel::PolarHandlePromise > defaultUnit_;
-      Kernel::VariableHandle defaultDestination_;
       RefCountPtr< const Lang::ColorSpace > blendSpace_;
     };
     
@@ -59,7 +58,7 @@ namespace MetaPDF
       const char * contId_;
       Kernel::ContRef contVal_;
     public:
-      DynamicEnvironment( Kernel::WarmGroup2D * defaultDestination, const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
+      DynamicEnvironment( const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
       DynamicEnvironment( RefCountPtr< Kernel::DynamicEnvironment > parent, const Lang::DynamicBindings & bindings );
       DynamicEnvironment( RefCountPtr< Kernel::DynamicEnvironment > parent, const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
       DynamicEnvironment( RefCountPtr< Kernel::DynamicEnvironment > parent, Kernel::SystemDynamicVariables * sysBindings );
@@ -80,7 +79,6 @@ namespace MetaPDF
       RefCountPtr< const Kernel::TextState > getTextState( ) const;
       Concrete::Length getEyeZ( ) const;
       RefCountPtr< const Kernel::PolarHandlePromise > getDefaultUnit( ) const;
-      Kernel::VariableHandle & getDefaultDestination( ) const;
       Kernel::ContRef getEscapeContinuation( const char * id, const Ast::SourceLocation & loc ) const;
       RefCountPtr< const Lang::ColorSpace > getBlendSpace( ) const;
       
@@ -99,16 +97,16 @@ namespace MetaPDF
   namespace Lang
   {
 
-    class DefaultDestinationBinding : public Lang::DynamicBindings
-    {
-      Ast::SourceLocation loc_;
-      Kernel::VariableHandle val_;
-    public:
-      DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val );
-      virtual ~DefaultDestinationBinding( );
-      virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
-    };
+//     class DefaultDestinationBinding : public Lang::DynamicBindings
+//     {
+//       Ast::SourceLocation loc_;
+//       Kernel::VariableHandle val_;
+//     public:
+//       DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val );
+//       virtual ~DefaultDestinationBinding( );
+//       virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+//       virtual void gcMark( Kernel::GCMarkedSet & marked );
+//     };
     
     class EyeZBinding : public Lang::DynamicBindings
     {
@@ -148,15 +146,15 @@ namespace MetaPDF
   namespace Kernel
   {
 
-    class DefaultDestinationDynamicVariableProperties : public Kernel::DynamicVariableProperties
-    {
-    public:
-      DefaultDestinationDynamicVariableProperties( const char * name );
-      virtual ~DefaultDestinationDynamicVariableProperties( );
-      virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-      virtual bool forceValue( ) const { return false; };
-      virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
-    };
+//     class DefaultDestinationDynamicVariableProperties : public Kernel::DynamicVariableProperties
+//     {
+//     public:
+//       DefaultDestinationDynamicVariableProperties( const char * name );
+//       virtual ~DefaultDestinationDynamicVariableProperties( );
+//       virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+//       virtual bool forceValue( ) const { return false; };
+//       virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+//     };
 
     class EyeZDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {

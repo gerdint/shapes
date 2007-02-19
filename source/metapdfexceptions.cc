@@ -1346,17 +1346,17 @@ Exceptions::UndefinedEscapeContinuation::display( std::ostream & os ) const
 }
 
 
-Exceptions::TackingOnDead::TackingOnDead( )
+Exceptions::DeadStateAccess::DeadStateAccess( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }
 
-Exceptions::TackingOnDead::~TackingOnDead( )
+Exceptions::DeadStateAccess::~DeadStateAccess( )
 { }
 
 void
-Exceptions::TackingOnDead::display( std::ostream & os ) const
+Exceptions::DeadStateAccess::display( std::ostream & os ) const
 {
-  os << "The destination state is dead." << std::endl ;
+  os << "The accessed state is dead." << std::endl ;
 }
 
 

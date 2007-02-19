@@ -146,7 +146,7 @@ namespace MetaPDF
       void freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
       bool isAlive( ) const;
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
+      virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
 
     protected:
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc ) = 0;
@@ -233,14 +233,14 @@ namespace MetaPDF
       size_t findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const;
       LexicalKey findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const;
       void define( size_t pos, const Kernel::VariableHandle & val );
-      void lookup( const LexicalKey & lexKey, bool state, Kernel::EvalState * evalState ) const;
-      void lookup( size_t pos, bool state, Kernel::EvalState * evalState ) const;
+      void lookup( const LexicalKey & lexKey, Kernel::EvalState * evalState ) const;
+      void lookup( size_t pos, Kernel::EvalState * evalState ) const;
       VariableHandle getVarHandle( const LexicalKey & lexKey );
       VariableHandle getVarHandle( size_t pos );
 
       size_t findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
       LexicalKey findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const;
-      void introduceState( size_t pos, const Kernel::State * state );
+      void introduceState( size_t pos, Kernel::State * state );
       void freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       void peek( const LexicalKey & lexKey, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       void tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
@@ -267,8 +267,9 @@ namespace MetaPDF
       bool isBaseEnvironment( ) const { return parent_ == 0; };
 
     private:
-      const char * reverseMap( size_t pos ) const;
+      const char * reverseMapVariable( size_t pos ) const;
       const char * reverseMapDynamic( size_t pos ) const;
+      const char * reverseMapState( size_t pos ) const;
     };
 
   }
