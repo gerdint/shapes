@@ -489,11 +489,6 @@ Lang::Core_intersection::call( Kernel::EvalState * evalState, Kernel::Arguments 
       
       Kernel::VariableHandle handler = dynProps.fetch( evalState->dyn_ );
 
-      if( handler->isWarm( ) )
-	{
-	  throw Exceptions::InternalError( "Encountered a warm error handler." );
-	}
-      
       typedef const Lang::Function HandlerType;
 
       RefCountPtr< HandlerType > fun( handler->getVal< HandlerType >( callLoc ) );
