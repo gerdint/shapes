@@ -110,6 +110,7 @@ void metapdferror( char * msg )
   Ast::ClassSection * classSection;
   Ast::MemberSection * memberSection;
   Ast::MemberDeclaration * memberDeclaration;
+  Ast::Split * split;
   Ast::MemberMode memberMode;
   Ast::ClassMode classMode;
   Ast::FunctionMode functionMode;
@@ -128,6 +129,7 @@ void metapdferror( char * msg )
 %token <tokenID> T_let T_letstar T_letrec
 %token <tokenID> T_tex T_dynamic T_continuation T_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
+%token <tokenID> T_spliceLeft T_spliceRight T_unionLeft T_unionRight
  // %token <tokenID>  T_letdst T_plusassign T_minusassign T_starassign T_slashassign
 
 %token <intVal> T_int
@@ -168,6 +170,7 @@ void metapdferror( char * msg )
 %type <memberMode> MemberAccessList MemberAccessSpecifier
 %type <classMode> ClassModeList ClassModeSpecifier OneOrMoreClassModeSpecifiers
 %type <functionMode> FunctionModeList OneOrMoreFunctionModeSpecifiers FunctionModeSpecifier
+%type <split> Split
 
 %nonassoc T_assign ':'
 %left ']'
@@ -415,6 +418,12 @@ CallExpr
 			  $1,
 			  args );
 }
+| Expr T_emptybrackets Split
+{
+  $$ = new Ast::CallSplitExpr( @$,
+			       $1,
+			       $3 );
+}
 | Expr T_dddotbrackets Expr
 {
   Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
@@ -432,6 +441,13 @@ CallExpr
 			  $1,
 			  args,
 			  true );  /* true means Curry */
+}
+| Expr T_dddotbrackets Split
+{
+  $$ = new Ast::CallSplitExpr( @$,
+			       $1,
+			       $3,
+			       true );  /* true means Curry */
 }
 | '[' '!' Expr ArgList ']'
 {
@@ -763,8 +779,8 @@ ExprExceptConstStrings
   Ast::PublicMethodReferenceFunction * res = new Ast::PublicMethodReferenceFunction( @$, $1, $3 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 | DynamicBinding
 | '(' T_continuation T_identifier Expr ')'
@@ -777,12 +793,16 @@ ExprExceptConstStrings
   Ast::ContinueDynamicECFunction * res = new Ast::ContinueDynamicECFunction( @3, $3, $4 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 | Expr '|' Expr
 {
   $$ = new Ast::WithDynamicExpr( @$, $1, $3 );
+}
+| T_unionLeft ArgList T_unionRight
+{
+  $$ = new Ast::UnionExpr( @$, $2 );  
 }
 | NamedLetExpr
 | Expr T_minusminus T_cycle
@@ -998,6 +1018,10 @@ GroupElem
 {
   size_t ** pos = new size_t * ( 0 );
   $$ = new Ast::DefineVariable( @1, $1, $3, pos );
+}
+| T_spliceLeft Formals T_spliceRight ':' Expr
+{
+  $$ = new Ast::DefineVariables( $2, $5 );  
 }
 | T_state_identifier ':' Expr
 {
@@ -1462,6 +1486,12 @@ FunctionModeSpecifier
 }
 ;
 
+Split
+: T_splitLeft Expr T_splitRight
+{
+  $$ = new Ast::Split( $@, $2 );
+}
+;
 
 %%
 

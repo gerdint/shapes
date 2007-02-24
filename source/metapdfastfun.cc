@@ -406,6 +406,40 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
 }
 
+;
+Kernel::VariableHandle
+Ast::ArgListExprs::findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const
+{
+  /* This function is called when a Lang::Structure is asked for a field by name.
+   * This is reflected in the generated error in case the name is not found.
+   */
+
+  typedef const Lang::SingleListPair ConsType;
+
+  /* Note that the arguments are bound in backwards-order, since that is how the values are accessed.
+   */
+  
+  Ast::SourceLocation dummy;
+  typedef std::map< const char *, Ast::Expression *, charPtrLess >::const_reverse_iterator I;
+  I i = namedExprs_->rbegin( );
+  I end = namedExprs_->rend( );
+  for( ; i != end; ++i )
+    {
+      RefCountPtr< ConsType > lst = vals.down_cast< ConsType >( );
+      if( lst == NullPtr< ConsType >( ) )
+	{
+	  throw Exceptions::InternalError( strrefdup( "Out of argument values when searching fields." ) );
+	}
+      if( strcmp( i->first, name ) == 0 )
+	{
+	  return lst->car_;
+	}
+      vals = lst->cdr_;
+    }
+
+  throw Exceptions::NonExistentMember( strrefdup( "< user union >" ), name );
+}
+
 Ast::ArgListExprs::ConstIterator
 Ast::ArgListExprs::begin( ) const
 {
@@ -777,6 +811,157 @@ Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
 			  evalState );
     }
 }
+
+Kernel::UnionCont_last::UnionCont_last( const Ast::ArgListExprs * argList, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( callLoc ), argList_( argList ), cont_( cont )
+{ }
+
+Kernel::UnionCont_last::~UnionCont_last( )
+{ }
+
+void
+Kernel::UnionCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const
+{
+  typedef const Lang::SingleList ArgType;
+  RefCountPtr< ArgType > vals = Helpers::down_cast< ArgType >( valsUntyped, "< Internal error situation in UnionCont_last >" );
+  
+  evalState->cont_ = cont_;
+  cont_->takeValue( Kernel::ValueRef( new Lang::Structure( argList_, vals ) ),
+		    evalState );
+}
+
+void
+Kernel::UnionCont_last::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+{
+  trace->push_front( Kernel::Continuation::BackTraceElem( this, "union" ) );
+  cont_->backTrace( trace );
+}
+
+void
+Kernel::UnionCont_last::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::Function * >( fun_.getPtr( ) )->gcMark( marked );
+  dyn_->gcMark( marked );
+  cont_->gcMark( marked );
+}
+
+
+Ast::UnionExpr::UnionExpr( const Ast::SourceLocation & loc, const Ast::ArgListExprs * argList )
+  : Ast::Expression( loc ), argList_( argList )
+{ }
+
+Ast::UnionExpr::~UnionExpr( )
+{
+  delete argList_;
+}
+
+
+void
+Ast::UnionExpr::eval( Kernel::EvalState * evalState ) const
+{
+  evalState->cont_ = Kernel::ContRef( new Kernel::UnionCont_last( constFun_, argList_, curry_, evalState->dyn_, evalState->cont_, loc_ ) );
+  
+  argList_->evaluate( RefCountPtr< Kernel::CallContInfo >( new Kernel::CallContInfo( argList_, evalState, false ) ),
+		      argList_->begin( ), Lang::THE_CONS_NULL,
+		      evalState );
+}
+
+
+Kernel::SplitCont_1::SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
+{ }
+
+Kernel::SplitCont_1::~SplitCont_1( )
+{ }
+
+void
+Kernel::SplitCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyped, Kernel::EvalState * evalState, bool dummy ) const
+{
+  typedef const Lang::Function ArgType;
+  RefCountPtr< ArgType > fun = Helpers::down_cast< ArgType >( valsUntyped, "Split's function" );
+  evalState->env_ = env_;
+  evalState->dyn_ = dyn_;
+  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_2( fun, curry_, dyn_, cont_, callLoc_ ) );
+  evalState->expr_ = argList_;
+}
+
+void
+Kernel::SplitCont_1::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+{
+  trace->push_front( Kernel::Continuation::BackTraceElem( this, "split call's function" ) );
+  cont_->backTrace( trace );
+}
+
+void
+Kernel::SplitCont_1::gcMark( Kernel::GCMarkedSet & marked )
+{
+  dyn_->gcMark( marked );
+  cont_->gcMark( marked );
+}
+
+
+Kernel::SplitCont_2::SplitCont_2( const RefCountPtr< const Lang::Function > & fun, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( callLoc ), fun_( fun ), curry_( curry ), env_( env ), dyn_( dyn ), cont_( cont )
+{ }
+
+Kernel::SplitCont_2::~SplitCont_2( )
+{ }
+
+void
+Kernel::SplitCont_2::takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const
+{
+  typedef const Lang::Structure ArgType;
+  RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( valsUntyped, "Split" );
+
+  Kernel::Arguments args = fun_->newCurriedArguments( );
+  structure->argList_->bind( & args, structure->values_, env_ );
+
+  if( curry_ )
+    {
+      evalState->cont_ = cont_;
+      cont_->takeValue( Kernel::ValueRef( new Lang::CuteFunction( fun_, args ) ),
+			evalState );
+    }
+  else
+    {
+      evalState->dyn_ = dyn_;
+      evalState->cont_ = cont_;
+      fun_->call( evalState, args, traceLoc_ );
+    }
+}
+
+void
+Kernel::SplitCont_2::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+{
+  trace->push_front( Kernel::Continuation::BackTraceElem( this, "Split/splice" ) );
+  cont_->backTrace( trace );
+}
+
+void
+Kernel::SplitCont_2::gcMark( Kernel::GCMarkedSet & marked )
+{
+  cont_->gcMark( marked );
+}
+
+
+Ast::CallSplitExpr::CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry )
+  : Ast::Expression( loc ), curry_( curry ), funExpr_( funExpr ), argList_( argList )
+{ }
+
+Ast::CallSplitExpr::~CallSplitExpr( )
+{
+  delete funExpr_;
+  delete argList_;
+}
+
+
+void
+Ast::CallSplitExpr::eval( Kernel::EvalState * evalState ) const
+{
+  evalState->expr_ = funExpr_;
+  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_1( evalState->expr_->loc( ), argList_, curry_, *evalState, loc_ ) );
+}
+
 
 Ast::DummyExpression::DummyExpression( )
   : Ast::Expression( Ast::SourceLocation( ) )

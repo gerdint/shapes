@@ -76,6 +76,98 @@ Kernel::Continuation::backTrace( std::ostream & os )
     }
 }
 
+namespace MetaPDF
+{
+  namespace Kernel
+  {
+
+    class ForcedStructureContinuationHelper : public Kernel::Continuation
+    {
+      const ForcedStructureContinuation * cont_;  // This does not have proper memory management...
+      Kernel::ContRef contMem_;  // and this is not properly down-casted.
+      RefCountPtr< const Lang::Structure > structure_;
+      RefCountPtr< const Lang::SingleList > lst_;
+    public:
+      ForcedStructureContinuationHelper( const ForcedStructureContinuation * cont, Kernel::ContRef contMem, const RefCountPtr< const Lang::Structure > & structure, const RefCountPtr< const Lang::SingleList > & lst, const Ast::SourceLocation & traceLoc )
+	: Kernel::Continuation( traceLoc ), cont_( cont ), contMem_( contMem ), structure_( structure ), lst_( lst )
+      { }
+      virtual ~ForcedStructureContinuationhelper( )
+      { }
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+      {
+	// Getting here means that some value that _we_ don't care about has been forced.
+
+	RefCountPtr< const Lang::SingleList > firstUnforced = Kernel::ForcedStructureContinuation::findUnforced( lst_ );
+	if( firstUnforced->isNull( ) )
+	  {
+	    cont_->takeStructure( structure_, evalState );
+	  }
+	else
+	  {
+	    typedef const Lang::SingleListPair ArgType;
+	    RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure->values_, "< internal error: SingleListPair contradicting isNull( )" );
+	    evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( cont_, contMem_, structure_, p->cdr_, traceLoc_ ) );
+	    p->car_->force( evalState );
+	  }
+	
+      }
+    };
+
+  }
+}
+
+
+Kernel::ForcedStructureContinuation::ForcedStructureContinuation( const Ast::SourceLocation & traceLoc )
+  : Kernel::Continuation( traceLoc )
+{ }
+
+Kernel::ForcedStructureContinuation::~ForcedStructureContinuation( )
+{ }
+
+void
+Kernel::ForcedStructureContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+{
+  typedef const Lang::Structure ArgType;
+  RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( val, name( ) );
+  
+  RefCountPtr< const Lang::SingleList > firstUnforced = findUnforced( structure->values_ );
+  if( firstUnforced->isNull( ) )
+    {
+      this->takeStructure( structure, evalState );
+    }
+  else
+    {
+      typedef const Lang::SingleListPair ArgType;
+      RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure->values_, "< internal error: SingleListPair contradicting isNull( )" );
+      evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( this, evalState->cont_, structure, p->cdr_, traceLoc_ ) );
+      p->car_->force( evalState );
+    }
+}
+
+RefCountPtr< const Lang::SingleList >
+Kernel::ForcedStructureContinuation::findUnforced( RefCountPtr< const Lang::SingleList > lst )
+{
+  try
+    {
+      while( true )
+	{
+	  typedef const Lang::SingleListPair ArgType;
+	  RefCountPtr< ArgType > p = Helpers::try_cast< ArgType >( structure->values_ );
+	  if( p->car_->isThunk( ) )
+	    {
+	      return lst;
+	    }
+	  lst = p->cdr_;
+	}
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      // This means we reached the end of the list.
+    }
+  return lst;
+}
+
+
 
 Ast::Node::Node( const Ast::SourceLocation & loc )
   : parent_( 0 ), loc_( loc )

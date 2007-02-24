@@ -35,12 +35,16 @@ namespace MetaPDF
 }
 
 Lang::Core_stroke::Core_stroke( const char * title )
-  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) ),
+    arrowHeadReceiverFormals_( new Kernel::EvaluatedFormals( "< Arrowhead receiver >", true ) )
 {
   formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "head", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
   formals_->appendEvaluatedCoreFormal( "tail", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
-}
+
+  arrowHeadReceiverFormals_->appendEvaluatedCoreFormal( "picture", Kernel::THE_SLOT_VARIABLE );
+  arrowHeadReceiverFormals_->appendEvaluatedCoreFormal( "cut", Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( 0 ) ) ) ) );
+  }
 
 void
 Lang::Core_stroke::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -124,29 +128,39 @@ namespace MetaPDF
 {
   namespace Kernel
   {
-  class Stroke2DCont_tail : public Kernel::Continuation
+  class Stroke2DCont_tail : public Kernel::ForcedStructureContinuation
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::VariableHandle tailKeepAlive;
-    Kernel::WarmGroup2D * tailWarm;
     Kernel::ContRef cont;
   public:
     Stroke2DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-		       Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
+		       Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
+      : Kernel::ForcedStructureContinuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), cont( _cont )
     { }
     virtual ~Stroke2DCont_tail( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState, bool dummy ) const
     {
-      RefCountPtr< const Lang::Length > cutTail = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow tail >" );
+      /* Argument 0: picture
+       * Argument 1: cut
+       */
+      Kernel::Arguments args( arrowHeadReceiverFormals_ );
+      structure->argList_->bind( & args, structure->values_, env_ );
+      args.applyDefaults( );
+
+      typedef const Lang::Drawable2D ArgType0;
+      RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( "Stroke's arrow tail receiver", args, 0, traceLoc_ );
+
+      typedef const Lang::Length ArgType1;
+      RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( "Stroke's arrow tail receiver", args, 1, traceLoc_ );
+
       if( cutTail->get( ) < 0 )
 	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow tail was negative." ) );
+	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
 	}
       else if( cutTail->get( ) == 0 )
 	{
-	  cont->takeValue( Helpers::newSolidTransparencyGroup( tailWarm->getPile( ),
+	  cont->takeValue( Helpers::newSolidTransparencyGroup( picture,
 							       RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, path, "S" ) ) ),
 			   evalState );
 	}
@@ -157,13 +171,13 @@ namespace MetaPDF
 	  RefCountPtr< const Lang::ElementaryPath2D > subpath = path->subpath( t1, t2 );
 	  if( subpath->size( ) > 0 )
 	    {
-	      cont->takeValue( Helpers::newSolidTransparencyGroup(  tailWarm->getPile( ),
-								    RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, subpath, "S" ) ) ),
+	      cont->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								   RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, subpath, "S" ) ) ),
 			       evalState );
 	    }
 	  else
 	    {
-	      cont->takeValue( tailWarm->getPile( ),
+	      cont->takeValue( picture,
 			       evalState );
 	    }
 	  
@@ -181,7 +195,7 @@ namespace MetaPDF
     }
   };
 
-  class Stroke2DCont_head : public Kernel::Continuation
+  class Stroke2DCont_head : public Kernel::ForcedStructureContinuation
   {
     RefCountPtr< const Kernel::GraphicsState > graphicsState;
     RefCountPtr< const Lang::ElementaryPath2D > path;
@@ -194,7 +208,7 @@ namespace MetaPDF
       : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
     { }
     virtual ~Stroke2DCont_head( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+    virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
     {
       RefCountPtr< const Lang::Length > cutHead = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow head >" );
       if( cutHead->get( ) < 0 )

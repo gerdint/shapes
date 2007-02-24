@@ -87,6 +87,8 @@ namespace MetaPDF
       
       void evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const;
       void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env ) const;
+
+      Kernel::VariableHandle findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const;
     };
     
     class FunctionFunction : public Lang::Function
@@ -158,6 +160,49 @@ namespace MetaPDF
       virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
 
+    class UnionCont_last : public Kernel::Continuation
+    {
+      const Ast::ArgListExprs * argList_;
+      Kernel::ContRef cont_;
+    public:
+      UnionCont_last( const Ast::ArgListExprs * argList, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
+      virtual ~UnionCont_last( );
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+
+    class SplitCont_1 : public Kernel::Continuation
+    {
+      Ast::Expression * argList_;
+      bool curry_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+      const Ast::SourceLocation & callLoc_;
+    public:
+      SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
+      virtual ~SplitCont_1( );
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+    
+    class SplitCont_2 : public Kernel::Continuation
+    {
+      RefCountPtr< const Lang::Function > fun_;
+      bool curry_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      SplitCont_2( const RefCountPtr< const Lang::Function > & fun, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
+      virtual ~SplitCont_2( );
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+    
   }
 
   namespace Ast
@@ -172,9 +217,31 @@ namespace MetaPDF
       Ast::Expression * funExpr_;
       const Ast::ArgListExprs * argList_;
       
-      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false, bool procedura = false );
-      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false, bool procedura = false );
+      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
+      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       virtual ~CallExpr( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class UnionExpr : public Expression
+    {
+    public:
+      const Ast::ArgListExprs * argList_;
+      
+      UnionExpr( const Ast::SourceLocation & loc, const Ast::ArgListExprs * argList );
+      virtual ~UnionExpr( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class CallSplitExpr : public Expression
+    {
+      bool curry_;
+      Ast::Expression * funExpr_;
+      Ast::Expression * argList_;
+
+    public:      
+      CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false );
+      virtual ~CallSplitExpr( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     

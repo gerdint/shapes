@@ -85,6 +85,19 @@ namespace MetaPDF
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
+    class Structure : public Lang::NoOperatorOverloadValue
+    {
+    public:
+      /* The data is provided public becase it is used in function application
+       */
+      const Ast::ArgListExprs * argList_;
+      RefCountPtr< const Lang::SingleList > values_;
+      Structure( const Ast::ArgListExprs * argList, const RefCountPtr< const Lang::SingleList > & values );
+      virtual ~Structure( );
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    }
+
   class ConsPair : public Lang::NoOperatorOverloadValue
   {
     Kernel::VariableHandle car_;

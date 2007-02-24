@@ -61,7 +61,18 @@ namespace MetaPDF
     };
     
     std::ostream & operator << ( std::ostream & os, const Kernel::Continuation::BackTraceElem & elem );
-    
+
+    class ForcedStructureContinuation
+    {
+    public:
+      ForcedStructureContinuation( const Ast::SourceLocation & traceLoc );
+      virtual ~ForcedStructureContinuation( );
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual const char * name( ) const = 0;
+      
+      static RefCountPtr< const Lang::SingleList > findUnforced( RefCountPtr< const Lang::SingleList > lst );
+    };
+        
   }
 
   namespace Ast

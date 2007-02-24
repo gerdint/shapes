@@ -478,6 +478,11 @@ Escape "¢"|"¤"
 "[...]" { return T_dddotbrackets; }
 "()" { return T_compose; }
 
+"(>" { return T_unionLeft; }
+"<)" { return T_unionRight; }
+"(<" { return T_spliceLeft; }
+">)" { return T_spliceRight; }
+
 [\{\}\(\)\[\]\<\>] { return yytext[0]; }
 [\.\,\;\:\_\@\!\#\%\&\|\^\-\+\'\\] { return yytext[0]; }
 [*/~=] { return yytext[0]; }

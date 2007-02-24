@@ -271,3 +271,24 @@ Lang::SingleListMethodFoldR::call( Kernel::EvalState * evalState, Kernel::Argume
 		args.getHandle( 1 ),
 		callLoc );
 }
+
+
+Lang::Structure::Structure( const Ast::ArgListExprs * argList, const RefCountPtr< const Lang::SingleList > & values )
+  : argList_( argList ), values_( values )
+{ }
+
+Lang::Structure::~Structure( )
+{ }
+
+Kernel::VariableHandle
+Lang::Structure::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+  return argList_->findNamed( values_, fieldID );
+}
+
+void
+Lang::Structure::gcMark( Kernel::GCMarkedSet & marked )
+{
+  const_cast< Lang::SingleList * >( values_.getPtr( ) )->gcMark( marked );
+}
+
