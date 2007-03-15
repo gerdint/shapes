@@ -755,6 +755,35 @@ Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
     }
 }
 
+
+Ast::DefineVariables::DefineVariables( const Ast::SourceLocation & loc, const Kernel::Formals * formals, Ast::Expression * unionExpr )
+  : Ast::Node( loc ), formals_( formals ), unionExpr_( unionExpr )
+{
+  if( formals_.stateOrder_.size( ) > 0 )
+    {
+      throw Exceptions::PassingStateOut( formals_->loc( ), formals_.stateOrder_.front( ).first( ) );
+    }
+  idPositions_.resize( formals_.argumentOrder_.size( ), 0 );
+}
+
+Ast::DefineVariables::~DefineVariables( )
+{
+  delete formals_;
+  delete unionExpr_;
+  while( idPositions_.size( ) > 0 )
+    {
+      delete idPositions_.back( );
+      idPositions_.pop_back( );
+    }
+}
+
+void
+Ast::DefineVariables::eval( Kernel::EvalState * evalState ) const
+{
+  throw Exceptions::NotImplemented( "Multiple assignment." );
+}
+
+
 Ast::LexiographicState::LexiographicState( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey, bool warm )
   : Ast::Expression( loc ), id_( id ), idKey_( idKey ), warm_( warm )
 {

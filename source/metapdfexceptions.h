@@ -119,6 +119,16 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
+    class PassingStateOut : public StaticInconsistency
+    {
+      Ast::SourceLocation loc;
+      const char * id;
+    public:
+      PassingStateOut( const Ast::SourceLocation & _Loc, const char * _id );
+      virtual ~PassingStateOut( );
+      virtual void display( std::ostream & os ) const;
+    };
+
     class IntroducingExisting : public StaticInconsistency
     {
       Ast::SourceLocation loc;

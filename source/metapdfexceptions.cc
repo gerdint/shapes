@@ -162,6 +162,20 @@ Exceptions::RepeatedFormal::display( ostream & os ) const
 }
 
 
+Exceptions::PassingStateOut::PassingStateOut( const Ast::SourceLocation & _loc, const char * _id )
+  : loc( _loc ), id( _id )
+{ }
+
+Exceptions::PassingStateOut::~PassingStateOut( )
+{ }
+
+void
+Exceptions::PassingStateOut::display( ostream & os ) const
+{
+  os << loc << "Return formals cannot contain states: " << id << std::endl ;
+}
+
+
 Exceptions::IntroducingExisting::IntroducingExisting( const Ast::SourceLocation & _loc, const char * _id )
   : loc( _loc ), id( _id )
 { }

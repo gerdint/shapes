@@ -469,7 +469,7 @@ Escape "¢"|"¤"
 ":=" { return T_assign; }
 "{:=}" { return T_flassign; }
 "==" { return T_eqeq; }
-"<>" { return T_eqneq; }
+"=/="|"≠" { return T_eqneq; }
 
 ".>" { return T_mapsto; }
 "../" { return T_surrounding; }
@@ -480,8 +480,9 @@ Escape "¢"|"¤"
 
 "(>" { return T_unionLeft; }
 "<)" { return T_unionRight; }
-"(<" { return T_spliceLeft; }
-">)" { return T_spliceRight; }
+"<>" { return T_split; }
+"(<" { return T_splitLeft; }
+">)" { return T_splitRight; }
 
 [\{\}\(\)\[\]\<\>] { return yytext[0]; }
 [\.\,\;\:\_\@\!\#\%\&\|\^\-\+\'\\] { return yytext[0]; }

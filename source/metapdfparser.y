@@ -110,7 +110,6 @@ void metapdferror( char * msg )
   Ast::ClassSection * classSection;
   Ast::MemberSection * memberSection;
   Ast::MemberDeclaration * memberDeclaration;
-  Ast::Split * split;
   Ast::MemberMode memberMode;
   Ast::ClassMode classMode;
   Ast::FunctionMode functionMode;
@@ -129,7 +128,7 @@ void metapdferror( char * msg )
 %token <tokenID> T_let T_letstar T_letrec
 %token <tokenID> T_tex T_dynamic T_continuation T_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
-%token <tokenID> T_spliceLeft T_spliceRight T_unionLeft T_unionRight
+%token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight
  // %token <tokenID>  T_letdst T_plusassign T_minusassign T_starassign T_slashassign
 
 %token <intVal> T_int
@@ -170,10 +169,10 @@ void metapdferror( char * msg )
 %type <memberMode> MemberAccessList MemberAccessSpecifier
 %type <classMode> ClassModeList ClassModeSpecifier OneOrMoreClassModeSpecifiers
 %type <functionMode> FunctionModeList OneOrMoreFunctionModeSpecifiers FunctionModeSpecifier
-%type <split> Split
+%type <expr> Split
 
 %nonassoc T_assign ':'
-%left ']'
+%left ']' T_splitRight
 %left T_llthan
 %nonassoc T_bangbang
 %left '|'
@@ -193,8 +192,9 @@ void metapdferror( char * msg )
 %left '*' '/' T_projection
 %left '~'
 %left T_compose
-%left '[' '.'
+%left '[' '.' T_splitLeft
 %left '#'
+%left T_split
 %left T_atat T_surrounding
 
 %nonassoc ')'
@@ -1019,9 +1019,9 @@ GroupElem
   size_t ** pos = new size_t * ( 0 );
   $$ = new Ast::DefineVariable( @1, $1, $3, pos );
 }
-| T_spliceLeft Formals T_spliceRight ':' Expr
+| T_splitLeft Formals T_splitRight ':' Expr
 {
-  $$ = new Ast::DefineVariables( $2, $5 );  
+  $$ = new Ast::DefineVariables( @$, $2, $5 );  
 }
 | T_state_identifier ':' Expr
 {
@@ -1487,9 +1487,9 @@ FunctionModeSpecifier
 ;
 
 Split
-: T_splitLeft Expr T_splitRight
+: T_split Expr
 {
-  $$ = new Ast::Split( $@, $2 );
+  $$ = $2;
 }
 ;
 

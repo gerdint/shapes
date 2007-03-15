@@ -132,6 +132,17 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
+    class DefineVariables : public Node
+    {
+      const Kernel::Formals * formals_;
+      Ast::Expression * unionExpr_;
+      mutable std::vector< size_t ** > idPositions_;
+    public:
+      DefineVariables( const Ast::SourceLocation & loc, const Kernel::Formals * formals, Ast::Expression * unionExpr );
+      virtual ~DefineVariables( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
     class LexiographicState : public Node
     {
       const char * id_;
