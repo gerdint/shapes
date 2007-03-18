@@ -295,40 +295,30 @@ OneOrMoreArgListItems
   $$ = new Ast::ArgListExprs( true );
   $$->orderedExprs_->push_back( $1 );
 }
-| '(' T_identifier T_llthan ')'
+| T_state_identifier
 {
   $$ = new Ast::ArgListExprs( true );
-  $$->orderedExprs_->push_back( new Ast::LexiographicVariable( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ), true ) );  // true means warm access
+  $$->orderedStates_->push_back( new Ast::LexiographicState( @1, $1, new Kernel::Environment::LexicalKey * ( 0 ) ) );
 }
-| '(' T_dynamic_identifier T_llthan ')'
+| T_dynamic_state_identifier
 {
   $$ = new Ast::ArgListExprs( true );
-  $$->orderedExprs_->push_back( new Ast::DynamicVariable( @2, $2, true ) );  // true means warm access
-}
-| T_at_llthan
-{
-  $$ = new Ast::ArgListExprs( true );
-  $$->orderedExprs_->push_back( new Ast::DynamicVariable( @1, 0, true ) );  // true means warm access
+  $$->orderedStates_->push_back( new Ast::DynamicState( @1, $1 ) );
 }
 | T_identifier ':' Expr
 {
   $$ = new Ast::ArgListExprs( true );
   (*$$->namedExprs_)[ $1 ] = $3;
 }
-| T_identifier ':' '(' T_identifier T_llthan ')'
+| T_state_identifier ':' T_state_identifier
 {
   $$ = new Ast::ArgListExprs( true );
-  (*$$->namedExprs_)[ $1 ] = new Ast::LexiographicVariable( @4, $4, new Kernel::Environment::LexicalKey * ( 0 ), true );   // true means warm access
+  (*$$->namedStates_)[ $1 ] = new Ast::LexiographicState( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| T_identifier ':' '(' T_dynamic_identifier T_llthan ')'
+| T_state_identifier ':' T_dynamic_state_identifier
 {
   $$ = new Ast::ArgListExprs( true );
-  (*$$->namedExprs_)[ $1 ] = new Ast::DynamicVariable( @4, $4, true );   // true means warm access
-}
-| T_identifier ':' T_at_llthan
-{
-  $$ = new Ast::ArgListExprs( true );
-  (*$$->namedExprs_)[ $1 ] = new Ast::DynamicVariable( @3, 0, true );   // true means warm access
+  (*$$->namedStates_)[ $1 ] = new Ast::DynamicState( @3, $3 );
 }
 | OneOrMoreArgListItems Expr
 {
@@ -339,32 +329,23 @@ OneOrMoreArgListItems
     }
   $$->orderedExprs_->push_back( $2 );
 }
-| OneOrMoreArgListItems '(' T_identifier T_llthan ')'
+| OneOrMoreArgListItems T_state_identifier
 {
   $$ = $1;
-  if( $$->namedExprs_->size( ) != 0 )
+  if( $$->namedStates_->size( ) != 0 )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) );
+      throw Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) );
     }
-  $$->orderedExprs_->push_back( new Ast::LexiographicVariable( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ), true ) );  // true means warm access
+  $$->orderedStates_->push_back( new Ast::LexiographicState( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ) ) );
 }
-| OneOrMoreArgListItems '(' T_dynamic_identifier T_llthan ')'
+| OneOrMoreArgListItems T_dynamic_state_identifier
 {
   $$ = $1;
-  if( $$->namedExprs_->size( ) != 0 )
+  if( $$->namedStates_->size( ) != 0 )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) );
+      throw Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) );
     }
-  $$->orderedExprs_->push_back( new Ast::DynamicVariable( @3, $3, true ) );  // true means warm access
-}
-| OneOrMoreArgListItems T_at_llthan
-{
-  $$ = $1;
-  if( $$->namedExprs_->size( ) != 0 )
-    {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) );
-    }
-  $$->orderedExprs_->push_back( new Ast::DynamicVariable( @2, 0, true ) );  // true means warm access
+  $$->orderedStates_->push_back( new Ast::DynamicState( @2, $2 ) );
 }
 | OneOrMoreArgListItems T_identifier ':' Expr
 {
@@ -375,32 +356,23 @@ OneOrMoreArgListItems
     }
   (*$$->namedExprs_)[ $2 ] = $4;
 }
-| OneOrMoreArgListItems T_identifier ':' '(' T_identifier T_llthan ')'
+| OneOrMoreArgListItems T_state_identifier ':' T_state_identifier
 {
   $$ = $1;
-  if( $$->namedExprs_->find( $2 ) != $$->namedExprs_->end( ) )
+  if( $$->namedStates_->find( $2 ) != $$->namedStates_->end( ) )
     {
       throw Exceptions::RepeatedFormal( @2, $2 );
     }
-  (*$$->namedExprs_)[ $2 ] = new Ast::LexiographicVariable( @5, $5, new Kernel::Environment::LexicalKey * ( 0 ), true );   // true means warm access
+  (*$$->namedStates_)[ $2 ] = new Ast::LexiographicState( @4, $4, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| OneOrMoreArgListItems T_identifier ':' '(' T_dynamic_identifier T_llthan ')'
+| OneOrMoreArgListItems T_state_identifier ':' T_dynamic_state_identifier
 {
   $$ = $1;
-  if( $$->namedExprs_->find( $2 ) != $$->namedExprs_->end( ) )
+  if( $$->namedStates_->find( $2 ) != $$->namedStates_->end( ) )
     {
       throw Exceptions::RepeatedFormal( @2, $2 );
     }
-  (*$$->namedExprs_)[ $2 ] = new Ast::DynamicVariable( @5, $5, true );   // true means warm access
-}
-| OneOrMoreArgListItems T_identifier ':' T_at_llthan
-{
-  $$ = $1;
-  if( $$->namedExprs_->find( $2 ) != $$->namedExprs_->end( ) )
-    {
-      throw Exceptions::RepeatedFormal( @2, $2 );
-    }
-  (*$$->namedExprs_)[ $2 ] = new Ast::DynamicVariable( @4, 0, true );   // true means warm access
+  (*$$->namedStates_)[ $2 ] = new Ast::DynamicState( @4, $4 );
 }
 ;
 
@@ -915,29 +887,15 @@ DynamicBinding
 {
   $$ = new Ast::DynamicBindingExpression( @$, $1, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| T_dynamic_identifier ':' '(' T_identifier T_llthan ')'  %prec T_dynamiccolon
+| T_dynamic_state_identifier ':' T_state_identifier  %prec T_dynamiccolon
 {
-  $$ = new Ast::DynamicBindWarmLexiographicExpr( @$, @1, $1, @4, $4 );
+  $$ = new Ast::DynamicStateBindingExpression( @$, @1, $1,
+					       new Ast::LexiographicState( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ) ) );
 }
-| T_at_llthan ':' '(' T_identifier T_llthan ')'  %prec T_dynamiccolon
+| T_dynamic_state_identifier ':' T_dynamic_state_identifier  %prec T_dynamiccolon
 {
-  $$ = new Ast::DynamicBindWarmLexiographicExpr( @$, @1, $1, @4, $4 );
-}
-| T_at_llthan ':' T_identifier  %prec T_dynamiccolon
-{
-  $$ = new Ast::DynamicBindWarmLexiographicExpr( @$, @1, $1, @3, $3 );
-}
-| T_dynamic_identifier ':' '(' T_dynamic_identifier T_llthan ')'  %prec T_dynamiccolon
-{
-  $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @4, $4 );
-}
-| T_at_llthan ':' '(' T_dynamic_identifier T_llthan ')'  %prec T_dynamiccolon
-{
-  $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @4, $4 );
-}
-| T_at_llthan ':' T_dynamic_identifier  %prec T_dynamiccolon
-{
-  $$ = new Ast::DynamicBindWarmDynamicExpr( @$, @1, $1, @3, $3 );
+  $$ = new Ast::DynamicStateBindingExpression( @$, @1, $1,
+					       new Ast::DynamicState( @3, $3 ) );
 }
 ;
 

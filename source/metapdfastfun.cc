@@ -6,6 +6,7 @@
 #include "consts.h"
 #include "globals.h"
 #include "continuations.h"
+#include "metapdfastvar.h"
 
 #include <sstream>
 
@@ -64,7 +65,7 @@ Kernel::Formals::newEvaluatedFormals( Kernel::Arguments & args, size_t * pos ) c
       if( *i != 0 )
 	{
 	  res->defaults_.push_back( args.getHandle( *pos ) );
-	  res->locations_.push_back( args.getExpr( *pos ) );
+	  res->locations_.push_back( args.getNode( *pos ) );
 	  ++(*pos);
 	}
       else
@@ -183,7 +184,7 @@ Ast::ArgListExprs::ConstIterator::ConstIterator( const Ast::ArgListExprs::ConstI
 
 Ast::ArgListExprs::ArgListExprs( bool exprOwner )
   : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ),
-    orderedStates_( new std::list< Ast::LexiographicState * > ), namedStates_( new std::map< const char *, Ast::LexiographicState *, charPtrLess > )
+    orderedStates_( new std::list< Ast::StateReference * > ), namedStates_( new std::map< const char *, Ast::StateReference *, charPtrLess > )
 {
   //  if( exprOwner_ )
   //    {
@@ -191,7 +192,7 @@ Ast::ArgListExprs::ArgListExprs( bool exprOwner )
   //    }
 }
 
-Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::LexiographicState * > * orderedStates, std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates )
+Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates )
   : exprOwner_( true ), orderedExprs_( orderedExprs ), namedExprs_( namedExprs ), orderedStates_( orderedStates ), namedStates_( namedStates )
 { }
 
@@ -225,7 +226,7 @@ Ast::ArgListExprs::~ArgListExprs( )
   {
     if( exprOwner_ )
       {
-	typedef list< const char * >::iterator I;
+	typedef std::list< Ast::StateReference * >::iterator I;
 	for( I i = orderedStates_->begin( ); i != orderedStates_->end( ); ++i )
 	  {
 	    delete *i;
@@ -237,7 +238,7 @@ Ast::ArgListExprs::~ArgListExprs( )
   {
     if( exprOwner_ )
       {
-	typedef std::map< const char *, const char *, charPtrLess >::const_iterator I;
+	typedef std::map< const char *, Ast::StateReference *, charPtrLess >::const_iterator I;
 	for( I i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
 	  {
 	    delete i->first;
@@ -249,7 +250,7 @@ Ast::ArgListExprs::~ArgListExprs( )
 }
 
 Ast::ArgListExprs::ArgListExprs( size_t numberOfOrderedDummyExprs )
-  : exprOwner_( true ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new std::list< const char * > ), namedStates_( new std::map< const char *, const char *, charPtrLess > )
+  : exprOwner_( true ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new typeof *orderedStates_ ), namedStates_( new typeof *namedStates_ )
 {
   for( size_t i = 0; i < numberOfOrderedDummyExprs; ++i )
     {
@@ -338,7 +339,7 @@ Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & i
 }
 
 void
-Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env ) const
+Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const
 {
   typedef const Lang::SingleListPair ConsType;
 
@@ -386,22 +387,22 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
   {
     Ast::SourceLocation dummy;
-    typedef std::map< const char *, Ast::LexiographicState *, charPtrLess >::const_iterator I;
+    typedef std::map< const char *, Ast::StateReference *, charPtrLess >::const_iterator I;
     I i = namedStates_->begin( );
     I end = namedStates_->end( );
     for( ; i != end; ++i )
       {
-	dst->addNamedState( i->first, i->second->getHandle( env ) , i->second );
+	dst->addNamedState( i->first, i->second->getHandle( env, dyn ) , i->second );
       }
   }
 
   {
-    typedef list< Ast::LexiographicState * >::const_iterator I;
+    typedef list< Ast::StateReference * >::const_iterator I;
     I i = orderedStates_->begin( );
     I end = orderedStates_->end( );
     for( ; i != end; ++i )
       {
-	dst->addOrderedState( i->getHandle( env ), *i );
+	dst->addOrderedState( (*i)->getHandle( env, dyn ), *i );
       }
   }
 
@@ -488,7 +489,7 @@ Kernel::CallCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsU
   RefCountPtr< ArgType > vals = Helpers::down_cast< ArgType >( valsUntyped, "< Internal error situation in CallCont_last >" );
   
   Kernel::Arguments args = fun_->newCurriedArguments( );
-  argList_->bind( & args, vals, env_ );
+  argList_->bind( & args, vals, env_, dyn_ );
 
   if( curry_ )
     {
@@ -613,17 +614,17 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
     RefCountPtr< ArgType > fun = funUntyped.down_cast< const Lang::Function >( );
     if( fun != NullPtr< ArgType >( ) )
       {
-	if( procedural_ != fun->procedural( ) )
+	if( procedural_ != fun->isProcedural( ) )
 	  {
 	    if( procedural_ )
 	      {
-		throw Exceptions::OutOfRange( traceLoc, "Expected procedure." );
+		throw Exceptions::OutOfRange( traceLoc_, "Expected procedure." );
 	      }
-	    throw Exceptions::OutOfRange( traceLoc, "Expected function." );
+	    throw Exceptions::OutOfRange( traceLoc_, "Expected function." );
 	  }
 	evalState->env_ = env_;
 	evalState->dyn_ = dyn_;
-	evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, dyn_, cont_, callLoc_ ) );
+	evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, env_, dyn_, cont_, callLoc_ ) );
 	argList_->evaluate( fun->newCallContInfo( argList_, *evalState ),
 			    argList_->begin( ), Lang::THE_CONS_NULL,
 			    evalState );
@@ -806,7 +807,7 @@ Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
 	{
 	  throw Exceptions::InternalError( "Function calling syntax should not be procedural." );
 	}
-      evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( constFun_, argList_, curry_, evalState->dyn_, evalState->cont_, loc_ ) );
+      evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( constFun_, argList_, curry_, evalState->env_, evalState->dyn_, evalState->cont_, loc_ ) );
       argList_->evaluate( constFun_->newCallContInfo( argList_, *evalState ),
 			  argList_->begin( ), Lang::THE_CONS_NULL,
 			  evalState );
@@ -841,8 +842,6 @@ Kernel::UnionCont_last::backTrace( std::list< Kernel::Continuation::BackTraceEle
 void
 Kernel::UnionCont_last::gcMark( Kernel::GCMarkedSet & marked )
 {
-  const_cast< Lang::Function * >( fun_.getPtr( ) )->gcMark( marked );
-  dyn_->gcMark( marked );
   cont_->gcMark( marked );
 }
 
@@ -860,9 +859,9 @@ Ast::UnionExpr::~UnionExpr( )
 void
 Ast::UnionExpr::eval( Kernel::EvalState * evalState ) const
 {
-  evalState->cont_ = Kernel::ContRef( new Kernel::UnionCont_last( constFun_, argList_, curry_, evalState->dyn_, evalState->cont_, loc_ ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::UnionCont_last( argList_, evalState->cont_, loc_ ) );
   
-  argList_->evaluate( RefCountPtr< Kernel::CallContInfo >( new Kernel::CallContInfo( argList_, evalState, false ) ),
+  argList_->evaluate( RefCountPtr< Kernel::CallContInfo >( new Kernel::CallContInfo( argList_, *evalState, false ) ),
 		      argList_->begin( ), Lang::THE_CONS_NULL,
 		      evalState );
 }
@@ -879,10 +878,10 @@ void
 Kernel::SplitCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyped, Kernel::EvalState * evalState, bool dummy ) const
 {
   typedef const Lang::Function ArgType;
-  RefCountPtr< ArgType > fun = Helpers::down_cast< ArgType >( valsUntyped, "Split's function" );
+  RefCountPtr< ArgType > fun = Helpers::down_cast< ArgType >( funUntyped, "Split's function" );
   evalState->env_ = env_;
   evalState->dyn_ = dyn_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_2( fun, curry_, dyn_, cont_, callLoc_ ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_2( fun, curry_, env_, dyn_, cont_, callLoc_ ) );
   evalState->expr_ = argList_;
 }
 
@@ -915,7 +914,7 @@ Kernel::SplitCont_2::takeValue( const RefCountPtr< const Lang::Value > & valsUnt
   RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( valsUntyped, "Split" );
 
   Kernel::Arguments args = fun_->newCurriedArguments( );
-  structure->argList_->bind( & args, structure->values_, env_ );
+  structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 
   if( curry_ )
     {

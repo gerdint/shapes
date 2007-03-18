@@ -126,7 +126,6 @@ namespace MetaPDF
 
   class Core_stroke : public Lang::CoreFunction
   {
-    Kernel::EvaluatedFormals * arrowHeadReceiverFormals_;  // the reason that this is not const is only to allow convenient setup
   public:
     Core_stroke( const char * title );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;

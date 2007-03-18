@@ -769,10 +769,9 @@ main( int argc, char ** argv )
       performIterativeStartup( texJobName );
       Kernel::theTeXLabelManager.settexJobName( texJobName );
       Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
-      Kernel::WarmGroup2D * defaultDestination = new Kernel::WarmGroup2D;                    // Not to be deleted here!
       RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
       Kernel::GraphicsState initState( *graphicsState );
-      Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( defaultDestination, graphicsState ) );
+      Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );
 
       bool done = false;
       Kernel::EvalState evalState( Ast::theProgram,
@@ -811,7 +810,7 @@ main( int argc, char ** argv )
 	  abortProcedure( & oFile, outputName );
 	}
 
-      RefCountPtr< const Lang::Group2D > finalPicture = defaultDestination->getPile( );
+      RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( baseEnv->getStateHandle( baseEnv->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
 
       // Forcing to synch is a bad thing, due to PDF version differences.  Instead, refer to the PDF documentation
       // on the graphics state dictionary (page 180 in the PDF-1.6 reference) to find out the correct default values,

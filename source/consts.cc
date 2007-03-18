@@ -12,6 +12,7 @@ RefCountPtr< const char > Interaction::PROTECTED_SCOPE_NAME = strrefdup( "protec
 RefCountPtr< const char > Lang::ARCDELTA_ID = strrefdup( "arcdelta" );
 RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "TeX" );
 
+const char * Lang::CANVAS_ID = "page";
 const char * Lang::SELF_ID = "self";
 const char * Kernel::SEQUENTIAL_EXPR_VAR_ID = ".seqvar"; /* Note that the leading dot puts this variable aside all user-variables. */
 

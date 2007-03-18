@@ -40,11 +40,11 @@ namespace MetaPDF
     {
       const Kernel::EvaluatedFormals * formals_;
       Environment::ValueVector variables_;
-      std::vector< const Ast::Expression * > locations_;
+      std::vector< const Ast::Node * > locations_;
       size_t dst_;
 
       Environment::StateVector states_;   // This type must match that used in Environment
-      std::vector< const Ast::Expression * > stateLocations_;
+      std::vector< const Ast::Node * > stateLocations_;
       size_t stateDst_;
       
     public:
@@ -53,18 +53,18 @@ namespace MetaPDF
       
       Kernel::Arguments clone( ) const;
       
-      void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc );
-      void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc );
+      void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Node * loc );
+      void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Node * loc );
 
-      void addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc );
-      void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Expression * loc );
+      void addOrderedState( const Kernel::StateHandle & state, Ast::Node * loc );
+      void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Node * loc );
       
       void applyDefaults( );
       
       Kernel::VariableHandle & getHandle( size_t i );
       RefCountPtr< const Lang::Value > & getValue( size_t i );
       const Ast::SourceLocation & getLoc( size_t i ) const;
-      const Ast::Expression * getExpr( size_t i ) const;
+      const Ast::Node * getNode( size_t i ) const;
       Kernel::Thunk * getThunk( size_t i );                        //  This funciton returns a newly created copy!
       bool isSlot( size_t i ) const;
       
@@ -83,15 +83,15 @@ namespace MetaPDF
     public:
       Kernel::Formals * formals_;                     /* it would have been const if it was not for appendEvaluatedFormal */
       std::vector< Kernel::VariableHandle > defaults_;
-      std::vector< const Ast::Expression * > locations_;
+      std::vector< const Ast::Node * > locations_;
       
       EvaluatedFormals( Kernel::Formals * _formals );
       EvaluatedFormals( const char * _locationString );
       EvaluatedFormals( const char * _locationString, bool _forceAll );
       ~EvaluatedFormals( );
       
-      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc, bool force );
-      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc );
+      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc, bool force );
+      void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc );
       void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal, bool force );
       void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal );
       

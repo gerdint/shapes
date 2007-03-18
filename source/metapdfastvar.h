@@ -106,9 +106,8 @@ namespace MetaPDF
     {
       const char * id_;
       mutable Kernel::Environment::LexicalKey ** idKey_;
-      bool warm_;  // this is used when passing a warm variable in a funciton call
     public:
-      LexiographicVariable( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey, bool warm = false );
+      LexiographicVariable( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~LexiographicVariable( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
@@ -143,15 +142,33 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class LexiographicState : public Node
+    class StateReference : public Node
+    {
+    public:
+      StateReference( const Ast::SourceLocation & loc );
+      virtual ~StateReference( );
+      virtual void eval( Kernel::EvalState * evalState ) const;  // illegal to call
+      virtual Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const = 0;
+    };
+
+    class LexiographicState : public StateReference
     {
       const char * id_;
       mutable Kernel::Environment::LexicalKey ** idKey_;
     public:
       LexiographicState( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~LexiographicState( );
-      virtual void eval( Kernel::EvalState * evalState ) const;  // illegal to call
-      Kernel::StateHandle getHandle( Kernel::PassedEnv env ) const;
+      Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
+    };
+    
+    class DynamicState : public Ast::StateReference
+    {
+      const char * id_;
+      mutable Kernel::Environment::LexicalKey ** idKey_;
+    public:
+      DynamicState( const Ast::SourceLocation & loc, const char * id );
+      virtual ~DynamicState( );
+      Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
     };
     
     class IntroduceState : public BindNode
@@ -186,6 +203,7 @@ namespace MetaPDF
     
     class Freeze : public Expression
     {
+      const char * id_;
       mutable size_t ** idPos_;
     public:
       Freeze( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos );
@@ -195,6 +213,7 @@ namespace MetaPDF
     
     class Peek : public Expression
     {
+      const char * id_;
       mutable Kernel::Environment::LexicalKey ** idKey_;
     public:
       Peek( const Ast::SourceLocation & idLoc, const char * id, Kernel::Environment::LexicalKey ** idKey );
@@ -245,10 +264,9 @@ namespace MetaPDF
     {
       Ast::SourceLocation loc_;
       const char * id_;
-      bool warm_;
       mutable Kernel::Environment::LexicalKey ** idKey_;
     public:
-      DynamicVariable( const Ast::SourceLocation & loc, const char * id, bool warm = false );
+      DynamicVariable( const Ast::SourceLocation & loc, const char * id );
       virtual ~DynamicVariable( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
@@ -265,37 +283,16 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    /* Note that it makes little sense to bind a dynamic variable to a fresh warm variable, since there is no way the value
-     * of that variable can be retrieved.  Neither would it be possible to freeze it.
-     */
-    
-    class DynamicBindWarmLexiographicExpr : public Ast::Expression
+    class DynamicStateBindingExpression : public Ast::Expression
     {
       Ast::SourceLocation loc_;
       Ast::SourceLocation dstLoc_;
       const char * dstId_;
       mutable Kernel::Environment::LexicalKey ** dstIdKey_;
-      Ast::SourceLocation srcLoc_;
-      const char * srcId_;
-      mutable Kernel::Environment::LexicalKey ** srcIdKey_;
+      Ast::StateReference * src_;
     public:
-      DynamicBindWarmLexiographicExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & dstLoc, const char * dstId, const Ast::SourceLocation & srcLoc, const char * srcId );
-      virtual ~DynamicBindWarmLexiographicExpr( );
-      virtual void eval( Kernel::EvalState * evalState ) const;
-    };
-    
-    class DynamicBindWarmDynamicExpr : public Ast::Expression
-    {
-      Ast::SourceLocation loc_;
-      Ast::SourceLocation dstLoc_;
-      const char * dstId_;
-      mutable Kernel::Environment::LexicalKey ** dstIdKey_;
-      Ast::SourceLocation srcLoc_;
-      const char * srcId_;
-      mutable Kernel::Environment::LexicalKey ** srcIdKey_;
-    public:
-      DynamicBindWarmDynamicExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & dstLoc, const char * dstId, const Ast::SourceLocation & srcLoc, const char * srcId );
-      virtual ~DynamicBindWarmDynamicExpr( );
+      DynamicStateBindingExpression( const Ast::SourceLocation & loc, const Ast::SourceLocation & dstLoc, const char * dstId, Ast::StateReference * src );
+      virtual ~DynamicStateBindingExpression( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     

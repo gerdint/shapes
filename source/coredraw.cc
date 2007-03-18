@@ -35,16 +35,12 @@ namespace MetaPDF
 }
 
 Lang::Core_stroke::Core_stroke( const char * title )
-  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) ),
-    arrowHeadReceiverFormals_( new Kernel::EvaluatedFormals( "< Arrowhead receiver >", true ) )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 {
   formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "head", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
   formals_->appendEvaluatedCoreFormal( "tail", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
-
-  arrowHeadReceiverFormals_->appendEvaluatedCoreFormal( "picture", Kernel::THE_SLOT_VARIABLE );
-  arrowHeadReceiverFormals_->appendEvaluatedCoreFormal( "cut", Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( 0 ) ) ) ) );
-  }
+}
 
 void
 Lang::Core_stroke::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -128,252 +124,293 @@ namespace MetaPDF
 {
   namespace Kernel
   {
-  class Stroke2DCont_tail : public Kernel::ForcedStructureContinuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::ContRef cont;
-  public:
-    Stroke2DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-		       Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::ForcedStructureContinuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), cont( _cont )
-    { }
-    virtual ~Stroke2DCont_tail( ) { }
-    virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState, bool dummy ) const
+    class ArrowheadReceiverFormals2D : public Kernel::EvaluatedFormals
     {
-      /* Argument 0: picture
-       * Argument 1: cut
-       */
-      Kernel::Arguments args( arrowHeadReceiverFormals_ );
-      structure->argList_->bind( & args, structure->values_, env_ );
-      args.applyDefaults( );
+    public:
+      ArrowheadReceiverFormals2D( )
+	: Kernel::EvaluatedFormals( "< Arrowhead receiver >", true )
+      {
+	appendEvaluatedCoreFormal( "picture", Kernel::THE_SLOT_VARIABLE );
+	appendEvaluatedCoreFormal( "cut", Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( 0 ) ) ) ) );
+      }
+    };
 
-      typedef const Lang::Drawable2D ArgType0;
-      RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( "Stroke's arrow tail receiver", args, 0, traceLoc_ );
-
-      typedef const Lang::Length ArgType1;
-      RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( "Stroke's arrow tail receiver", args, 1, traceLoc_ );
-
-      if( cutTail->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
-	}
-      else if( cutTail->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newSolidTransparencyGroup( picture,
-							       RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, path, "S" ) ) ),
-			   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1 = path->arcTime( cutTail->get( ) );
-	  Concrete::SplineTime t2( HUGE_VAL );
-	  RefCountPtr< const Lang::ElementaryPath2D > subpath = path->subpath( t1, t2 );
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newSolidTransparencyGroup( picture,
-								   RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, subpath, "S" ) ) ),
+    ArrowheadReceiverFormals2D theArrowheadReceiverFormals2D;
+    
+    class Stroke2DCont_tail : public Kernel::ForcedStructureContinuation
+    {
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath2D > path_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke2DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & path,
+			 const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke2DCont_tail( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals2D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable2D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
+	
+	if( cutTail->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
+	  }
+	else if( cutTail->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								  RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1 = path_->arcTime( cutTail->get( ) );
+	    Concrete::SplineTime t2( HUGE_VAL );
+	    RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								      RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, subpath, "S" ) ) ),
 			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( picture,
-			       evalState );
-	    }
-	  
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's tail" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      tailKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+	      }
+	    else
+	      {
+		cont_->takeValue( picture,
+				  evalState );
+	      }
+	    
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's tail" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	cont_->gcMark( marked );
+      }
+    };
 
-  class Stroke2DCont_head : public Kernel::ForcedStructureContinuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::VariableHandle headKeepAlive;
-    Kernel::WarmGroup2D * headWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke2DCont_head( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-		       Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
-    { }
-    virtual ~Stroke2DCont_head( ) { }
-    virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+    class Stroke2DCont_head : public Kernel::ForcedStructureContinuation
     {
-      RefCountPtr< const Lang::Length > cutHead = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow head >" );
-      if( cutHead->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow head was negative." ) );
-	}
-      else if( cutHead->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newSolidTransparencyGroup( headWarm->getPile( ),
-							       RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, path, "S" ) ) ),
-			   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1( 0 );
-	  Concrete::SplineTime t2 = path->arcTime( path->arcLength( ) - cutHead->get( ) );
-	  RefCountPtr< const Lang::ElementaryPath2D > subpath = path->subpath( t1, t2 );
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newSolidTransparencyGroup( headWarm->getPile( ),
-								   RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, subpath, "S" ) ) ),
-			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( headWarm->getPile( ),
-			       evalState );
-	    }
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      headKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath2D > path_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke2DCont_head( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & path,
+			 const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke2DCont_head( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals2D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable2D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
-  class Stroke2DCont_both2 : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath2D > path;
-    RefCountPtr< const Lang::Drawable2D > tail;
-    Lang::Length cutTail;
-    Kernel::VariableHandle headKeepAlive;
-    Kernel::WarmGroup2D * headWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke2DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-			const RefCountPtr< const Lang::Drawable2D > & _tail, Lang::Length _cutTail,
-			Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup2D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tail( _tail ), cutTail( _cutTail ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
-    { }
-    virtual ~Stroke2DCont_both2( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
-    {
-      RefCountPtr< const Lang::Length > cutHead = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow head >" );
-      if( cutHead->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow head was negative." ) );
-	}
+	if( cutHead->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow head cut length was negative." ) );
+	  }
+	else if( cutHead->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								  RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1( 0 );
+	    Concrete::SplineTime t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
+	    RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								      RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, subpath, "S" ) ) ),
+				  evalState );
+	      }
+	    else
+	      {
+		cont_->takeValue( picture,
+				  evalState );
+	      }
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	cont_->gcMark( marked );
+      }
+    };
 
-      if( cutTail.get( ) == 0 && cutHead->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newSolidTransparencyGroup( headWarm->getPile( ),
-							       tail,
-							       RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, path, "S" ) ) ),
-			   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1( 0 );
-	  if( cutTail.get( ) > 0 )
-	    {
-	      t1 = path->arcTime( cutTail.get( ) );
-	    }
-
-	  Concrete::SplineTime t2( HUGE_VAL );
-	  if( cutHead->get( ) > 0 )
-	    {
-	      t2 = path->arcTime( path->arcLength( ) - cutHead->get( ) );
-	    }
-
-	  RefCountPtr< const Lang::ElementaryPath2D > subpath = path->subpath( t1, t2 );
-
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newSolidTransparencyGroup( headWarm->getPile( ),
-								   tail,
-								   RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState, subpath, "S" ) ) ),
-			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( Helpers::newSolidTransparencyGroup( headWarm->getPile( ),
-								   tail ),
-			       evalState );
-	    }
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    class Stroke2DCont_both2 : public Kernel::ForcedStructureContinuation
     {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head & tail, second" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      const_cast< Lang::Drawable2D * >( tail.getPtr( ) )->gcMark( marked );
-      headKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath2D > path_;
+      RefCountPtr< const Lang::Drawable2D > tail_;
+      Lang::Length cutTail_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke2DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & path,
+			  const RefCountPtr< const Lang::Drawable2D > & tail, Lang::Length cutTail,
+			  const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow head receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), tail_( tail ), cutTail_( cutTail ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke2DCont_both2( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals2D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable2D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
-  class Stroke2DCont_both1 : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath2D > path;
-    Kernel::VariableHandle pathHandle;
-    RefCountPtr< const Lang::Function > headFunction;
-    Kernel::PassedDyn dyn;
-    Kernel::VariableHandle tailKeepAlive;
-    Kernel::WarmGroup2D * tailWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke2DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & _path,
-			const Kernel::VariableHandle & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
-			Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup2D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), pathHandle( _pathHandle ), headFunction( _headFunction ), dyn( _dyn ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
-    { }
-    virtual ~Stroke2DCont_both1( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
-    {
-      RefCountPtr< const Lang::Length > cutTail = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow tail >" );
-      if( cutTail->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow tail was negative." ) );
-	}
-      
-      Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both2( graphicsState, path, tailWarm->getPile( ), *cutTail, dst, warm, cont, traceLoc_ ) );
-      Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-      sysVars->defaultDestination_ = dst;
-      evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
-      headFunction->call( evalState, path->reverse( ), traceLoc_ );
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head & tail, first" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      pathHandle->gcMark( marked );
-      const_cast< Lang::Function * >( headFunction.getPtr( ) )->gcMark( marked );
-      dyn->gcMark( marked );
-      tailKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+	if( cutHead->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Aarrow head cut length was negative." ) );
+	  }
+	
+	if( cutTail_.get( ) == 0 && cutHead->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								  tail_,
+								  RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1( 0 );
+	    if( cutTail_.get( ) > 0 )
+	      {
+		t1 = path_->arcTime( cutTail_.get( ) );
+	      }
+	    
+	    Concrete::SplineTime t2( HUGE_VAL );
+	    if( cutHead->get( ) > 0 )
+	      {
+		t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
+	      }
+	    
+	    RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
+	    
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								      tail_,
+								      RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, subpath, "S" ) ) ),
+				  evalState );
+	      }
+	    else
+	      {
+		cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
+								      tail_ ),
+				  evalState );
+	      }
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head & tail, second" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	const_cast< Lang::Drawable2D * >( tail_.getPtr( ) )->gcMark( marked );
+	cont_->gcMark( marked );
+      }
+    };
 
+    class Stroke2DCont_both1 : public Kernel::ForcedStructureContinuation
+    {
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath2D > path_;
+      RefCountPtr< const Lang::Function > headFunction_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke2DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath2D > & path,
+			  const RefCountPtr< const Lang::Function > & headFunction,
+			  const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), headFunction_( headFunction ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke2DCont_both1( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals2D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable2D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
+	
+	if( cutTail->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
+	  }
+	
+	evalState->env_ = env_;
+	evalState->dyn_ = dyn_;
+	evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both2( graphicsState_, path_, picture, *cutTail, env_, dyn_, cont_, traceLoc_ ) );
+	headFunction_->call( evalState, path_->reverse( ), traceLoc_ );
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "2D stroke's head & tail, first" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	const_cast< Lang::Function * >( headFunction_.getPtr( ) )->gcMark( marked );
+	dyn_->gcMark( marked );
+	cont_->gcMark( marked );
+      }
+    };
+    
   }
 }
 
@@ -402,12 +439,7 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 	{
 	  /* There's only an arrow at the head.
 	   */
-	  Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_head( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
-	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-	  sysVars->defaultDestination_ = dst;
-	  evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_head( evalState->dyn_->getGraphicsState( ), path, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
 	  arrowHead->call( evalState, path->reverse( ), callLoc );
 	  return;
 	}
@@ -416,22 +448,12 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 	{
 	  /* There's only an arrow at the tail.
 	   */
-	  Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_tail( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
-	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-	  sysVars->defaultDestination_ = dst;
-	  evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_tail( evalState->dyn_->getGraphicsState( ), path, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
 	  arrowHead->call( arrowTail, evalState, args.getHandle( 0 ), callLoc );
 	  return;
 	}
 
-      Kernel::WarmGroup2D * warm = new Kernel::WarmGroup2D( );
-      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both1( evalState->dyn_->getGraphicsState( ), path, args.getHandle( 0 ), arrowHead, evalState->dyn_, dst, warm, evalState->cont_, callLoc ) );
-      Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-      sysVars->defaultDestination_ = dst;
-      evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both1( evalState->dyn_->getGraphicsState( ), path, arrowHead, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
       arrowTail->call( arrowTail, evalState, args.getHandle( 0 ), callLoc );
       return;
     }
@@ -442,254 +464,302 @@ namespace MetaPDF
 {
   namespace Kernel
   {
-
-  class Stroke3DCont_tail : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::VariableHandle tailKeepAlive;
-    Kernel::WarmGroup3D * tailWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke3DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-		       Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
-    { }
-    virtual ~Stroke3DCont_tail( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+    class ArrowheadReceiverFormals3D : public Kernel::EvaluatedFormals
     {
-      RefCountPtr< const Lang::Length > cutTail = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow tail >" );
-      if( cutTail->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow tail was negative." ) );
-	}
-      else if( cutTail->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						tailWarm->getPile( ),
-						RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, path, "S" ) ) ),
-			   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1 = path->arcTime( cutTail->get( ) );
-	  Concrete::SplineTime t2( HUGE_VAL );
-	  RefCountPtr< const Lang::ElementaryPath3D > subpath = path->subpath( t1, t2 );
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						    tailWarm->getPile( ),
-						    RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, subpath, "S" ) ) ),
+    public:
+      ArrowheadReceiverFormals3D( )
+	: Kernel::EvaluatedFormals( "< Arrowhead receiver >", true )
+      {
+	appendEvaluatedCoreFormal( "picture", Kernel::THE_SLOT_VARIABLE );
+	appendEvaluatedCoreFormal( "cut", Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Length( 0 ) ) ) ) );
+      }
+    };
+
+    ArrowheadReceiverFormals3D theArrowheadReceiverFormals3D;
+    
+    class Stroke3DCont_tail : public Kernel::ForcedStructureContinuation
+    {
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath3D > path_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke3DCont_tail( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & path,
+			 const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke3DCont_tail( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals3D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable3D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
+	
+	if( cutTail->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
+	  }
+	else if( cutTail->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						   picture,
+						   RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1 = path_->arcTime( cutTail->get( ) );
+	    Concrete::SplineTime t2( HUGE_VAL );
+	    RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						       picture,
+						       RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, subpath, "S" ) ) ),
 			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( tailWarm->getPile( ),
-			       evalState );
-	    }
-	  
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's tail" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      tailKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+	      }
+	    else
+	      {
+		cont_->takeValue( picture,
+				  evalState );
+	      }
+	    
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's tail" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	cont_->gcMark( marked );
+      }
+    };
 
-  class Stroke3DCont_head : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::VariableHandle headKeepAlive;
-    Kernel::WarmGroup3D * headWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke3DCont_head( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-		       Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
-    { }
-    virtual ~Stroke3DCont_head( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+    class Stroke3DCont_head : public Kernel::ForcedStructureContinuation
     {
-      RefCountPtr< const Lang::Length > cutHead = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow head >" );
-      if( cutHead->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow head was negative." ) );
-	}
-      else if( cutHead->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						headWarm->getPile( ),
-						RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, path, "S" ) ) ),
-		   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1( 0 );
-	  Concrete::SplineTime t2 = path->arcTime( path->arcLength( ) - cutHead->get( ) );
-	  RefCountPtr< const Lang::ElementaryPath3D > subpath = path->subpath( t1, t2 );
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						    headWarm->getPile( ),
-						    RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, subpath, "S" ) ) ),
-			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( headWarm->getPile( ),
-			       evalState );
-	    }
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      headKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath3D > path_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke3DCont_head( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & path,
+			 const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke3DCont_head( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals3D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable3D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
-  class Stroke3DCont_both2 : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath3D > path;
-    RefCountPtr< const Lang::Drawable3D > tail;
-    Lang::Length cutTail;
-    Kernel::VariableHandle headKeepAlive;
-    Kernel::WarmGroup3D * headWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke3DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-			const RefCountPtr< const Lang::Drawable3D > & _tail, Lang::Length _cutTail,
-			Kernel::VariableHandle _headKeepAlive, Kernel::WarmGroup3D * _headWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), tail( _tail ), cutTail( _cutTail ), headKeepAlive( _headKeepAlive ), headWarm( _headWarm ), cont( _cont )
-    { }
-    virtual ~Stroke3DCont_both2( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
-    {
-      RefCountPtr< const Lang::Length > cutHead = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow head >" );
-      if( cutHead->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow head was negative." ) );
-	}
+	if( cutHead->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow head cut length was negative." ) );
+	  }
+	else if( cutHead->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						   picture,
+						   RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1( 0 );
+	    Concrete::SplineTime t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
+	    RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						       picture,
+						       RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, subpath, "S" ) ) ),
+				  evalState );
+	      }
+	    else
+	      {
+		cont_->takeValue( picture,
+				  evalState );
+	      }
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	cont_->gcMark( marked );
+      }
+    };
 
-      if( cutTail.get( ) == 0 && cutHead->get( ) == 0 )
-	{
-	  cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						headWarm->getPile( ),
-						tail,
-						RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, path, "S" ) ) ),
-			   evalState );
-	}
-      else
-	{
-	  Concrete::SplineTime t1( 0 );
-	  if( cutTail.get( ) > 0 )
-	    {
-	      t1 = path->arcTime( cutTail.get( ) );
-	    }
-
-	  Concrete::SplineTime t2( HUGE_VAL );
-	  if( cutHead->get( ) > 0 )
-	    {
-	      t2 = path->arcTime( path->arcLength( ) - cutHead->get( ) );
-	    }
-
-	  RefCountPtr< const Lang::ElementaryPath3D > subpath = path->subpath( t1, t2 );
-
-	  if( subpath->size( ) > 0 )
-	    {
-	      cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						    headWarm->getPile( ),
-						    tail,
-						    RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState, subpath, "S" ) ) ),
-			       evalState );
-	    }
-	  else
-	    {
-	      cont->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
-						    headWarm->getPile( ),
-						    tail ),
-			       evalState );
-	    }
-	}
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    class Stroke3DCont_both2 : public Kernel::ForcedStructureContinuation
     {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head & tail, second" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      const_cast< Lang::Drawable3D * >( tail.getPtr( ) )->gcMark( marked );
-      headKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath3D > path_;
+      RefCountPtr< const Lang::Drawable3D > tail_;
+      Lang::Length cutTail_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke3DCont_both2( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & path,
+			  const RefCountPtr< const Lang::Drawable3D > & tail, Lang::Length cutTail,
+			  const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow head receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), tail_( tail ), cutTail_( cutTail ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke3DCont_both2( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals3D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable3D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
-  class Stroke3DCont_both1 : public Kernel::Continuation
-  {
-    RefCountPtr< const Kernel::GraphicsState > graphicsState;
-    RefCountPtr< const Lang::ElementaryPath3D > path;
-    Kernel::VariableHandle pathHandle;
-    RefCountPtr< const Lang::Function > headFunction;
-    Kernel::PassedDyn dyn;
-    Kernel::VariableHandle tailKeepAlive;
-    Kernel::WarmGroup3D * tailWarm;
-    Kernel::ContRef cont;
-  public:
-    Stroke3DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & _graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & _path,
-			const Kernel::VariableHandle & _pathHandle, const RefCountPtr< const Lang::Function > & _headFunction, const Kernel::PassedDyn & _dyn,
-			Kernel::VariableHandle _tailKeepAlive, Kernel::WarmGroup3D * _tailWarm, Kernel::ContRef _cont, const Ast::SourceLocation & _traceLoc )
-      : Kernel::Continuation( _traceLoc ), graphicsState( _graphicsState ), path( _path ), pathHandle( _pathHandle ), headFunction( _headFunction ), dyn( _dyn ), tailKeepAlive( _tailKeepAlive ), tailWarm( _tailWarm ), cont( _cont )
-    { }
-    virtual ~Stroke3DCont_both1( ) { }
-    virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
-    {
-      RefCountPtr< const Lang::Length > cutTail = Helpers::down_cast< const Lang::Length >( val, "< return value from arrow tail >" );
-      if( cutTail->get( ) < 0 )
-	{
-	  throw Exceptions::MiscellaneousRequirement( strrefdup( "Return value from arrow tail was negative." ) );
-	}
-      
-      Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both2( graphicsState, path, tailWarm->getPile( ), *cutTail, dst, warm, cont, traceLoc_ ) );
-      Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-      sysVars->defaultDestination_ = dst;
-      evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
-      headFunction->call( evalState, path->reverse( ), traceLoc_ );
-    }
-    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-    {
-      trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head & tail, first" ) );
-      cont->backTrace( trace );
-    }
-    virtual void gcMark( Kernel::GCMarkedSet & marked )
-    {
-      pathHandle->gcMark( marked );
-      const_cast< Lang::Function * >( headFunction.getPtr( ) )->gcMark( marked );
-      dyn->gcMark( marked );
-      tailKeepAlive->gcMark( marked );
-      cont->gcMark( marked );
-    }
-  };
+	if( cutHead->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Aarrow head cut length was negative." ) );
+	  }
+	
+	if( cutTail_.get( ) == 0 && cutHead->get( ) == 0 )
+	  {
+	    cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						   picture,
+						   tail_,
+						   RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, path_, "S" ) ) ),
+			      evalState );
+	  }
+	else
+	  {
+	    Concrete::SplineTime t1( 0 );
+	    if( cutTail_.get( ) > 0 )
+	      {
+		t1 = path_->arcTime( cutTail_.get( ) );
+	      }
+	    
+	    Concrete::SplineTime t2( HUGE_VAL );
+	    if( cutHead->get( ) > 0 )
+	      {
+		t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
+	      }
+	    
+	    RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
+	    
+	    if( subpath->size( ) > 0 )
+	      {
+		cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						       picture,
+						       tail_,
+						       RefCountPtr< const Lang::Drawable3D >( new Lang::PaintedPath3D( graphicsState_, subpath, "S" ) ) ),
+				  evalState );
+	      }
+	    else
+	      {
+		cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
+						       picture,
+						       tail_ ),
+				  evalState );
+	      }
+	  }
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head & tail, second" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	const_cast< Lang::Drawable3D * >( tail_.getPtr( ) )->gcMark( marked );
+	cont_->gcMark( marked );
+      }
+    };
 
+    class Stroke3DCont_both1 : public Kernel::ForcedStructureContinuation
+    {
+      RefCountPtr< const Kernel::GraphicsState > graphicsState_;
+      RefCountPtr< const Lang::ElementaryPath3D > path_;
+      RefCountPtr< const Lang::Function > headFunction_;
+      Kernel::PassedEnv env_;
+      Kernel::PassedDyn dyn_;
+      Kernel::ContRef cont_;
+    public:
+      Stroke3DCont_both1( const RefCountPtr< const Kernel::GraphicsState > & graphicsState, const RefCountPtr< const Lang::ElementaryPath3D > & path,
+			  const RefCountPtr< const Lang::Function > & headFunction,
+			  const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+	: Kernel::ForcedStructureContinuation( "Stroke's arrow tail receiver", traceLoc ), graphicsState_( graphicsState ), path_( path ), headFunction_( headFunction ), env_( env ), dyn_( dyn ), cont_( cont )
+      { }
+      virtual ~Stroke3DCont_both1( ) { }
+      virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const
+      {
+	/* Argument 0: picture
+	 * Argument 1: cut
+	 */
+	Kernel::Arguments args( & theArrowheadReceiverFormals3D );
+	structure->argList_->bind( & args, structure->values_, env_, dyn_ );
+	args.applyDefaults( );
+	
+	typedef const Lang::Drawable3D ArgType0;
+	RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
+	
+	typedef const Lang::Length ArgType1;
+	RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
+	
+	if( cutTail->get( ) < 0 )
+	  {
+	    throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
+	  }
+	
+	evalState->env_ = env_;
+	evalState->dyn_ = dyn_;
+	evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both2( graphicsState_, path_, picture, *cutTail, env_, dyn_, cont_, traceLoc_ ) );
+	headFunction_->call( evalState, path_->reverse( ), traceLoc_ );
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "3D stroke's head & tail, first" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	const_cast< Lang::Function * >( headFunction_.getPtr( ) )->gcMark( marked );
+	dyn_->gcMark( marked );
+	cont_->gcMark( marked );
+      }
+    };
+    
   }
 }
-
-
 
 
 void
@@ -715,36 +785,21 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 	{
 	  /* There's only an arrow at the head.
 	   */
-	  Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_head( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
-	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-	  sysVars->defaultDestination_ = dst;
-	  evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_head( evalState->dyn_->getGraphicsState( ), path, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
 	  arrowHead->call( evalState, path->reverse( ), callLoc );
 	  return;
 	}
-
+      
       if( arrowHead == Lang::THE_NO_ARROW )
 	{
 	  /* There's only an arrow at the tail.
 	   */
-	  Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-	  Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_tail( evalState->dyn_->getGraphicsState( ), path, dst, warm, evalState->cont_, callLoc ) );
-	  Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-	  sysVars->defaultDestination_ = dst;
-	  evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+	  evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_tail( evalState->dyn_->getGraphicsState( ), path, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
 	  arrowHead->call( arrowTail, evalState, args.getHandle( 0 ), callLoc );
 	  return;
 	}
 
-      Kernel::WarmGroup3D * warm = new Kernel::WarmGroup3D( );
-      Kernel::VariableHandle dst( new Kernel::Variable( warm ) );
-      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both1( evalState->dyn_->getGraphicsState( ), path, args.getHandle( 0 ), arrowHead, evalState->dyn_, dst, warm, evalState->cont_, callLoc ) );
-      Kernel::SystemDynamicVariables * sysVars = new Kernel::SystemDynamicVariables( );
-      sysVars->defaultDestination_ = dst;
-      evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, sysVars ) );
+      evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both1( evalState->dyn_->getGraphicsState( ), path, arrowHead, evalState->env_, evalState->dyn_, evalState->cont_, callLoc ) );
       arrowTail->call( arrowTail, evalState, args.getHandle( 0 ), callLoc );
       return;
     }

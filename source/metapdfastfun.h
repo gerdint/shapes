@@ -64,8 +64,8 @@ namespace MetaPDF
     public:
       std::list< Ast::Expression * > * orderedExprs_;
       std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs_;
-      std::list< Ast::LexiographicState * > * orderedStates_;
-      std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates_;
+      std::list< Ast::StateReference * > * orderedStates_;
+      std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates_;
       
       class ConstIterator
       {
@@ -80,14 +80,14 @@ namespace MetaPDF
       
       ArgListExprs( bool exprOwner );
       ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs,
-		    std::list< Ast::LexiographicState * > * orderedStates, std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates );
+		    std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
       
       ConstIterator begin( ) const;
       
       void evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const;
-      void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env ) const;
+      void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
 
       Kernel::VariableHandle findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const;
     };

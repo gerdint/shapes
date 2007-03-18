@@ -91,7 +91,7 @@ namespace MetaPDF
       ForcedStructureContinuationHelper( const ForcedStructureContinuation * cont, Kernel::ContRef contMem, const RefCountPtr< const Lang::Structure > & structure, const RefCountPtr< const Lang::SingleList > & lst, const Ast::SourceLocation & traceLoc )
 	: Kernel::Continuation( traceLoc ), cont_( cont ), contMem_( contMem ), structure_( structure ), lst_( lst )
       { }
-      virtual ~ForcedStructureContinuationhelper( )
+      virtual ~ForcedStructureContinuationHelper( )
       { }
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
       {
@@ -105,11 +105,22 @@ namespace MetaPDF
 	else
 	  {
 	    typedef const Lang::SingleListPair ArgType;
-	    RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure->values_, "< internal error: SingleListPair contradicting isNull( )" );
+	    RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure_->values_, "< internal error: SingleListPair contradicting isNull( )" );
 	    evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( cont_, contMem_, structure_, p->cdr_, traceLoc_ ) );
-	    p->car_->force( evalState );
+	    p->car_->force( const_cast< Kernel::VariableHandle & >( p->car_ ), evalState );
 	  }
 	
+      }
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+      {
+	trace->push_front( Kernel::Continuation::BackTraceElem( this, "< Forcing union >" ) );
+	cont_->backTrace( trace );
+      }
+      virtual void gcMark( Kernel::GCMarkedSet & marked )
+      {
+	const_cast< Lang::Structure * >( structure_.getPtr( ) )->gcMark( marked );
+	const_cast< Lang::SingleList * >( lst_.getPtr( ) )->gcMark( marked );
+	contMem_->gcMark( marked );
       }
     };
 
@@ -117,8 +128,8 @@ namespace MetaPDF
 }
 
 
-Kernel::ForcedStructureContinuation::ForcedStructureContinuation( const Ast::SourceLocation & traceLoc )
-  : Kernel::Continuation( traceLoc )
+Kernel::ForcedStructureContinuation::ForcedStructureContinuation( const char * continuationName, const Ast::SourceLocation & traceLoc )
+  : Kernel::Continuation( traceLoc ), continuationName_( continuationName )
 { }
 
 Kernel::ForcedStructureContinuation::~ForcedStructureContinuation( )
@@ -128,7 +139,7 @@ void
 Kernel::ForcedStructureContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
   typedef const Lang::Structure ArgType;
-  RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( val, name( ) );
+  RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( val, continuationName_ );
   
   RefCountPtr< const Lang::SingleList > firstUnforced = findUnforced( structure->values_ );
   if( firstUnforced->isNull( ) )
@@ -140,7 +151,7 @@ Kernel::ForcedStructureContinuation::takeValue( const RefCountPtr< const Lang::V
       typedef const Lang::SingleListPair ArgType;
       RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure->values_, "< internal error: SingleListPair contradicting isNull( )" );
       evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( this, evalState->cont_, structure, p->cdr_, traceLoc_ ) );
-      p->car_->force( evalState );
+      p->car_->force( const_cast< Kernel::VariableHandle & >( p->car_ ), evalState );
     }
 }
 
@@ -152,7 +163,7 @@ Kernel::ForcedStructureContinuation::findUnforced( RefCountPtr< const Lang::Sing
       while( true )
 	{
 	  typedef const Lang::SingleListPair ArgType;
-	  RefCountPtr< ArgType > p = Helpers::try_cast< ArgType >( structure->values_ );
+	  RefCountPtr< ArgType > p = Helpers::try_cast_CoreArgument< ArgType >( lst );
 	  if( p->car_->isThunk( ) )
 	    {
 	      return lst;

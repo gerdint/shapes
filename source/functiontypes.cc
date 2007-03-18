@@ -509,7 +509,7 @@ Kernel::Arguments::clone( ) const
 
 
 void
-Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc )
+Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Node * loc )
 {
   if( dst_ == variables_->size( ) )
     {
@@ -530,7 +530,7 @@ Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::
 }
 
 void
-Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc )
+Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Node * loc )
 {
   if( formals_ == 0 )
     {
@@ -582,7 +582,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHand
 }
 
 void
-Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Expression * loc )
+Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Node * loc )
 {
   if( stateDst_ == states_->size( ) )
     {
@@ -603,7 +603,7 @@ Kernel::Arguments::addOrderedState( const Kernel::StateHandle & state, Ast::Expr
 }
 
 void
-Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Expression * loc )
+Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Node * loc )
 {
   if( formals_ == 0 )
     {
@@ -791,8 +791,8 @@ Kernel::Arguments::getLoc( size_t i ) const
   return locations_[ i ]->loc( );
 }
 
-const Ast::Expression *
-Kernel::Arguments::getExpr( size_t i ) const
+const Ast::Node *
+Kernel::Arguments::getNode( size_t i ) const
 {
   return locations_[ i ];
 }
@@ -1165,7 +1165,7 @@ Kernel::EvaluatedFormals::newCallContInfo( const Ast::ArgListExprs * argList, co
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc, bool force )
+Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc, bool force )
 {
   if( ! selectiveForcing_ )
     {
@@ -1178,7 +1178,7 @@ Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::
 }
 
 void
-Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Expression * loc )
+Kernel::EvaluatedFormals::appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc )
 {
   if( selectiveForcing_ )
     {

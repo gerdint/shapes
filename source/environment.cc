@@ -403,6 +403,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "EMPTYPATH3D", Lang::THE_EMPTYPATH3D );
   selfDefine( "NOMASK", Lang::THE_NONE_MASK );
 
+  selfDefine( Lang::CANVAS_ID, new Kernel::WarmGroup2D );
   selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
 

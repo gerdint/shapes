@@ -12,7 +12,9 @@ namespace MetaPDF
     class DynamicVariableDecl;
     class Expression;
     class MemberDeclaration;
+    class Node;
     class SourceLocation;
+    class StateReference;
     class UnaryExpr;
     class LexiographicState;
   }

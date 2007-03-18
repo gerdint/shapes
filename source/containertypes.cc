@@ -280,6 +280,9 @@ Lang::Structure::Structure( const Ast::ArgListExprs * argList, const RefCountPtr
 Lang::Structure::~Structure( )
 { }
 
+RefCountPtr< const Lang::Class > Lang::Structure::TypeID( new Lang::SystemFinalClass( strrefdup( "Union" ) ) );
+TYPEINFOIMPL( Structure );
+
 Kernel::VariableHandle
 Lang::Structure::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {

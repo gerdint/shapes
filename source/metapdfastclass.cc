@@ -580,7 +580,7 @@ Ast::ProtectedMethodReferenceFunction::call( Kernel::EvalState * evalState, Kern
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
@@ -646,7 +646,7 @@ Ast::ProtectedMemberReferenceFunction::call( Kernel::EvalState * evalState, Kern
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
@@ -709,7 +709,7 @@ Ast::ProtectedMemberInsertionFunction::call( Kernel::EvalState * evalState, Kern
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
@@ -727,12 +727,14 @@ Ast::ProtectedMemberInsertionFunction::call( Kernel::EvalState * evalState, Kern
 
   RefCountPtr< const Lang::Value > piece = args.getValue( 0 );
 
-  if( parent_ == 0 )
-    {
-      typedSelf->getField( id_, untypedSelf )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
-      return;
-    }
+  throw Exceptions::NotImplemented( "Tacking on fields." );
 
-  RefCountPtr< const Lang::Class > typedParent = args.getHandle( 1 )->getVal< const Lang::Class >( parent_->loc( ) );
-  typedSelf->superReference( typedParent )->getLocalField( id_ )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
+//   if( parent_ == 0 )
+//     {
+//       typedSelf->getField( id_, untypedSelf )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
+//       return;
+//     }
+
+//   RefCountPtr< const Lang::Class > typedParent = args.getHandle( 1 )->getVal< const Lang::Class >( parent_->loc( ) );
+//   typedSelf->superReference( typedParent )->getLocalField( id_ )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
 }
