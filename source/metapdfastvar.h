@@ -325,9 +325,10 @@ namespace MetaPDF
     {
       const char * defaultStateID_;
       mutable size_t ** idPos_;
-      mutable size_t ** defaultIdPos_;
+      mutable Kernel::Environment::LexicalKey ** defaultIdPos_;
+      const Ast::SourceLocation defaultStateIdLoc_;
     public:
-      DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const char * defaultStateID, size_t ** idPos, size_t ** defaultIdPos );
+      DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultStateIdLoc, const char * defaultStateID, size_t ** idPos, Kernel::Environment::LexicalKey ** defaultIdPos );
       virtual ~DynamicStateDecl( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };

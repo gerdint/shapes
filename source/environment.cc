@@ -139,7 +139,7 @@ Kernel::State::peek( Kernel::EvalState * evalState, const Ast::SourceLocation & 
 {
   if( ! alive_ )
     {
-      throw Exceptions::TackingOnCold( );
+      throw Exceptions::DeadStateAccess( );      
     }
   this->peekImpl( evalState, callLoc );
 }
@@ -149,7 +149,7 @@ Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation 
 {
   if( ! alive_ )
     {
-      throw Exceptions::ReFreezing( );
+      throw Exceptions::DeadStateAccess( );      
     }
   /* It would make sense to have an intermediate state here.
    */
@@ -158,24 +158,6 @@ Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation 
   // Perhaps, it would be smart to use a continuation to erase the implementation once it is used...
   //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
 
-  this->freezeImpl( evalState, callLoc );
-}
-
-bool
-Kernel::State::isAlive( ) const
-{
-  return alive_;
-}
-
-void
-Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  if( ! alive_ )
-    {
-      throw Exceptions::DeadStateAccess( );
-    }
-  alive_ = false;
-  //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
   this->freezeImpl( evalState, callLoc );
 }
 
@@ -533,7 +515,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 
   selfDefineDynamic( new Kernel::EyeZDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_EYEZ ) );
   selfDefineDynamic( new Kernel::DefaultUnitDynamicVariableProperties( "defaultunit" ) );
-  selfDefineDynamic( new Kernel::DefaultDestinationDynamicVariableProperties( "<<" ) );
+  //  selfDefineDynamic( new Kernel::DefaultDestinationDynamicVariableProperties( "<<" ) );
   selfDefineDynamic( new Kernel::BlendSpaceDynamicVariableProperties( "blendspace" ) );
 
   selfDefineDynamicHandler( Lang::HANDLER_NO_INTERSECTION, "Failed to find intersection." );

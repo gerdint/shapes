@@ -108,7 +108,6 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmGroup3D : public Kernel::State
@@ -122,7 +121,6 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmGroupLights : public Kernel::State
@@ -136,7 +134,6 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::LightGroup > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
     
     class WarmZBuf : public Kernel::State

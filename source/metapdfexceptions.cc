@@ -1346,20 +1346,6 @@ Exceptions::UndefinedEscapeContinuation::display( std::ostream & os ) const
 }
 
 
-Exceptions::TackingOnDead::TackingOnDead( )
-  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
-{ }
-
-Exceptions::TackingOnDead::~TackingOnDead( )
-{ }
-
-void
-Exceptions::TackingOnDead::display( std::ostream & os ) const
-{
-  os << "The destination state is dead." << std::endl ;
-}
-
-
 Exceptions::UnFreezable::UnFreezable( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }

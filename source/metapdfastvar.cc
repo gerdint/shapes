@@ -649,7 +649,7 @@ Kernel::DynamicVariableDeclContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const char * defaultStateID, size_t ** idPos, size_t ** defaultIdPos )
+Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultStateIdLoc, const char * defaultStateID, size_t ** idPos, size_t ** defaultIdPos )
   : Ast::BindNode( loc, idLoc, id ), defaultStateID_( defaultStateID ), idPos_( idPos ), defaultIdPos_( defaultIdPos )
 { }
 
