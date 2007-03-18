@@ -169,6 +169,20 @@ namespace MetaPDF
       virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const = 0;
     };
 
+    class DynamicStateProperties
+    {
+    protected:
+      const char * name_;
+    public:
+    DynamicStateProperties( const char * name )
+      : name_( name )
+      { }
+      virtual ~DynamicStateProperties( );
+      const char * getName( ) const { return name_; }
+      virtual Kernel::StateHandle fetch( const Kernel::PassedDyn & dyn ) const = 0;
+      virtual void makeBinding( Kernel::StateHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const = 0;
+    };
+
     class Environment
     {
     public:
@@ -254,6 +268,14 @@ namespace MetaPDF
       LexicalKey findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const;
       const DynamicVariableProperties & lookupDynamicVariable( const LexicalKey & lexKey ) const;
       const DynamicVariableProperties & lookupDynamicVariable( size_t pos ) const;
+
+
+      size_t findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
+      void defineDynamicState( const char * debugName, size_t pos, Kernel::StateHandle & defaultState );
+
+      LexicalKey findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const;
+      const DynamicStateProperties & lookupDynamicState( const LexicalKey & lexKey ) const;
+      const DynamicStateProperties & lookupDynamicState( size_t pos ) const;
 
 
       size_t size( ) const;

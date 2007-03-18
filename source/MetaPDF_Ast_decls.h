@@ -14,7 +14,7 @@ namespace MetaPDF
     class MemberDeclaration;
     class SourceLocation;
     class UnaryExpr;
-    class LexicalState;
+    class LexiographicState;
   }
 }
 

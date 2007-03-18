@@ -1338,7 +1338,7 @@ Lang::UserFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
   args.applyDefaults( );
   evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, env_, formals_->formals_->argumentOrder_, args.getVariables( ), formals_->formals_->stateOrder_, args.getStates( ) );
 
-  if( ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) != 0 )
+  if( ! isProcedural( ) )
     {
       evalState->env_->activateFunctionBoundary( );
     }

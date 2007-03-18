@@ -435,7 +435,7 @@ Ast::ClassFunction::bindInitializationArguments( RefCountPtr< const Lang::Class 
 {
   if( args.size( ) != constructorFormals_->size( ) )
     {
-      throw Exceptions::UserArityMismatch( this, constructorFormals_->size( ), args.size( ) );
+      throw Exceptions::UserArityMismatch( this, constructorFormals_->size( ), args.size( ), Exceptions::UserArityMismatch::VARIABLE );
     }
 
   std::list< Kernel::ValueRef >::const_iterator val = args.begin( );

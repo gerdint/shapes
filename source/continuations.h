@@ -79,16 +79,16 @@ namespace MetaPDF
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
 
-  /* IntroduceWarmContinuation is used by the expression IntroduceWarm.
+  /* IntroduceStateContinuation is used by the expression IntroduceState.
    */
-  class IntroduceWarmContinuation : public Kernel::Continuation
+  class IntroduceStateContinuation : public Kernel::Continuation
   {
     Kernel::PassedEnv env_;
     size_t * pos_;
     Kernel::ContRef cont_;
   public:
-    IntroduceWarmContinuation( const Kernel::PassedEnv & _env, size_t * _pos, const Kernel::ContRef & _cont, const Ast::SourceLocation & _traceLoc );
-    ~IntroduceWarmContinuation( );
+    IntroduceStateContinuation( const Kernel::PassedEnv & _env, size_t * _pos, const Kernel::ContRef & _cont, const Ast::SourceLocation & _traceLoc );
+    ~IntroduceStateContinuation( );
     virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
     virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );

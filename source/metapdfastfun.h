@@ -64,8 +64,8 @@ namespace MetaPDF
     public:
       std::list< Ast::Expression * > * orderedExprs_;
       std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs_;
-      std::list< Ast::LexicalState * > * orderedStates_;
-      std::map< const char *, Ast::LexicalState *, charPtrLess > * namedStates_;
+      std::list< Ast::LexiographicState * > * orderedStates_;
+      std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates_;
       
       class ConstIterator
       {
@@ -79,7 +79,8 @@ namespace MetaPDF
       };
       
       ArgListExprs( bool exprOwner );
-      ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::LexicalState * > * orderedStates, std::map< const char *, Ast::LexicalState *, charPtrLess > * namedStates );
+      ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs,
+		    std::list< Ast::LexiographicState * > * orderedStates, std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
       

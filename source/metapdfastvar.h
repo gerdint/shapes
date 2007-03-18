@@ -323,18 +323,14 @@ namespace MetaPDF
 
     class DynamicStateDecl : public Ast::BindNode
     {
-      Ast::SourceLocation idLoc_;
-      const char * id_;
+      const char * defaultStateID_;
       mutable size_t ** idPos_;
-      Ast::SourceLocation defaultLoc_;
-      const char * defaultId_;
-      mutable Kernel::Environment::LexicalKey ** defaultIdKey_;
+      mutable size_t ** defaultIdPos_;
     public:
-      DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultLoc, char * defaultId, size_t ** idPos, Kernel::Environment::LexicalKey ** defaultIdKey );
+      DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const char * defaultStateID, size_t ** idPos, size_t ** defaultIdPos );
       virtual ~DynamicStateDecl( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
-
   }
 }
 

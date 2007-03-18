@@ -139,10 +139,32 @@ Kernel::State::peek( Kernel::EvalState * evalState, const Ast::SourceLocation & 
 {
   if( ! alive_ )
     {
-      throw Exceptions::DeadStateAccess( );      
+      throw Exceptions::TackingOnCold( );
     }
-  //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
   this->peekImpl( evalState, callLoc );
+}
+
+void
+Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  if( ! alive_ )
+    {
+      throw Exceptions::ReFreezing( );
+    }
+  /* It would make sense to have an intermediate state here.
+   */
+  alive_ = false;
+
+  // Perhaps, it would be smart to use a continuation to erase the implementation once it is used...
+  //  evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreVariableContinuation( selfRef, evalState->cont_, callLoc ) );
+
+  this->freezeImpl( evalState, callLoc );
+}
+
+bool
+Kernel::State::isAlive( ) const
+{
+  return alive_;
 }
 
 void

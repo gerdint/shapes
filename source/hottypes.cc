@@ -67,15 +67,15 @@ Kernel::WarmTriple::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr
 }
 
 void
-Kernel::WarmTriple::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTriple::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  /* The right continuation is set by the calling variable.
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
    */
-  result_->call( evalState, pile_, callLoc );
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::WarmTriple::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTriple::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   /* The right continuation is set by the calling variable.
    */
@@ -108,16 +108,19 @@ Kernel::WarmOstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 }
 
 void
+Kernel::WarmOstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
+}
+
+void
 Kernel::WarmOstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm ostream cannot be frozen." ) );
 }
 
-void
-Kernel::WarmOstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm ostream cannot be peeked." ) );
-}
 
 void
 Kernel::WarmOstream::gcMark( Kernel::GCMarkedSet & marked )
@@ -140,15 +143,15 @@ Kernel::Warm_ostringstream::tackOnImpl( Kernel::EvalState * evalState, const Ref
 }
 
 void
-Kernel::Warm_ostringstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
-		   evalState );
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::Warm_ostringstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
@@ -158,6 +161,7 @@ Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::
 void
 Kernel::Warm_ostringstream::gcMark( Kernel::GCMarkedSet & marked )
 { }
+
 
 
 Kernel::WarmGroup2D::WarmGroup2D( )
@@ -196,15 +200,15 @@ Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 }
 
 void
-Kernel::WarmGroup2D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup2D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( pile_,
-		   evalState );
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::WarmGroup2D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup2D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -216,7 +220,6 @@ Kernel::WarmGroup2D::gcMark( Kernel::GCMarkedSet & marked )
 {
   const_cast< Lang::Group2D * >( pile_.getPtr( ) )->gcMark( marked );
 }
-
 
 
 Kernel::WarmGroup3D::WarmGroup3D( )
@@ -238,15 +241,15 @@ Kernel::WarmGroup3D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 }
 
 void
-Kernel::WarmGroup3D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup3D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( pile_,
-		   evalState );
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::WarmGroup3D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup3D::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -278,15 +281,15 @@ Kernel::WarmGroupLights::tackOnImpl( Kernel::EvalState * evalState, const RefCou
 }
 
 void
-Kernel::WarmGroupLights::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroupLights::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( pile_,
-		   evalState );
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::WarmGroupLights::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroupLights::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( pile_,
@@ -352,17 +355,19 @@ Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< 
 }
 
 void
+Kernel::WarmZBuf::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
+}
+
+void
 Kernel::WarmZBuf::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ZBuf( pile_, strokePile_, lightPile_, evalState->dyn_->getGraphicsState( ) ) ),
 		   evalState );
-}
-
-void
-Kernel::WarmZBuf::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-buffer state cannot be peeked." ) );
 }
 
 void
@@ -375,13 +380,8 @@ Kernel::WarmZBuf::gcMark( Kernel::GCMarkedSet & marked )
 	const_cast< Computation::PaintedPolygon3D * >( i->getPtr( ) )->gcMark( marked );
       }
   }
-//   {
-//     typedef typeof *strokePile_ ListType;
-//     for( ListType::const_iterator i = strokePile_->begin( ); i != strokePile_->end( ); ++i )
-//       {
-// 	const_cast< Computation::StrokedLine3D * >( i->getPtr( ) )->gcMark( marked );
-//       }
-//   }
+  // The stroked line has no gcMark function!
+
   {
     typedef typeof *lightPile_ ListType;
     for( ListType::const_iterator i = lightPile_->begin( ); i != lightPile_->end( ); ++i )
@@ -444,17 +444,19 @@ Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 }
 
 void
+Kernel::WarmZSorter::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
+}
+
+void
 Kernel::WarmZSorter::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ZSorter( pile_, strokePile_, lightPile_, evalState->dyn_->getGraphicsState( ) ) ),
 		   evalState );
-}
-
-void
-Kernel::WarmZSorter::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  throw Exceptions::MiscellaneousRequirement( strrefdup( "A z-sorter state cannot be peeked." ) );
 }
 
 void
@@ -467,13 +469,9 @@ Kernel::WarmZSorter::gcMark( Kernel::GCMarkedSet & marked )
 	const_cast< Computation::PaintedPolygon3D * >( i->getPtr( ) )->gcMark( marked );
       }
   }
-//   {
-//     typedef typeof *strokePile_ ListType;
-//     for( ListType::const_iterator i = strokePile_->begin( ); i != strokePile_->end( ); ++i )
-//       {
-// 	const_cast< Computation::StrokedLine3D * >( i->getPtr( ) )->gcMark( marked );
-//       }
-//   }
+
+  // The stroked line has no gcMark function!
+
   {
     typedef typeof *lightPile_ ListType;
     for( ListType::const_iterator i = lightPile_->begin( ); i != lightPile_->end( ); ++i )
@@ -505,25 +503,15 @@ Kernel::WarmTimer::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr<
 }
 
 void
-Kernel::WarmTimer::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTimer::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  rusage ru;
-  int res = getrusage( RUSAGE_SELF, &ru );
-  if( res != 0 )
-    {
-      throw Exceptions::InternalError( strrefdup( "grtrusage failed." ) );
-    }
-  timeval stop = ru.ru_utime;
-  double time1 = start_.tv_usec / 1000000.0 + start_.tv_sec;
-  double time2 = stop.tv_usec  / 1000000.0 + stop.tv_sec;
-
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( Kernel::ValueRef( new Lang::Float( time2 - time1 ) ),
-		   evalState );
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
 }
 
 void
-Kernel::WarmTimer::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmTimer::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   rusage ru;
   int res = getrusage( RUSAGE_SELF, &ru );
@@ -640,6 +628,14 @@ Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< 
 }
 
 void
+Kernel::WarmText::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
+}
+
+void
 Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   if( pile_->size( ) == 0 )
@@ -685,12 +681,6 @@ Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLo
 }
 
 void
-Kernel::WarmText::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  throw Exceptions::MiscellaneousRequirement( strrefdup( "A text graphics state cannot be peeked." ) );
-}
-
-void
 Kernel::WarmText::gcMark( Kernel::GCMarkedSet & marked )
 {
   typedef typeof *pile_ ListType;
@@ -699,6 +689,8 @@ Kernel::WarmText::gcMark( Kernel::GCMarkedSet & marked )
       const_cast< Lang::TextOperation * >( i->getPtr( ) )->gcMark( marked );
     }
 }
+
+
 
 Kernel::WarmType3Font::WarmType3Font( )
   : metrics_( new FontMetrics::BaseFont( ) ), size_( -1 )
@@ -1073,6 +1065,14 @@ Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCount
 }
 
 void
+Kernel::WarmType3Font::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  /* This is exactly the same as on freeze.  Should it be different?  Shall the result function be invoked?
+   */
+  freezeImpl( evalState, callLoc );
+}
+
+void
 Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
   if( glyphs_.size( ) == 0 )
@@ -1254,12 +1254,6 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 }
 
 void
-Kernel::WarmType3Font::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
-{
-  throw Exceptions::MiscellaneousRequirement( strrefdup( "A type 3 font state cannot be peeked." ) );
-}
-
-void
 Kernel::WarmType3Font::gcMark( Kernel::GCMarkedSet & marked )
 {
   {
@@ -1276,8 +1270,10 @@ Kernel::WarmType3Font::gcMark( Kernel::GCMarkedSet & marked )
 	const_cast< Lang::Type3Glyph * >( i->getPtr( ) )->gcMark( marked );
       }
   }
-}
 
+  // FontMetrics::BaseFont has no gcMark.
+  // Neither has Concrete::Length.
+}
 
 void
 Kernel::WarmType3Font::initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues )

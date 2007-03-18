@@ -530,8 +530,7 @@ namespace MetaPDF
       const size_t callArity;
       const Type type_;
     public:
-      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, Type type );
-      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _callArity, Type type );
+      UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, const Type type );
       virtual ~UserArityMismatch( );
       virtual void display( std::ostream & os ) const;
     };

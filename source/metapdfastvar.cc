@@ -616,7 +616,6 @@ Ast::DynamicVariableDecl::callBack( const RefCountPtr< const Lang::Function > & 
 		    evalState );
 }
 
-
 Kernel::DynamicVariableDeclContinuation::DynamicVariableDeclContinuation( const Ast::SourceLocation & traceLoc, const Ast::DynamicVariableDecl * declExpr, Kernel::EvalState & evalState )
   : Kernel::Continuation( traceLoc ), declExpr_( declExpr ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ )
 { }
@@ -650,30 +649,32 @@ Kernel::DynamicVariableDeclContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const Ast::SourceLocation & defaultLoc, char * defaultId, size_t ** idPos, Kernel::Environment::LexicalKey ** defaultIdKey )
-  : Ast::BindNode( loc, idLoc, id ), defaultLoc_( defaultLoc ), defaultId_( defaultId ), idPos_( idPos ), defaultIdKey_( defaultIdKey )
+Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, const char * defaultStateID, size_t ** idPos, size_t ** defaultIdPos )
+  : Ast::BindNode( loc, idLoc, id ), defaultStateID_( defaultStateID ), idPos_( idPos ), defaultIdPos_( defaultIdPos )
 { }
 
 Ast::DynamicStateDecl::~DynamicStateDecl( )
-{
-  delete id_;
-  delete defaultId_;
-}
+{ }
 
 void
 Ast::DynamicStateDecl::eval( Kernel::EvalState * evalState ) const
 {
-  throw Exceptions::NotImplemented( "Dynamic state declarations" );
 //   if( *idPos_ == 0 )
 //     {
 //       *idPos_ = new size_t( evalState->env_->findLocalDynamicStatePosition( idLoc_, id_ ) );
-//       *defaultPos_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( defaultLoc_, defaultId_ ) );
+      
+//       *defaultIdPos_ = new size_t( evalState->env_->findLexicalStatePosition( defaultIdLoc_, defaultStateID_ ) );
 //     }
 
-//   evalState->env_->???;
-
+//   evalState->env_->defineDynamicState( id_,
+// 				       **idPos_,
+// 				       evalState->env_->getStateHandle( defaultIdPos_ ) );
+  
 //   Kernel::ContRef cont = evalState->cont_;
-//   cont->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
+//   cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+// 		    evalState );
+
+  throw Exceptions::NotImplemented( "Dynamic state declarations" );
 }
 
 
@@ -748,8 +749,8 @@ Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
     {
       evalState->env_->define( **idPos_,
 			       Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
-											    evalState->dyn_,
-											    expr_ ) ) ) );
+												evalState->dyn_,
+												expr_ ) ) ) );
       Kernel::ContRef cont = evalState->cont_;
       cont->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
     }
@@ -818,11 +819,11 @@ Ast::LexiographicState::getHandle( Kernel::PassedEnv env ) const
 }
 
 
-Ast::IntroduceWarm::IntroduceWarm( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos )
+Ast::IntroduceState::IntroduceState( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos )
   : Ast::BindNode( Ast::SourceLocation( idLoc, expr->loc( ) ), idLoc, id ), expr_( expr ), idPos_( idPos )
 { }
 
-Ast::IntroduceWarm::~IntroduceWarm( )
+Ast::IntroduceState::~IntroduceState( )
 {
   delete expr_;
 
@@ -832,17 +833,17 @@ Ast::IntroduceWarm::~IntroduceWarm( )
 }
 
 void
-Ast::IntroduceWarm::eval( Kernel::EvalState * evalState ) const
+Ast::IntroduceState::eval( Kernel::EvalState * evalState ) const
 {
   if( *idPos_ == 0 )
     {
       *idPos_ = new size_t( evalState->env_->findLocalPosition( idLoc_, id_ ) );
     }
   
-  evalState->cont_ = Kernel::ContRef( new Kernel::IntroduceWarmContinuation( evalState->env_,
-									     *idPos_,
-									     evalState->cont_,
-									     expr_->loc( ) ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::IntroduceStateContinuation( evalState->env_,
+									      *idPos_,
+									      evalState->cont_,
+									      expr_->loc( ) ) );
   evalState->expr_ = expr_;
 }
 
@@ -859,10 +860,10 @@ Ast::LexiographicInsertion::eval( Kernel::EvalState * evalState ) const
 {
   if( *idKey_ == 0 )
     {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalKey( idLoc_, id_ ) );
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( idLoc_, id_ ) );
     }
 
-  evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( evalState->env_->getVarHandle( **idKey_ ),
+  evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( evalState->env_->getStateHandle( **idKey_ ),
 									 evalState->cont_,
 									 evalState->dyn_,
 									 expr_->loc( ) ) );
@@ -950,7 +951,7 @@ Ast::Peek::eval( Kernel::EvalState * evalState ) const
 {
   if( *idKey_ == 0 )
     {
-      *idKey_ = new size_t( evalState->env_->findLexicalStateKey( idLoc_, id_ ) );
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicStateKey( idLoc_, id_ ) );
     }
 
   Kernel::ContRef cont = evalState->cont_;

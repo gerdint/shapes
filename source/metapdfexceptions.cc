@@ -162,20 +162,6 @@ Exceptions::RepeatedFormal::display( ostream & os ) const
 }
 
 
-Exceptions::PassingStateOut::PassingStateOut( const Ast::SourceLocation & _loc, const char * _id )
-  : loc( _loc ), id( _id )
-{ }
-
-Exceptions::PassingStateOut::~PassingStateOut( )
-{ }
-
-void
-Exceptions::PassingStateOut::display( ostream & os ) const
-{
-  os << loc << "Return formals cannot contain states: " << id << std::endl ;
-}
-
-
 Exceptions::IntroducingExisting::IntroducingExisting( const Ast::SourceLocation & _loc, const char * _id )
   : loc( _loc ), id( _id )
 { }
@@ -801,15 +787,15 @@ Exceptions::UserArityMismatch::display( std::ostream & os ) const
   switch( type_ )
     {
     case VARIABLE:
-      os << " variables" ;
+      os << "value arguments" ;
       break;
     case STATE:
-      os << " states" ;
+      os << "state arguments" ;
       break;
     default:
       os << "<?ERROR?" ;
     }
-  os << ", not " << callArity << std::endl ;
+  os << " , not " << callArity << std::endl ;
 }
 
 
@@ -1360,17 +1346,17 @@ Exceptions::UndefinedEscapeContinuation::display( std::ostream & os ) const
 }
 
 
-Exceptions::DeadStateAccess::DeadStateAccess( )
+Exceptions::TackingOnDead::TackingOnDead( )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
 { }
 
-Exceptions::DeadStateAccess::~DeadStateAccess( )
+Exceptions::TackingOnDead::~TackingOnDead( )
 { }
 
 void
-Exceptions::DeadStateAccess::display( std::ostream & os ) const
+Exceptions::TackingOnDead::display( std::ostream & os ) const
 {
-  os << "The accessed state is dead." << std::endl ;
+  os << "The destination state is dead." << std::endl ;
 }
 
 

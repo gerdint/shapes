@@ -182,7 +182,8 @@ Ast::ArgListExprs::ConstIterator::ConstIterator( const Ast::ArgListExprs::ConstI
 { }
 
 Ast::ArgListExprs::ArgListExprs( bool exprOwner )
-  : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ), orderedStates_( new std::list< const char * > ), namedStates_( new std::map< const char *, const char *, charPtrLess > )
+  : exprOwner_( exprOwner ), orderedExprs_( new std::list< Ast::Expression * > ), namedExprs_( new std::map< const char *, Ast::Expression *, charPtrLess > ),
+    orderedStates_( new std::list< Ast::LexiographicState * > ), namedStates_( new std::map< const char *, Ast::LexiographicState *, charPtrLess > )
 {
   //  if( exprOwner_ )
   //    {
@@ -190,7 +191,7 @@ Ast::ArgListExprs::ArgListExprs( bool exprOwner )
   //    }
 }
 
-Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::Expression * > * orderedStates, std::map< const char *, Ast::Expression *, charPtrLess > * namedStates )
+Ast::ArgListExprs::ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs, std::list< Ast::LexiographicState * > * orderedStates, std::map< const char *, Ast::LexiographicState *, charPtrLess > * namedStates )
   : exprOwner_( true ), orderedExprs_( orderedExprs ), namedExprs_( namedExprs ), orderedStates_( orderedStates ), namedStates_( namedStates )
 { }
 
@@ -385,7 +386,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
   {
     Ast::SourceLocation dummy;
-    typedef std::map< const char *, Ast::LexicalState *, charPtrLess >::const_iterator I;
+    typedef std::map< const char *, Ast::LexiographicState *, charPtrLess >::const_iterator I;
     I i = namedStates_->begin( );
     I end = namedStates_->end( );
     for( ; i != end; ++i )
@@ -395,7 +396,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
   }
 
   {
-    typedef list< Ast::LexicalState * >::const_iterator I;
+    typedef list< Ast::LexiographicState * >::const_iterator I;
     I i = orderedStates_->begin( );
     I end = orderedStates_->end( );
     for( ; i != end; ++i )

@@ -90,15 +90,15 @@ Kernel::DefineVariableContinuation::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::IntroduceWarmContinuation::IntroduceWarmContinuation( const Kernel::PassedEnv & env, size_t * pos, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::IntroduceStateContinuation::IntroduceStateContinuation( const Kernel::PassedEnv & env, size_t * pos, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), env_( env ), pos_( pos ), cont_( cont )
 { }
 
-Kernel::IntroduceWarmContinuation::~IntroduceWarmContinuation( )
+Kernel::IntroduceStateContinuation::~IntroduceStateContinuation( )
 { }
 
 void
-Kernel::IntroduceWarmContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::IntroduceStateContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
   RefCountPtr< const Lang::Hot > hot( Helpers::down_cast< const Lang::Hot >( val, traceLoc_ ) );
   env_->introduceState( *pos_, hot->newState( ) );
@@ -107,14 +107,14 @@ Kernel::IntroduceWarmContinuation::takeValue( const RefCountPtr< const Lang::Val
 }
 
 void
-Kernel::IntroduceWarmContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+Kernel::IntroduceStateContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
 {
   trace->push_front( Kernel::Continuation::BackTraceElem( this, "introduce warm" ) );
   cont_->backTrace( trace );
 }
 
 void
-Kernel::IntroduceWarmContinuation::gcMark( Kernel::GCMarkedSet & marked )
+Kernel::IntroduceStateContinuation::gcMark( Kernel::GCMarkedSet & marked )
 {
   env_->gcMark( marked );
   cont_->gcMark( marked );
