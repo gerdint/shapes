@@ -874,7 +874,7 @@ Lang::Core_randomBall1D::call( Kernel::EvalState * evalState, Kernel::Arguments 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::Float( 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1 ) ),
 		   evalState );
- }
+}
 
 void
 Lang::Core_randomBall2D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -893,7 +893,7 @@ Lang::Core_randomBall2D::call( Kernel::EvalState * evalState, Kernel::Arguments 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::FloatPair( x1, x2 ) ),
 		   evalState );
- }
+}
 
 void
 Lang::Core_randomBall3D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
