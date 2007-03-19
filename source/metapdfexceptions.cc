@@ -162,6 +162,20 @@ Exceptions::RepeatedFormal::display( ostream & os ) const
 }
 
 
+Exceptions::PassingStateOut::PassingStateOut( const Ast::SourceLocation & loc, const char * id )
+  : loc_( loc ), id_( id )
+{ }
+
+Exceptions::PassingStateOut::~PassingStateOut( )
+{ }
+
+void
+Exceptions::PassingStateOut::display( std::ostream & os ) const
+{
+  os << loc_ << "States may not be returned." << std::endl ;
+}
+
+
 Exceptions::IntroducingExisting::IntroducingExisting( const Ast::SourceLocation & _loc, const char * _id )
   : loc( _loc ), id( _id )
 { }
@@ -1343,6 +1357,20 @@ void
 Exceptions::UndefinedEscapeContinuation::display( std::ostream & os ) const
 {
   os << "The escape continuation " << id << " was not defined in the dynamic context." << std::endl ;
+}
+
+
+Exceptions::DeadStateAccess::DeadStateAccess( )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION )
+{ }
+
+Exceptions::DeadStateAccess::~DeadStateAccess( )
+{ }
+
+void
+Exceptions::DeadStateAccess::display( std::ostream & os ) const
+{
+  os << "Accessing dead state." << std::endl ;
 }
 
 

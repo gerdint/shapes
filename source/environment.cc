@@ -340,7 +340,9 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
     dynamicKeyBindings_( new Kernel::Environment::MapType ),
     dynamicKeyValues_( new std::vector< DynamicVariableProperties * > ),
     stateBindings_( new Kernel::Environment::MapType ),
-    states_( new std::vector< Kernel::StateHandle >( ) )
+    states_( new std::vector< Kernel::StateHandle >( ) ),
+    dynamicStateKeyBindings_( new Kernel::Environment::MapType ),
+    dynamicStateKeyValues_( new std::vector< DynamicStateProperties * > )
 {
   garbageArea.push_back( this );
   ++createdCount;
@@ -610,7 +612,9 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 }
 
 Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea, Environment * parent, MapType * bindings, const RefCountPtr< std::vector< VariableHandle > > & values, MapType * stateBindings, const RefCountPtr< std::vector< StateHandle > > & states )
-  : parent_( parent ), bindings_( bindings ), values_( values ), dynamicKeyBindings_( 0 ), stateBindings_( stateBindings ), states_( states )
+  : parent_( parent ),
+    bindings_( bindings ), values_( values ), dynamicKeyBindings_( 0 ),
+    stateBindings_( stateBindings ), states_( states ), dynamicStateKeyBindings_( 0 )
 				 //, unitMap_( NullPtr< Kernel::Environment::UnitMapType >( ) )
 {
   garbageArea.push_back( this );
@@ -662,6 +666,25 @@ Kernel::Environment::~Environment( )
 	    }
 	}
     }
+  if( dynamicStateKeyBindings_ != 0 )
+    {
+      if( parent_ == 0 )
+	{
+	  /* The condition means that this is the global evironment, which created its own map.
+	   */
+	  delete dynamicStateKeyBindings_;
+	}
+      /* However, the values will always be owned by the environment itself, and be defined whenever dynamicKeyBindings != 0
+       */
+      for( std::vector< DynamicStateProperties * >::iterator i = dynamicStateKeyValues_->begin( ); i != dynamicStateKeyValues_->end( ); ++i )
+	{
+	  if( *i != 0 )
+	    {
+	      delete *i;
+	    }
+	}
+      delete dynamicStateKeyValues_;
+    }
   --liveCount;
 }
 
@@ -702,6 +725,19 @@ Kernel::Environment::setupDynamicKeyVariables( MapType * dynamicKeyBindings )
   while( dynamicKeyValues_->size( ) < theSize )
     {
       dynamicKeyValues_->push_back( 0 );
+    }
+}
+
+void
+Kernel::Environment::setupDynamicStateKeyVariables( MapType * dynamicStateKeyBindings )
+{
+  dynamicStateKeyBindings_ = dynamicStateKeyBindings;
+  dynamicStateKeyValues_ = new std::vector< DynamicStateProperties * >;
+  size_t theSize = dynamicStateKeyBindings_->size( );
+  dynamicStateKeyValues_->reserve( theSize );
+  while( dynamicStateKeyValues_->size( ) < theSize )
+    {
+      dynamicStateKeyValues_->push_back( 0 );
     }
 }
 
@@ -1011,6 +1047,53 @@ const Kernel::DynamicVariableProperties &
 Kernel::Environment::lookupDynamicVariable( size_t pos ) const
 {
   const DynamicVariableProperties * res = (*dynamicKeyValues_)[ pos ];
+  if( res == 0 )
+    {
+      throw Exceptions::UninitializedAccess( );
+    }
+  return *res;
+}
+
+Kernel::Environment::LexicalKey
+Kernel::Environment::findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const
+{
+  if( dynamicStateKeyBindings_ == 0 )
+    {
+      return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
+    }
+
+  MapType::const_iterator i = dynamicStateKeyBindings_->find( id );
+  if( i == dynamicStateKeyBindings_->end( ) )
+    {
+      if( isBaseEnvironment( ) )
+	{
+	  char * msg = new char[ strlen( id ) + 2 ];
+	  strcpy( msg, "@#" );
+	  strcpy( msg + 1, id );
+	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE );
+	}
+      return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
+    }
+  
+  return LexicalKey( 0, i->second );
+}
+
+const Kernel::DynamicStateProperties &
+Kernel::Environment::lookupDynamicState( const LexicalKey & lexKey ) const
+{
+  const Environment * env = this;
+  for( size_t i = lexKey.up_; i > 0; --i )
+    {
+      env = env->getParent( );
+    }
+  
+  return env->lookupDynamicState( lexKey.pos_ );  
+}
+
+const Kernel::DynamicStateProperties &
+Kernel::Environment::lookupDynamicState( size_t pos ) const
+{
+  const DynamicStateProperties * res = (*dynamicStateKeyValues_)[ pos ];
   if( res == 0 )
     {
       throw Exceptions::UninitializedAccess( );

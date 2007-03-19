@@ -205,12 +205,17 @@ namespace MetaPDF
     private:
       Environment * parent_;
       typedef std::map< const char *, size_t, charPtrLess > MapType; /* this is not constant to simplify initialization of the global environment */
+
       MapType * bindings_;
       ValueVector values_;
       MapType * dynamicKeyBindings_;
       std::vector< DynamicVariableProperties * > * dynamicKeyValues_;
+
       MapType * stateBindings_;
       StateVector states_;
+      MapType * dynamicStateKeyBindings_;
+      std::vector< DynamicStateProperties * > * dynamicStateKeyValues_;
+
       PtrOwner_back_Access< std::list< const char * > > charPtrDeletionList_;
       bool functionBoundary_;
 
@@ -233,6 +238,7 @@ namespace MetaPDF
       ~Environment( );
       void setParent( Environment * _parent );
       void setupDynamicKeyVariables( MapType * _dynamicKeyBindings );
+      void setupDynamicStateKeyVariables( MapType * _dynamicStateKeyBindings );
       void activateFunctionBoundary( );
       Kernel::Environment * getParent( );
       const Kernel::Environment * getParent( ) const;

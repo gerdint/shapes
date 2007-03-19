@@ -51,7 +51,7 @@ namespace MetaPDF
       HotDefault( ) { }
       virtual ~HotDefault( ) { }
       virtual Kernel::State * newState( ) const { return new S; }
-      virtual void gcMark( Kernel::GCMarkedSet & marked );
+      virtual void gcMark( Kernel::GCMarkedSet & marked ){ }
     };
     
   }

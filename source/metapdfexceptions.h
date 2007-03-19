@@ -121,10 +121,10 @@ namespace MetaPDF
 
     class PassingStateOut : public StaticInconsistency
     {
-      Ast::SourceLocation loc;
-      const char * id;
+      Ast::SourceLocation loc_;
+      const char * id_;
     public:
-      PassingStateOut( const Ast::SourceLocation & _Loc, const char * _id );
+      PassingStateOut( const Ast::SourceLocation & loc, const char * id );
       virtual ~PassingStateOut( );
       virtual void display( std::ostream & os ) const;
     };
