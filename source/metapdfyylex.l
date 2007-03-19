@@ -57,6 +57,8 @@ UpperCaseLetter [A-Z]
 Letter {LowerCaseLetter}|{UpperCaseLetter}
 Identifier {LowerCaseLetter}({Letter}|[0-9])*
 Typename {UpperCaseLetter}({Letter}|[0-9])*
+DynamicMark "@"
+StateMark "#"|"•"
 
 /*
   At the moment, escape characters must occypy exactly 2 bytes.
@@ -735,23 +737,37 @@ Escape "¢"|"¤"
   return T_identifier;
 }
 
-"@"{Identifier} {
+{DynamicMark}{Identifier} {
   metapdflval.str = strdup( yytext + 1 );
   return T_dynamic_identifier;
 }
-"#"{Identifier} {
-  /* Note: the hash mark is included in the name!  This way, variables and states can live in the same map.
-   */
-  metapdflval.str = strdup( yytext );
+{StateMark}{Identifier} {
+  const char * id = yytext;
+  // Depending on which state mark is used, we must skip different number of bytes.
+  if( *id == '#' )
+    {
+      id += 1;
+    }
+  else // The state mark is '•'
+    {
+      id += 3;
+    }
+  metapdflval.str = strdup( id );
   return T_state_identifier;
 }
-"@#"{Identifier} {
-  metapdflval.str = strdup( yytext + 2 );
+{DynamicMark}{StateMark}{Identifier} {
+  const char * id = yytext + 1; // The dynamic mark is allways 1 byte.
+  // Depending on which state mark is used, we must skip different number of bytes.
+  if( *id == '#' )
+    {
+      id += 1;
+    }
+  else // The state mark is '•'
+    {
+      id += 3;
+    }
+  metapdflval.str = strdup( id );
   return T_dynamic_state_identifier;
-}
-"@<<" {
-  metapdflval.str = strdup( yytext + 1 );
-  return T_at_llthan;
 }
 
 . { throw Exceptions::ScannerError( metapdflloc, strrefdup( (string( "Scanner found unrecognized token: " ) + yytext).c_str( ) ) ); }

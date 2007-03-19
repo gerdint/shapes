@@ -135,7 +135,7 @@ void metapdferror( char * msg )
 %token <floatVal> T_float T_length
 %token <expr> T_speciallength
 %token <boolVal> T_bool
-%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier T_at_llthan
+%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier
 
 /* Non-terminal types
  * ------------------
@@ -1047,7 +1047,7 @@ OneOrMoreGroupElems
   $$ = $1;
   $$->push_back( $2 );
 }
-| T_identifier T_llthan InsertionSequence
+| T_state_identifier T_llthan InsertionSequence
 {
   $$ = new list< Ast::Node * >( );
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
@@ -1057,7 +1057,7 @@ OneOrMoreGroupElems
     }
   delete $1;
 }
-| OneOrMoreGroupElems T_identifier T_llthan InsertionSequence
+| OneOrMoreGroupElems T_state_identifier T_llthan InsertionSequence
 {
   $$ = $1;
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
@@ -1067,7 +1067,7 @@ OneOrMoreGroupElems
     }
   delete $2;
 }
-| T_dynamic_identifier T_llthan InsertionSequence
+| T_dynamic_state_identifier T_llthan InsertionSequence
 {
   $$ = new list< Ast::Node * >( );
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
@@ -1077,7 +1077,7 @@ OneOrMoreGroupElems
     }
   delete $1;
 }
-| OneOrMoreGroupElems T_dynamic_identifier T_llthan InsertionSequence
+| OneOrMoreGroupElems T_dynamic_state_identifier T_llthan InsertionSequence
 {
   $$ = $1;
   Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
@@ -1086,24 +1086,6 @@ OneOrMoreGroupElems
       $$->push_back( new Ast::DynamicInsertion( @2, strdup( $2 ), *i, key ) );
     }
   delete $2;
-}
-| T_at_llthan InsertionSequence
-{
-  $$ = new list< Ast::Node * >( );
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  for( std::list< Ast::Expression * >::const_iterator i = $2->begin( ); i != $2->end( ); ++i )
-    {
-      $$->push_back( new Ast::DynamicInsertion( @1, 0, *i, key ) );
-    }
-}
-| OneOrMoreGroupElems T_at_llthan InsertionSequence
-{
-  $$ = $1;
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  for( std::list< Ast::Expression * >::const_iterator i = $3->begin( ); i != $3->end( ); ++i )
-    {
-      $$->push_back( new Ast::DynamicInsertion( @2, 0, *i, key ) );
-    }
 }
 ;
 
