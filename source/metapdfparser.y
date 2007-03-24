@@ -110,6 +110,7 @@ void metapdferror( char * msg )
   Ast::ClassSection * classSection;
   Ast::MemberSection * memberSection;
   Ast::MemberDeclaration * memberDeclaration;
+  Ast::StateReference * stateReference;
   Ast::MemberMode memberMode;
   Ast::ClassMode classMode;
   Ast::FunctionMode functionMode;
@@ -170,6 +171,7 @@ void metapdferror( char * msg )
 %type <classMode> ClassModeList ClassModeSpecifier OneOrMoreClassModeSpecifiers
 %type <functionMode> FunctionModeList OneOrMoreFunctionModeSpecifiers FunctionModeSpecifier
 %type <expr> Split
+%type <stateReference> StateReference
 
 %nonassoc T_assign ':'
 %left ']' T_splitRight
@@ -281,6 +283,17 @@ PolarHandle
 }
 ;
 
+StateReference
+: T_state_identifier
+{
+  $$ = new Ast::LexiographicState( @1, $1, new Kernel::Environment::LexicalKey * ( 0 ) );
+}
+| T_dynamic_state_identifier
+{
+  $$ = new Ast::DynamicState( @1, $1 );
+}
+;
+
 ArgList
 :
 {
@@ -295,30 +308,20 @@ OneOrMoreArgListItems
   $$ = new Ast::ArgListExprs( true );
   $$->orderedExprs_->push_back( $1 );
 }
-| T_state_identifier
+| StateReference
 {
   $$ = new Ast::ArgListExprs( true );
-  $$->orderedStates_->push_back( new Ast::LexiographicState( @1, $1, new Kernel::Environment::LexicalKey * ( 0 ) ) );
-}
-| T_dynamic_state_identifier
-{
-  $$ = new Ast::ArgListExprs( true );
-  $$->orderedStates_->push_back( new Ast::DynamicState( @1, $1 ) );
+  $$->orderedStates_->push_back( $1 );
 }
 | T_identifier ':' Expr
 {
   $$ = new Ast::ArgListExprs( true );
   (*$$->namedExprs_)[ $1 ] = $3;
 }
-| T_state_identifier ':' T_state_identifier
+| T_state_identifier ':' StateReference
 {
   $$ = new Ast::ArgListExprs( true );
-  (*$$->namedStates_)[ $1 ] = new Ast::LexiographicState( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
-}
-| T_state_identifier ':' T_dynamic_state_identifier
-{
-  $$ = new Ast::ArgListExprs( true );
-  (*$$->namedStates_)[ $1 ] = new Ast::DynamicState( @3, $3 );
+  (*$$->namedStates_)[ $1 ] = $3;
 }
 | OneOrMoreArgListItems Expr
 {
@@ -329,23 +332,14 @@ OneOrMoreArgListItems
     }
   $$->orderedExprs_->push_back( $2 );
 }
-| OneOrMoreArgListItems T_state_identifier
+| OneOrMoreArgListItems StateReference
 {
   $$ = $1;
   if( $$->namedStates_->size( ) != 0 )
     {
       throw Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) );
     }
-  $$->orderedStates_->push_back( new Ast::LexiographicState( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ) ) );
-}
-| OneOrMoreArgListItems T_dynamic_state_identifier
-{
-  $$ = $1;
-  if( $$->namedStates_->size( ) != 0 )
-    {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) );
-    }
-  $$->orderedStates_->push_back( new Ast::DynamicState( @2, $2 ) );
+  $$->orderedStates_->push_back( $2 );
 }
 | OneOrMoreArgListItems T_identifier ':' Expr
 {
@@ -356,23 +350,14 @@ OneOrMoreArgListItems
     }
   (*$$->namedExprs_)[ $2 ] = $4;
 }
-| OneOrMoreArgListItems T_state_identifier ':' T_state_identifier
+| OneOrMoreArgListItems T_state_identifier ':' StateReference
 {
   $$ = $1;
   if( $$->namedStates_->find( $2 ) != $$->namedStates_->end( ) )
     {
       throw Exceptions::RepeatedFormal( @2, $2 );
     }
-  (*$$->namedStates_)[ $2 ] = new Ast::LexiographicState( @4, $4, new Kernel::Environment::LexicalKey * ( 0 ) );
-}
-| OneOrMoreArgListItems T_state_identifier ':' T_dynamic_state_identifier
-{
-  $$ = $1;
-  if( $$->namedStates_->find( $2 ) != $$->namedStates_->end( ) )
-    {
-      throw Exceptions::RepeatedFormal( @2, $2 );
-    }
-  (*$$->namedStates_)[ $2 ] = new Ast::DynamicState( @4, $4 );
+  (*$$->namedStates_)[ $2 ] = $4;
 }
 ;
 
@@ -675,7 +660,7 @@ ExprExceptConstStrings
   std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
   
   size_t ** pos = new size_t * ( 0 );
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
+  Ast::StateReference * dst = new Ast::LexiographicState( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
 
   bracket->push_back( new Ast::IntroduceState( @3,
 					       strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
@@ -683,7 +668,7 @@ ExprExceptConstStrings
 					       pos ) );
   for( std::list< Ast::Expression * >::const_iterator i = $4->begin( ); i != $4->end( ); ++i )
     {
-      bracket->push_back( new Ast::LexiographicInsertion( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), *i, key ) );
+      bracket->push_back( new Ast::Insertion( dst, *i ) );
     }
   bracket->push_back( new Ast::Freeze( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
   $$ = new Ast::CodeBracket( @$, bracket );
@@ -693,7 +678,7 @@ ExprExceptConstStrings
   std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
   
   size_t ** pos = new size_t * ( 0 );
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
+  Ast::StateReference * dst = new Ast::LexiographicState( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
 
   bracket->push_back( new Ast::IntroduceState( @4,
 					       strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
@@ -701,7 +686,7 @@ ExprExceptConstStrings
 					       pos ) );
   for( std::list< Ast::Expression * >::const_iterator i = $5->begin( ); i != $5->end( ); ++i )
     {
-      bracket->push_back( new Ast::LexiographicInsertion( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), *i, key ) );
+      bracket->push_back( new Ast::Insertion( dst, *i ) );
     }
   bracket->push_back( new Ast::Freeze( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
   $$ = new Ast::CodeBracket( @$, bracket );
@@ -1047,45 +1032,21 @@ OneOrMoreGroupElems
   $$ = $1;
   $$->push_back( $2 );
 }
-| T_state_identifier T_llthan InsertionSequence
+| StateReference T_llthan InsertionSequence
 {
   $$ = new list< Ast::Node * >( );
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
   for( std::list< Ast::Expression * >::const_iterator i = $3->begin( ); i != $3->end( ); ++i )
     {
-      $$->push_back( new Ast::LexiographicInsertion( @1, strdup( $1 ), *i, key ) );
+      $$->push_back( new Ast::Insertion( $1, *i ) );
     }
-  delete $1;
 }
-| OneOrMoreGroupElems T_state_identifier T_llthan InsertionSequence
+| OneOrMoreGroupElems StateReference T_llthan InsertionSequence
 {
   $$ = $1;
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
   for( std::list< Ast::Expression * >::const_iterator i = $4->begin( ); i != $4->end( ); ++i )
     {
-      $$->push_back( new Ast::LexiographicInsertion( @2, strdup( $2 ), *i, key ) );
+      $$->push_back( new Ast::Insertion( $2, *i ) );
     }
-  delete $2;
-}
-| T_dynamic_state_identifier T_llthan InsertionSequence
-{
-  $$ = new list< Ast::Node * >( );
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  for( std::list< Ast::Expression * >::const_iterator i = $3->begin( ); i != $3->end( ); ++i )
-    {
-      $$->push_back( new Ast::DynamicInsertion( @1, strdup( $1 ), *i, key ) );
-    }
-  delete $1;
-}
-| OneOrMoreGroupElems T_dynamic_state_identifier T_llthan InsertionSequence
-{
-  $$ = $1;
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  for( std::list< Ast::Expression * >::const_iterator i = $4->begin( ); i != $4->end( ); ++i )
-    {
-      $$->push_back( new Ast::DynamicInsertion( @2, strdup( $2 ), *i, key ) );
-    }
-  delete $2;
 }
 ;
 

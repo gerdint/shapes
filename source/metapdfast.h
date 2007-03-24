@@ -113,18 +113,6 @@ namespace MetaPDF
       const Ast::SourceLocation & idLoc( ) const;
     };
     
-    class SequencingNode : public Node
-    {
-    protected:
-      Ast::SourceLocation idLoc_;
-      const char * id_;
-    public:
-      SequencingNode( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id );
-      virtual ~SequencingNode( );
-      const char * id( ) const;
-      const Ast::SourceLocation & idLoc( ) const;
-    };
-    
     class IdentifierNode
     {
     public:

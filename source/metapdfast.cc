@@ -233,29 +233,6 @@ Ast::BindNode::idLoc( ) const
 }
 
 
-Ast::SequencingNode::SequencingNode( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id )
-  : Ast::Node( loc ), idLoc_( idLoc ), id_( id )
-{ }
-
-Ast::SequencingNode::~SequencingNode( )
-{
-  delete id_;
-}
-
-const char *
-Ast::SequencingNode::id( ) const
-{
-  return id_;
-}
-
-const Ast::SourceLocation &
-Ast::SequencingNode::idLoc( ) const
-{
-  return idLoc_;
-}
-
-
-
 Ast::IdentifierNode::IdentifierNode( )
 { }
 

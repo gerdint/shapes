@@ -802,53 +802,22 @@ Ast::IntroduceState::eval( Kernel::EvalState * evalState ) const
 }
 
 
-Ast::LexiographicInsertion::LexiographicInsertion( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, Kernel::Environment::LexicalKey ** idKey )
-  : Ast::SequencingNode( Ast::SourceLocation( idLoc, expr->loc( ) ), idLoc, id ), expr_( expr ), idKey_( idKey )
+Ast::Insertion::Insertion( Ast::StateReference * stateRef, Ast::Expression * expr )
+  : Ast::Node( Ast::SourceLocation( stateRef->loc( ), expr->loc( ) ) ), stateRef_( stateRef ), expr_( expr )
 { }
 
-Ast::LexiographicInsertion::~LexiographicInsertion( )
+Ast::Insertion::~Insertion( )
 { }
 
 void
-Ast::LexiographicInsertion::eval( Kernel::EvalState * evalState ) const
+Ast::Insertion::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( idLoc_, id_ ) );
-    }
-
-  evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( evalState->env_->getStateHandle( **idKey_ ),
+  evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( stateRef_->getHandle( evalState->env_, evalState->dyn_ ),
 									 evalState->cont_,
 									 evalState->dyn_,
 									 expr_->loc( ) ) );
   evalState->expr_ = expr_;
 }
-
-
-Ast::DynamicInsertion::DynamicInsertion( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, Kernel::Environment::LexicalKey ** idKey )
-  : Ast::SequencingNode( Ast::SourceLocation( idLoc, expr->loc( ) ), idLoc, id ), expr_( expr ), idKey_( idKey )
-{ }
-
-Ast::DynamicInsertion::~DynamicInsertion( )
-{ }
-
-void
-Ast::DynamicInsertion::eval( Kernel::EvalState * evalState ) const
-{
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( idLoc_, id_ ) );
-    }
-  
-  const Kernel::DynamicStateProperties & dynProps = evalState->env_->lookupDynamicState( **idKey_ );
-  
-  evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( dynProps.fetch( evalState->dyn_ ),
-									 evalState->cont_,
-									 evalState->dyn_,
-									 expr_->loc( ) ) );
-  evalState->expr_ = expr_;
-}
-
 
 Ast::Freeze::Freeze( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos )
   : Ast::Expression( idLoc ), id_( id ), idPos_( idPos )

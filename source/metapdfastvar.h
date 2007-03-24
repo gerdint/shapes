@@ -181,23 +181,13 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class LexiographicInsertion : public SequencingNode
+    class Insertion : public Node
     {
+      Ast::StateReference * stateRef_;
       Ast::Expression * expr_;
-      mutable Kernel::Environment::LexicalKey ** idKey_;
     public:
-      LexiographicInsertion( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, Kernel::Environment::LexicalKey ** idKey );
-      virtual ~LexiographicInsertion( );
-      virtual void eval( Kernel::EvalState * evalState ) const;
-    };
-    
-    class DynamicInsertion : public SequencingNode
-    {
-      Ast::Expression * expr_;
-      mutable Kernel::Environment::LexicalKey ** idKey_;
-    public:
-      DynamicInsertion( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, Kernel::Environment::LexicalKey ** idKey );
-      virtual ~DynamicInsertion( );
+      Insertion( Ast::StateReference * stateRef, Ast::Expression * expr );
+      virtual ~Insertion( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
