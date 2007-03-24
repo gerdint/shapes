@@ -471,7 +471,7 @@ Lang::Transform3D::show( std::ostream & os ) const
 
 Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
   : formals_( formals ), variables_( new Environment::ValueVector::ValueType ), dst_( 0 ),
-    states_( new Environment::StateVector::ValueType )
+    states_( new Environment::StateVector::ValueType ), stateDst_( 0 )
 {
   // Thinking of all the evaluated cuts, it actually makes some sense not to reserve memory here.
   //  variables_.reserve( formals_->argumentOrder_->size( ) );
@@ -1338,7 +1338,7 @@ Lang::UserFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
   args.applyDefaults( );
   evalState->env_ = new Kernel::Environment( Kernel::theEnvironmentList, env_, formals_->formals_->argumentOrder_, args.getVariables( ), formals_->formals_->stateOrder_, args.getStates( ) );
 
-  if( ! isProcedural( ) )
+  if( ! this->isProcedural( ) )
     {
       evalState->env_->activateFunctionBoundary( );
     }

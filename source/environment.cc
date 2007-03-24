@@ -244,6 +244,9 @@ Kernel::Variable::setValue( const RefCountPtr< const Lang::Value > & val ) const
 Kernel::DynamicVariableProperties::~DynamicVariableProperties( )
 { }
 
+Kernel::DynamicStateProperties::~DynamicStateProperties( )
+{ }
+
 
 void
 Kernel::Environment::selfDefineCoreFunction( Lang::CoreFunction * fun )
@@ -409,15 +412,15 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
 
-  selfDefine( "Hot2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
-  selfDefine( "Hot3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
-  selfDefine( "HotZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
-  selfDefine( "HotZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
-  selfDefine( "HotString", Kernel::ValueRef( new Lang::HotDefault< Kernel::Warm_ostringstream > ) );
-  selfDefine( "HotLights", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroupLights > ) );
-  selfDefine( "HotTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
-  selfDefine( "HotText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
-  selfDefine( "HotFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
+  selfDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
+  selfDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
+  selfDefine( "newZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
+  selfDefine( "newZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
+  selfDefine( "newString", Kernel::ValueRef( new Lang::HotDefault< Kernel::Warm_ostringstream > ) );
+  selfDefine( "newLights", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroupLights > ) );
+  selfDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
+  selfDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
+  selfDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 
@@ -902,7 +905,7 @@ Kernel::Environment::findLexicalStateKey( const Ast::SourceLocation & loc, const
       if( functionBoundary_ )
 	{
 	  // If the state is not found at all, this will throw an error.
-	  return parent_->findLexicalStateKey( loc, id ).oneAbove( );
+	  parent_->findLexicalStateKey( loc, id ).oneAbove( );  // Ignore the result!
 	  // If no error is thrown, we inform the user that the state is outside a function boundary.
 	  throw Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) );	  
 	}
@@ -958,15 +961,18 @@ Kernel::Environment::getStateHandle( const LexicalKey & lexKey )
       env = env->getParent( );
     }
   
-  std::cerr << "Warning: Not checking that state is in dynamic context." << std::endl ;
-
   return env->getStateHandle( lexKey.pos_ );
 }
 
 Kernel::StateHandle
 Kernel::Environment::getStateHandle( size_t pos )
 {
-  return (*states_)[ pos ];
+  Kernel::StateHandle res = (*states_)[ pos ];
+  if( res == NullPtr< Kernel::State >( ) )
+    {
+      throw Exceptions::UninitializedAccess( );
+    }
+  return res;
 }
 
 
@@ -1054,6 +1060,45 @@ Kernel::Environment::lookupDynamicVariable( size_t pos ) const
   return *res;
 }
 
+size_t
+Kernel::Environment::findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const
+{
+  if( dynamicStateKeyBindings_ == 0 )
+    {
+      throw Exceptions::InternalError( "Environment::findLocalDynamicStatePosition called with dynamicStateKeyBindings_ == 0." );
+    }
+  MapType::const_iterator i = dynamicStateKeyBindings_->find( id );
+  if( i == dynamicStateKeyBindings_->end( ) )
+    {
+      throw Exceptions::InternalError( loc, "Environment::findLocalDynamicStatePosition failed" );
+    }
+  return i->second;
+}
+
+void
+Kernel::Environment::defineDynamicState( const char * debugName, size_t pos, Kernel::EvalState * evalState, Ast::StateReference * defaultState )
+{
+  if( dynamicStateKeyValues_ == 0 )
+    {
+      throw Exceptions::InternalError( "Environment::defineDynamicState called with dynamicStateKeyValues_ == 0." );
+    }
+  if( pos > dynamicStateKeyValues_->size( ) )
+    {
+      throw Exceptions::InternalError( "Environment::defineDynamicState called with pos out of range." );
+    }
+  if( (*dynamicStateKeyValues_)[ pos ] != 0 )
+    {
+      throw Exceptions::RedefiningDynamic( reverseMapDynamicState( pos ) );
+    }
+  
+  (*dynamicStateKeyValues_)[ pos ] = new Kernel::UserDynamicStateProperties( debugName,
+									     Kernel::DynamicEnvironment::getFreshKey( ),
+									     evalState->env_,
+									     evalState->dyn_, 
+									     defaultState );
+}
+
+
 Kernel::Environment::LexicalKey
 Kernel::Environment::findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const
 {
@@ -1138,6 +1183,19 @@ Kernel::Environment::reverseMapState( size_t pos ) const
 	}
     }
   throw Exceptions::InternalError( "Environment::reverseMapState failure." );
+}
+
+const char *
+Kernel::Environment::reverseMapDynamicState( size_t pos ) const
+{
+  for( MapType::const_iterator i = dynamicStateKeyBindings_->begin( ); i != dynamicStateKeyBindings_->end( ); ++i )
+    {
+      if( i->second == pos )
+	{
+	  return i->first;
+	}
+    }
+  throw Exceptions::InternalError( "Environment::reverseMapDynamicState failure." );
 }
 
 

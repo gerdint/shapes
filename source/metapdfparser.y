@@ -447,6 +447,11 @@ OneOrMoreFormalsItems
   $$->argumentOrder_->insert( std::pair< const char *, size_t >( $1, $$->defaultExprs_.size( ) ) );
   $$->defaultExprs_.push_back( $3 );
 }
+| T_state_identifier
+{
+  $$ = new Kernel::Formals( );
+  $$->stateOrder_->insert( std::pair< const char *, size_t >( $1, $$->stateOrder_->size( ) ) );
+}
 | OneOrMoreFormalsItems T_identifier
 {
   $$ = $1;
@@ -471,6 +476,15 @@ OneOrMoreFormalsItems
     }
   $$->argumentOrder_->insert( std::pair< const char *, size_t >( $2, $$->defaultExprs_.size( ) ) );
   $$->defaultExprs_.push_back( $4 );
+}
+| OneOrMoreFormalsItems T_state_identifier
+{
+  $$ = $1;
+  if( $$->stateOrder_->find( $2 ) != $$->stateOrder_->end( ) )
+    {
+      throw Exceptions::RepeatedFormal( @2, $2 );
+    }
+  $$->stateOrder_->insert( std::pair< const char *, size_t >( $2, $$->stateOrder_->size( ) ) );
 }
 ;
 
@@ -716,10 +730,9 @@ ExprExceptConstStrings
 {
   $$ = new Ast::DynamicVariable( @$, $1 );
 }
-| '(' T_state_identifier ')'
+| '(' StateReference ')'
 {
-  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-  $$ = new Ast::Peek( @$, $2, key );
+  $$ = new Ast::Peek( @$, $2 );
 }
 | Expr '.' T_identifier
 {
@@ -982,19 +995,13 @@ GroupElem
   size_t ** posState = new size_t * ( 0 );
   $$ = new Ast::DefineVariable( @1, $1, new Ast::Freeze( @3, $3, posState ), posVar );
 }
-| T_identifier ':' T_state_identifier T_ggthan
-{
-  size_t ** posVar = new size_t * ( 0 );
-  Kernel::Environment::LexicalKey ** keyState = new Kernel::Environment::LexicalKey * ( 0 );
-  $$ = new Ast::DefineVariable( @1, $1, new Ast::Peek( @3, $3, keyState ), posVar );
-}
 | T_dynamic T_dynamic_identifier Expr Expr
 {
   $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4, new size_t * ( 0 ) );
 }
-| T_dynamic T_dynamic_state_identifier T_state_identifier
+| T_dynamic T_dynamic_state_identifier StateReference
 {
-  $$ = new Ast::DynamicStateDecl( @$, @2, $2, @3, $3, new size_t * ( 0 ), new Kernel::Environment::LexicalKey * ( 0 ) );
+  $$ = new Ast::DynamicStateDecl( @$, @2, $2, $3, new size_t * ( 0 ) );
 }
 | Expr '.' T_identifier T_llthan InsertionSequence
 {

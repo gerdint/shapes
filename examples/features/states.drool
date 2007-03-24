@@ -1,49 +1,134 @@
-/** This feature example is a translation of the old warm.drool example
+/** This feature example is a translation (and reordering) of the old warm.drool example
  **/
 
-#str: String
-#msg: String
-#str << `Say´ << ` ´
-#msg << `Say´ << ` ´
-#str << `hello!´
-#msg << `goodbye!´
-str: #str;
-msg: #msg;
-#stderr << str << `¢n´ << msg << `¢n´
+/** Basic use of states includes defining new states, tacking on to them, and finally using the result.
+ **/
 
-#stderr << ( String << `a ´ << `b¢n´ )
+•str: newString
+•msg: newString
+•str << `Say´ << ` ´
+•msg << `Say´ << ` ´
+•str << `hello!´
+•msg << `goodbye!´
 
-#dst1: String
-#dst2: String
+/** Here we freeze the state •str, assigning the final value to the variable str.
+ **/
+str: •str;
 
-#dst1 << `1:´
-#dst2 << `2:´
+/** Future access to •str is invalid; the following would cause an error:
+ **/
+|**•str << `Too much´
 
-say_y: \ #dstStr .> { #dstStr << `y´ }
+/** We can also peek at the state.  This is a potentially expensive operation, depending on
+ ** the implementation of this particular kind of state.
+ **/
+•stderr << str << `¢n´ << (•msg) << `¢n´
 
-dynamic @#dfoo I #stderr
+/** The following is legal:
+ **/
+•msg << `This long message is never used´
 
-foo: \ .> ! { @#dfoo << ` x ´   [say_y @#dfoo] }
 
-@#dfoo: #dst1
-| [! foo]
-@#dfoo: #dst2
-| [! foo]
-@#dfoo: #dst1
-| [! foo]
+/** States can also be created temporary without giving them names.  This has the following syntax,
+ ** where newString is used to spawn the unnamed state.  The state is frozen at the end of the
+ ** insertion sequence within parentheses, and the final value is returned.
+ **/
+•stderr << ( newString << `a ´ << `b¢n´ )
 
-endline: \ #os .> { #os << `(endl)¢n´ }
 
-[endline #dst1]
-[endline #dst2]
-dst1: #dst1;
-dst2: #dst2;
+/** Next, we turn to the scoping rules for lexical access of states.  The rule is that states
+ ** cannot be accessed across function boundaries.  This makes functions behave as functions.
+ ** The language also provides procedures, which are like functions without boundaries.  Procedures
+ ** do not behave as functions, but may be used internally in functions as long as they don't
+ ** reach for states outside the function boundary.
+ ** Note that procedures are called with a special syntax, so that it is obvious that the calls
+ ** cannot be delayed.
+ **/
 
-#stderr << dst1 << dst2
+/** Let's begin with a legal program.
+ **/
+fun: \ a .>
+  {
+    •s: newString
+    proc: \ b .> !
+      {
+        /** Note that, for instance, •stderr is not in scope here.
+	 **/
+        •s << b << a << b
+      }
+    [!proc `Hej!´]
+    •s;
+  }
 
-/* Just to prevent the empty-output-error:
- */
+•stderr << [fun `--´] << `¢n´
 
-dummyStroke: \ #dst2D .> { #dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 
-[dummyStroke #page]
+/** The following is illegal, since •stderr is in the global environment,
+ ** which is outside the function boundary.
+ ** At the time of writing, the error is not detected until badFun is invoked.
+ ** It would be nice, though, if all lexiographic references were checked in a second scan of
+ ** the program.
+ **/
+badFun: \ a .>
+{
+  •stderr << a
+  `Hej!´
+}
+
+/** The following line would trigger the error.
+ **/
+|** •stdout << [badFun `Foo!´]
+
+
+/** States may also be passed to functions.  Functions that take states as arguments are like
+ ** macros in that their evaluation cannot be delayed.  However, since the states being modified
+ ** are explicitly passed to the function, the code is much easier to understand than code that
+ ** uses procedures.
+ ** As an example of this, we draw something to the •page state using this technique.
+ **/
+
+/** Just to prevent the empty-output-error:
+ **/
+
+dummyStroke: \ •dst2D .> { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
+
+[dummyStroke •page]
+
+
+/** We finally take a look at dynamic states.  This is a tricky topic, and a mechanism that
+ ** is recommended to stay away from as much as possible.
+ ** To get reasonable semantics os this beast, we are required to make runtime checks that
+ ** the accessed states are indeed in dynamic scope, and this makes them more expensive to
+ ** use compared to dynamic variables.
+ **/
+
+/** In fact, at the time of writing, dynamic states are not even implemented, but the following
+ ** is a guess of what the final design might look like.
+ **/
+
+•dst1: newString
+•dst2: newString
+
+•dst1 << `1:´
+•dst2 << `2:´
+
+say_y: \ •dstStr .> { •dstStr << `y´ }
+
+|** dynamic @•dfoo •stderr
+|** 
+|** foo: \ .> !
+|**   {
+|**     @•dfoo << ` x ´
+|**     [say_y @•dfoo]
+|**   }
+|** 
+|** @•dfoo: •dst1
+|** | [! foo]
+|** 
+|** @•dfoo: •dst2
+|** | [! foo]
+|** 
+|** @•dfoo: •dst1
+|** | [! foo]
+
+|** •stderr << (•dst1) << `¢n´ << (•dst2) << `¢n´

@@ -414,6 +414,20 @@ namespace MetaPDF
       virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
     };
     
+    class UserDynamicStateProperties : public Kernel::DynamicStateProperties
+    {
+      Kernel::DynamicEnvironmentKeyType key_;
+      Kernel::PassedEnv defaultStateEnv_;
+      Kernel::PassedDyn defaultStateDyn_;
+      Ast::StateReference * defaultState_;
+    public:
+      UserDynamicStateProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const Kernel::PassedEnv & defaultStateEnv, Kernel::PassedDyn defaultStateDyn, Ast::StateReference * defaultState );
+      virtual ~UserDynamicStateProperties( );
+      
+      virtual Kernel::StateHandle fetch( const Kernel::PassedDyn & dyn ) const;
+      virtual void makeBinding( Kernel::StateHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+    };
+    
     class WidthDynamicVariableProperties : public Kernel::DynamicVariableProperties
     {
     public:

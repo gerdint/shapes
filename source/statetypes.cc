@@ -154,6 +154,36 @@ Kernel::UserDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 }
 
 
+Kernel::UserDynamicStateProperties::UserDynamicStateProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const Kernel::PassedEnv & defaultStateEnv, Kernel::PassedDyn defaultStateDyn, Ast::StateReference * defaultState )
+  : DynamicStateProperties( name ), key_( key ),
+    defaultStateEnv_( defaultStateEnv ), defaultStateDyn_( defaultStateDyn ), defaultState_( defaultState )
+{ }
+
+Kernel::UserDynamicStateProperties::~UserDynamicStateProperties( )
+{ }
+
+Kernel::StateHandle
+Kernel::UserDynamicStateProperties::fetch( const Kernel::PassedDyn & dyn ) const
+{
+  try
+    {
+      throw Exceptions::NotImplemented( "Fetching dynamic states" );
+      //      return dyn->getStateHandle( key_ );
+    }
+  catch( const NonLocalExit::DynamicBindingNotFound & ball )
+    {
+      return defaultState_->getHandle( defaultStateEnv_, defaultStateDyn_ );
+    }
+}
+
+void
+Kernel::UserDynamicStateProperties::makeBinding( Kernel::StateHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+{
+  throw Exceptions::NotImplemented( "Creation of dynamic state bindings" );
+}
+
+
+
 Lang::WidthBinding::WidthBinding( const Ast::SourceLocation & loc, Concrete::Length val )
   : loc_( loc ), val_( val )
 { }

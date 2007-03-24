@@ -277,8 +277,8 @@ namespace MetaPDF
 
 
       size_t findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
-      void defineDynamicState( const char * debugName, size_t pos, Kernel::StateHandle & defaultState );
-
+      void defineDynamicState( const char * debugName, size_t pos, Kernel::EvalState * evalState, Ast::StateReference * defaultState );
+      
       LexicalKey findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const;
       const DynamicStateProperties & lookupDynamicState( const LexicalKey & lexKey ) const;
       const DynamicStateProperties & lookupDynamicState( size_t pos ) const;
@@ -298,6 +298,7 @@ namespace MetaPDF
       const char * reverseMapVariable( size_t pos ) const;
       const char * reverseMapDynamic( size_t pos ) const;
       const char * reverseMapState( size_t pos ) const;
+      const char * reverseMapDynamicState( size_t pos ) const;
     };
 
   }
