@@ -10,7 +10,7 @@ ILAPACK := $(shell ../tools/source/whichiLAPACK)
 LICONV = $(shell ../tools/source/whichlICONV)
 DICONV = $(shell ../tools/source/whichdICONV)
 DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
--D'VERSION_REVISION="$(shell svnversion . -n)"' \
+-D'VERSION_REVISION="$(shell svn info . | sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //')"' \
 -D'VERSION_NUMBER="$(shell cat VERSION | sed -e '2,$$ d')"'
 
 PROGRAM = ../bin/drool
