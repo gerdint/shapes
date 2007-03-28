@@ -317,6 +317,17 @@ namespace MetaPDF
       virtual ~DynamicStateDecl( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
+
+    class DynamicExpression : public Ast::Expression
+    {
+      Ast::Expression * expr_;
+    public:
+      DynamicExpression( const Ast::SourceLocation & loc, Ast::Expression * expr );
+      virtual ~DynamicExpression( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+
   }
 }
 

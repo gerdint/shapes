@@ -350,6 +350,24 @@ Ast::DynamicVariable::eval( Kernel::EvalState * evalState ) const
   
   Kernel::VariableHandle res = dynProps.fetch( evalState->dyn_ );
   
+  /* Now, we know that if the value was bound to a dynamic expression, a value was bound, and that value has
+   * a certain type.
+   */
+  if( ! res->isThunk( ) )
+    {
+      try
+	{
+	  typedef const Lang::DynamicExpression DynType;
+	  RefCountPtr< DynType > dynVal = res->tryVal< DynType >( );
+	  dynVal->eval( evalState );
+	  return;
+	}
+      catch( const NonLocalExit::NotThisType & ball )
+	{
+	  // Never mind.
+	}
+    }
+
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( res,
 		    evalState );
@@ -531,16 +549,23 @@ Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
 void
 Ast::DynamicVariableDecl::callBack( const RefCountPtr< const Lang::Function > & filter, Kernel::EvalState * evalState ) const
 {
-  evalState->env_->defineDynamic( id_,
-				  **idPos_,
-				  filter,
-				  Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
-											       evalState->dyn_,
-											       defaultExpr_ ) ) ) );
-  
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
-		    evalState );
+  if( defaultExpr_->immediate_ )
+    {
+      throw Exceptions::NotImplemented( "Immediate initialization of dynamic variable" );
+    }
+  else
+    {
+      evalState->env_->defineDynamic( id_,
+				      **idPos_,
+				      filter,
+				      Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
+												       evalState->dyn_,
+												       defaultExpr_ ) ) ) );
+      
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+			evalState );
+    }
 }
 
 Kernel::DynamicVariableDeclContinuation::DynamicVariableDeclContinuation( const Ast::SourceLocation & traceLoc, const Ast::DynamicVariableDecl * declExpr, Kernel::EvalState & evalState )
@@ -859,3 +884,23 @@ Ast::Peek::eval( Kernel::EvalState * evalState ) const
 {
   stateRef_->getHandle( evalState->env_, evalState->dyn_ )->peek( evalState, loc( ) );
 }
+
+
+Ast::DynamicExpression::DynamicExpression( const Ast::SourceLocation & loc, Ast::Expression * expr )
+  : Ast::Expression( loc ), expr_( expr )
+{
+  immediate_ = true;
+}
+
+Ast::DynamicExpression::~DynamicExpression( )
+{ }
+
+void
+Ast::DynamicExpression::eval( Kernel::EvalState * evalState ) const
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Kernel::ValueRef( new Lang::DynamicExpression( evalState->env_, expr_ ) ),
+		   evalState );
+}
+
+

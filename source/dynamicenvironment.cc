@@ -709,3 +709,27 @@ Kernel::DynamicEnvironment::getFreshKey( )
   return nextKey;
 }
 
+
+
+Lang::DynamicExpression::DynamicExpression( Kernel::PassedEnv env, Ast::Expression * expr )
+  : env_( env ), expr_( expr )
+{ }
+
+Lang::DynamicExpression::~DynamicExpression( )
+{ }
+
+RefCountPtr< const Lang::Class > Lang::DynamicExpression::TypeID( new Lang::SystemFinalClass( strrefdup( "DynamicExpression" ) ) );
+TYPEINFOIMPL( DynamicExpression );
+
+void
+Lang::DynamicExpression::eval( Kernel::EvalState * evalState ) const
+{
+  evalState->env_ = env_;
+  evalState->expr_ = expr_;
+}
+
+void
+Lang::DynamicExpression::gcMark( Kernel::GCMarkedSet & marked )
+{
+  env_->gcMark( marked );
+}

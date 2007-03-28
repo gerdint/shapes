@@ -885,15 +885,15 @@ DynamicBinding
 {
   $$ = new Ast::DynamicBindingExpression( @$, $1, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| T_dynamic_state_identifier ':' T_state_identifier  %prec T_dynamiccolon
+| T_dynamic_identifier ':' T_dynamic Expr %prec T_dynamiccolon
 {
-  $$ = new Ast::DynamicStateBindingExpression( @$, @1, $1,
-					       new Ast::LexiographicState( @3, $3, new Kernel::Environment::LexicalKey * ( 0 ) ) );
+  $$ = new Ast::DynamicBindingExpression( @$, $1,
+					  new Ast::DynamicExpression( @4, $4 ),
+					  new Kernel::Environment::LexicalKey * ( 0 ) );
 }
-| T_dynamic_state_identifier ':' T_dynamic_state_identifier  %prec T_dynamiccolon
+| T_dynamic_state_identifier ':' StateReference  %prec T_dynamiccolon
 {
-  $$ = new Ast::DynamicStateBindingExpression( @$, @1, $1,
-					       new Ast::DynamicState( @3, $3 ) );
+  $$ = new Ast::DynamicStateBindingExpression( @$, @1, $1, $3 );
 }
 ;
 
@@ -998,6 +998,12 @@ GroupElem
 | T_dynamic T_dynamic_identifier Expr Expr
 {
   $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4, new size_t * ( 0 ) );
+}
+| T_dynamic T_dynamic_identifier Expr T_dynamic Expr
+{
+  $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3,
+				     new Ast::DynamicExpression( @5, $5 ),
+				     new size_t * ( 0 ) );
 }
 | T_dynamic T_dynamic_state_identifier StateReference
 {

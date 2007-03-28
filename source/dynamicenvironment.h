@@ -97,6 +97,20 @@ namespace MetaPDF
   namespace Lang
   {
 
+    class DynamicExpression : public Lang::NoOperatorOverloadValue
+    {
+      Kernel::PassedEnv env_;
+      Ast::Expression * expr_;
+    public:
+      DynamicExpression( Kernel::PassedEnv env, Ast::Expression * expr );
+      virtual ~DynamicExpression( );
+      void eval( Kernel::EvalState * evalState ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
+    };
+    
+
+
 //     class DefaultDestinationBinding : public Lang::DynamicBindings
 //     {
 //       Ast::SourceLocation loc_;

@@ -67,13 +67,13 @@ RefCountPtr< const Lang::Boolean > Lang::THE_TRUE( new Lang::Boolean( true ) );
 RefCountPtr< const Lang::Gray > Lang::THE_BLACK( new Lang::Gray( Concrete::Gray( 0 ) ) );
 RefCountPtr< const Lang::Alpha > Lang::THE_OPAQUE( new Lang::Alpha( false, 1 ) );
 RefCountPtr< const Lang::Class > Lang::THE_OBJECT( new Lang::Object( ) );
-RefCountPtr< const Lang::CoreFunction > Lang::THE_NO_ARROW( new Lang::Core_noArrow( "NO_ARROW" ) );
-RefCountPtr< const Lang::CoreFunction > Lang::THE_IDENTITY( new Lang::Core_identity( "I" ) );
+RefCountPtr< const Lang::CoreFunction > Lang::THE_NO_ARROW( new Lang::Core_noArrow( "no_arrow" ) );
+RefCountPtr< const Lang::CoreFunction > Lang::THE_IDENTITY( new Lang::Core_identity( "identity" ) );
 RefCountPtr< const Lang::Dash > Lang::THE_SOLID_DASH( new Lang::Dash( ) );
 RefCountPtr< const Lang::SoftMask > Lang::THE_NONE_MASK( new Lang::SoftMask( ) );
 RefCountPtr< const Lang::SoftMask > Lang::THE_SAME_MASK( new Lang::SoftMask( ) );
 
-RefCountPtr< const char > BuiltInFonts::HELVETICA = strrefdup( "Helvetica" );
+RefCountPtr< const char > BuiltInFonts::HELVETICA = strrefdup( "helvetica" );
 RefCountPtr< const Lang::Font > Lang::THE_FONT_HELVETICA( new Lang::Font( BuiltInFonts::HELVETICA ) );
 
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords2D( new Lang::Core_coords2D( "coords2D" ) );
