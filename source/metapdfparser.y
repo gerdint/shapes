@@ -997,13 +997,12 @@ GroupElem
 }
 | T_dynamic T_dynamic_identifier Expr Expr
 {
-  $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4, new size_t * ( 0 ) );
+  $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3, $4 );
 }
 | T_dynamic T_dynamic_identifier Expr T_dynamic Expr
 {
   $$ = new Ast::DynamicVariableDecl( @$, @2, $2, $3,
-				     new Ast::DynamicExpression( @5, $5 ),
-				     new size_t * ( 0 ) );
+				     new Ast::DynamicExpression( @5, $5 ) );
 }
 | T_dynamic T_dynamic_state_identifier StateReference
 {

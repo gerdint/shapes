@@ -522,15 +522,25 @@ Ast::WithDynamicExpr::eval( Kernel::EvalState * evalState ) const
 }
 
 
-Ast::DynamicVariableDecl::DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos )
-  : Ast::BindNode( loc, idLoc, id ), filterExpr_( filterExpr ), defaultExpr_( defaultExpr ), idPos_( idPos )
-{ }
+Ast::DynamicVariableDecl::DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr )
+  : Ast::BindNode( loc, idLoc, id ), idPos_( new size_t * ( 0 ) )
+{
+  /* This type of expression is an Ast::BindNode so that it is easy to recovnize and extract the identifier for static analysis
+   * and similar tasks.
+   *
+   * The expression is implemented as a function call, since there are two subexpressions that may need evaluation.
+   */
+
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( false );
+  Ast::DynamicVariableDeclFunction * res = new Ast::DynamicVariableDeclFunction( id, filterExpr, defaultExpr, idPos_ );
+  res->push_exprs( args );
+  impl_ = new Ast::CallExpr( loc,
+			     RefCountPtr< const Lang::Function >( res ),
+			     args );
+}
 
 Ast::DynamicVariableDecl::~DynamicVariableDecl( )
-{
-  delete filterExpr_;
-  delete defaultExpr_;
-}
+{ }
 
 void
 Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
@@ -540,32 +550,40 @@ Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
       *idPos_ = new size_t( evalState->env_->findLocalDynamicPosition( idLoc_, id_ ) );
     }
 
-  evalState->expr_ = filterExpr_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::DynamicVariableDeclContinuation( filterExpr_->loc( ),
-										   this,
-										   *evalState ) );
+  evalState->expr_ = impl_;
+}
+
+
+Ast::DynamicVariableDeclFunction::DynamicVariableDeclFunction( const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos )
+  : Lang::Function( new Kernel::EvaluatedFormals( "< dynamic variable declaration >", false ) ), id_( id ), filterExpr_( filterExpr ), defaultExpr_( defaultExpr ), idPos_( idPos )
+{ }
+
+Ast::DynamicVariableDeclFunction::~DynamicVariableDeclFunction( )
+{
+  delete filterExpr_;
+  delete defaultExpr_;
 }
 
 void
-Ast::DynamicVariableDecl::callBack( const RefCountPtr< const Lang::Function > & filter, Kernel::EvalState * evalState ) const
+Ast::DynamicVariableDeclFunction::push_exprs( Ast::ArgListExprs * args ) const
 {
-  if( defaultExpr_->immediate_ )
-    {
-      throw Exceptions::NotImplemented( "Immediate initialization of dynamic variable" );
-    }
-  else
-    {
-      evalState->env_->defineDynamic( id_,
-				      **idPos_,
-				      filter,
-				      Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_,
-												       evalState->dyn_,
-												       defaultExpr_ ) ) ) );
-      
-      Kernel::ContRef cont = evalState->cont_;
-      cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
-			evalState );
-    }
+  args->orderedExprs_->push_back( filterExpr_ );
+  args->orderedExprs_->push_back( defaultExpr_ );
+}
+
+void
+Ast::DynamicVariableDeclFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  static const char * title = "< dynamic variable declaration >";
+  typedef const Lang::Function FilterType;
+  evalState->env_->defineDynamic( id_,
+				  **idPos_,
+				  Helpers::down_cast_CoreArgument< FilterType >( title, args, 0, callLoc ),
+				  args.getHandle( 1 ) );
+  
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+		    evalState );
 }
 
 Kernel::DynamicVariableDeclContinuation::DynamicVariableDeclContinuation( const Ast::SourceLocation & traceLoc, const Ast::DynamicVariableDecl * declExpr, Kernel::EvalState & evalState )
@@ -581,8 +599,9 @@ void
   evalState->env_ = env_;
   evalState->dyn_ = dyn_;
   evalState->cont_ = cont_;
-  declExpr_->callBack( Helpers::down_cast< const Lang::Function >( val, traceLoc_ ),
-		       evalState );
+  throw Exceptions::NotImplemented( "Deprecated: DynamicVariableDeclContinuation" );
+  //  declExpr_->callBack( Helpers::down_cast< const Lang::Function >( val, traceLoc_ ),
+  //		       evalState );
 }
 
 void

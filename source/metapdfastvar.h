@@ -294,17 +294,30 @@ namespace MetaPDF
       virtual ~WithDynamicExpr( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
-    
+
     class DynamicVariableDecl : public Ast::BindNode
     {
-      Ast::Expression * filterExpr_;
-      Ast::Expression * defaultExpr_;
       mutable size_t ** idPos_;
+      Ast::Expression * impl_;
     public:
-      DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos );
+      DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr );
       virtual ~DynamicVariableDecl( );
       virtual void eval( Kernel::EvalState * evalState ) const;
-      void callBack( const RefCountPtr< const Lang::Function > & filter, Kernel::EvalState * evalState ) const;
+    };
+
+    class DynamicVariableDeclFunction : public Lang::Function
+    {
+      const char * id_;
+      Ast::Expression * filterExpr_;
+      Ast::Expression * defaultExpr_;
+      size_t ** idPos_;
+    public:
+      DynamicVariableDeclFunction( const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos );
+      virtual ~DynamicVariableDeclFunction( );
+      void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
+      virtual bool isTransforming( ) const { return false; }
     };
 
     class DynamicStateDecl : public Ast::BindNode
