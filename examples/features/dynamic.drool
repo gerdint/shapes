@@ -4,9 +4,12 @@ f: \ b .> @a + b
 •stderr << @a:6 | [f 2] << `¢n´
 •stderr << [f 2] << `¢n´
 
+dynamic @c identity 10
 dynamic @b identity dynamic @a + 5
 
-@a: 7
+@a: dynamic @c * 4
+&
+@c: 20
 |
 {
   •stderr << `@b: ´ << @b << `¢n´
