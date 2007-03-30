@@ -1,0 +1,86 @@
+/** This feature example is named after the reminding concept from Scheme.
+ ** Anyway, "values" refers to the possibility of returning multiple values from a function.  However,
+ ** this is not done the way it is in Scheme, where a bunch of values can only be returned through
+ ** certain continuations.  Here, multiple values are combined in one value which we denote a "structure"
+ ** (which can be given a composite type) and special constructs are used to use a structure in function calls or to
+ ** bind the contained values to variables.
+ **/
+
+
+/** In the first example, some values are simply put in a certain order.
+ **/
+{
+  multi: \  x .> (>  x  x+1  x+2  <)
+
+  user: \ a1 a2 a3 .>  100*a1 + 10*a2 + a3
+  
+  /** Note the special syntax used to call a function with the values expanded:
+   **/
+  •stdout << user [] <>[multi 5] << `¢n´
+}
+
+/** In the next example, some values are simply put in a certain order, and we combine this
+ ** with an evaluated cut.
+ **/
+{
+  multi: \  x .> (>  x  a3:x+1  a2:x+2  <)
+
+  user: \ a1 a2 a3 a4 .>  1000*a4 + 100*a1 + 10*a2 + a3
+
+  •stdout << user [...] <>[multi 5] [] 9<< `¢n´
+}
+
+
+/** Here, we show how to also pass states to a function, and also that the structure with values need
+ ** not be returned from a function, but can be created anywhere.  Also, it is shown how named parts
+ ** can be accessed using field access notation.
+ **/
+{
+  bunch: (>  6  a3:7  a2:8  <)
+
+  user: \ •dst a1 a2 a3 .>
+    {
+      •dst << 100*a1 + 10*a2 + a3 << `¢n´
+    }
+  [(user [...] <>bunch)  •stdout]
+
+  /** The following syntax might be supported in the future.  For now,
+   ** it is considered a risk of ambiguity to mix the two forms of
+   ** function application.
+   **/
+|**  [user •stdout <>bunch]
+
+  •stdout << `Field access:  a2 = ´ << bunch.a2 << `¢n´
+  /** By the way, parts that are not named cannot be accessed in a similar way.  However,
+   ** note that we can always to this:
+   **/
+  •stdout << `The first argument is:  a1 = ´ << ( \ a1 a2 a3 .> a1 ) [] <>bunch << `¢n´
+  /** ... but note that this requires that we know the names of the named parts of <bunch>, for
+   ** otherwise there will be an error when the function is applied.
+   **/
+}
+
+
+/** Like in (lambda args <body>) construct in Scheme, we can define a function that gets just a structure as argument.
+ ** There's also a construct that corresponds to (lambda (<arglist> . moreargs) <body>)
+ **/
+{
+  foo: \! <>args .>
+  {
+    •stdout << `a = ´ << args.a << `, b = ´ << args.b << `¢n´
+  }
+
+  [!foo b:2 a:1]
+
+  bar: \! a <>args .>
+  {
+    •stdout << `a = ´ << args.a << `, b = ´ << args.b << `, c = ´ << args.c << `¢n´
+  }
+
+  [!bar 0 c:2 b:1]
+}
+
+/** Next, we turn to how parts of a structure can conveniently be given names in the local scope.
+ **/
+
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

@@ -345,7 +345,8 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
     stateBindings_( new Kernel::Environment::MapType ),
     states_( new std::vector< Kernel::StateHandle >( ) ),
     dynamicStateKeyBindings_( new Kernel::Environment::MapType ),
-    dynamicStateKeyValues_( new std::vector< DynamicStateProperties * > )
+    dynamicStateKeyValues_( new std::vector< DynamicStateProperties * > ),
+    functionBoundary_( false )
 {
   garbageArea.push_back( this );
   ++createdCount;
@@ -617,7 +618,8 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea, Environment * parent, MapType * bindings, const RefCountPtr< std::vector< VariableHandle > > & values, MapType * stateBindings, const RefCountPtr< std::vector< StateHandle > > & states )
   : parent_( parent ),
     bindings_( bindings ), values_( values ), dynamicKeyBindings_( 0 ),
-    stateBindings_( stateBindings ), states_( states ), dynamicStateKeyBindings_( 0 )
+    stateBindings_( stateBindings ), states_( states ), dynamicStateKeyBindings_( 0 ),
+    functionBoundary_( false )
 				 //, unitMap_( NullPtr< Kernel::Environment::UnitMapType >( ) )
 {
   garbageArea.push_back( this );
