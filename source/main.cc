@@ -122,6 +122,12 @@ main( int argc, char ** argv )
 	  argv += 1;
 	  argc -= 1;
 	}
+      else if( strcmp( *argv, "--bytecolumn" ) == 0 )
+	{
+	  Interaction::characterColumnInBytes = true;
+	  argv += 1;
+	  argc -= 1;
+	}
       else if( strcmp( *argv, "--debugstep" ) == 0 )
 	{
 	  char * endp;
@@ -800,6 +806,7 @@ main( int argc, char ** argv )
 	}
       catch( Exceptions::Exception & ball )
 	{
+	  std::cout.flush( );
 	  if( Interaction::debugBacktrace )
 	    {
 	      evalState.cont_->backTrace( std::cerr );
@@ -844,6 +851,7 @@ main( int argc, char ** argv )
     }
   catch( const Exceptions::Exception & ball )
     {
+      std::cout.flush( );
       ball.display( cerr );
       abortProcedure( & oFile, outputName );
     }

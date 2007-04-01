@@ -29,6 +29,7 @@ namespace MetaPDF
     extern double displayUnitFactor;
     extern bool fontMetricMessages;
     extern bool fontMetricDebug;
+    extern bool characterColumnInBytes;
 
   }
 
