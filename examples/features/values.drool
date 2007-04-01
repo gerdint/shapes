@@ -76,7 +76,7 @@
 
   bar: \ a <> args .> !
   {
-    •stdout << `a = ´ << args.a << `, b = ´ << args.b << `, c = ´ << args.c << `¢n´
+    •stdout << `a = ´ << a << `, b = ´ << args.b << `, c = ´ << args.c << `¢n´
   }
 
   [!bar 0 c:2 b:1]
@@ -95,6 +95,104 @@
 }
 
 /** Next, we turn to how parts of a structure can conveniently be given names in the local scope.
+ ** The semantics remind a little bit of function calls, but are actually rather different.
  **/
+{
+
+  {
+    /** We begin with a structure with only ordered parts.
+     **/
+    bunch: (>  6  7  8  <)
+
+    {
+      /** Just like in a function call, we can receive the parts of a structure by order:
+       **/
+      (< x y z >): bunch
+      •stdout << `x = ´ << x << `, y = ´ << y << `, z = ´ << z << `¢n´
+    }
+
+    {
+      /** It is an error to not take care of all ordered parts.  The following would result in an error.
+       **/
+|**      (< x y >): bunch
+
+      /** Unless we have a sink!
+       **/
+      (< x y <> rest >): bunch
+      (< z >): rest
+      •stdout << `From the sink, z = ´ << z << `¢n´
+    }
+
+    {
+      /** On the other hand, we can provide defaults if there are not enough ordered parts:
+       **/
+      (< x y z w:14 >): bunch
+
+      •stdout << `w = ´ << w << `¢n´
+    }
+
+  }
+
+
+  {
+    /** When it comes to named parts of a structure, there are some differences to the semantics of calling
+     ** a function.  First, it is not required that all named parts are received.  This makes it possible to 
+     ** extract only the parts of a structure with are useful, and avoids cluttering the destination scope with
+     ** variables of no use.
+     ** Second, the variables being introduced in the current scope are generally named different from the
+     ** names bound to the values in the structure.
+     **/
+    bunch: (>  a1:6  a3:7  a2:8  <)
+
+    {
+      /** Here is a typical extraction of two named parts.  Note that without the dot before the names
+       ** that refer to parts of the structure, this would be the syntax that specifies a default values.
+       **/
+      (<
+        x:.a1
+	y:.a2
+      >): bunch
+
+      •stdout << `x = ´ << x  << `, y = ´ << y << `¢n´
+    }
+
+    {
+      /** To receive the parts by their own names, the following syntax may be thought of (and implemented)
+       ** as a low level syntax sugar.
+       **/
+      (< a2:." a3:." >): bunch
+      •stdout << `a2 = ´ << a2 << `, a3 = ´ << a3 << `¢n´
+    }
+
+    {
+      /** Defaults can be provided.
+       **/
+      def: 1000
+      (< a2:." a4:.":def >): bunch
+      •stdout << `a2 = ´ << a2 << `, a4 = ´ << a4 << `¢n´
+    }
+  }
+
+  {
+    /** Ordered and named parts can be used at the same time, as shown by these examples.  However, it sould
+     ** be noted that they cannot interact, so there are no fancy combinations to be explained here.
+     **/
+
+    bunch: (>  6  a3:7  a2:8  <)
+
+    {
+      (<  x  y:a2  a3:."  >): bunch
+      •stdout << `x = ´ << x << `, a2 = ´ << a2 << `, a3 = ´ << a3 << `¢n´
+    }
+
+    {
+      (<  x  y:1000 >): bunch
+      •stdout << `x = ´ << x << `, y = ´ << y << `¢n´
+    }
+     
+  }
+
+}
+
 
 •page << [stroke (0cm,0cm)--(1cm,1cm)]

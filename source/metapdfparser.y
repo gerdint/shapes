@@ -762,8 +762,8 @@ ExprExceptConstStrings
   Ast::MemberReferenceFunction * res = new Ast::MemberReferenceFunction( @$, $1, $3 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 | Expr '.' MethodIdentifier
 {

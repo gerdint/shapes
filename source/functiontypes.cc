@@ -472,7 +472,8 @@ Lang::Transform3D::show( std::ostream & os ) const
 Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
   : formals_( formals ), variables_( new Environment::ValueVector::ValueType ), dst_( 0 ),
     hasSink_( formals_->formals_->hasSink( ) ),
-    dstEnd_( hasSink_ ? ( formals_->formals_->argumentOrder_->size( ) - 1 ) : formals_->formals_->argumentOrder_->size( ) ),
+    dstEnd_( formals_->formals_->defaultExprs_.size( ) ),
+    isSink_( formals_->isSink_ ),
     sinkArgList_( 0 ), sinkValues_( NullPtr< const Lang::SingleList >( ) ),
     states_( new Environment::StateVector::ValueType ), stateDst_( 0 )
 {
@@ -532,7 +533,8 @@ Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::
 {
   /* Recall that if there's a sink, this will be the last argument.
    */
-  if( dst_ == dstEnd_ )
+  if( ! isSink_ &&
+      dst_ == dstEnd_ )
     {
       // Put it in the sink.
       CHECK(
@@ -579,7 +581,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHand
   FormalsMapType::const_iterator j = formalsMap.find( id );
   if( j == formalsMap.end( ) ||
       ( hasSink_ &&
-	j->second + 1 == dstEnd_ ) )
+	j->second == dstEnd_ ) )
     {
       if( hasSink_ )
 	{
@@ -713,7 +715,8 @@ Kernel::Arguments::applyDefaults( )
   size_t numberOfArguments = variables_->size( );
   size_t formalsSize = formals_->defaults_.size( );
 
-  if( numberOfArguments > formalsSize )
+  if( numberOfArguments > formalsSize &&
+      ! hasSink_ )
     {
       /* The location of the ball must be set by the caller. */
       throw Exceptions::UserArityMismatch( formals_->formals_->loc( ), formalsSize, numberOfArguments, Exceptions::UserArityMismatch::VARIABLE );
@@ -1172,21 +1175,21 @@ RefCountPtr< const Lang::Class > Lang::Function::TypeID( new Lang::SystemFinalCl
 TYPEINFOIMPL( Function );
 
 Kernel::EvaluatedFormals::EvaluatedFormals( Kernel::Formals * formals )
-  : selectiveForcing_( false ), forceAll_( false ), formals_( formals )
+  : selectiveForcing_( false ), forceAll_( false ), formals_( formals ), isSink_( true )
 { }
 
 Kernel::EvaluatedFormals::EvaluatedFormals( const char * locationString )
-  : selectiveForcing_( true ), formals_( 0 )
+  : selectiveForcing_( true ), formals_( 0 ), isSink_( true )
 {
-  Kernel::Formals * formals( new Kernel::Formals );
+  Kernel::Formals * formals( new Kernel::Formals( ) );
   formals->setLoc( Ast::SourceLocation( locationString ) );
   formals_ = formals;
 }
 
-Kernel::EvaluatedFormals::EvaluatedFormals( const char * locationString, bool forceAll )
-  : selectiveForcing_( false ), forceAll_( forceAll ), formals_( 0 )
+Kernel::EvaluatedFormals::EvaluatedFormals( const char * locationString, bool forceAll)
+  : selectiveForcing_( false ), forceAll_( forceAll ), formals_( 0 ), isSink_( true )
 {
-  Kernel::Formals * formals( new Kernel::Formals );
+  Kernel::Formals * formals( new Kernel::Formals( ) );
   formals->setLoc( Ast::SourceLocation( locationString ) );
   formals_ = formals;
 }

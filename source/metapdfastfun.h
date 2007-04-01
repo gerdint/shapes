@@ -17,11 +17,12 @@ namespace MetaPDF
     public:
       bool seenDefault_;
       std::map< const char *, size_t, charPtrLess > * argumentOrder_;
-      std::vector< Ast::Expression * > defaultExprs_;
+      std::vector< Ast::Expression * > defaultExprs_; // The sink does not have a default expression at all.
       const char * sink_; // If null, there is no sink.
       std::vector< bool > forcePos_;
       std::map< const char *, size_t, charPtrLess > * stateOrder_;
       Formals( );
+      Formals( size_t numberOfDummyDefaultExprs );
       ~Formals( );
       void setLoc( Ast::SourceLocation loc );
       

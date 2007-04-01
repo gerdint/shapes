@@ -45,6 +45,7 @@ namespace MetaPDF
       bool hasSink_;
       // Putting dstEnd_ after hasSink_ makes initialization more convenient.
       size_t dstEnd_; // This is one less than there are variables if there is a sink.
+      bool isSink_; // This is used by functions in the core.
 
       Ast::ArgListExprs * sinkArgList_; // If null, there is no sink.
       RefCountPtr< const Lang::SingleList > sinkValues_;
@@ -90,6 +91,7 @@ namespace MetaPDF
       Kernel::Formals * formals_;                     /* it would have been const if it was not for appendEvaluatedFormal */
       std::vector< Kernel::VariableHandle > defaults_;
       std::vector< const Ast::Node * > locations_;
+      bool isSink_;
       
       EvaluatedFormals( Kernel::Formals * _formals );
       EvaluatedFormals( const char * _locationString );

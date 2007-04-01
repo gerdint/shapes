@@ -20,6 +20,18 @@ Kernel::Formals::Formals( )
     stateOrder_( new std::map< const char *, size_t, charPtrLess > )
 { }
 
+Kernel::Formals::Formals( size_t numberOfDummyDefaultExprs )
+  : seenDefault_( false ), argumentOrder_( new std::map< const char *, size_t, charPtrLess > ),
+    sink_( 0 ),
+    stateOrder_( new std::map< const char *, size_t, charPtrLess > )
+{
+  // Pushing null expressions is just a way of specifying how many non-sink arguments there are.
+  for( size_t i = 0; i < numberOfDummyDefaultExprs; ++i )
+    {
+      defaultExprs_.push_back( 0 );
+    }
+}
+
 Kernel::Formals::~Formals( )
 {
   delete argumentOrder_;
@@ -61,6 +73,8 @@ Kernel::EvaluatedFormals *
 Kernel::Formals::newEvaluatedFormals( Kernel::Arguments & args, size_t * pos ) const
 {
   Kernel::EvaluatedFormals * res = new Kernel::EvaluatedFormals( const_cast< Kernel::Formals * >( this ) );
+  res->isSink_ = false; // The formals created here belong to user functions, which are exactly those which are not sinks.
+
   res->defaults_.reserve( defaultExprs_.size( ) );
   res->locations_.reserve( defaultExprs_.size( ) );
 

@@ -801,15 +801,15 @@ Exceptions::UserArityMismatch::display( std::ostream & os ) const
   switch( type_ )
     {
     case VARIABLE:
-      os << "value arguments" ;
+      os << " value arguments" ;
       break;
     case STATE:
-      os << "state arguments" ;
+      os << " state arguments" ;
       break;
     default:
-      os << "<?ERROR?" ;
+      os << " ?ERROR?" ;
     }
-  os << " , not " << callArity << std::endl ;
+  os << ", not " << callArity << std::endl ;
 }
 
 

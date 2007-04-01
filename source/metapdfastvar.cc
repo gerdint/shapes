@@ -246,7 +246,7 @@ Ast::EvalOutsideExpr::eval( Kernel::EvalState * evalState ) const
 
 
 Ast::MemberReferenceFunction::MemberReferenceFunction( const Ast::SourceLocation & loc, Ast::Expression * variable, const char * fieldID )
-  : Lang::Function( new Kernel::EvaluatedFormals( "<>.<>)", true ) ), loc_( loc ), variable_( variable ), fieldID_( fieldID )
+  : Lang::Function( new Kernel::EvaluatedFormals( "<>.<>", true ) ), loc_( loc ), variable_( variable ), fieldID_( fieldID )
 { }
 
 Ast::MemberReferenceFunction::~MemberReferenceFunction( )
