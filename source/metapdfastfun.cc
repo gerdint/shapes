@@ -16,6 +16,7 @@ using namespace std;
 
 Kernel::Formals::Formals( )
   : seenDefault_( false ), argumentOrder_( new std::map< const char *, size_t, charPtrLess > ),
+    sink_( 0 ),
     stateOrder_( new std::map< const char *, size_t, charPtrLess > )
 { }
 
@@ -23,6 +24,10 @@ Kernel::Formals::~Formals( )
 {
   delete argumentOrder_;
   delete stateOrder_;
+  if( sink_ != 0  )
+    {
+      delete sink_;
+    }
 }
 
 void

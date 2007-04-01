@@ -18,6 +18,7 @@ namespace MetaPDF
       bool seenDefault_;
       std::map< const char *, size_t, charPtrLess > * argumentOrder_;
       std::vector< Ast::Expression * > defaultExprs_;
+      const char * sink_; // If null, there is no sink.
       std::vector< bool > forcePos_;
       std::map< const char *, size_t, charPtrLess > * stateOrder_;
       Formals( );
@@ -31,6 +32,8 @@ namespace MetaPDF
       std::vector< bool > * newArgListForcePos( const Ast::ArgListExprs * argList ) const;
       std::vector< bool > * newArgListForcePos( const Ast::ArgListExprs * argList, const Kernel::Arguments & curryArgs ) const;
       
+      bool hasSink( ) const { return sink_ != 0; }
+
       const Ast::SourceLocation & loc( ) const;
     };
     

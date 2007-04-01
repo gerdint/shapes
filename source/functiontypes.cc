@@ -471,8 +471,21 @@ Lang::Transform3D::show( std::ostream & os ) const
 
 Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
   : formals_( formals ), variables_( new Environment::ValueVector::ValueType ), dst_( 0 ),
+    hasSink_( formals_->formals_->hasSink( ) ),
+    dstEnd_( hasSink_ ? ( formals_->formals_->argumentOrder_->size( ) - 1 ) : formals_->formals_->argumentOrder_->size( ) ),
+    sinkArgList_( 0 ), sinkValues_( NullPtr< const Lang::SingleList >( ) ),
     states_( new Environment::StateVector::ValueType ), stateDst_( 0 )
 {
+  if( hasSink_ )
+    {
+      sinkArgList_ = new Ast::ArgListExprs( false ); // This is not an expression-owner.
+      sinkValues_ = RefCountPtr< const Lang::SingleList >( new Lang::SingleListNull( ) );
+      if( formals_->formals_->argumentOrder_->size( ) == 0 )
+	{
+	  // All arguments go in the sink.
+	  dst_ = INT_MAX;
+	}
+    }
   // Thinking of all the evaluated cuts, it actually makes some sense not to reserve memory here.
   //  variables_.reserve( formals_->argumentOrder_->size( ) );
   //  states_.reserve( formals_->stateOrder_->size( ) );
@@ -503,15 +516,35 @@ Kernel::Arguments::clone( ) const
   }
   res.locations_ = locations_;
   res.dst_ = dst_;
+  if( sinkArgList_ != 0 )
+    {
+      throw Exceptions::NotImplemented( "Cloning of arguments with sink." );
+      //res.sinkArgList_ = sinkArgList_->clone( );
+      res.sinkValues_ = sinkValues_;
+    }
 
   return res;
 }
 
 
 void
-Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Node * loc )
+Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc )
 {
-  if( dst_ == variables_->size( ) )
+  /* Recall that if there's a sink, this will be the last argument.
+   */
+  if( dst_ == dstEnd_ )
+    {
+      // Put it in the sink.
+      CHECK(
+	    if( ! hasSink_ )
+	      {
+		throw Exceptions::InternalError( "Excess of arguments and no sink." );
+	      }
+	    );
+      sinkArgList_->orderedExprs_->push_back( loc );
+      sinkValues_ = RefCountPtr< Lang::SingleList >( new Lang::SingleListPair( arg, sinkValues_ ) );
+    }
+  else if( dst_ == variables_->size( ) )
     {
       variables_->push_back( arg );
       locations_.push_back( loc );
@@ -530,7 +563,7 @@ Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::
 }
 
 void
-Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Node * loc )
+Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc )
 {
   if( formals_ == 0 )
     {
@@ -540,9 +573,24 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHand
   typedef typeof *(formals_->formals_->argumentOrder_) FormalsMapType;
   FormalsMapType & formalsMap = *(formals_->formals_->argumentOrder_);
 
+  /* Note that the name of the sink is invisible, so referring to it is just another arguments which is
+   * put in the sink.  This variable happens to have the same name as the sink.
+   */
   FormalsMapType::const_iterator j = formalsMap.find( id );
-  if( j == formalsMap.end( ) )
+  if( j == formalsMap.end( ) ||
+      ( hasSink_ &&
+	j->second + 1 == dstEnd_ ) )
     {
+      if( hasSink_ )
+	{
+	  if( sinkArgList_->namedExprs_->find( id ) != sinkArgList_->namedExprs_->end( ) )
+	    {
+	      throw Exceptions::InternalError( "It is a surprise that the sink got a repeated formal." );
+	    }
+	  sinkArgList_->namedExprs_->insert( std::pair< const char *, Ast::Expression * >( id, loc ) );
+	  sinkValues_ = RefCountPtr< Lang::SingleList >( new Lang::SingleListPair( arg, sinkValues_ ) );
+	  return;
+	}
       throw Exceptions::NamedFormalMismatch( formals_->formals_->loc( ), strrefdup( id ), Exceptions::NamedFormalMismatch::VARIABLE );
     }
   size_t pos = j->second;
@@ -715,7 +763,7 @@ Kernel::Arguments::applyDefaults( )
 
   /* Allocate positions in the vector for all arguments.
    */
-  variables_->reserve( formalsSize );
+  variables_->reserve( hasSink_ ? formalsSize + 1 : formalsSize );
   while( variables_->size( ) < formalsSize )
     {
       variables_->push_back( Kernel::THE_SLOT_VARIABLE );
@@ -769,6 +817,16 @@ Kernel::Arguments::applyDefaults( )
   if( missingArgs != 0 || missingStates != 0 )
     {
       throw Exceptions::MissingArguments( formals_->formals_->loc( ), missingArgs, missingStates );
+    }
+
+  if( hasSink_ )
+    {
+      variables_->push_back
+	( Helpers::newValHandle
+	  ( new Lang::Structure( sinkArgList_,
+				 sinkValues_, 
+				 true ) ) ); // true means that the sinkArgList_ gets owned by the Structure.
+      sinkArgList_ = 0;
     }
 }
 

@@ -62,22 +62,36 @@
 
 
 /** Like in (lambda args <body>) construct in Scheme, we can define a function that gets just a structure as argument.
- ** There's also a construct that corresponds to (lambda (<arglist> . moreargs) <body>)
+ ** There's also a construct that corresponds to (lambda (<arglist> . moreargs) <body>).
+ ** In Drool, the construct is called a "sink".  Note that functions with a sink may be tricky from a type system point
+ ** of view, so code that wish to be type-compilant should not use sinks.
  **/
 {
-  foo: \! <>args .>
+  foo: \ <> args .> !
   {
     •stdout << `a = ´ << args.a << `, b = ´ << args.b << `¢n´
   }
 
   [!foo b:2 a:1]
 
-  bar: \! a <>args .>
+  bar: \ a <> args .> !
   {
     •stdout << `a = ´ << args.a << `, b = ´ << args.b << `, c = ´ << args.c << `¢n´
   }
 
   [!bar 0 c:2 b:1]
+
+
+  /** Sinks themselves cannot be passed as a named argument.  Hence, the name of the sink can be used without
+   ** confusion:
+   **/
+
+  boo: \ <> args .> !
+  {
+    •stdout << `args = ´ << args.args << `¢n´
+  }
+
+  [!boo args:7]
 }
 
 /** Next, we turn to how parts of a structure can conveniently be given names in the local scope.

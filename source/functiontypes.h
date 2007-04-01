@@ -42,6 +42,12 @@ namespace MetaPDF
       Environment::ValueVector variables_;
       std::vector< const Ast::Node * > locations_;
       size_t dst_;
+      bool hasSink_;
+      // Putting dstEnd_ after hasSink_ makes initialization more convenient.
+      size_t dstEnd_; // This is one less than there are variables if there is a sink.
+
+      Ast::ArgListExprs * sinkArgList_; // If null, there is no sink.
+      RefCountPtr< const Lang::SingleList > sinkValues_;
 
       Environment::StateVector states_;   // This type must match that used in Environment
       std::vector< const Ast::Node * > stateLocations_;
@@ -53,8 +59,8 @@ namespace MetaPDF
       
       Kernel::Arguments clone( ) const;
       
-      void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Node * loc );
-      void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Node * loc );
+      void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc );
+      void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc );
 
       void addOrderedState( const Kernel::StateHandle & state, Ast::Node * loc );
       void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Node * loc );

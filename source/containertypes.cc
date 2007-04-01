@@ -273,12 +273,17 @@ Lang::SingleListMethodFoldR::call( Kernel::EvalState * evalState, Kernel::Argume
 }
 
 
-Lang::Structure::Structure( const Ast::ArgListExprs * argList, const RefCountPtr< const Lang::SingleList > & values )
-  : argList_( argList ), values_( values )
+Lang::Structure::Structure( const Ast::ArgListExprs * argList, const RefCountPtr< const Lang::SingleList > & values, bool argListOwner )
+  : argListOwner_( argListOwner ), argList_( argList ), values_( values )
 { }
 
 Lang::Structure::~Structure( )
-{ }
+{
+  if( argListOwner_ )
+    {
+      delete argList_;
+    }
+}
 
 RefCountPtr< const Lang::Class > Lang::Structure::TypeID( new Lang::SystemFinalClass( strrefdup( "Union" ) ) );
 TYPEINFOIMPL( Structure );

@@ -427,10 +427,32 @@ Formals
   $$ = new Kernel::Formals( );
   $$->setLoc( @$ );
 }
+| T_split T_identifier
+{
+  $$ = new Kernel::Formals( );
+  $$->argumentOrder_->insert( std::pair< const char *, size_t >( $2, $$->defaultExprs_.size( ) ) );
+  /* Note that we do not push a default expression (not even a null pointer) for the sink.
+   * This way, the length of defaultExprs_ allways gives the number of non-sink arguments.
+   * The default value for the sink is taken care of in a non-standard way anyway.
+   */
+  $$->setLoc( @$ );
+  $$->sink_ = $2;
+}
 | OneOrMoreFormalsItems
 {
   $$ = $1;
   $$->setLoc( @$ );
+}
+| OneOrMoreFormalsItems T_split T_identifier
+{
+  $$ = $1;
+  $$->argumentOrder_->insert( std::pair< const char *, size_t >( $3, $$->defaultExprs_.size( ) ) );
+  /* Note that we do not push a default expression (not even a null pointer) for the sink.
+   * This way, the length of defaultExprs_ allways gives the number of non-sink arguments.
+   * The default value for the sink is taken care of in a non-standard way anyway.
+   */
+  $$->setLoc( @$ );
+  $$->sink_ = $3;
 }
 ;
 
@@ -458,7 +480,7 @@ OneOrMoreFormalsItems
   if( $$->seenDefault_ )
     {
       throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
-    } 
+    }
   if( $$->argumentOrder_->find( $2 ) != $$->argumentOrder_->end( ) )
     {
       throw Exceptions::RepeatedFormal( @2, $2 );
