@@ -353,6 +353,16 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
+    class NonExistentPosition : public RuntimeError
+    {
+      size_t pos_;
+      size_t maxPos_;
+    public:
+      NonExistentPosition( size_t pos, size_t maxPos );
+      virtual ~NonExistentPosition( );
+      virtual void display( std::ostream & os ) const;
+    };
+
     class ProtectedMemberPublicScope : public RuntimeError
     {
       RefCountPtr< const char > valueType;
@@ -532,6 +542,18 @@ namespace MetaPDF
     public:
       UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, const Type type );
       virtual ~UserArityMismatch( );
+      virtual void display( std::ostream & os ) const;
+    };
+
+    class SinkRequired : public RuntimeError
+    {
+    private:
+      const Ast::SourceLocation loc_;    
+      const size_t formalsArity_;
+      const size_t callArity_;
+    public:
+      SinkRequired( const Ast::SourceLocation loc, size_t formalsArity, size_t callArity );
+      virtual ~SinkRequired( );
       virtual void display( std::ostream & os ) const;
     };
 

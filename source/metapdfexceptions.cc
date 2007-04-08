@@ -414,6 +414,20 @@ Exceptions::NonExistentMember::display( std::ostream & os ) const
 }
 
 
+Exceptions::NonExistentPosition::NonExistentPosition( size_t pos, size_t maxPos )
+  : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), pos_( pos ), maxPos_( maxPos )
+{ }
+
+Exceptions::NonExistentPosition::~NonExistentPosition( )
+{ }
+
+void
+Exceptions::NonExistentPosition::display( std::ostream & os ) const
+{
+  os << "Referencing field at position " << pos_ << " is an error since the user struct has only " << maxPos_ << " ordered fields." << std::endl ;
+}
+
+
 Exceptions::ProtectedMemberPublicScope::ProtectedMemberPublicScope( RefCountPtr< const char > _valueType, const char * _fieldID )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), valueType( _valueType ), fieldID( _fieldID )
 { }
@@ -810,6 +824,19 @@ Exceptions::UserArityMismatch::display( std::ostream & os ) const
       os << " ?ERROR?" ;
     }
   os << ", not " << callArity << std::endl ;
+}
+
+Exceptions::SinkRequired::SinkRequired( const Ast::SourceLocation loc, size_t formalsArity, size_t callArity )
+  : loc_( loc ), formalsArity_( formalsArity ), callArity_( callArity )
+{ }
+
+Exceptions::SinkRequired::~SinkRequired( )
+{ }
+
+void
+Exceptions::SinkRequired::display( std::ostream & os ) const
+{
+  os << "Formals at " << loc_ << " contains no sink, so passing " << callArity << " ordered arguments is " << callArity - formalsArity << " too many." << std::endl ;
 }
 
 

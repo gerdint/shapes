@@ -94,6 +94,7 @@ namespace MetaPDF
       void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
 
       Kernel::VariableHandle findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const;
+      Kernel::VariableHandle getOrdered( RefCountPtr< const Lang::SingleList > vals, size_t pos ) const;
     };
     
     class FunctionFunction : public Lang::Function

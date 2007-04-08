@@ -100,6 +100,7 @@ void metapdferror( char * msg )
   Kernel::Formals * formals;
   std::list< Kernel::Formals * > * formalsList;
   Ast::ArgListExprs * argList;
+  Ast::SplitDefineVariables * splitFormals;
   int intVal;
   double floatVal;
   bool boolVal;
@@ -172,6 +173,7 @@ void metapdferror( char * msg )
 %type <functionMode> FunctionModeList OneOrMoreFunctionModeSpecifiers FunctionModeSpecifier
 %type <expr> Split
 %type <stateReference> StateReference
+%type <splitFormals> SplitFormals OneOrMoreSplitFormals
 
 %nonassoc T_assign ':'
 %left ']' T_splitRight
@@ -510,6 +512,157 @@ OneOrMoreFormalsItems
 }
 ;
 
+
+SplitFormals
+:
+{
+  throw Exceptions::ParserError( @$, strrefdup( "The list of split assignment variables must not be empty." ) );
+}
+| T_split T_identifier
+{
+  throw Exceptions::ParserError( @$, strrefdup( "Just a sink in a split assignment formals list makes no sense." ) );
+}
+| OneOrMoreSplitFormals
+{
+  $$ = $1;
+}
+| OneOrMoreSplitFormals T_split T_identifier
+{
+  $$ = $1;
+  Ast::StructSplitSink * expr = new Ast::StructSplitSink( );
+  size_t ** pos = new size_t * ( 0 );
+  $$->sinkDefine_ = new Ast::DefineVariable( @3, $3, expr, pos );
+  $$->sinkExpr_ = expr;
+}
+;
+
+OneOrMoreSplitFormals
+: T_identifier
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, 0, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| T_identifier ':' Expr
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, 0, $3 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| T_identifier ':' '.' T_identifier
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $4, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| T_identifier ':' '.' T_identifier ':' Expr
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $4, $6 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| T_identifier ':' '.' '\"'
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| T_identifier ':' '.' '\"' ':' Expr
+{
+  $$ = new Kernel::SplitDefineVariables( );
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, $6 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier
+{
+  $$ = $1;
+  if( $$->seenNamed_ )
+    {
+      throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
+    }
+  if( $$->seenDefault_ )
+    {
+      throw Exceptions::ParserError( @2, strrefdup( "All order-based formals without default values must be placed before those with default values." ) );
+    }
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, 0, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier ':' Expr
+{
+  $$ = $1;
+  if( $$->seenNamed_ )
+    {
+      throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
+    }
+  $$->seenDefault_ = true;
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, 0, $4 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier ':' '.' T_identifier
+{
+  $$ = $1;
+  $$->seenNamed_ = true;
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $5, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier ':' '.' T_identifier ':' Expr
+{
+  $$ = $1;
+  $$->seenNamed_ = true;
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $5, $7 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier ':' '.' '\"'
+{
+  $$ = $1;
+  $$->seenNamed_ = true;
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, 0 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+| OneOrMoreSplitFormals T_identifier ':' '.' '\"' ':' Expr
+{
+  $$ = $1;
+  $$->seenNamed_ = true;
+  typedef typeof $$->exprs_ ListType;
+  size_t ** pos = new size_t * ( 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, $7 );
+  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+					       ref ) );
+}
+;
 
 
 Function
@@ -997,10 +1150,6 @@ GroupElem
   size_t ** pos = new size_t * ( 0 );
   $$ = new Ast::DefineVariable( @1, $1, $3, pos );
 }
-| T_splitLeft Formals T_splitRight ':' Expr
-{
-  $$ = new Ast::DefineVariables( @$, $2, $5 );  
-}
 | T_state_identifier ':' Expr
 {
   size_t ** pos = new size_t * ( 0 );
@@ -1082,6 +1231,38 @@ OneOrMoreGroupElems
       $$->push_back( new Ast::Insertion( $2, *i ) );
     }
 }
+| T_splitLeft SplitFormals T_splitRight ':' Expr
+{
+  $$ = new list< Ast::Node * >( );
+  size_t ** pos = new size_t * ( 0 );
+
+  $5->immediate_ = true;
+  $$->push_back( new Ast::DefineVariable( @5, $2->splitVarId( ), $5, pos ) );
+
+  size_t orderedCount = 0;
+
+  typedef typeof $2->exprs_ ListType;
+  for( ListType::iterator i = $2->exprs_->begin( ); i != $2->exprs_->end( ); ++i )
+    {
+      (*i)->second->setStruct( @5, pos );
+      $$->push_back( (*i)->first );
+      if( (*i)->second->isOrdered( ) )
+	{
+	  ++orderedCount;
+	}
+    }
+
+  if( $2->sinkDefine_ != 0 )
+    {
+      $2->sinkExpr_setStruct( @5, pos, orderedCount );
+      $$->push_back( $2->sinkDefine_ );
+    }
+  else
+    {
+      $$->push_back( new Ast::AssertNoSinkNeeded( @2, orderedCount, @5, pos ) );
+    }
+}
+
 ;
 
 Group

@@ -46,6 +46,7 @@ namespace MetaPDF
   {
 
     extern const char * SEQUENTIAL_EXPR_VAR_ID;
+    extern const char * SPLIT_VAR_PREFIX;
 
   }
 

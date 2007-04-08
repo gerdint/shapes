@@ -98,7 +98,18 @@ namespace MetaPDF
       virtual void gcMark( Kernel::GCMarkedSet & marked );
     };
 
-  }
+    class AssertStructureContinuation : public Kernel::Continuation
+    {
+      Kernel::ContRef cont_;
+    public:
+      AssertStructureContinuation( const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+      ~AssertStructureContinuation( );
+      virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
+      virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+
+  } // End of namespace Kernel.
 
   namespace Ast
   {
@@ -131,15 +142,59 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class DefineVariables : public Node
+    class StructSplitReference : public Node
     {
-      const Kernel::Formals * formals_;
-      Ast::Expression * unionExpr_;
-      mutable std::vector< size_t ** > idPositions_;
+      Ast::SourceLocation structLoc_;
+      size_t ** structPos_;
+      Ast::SourceLocation fieldLoc_;
+      const char * fieldId_;
+      size_t fieldPos_;
+      Ast::Expression * defaultExpr_;
     public:
-      DefineVariables( const Ast::SourceLocation & loc, const Kernel::Formals * formals, Ast::Expression * unionExpr );
-      virtual ~DefineVariables( );
+      StructSplitReference( Ast::SourceLocation fieldLoc, const char * fieldId, Ast::Expression * defaultExpr );
+      StructSplitReference( Ast::SourceLocation fieldLoc, size_t fieldPos, Ast::Expression * defaultExpr );
+      virtual ~StructSplitReference( );
+      void setStruct( Ast::SourceLocation structLoc, size_t ** structPos );
+      bool isOrdered( ) const { return fieldId_ == 0; }
       virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class StructSplitSink : public Node
+    {
+      Ast::SourceLocation structLoc_;
+      size_t ** structPos_;
+      size_t consumedArguments_;
+    public:
+      StructSplitSink( );
+      virtual ~StructSplitSink( );
+      void setStruct( Ast::SourceLocation structLoc, size_t ** structPos, size_t consumedArguments );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class AssertNoSinkNeeded : public Node
+    {
+      size_t orderedCount_;
+      Ast::SourceLocation structLoc_;
+      size_t ** structPos_;
+    public:
+      AssertNoSinkNeeded( const Ast::SourceLocation & loc, size_t orderedCount, Ast::SourceLocation structLoc, size_t ** structPos );
+      virtual ~AssertNoSinkNeeded( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
+    class SplitDefineVariables
+    {
+      static size_t splitVarCount;
+      static PtrOwner_back_Access< List< const char * > > mem;
+      const char * splitVarId_;
+    public:
+      std::list< std::pair< Ast::DefineVariable *, Ast::StructSplitReference * > exprs_;
+      Ast::DefineVariable * sinkDefine_;
+      Ast::StructSplitSink * sinkExpr_;
+      bool seenNamed_;
+      bool seenDefault_;
+      SplitDefineVariables( );
+      static const char * splitVarId( ) const;
     };
     
     class StateReference : public Node

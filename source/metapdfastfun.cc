@@ -427,7 +427,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
 }
 
-;
+
 Kernel::VariableHandle
 Ast::ArgListExprs::findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const
 {
@@ -459,6 +459,39 @@ Ast::ArgListExprs::findNamed( RefCountPtr< const Lang::SingleList > vals, const 
     }
 
   throw Exceptions::NonExistentMember( strrefdup( "< user union >" ), name );
+}
+
+Kernel::VariableHandle
+Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_t pos ) const
+{
+  /* This function is called when a Lang::Structure is asked for a field by position.
+   * This is reflected in the generated error in case the position is not found.
+   */
+
+  typedef const Lang::SingleListPair ConsType;
+
+  /* Note that the arguments are bound in backwards-order, since that is how the values are accessed.
+   */
+
+  {
+    typedef list< Ast::Expression * >::const_iterator I;
+    while( true )
+      {
+	RefCountPtr< ConsType > lst = vals.down_cast< ConsType >( );
+	if( lst == NullPtr< ConsType >( ) )
+	  {
+	    break;
+	  }	
+	if( pos == 0 )
+	  {
+	    return lst->car_;
+	    return;
+	  }
+	vals = lst->cdr_;
+      }
+  }
+
+  throw Exceptions::NonExistentPosition( pos );
 }
 
 Ast::ArgListExprs::ConstIterator

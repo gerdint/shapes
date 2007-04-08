@@ -15,6 +15,7 @@ RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "TeX" );
 const char * Lang::CANVAS_ID = "page";
 const char * Lang::SELF_ID = "self";
 const char * Kernel::SEQUENTIAL_EXPR_VAR_ID = ".seqvar"; /* Note that the leading dot puts this variable aside all user-variables. */
+const char * Kernel::SPLIT_VAR_PREFIX = ".splvar"; /* Note that the leading dot puts this variable aside all user-variables. */
 
 const char * Lang::DYNAMIC_VARIABLE_ID_EYEZ = "eyez";
 const char * Lang::DYNAMIC_VARIABLE_ID_STROKING = "stroking";
