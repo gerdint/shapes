@@ -827,7 +827,7 @@ Exceptions::UserArityMismatch::display( std::ostream & os ) const
 }
 
 Exceptions::SinkRequired::SinkRequired( const Ast::SourceLocation loc, size_t formalsArity, size_t callArity )
-  : loc_( loc ), formalsArity_( formalsArity ), callArity_( callArity )
+  : Exceptions::RuntimeError( loc ), formalsArity_( formalsArity ), callArity_( callArity )
 { }
 
 Exceptions::SinkRequired::~SinkRequired( )
@@ -836,7 +836,7 @@ Exceptions::SinkRequired::~SinkRequired( )
 void
 Exceptions::SinkRequired::display( std::ostream & os ) const
 {
-  os << "Formals at " << loc_ << " contains no sink, so passing " << callArity << " ordered arguments is " << callArity - formalsArity << " too many." << std::endl ;
+  os << "Formals at " << loc_ << " contains no sink, so passing " << callArity_ << " ordered arguments is " << callArity_ - formalsArity_ << " too many." << std::endl ;
 }
 
 

@@ -185,16 +185,16 @@ namespace MetaPDF
     class SplitDefineVariables
     {
       static size_t splitVarCount;
-      static PtrOwner_back_Access< List< const char * > > mem;
+      static PtrOwner_back_Access< std::list< const char * > > mem;
       const char * splitVarId_;
     public:
-      std::list< std::pair< Ast::DefineVariable *, Ast::StructSplitReference * > exprs_;
+      std::list< std::pair< Ast::DefineVariable *, Ast::StructSplitReference * > > exprs_;
       Ast::DefineVariable * sinkDefine_;
       Ast::StructSplitSink * sinkExpr_;
       bool seenNamed_;
       bool seenDefault_;
       SplitDefineVariables( );
-      static const char * splitVarId( ) const;
+      const char * splitVarId( ) const;
     };
     
     class StateReference : public Node
