@@ -85,6 +85,7 @@ RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( 
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( "TeX" ) );
 
 Kernel::Arguments Kernel::EMPTY_ARGLIST( new Kernel::EvaluatedFormals( "< the empty arg list >" ) );
+RefCountPtr< const Lang::Structure > Lang::THE_EMPTY_STRUCT( new Lang::Structure( new Ast::ArgListExprs( true ), Lang::THE_CONS_NULL, true ) );
 Kernel::VariableHandle Kernel::THE_SLOT_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
 Kernel::VariableHandle Kernel::THE_VOID_VARIABLE( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Void ) ) );
 Kernel::VariableHandle Kernel::THE_FALSE_VARIABLE( new Kernel::Variable( Lang::THE_FALSE ) );

@@ -142,7 +142,7 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class StructSplitReference : public Node
+    class StructSplitReference : public Expression
     {
       Ast::SourceLocation structLoc_;
       size_t ** structPos_;
@@ -159,7 +159,7 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class StructSplitSink : public Node
+    class StructSplitSink : public Expression
     {
       Ast::SourceLocation structLoc_;
       size_t ** structPos_;
@@ -171,7 +171,7 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
-    class AssertNoSinkNeeded : public Node
+    class AssertNoSinkNeeded : public Expression
     {
       size_t orderedCount_;
       Ast::SourceLocation structLoc_;

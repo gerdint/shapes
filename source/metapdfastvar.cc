@@ -5,6 +5,7 @@
 #include "specialunits.h"
 #include "metapdfastfun.h"
 #include "continuations.h"
+#include "containertypes.h"
 
 using namespace MetaPDF;
 using namespace std;
@@ -725,45 +726,45 @@ Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
 }
 
 
-Kernel::AssertStructContinuation::AssertStructContinuation( const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+Kernel::AssertStructureContinuation::AssertStructureContinuation( const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
   : Kernel::Continuation( traceLoc ), cont_( cont )
 { }
 
-Kernel::AssertStructContinuation::~AssertStructContinuation( )
+Kernel::AssertStructureContinuation::~AssertStructureContinuation( )
 { }
 
 void
-Kernel::AssertStructContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
+Kernel::AssertStructureContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
   evalState->cont_ = cont_;
-  cont_->takeValue( Helpers::down_cast_ContinuationArgument< const Lang::Struct >( val, this ), evalState );
+  cont_->takeValue( Helpers::down_cast_ContinuationArgument< const Lang::Structure >( val, this ), evalState );
 }
 
 void
-Kernel::AssertStructContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+Kernel::AssertStructureContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
 {
   trace->push_front( Kernel::Continuation::BackTraceElem( this, "Assert type is struct" ) );
   cont_->backTrace( trace );
 }
 
 void
-Kernel::AssertStructContinuation::gcMark( Kernel::GCMarkedSet & marked )
+Kernel::AssertStructureContinuation::gcMark( Kernel::GCMarkedSet & marked )
 {
   cont_->gcMark( marked );
 }
 
 
 Ast::StructSplitReference::StructSplitReference( Ast::SourceLocation fieldLoc, const char * fieldId, Ast::Expression * defaultExpr )
-  : Ast::node( fieldLoc ),
+  : Ast::Expression( fieldLoc ),
     structLoc_( Ast::THE_UNKNOWN_LOCATION ), // This is a dummy value!  The correct value is set later.
     fieldId_( fieldId ),
     defaultExpr_( defaultExpr )
 { }
 
 Ast::StructSplitReference::StructSplitReference( Ast::SourceLocation fieldLoc, size_t fieldPos, Ast::Expression * defaultExpr )
-  : Ast::node( fieldLoc ),
+  : Ast::Expression( fieldLoc ),
     structLoc_( Ast::THE_UNKNOWN_LOCATION ), // This is a dummy value!  The correct value is set later.
-    fieldId_( 0 ), fieldPos_( fieldPos )
+    fieldId_( 0 ), fieldPos_( fieldPos ),
     defaultExpr_( defaultExpr )
 { }
 
@@ -780,15 +781,15 @@ void
 Ast::StructSplitReference::setStruct( Ast::SourceLocation structLoc, size_t ** structPos )
 {
   structLoc_ = structLoc;
-  structpos_ = structPos;
+  structPos_ = structPos;
 }
 
 void
 Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 {
-  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos );
-  typedef const Lang::Struct StructType;
-  RefCountPtr< StructType > structVal = structHandle.getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
+  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
+  typedef const Lang::Structure StructType;
+  RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
   
   Kernel::ContRef cont = evalState->cont_;
   if( fieldId_ != 0 )
@@ -822,7 +823,7 @@ Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 }
 
 Ast::StructSplitSink::StructSplitSink( )
-  : structLoc_( Ast::THE_UNKNOWN_LOCATION )
+  : Ast::Expression( Ast::THE_UNKNOWN_LOCATION ), structLoc_( Ast::THE_UNKNOWN_LOCATION )
 { }
 
 Ast::StructSplitSink::~StructSplitSink( )
@@ -839,12 +840,12 @@ Ast::StructSplitSink::setStruct( Ast::SourceLocation structLoc, size_t ** struct
 void
 Ast::StructSplitSink::eval( Kernel::EvalState * evalState ) const
 {
-  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos );
-  typedef const Lang::Struct StructType;
-  RefCountPtr< StructType > structVal = structHandle.getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
+  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
+  typedef const Lang::Structure StructType;
+  RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
   
   Kernel::ContRef cont = evalState->cont_;
-  if( structVal->arglist_->orderedExprs_->size( ) > consumedArguments_ )
+  if( structVal->argList_->orderedExprs_->size( ) > consumedArguments_ )
     {
       throw Exceptions::NotImplemented( "Construction of sink when splitting structure." );
       //      cont_->takeValue( RefCountPtr< const Lang::Value >( new Lang::Structure( ) ),
@@ -852,13 +853,13 @@ Ast::StructSplitSink::eval( Kernel::EvalState * evalState ) const
     }
   else
     {
-      cont_->takeValue( Kernel::THE_EMPTY_STRUCT, evalState );
+      cont->takeValue( Lang::THE_EMPTY_STRUCT, evalState );
     }
 }
 
 
 Ast::AssertNoSinkNeeded::AssertNoSinkNeeded( const Ast::SourceLocation & loc, size_t orderedCount, Ast::SourceLocation structLoc, size_t ** structPos )
-  : Ast::Node( loc ), orderedCount_( orderedCount ), structLoc_( structLoc ), structPos_( structPos )
+  : Ast::Expression( loc ), orderedCount_( orderedCount ), structLoc_( structLoc ), structPos_( structPos )
 { }
 
 Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
@@ -867,34 +868,35 @@ Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
 void
 Ast::AssertNoSinkNeeded::eval( Kernel::EvalState * evalState ) const
 {
-  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos );
-  typedef const Lang::Struct StructType;
-  RefCountPtr< StructType > structVal = structHandle.getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
+  Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
+  typedef const Lang::Structure StructType;
+  RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
   
-  if( structVal->arglist_->orderedExprs_->size( ) > orderedCount_ )
+  if( structVal->argList_->orderedExprs_->size( ) > orderedCount_ )
     {
-      throw Exceptions::SinkRequired( loc_, orderedCount_, structVal->arglist_->orderedExprs_->size( ) );
+      throw Exceptions::SinkRequired( loc_, orderedCount_, structVal->argList_->orderedExprs_->size( ) );
     }
 
   Kernel::ContRef cont = evalState->cont_;
-  cont_->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
+  cont->takeHandle( Kernel::THE_SLOT_VARIABLE, evalState );
 }
 
 size_t Ast::SplitDefineVariables::splitVarCount = 0;
-PtrOwner_back_Access< List< const char * > > Ast::SplitDefineVariables::mem;
+PtrOwner_back_Access< std::list< const char * > > Ast::SplitDefineVariables::mem;
 
 Ast::SplitDefineVariables::SplitDefineVariables( )
-  : seenNamed_( false ), seenDefault_( false ), sinkDefine_( 0 ), sinkExpr_( 0 )
+  : sinkDefine_( 0 ), sinkExpr_( 0 ), seenNamed_( false ), seenDefault_( false )
 {
   std::ostringstream oss;
   oss << Kernel::SPLIT_VAR_PREFIX << splitVarCount ;
   splitVarId_ = strdup( oss.str( ).c_str( ) );
-  mem.push_back( splitVarid_ );
+  mem.push_back( splitVarId_ );
 }
 
+const char *
 Ast::SplitDefineVariables::splitVarId( ) const
 {
-  return splitVarid_;
+  return splitVarId_;
 }
 
 

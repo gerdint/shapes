@@ -294,6 +294,12 @@ Lang::Structure::getField( const char * fieldID, const RefCountPtr< const Lang::
   return argList_->findNamed( values_, fieldID );
 }
 
+Kernel::VariableHandle
+Lang::Structure::getPosition( size_t pos, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+  return argList_->getOrdered( values_, pos );
+}
+
 void
 Lang::Structure::gcMark( Kernel::GCMarkedSet & marked )
 {

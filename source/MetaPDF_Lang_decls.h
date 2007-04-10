@@ -49,6 +49,7 @@ namespace MetaPDF
     class SpecularReflection;
     class SpecularReflectionNull;
     class String;
+    class Structure;
     class Symbol;
     class TextOperation;
     class Transform2D;

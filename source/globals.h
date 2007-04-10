@@ -75,6 +75,7 @@ namespace MetaPDF
     extern RefCountPtr< const Lang::GroupNull3D > THE_NULL3D;
     extern RefCountPtr< const Lang::LightGroup > THE_NULL_LIGHTS;
     extern RefCountPtr< const Lang::SingleListNull > THE_CONS_NULL;
+    extern RefCountPtr< const Lang::Structure > THE_EMPTY_STRUCT;
     extern RefCountPtr< const Lang::SpecularReflectionNull > THE_SPECULARREFLECTION_NULL;
     //    extern RefCountPtr< const Lang::PaintedPoltgon2D > THE_NULL_POLYGON2D;
     extern RefCountPtr< const Lang::ColorSpace > THE_INHERITED_COLOR_SPACE;

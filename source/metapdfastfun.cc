@@ -473,6 +473,7 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
   /* Note that the arguments are bound in backwards-order, since that is how the values are accessed.
    */
 
+  size_t i = 0;
   {
     typedef list< Ast::Expression * >::const_iterator I;
     while( true )
@@ -482,16 +483,16 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
 	  {
 	    break;
 	  }	
-	if( pos == 0 )
+	if( i == pos )
 	  {
 	    return lst->car_;
-	    return;
 	  }
 	vals = lst->cdr_;
+	++i;
       }
   }
 
-  throw Exceptions::NonExistentPosition( pos );
+  throw Exceptions::NonExistentPosition( pos, i - 1 );
 }
 
 Ast::ArgListExprs::ConstIterator

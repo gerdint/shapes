@@ -539,56 +539,56 @@ SplitFormals
 OneOrMoreSplitFormals
 : T_identifier
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, 0, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, static_cast< size_t >( 0 ), 0 );
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | T_identifier ':' Expr
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, 0, $3 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @1, static_cast< size_t >( 0 ), $3 );
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | T_identifier ':' '.' T_identifier
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $4, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | T_identifier ':' '.' T_identifier ':' Expr
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $4, $6 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | T_identifier ':' '.' '\"'
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | T_identifier ':' '.' '\"' ':' Expr
 {
-  $$ = new Kernel::SplitDefineVariables( );
+  $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, $6 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier
@@ -604,8 +604,8 @@ OneOrMoreSplitFormals
     }
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, 0, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, $$->exprs_.size( ), 0 );
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier ':' Expr
@@ -618,8 +618,8 @@ OneOrMoreSplitFormals
   $$->seenDefault_ = true;
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, 0, $4 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @2, $$->exprs_.size( ), $4 );
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier ':' '.' T_identifier
@@ -629,7 +629,7 @@ OneOrMoreSplitFormals
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $5, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier ':' '.' T_identifier ':' Expr
@@ -639,7 +639,7 @@ OneOrMoreSplitFormals
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $5, $7 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier ':' '.' '\"'
@@ -649,7 +649,7 @@ OneOrMoreSplitFormals
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, 0 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 | OneOrMoreSplitFormals T_identifier ':' '.' '\"' ':' Expr
@@ -659,7 +659,7 @@ OneOrMoreSplitFormals
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
   Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, $7 );
-  $$->exprs_->push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, pos, ref ),
+  $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
 ;
@@ -1242,11 +1242,11 @@ OneOrMoreGroupElems
   size_t orderedCount = 0;
 
   typedef typeof $2->exprs_ ListType;
-  for( ListType::iterator i = $2->exprs_->begin( ); i != $2->exprs_->end( ); ++i )
+  for( ListType::iterator i = $2->exprs_.begin( ); i != $2->exprs_.end( ); ++i )
     {
-      (*i)->second->setStruct( @5, pos );
-      $$->push_back( (*i)->first );
-      if( (*i)->second->isOrdered( ) )
+      i->second->setStruct( @5, pos );
+      $$->push_back( i->first );
+      if( i->second->isOrdered( ) )
 	{
 	  ++orderedCount;
 	}
@@ -1254,7 +1254,7 @@ OneOrMoreGroupElems
 
   if( $2->sinkDefine_ != 0 )
     {
-      $2->sinkExpr_setStruct( @5, pos, orderedCount );
+      $2->sinkExpr_->setStruct( @5, pos, orderedCount );
       $$->push_back( $2->sinkDefine_ );
     }
   else
