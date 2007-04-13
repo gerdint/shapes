@@ -845,16 +845,8 @@ Ast::StructSplitSink::eval( Kernel::EvalState * evalState ) const
   RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
   
   Kernel::ContRef cont = evalState->cont_;
-  if( structVal->argList_->orderedExprs_->size( ) > consumedArguments_ )
-    {
-      throw Exceptions::NotImplemented( "Construction of sink when splitting structure." );
-      //      cont_->takeValue( RefCountPtr< const Lang::Value >( new Lang::Structure( ) ),
-      //			evalState );
-    }
-  else
-    {
-      cont->takeValue( Lang::THE_EMPTY_STRUCT, evalState );
-    }
+  cont->takeValue( structVal->getSink( consumedArguments_ ),
+		   evalState );
 }
 
 
@@ -891,6 +883,7 @@ Ast::SplitDefineVariables::SplitDefineVariables( )
   oss << Kernel::SPLIT_VAR_PREFIX << splitVarCount ;
   splitVarId_ = strdup( oss.str( ).c_str( ) );
   mem.push_back( splitVarId_ );
+  ++splitVarCount;
 }
 
 const char *

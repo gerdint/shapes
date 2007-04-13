@@ -14,6 +14,7 @@ namespace MetaPDF
     class MemberDeclaration;
     class Node;
     class SourceLocation;
+    class SplitDefineVariables;
     class StateReference;
     class UnaryExpr;
     class LexiographicState;

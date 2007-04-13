@@ -37,7 +37,7 @@ bool Computation::fontMetricGuessIsError = false;
 Computation::BasicSimplex Computation::theTwoTriangleSimplex( 3, 6 ); // 3 variables ( x, y, r ), 6 equations.  
 
 Ast::Expression * Ast::theProgram;
-Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION( "< unknown location >" );
+Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION( "" );  // This is a special value.  See SourceLocation.
 Ast::DummyExpression Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< core function default value >" ) );
 Ast::DummyExpression Ast::THE_INTERNAL_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< internally passed value >" ) );
 

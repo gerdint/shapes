@@ -578,7 +578,7 @@ OneOrMoreSplitFormals
   $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, strdup( $1 ), 0 );
   $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
@@ -587,7 +587,7 @@ OneOrMoreSplitFormals
   $$ = new Ast::SplitDefineVariables( );
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, $1, $6 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @4, strdup( $1 ), $6 );
   $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @1, $1, ref, pos ),
 					       ref ) );
 }
@@ -648,7 +648,7 @@ OneOrMoreSplitFormals
   $$->seenNamed_ = true;
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, 0 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, strdup( $2 ), 0 );
   $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
@@ -658,7 +658,7 @@ OneOrMoreSplitFormals
   $$->seenNamed_ = true;
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
-  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, $2, $7 );
+  Ast::StructSplitReference * ref = new Ast::StructSplitReference( @5, strdup( $2 ), $7 );
   $$->exprs_.push_back( ListType::value_type( new Ast::DefineVariable( @2, $2, ref, pos ),
 					       ref ) );
 }
@@ -1262,7 +1262,46 @@ OneOrMoreGroupElems
       $$->push_back( new Ast::AssertNoSinkNeeded( @2, orderedCount, @5, pos ) );
     }
 }
+| T_splitLeft SplitFormals T_splitRight Expr
+{
+  throw Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) );
+}
+| OneOrMoreGroupElems T_splitLeft SplitFormals T_splitRight ':' Expr
+{
+  $$ = $1;
+  size_t ** pos = new size_t * ( 0 );
 
+  $6->immediate_ = true;
+  $$->push_back( new Ast::DefineVariable( @6, $3->splitVarId( ), $6, pos ) );
+
+  size_t orderedCount = 0;
+
+  typedef typeof $3->exprs_ ListType;
+  for( ListType::iterator i = $3->exprs_.begin( ); i != $3->exprs_.end( ); ++i )
+    {
+      i->second->setStruct( @6, pos );
+      $$->push_back( i->first );
+      if( i->second->isOrdered( ) )
+	{
+	  ++orderedCount;
+	}
+    }
+
+  if( $3->sinkDefine_ != 0 )
+    {
+      $3->sinkExpr_->setStruct( @6, pos, orderedCount );
+      $$->push_back( $3->sinkDefine_ );
+    }
+  else
+    {
+      $$->push_back( new Ast::AssertNoSinkNeeded( @3, orderedCount, @6, pos ) );
+    }
+}
+| OneOrMoreGroupElems T_splitLeft SplitFormals T_splitRight Expr
+{
+  $$ = $1;
+  throw Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) );
+}
 ;
 
 Group

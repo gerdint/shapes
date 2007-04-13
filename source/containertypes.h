@@ -97,6 +97,7 @@ namespace MetaPDF
       virtual ~Structure( );
       virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       Kernel::VariableHandle getPosition( size_t pos, const RefCountPtr< const Lang::Value > & selfRef ) const;
+      RefCountPtr< const Lang::Structure > getSink( size_t consumedArguments ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       TYPEINFODECL;
     };

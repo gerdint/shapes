@@ -300,6 +300,40 @@ Lang::Structure::getPosition( size_t pos, const RefCountPtr< const Lang::Value >
   return argList_->getOrdered( values_, pos );
 }
 
+RefCountPtr< const Lang::Structure >
+Lang::Structure::getSink( size_t consumedArguments ) const
+{
+  if( argList_->orderedExprs_->size( ) <= consumedArguments )
+    {
+      return Lang::THE_EMPTY_STRUCT;
+    }
+  
+  static std::vector< const Ast::ArgListExprs * > argLists;
+  size_t resSize = argList_->orderedExprs_->size( ) - consumedArguments;
+  if( resSize >= argLists.size( ) )
+    {
+      argLists.reserve( resSize + 1 );
+      while( argLists.size( ) <= resSize )
+	{
+	  argLists.push_back( new Ast::ArgListExprs( argLists.size( ) ) );
+	}
+    }
+
+  RefCountPtr< const Lang::SingleList > resValues = values_;
+  try
+    {
+      for( size_t i = 0; i < consumedArguments; ++i )
+	{
+	  resValues = Helpers::try_cast_CoreArgument< const Lang::SingleListPair >( resValues )->cdr_;
+	}
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      throw Exceptions::InternalError( "When constructing the sink, there was not enough arguments." );
+    }
+  return RefCountPtr< const Lang::Structure >( new Lang::Structure( argLists[ resSize ], resValues, false ) );
+}
+
 void
 Lang::Structure::gcMark( Kernel::GCMarkedSet & marked )
 {

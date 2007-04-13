@@ -37,7 +37,11 @@ Ast::SourceLocation::contains( const Ast::SourceLocation & loc2 ) const
 std::ostream &
 Ast::operator << ( std::ostream & os, const Ast::SourceLocation & self )
 {
-  if( Interaction::characterColumnInBytes )
+  if( *(self.filename) == '\0' )
+    {
+      os << "< unknown location >" ;
+    }
+  else if( Interaction::characterColumnInBytes )
     {
       if( self.firstLine == self.lastLine )
 	{
