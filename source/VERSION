@@ -1,8 +1,16 @@
-0.1.2
+0.2.0
 The first line of this file shall be the current version string.  It shall be incremented at least after each tagging.  Thus, when tagging, one can either use the current version string, or increment.  If incrementing, note that it makes no sense to increment only the least significant part of the version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
+
+====( 0.2.0 )====
+2007-04-24
+
+This version marks the point where the two feature examples states.drool and values.drool compile.  This means that the program is getting useful again.  However, the great majority of the examples have not been updated, and it is expected that many bugs will be revealed in the process of updating them.
+
+In other words, this version marks the beginning of the use of states and structures, but these features should be debugged and tested on the many available examples before being considered a true alternative to using the language as of version 0.1.1.
+
 
 ====( 0.1.2 )====
 
