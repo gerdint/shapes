@@ -83,6 +83,11 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
   size_t lineInCache;
   static std::string cachedLine;
 
+  if( byteCol == 0 )
+    {
+      return 0;
+    }
+
   if( strcmp( filename, filenameInCache ) != 0 ||
       line != lineInCache )
     {
@@ -90,16 +95,16 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
       std::ifstream iFile( filename );
       if( ! iFile.is_open( ) )
 	{
-	  std::cerr << "Error in error message: Failed to open file pointed to by source location: " << filename << std::endl ;
-	  exit( 1 );
+	  std::cerr << "*** Error in error message: Failed to open file pointed to by source location: " << filename << std::endl ;
+	  return 0;
 	}
       for( lineInCache = 0; lineInCache < line; ++lineInCache )
 	{
 	  getline( iFile, cachedLine );
 	  if( iFile.eof( ) )
 	    {
-	      std::cerr << "Error in error message: Source location's line (" << line << ") is beyond end of file: " << filename << std::endl ;
-	      exit( 1 );	  
+	      std::cerr << "*** Error in error message: Source location's line (" << line << ") is beyond end of file: " << filename << std::endl ;
+	      return 0;
 	    }
 	}
     }
@@ -140,23 +145,23 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
     {
       if( errno == EINVAL )
 	{
-	  std::cerr << "Error in error message, when converting byte column to utf-8: (EINVAL) Found invalid utf-8 byte sequence." << std::endl ;
-	  exit( 1 );	  
+	  std::cerr << "*** Error in error message, when converting byte column to utf-8: (EINVAL) Found invalid utf-8 byte sequence." << std::endl ;
+	  return 0;
 	}
       else if( errno == EILSEQ )
 	{
-	  std::cerr << "Error in error message, when converting byte column to utf-8: (EILSEQ) Found invalid utf-8 byte." << std::endl ;
-	  exit( 1 );
+	  std::cerr << "*** Error in error message, when converting byte column to utf-8: (EILSEQ) Found invalid utf-8 byte." << std::endl ;
+	  return 0;
 	}
       else if( errno == E2BIG )
 	{
-	  std::cerr << "Error in error message, when converting byte column to utf-8: (E2BIG) Insufficient memory allocated." << std::endl ;
-	  exit( 1 );
+	  std::cerr << "*** Error in error message, when converting byte column to utf-8: (E2BIG) Insufficient memory allocated." << std::endl ;
+	  return 0;
 	}
       else
 	{
-	  std::cerr << "Error in error message, when converting byte column to utf-8: iconv failed with un unrecognized error code: " << errno << "." << std::endl ;
-	  exit( 1 );
+	  std::cerr << "*** Error in error message, when converting byte column to utf-8: iconv failed with un unrecognized error code: " << errno << "." << std::endl ;
+	  return 0;
 	}
     }
   

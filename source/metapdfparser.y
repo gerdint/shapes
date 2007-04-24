@@ -1237,7 +1237,7 @@ OneOrMoreGroupElems
   size_t ** pos = new size_t * ( 0 );
 
   $5->immediate_ = true;
-  $$->push_back( new Ast::DefineVariable( @5, $2->splitVarId( ), $5, pos ) );
+  $$->push_back( new Ast::DefineVariable( @5, $2->newSplitVarId( ), $5, pos ) );
 
   size_t orderedCount = 0;
 
@@ -1272,7 +1272,7 @@ OneOrMoreGroupElems
   size_t ** pos = new size_t * ( 0 );
 
   $6->immediate_ = true;
-  $$->push_back( new Ast::DefineVariable( @6, $3->splitVarId( ), $6, pos ) );
+  $$->push_back( new Ast::DefineVariable( @6, $3->newSplitVarId( ), $6, pos ) );
 
   size_t orderedCount = 0;
 

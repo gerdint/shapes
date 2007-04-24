@@ -194,7 +194,7 @@ namespace MetaPDF
       bool seenNamed_;
       bool seenDefault_;
       SplitDefineVariables( );
-      const char * splitVarId( ) const;
+      const char * newSplitVarId( ) const;
     };
     
     class StateReference : public Node

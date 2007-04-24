@@ -133,7 +133,6 @@
 
   }
 
-
   {
     /** When it comes to named parts of a structure, there are some differences to the semantics of calling
      ** a function.  First, it is not required that all named parts are received.  This makes it possible to 

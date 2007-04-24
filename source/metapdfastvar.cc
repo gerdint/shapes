@@ -887,9 +887,9 @@ Ast::SplitDefineVariables::SplitDefineVariables( )
 }
 
 const char *
-Ast::SplitDefineVariables::splitVarId( ) const
+Ast::SplitDefineVariables::newSplitVarId( ) const
 {
-  return splitVarId_;
+  return strdup( splitVarId_ );
 }
 
 
