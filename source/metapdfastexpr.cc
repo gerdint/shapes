@@ -17,8 +17,8 @@ Ast::UnaryExpr::~UnaryExpr( )
 DEFAULTUNARYOPIMPL( UnaryExpr );
 
 
-Kernel::UnaryCont_1::UnaryCont_1( const Ast::UnaryExpr * op, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
-  : Kernel::Continuation( traceLoc ), op_( op ), cont_( cont )
+Kernel::UnaryCont_1::UnaryCont_1( const Ast::UnaryExpr * op, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+  : Kernel::Continuation( traceLoc ), op_( op ), dyn_( dyn ), cont_( cont )
 { }
 
 Kernel::UnaryCont_1::~UnaryCont_1( )
@@ -27,7 +27,7 @@ Kernel::UnaryCont_1::~UnaryCont_1( )
 void
 Kernel::UnaryCont_1::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
-  cont_->takeValue( val->unaryDispatch( val, op_ ), evalState );
+  cont_->takeValue( val->unaryDispatch( val, dyn_, op_ ), evalState );
 }
 
 void
@@ -57,7 +57,7 @@ void
 Ast::UnaryPrefixExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = expr_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::UnaryCont_1( this, evalState->cont_, expr_->loc( ) ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::UnaryCont_1( this, evalState->dyn_, evalState->cont_, expr_->loc( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -82,7 +82,7 @@ void
 Ast::UnaryPostfixExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = expr_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::UnaryCont_1( this, evalState->cont_, expr_->loc( ) ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::UnaryCont_1( this, evalState->dyn_, evalState->cont_, expr_->loc( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -92,8 +92,8 @@ Ast::UnaryPostfixExpr::throwNotApplicable( const Lang::Value * arg ) const
 }
 
 
-Kernel::BinaryInfixCont_2::BinaryInfixCont_2( const Ast::BinaryInfixExpr * op, const Kernel::ValueRef & val1, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
-  : Kernel::Continuation( traceLoc ), op_( op ), val1_( val1 ), cont_( cont )
+Kernel::BinaryInfixCont_2::BinaryInfixCont_2( const Ast::BinaryInfixExpr * op, const Kernel::ValueRef & val1, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
+  : Kernel::Continuation( traceLoc ), op_( op ), val1_( val1 ), dyn_( dyn ), cont_( cont )
 { }
 
 Kernel::BinaryInfixCont_2::~BinaryInfixCont_2( )
@@ -102,7 +102,7 @@ Kernel::BinaryInfixCont_2::~BinaryInfixCont_2( )
 void
 Kernel::BinaryInfixCont_2::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
-  cont_->takeValue( val1_->binaryDispatch1( val1_, val, op_ ), evalState );
+  cont_->takeValue( val1_->binaryDispatch1( val1_, val, dyn_, op_ ), evalState );
 }
 
 void
@@ -133,7 +133,7 @@ Kernel::BinaryInfixCont_1::takeValue( const RefCountPtr< const Lang::Value > & v
   evalState->expr_ = const_cast< Ast::Expression * >( op_->get_expr2( ) );
   evalState->env_ = env_;
   evalState->dyn_ = dyn_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::BinaryInfixCont_2( op_, val, cont_, evalState->expr_->loc( ) ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::BinaryInfixCont_2( op_, val, dyn_, cont_, evalState->expr_->loc( ) ) );
 }
 
 void

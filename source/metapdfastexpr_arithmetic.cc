@@ -3,13 +3,14 @@
 #include "metapdfastexprs.h"
 #include "metapdfexceptions.h"
 #include "lighttypes.h"
+#include "globals.h"
 
 using namespace MetaPDF;
 using namespace std;
 
 
 RefCountPtr< const Lang::Value >
-Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->val_ < 0 )
     {
@@ -23,7 +24,7 @@ Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( con
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Concrete::Length tmp1 = arg1->get( );
   Concrete::Length tmp2 = arg2->get( );
@@ -40,7 +41,7 @@ Ast::PlusPlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( co
 
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->val_ < 0 )
     {
@@ -58,7 +59,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Concrete::Length tmp1 = arg1->get( );
   Concrete::Length tmp2 = arg2->get( );
@@ -78,25 +79,25 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection2D( arg1, arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection2D( arg1, arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection2D( arg1, arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -106,7 +107,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -116,13 +117,13 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection2D( arg1, arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -132,7 +133,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -142,7 +143,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -156,28 +157,28 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
 						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
 						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
 						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -187,7 +188,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -197,14 +198,14 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
 						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -214,7 +215,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -224,7 +225,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -238,7 +239,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::PathSlider2D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::PathSlider2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Lang::ElementaryPath2D > path = arg1->getPath( );
   if( path != arg2->getPath( ) )
@@ -265,7 +266,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYAN
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::PathSlider3D ) arg2 ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::PathSlider3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Lang::ElementaryPath3D > path = arg1->getPath( );
   if( path != arg2->getPath( ) )
@@ -294,7 +295,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYAN
 
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path2D * res = new Lang::Path2D;
   res->push_back( arg1 );
@@ -303,7 +304,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path2D * res = arg1->clone( );
   res->push_back( arg2 );
@@ -311,7 +312,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path2D * res = arg2->clone( );
   res->push_front( arg1 );
@@ -319,7 +320,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path2D * res = arg1->clone( );
   typedef typeof( *arg2 ) ListType;
@@ -331,7 +332,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path3D * res = new Lang::Path3D;
   res->push_back( arg1 );
@@ -340,7 +341,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path3D * res = arg1->clone( );
   res->push_back( arg2 );
@@ -348,7 +349,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path3D * res = arg2->clone( );
   res->push_front( arg1 );
@@ -356,7 +357,7 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Lang::Path3D * res = arg1->clone( );
   typedef typeof( *arg2 ) ListType;
@@ -368,56 +369,94 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< Lang::DynamicBindings >( new Lang::DynamicBindingsPair( arg1, arg2 ) );
 }
 
+RefCountPtr< const Lang::Value >
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Drawable2D ) arg1, DUMMYANDREF( const Lang::Drawable2D ) arg2, const Kernel::PassedDyn & dyn ) const
+{
+  RefCountPtr< const Kernel::GraphicsState > metaState = dyn->getGraphicsState( );
+  return RefCountPtr< Lang::Group2D >( new Lang::GroupPair2D
+				       ( arg2,
+					 RefCountPtr< Lang::Group2D >( new Lang::GroupPair2D
+								       ( arg1,
+									 Lang::THE_NULL2D,
+									 metaState ) ),
+					 metaState ) );
+}
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Group2D ) arg1, DUMMYANDREF( const Lang::Drawable2D ) arg2, const Kernel::PassedDyn & dyn ) const
+{
+  return RefCountPtr< Lang::Group2D >( new Lang::GroupPair2D( arg2, arg1, dyn->getGraphicsState( ) ) );
+}
+
+RefCountPtr< const Lang::Value >
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Drawable3D ) arg1, DUMMYANDREF( const Lang::Drawable3D ) arg2, const Kernel::PassedDyn & dyn ) const
+{
+  RefCountPtr< const Kernel::GraphicsState > metaState = dyn->getGraphicsState( );
+  return RefCountPtr< Lang::Group3D >( new Lang::GroupPair3D
+				       ( arg2,
+					 RefCountPtr< Lang::Group3D >( new Lang::GroupPair3D
+								       ( arg1,
+									 Lang::THE_NULL3D,
+									 metaState ) ),
+					 metaState ) );
+}
+
+RefCountPtr< const Lang::Value >
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Group3D ) arg1, DUMMYANDREF( const Lang::Drawable3D ) arg2, const Kernel::PassedDyn & dyn ) const
+{
+  return RefCountPtr< Lang::Group3D >( new Lang::GroupPair3D( arg2, arg1, dyn->getGraphicsState( ) ) );
+}
+
+
+RefCountPtr< const Lang::Value >
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ + arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Integer( arg1->val_ + arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( *arg1 + *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->x_ + arg2->x_, arg1->y_ + arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->x_ + arg2->x_, arg1->y_ + arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->x_ + arg2->x_, arg1->y_ + arg2->y_, arg1->z_ + arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->x_ + arg2->x_, arg1->y_ + arg2->y_, arg1->z_ + arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::String ) arg1, DUMMYANDREF( const Lang::String ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::String ) arg1, DUMMYANDREF( const Lang::String ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const char * src1 = arg1->val_.getPtr( );
   const char * src2 = arg2->val_.getPtr( );
@@ -429,129 +468,129 @@ Ast::PlusExpr::impl( DUMMYANDREF( const Lang::String ) arg1, DUMMYANDREF( const 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Dash ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Dash ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->shifted( arg2->get( ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Dash ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Dash ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg2->shifted( arg1->get( ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_time( Concrete::Time( arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_length( arg2->get( ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_time( Concrete::Time( arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_length( arg2->get( ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::RGB ) arg1, DUMMYANDREF( const Lang::RGB ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::RGB ) arg1, DUMMYANDREF( const Lang::RGB ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::RGB( arg1->components( ).add( arg2->components( ), loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Gray ) arg1, DUMMYANDREF( const Lang::Gray ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Gray ) arg1, DUMMYANDREF( const Lang::Gray ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Gray( arg1->components( ).add( arg2->components( ), loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::PlusExpr::impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYANDREF( const Lang::SpecularReflection ) arg2 ) const
+Ast::PlusExpr::impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYANDREF( const Lang::SpecularReflection ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::SpecularReflectionPair( arg1, arg2 ) );
 }
 
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ - arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Integer( arg1->val_ - arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( *arg1 - *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->x_ - arg2->x_, arg1->y_ - arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->x_ - arg2->x_, arg1->y_ - arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->x_ - arg2->x_, arg1->y_ - arg2->y_, arg1->z_ - arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->x_ - arg2->x_, arg1->y_ - arg2->y_, arg1->z_ - arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_time( Concrete::Time( - arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_length( - arg2->get( ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_time( Concrete::Time( - arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::MinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return arg1->move_length( - arg2->get( ) );
 }
 
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   double tmp = arg1->val_ * arg2->val_;
   if( tmp > 0 )
@@ -566,7 +605,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Concrete::Length tmp = arg1->val_ * arg2->get( );
   if( tmp > 0 )
@@ -581,7 +620,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Concrete::Length tmp = arg1->get( ) * arg2->val_;
   if( tmp > 0 )
@@ -596,7 +635,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   Physical< 2, 0 > tmp = arg1->get( ) * arg2->get( );
   if( tmp > 0 )
@@ -611,7 +650,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -631,7 +670,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( co
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -651,7 +690,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( co
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -671,7 +710,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( con
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -691,7 +730,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( con
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -713,7 +752,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -735,7 +774,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( 
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -757,7 +796,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( con
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -780,133 +819,133 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( con
 
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->x_ * arg2->x_ + arg1->y_ * arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->x_ * arg2->val_, arg1->y_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->val_ * arg2->x_, arg1->val_ * arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->x_ * arg2->x_ + arg1->y_ * arg2->y_ + arg1->z_ * arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->x_ * arg2->val_, arg1->y_ * arg2->val_, arg1->z_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->val_ * arg2->x_, arg1->val_ * arg2->y_, arg1->val_ * arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->val_ * arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->x_.get( ) * arg2->val_, arg1->y_.get( ) * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->val_ * arg2->x_.get( ), arg1->val_ * arg2->y_.get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->x_.get( ) * arg2->x_ + arg1->y_.get( ) * arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->x_ * arg2->x_.get( ) + arg1->y_ * arg2->y_.get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->x_ * arg2->get( ), arg1->y_ * arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->get( ) * arg2->x_, arg1->get( ) * arg2->y_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->x_.get( ) * arg2->val_, arg1->y_.get( ) * arg2->val_, arg1->z_.get( ) * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->val_ * arg2->x_.get( ), arg1->val_ * arg2->y_.get( ), arg1->val_ * arg2->z_.get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->x_.get( ) * arg2->x_ + arg1->y_.get( ) * arg2->y_ + arg1->z_.get( ) * arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->x_ * arg2->x_.get( ) + arg1->y_ * arg2->y_.get( ) + arg1->z_ * arg2->z_.get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->x_ * arg2->get( ), arg1->y_ * arg2->get( ), arg1->z_ * arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->get( ) * arg2->x_, arg1->get( ) * arg2->y_, arg1->get( ) * arg2->z_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Dash ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Dash ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->val_ <= 0 )
     {
@@ -917,7 +956,7 @@ Ast::StarExpr::impl( DUMMYANDREF( const Lang::Dash ) arg1, DUMMYANDREF( const La
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Dash ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Dash ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->val_ <= 0 )
     {
@@ -928,43 +967,43 @@ Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const L
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Transform2D ) arg1, DUMMYANDREF( const Lang::Transform2D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Transform2D ) arg1, DUMMYANDREF( const Lang::Transform2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Transform2D( *arg1, *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Transform3D ) arg1, DUMMYANDREF( const Lang::Transform3D ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Transform3D ) arg1, DUMMYANDREF( const Lang::Transform3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Transform3D( *arg1, *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::RGB ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::RGB ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::RGB( arg2->components( ).mul( arg1->val_, expr1_->loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::RGB ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::RGB ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::RGB( arg1->components( ).mul( arg2->val_, expr1_->loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Gray ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Gray ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Gray( arg2->components( ).mul( arg1->val_, expr1_->loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Gray ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Gray ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Gray( arg1->components( ).mul( arg2->val_, expr1_->loc( ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::SpecularReflection ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::SpecularReflection ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   double scalar = arg1->val_;
   if( scalar < 0 || scalar > 1 )
@@ -975,7 +1014,7 @@ Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const L
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   double scalar = arg2->val_;
   if( scalar < 0 || scalar > 1 )
@@ -986,38 +1025,38 @@ Ast::StarExpr::impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYAN
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Integer( arg1->val_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) * arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::StarExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->val_ * arg2->get( ) ) );
 }
 
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -1033,7 +1072,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -1049,7 +1088,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::FloatPair ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -1065,7 +1104,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -1081,7 +1120,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -1099,7 +1138,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const double x1 = arg1->x_;
   const double y1 = arg1->y_;
@@ -1117,7 +1156,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -1135,7 +1174,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2 ) const
+Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   const Concrete::Length x1 = arg1->x_.get( );
   const Concrete::Length y1 = arg1->y_.get( );
@@ -1154,92 +1193,92 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF
 
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->get( ) / arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->x_ / arg2->val_, arg1->y_ / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords2D( arg1->x_.get( ) / arg2->val_, arg1->y_.get( ) / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatPair( arg1->x_.get( ) / arg2->get( ), arg1->y_.get( ) / arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->x_ / arg2->val_, arg1->y_ / arg2->val_, arg1->z_ / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Coords3D( arg1->x_.get( ) / arg2->val_, arg1->y_.get( ) / arg2->val_, arg1->z_.get( ) / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( arg1->x_.get( ) / arg2->get( ), arg1->y_.get( ) / arg2->get( ), arg1->z_.get( ) / arg2->get( ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Integer( arg1->val_ / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ / arg2->val_ ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2 ) const
+Ast::SlashExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Length( arg1->get( ) / static_cast< double >( arg2->val_ ) ) );
 }
 
 
 RefCountPtr< const Lang::Value >
-Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Transform2D ) arg1, DUMMYANDREF( const Lang::Transform2D ) arg2 ) const
+Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Transform2D ) arg1, DUMMYANDREF( const Lang::Transform2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Transform2D( *arg1, *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Transform3D ) arg1, DUMMYANDREF( const Lang::Transform3D ) arg2 ) const
+Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Transform3D ) arg1, DUMMYANDREF( const Lang::Transform3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::Transform3D( *arg1, *arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Function ) arg1, DUMMYANDREF( const Lang::Function ) arg2 ) const
+Ast::ComposeExpr::impl( DUMMYANDREF( const Lang::Function ) arg1, DUMMYANDREF( const Lang::Function ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::ComposedFunction( arg1, arg2 ) );
 }

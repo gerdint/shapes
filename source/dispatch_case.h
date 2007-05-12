@@ -6,15 +6,15 @@
       {\
 	throw Exceptions::InternalError( strrefdup( "Downcast in unary dispatch failed, " #T ) ); \
       }\
-    return op->op( arg ); \
+    return op->op( arg, dyn ); \
   }\
   break;
 
-#define UNARYDISPATCHBASEDECL static RefCountPtr< const Lang::Value > unaryDispatch( RefCountPtr< const Lang::Value > self, const MetaPDF::Ast::UnaryExpr * op );
+#define UNARYDISPATCHBASEDECL static RefCountPtr< const Lang::Value > unaryDispatch( RefCountPtr< const Lang::Value > self, const Kernel::PassedDyn & dyn, const MetaPDF::Ast::UnaryExpr * op );
 
 #define UNARYDISPATCHBASEIMPL \
   RefCountPtr< const Lang::Value >				\
-  Lang::Value::unaryDispatch( RefCountPtr< const Lang::Value > self, const MetaPDF::Ast::UnaryExpr * op ) \
+  Lang::Value::unaryDispatch( RefCountPtr< const Lang::Value > self, const Kernel::PassedDyn & dyn, const MetaPDF::Ast::UnaryExpr * op ) \
 {\
   switch( self->getTypeID( ) )\
     {\
@@ -37,7 +37,7 @@
       {\
 	throw Exceptions::InternalError( strrefdup( "Downcast in binary dispatch level 1 failed, " #T1 ) ); \
       }\
-    return binaryDispatch2( arg1, other, op ); \
+    return binaryDispatch2( arg1, other, dyn, op ); \
   }\
   break;
 
@@ -49,13 +49,13 @@
       {\
 	throw Exceptions::InternalError( strrefdup( "Downcast in binary dispatch level 2 failed, " #T2 ) ); \
       }\
-    return op->op( arg1, arg2 ); \
+    return op->op( arg1, arg2, dyn ); \
   }\
   break;
 
 #define BINARYDISPATCH2CASE_LEVEL1( T1 )\
   RefCountPtr< const Lang::Value >				\
-  Lang::Value::binaryDispatch2( RefCountPtr< const ::MetaPDF::Lang::T1 > arg1, RefCountPtr< const Lang::Value > other, const ::MetaPDF::Ast::BinaryInfixExpr * op ) \
+  Lang::Value::binaryDispatch2( RefCountPtr< const ::MetaPDF::Lang::T1 > arg1, RefCountPtr< const Lang::Value > other, const Kernel::PassedDyn & dyn, const ::MetaPDF::Ast::BinaryInfixExpr * op ) \
 {\
   switch( other->getTypeID( ) )						\
     {									\
@@ -66,15 +66,15 @@
 }
 
 
-#define BINARYDISPATCH2DECL( T ) static RefCountPtr< const Lang::Value > binaryDispatch2( RefCountPtr< const ::MetaPDF::Lang::T > self, RefCountPtr< const Lang::Value > other, const ::MetaPDF::Ast::BinaryInfixExpr * op );
+#define BINARYDISPATCH2DECL( T ) static RefCountPtr< const Lang::Value > binaryDispatch2( RefCountPtr< const ::MetaPDF::Lang::T > self, RefCountPtr< const Lang::Value > other, const Kernel::PassedDyn & dyn, const ::MetaPDF::Ast::BinaryInfixExpr * op );
 
 #define BINARYDISPATCHBASEDECL \
-  static RefCountPtr< const Lang::Value > binaryDispatch1( RefCountPtr< const Lang::Value > self, RefCountPtr< const Lang::Value > other, const ::MetaPDF::Ast::BinaryInfixExpr * op ); \
+  static RefCountPtr< const Lang::Value > binaryDispatch1( RefCountPtr< const Lang::Value > self, RefCountPtr< const Lang::Value > other, const Kernel::PassedDyn & dyn, const ::MetaPDF::Ast::BinaryInfixExpr * op ); \
   SINGLELOOP1( CLASSTREE1_ROOT, BINARYDISPATCH2DECL )
 
 #define BINARYDISPATCHBASEIMPL \
   RefCountPtr< const Lang::Value >				\
-  Lang::Value::binaryDispatch1( RefCountPtr< const Lang::Value > self, RefCountPtr< const Lang::Value > other, const ::MetaPDF::Ast::BinaryInfixExpr * op ) \
+  Lang::Value::binaryDispatch1( RefCountPtr< const Lang::Value > self, RefCountPtr< const Lang::Value > other, const Kernel::PassedDyn & dyn, const ::MetaPDF::Ast::BinaryInfixExpr * op ) \
 {\
   switch( self->getTypeID( ) )\
     {\

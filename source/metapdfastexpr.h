@@ -64,9 +64,10 @@ namespace MetaPDF
     class UnaryCont_1 : public Kernel::Continuation
     {
       const Ast::UnaryExpr * op_;
+      Kernel::PassedDyn dyn_;
       Kernel::ContRef cont_;
     public:
-      UnaryCont_1( const Ast::UnaryExpr * op, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+      UnaryCont_1( const Ast::UnaryExpr * op, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
       virtual ~UnaryCont_1( );
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -77,9 +78,10 @@ namespace MetaPDF
     {
       const Ast::BinaryInfixExpr * op_;
       Kernel::ValueRef val1_;
+      Kernel::PassedDyn dyn_;
       Kernel::ContRef cont_;
     public:
-      BinaryInfixCont_2( const Ast::BinaryInfixExpr * op, const Kernel::ValueRef & val1, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
+      BinaryInfixCont_2( const Ast::BinaryInfixExpr * op, const Kernel::ValueRef & val1, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc );
       virtual ~BinaryInfixCont_2( );
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
