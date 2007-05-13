@@ -97,13 +97,13 @@ dummyStroke: \ •dst2D .> { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 
 /** We finally take a look at dynamic states.  This is a tricky topic, and a mechanism that
  ** is recommended to stay away from as much as possible.
- ** To get reasonable semantics os this beast, we are required to make runtime checks that
+ ** To get reasonable semantics for this beast, we are required to make runtime checks that
  ** the accessed states are indeed in dynamic scope, and this makes them more expensive to
  ** use compared to dynamic variables.
  **/
 
 /** In fact, at the time of writing, dynamic states are not even implemented, but the following
- ** is a guess of what the final design might look like.
+ ** is a guess of what the final design might look like in use.
  **/
 
 •dst1: newString

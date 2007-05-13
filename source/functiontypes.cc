@@ -1561,7 +1561,7 @@ Lang::BinaryOperatorFunction::call( Kernel::EvalState * evalState, Kernel::Argum
   try
     {
       Kernel::ContRef cont = evalState->cont_;
-      cont->takeValue( arg1->binaryDispatch1( arg1, arg2, opExpr_ ),
+      cont->takeValue( arg1->binaryDispatch1( arg1, arg2, evalState->dyn_, opExpr_ ),
 		       evalState );
     }
   catch( Exceptions::BinaryInfixNotApplicable & ball )
@@ -1600,7 +1600,7 @@ Lang::UnaryOperatorFunction::call( Kernel::EvalState * evalState, Kernel::Argume
   try
     {
       Kernel::ContRef cont = evalState->cont_;
-      cont->takeValue( arg->unaryDispatch( arg, opExpr_ ),
+      cont->takeValue( arg->unaryDispatch( arg, evalState->dyn_, opExpr_ ),
 		       evalState );
     }
   catch( Exceptions::UnaryPrefixNotApplicable & ball )

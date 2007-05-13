@@ -1,5 +1,5 @@
 koch: \ pth depth .>
-[if depth == 0
+[if depth == '0
     pth
     {
       len: [abs pth]
@@ -8,23 +8,20 @@ koch: \ pth depth .>
       seg1: pth.begin--sl1
       seg2: sl1--sl2
       seg3: sl2--pth.end
-      depth: ../depth - 1
+      depth: ../depth - '1
       [koch seg1 depth]
         --[koch [shift sl1.p][][rotate 60°][][shift ~sl1.p][]seg2 depth]
         --[koch [shift sl2.p][][rotate ~60°][][shift ~sl2.p][]seg2 depth]
         --[koch seg3 depth]
     }]
 
-@<< @width:0.3bp | [stroke [koch (0cm,0cm)--(15cm,10cm) 6]]
+•page << @width:0.3bp | [stroke [koch (0cm,0cm)--(15cm,10cm) '6]]
 
 ##needs circle
 ##needs centering
 c: [shift (5cm,~10cm)][][circle 5cm]
 
-![[range '0 '5].foldl
- \ p i .>
-    {
-      @<< @stroking:[mediate i*(1/5) 0.9*GRAY_WHITE GRAY_BLACK] | [stroke [koch c i]]
-      p
-    }
- VOID]
+•page <<
+ [[range '0 '5].foldl
+   \ p i .> ( p & ( @stroking:[mediate i*(1/5) 0.9*gray_WHITE gray_BLACK] | [stroke [koch c i]] ) )
+   null]
