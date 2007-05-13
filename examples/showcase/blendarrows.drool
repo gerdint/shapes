@@ -1,12 +1,12 @@
 ##needs arrowheads
 
-@blend: BLEND_MULTIPLY
+@blend: blend_MULTIPLY
 &
 @stroking: [gray 0.7] & @width:3mm
 &
 @defaultunit: 1%C
 |
 {
-  @<< [stroke (0cm,0cm)>(^)--(^)<(1cm,1cm)>(^)--(^)<(0cm,2.5cm) head:MetaPostArrow]
-  @<< [stroke (1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(1cm,2cm) head:MetaPostArrow]
+  •page << [stroke (0cm,0cm)>(^)--(^)<(1cm,1cm)>(^)--(^)<(0cm,2.5cm) head:metaPostArrow]
+  •page << [stroke (1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(1cm,2cm) head:metaPostArrow]
 }

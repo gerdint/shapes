@@ -50,27 +50,27 @@ Lang::PathSlider3D::getField( const char * fieldID, const RefCountPtr< const Lan
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_speed( ) ) );
     }
-  if( strcmp( fieldID, "T" ) == 0 )
+  if( strcmp( fieldID, "t" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( direction( ) ) );
     }
-  if( strcmp( fieldID, "rT" ) == 0 )
+  if( strcmp( fieldID, "rt" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_direction( ) ) );
     }
-  if( strcmp( fieldID, "N" ) == 0 )
+  if( strcmp( fieldID, "n" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( normal( ) ) );
     }
-  if( strcmp( fieldID, "rN" ) == 0 )
+  if( strcmp( fieldID, "rn" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_normal( ) ) );
     }
-  if( strcmp( fieldID, "B" ) == 0 )
+  if( strcmp( fieldID, "b" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( binormal( ) ) );
     }
-  if( strcmp( fieldID, "rB" ) == 0 )
+  if( strcmp( fieldID, "rb" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_binormal( ) ) );
     }

@@ -105,7 +105,7 @@ namespace MetaPDF
 	else
 	  {
 	    typedef const Lang::SingleListPair ArgType;
-	    RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( structure_->values_, "< internal error: SingleListPair contradicting isNull( )" );
+	    RefCountPtr< ArgType > p = Helpers::down_cast< ArgType >( firstUnforced, "< internal error: SingleListPair contradicting isNull( )" );
 	    evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( cont_, contMem_, structure_, p->cdr_, traceLoc_ ) );
 	    p->car_->force( const_cast< Kernel::VariableHandle & >( p->car_ ), evalState );
 	  }
