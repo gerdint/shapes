@@ -5,14 +5,18 @@ lMin: 1.5cm
 lMax: 10cm
 lSteps: '20
 
-![[range '0 lSteps].foldl
+•page <<
+ [[range '0 lSteps].foldl
   \ p e .>
    {
-     l: lMin+e*(lMax-lMin)/(lSteps-1)
+     l: lMin+e*(lMax-lMin)/(lSteps-'1)
      br: [someBrace (e*xStep,0cm) (e*xStep,l)]
-     @<< [stroke br]
-|**     @<< @stroking:RGB_RED & @width:0.5bp | [stroke [controlling br]]
-     @<< fill [] (@width:1bp|[someClosedBrace (e*xStep,lMax+lMin) (e*xStep,l)])
      p
+     &
+     [stroke br]
+|**     &
+|**     ( @stroking:RGB_RED & @width:0.5bp | [stroke [controlling br]] )
+     &
+     ( fill [] (@width:1bp|[someClosedBrace (e*xStep,lMax+lMin) (e*xStep,l)]) )
    }
-  VOID]
+  null]

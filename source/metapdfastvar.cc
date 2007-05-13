@@ -1063,3 +1063,31 @@ Ast::DynamicExpression::eval( Kernel::EvalState * evalState ) const
 }
 
 
+Ast::LexiographicType::LexiographicType( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey )
+  : Ast::Expression( loc ), id_( id ), idKey_( idKey )
+{
+  immediate_ = true;
+}
+
+Ast::LexiographicType::~LexiographicType( )
+{
+  delete id_;
+  if( *idKey_ != 0 )
+    {
+      delete *idKey_;
+    }
+  delete idKey_;     //  This can be done only as long as this is not shared!
+}
+
+void
+Ast::LexiographicType::eval( Kernel::EvalState * evalState ) const
+{
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalTypeKey( loc_, id_ ) );
+    }
+
+  evalState->env_->lookup( **idKey_, evalState );
+}
+
+

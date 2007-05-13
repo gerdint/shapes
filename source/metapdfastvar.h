@@ -395,6 +395,16 @@ namespace MetaPDF
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
+    class LexiographicType : public Expression 
+    {
+      const char * id_;
+      mutable Kernel::Environment::LexicalKey ** idKey_;
+    public:
+      LexiographicType( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
+      virtual ~LexiographicType( );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+    
 
   }
 }

@@ -1,27 +1,47 @@
+|** We begin with two useful general-purpose abstractions.
+
+rotateAbout: \ z a .> [shift z]()[rotate a]()[shift ~z]
+
+accumulateGraphics2D: \ lst fun .> [lst.foldl \ p e .> ( p & [fun e] )
+                                              null]
+
+
+|** It is now straight-forward to implement the Koch curve (at some finite depth).
+
 koch: \ pth depth .>
-[if depth == '0
-    pth
-    {
-      len: [abs pth]
-      sl1: [pth len / 3]
-      sl2: [pth 2 * len / 3]
-      seg1: pth.begin--sl1
-      seg2: sl1--sl2
-      seg3: sl2--pth.end
-      depth: ../depth - '1
-      [koch seg1 depth]
-        --[koch [shift sl1.p][][rotate 60°][][shift ~sl1.p][]seg2 depth]
-        --[koch [shift sl2.p][][rotate ~60°][][shift ~sl2.p][]seg2 depth]
-        --[koch seg3 depth]
-    }]
+  [if depth == '0
+      pth
+      {
+        len: [abs pth]
+        sl1: [pth len / 3]
+        sl2: [pth 2 * len / 3]
+        seg1: pth.begin--sl1
+        seg2: sl1--sl2
+        seg3: sl2--pth.end
+        depth: ../depth - '1
+        [koch seg1 depth]
+          --[koch [rotateAbout sl1.p 60°][]seg2 depth]
+          --[koch [rotateAbout sl2.p ~60°][]seg2 depth]
+          --[koch seg3 depth]
+      }]
+
+
+|** Here's our first simple application to a straight line:
 
 •page << @width:0.3bp | [stroke [koch (0cm,0cm)--(15cm,10cm) '6]]
 
+
+|** As a more advanced application, we start from a circle, and draw also the curves at intermediate depths, in successively darker shades of gray:
+
 ##needs circle
 ##needs centering
-c: [shift (5cm,~10cm)][][circle 5cm]
 
-•page <<
- [[range '0 '5].foldl
-   \ p i .> ( p & ( @stroking:[mediate i*(1/5) 0.9*gray_WHITE gray_BLACK] | [stroke [koch c i]] ) )
-   null]
+•page << {
+           c: [shift (5cm,~10cm)][][circle 5cm]
+           end: '5
+           [accumulateGraphics2D
+             [range '0 end]
+             \ i .> ( @stroking:[mediate i*(1/end) 0.9*gray_WHITE gray_BLACK]
+                      |
+                      [stroke [koch c i]] ) ]
+         }

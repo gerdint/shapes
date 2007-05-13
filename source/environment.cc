@@ -883,6 +883,23 @@ Kernel::Environment::getVarHandle( size_t pos )
   return (*values_)[ pos ];
 }
 
+Kernel::Environment::LexicalKey
+Kernel::Environment::findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const
+{
+  MapType::const_iterator i = bindings_->find( id );
+  if( i == bindings_->end( ) )
+    {
+      if( isBaseEnvironment( ) )
+	{
+	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE );
+	}
+      return parent_->findLexicalTypeKey( loc, id ).oneAbove( );
+    }
+  
+  return LexicalKey( 0, i->second );
+}
+
+
 size_t
 Kernel::Environment::findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const
 {
@@ -976,6 +993,7 @@ Kernel::Environment::getStateHandle( size_t pos )
     }
   return res;
 }
+
 
 
 size_t

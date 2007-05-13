@@ -462,7 +462,7 @@ namespace MetaPDF
     class LookupUnknown : public RuntimeError
     {
     public:
-      enum Type{ VARIABLE, STATE, DYNAMIC_VARIABLE, DYNAMIC_STATE };
+      enum Type{ VARIABLE, STATE, DYNAMIC_VARIABLE, DYNAMIC_STATE, TYPE };
     private:
       RefCountPtr< const char > id;
       Type type_;

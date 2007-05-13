@@ -258,6 +258,9 @@ namespace MetaPDF
       VariableHandle getVarHandle( const LexicalKey & lexKey );
       VariableHandle getVarHandle( size_t pos );
 
+      // These only differ from those above by the error messages they may generate.
+      LexicalKey findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const;
+
       size_t findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
       LexicalKey findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const;
       void introduceState( size_t pos, Kernel::State * state );
@@ -266,7 +269,6 @@ namespace MetaPDF
       void tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
       StateHandle getStateHandle( const LexicalKey & lexKey );
       StateHandle getStateHandle( size_t pos );
-
 
       size_t findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const;
       void defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );

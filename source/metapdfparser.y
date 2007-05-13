@@ -137,7 +137,7 @@ void metapdferror( char * msg )
 %token <floatVal> T_float T_length
 %token <expr> T_speciallength
 %token <boolVal> T_bool
-%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier
+%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier T_typename
 
 /* Non-terminal types
  * ------------------
@@ -1051,6 +1051,11 @@ ExprExceptConstStrings
 | Expr T_xor Expr
 {
   $$ = new Ast::XorExpr( @2, $1, $3 );
+}
+| T_typename
+{
+  Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
+  $$ = new Ast::LexiographicType( @$, $1, key );
 }
 ;
 

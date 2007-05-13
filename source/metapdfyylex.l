@@ -736,6 +736,10 @@ Escape "¢"|"¤"
   metapdflval.str = strdup( yytext );
   return T_identifier;
 }
+{Typename} {
+  metapdflval.str = strdup( yytext );
+  return T_typename;
+}
 
 {DynamicMark}{Identifier} {
   metapdflval.str = strdup( yytext + 1 );
