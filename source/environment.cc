@@ -403,6 +403,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "font_ZAPFDINGBATS", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::ZAPFDINGBATS ) ) );
 
   selfDefine( "null", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_NULL2D ) );
+  selfDefine( "null3D", static_cast< RefCountPtr< const Lang::Geometric3D > >( Lang::THE_NULL3D ) );
   selfDefine( "void", Lang::THE_VOID );
   selfDefine( "pointpicture", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_POINTPICTURE ) );
   selfDefine( "emptypath2D", Lang::THE_EMPTYPATH2D );

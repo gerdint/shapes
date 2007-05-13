@@ -16,18 +16,10 @@ cylinderWall: \ radius height sides .>
                   [facetnormal (r,0u,0u) (1,0,0)]
 		  [facetnormal (r*[cos deltaAngle],r*[sin deltaAngle],0u) ([cos deltaAngle],[sin deltaAngle],0)] ]
 
-  res: Hot3D <<
-
-  ![[range '0 sides-'1].foldl
+  [[range '0 sides-'1].foldl
    \ p e .>
-    !{
-      res << [rotate3D (0,0,1) e*deltaAngle] [] oneSide
-      p
-    }
-   VOID]
-
-  res;
-  res
+      p & ( [rotate3D (0,0,1) e*deltaAngle] [] oneSide )
+    null3D]
 }
 
 polyDisc: \ radius sides .>
@@ -36,13 +28,13 @@ polyDisc: \ radius sides .>
   r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
   [[range '0 sides-'1].foldl
    \ pile e .>  pile--( r * [dir deltaAngle * e] )
-   EMPTYPATH2D]--cycle
+   emptypath2D]--cycle
 }
 
 cylinderLid: \ radius height sides smallRadius .>
-  [shift (0cm,0cm,height)] [] ( Hot3D << [facet [immerse [polyDisc radius sides]]]
-                                      << [stroke [immerse [polyDisc radius sides]]]
-                                      << @nonstroking:[gray 0.3] | [facet [immerse [polyDisc smallRadius sides]] tiebreaker:1bp]
+  [shift (0cm,0cm,height)] [] ( newGroup3D << [facet [immerse [polyDisc radius sides]]]
+                                           << [stroke [immerse [polyDisc radius sides]]]
+                                           << @nonstroking:[gray 0.3] | [facet [immerse [polyDisc smallRadius sides]] tiebreaker:1bp]
                                 )
 
 |** First object to be defined is a joint.
@@ -60,10 +52,10 @@ jointSurface:
 
 jointSides: '30
 
-joint: jointSurface | ( Hot3D << [shift (0m,0m,~jointThickness)] [] [cylinderWall jointRadius 2*jointThickness jointSides]
-                              << [cylinderLid jointRadius ~jointThickness jointSides 0.3*jointRadius]
-                              << [cylinderLid jointRadius jointThickness jointSides 0.3*jointRadius]
-                            )
+joint: jointSurface | ( newGroup3D << [shift (0m,0m,~jointThickness)] [] [cylinderWall jointRadius 2*jointThickness jointSides]
+                                   << [cylinderLid jointRadius ~jointThickness jointSides 0.3*jointRadius]
+                                   << [cylinderLid jointRadius jointThickness jointSides 0.3*jointRadius]
+                      )
 
 jointYSeparation: 2*jointThickness + 0.1u
 
@@ -81,72 +73,65 @@ armPath: \ tfStart tfEnd .>
 
 edgyCylinder: \ pth0 pth1 .>
 {
-  res: Hot3D <<
+  •res: newGroup3D
 
-  ![if [duration pth0] <> [duration pth1]
-       [error `edgyCylinder: Paths don't have the same duration.´]]
+  [if [duration pth0] ≠ [duration pth1]
+      [error `edgyCylinder: Paths don't have the same duration.´]]
 
-  ![[range '0 [duration pth0]-'1].foldl
-   \ p e .>
-    !{
-      res << [facet [pth0 e*1].p--[pth0 (e+'1)*1].p--[pth1 (e+'1)*1].p--cycle]
-      res << [facet [pth0 e*1].p--[pth1 (e+'1)*1].p--[pth1 e*1].p--cycle]
-      p
-    }
-   VOID]
+  •res <<
+    [[range '0 [duration pth0]-'1].foldl
+       \ p e .>
+         p
+         &
+         ( [facet [pth0 e*1].p--[pth0 (e+'1)*1].p--[pth1 (e+'1)*1].p--cycle] )
+         &
+         ( [facet [pth0 e*1].p--[pth1 (e+'1)*1].p--[pth1 e*1].p--cycle] )
+       null3D]
 
-  ![[range '0 [duration pth0]].foldl
-   \ p e .>
-    !{
-      res << [stroke [pth0 e*1].p--[pth1 e*1].p]
-      p
-    }
-   VOID]
+  •res <<
+    [[range '0 [duration pth0]].foldl
+      \ p e .>
+        p & [stroke [pth0 e*1].p--[pth1 e*1].p]
+      null3D]
 
-  res;
-  res
+  •res;
 }
 
 paintArm: \ pth width height steps .>
 {
   lStep: [abs pth] / steps
 
-  res: Hot3D <<
-
-  ![[range '0 steps-'1].foldl
+  [[range '0 steps-'1].foldl
    \ p e .>
-    !{
-      pth0:
-      {
-        sl: [pth e*lStep]
-	dx: sl.N * 0.5 * width
-	dy: sl.B * 0.5 * height
-	[shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
-      }
+     p
+     &
+     {
+       pth0:
+       {
+         sl: [pth e*lStep]
+ 	 dx: sl.n * 0.5 * width
+	 dy: sl.b * 0.5 * height
+	 [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+       }
 
-      pth1:
-      {
-        sl: [pth (e*1+0.999)*lStep]
-	dx: sl.N * 0.5 * width
-	dy: sl.B * 0.5 * height
-	[shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
-      }
+       pth1:
+       {
+         sl: [pth (e*1+0.999)*lStep]
+ 	 dx: sl.n * 0.5 * width
+	 dy: sl.b * 0.5 * height
+	 [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+       }
 
-      res << [edgyCylinder pth0 pth1]
-
-      p
+      [edgyCylinder pth0 pth1]
     }
-   VOID]
-
-  res;
-  res
+   null3D]
 }
 
-myArrowHead: [MetaPostArrow3D ahLength:8bp ...]
+myArrowHead: [metaPostArrow3D ahLength:8bp ...]
 
 frameArrows:
 {
-  res: Hot3D <<
+  •res: newGroup3D
 
   l: 2u
 
@@ -154,21 +139,20 @@ frameArrows:
   y: (0m,l,0m)
   z: (0m,0m,l)
 
-  res << [tag 'x x]
-      << [tag 'y y]
-      << [tag 'z z]
+  •res << [tag 'x x]
+       << [tag 'y y]
+       << [tag 'z z]
 
-  @stroking:RGB_BLUE
-  & @nonstroking:RGB_BLUE
+  @stroking:rgb_BLUE
+  & @nonstroking:rgb_BLUE
   |
   {
-    res << [stroke (0m,0m,0m)--x head:[myArrowHead (0,~1,0) ...]]
-    res << [stroke (0m,0m,0m)--y head:[myArrowHead (0,0,1) ...]]
-    res << [stroke (0m,0m,0m)--z head:[myArrowHead (0,~1,0) ...]]
+    •res << [stroke (0m,0m,0m)--x head:[myArrowHead (0,~1,0) ...]]
+    •res << [stroke (0m,0m,0m)--y head:[myArrowHead (0,0,1) ...]]
+    •res << [stroke (0m,0m,0m)--z head:[myArrowHead (0,~1,0) ...]]
   }
 
-  res;
-  res
+  •res;
 }
 
 /** The arguments <d1> and <d2> will be normalized, so they can be either float triples or coordinates to be interpreted
@@ -215,20 +199,20 @@ frame0: tf0d [] frameArrows
 frame1: tf1d [] frameArrows
 
 |** This is the part of the picture where the machinery is drawn.
-zbuf: HotZSorter <<
-zbuf << [shift (0cm,0cm,10cm)] [] [specular_light [gray 0.9]]
-zbuf << [ambient_light [gray 0.3]]
+•zbuf: newZSorter
+•zbuf << [shift (0cm,0cm,10cm)] [] [specular_light [gray 0.9]]
+•zbuf << [ambient_light [gray 0.3]]
 
 |** This is the part of the picture where parameters are shown.
-pbuf: Hot3D <<
+•pbuf: newGroup3D
 
-zbuf << tf0d [] joint
-zbuf << tf1u [] joint
-zbuf << tf1d [] joint
-zbuf << tf2u [] joint
+•zbuf << tf0d [] joint
+•zbuf << tf1u [] joint
+•zbuf << tf1d [] joint
+•zbuf << tf2u [] joint
 
-zbuf << jointSurface | [paintArm [armPath tf0d tf1u] 0.5*jointRadius 0.2*jointRadius '10]
-zbuf << jointSurface | [paintArm [armPath tf1d tf2u] 0.5*jointRadius 0.2*jointRadius '10]
+•zbuf << jointSurface | [paintArm [armPath tf0d tf1u] 0.5*jointRadius 0.2*jointRadius '10]
+•zbuf << jointSurface | [paintArm [armPath tf1d tf2u] 0.5*jointRadius 0.2*jointRadius '10]
 
 /** The axes defined here turn out to be very useful, since they provide
  ** a compact way to refer to certain directions in the picture.
@@ -238,23 +222,23 @@ axis1: tf1d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 
 
-zbuf << @stroking:RGB_RED | [stroke axis0]
-zbuf << frame0
-zbuf << @stroking:RGB_RED | [stroke axis1]
-zbuf << frame1
-zbuf << @stroking:RGB_RED | [stroke axis2]
+•zbuf << @stroking:rgb_RED | [stroke axis0]
+•zbuf << frame0
+•zbuf << @stroking:rgb_RED | [stroke axis1]
+•zbuf << frame1
+•zbuf << @stroking:rgb_RED | [stroke axis2]
 
-pbuf << @stroking:RGB_RED | [stroke axis0]
-pbuf << frame0
-pbuf << [shift [find frame0 'x]] [] [facing [centeratwlm [TeX `$x_{i-1}$´] (0,~1)]]
-pbuf << [shift [find frame0 'y]] [] [facing [centeratwlm [TeX `$y_{i-1}$´] (0,~1)]]
-pbuf << [shift [find frame0 'z]] [] [facing [centeratwlm [TeX `$z_{i-1}$´] (1,0)]]
-pbuf << @stroking:RGB_RED | [stroke axis1]
-pbuf << frame1
-pbuf << [shift [find frame1 'x]] [] [facing [centeratwlm [TeX `$x_{i}$´] (0,~1)]]
-pbuf << [shift [find frame1 'y]] [] [facing [centeratwlm [TeX `$y_{i}$´] (1,0)]]
-pbuf << [shift [find frame1 'z]] [] [facing [centeratwlm [TeX `$z_{i}$´] (1,0)]]
-pbuf << @stroking:RGB_RED | [stroke axis2]
+•pbuf << @stroking:rgb_RED | [stroke axis0]
+•pbuf << frame0
+•pbuf << [shift [find frame0 'x]] [] [facing [centeratwlm [TeX `$x_{i-1}$´] (0,~1)]]
+•pbuf << [shift [find frame0 'y]] [] [facing [centeratwlm [TeX `$y_{i-1}$´] (0,~1)]]
+•pbuf << [shift [find frame0 'z]] [] [facing [centeratwlm [TeX `$z_{i-1}$´] (1,0)]]
+•pbuf << @stroking:rgb_RED | [stroke axis1]
+•pbuf << frame1
+•pbuf << [shift [find frame1 'x]] [] [facing [centeratwlm [TeX `$x_{i}$´] (0,~1)]]
+•pbuf << [shift [find frame1 'y]] [] [facing [centeratwlm [TeX `$y_{i}$´] (1,0)]]
+•pbuf << [shift [find frame1 'z]] [] [facing [centeratwlm [TeX `$z_{i}$´] (1,0)]]
+•pbuf << @stroking:rgb_RED | [stroke axis2]
 @width: 0.5bp
 |
 {
@@ -263,51 +247,51 @@ pbuf << @stroking:RGB_RED | [stroke axis2]
   {
     |** This is the distance $a_{i-1}$ along with angle marks.
     pth: tf0d [] ( (0u,0u,0u)--(a0,0u,0u) )
-    pbuf << stroke [] pth
-    pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i-1}$´] (0,1)]]
-    pbuf << stroke [] [myRightAnglePath [tf0d (0u,0u,0u)] [axis0 0].T [pth 0].T]
-    pbuf << stroke [] [myRightAnglePath [tf0d (a0,0u,0u)] [axis1 0].T [pth 1].rT]
+    •pbuf << stroke [] pth
+    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i-1}$´] (0,1)]]
+    •pbuf << stroke [] [myRightAnglePath [tf0d (0u,0u,0u)] [axis0 0].t [pth 0].t]
+    •pbuf << stroke [] [myRightAnglePath [tf0d (a0,0u,0u)] [axis1 0].t [pth 1].rt]
   }
   {
     |** This is the distance $a_{i}$ along with angle marks.
     pth: tf1d [] ( (0u,0u,0u)--(a1,0u,0u) )
-    pbuf << stroke [] pth
-    pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i}$´] (0,1)]]
-    pbuf << stroke [] [myRightAnglePath [tf1d (0u,0u,0u)] [axis1 0].T [pth 0].T]
-    pbuf << stroke [] [myRightAnglePath [tf1d (a1,0u,0u)] [axis2 0].T [pth 1].rT]
+    •pbuf << stroke [] pth
+    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i}$´] (0,1)]]
+    •pbuf << stroke [] [myRightAnglePath [tf1d (0u,0u,0u)] [axis1 0].t [pth 0].t]
+    •pbuf << stroke [] [myRightAnglePath [tf1d (a1,0u,0u)] [axis2 0].t [pth 1].rt]
 
     |** This is the angle $\theta_{i}$ along helpers and angle marks.
-    helper1: [shift [tf0d (a0,0u,0u)]] [] ( (0u,0u,0u)--((angleR+angleExtra)*[pth 0].T) )
+    helper1: [shift [tf0d (a0,0u,0u)]] [] ( (0u,0u,0u)--((angleR+angleExtra)*[pth 0].t) )
     helper2: tf0d [] ( (a0,0u,0u)--(a0+angleR+angleExtra,0u,0u) )
     |** At the moment, the easy way to define circular arcs in 3D is to immerse a 2D arc.
     /** In the choice of using tf1d or tf1u, I chose tf1d, which makes the positioning rather natural,
      ** although the angles do not really correspond to the figure.
      **/
     arc: tf1d*[shift (0u,0u,~d1)] [] [immerse (angleR*[dir ~theta1])>(1%c^90°-theta1)--(1%c^~90°)<(angleR,0)]
-    pbuf << myDash | stroke [] helper1
-    pbuf << myDash | stroke [] helper2
-    pbuf << [stroke arc head:[MetaPostArrow3D (0,0,1) ahLength:5bp ...]]
-    pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\theta_{i}$´] (~1,0)]]
+    •pbuf << myDash | stroke [] helper1
+    •pbuf << myDash | stroke [] helper2
+    •pbuf << [stroke arc head:[metaPostArrow3D (0,0,1) ahLength:5bp ...]]
+    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\theta_{i}$´] (~1,0)]]
   }
   {
     |** This is the angle $\alpha_{i-1}$ along helpers and angle marks.
-    helper: [shift [tf0d (0u,0u,0u)]] [] ( (0u,0u,0u)--((angleR+angleExtra)*[axis1 0].T) )
+    helper: [shift [tf0d (0u,0u,0u)]] [] ( (0u,0u,0u)--((angleR+angleExtra)*[axis1 0].t) )
     |** At the moment, the easy way to define circular arcs in 3D is to immerse a 2D arc.
     arc: tf0d*[rotate3D (0,0,1) 90°]*[rotate3D (1,0,0) 90°] [] [immerse (0,~angleR)>(1%c^0°)--(1%c^180°+alpha0)<(angleR*[dir ~90°+alpha0])]
-    pbuf << myDash | stroke [] helper
-    pbuf << [stroke arc head:[MetaPostArrow3D [axis1 0].T ahLength:5bp ...]]
-    pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\alpha_{i-1}$´] (~1,1)]]
+    •pbuf << myDash | stroke [] helper
+    •pbuf << [stroke arc head:[metaPostArrow3D [axis1 0].t ahLength:5bp ...]]
+    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\alpha_{i-1}$´] (~1,1)]]
   }
 }
-pbuf << [shift 0.5 * ([tf0d (a0,0u,0u)] + [tf1d (0u,0u,0u)])] [] [facing [centeratwlm [TeX `$d_{i}$´] (~1,0)]]
+•pbuf << [shift 0.5 * ([tf0d (a0,0u,0u)] + [tf1d (0u,0u,0u)])] [] [facing [centeratwlm [TeX `$d_{i}$´] (~1,0)]]
 
-zbuf;
-pbuf;
+zbuf: •zbuf;
+pbuf: •pbuf;
 
 |** Finally, the two buffers are drawn.  The parameters are moved down a bit to avoid cluttering.
 @eyez:40u
 |
 {
-  @<< [view zbuf]
-  @<< [shift (0,~5u)] [] [view pbuf]
+  •page << [view zbuf]
+  •page << [shift (0,~5u)] [] [view pbuf]
 }

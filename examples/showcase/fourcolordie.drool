@@ -4,22 +4,17 @@ z2: [immerse r*[dir 120°]]
 z3: [immerse r*[dir ~120°]]
 z4: (0cm,0cm,(1.5++0.5)*r)
 
-die: Hot3D <<
-die << @nonstroking:RGB_RED    | [fill z1--z2--z3--cycle]
-die << @nonstroking:RGB_GREEN  | [fill z1--z2--z4--cycle]
-die << @nonstroking:RGB_BLUE   | [fill z1--z3--z4--cycle]
-die << @nonstroking:RGB_YELLOW | [fill z2--z3--z4--cycle]
-die;
+die: ( newGroup3D
+       << @nonstroking:rgb_RED    | [fill z1--z2--z3--cycle]
+       << @nonstroking:rgb_GREEN  | [fill z1--z2--z4--cycle]
+       << @nonstroking:rgb_BLUE   | [fill z1--z3--z4--cycle]
+       << @nonstroking:rgb_YELLOW | [fill z2--z3--z4--cycle] )
 
-world: HotZBuf <<
+world:
+  [[range '1 '5].foldl
+    \ pile e .>
+      pile &
+      ( [shift 5*r*[random3D]]*[rotate3D dir:[random3D] angle:180°*[random1D]] [] die )
+    null3D]
 
-![[range '1 '5].foldl
-  \ pile e .>
-   {
-     world << [shift 5*r*[random3D]]*[rotate3D dir:![random3D] angle:180°*[random1D]] [] die
-     pile
-   }
-   VOID]
-
-world;
-@<< view [] world
+•page << view [] ( newZBuf << world )
