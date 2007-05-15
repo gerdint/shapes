@@ -1,15 +1,13 @@
 pth: @defaultunit:1%c | (0cm,0cm)>(^90°)--(^90°)<(2cm,0cm)
 
-@<< [stroke pth]
+•page << [stroke pth]
 
 @width: 0.2bp
 |
-[[range '1 '10].foldl
- \ pile e .>
+[![range '1 '10].foreach
+ \ e .>!
  {
-  p: (~2cm+e*0.5cm,0.6cm)
-   @<< [stroke p--[continuous_approximator pth p].p ]
-   pile
+   p: (~2cm+e*0.5cm,0.6cm)
+   •page << [stroke p--[continuous_approximator pth p].p ]
   }
-  VOID
 ]

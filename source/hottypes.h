@@ -12,6 +12,7 @@
 #include "charptrless.h"
 
 #include <iostream>
+#include <fstream>
 #include <sys/time.h>
 
 
@@ -206,6 +207,33 @@ namespace MetaPDF
       static void initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues );
     };
 
+    class WarmRandomDevice : public Kernel::State
+    {
+      std::ifstream idev_;
+      std::ofstream odev_;
+    public:
+      WarmRandomDevice( );
+      virtual ~WarmRandomDevice( );
+      virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+    
+    class WarmRandomState : public Kernel::State
+    {
+      char * state_;
+      size_t sz_;
+    public:
+      WarmRandomState( size_t sz );  // Uses the random device to initialize, hence the semantics require that the /dev/random state be around!
+      WarmRandomState( size_t sz, unsigned long seed );
+      virtual ~WarmRandomState( );
+      virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+    
   }
 
 }

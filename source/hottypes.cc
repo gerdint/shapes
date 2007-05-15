@@ -12,6 +12,7 @@
 #include <sstream>
 #include <limits>
 #include <sys/resource.h>
+#include <cstdlib>
 
 using namespace MetaPDF;
 
@@ -1292,3 +1293,96 @@ Kernel::WarmType3Font::initializeLegalStrechValues( std::set< const char *, char
   legalStretchValues->insert( "ExtraExpanded" );
   legalStretchValues->insert( "UltraExpanded" );
 }
+
+
+Kernel::WarmRandomDevice::WarmRandomDevice( )
+{
+  idev_.open( "/dev/random" );
+  if( ! idev_.is_open( ) || ! idev_.good( ) )
+    {
+      throw Exceptions::ExternalError( "/dev/random could not be for input." );
+    }
+
+  odev_.open( "/dev/random" );
+  if( ! odev_.is_open( ) || ! odev_.good( ) )
+    {
+      throw Exceptions::ExternalError( "/dev/random could not be for output." );
+    }
+}
+
+Kernel::WarmRandomDevice::~WarmRandomDevice( )
+{ }
+
+void
+Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+{
+  piece->show( odev_ );
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+		    evalState );
+}
+
+void
+Kernel::WarmRandomDevice::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "The random device cannot be frozen." ) );
+}
+
+void
+Kernel::WarmRandomDevice::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  unsigned char tmp;
+  idev_.read( reinterpret_cast< char * >( & tmp ), 1 );
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Integer( tmp ) ),
+		   evalState );  
+}
+
+void
+Kernel::WarmRandomDevice::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
+Kernel::WarmRandomState::WarmRandomState( size_t sz )
+{
+  state_ = new char[ sz ];
+  initstate( 1, state_, sz );
+  srandomdev( );
+}
+
+Kernel::WarmRandomState::WarmRandomState( size_t sz, unsigned long seed )
+{
+  state_ = new char[ sz ];
+  initstate( seed, state_, sz );
+}
+
+Kernel::WarmRandomState::~WarmRandomState( )
+{
+  delete state_;
+}
+
+void
+Kernel::WarmRandomState::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A random state does not accept values." ) );
+}
+
+void
+Kernel::WarmRandomState::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "A random state cannot be frozen." ) );
+}
+
+void
+Kernel::WarmRandomState::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  setstate( state_ );
+  long tmp = random( );
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Integer( tmp ) ),
+		   evalState );
+}
+
+void
+Kernel::WarmRandomState::gcMark( Kernel::GCMarkedSet & marked )
+{ }

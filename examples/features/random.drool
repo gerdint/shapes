@@ -1,0 +1,4 @@
+•stderr << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `¢n´
+
+|** Just to prevent the empty-output-error:
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

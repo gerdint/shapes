@@ -413,6 +413,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( Lang::CANVAS_ID, new Kernel::WarmGroup2D );
   selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
+  selfDefine( "randomdevice", new Kernel::WarmRandomDevice );
 
   selfDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
   selfDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
