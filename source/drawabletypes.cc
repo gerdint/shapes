@@ -1214,7 +1214,8 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
     {
       if( respectSingleSided && singleSided_ )
 	{
-	  if( normal_.z_ <= 0 )
+	  const Concrete::Coords3D & somePoint = points_.front( );
+	  if( normal_.z_ * eyez - Concrete::inner( normal_, somePoint ) <= 0 )
 	    {
 	      return;
 	    }
@@ -1247,7 +1248,8 @@ Computation::PaintedPolygon3D::push_zBufTriangles( const Lang::Transform3D & tf,
 	Concrete::UnitFloatTriple Tnormal = tf.transformPlaneUnitNormal( normal_ );
 	if( respectSingleSided && singleSided_ )
 	  {
-	    if( Tnormal.z_ <= 0 )
+	    const Concrete::Coords3D & somePoint = points_.front( );
+	    if( Tnormal.z_ * eyez - Concrete::inner( Tnormal, somePoint.transformed( tf ) ) <= 0 )
 	      {
 		return;
 	      }

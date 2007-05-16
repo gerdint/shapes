@@ -1,0 +1,8 @@
+polyDisc: \ radius sides .>
+{
+  deltaAngle: 360° / sides
+  r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
+  [[range '0 sides-'1].foldl
+   \ pile e .>  pile--( r * [dir deltaAngle * e] )
+   emptypath2D]--cycle
+}

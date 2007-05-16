@@ -1,0 +1,28 @@
+cylinderWall: \ radius height sides .>
+{
+  deltaAngle: 360° / sides
+  r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
+  oneSide: [facet (r,0m,0m)--(r*[cos deltaAngle],r*[sin deltaAngle],0m)--(r*[cos deltaAngle],r*[sin deltaAngle],height)--(r,0m,height)--cycle
+                  [facetnormal (r,0m,0m) (1,0,0)]
+		  [facetnormal (r*[cos deltaAngle],r*[sin deltaAngle],0m) ([cos deltaAngle],[sin deltaAngle],0)] ]
+
+  [[range '0 sides-'1].foldl
+   \ p e .>
+      p & ( [rotate3D (0,0,1) e*deltaAngle] [] oneSide )
+    null3D]
+}
+
+block: \ x1 y1 z1 x2 y2 z2 .>
+  (
+    [facet (x1,y1,z1)--(x2,y1,z1)--(x2,y2,z1)--(x1,y2,z1)--cycle]
+    &
+    [facet (x1,y1,z2)--(x2,y1,z2)--(x2,y2,z2)--(x1,y2,z2)--cycle]
+    &
+    [facet (x1,y1,z1)--(x2,y1,z1)--(x2,y1,z2)--(x1,y1,z2)--cycle]
+    &
+    [facet (x1,y2,z1)--(x2,y2,z1)--(x2,y2,z2)--(x1,y2,z2)--cycle]
+    &
+    [facet (x1,y1,z1)--(x1,y1,z2)--(x1,y2,z2)--(x1,y2,z1)--cycle]
+    &
+    [facet (x2,y1,z1)--(x2,y1,z2)--(x2,y2,z2)--(x2,y2,z1)--cycle]
+  )
