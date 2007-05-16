@@ -8,6 +8,7 @@
 #include "tagtypes.h"
 #include "isnan.h"
 #include "pdfstructure.h"
+#include "timetypes.h"
 
 #include <sstream>
 #include <limits>
@@ -47,6 +48,38 @@ Lang::HotTriple::gcMark( Kernel::GCMarkedSet & marked )
   const_cast< Lang::Function * >( update_.getPtr( ) )->gcMark( marked );
   const_cast< Lang::Function * >( result_.getPtr( ) )->gcMark( marked );
 }
+
+
+
+Lang::HotRandomSeed::HotRandomSeed( size_t sz )
+  : sz_( sz ), useDevice_( true )
+{ }
+
+Lang::HotRandomSeed::HotRandomSeed( size_t sz, unsigned long seed )
+  : sz_( sz ), useDevice_( false ), seed_( seed )
+{ }
+
+Lang::HotRandomSeed::~HotRandomSeed( )
+{ }
+
+Kernel::State *
+Lang::HotRandomSeed::newState( ) const
+{
+  if( useDevice_ )
+    {
+      return new Kernel::WarmRandomState( sz_ );
+    }
+  else
+    {
+      return new Kernel::WarmRandomState( sz_, seed_ );
+    }
+}
+
+void
+Lang::HotRandomSeed::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
 
 
 Kernel::WarmTriple::WarmTriple( const RefCountPtr< const Lang::Value > & pile, RefCountPtr< const Lang::Function > update, RefCountPtr< const Lang::Function > result )
@@ -1344,19 +1377,7 @@ Kernel::WarmType3Font::initializeLegalStrechValues( std::set< const char *, char
 
 
 Kernel::WarmRandomDevice::WarmRandomDevice( )
-{
-  idev_.open( "/dev/random" );
-  if( ! idev_.is_open( ) || ! idev_.good( ) )
-    {
-      throw Exceptions::ExternalError( "/dev/random could not be for input." );
-    }
-
-  odev_.open( "/dev/random" );
-  if( ! odev_.is_open( ) || ! odev_.good( ) )
-    {
-      throw Exceptions::ExternalError( "/dev/random could not be for output." );
-    }
-}
+{ }
 
 Kernel::WarmRandomDevice::~WarmRandomDevice( )
 { }
@@ -1364,6 +1385,15 @@ Kernel::WarmRandomDevice::~WarmRandomDevice( )
 void
 Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
+  if( ! odev_.is_open( ) )
+    {
+      odev_.open( "/dev/random" );
+      if( ! odev_.is_open( ) || ! odev_.good( ) )
+	{
+	  throw Exceptions::ExternalError( "/dev/random could not be for output." );
+	}
+    }
+
   piece->show( odev_ );
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
@@ -1379,6 +1409,15 @@ Kernel::WarmRandomDevice::freezeImpl( Kernel::EvalState * evalState, const Ast::
 void
 Kernel::WarmRandomDevice::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
+  if( ! idev_.is_open( ) )
+    {
+      idev_.open( "/dev/random" );
+      if( ! idev_.is_open( ) || ! idev_.good( ) )
+	{
+	  throw Exceptions::ExternalError( "/dev/random could not be for input." );
+	}
+    }
+
   unsigned char tmp;
   idev_.read( reinterpret_cast< char * >( & tmp ), 1 );
   Kernel::ContRef cont = evalState->cont_;
@@ -1388,6 +1427,38 @@ Kernel::WarmRandomDevice::peekImpl( Kernel::EvalState * evalState, const Ast::So
 
 void
 Kernel::WarmRandomDevice::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
+Kernel::WarmTime::WarmTime( )
+{ }
+
+Kernel::WarmTime::~WarmTime( )
+{ }
+
+void
+Kernel::WarmTime::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "The time does not accept values." ) );
+}
+
+void
+Kernel::WarmTime::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "The time cannot be frozen." ) );
+}
+
+void
+Kernel::WarmTime::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  time_t t = time( 0 );
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ChronologicalTime( t ) ),
+		   evalState );  
+}
+
+void
+Kernel::WarmTime::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 

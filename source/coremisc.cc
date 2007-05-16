@@ -296,25 +296,6 @@ Lang::Core_rectangle::call( Kernel::EvalState * evalState, Kernel::Arguments & a
 }
 
 
-void
-Lang::Core_clocktime::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
-{
-  const size_t ARITY = 0;
-  CHECK_ARITY( args, ARITY, title_ );
-
-  time_t t;
-  tm * timeInfo;
-  t = time( 0 );
-  timeInfo = localtime( & t );
-  std::ostringstream res;
-  res << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec ;
-
-  Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( res.str( ).c_str( ) ) ) ),
-		   evalState );
-}
-
-
 Lang::Core_hot::Core_hot( const char * title )
   : CoreFunction( title, new Kernel::EvaluatedFormals( "< core function hot >", true ) )
 {

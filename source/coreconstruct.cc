@@ -14,12 +14,14 @@
 #include "pagecontentstates.h"
 #include "texlabelmanager.h"
 #include "autoonoff.h"
+#include "timetypes.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <vector>
 #include <stdio.h>
+#include <ctime>
 
 using namespace MetaPDF;
 
@@ -860,6 +862,25 @@ Lang::Core_sprintf::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
 	      break;
 	    }
 	}
+	{
+	  typedef const Lang::ChronologicalTime Arg2Type;
+	  Arg2Type * arg2 = dynamic_cast< Arg2Type * >( args.getValue( i ).getPtr( ) );
+	  if( arg2 != 0 )
+	    {
+	      const char * fmt = arg1->val_.getPtr( );
+	      const struct tm * tmp = arg2->temporary_localtime( );
+	      size_t sz = strlen( fmt ) * 2;
+	      res = new char[ sz ];
+	      while( strftime( res, sz, fmt, tmp ) == 0 )
+		{
+		  delete res;
+		  sz *= 2;
+		  res = new char[ sz ];
+		}
+	      status = 0; // Here, I'd like to check some error condition instead...
+	      break;
+	    }
+	}
 	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, i, Interaction::SEVERAL_TYPES );
       }
       break;
@@ -881,6 +902,24 @@ Lang::Core_sprintf::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::String( res ) ),
+		   evalState );
+}
+
+void
+Lang::Core_strftime::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  const size_t ARITY = 0;
+  CHECK_ARITY( args, ARITY, title_ );
+
+  time_t t;
+  tm * timeInfo;
+  t = time( 0 );
+  timeInfo = localtime( & t );
+  std::ostringstream res;
+  res << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec ;
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( res.str( ).c_str( ) ) ) ),
 		   evalState );
 }
 
@@ -1482,4 +1521,65 @@ Lang::Core_findall::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
     }
   
   throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Drawable2D::staticTypeName( ), Lang::Drawable3D::staticTypeName( ) ) );
+}
+
+
+Lang::Core_newrandom::Core_newrandom( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+{
+  formals_->appendEvaluatedCoreFormal( "seed", Kernel::THE_SLOT_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "size", Helpers::newValHandle( new Lang::Integer( 32 ) ) );
+}
+
+void
+Lang::Core_newrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  typedef const Lang::Integer SizeType;
+  Lang::Integer::ValueType sz = Helpers::down_cast_CoreArgument< SizeType >( title_, args, 1, callLoc )->val_;
+  if( sz < 8 )
+    {
+      throw Exceptions::CoreOutOfRange( title_, args, 1, "The size must be at least 8." );
+    }
+  if( sz > 256 )
+    {
+      throw Exceptions::CoreOutOfRange( title_, args, 1, "The size must at most 256." );
+    }
+
+  size_t argsi = 0;
+
+  try
+    {
+      typedef const Lang::ChronologicalTime SeedType;
+      
+      RefCountPtr< SeedType > seed = Helpers::try_cast_CoreArgument< SeedType >( args.getValue( argsi ) );
+
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::HotRandomSeed( sz, seed->val( ) ) ),
+		       evalState );
+      return;
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      // Never mind, see below
+    }
+  
+  try
+    {
+      typedef const Lang::Integer SeedType;
+      
+      RefCountPtr< SeedType > seed = Helpers::try_cast_CoreArgument< SeedType >( args.getValue( argsi ) );
+
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::HotRandomSeed( sz, seed->val_ ) ),
+		       evalState );
+      return;
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      // Never mind, see below
+    }
+  
+  throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::ChronologicalTime::staticTypeName( ) ) );
 }

@@ -1,4 +1,8 @@
-•stderr << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `¢n´
+•stdout << `Now is ´ << [sprintf `%H:%M´ (•time)] << `¢n´
+
+•stdout << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `¢n´
+
+•rand: [newRandom (•time)]
 
 |** Just to prevent the empty-output-error:
 •page << [stroke (0cm,0cm)--(1cm,1cm)]

@@ -414,6 +414,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
   selfDefine( "randomdevice", new Kernel::WarmRandomDevice );
+  selfDefine( "time", new Kernel::WarmTime );
 
   selfDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
   selfDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
@@ -424,6 +425,8 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
   selfDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
   selfDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
+
+  selfDefineCoreFunction( new Lang::Core_newrandom( "newRandom" ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 
@@ -613,7 +616,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefineCoreFunction( new Lang::Core_importPDFpages( "import" ) );
 
   selfDefineCoreFunction( new Lang::Core_sprintf( "sprintf" ) );
-  selfDefineCoreFunction( new Lang::Core_clocktime( "clocktime" ) );
+  selfDefineCoreFunction( new Lang::Core_strftime( "strftime" ) );
 
 }
 

@@ -722,10 +722,10 @@ namespace MetaPDF
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
-  class Core_clocktime : public Lang::CoreFunction
+  class Core_strftime : public Lang::CoreFunction
   {
   public:
-    Core_clocktime( const char * title ) : CoreFunction( title ) { }
+    Core_strftime( const char * title ) : CoreFunction( title ) { }
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
@@ -762,6 +762,14 @@ namespace MetaPDF
       Lang::Type3Glyph::Kind kind_;
     public:
       Core_makeglyph( const char * title, Lang::Type3Glyph::Kind kind );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
+    class Core_newrandom : public Lang::CoreFunction
+    {
+      Lang::Type3Glyph::Kind kind_;
+    public:
+      Core_newrandom( const char * title );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
     };
 

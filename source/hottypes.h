@@ -54,7 +54,20 @@ namespace MetaPDF
       virtual Kernel::State * newState( ) const { return new S; }
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ }
     };
-    
+
+    class HotRandomSeed : public Lang::Hot
+    {
+      size_t sz_;
+      bool useDevice_;
+      unsigned long seed_;
+    public:
+      HotRandomSeed( size_t sz );
+      HotRandomSeed( size_t sz, unsigned long seed );
+      virtual ~HotRandomSeed( );
+      virtual Kernel::State * newState( ) const;
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+        
   }
 
   namespace Kernel
@@ -207,6 +220,17 @@ namespace MetaPDF
       static void initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues );
     };
 
+    class WarmTime : public Kernel::State
+    {
+    public:
+      WarmTime( );
+      virtual ~WarmTime( );
+      virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+    };
+    
     class WarmRandomDevice : public Kernel::State
     {
       std::ifstream idev_;

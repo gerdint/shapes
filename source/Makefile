@@ -23,7 +23,7 @@ gettypeid.o elementarytypes.o concretecolors.o facetnormals.o facettypes.o textt
 pagecontentstates.o \
 elementarycoords.o statetypes.o pathtypes.o elementarypath2D.o elementarypath3D.o \
 pathslider2D.o pathslider3D.o drawabletypes.o shadingtypes.o functiontypes.o pdffunctiontypes.o \
-lighttypes.o containertypes.o hottypes.o tagtypes.o metapdfvalue.o \
+lighttypes.o containertypes.o timetypes.o hottypes.o tagtypes.o metapdfvalue.o \
 metapdfscanner.o sourcelocation.o metapdfexceptions.o strrefdup.o \
 metapdfparser.o environment.o dynamicenvironment.o \
 metapdfcore.o coreelem.o coreconstruct.o corepoint.o corepath.o coremisc.o coredraw.o corestate.o \
