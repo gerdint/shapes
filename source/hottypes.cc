@@ -349,6 +349,30 @@ Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< 
        */
     }
 
+  try
+    {
+      typedef const Lang::LightGroup ArgType;
+      RefCountPtr< ArgType > lights = Helpers::try_cast_CoreArgument< ArgType >( piece );
+      
+      while( ! lights->isNull( ) )
+	{
+	  typedef const Lang::LightPair PairType;
+	  RefCountPtr< PairType > p = lights.down_cast< PairType >( );
+	  lightPile_->push_back( p->car( ) );
+	  lights = p->cdr( );
+	}
+
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+			evalState );
+      return;
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      /* Wrong type; never mind!.. but see below!
+       */
+    }
+
   throw Exceptions::TypeMismatch( callLoc, piece->getTypeName( ), Helpers::typeSetString( Lang::Drawable3D::staticTypeName( ), Lang::LightSource::staticTypeName( ) ) );
 }
 
@@ -430,6 +454,30 @@ Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
   try
     {
       lightPile_->push_back( Helpers::try_cast_CoreArgument< const Lang::LightSource >( piece ) );
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+			evalState );
+      return;
+    }
+  catch( const NonLocalExit::NotThisType & ball )
+    {
+      /* Wrong type; never mind!.. but see below!
+       */
+    }
+
+  try
+    {
+      typedef const Lang::LightGroup ArgType;
+      RefCountPtr< ArgType > lights = Helpers::try_cast_CoreArgument< ArgType >( piece );
+      
+      while( ! lights->isNull( ) )
+	{
+	  typedef const Lang::LightPair PairType;
+	  RefCountPtr< PairType > p = lights.down_cast< PairType >( );
+	  lightPile_->push_back( p->car( ) );
+	  lights = p->cdr( );
+	}
+
       Kernel::ContRef cont = evalState->cont_;
       cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
 			evalState );

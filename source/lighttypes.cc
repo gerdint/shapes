@@ -477,7 +477,7 @@ Lang::LightPair::typed_transformed( const Lang::Transform3D & tf, const RefCount
 bool
 Lang::LightPair::isNull( ) const
 {
-  return true;
+  return false;
 }
 
 bool
