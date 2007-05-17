@@ -5,31 +5,11 @@
 
 ##needs arrowheads
 ##needs centering
+##needs shapes2D
+##needs shapes3D
+
 
 ##unit u = 1cm
-
-cylinderWall: \ radius height sides .>
-{
-  deltaAngle: 360° / sides
-  r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
-  oneSide: [facet (r,0u,0u)--(r*[cos deltaAngle],r*[sin deltaAngle],0u)--(r*[cos deltaAngle],r*[sin deltaAngle],height)--(r,0u,height)--cycle
-                  [facetnormal (r,0u,0u) (1,0,0)]
-		  [facetnormal (r*[cos deltaAngle],r*[sin deltaAngle],0u) ([cos deltaAngle],[sin deltaAngle],0)] ]
-
-  [[range '0 sides-'1].foldl
-   \ p e .>
-      p & ( [rotate3D (0,0,1) e*deltaAngle] [] oneSide )
-    null3D]
-}
-
-polyDisc: \ radius sides .>
-{
-  deltaAngle: 360° / sides
-  r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
-  [[range '0 sides-'1].foldl
-   \ pile e .>  pile--( r * [dir deltaAngle * e] )
-   emptypath2D]--cycle
-}
 
 cylinderLid: \ radius height sides smallRadius .>
   [shift (0cm,0cm,height)] [] ( newGroup3D << [facet [immerse [polyDisc radius sides]]]

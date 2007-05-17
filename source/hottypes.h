@@ -75,7 +75,7 @@ namespace MetaPDF
       size_t sz_;
       char * state_;
     public:
-      HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dummy ); // The argument is passed only to ensure that the random device is in scope.
+      HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dev );
       HotRandomSeed( size_t sz, unsigned long seed );
       virtual ~HotRandomSeed( );
       virtual Kernel::State * newState( ) const;
@@ -259,11 +259,13 @@ namespace MetaPDF
     
     class WarmRandomDevice : public Kernel::State
     {
+      const char * deviceName_;
       std::ifstream idev_;
       std::ofstream odev_;
     public:
-      WarmRandomDevice( );
+      WarmRandomDevice( const char * deviceName );
       virtual ~WarmRandomDevice( );
+      void read( char * dst, size_t sz );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );

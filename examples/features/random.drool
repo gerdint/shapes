@@ -5,6 +5,7 @@
 seed: [newRandom (•time)]
 •rand1: seed
 •rand2: seed
+|**•rand3: [newRandom (•time)]
 •rand3: [devRandom •randomdevice]
 •stdout << (•rand1) << `=´ << (•rand2) << `, ´ << (•rand1) << `=´ << (•rand2) << `¢n´
 •stdout << (•rand3) << `, ´ << [random2D •rand3] << `¢n´

@@ -52,22 +52,23 @@ Lang::HotTriple::gcMark( Kernel::GCMarkedSet & marked )
 
 
 
-Lang::HotRandomSeed::HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dummy )
+Lang::HotRandomSeed::HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dev )
   : sz_( sz ), state_( new char[ sz ] )
 {
-  initstate( 1, state_, sz_ );
-  srandomdev( );
+  char * oldState = initstate( 1, state_, sz_ );
+  dev->read( state_, sz_ );
+  setstate( oldState );
 }
 
 Lang::HotRandomSeed::HotRandomSeed( size_t sz, unsigned long seed )
   : sz_( sz ), state_( new char[ sz ] )
 {
-  initstate( seed, state_, sz_ );
+  char * oldState = initstate( seed, state_, sz_ );
+  setstate( oldState );
 }
 
 Lang::HotRandomSeed::~HotRandomSeed( )
 {
-  // Let's hope this state is not in use.  It should never be used to generate numbers.
   delete state_;
 }
 
@@ -1413,7 +1414,8 @@ Kernel::WarmType3Font::initializeLegalStrechValues( std::set< const char *, char
 }
 
 
-Kernel::WarmRandomDevice::WarmRandomDevice( )
+Kernel::WarmRandomDevice::WarmRandomDevice( const char * deviceName )
+  : deviceName_( deviceName )
 { }
 
 Kernel::WarmRandomDevice::~WarmRandomDevice( )
@@ -1423,14 +1425,29 @@ RefCountPtr< const Lang::Class > Kernel::WarmRandomDevice::TypeID( new Lang::Sys
 TYPEINFOIMPL_STATE( WarmRandomDevice );
 
 void
+Kernel::WarmRandomDevice::read( char * dst, size_t sz )
+{
+  if( ! idev_.is_open( ) )
+    {
+      idev_.open( deviceName_ );
+      if( ! idev_.is_open( ) || ! idev_.good( ) )
+	{
+	  throw Exceptions::ExternalError( strrefdup( deviceName_ + std::string( " could not be opened for input." ) ) );
+	}
+    }
+
+  idev_.read( dst, sz );
+}
+
+void
 Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
   if( ! odev_.is_open( ) )
     {
-      odev_.open( "/dev/random" );
+      odev_.open( deviceName_ );
       if( ! odev_.is_open( ) || ! odev_.good( ) )
 	{
-	  throw Exceptions::ExternalError( "/dev/random could not be for output." );
+	  throw Exceptions::ExternalError( strrefdup( deviceName_ + std::string( " could not be opened for output." ) ) );
 	}
     }
 
@@ -1451,10 +1468,10 @@ Kernel::WarmRandomDevice::peekImpl( Kernel::EvalState * evalState, const Ast::So
 {
   if( ! idev_.is_open( ) )
     {
-      idev_.open( "/dev/random" );
+      idev_.open( deviceName_ );
       if( ! idev_.is_open( ) || ! idev_.good( ) )
 	{
-	  throw Exceptions::ExternalError( "/dev/random could not be for input." );
+	  throw Exceptions::ExternalError( strrefdup( deviceName_ + std::string( " could not be opened for output." ) ) );
 	}
     }
 
