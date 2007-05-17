@@ -1067,6 +1067,73 @@ Exceptions::CoreTypeMismatch::display( std::ostream & os ) const
 }
 
 
+Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+					     const char * title,
+					     const Ast::SourceLocation & argLoc,
+					     RefCountPtr< const char > valueType,
+					     RefCountPtr< const char > expectedType )
+  : Exceptions::RuntimeError( callLoc ),
+    title_( title ),
+    titleMem_( NullPtr< const char >( ) ),
+    argLoc_( argLoc ),
+    valueType_( valueType ),
+    expectedType_( expectedType )
+{ }
+
+Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+					     RefCountPtr< const char > title,
+					     const Ast::SourceLocation & argLoc,
+					     RefCountPtr< const char > valueType,
+					     RefCountPtr< const char > expectedType )
+  : Exceptions::RuntimeError( callLoc ),
+    title_( title.getPtr( ) ),
+    titleMem_( title ),
+    argLoc_( argLoc ),
+    valueType_( valueType ),
+    expectedType_( expectedType )
+{ }
+
+Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+						const char * title,
+						Kernel::Arguments & args,
+						size_t argNo,
+						RefCountPtr< const char > expectedType )
+  : Exceptions::RuntimeError( callLoc ),
+    title_( title ),
+    titleMem_( NullPtr< const char >( ) ),
+    argLoc_( args.getLoc( argNo ) ),
+    valueType_( args.getValue( argNo )->getTypeName( ) ),
+    expectedType_( expectedType )
+{ }
+
+Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+					     RefCountPtr< const char > title,
+					     Kernel::Arguments & args,
+					     size_t argNo,
+					     RefCountPtr< const char > expectedType )
+  : Exceptions::RuntimeError( callLoc ),
+    title_( title.getPtr( ) ),
+    titleMem_( title ),
+    argLoc_( args.getLoc( argNo ) ),
+    valueType_( args.getValue( argNo )->getTypeName( ) ),
+    expectedType_( expectedType )
+{ }
+
+Exceptions::CoreStateTypeMismatch::~CoreStateTypeMismatch( )
+{ }
+
+void
+Exceptions::CoreStateTypeMismatch::display( std::ostream & os ) const
+{
+  os << "Core function " << title_ << ", state ";
+  //  if( argName_ != 0 )
+  //    {
+  //      os << "\"" << argName_ << "\" " ;
+  //    }
+  os << "at " << argLoc_ << ": expected a " << expectedType_ << ", got a " << valueType_ << std::endl ;
+}
+
+
 Exceptions::CoreDynamicTypeMismatch::CoreDynamicTypeMismatch( const Ast::SourceLocation & callLoc,
 							      const char * title,
 							      const char * id,

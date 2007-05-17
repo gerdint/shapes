@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
+#define RANDOM_MAX ((1<<31)-1)
+#define TWO_DIV_RANDOM_MAX (2. / ( (1<<31)-1 ))
 
 using namespace MetaPDF;
 
@@ -865,29 +867,70 @@ Lang::Core_orthogonal::call( Kernel::EvalState * evalState, Kernel::Arguments & 
   throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::FloatPair::staticTypeName( ), Lang::FloatTriple::staticTypeName( ) ) );
 }
 
+Lang::Core_randomNatural::Core_randomNatural( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( "< core function randomNatural >", true ) )
+{
+  formals_->appendCoreStateFormal( "state" );
+}
+
+void
+Lang::Core_randomNatural::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  typedef Kernel::WarmRandomState StateType;
+  StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+  
+  st->setState( );
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Kernel::ValueRef( new Lang::Float( TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1 ) ),
+		   evalState );
+}
+
+Lang::Core_randomBall1D::Core_randomBall1D( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( "< core function randomBall1D >", true ) )
+{
+  formals_->appendCoreStateFormal( "state" );
+}
+
 void
 Lang::Core_randomBall1D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
-  const size_t ARITY = 0;
-  CHECK_ARITY( args, ARITY, title_ );
+  args.applyDefaults( );
+
+  typedef Kernel::WarmRandomState StateType;
+  StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+  
+  st->setState( );
   
   Kernel::ContRef cont = evalState->cont_;
-  cont->takeValue( Kernel::ValueRef( new Lang::Float( 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1 ) ),
+  cont->takeValue( Kernel::ValueRef( new Lang::Float( TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1 ) ),
 		   evalState );
+}
+
+Lang::Core_randomBall2D::Core_randomBall2D( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( "< core function randomBall2D >", true ) )
+{
+  formals_->appendCoreStateFormal( "state" );
 }
 
 void
 Lang::Core_randomBall2D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
-  const size_t ARITY = 0;
-  CHECK_ARITY( args, ARITY, title_ );
+  args.applyDefaults( );
+
+  typedef Kernel::WarmRandomState StateType;
+  StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+  
+  st->setState( );
  
-  double x1 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-  double x2 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
+  double x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+  double x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
   while( x1 * x1 + x2 * x2 > 1 )
     {
-      x1 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-      x2 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
+      x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+      x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
     }
 
   Kernel::ContRef cont = evalState->cont_;
@@ -895,20 +938,30 @@ Lang::Core_randomBall2D::call( Kernel::EvalState * evalState, Kernel::Arguments 
 		   evalState );
 }
 
+Lang::Core_randomBall3D::Core_randomBall3D( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( "< core function randomBall3D >", true ) )
+{
+  formals_->appendCoreStateFormal( "state" );
+}
+
 void
 Lang::Core_randomBall3D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
-  const size_t ARITY = 0;
-  CHECK_ARITY( args, ARITY, title_ );
+  args.applyDefaults( );
+
+  typedef Kernel::WarmRandomState StateType;
+  StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
   
-  double x1 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-  double x2 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-  double x3 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
+  st->setState( );
+  
+  double x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+  double x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+  double x3 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
   while( x1 * x1 + x2 * x2 + x3 * x3 > 1 )
     {
-      x1 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-      x2 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
-      x3 = 2.0 * static_cast< double >( rand( ) ) / RAND_MAX - 1;
+      x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+      x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
+      x3 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
     }
 
   Kernel::ContRef cont = evalState->cont_;

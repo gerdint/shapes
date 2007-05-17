@@ -14,6 +14,7 @@
 #include <limits>
 #include <sys/resource.h>
 #include <cstdlib>
+#include <cstring>
 
 using namespace MetaPDF;
 
@@ -51,28 +52,31 @@ Lang::HotTriple::gcMark( Kernel::GCMarkedSet & marked )
 
 
 
-Lang::HotRandomSeed::HotRandomSeed( size_t sz )
-  : sz_( sz ), useDevice_( true )
-{ }
+Lang::HotRandomSeed::HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dummy )
+  : sz_( sz ), state_( new char[ sz ] )
+{
+  initstate( 1, state_, sz_ );
+  srandomdev( );
+}
 
 Lang::HotRandomSeed::HotRandomSeed( size_t sz, unsigned long seed )
-  : sz_( sz ), useDevice_( false ), seed_( seed )
-{ }
+  : sz_( sz ), state_( new char[ sz ] )
+{
+  initstate( seed, state_, sz_ );
+}
 
 Lang::HotRandomSeed::~HotRandomSeed( )
-{ }
+{
+  // Let's hope this state is not in use.  It should never be used to generate numbers.
+  delete state_;
+}
 
 Kernel::State *
 Lang::HotRandomSeed::newState( ) const
 {
-  if( useDevice_ )
-    {
-      return new Kernel::WarmRandomState( sz_ );
-    }
-  else
-    {
-      return new Kernel::WarmRandomState( sz_, seed_ );
-    }
+  char * stateCopy = new char[ sz_ ];
+  memcpy( stateCopy, state_, sz_ );
+  return new Kernel::WarmRandomState( stateCopy ); // This handles ownership to the new state.
 }
 
 void
@@ -88,6 +92,9 @@ Kernel::WarmTriple::WarmTriple( const RefCountPtr< const Lang::Value > & pile, R
 
 Kernel::WarmTriple::~WarmTriple( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmTriple::TypeID( new Lang::SystemFinalClass( strrefdup( "#UserState" ) ) );
+TYPEINFOIMPL_STATE( WarmTriple );
 
 void
 Kernel::WarmTriple::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -132,6 +139,9 @@ Kernel::WarmOstream::WarmOstream( std::ostream & os )
 Kernel::WarmOstream::~WarmOstream( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmOstream::TypeID( new Lang::SystemFinalClass( strrefdup( "#OutputStream" ) ) );
+TYPEINFOIMPL_STATE( WarmOstream );
+
 void
 Kernel::WarmOstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -163,6 +173,9 @@ Kernel::Warm_ostringstream::Warm_ostringstream( )
 
 Kernel::Warm_ostringstream::~Warm_ostringstream( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::Warm_ostringstream::TypeID( new Lang::SystemFinalClass( strrefdup( "#StringConcatenator" ) ) );
+TYPEINFOIMPL_STATE( Warm_ostringstream );
 
 void
 Kernel::Warm_ostringstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -200,6 +213,9 @@ Kernel::WarmGroup2D::WarmGroup2D( )
 
 Kernel::WarmGroup2D::~WarmGroup2D( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmGroup2D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group2D" ) ) );
+TYPEINFOIMPL_STATE( WarmGroup2D );
 
 void
 Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -260,6 +276,9 @@ Kernel::WarmGroup3D::WarmGroup3D( )
 Kernel::WarmGroup3D::~WarmGroup3D( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmGroup3D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group3D" ) ) );
+TYPEINFOIMPL_STATE( WarmGroup3D );
+
 void
 Kernel::WarmGroup3D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -301,6 +320,9 @@ Kernel::WarmGroupLights::WarmGroupLights( )
 Kernel::WarmGroupLights::~WarmGroupLights( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmGroupLights::TypeID( new Lang::SystemFinalClass( strrefdup( "#GroupLights" ) ) );
+TYPEINFOIMPL_STATE( WarmGroupLights );
+
 void
 Kernel::WarmGroupLights::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -339,6 +361,9 @@ Kernel::WarmZBuf::WarmZBuf( )
 
 Kernel::WarmZBuf::~WarmZBuf( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmZBuf::TypeID( new Lang::SystemFinalClass( strrefdup( "#ZBuf" ) ) );
+TYPEINFOIMPL_STATE( WarmZBuf );
 
 void
 Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -455,6 +480,9 @@ Kernel::WarmZSorter::WarmZSorter( )
 
 Kernel::WarmZSorter::~WarmZSorter( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmZSorter::TypeID( new Lang::SystemFinalClass( strrefdup( "#ZSorter" ) ) );
+TYPEINFOIMPL_STATE( WarmZSorter );
 
 void
 Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -580,6 +608,9 @@ Kernel::WarmTimer::WarmTimer( )
 Kernel::WarmTimer::~WarmTimer( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmTimer::TypeID( new Lang::SystemFinalClass( strrefdup( "#Timer" ) ) );
+TYPEINFOIMPL_STATE( WarmTimer );
+
 void
 Kernel::WarmTimer::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -632,6 +663,9 @@ Kernel::WarmText::WarmText( )
 
 Kernel::WarmText::~WarmText( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmText::TypeID( new Lang::SystemFinalClass( strrefdup( "#Text" ) ) );
+TYPEINFOIMPL_STATE( WarmText );
 
 void
 Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -803,6 +837,9 @@ Kernel::WarmType3Font::WarmType3Font( )
 
 Kernel::WarmType3Font::~WarmType3Font( )
 { }
+
+RefCountPtr< const Lang::Class > Kernel::WarmType3Font::TypeID( new Lang::SystemFinalClass( strrefdup( "#Type3Font" ) ) );
+TYPEINFOIMPL_STATE( WarmType3Font );
 
 void
 Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -1382,6 +1419,9 @@ Kernel::WarmRandomDevice::WarmRandomDevice( )
 Kernel::WarmRandomDevice::~WarmRandomDevice( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmRandomDevice::TypeID( new Lang::SystemFinalClass( strrefdup( "#RandomDevice" ) ) );
+TYPEINFOIMPL_STATE( WarmRandomDevice );
+
 void
 Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -1436,6 +1476,9 @@ Kernel::WarmTime::WarmTime( )
 Kernel::WarmTime::~WarmTime( )
 { }
 
+RefCountPtr< const Lang::Class > Kernel::WarmTime::TypeID( new Lang::SystemFinalClass( strrefdup( "#Time" ) ) );
+TYPEINFOIMPL_STATE( WarmTime );
+
 void
 Kernel::WarmTime::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
@@ -1462,22 +1505,22 @@ Kernel::WarmTime::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Kernel::WarmRandomState::WarmRandomState( size_t sz )
-{
-  state_ = new char[ sz ];
-  initstate( 1, state_, sz );
-  srandomdev( );
-}
-
-Kernel::WarmRandomState::WarmRandomState( size_t sz, unsigned long seed )
-{
-  state_ = new char[ sz ];
-  initstate( seed, state_, sz );
-}
+Kernel::WarmRandomState::WarmRandomState( char * state )
+  : state_( state )
+{ }
 
 Kernel::WarmRandomState::~WarmRandomState( )
 {
-  delete state_;
+  delete state_; // Let's hope this is not in use!
+}
+
+RefCountPtr< const Lang::Class > Kernel::WarmRandomState::TypeID( new Lang::SystemFinalClass( strrefdup( "#RandomState" ) ) );
+TYPEINFOIMPL_STATE( WarmRandomState );
+
+void
+Kernel::WarmRandomState::setState( )
+{
+  setstate( state_ );
 }
 
 void
@@ -1495,7 +1538,7 @@ Kernel::WarmRandomState::freezeImpl( Kernel::EvalState * evalState, const Ast::S
 void
 Kernel::WarmRandomState::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-  setstate( state_ );
+  setState( );
   long tmp = random( );
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Integer( tmp ) ),

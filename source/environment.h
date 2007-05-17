@@ -145,6 +145,8 @@ namespace MetaPDF
       void peek( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       void freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
+      virtual const RefCountPtr< const ::MetaPDF::Lang::Class > & getClass( ) const = 0;
+      RefCountPtr< const char > getTypeName( ) const;
       bool isAlive( ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
 

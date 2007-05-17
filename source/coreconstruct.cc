@@ -1583,3 +1583,35 @@ Lang::Core_newrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & a
   
   throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::ChronologicalTime::staticTypeName( ) ) );
 }
+
+
+Lang::Core_devrandom::Core_devrandom( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+{
+  formals_->appendCoreStateFormal( "device" );
+  formals_->appendEvaluatedCoreFormal( "size", Helpers::newValHandle( new Lang::Integer( 32 ) ) );
+}
+
+void
+Lang::Core_devrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  typedef const Lang::Integer SizeType;
+  Lang::Integer::ValueType sz = Helpers::down_cast_CoreArgument< SizeType >( title_, args, 0, callLoc )->val_;
+  if( sz < 8 )
+    {
+      throw Exceptions::CoreOutOfRange( title_, args, 0, "The size must be at least 8." );
+    }
+  if( sz > 256 )
+    {
+      throw Exceptions::CoreOutOfRange( title_, args, 0, "The size must at most 256." );
+    }
+
+  typedef Kernel::WarmRandomDevice GeneratorType;
+  GeneratorType * gen = Helpers::down_cast_CoreState< GeneratorType >( title_, args, 0, callLoc );
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::HotRandomSeed( static_cast< size_t >( sz ), gen ) ),
+		   evalState );
+}

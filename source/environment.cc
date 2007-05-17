@@ -161,6 +161,12 @@ Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation 
   this->freezeImpl( evalState, callLoc );
 }
 
+RefCountPtr< const char >
+Kernel::State::getTypeName( ) const
+{
+  return this->getClass( )->getPrettyName( );
+}
+
 bool
 Kernel::State::isAlive( ) const
 {
@@ -427,6 +433,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
 
   selfDefineCoreFunction( new Lang::Core_newrandom( "newRandom" ) );
+  selfDefineCoreFunction( new Lang::Core_devrandom( "devRandom" ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 
@@ -485,6 +492,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefineCoreFunction( new Lang::Core_cross( "cross" ) );
   selfDefineCoreFunction( new Lang::Core_orthogonal( "orthogonal" ) );
 
+  selfDefineCoreFunction( new Lang::Core_randomNatural( "randomN" ) );
   selfDefineCoreFunction( new Lang::Core_randomBall1D( "random1D" ) );
   selfDefineCoreFunction( new Lang::Core_randomBall2D( "random2D" ) );
   selfDefineCoreFunction( new Lang::Core_randomBall3D( "random3D" ) );

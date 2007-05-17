@@ -2,9 +2,11 @@
 #define hottypes_h
 
 #include "MetaPDF_Ast_decls.h"
+#include "MetaPDF_Kernel_decls.h"
 #include "MetaPDF_Lang_decls.h"
 #include "FontMetrics_decls.h"
 
+#include "metapdfvalue.h"
 #include "functiontypes.h"
 #include "drawabletypes.h"
 #include "lighttypes.h"
@@ -14,6 +16,19 @@
 #include <iostream>
 #include <fstream>
 #include <sys/time.h>
+
+
+#define TYPEINFOIMPL_STATE( T )			\
+  const RefCountPtr< const ::MetaPDF::Lang::Class > &	\
+    Kernel::T::getClass( ) const			\
+  {						\
+    return TypeID;				\
+  }						\
+  RefCountPtr< const char >			\
+    Kernel::T::staticTypeName( )			\
+    {						\
+      return TypeID->getPrettyName( );		\
+    }
 
 
 namespace MetaPDF
@@ -58,10 +73,9 @@ namespace MetaPDF
     class HotRandomSeed : public Lang::Hot
     {
       size_t sz_;
-      bool useDevice_;
-      unsigned long seed_;
+      char * state_;
     public:
-      HotRandomSeed( size_t sz );
+      HotRandomSeed( size_t sz, Kernel::WarmRandomDevice * dummy ); // The argument is passed only to ensure that the random device is in scope.
       HotRandomSeed( size_t sz, unsigned long seed );
       virtual ~HotRandomSeed( );
       virtual Kernel::State * newState( ) const;
@@ -85,6 +99,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmOstream : public Kernel::State
@@ -97,6 +112,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class Warm_ostringstream : public Kernel::State
@@ -109,6 +125,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmGroup2D : public Kernel::State
@@ -122,6 +139,7 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
+      TYPEINFODECL;
     };
     
     class WarmGroup3D : public Kernel::State
@@ -135,6 +153,7 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
+      TYPEINFODECL;
     };
     
     class WarmGroupLights : public Kernel::State
@@ -148,6 +167,7 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::LightGroup > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
+      TYPEINFODECL;
     };
     
     class WarmZBuf : public Kernel::State
@@ -162,6 +182,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmZSorter : public Kernel::State
@@ -176,6 +197,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmTimer : public Kernel::State
@@ -188,6 +210,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
 
     class WarmText : public Kernel::State
@@ -200,6 +223,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
 
     class WarmType3Font : public Kernel::State
@@ -215,6 +239,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
 
     private:
       static void initializeLegalStrechValues( std::set< const char *, charPtrLess > * legalStretchValues );
@@ -229,6 +254,7 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmRandomDevice : public Kernel::State
@@ -242,20 +268,21 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
     class WarmRandomState : public Kernel::State
     {
       char * state_;
-      size_t sz_;
     public:
-      WarmRandomState( size_t sz );  // Uses the random device to initialize, hence the semantics require that the /dev/random state be around!
-      WarmRandomState( size_t sz, unsigned long seed );
+      WarmRandomState( char * state );
+      void setState( );
       virtual ~WarmRandomState( );
       virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
     };
     
   }

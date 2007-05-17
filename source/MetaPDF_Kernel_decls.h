@@ -55,6 +55,7 @@ namespace MetaPDF
 
     class Warm;
     class WarmGroup2D;
+    class WarmRandomDevice;
 
     class PolarHandlePromise;
 

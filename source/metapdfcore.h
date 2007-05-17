@@ -390,24 +390,31 @@ namespace MetaPDF
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
+  class Core_randomNatural : public Lang::CoreFunction
+  {
+  public:
+    Core_randomNatural( const char * title );
+    virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+  };
+
   class Core_randomBall1D : public Lang::CoreFunction
   {
   public:
-    Core_randomBall1D( const char * title ) : CoreFunction( title ) { }
+    Core_randomBall1D( const char * title );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
   class Core_randomBall2D : public Lang::CoreFunction
   {
   public:
-    Core_randomBall2D( const char * title ) : CoreFunction( title ) { }
+    Core_randomBall2D( const char * title );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
   class Core_randomBall3D : public Lang::CoreFunction
   {
   public:
-    Core_randomBall3D( const char * title ) : CoreFunction( title ) { }
+    Core_randomBall3D( const char * title );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 
@@ -767,9 +774,15 @@ namespace MetaPDF
 
     class Core_newrandom : public Lang::CoreFunction
     {
-      Lang::Type3Glyph::Kind kind_;
     public:
       Core_newrandom( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
+    class Core_devrandom : public Lang::CoreFunction
+    {
+    public:
+      Core_devrandom( const char * title );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
     };
 

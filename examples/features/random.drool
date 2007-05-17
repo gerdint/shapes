@@ -2,7 +2,26 @@
 
 •stdout << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `¢n´
 
-•rand: [newRandom (•time)]
+seed: [newRandom (•time)]
+•rand1: seed
+•rand2: seed
+•rand3: [devRandom •randomdevice]
+•stdout << (•rand1) << `=´ << (•rand2) << `, ´ << (•rand1) << `=´ << (•rand2) << `¢n´
+•stdout << (•rand3) << `, ´ << [random2D •rand3] << `¢n´
+•stdout << [random1D •rand1] << `=´ << [random1D •rand2] << `, ´ << [random2D •rand1] << `=´ << [random2D •rand2] << `¢n´
 
-|** Just to prevent the empty-output-error:
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+|** In the future, this may be possible to make more beautiful using a fold with state.
+•page << [stroke (0cm,1cm)--(10cm,1cm)]
+      << [stroke (0cm,~1cm)--(10cm,~1cm)]
+      << [stroke (0cm,1cm*[random1D •rand3])--
+                 (1cm,1cm*[random1D •rand3])--
+                 (2cm,1cm*[random1D •rand3])--
+                 (3cm,1cm*[random1D •rand3])--
+                 (4cm,1cm*[random1D •rand3])--
+                 (5cm,1cm*[random1D •rand3])--
+                 (6cm,1cm*[random1D •rand3])--
+                 (7cm,1cm*[random1D •rand3])--
+                 (8cm,1cm*[random1D •rand3])--
+                 (9cm,1cm*[random1D •rand3])--
+                 (10cm,1cm*[random1D •rand3])]
+                 

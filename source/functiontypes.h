@@ -76,6 +76,9 @@ namespace MetaPDF
       bool isSlot( size_t i ) const;
       
       size_t size( ) const;
+
+      Kernel::StateHandle getState( size_t i );
+      const Ast::SourceLocation & getStateLoc( size_t i ) const;
       
       void gcMark( Kernel::GCMarkedSet & marked );
       
@@ -102,6 +105,7 @@ namespace MetaPDF
       void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc );
       void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal, bool force );
       void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal );
+      void appendCoreStateFormal( const char * id );
       
       RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState ) const;
       RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, const Kernel::Arguments & curryArgs ) const;
@@ -128,6 +132,19 @@ namespace MetaPDF
 	    {
 	      throw Exceptions::CoreTypeMismatch( callLoc, coreTitle, args.getLoc( i ), val->getTypeName( ), T::staticTypeName( ) );
 	    }
+	}
+      return res;
+    }
+
+    template< class T >
+    T *
+    down_cast_CoreState( const char * coreTitle, Kernel::Arguments & args, size_t i, const Ast::SourceLocation & callLoc, bool voidIsNull = false )
+    {
+      Kernel::StateHandle st = args.getState( i );
+      T * res = dynamic_cast< T * >( st );
+      if( res == NullPtr< T >( ) )
+	{
+	  throw Exceptions::CoreStateTypeMismatch( callLoc, coreTitle, args.getStateLoc( i ), st->getTypeName( ), T::staticTypeName( ) );
 	}
       return res;
     }

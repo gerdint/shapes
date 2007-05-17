@@ -674,6 +674,39 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
+    class CoreStateTypeMismatch : public RuntimeError
+    {
+      const char * title_;
+      RefCountPtr< const char > titleMem_;
+      const Ast::SourceLocation argLoc_;
+      RefCountPtr< const char > valueType_;
+      RefCountPtr< const char > expectedType_;
+    public:
+      CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+			     const char * title,
+			     const Ast::SourceLocation & argLoc,
+			     RefCountPtr< const char > valueType,
+			     RefCountPtr< const char > expectedType );
+      CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+			     RefCountPtr< const char > title,
+			     const Ast::SourceLocation & argLoc,
+			     RefCountPtr< const char > valueType,
+			     RefCountPtr< const char > expectedType );
+      CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+			     const char * title,
+			     Kernel::Arguments & args,
+			     size_t argNo,
+			     RefCountPtr< const char > expectedType );
+      CoreStateTypeMismatch( const Ast::SourceLocation & callLoc,
+			     RefCountPtr< const char > title,
+			     Kernel::Arguments & args,
+			     size_t argNo,
+			     RefCountPtr< const char > expectedType );
+      virtual ~CoreStateTypeMismatch( );
+      virtual void display( std::ostream & os ) const;
+    };
+  
+
     class ContinuationTypeMismatch : public RuntimeError
     {
       RefCountPtr< const char > valueType_;

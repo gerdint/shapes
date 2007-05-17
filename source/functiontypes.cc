@@ -870,6 +870,18 @@ Kernel::Arguments::isSlot( size_t i ) const
   return (*variables_)[ i ] == Kernel::THE_SLOT_VARIABLE;
 }
 
+Kernel::StateHandle
+Kernel::Arguments::getState( size_t i )
+{
+  return (*states_)[ i ];
+}
+
+const Ast::SourceLocation &
+Kernel::Arguments::getStateLoc( size_t i ) const
+{
+  return stateLocations_[ i ]->loc( );
+}
+
 size_t
 Kernel::Arguments::size( ) const
 {
@@ -1261,6 +1273,12 @@ void
 Kernel::EvaluatedFormals::appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal )
 {
   appendEvaluatedFormal( id, defaultVal, & Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION );
+}
+
+void
+Kernel::EvaluatedFormals::appendCoreStateFormal( const char * id )
+{
+  (*(formals_->stateOrder_))[ id ] = formals_->stateOrder_->size( );
 }
 
 void
