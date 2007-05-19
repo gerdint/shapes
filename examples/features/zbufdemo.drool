@@ -5,18 +5,19 @@ leaf: \ a .>
   [rotate3D angle:a dir:(0,0,1)] [] [fill (0.5cm,~4cm,0cm)--(2.5cm,~4cm,0cm)--(1.5cm,5cm,0.5cm)--cycle]
 )
 
-zbuf: HotZBuf <<
+•zbuf: newZBuf
 
+•zbuf <<
 [[range 0° 359° 120°].foldl
- \ p e .> !{ zbuf << [leaf e]  p }
- VOID]
+ \ p e .> (p & [leaf e])
+ null3D]
 
-zbuf << @nonstroking:[gray 0.3] | [fill (3cm,~2cm,0cm)--(3cm,2cm,0cm)--(7cm,0cm,2cm)--cycle]
-     << @nonstroking:[gray 0.7] | [fill (8cm,~1cm,0cm)--(8cm,1cm,0cm)--(4cm,0cm,2cm)--cycle]
+•zbuf << @nonstroking:[gray 0.3] | [fill (3cm,~2cm,0cm)--(3cm,2cm,0cm)--(7cm,0cm,2cm)--cycle]
+      << @nonstroking:[gray 0.7] | [fill (8cm,~1cm,0cm)--(8cm,1cm,0cm)--(4cm,0cm,2cm)--cycle]
 
-zbuf;
+zbuf: •zbuf;
 
 
 tf: [rotate3D (1,0,0) 60°]
 |**tf: [affinetransform3D (0,4,7) (2,5,8) (3,6,9) (0cm,0cm,0cm)]
-@<< [view  tf [] zbuf]
+•page << [view  tf [] zbuf]
