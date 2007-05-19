@@ -4,6 +4,16 @@ The first line of this file shall be the current version string.  It shall be in
   Version history
 ===================
 
+====( 0.2.1 )====
+2007-05-19
+
+By now many feature examples have been compiled successfully, and the tests go through.
+
+More importantly, the random number facility has been redesigned so that states are used where appropriate.  To make it easy to use states in folds, the kernel's list type has been enhanced with methods foldsl ("fold with state, left") and foldsr ("fold with state, right").  However, this was not quite necessary since the same functionality can be implemented as an extension, as was done in conssupport.drext, and used random.drool.
+
+Among all bugs found lately, one was in the z-buffer.  Although it was fixed, I'm not at all convinced that transforms are handled correctly, nor that overlaps and line-surface intersections are determined correctly.
+
+
 ====( 0.2.0 )====
 2007-04-24
 
