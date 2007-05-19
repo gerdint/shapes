@@ -7,13 +7,13 @@ junction: \ txt .> [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smal
 
 pjunction:
 {
-  res: [junction [TeX `p´]]
+  res: [junction [teX `p´]]
   \ .> res
 }
 
 sjunction:
 {
-  res: [junction [TeX `s´]]
+  res: [junction [teX `s´]]
   \ .> res
 }
 
@@ -36,25 +36,25 @@ junctionlbl: \ txt arrowdir lbl doArrow .>
 	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
 
   [symbboxed
-    (Hot2D << [if doArrow
-	          [stroke p head: [triangleArrow ahLength:ahLength ahAngle:ahAngle...]]
- 	          NULL]
-           << [conlabel d lbl [mspoint p 0.5]]
-	   << tmppic )]
+    (newGroup2D
+       << [if doArrow
+	      [stroke p head: [triangleArrow ahLength:ahLength ahAngle:ahAngle...]]
+ 	      null]
+       << [conlabel d lbl [mspoint p 0.5]]
+       << tmppic )]
 }
 
-tfjunction: \ arrowdir lbl .> [junctionlbl [TeX `TF´] arrowdir lbl true]
-gyjunction: \ arrowdir lbl .> [junctionlbl [TeX `GY´] arrowdir lbl false]
+tfjunction: \ arrowdir lbl .> [junctionlbl [teX `TF´] arrowdir lbl true]
+gyjunction: \ arrowdir lbl .> [junctionlbl [teX `GY´] arrowdir lbl false]
 
 
 	      
 
-putblockTerminal: \ newBlock z oldBlock .>
+putblockTerminal: \ •dst newBlock z oldBlock .>
 {
   r: [normalized z - [centerof oldBlock]]
   res: [[shift z] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
-  [if @implicitdraw
-    { @<< res }]
+  •dst << res
   res
 }
 
@@ -68,40 +68,43 @@ bgconnect: \ pica picb .>
   (ca + d * @smallblockr)--(cb - d * @smallblockr)
 }
 
-dynamic @bgArrowWidth I 4bp
+dynamic @bgArrowWidth identity 4bp
 
 bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true .>
- (@blend:BLEND_NORMAL
+ (@blend:blend_NORMAL
   |
   { theLength: @bgArrowWidth / [sin ahAngle]
     hook:
     {
       sl: [p theLength]
-      z: sl.p - sl.N * theLength * [sin ahAngle]
+      z: sl.p - sl.n * theLength * [sin ahAngle]
       @nonstroking:[if fillAsStroking @stroking @nonstroking]
       |
-      [fill [[shift sl.N * 0.5 * @width] [p 0]--sl]--z--cycle]
+      [fill [[shift sl.n * 0.5 * @width] [p 0]--sl]--z--cycle]
     }
     causal:
     {
       sl: [p 0]
-      z: sl.p + sl.rT * @width
-      r: sl.N * theLength * [sin ahAngle]
+      z: sl.p + sl.rt * @width
+      r: sl.n * theLength * [sin ahAngle]
       @width: 1.5*@width
       |
       [stroke (z-r)--(z+r)]
     }
-    @<< [if doHook
-    	    hook
- 	    NULL]
-    @<< [if doCausal
-    	    causal
- 	    NULL]
-
-    |** Finally, we return the length to cut off the stroke
-    [if doHook
-        0.8 * theLength
-	@width]
+    (>
+      picture:
+        ( newGroup2D
+	   << [if doHook
+    	          hook
+       	          null]
+          << [if doCausal
+    	         causal
+    	         null] )
+      cut:
+        [if doHook
+            0.8 * theLength
+  	    @width]
+   <)
   }
  )
 
@@ -122,14 +125,14 @@ effortlabel: \ p txt .>
 /** The following two functions are conventience functions that factors out the oldBlock which appears at two places.
  ** They return the path so that it can be labeled.
  **/
-terminalfrom: \ oldBlock pos newBlock  .>
+terminalfrom: \ •dst oldBlock pos newBlock  .>
 {
-  t: [putblockTerminal newBlock pos oldBlock]
+  t: [putblockTerminal •dst newBlock pos oldBlock]
   [bgconnect oldBlock t]
 }
-terminalto: \ oldBlock pos newBlock .>
+terminalto: \ •dst oldBlock pos newBlock .>
 {
-  t: [putblockTerminal newBlock pos oldBlock]
+  t: [putblockTerminal •dst newBlock pos oldBlock]
   [bgconnect t oldBlock]
 }
 

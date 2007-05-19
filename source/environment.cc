@@ -421,7 +421,9 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
   selfDefine( "randomdevice", new Kernel::WarmRandomDevice( "/dev/urandom" ) );
   selfDefine( "time", new Kernel::WarmTime );
+  selfDefine( "ignore", new Kernel::WarmIgnore );
 
+  selfDefine( "newIgnore", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmIgnore > ) );
   selfDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
   selfDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
   selfDefine( "newZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );

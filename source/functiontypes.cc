@@ -768,6 +768,27 @@ Kernel::Arguments::applyDefaults( )
 
 	  }
       }
+
+    if( numberOfStates < formalsStateSize )
+      {
+	if( missingStates == 0 )
+	  {
+	    missingStates = new typeof *missingStates;
+	  }
+	typedef typeof *(formals_->formals_->stateOrder_) FormalsMapType;
+	FormalsMapType & formalsMap = *(formals_->formals_->stateOrder_);
+	FormalsMapType::const_iterator i = formalsMap.begin( );
+	for( size_t j = 0; j < numberOfStates; ++j )
+	  {
+	    ++i;
+	  }
+	  
+	for( ; i != formalsMap.end( ); ++i, ++pos)
+	  {
+	    missingStates->insert( missingStates->begin( ), std::pair< size_t, RefCountPtr< const char > >( pos, strrefdup( i->first ) ) );
+	  }
+	
+      }
   }
 
   /* Allocate positions in the vector for all arguments.

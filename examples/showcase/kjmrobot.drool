@@ -210,14 +210,14 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 
 •pbuf << @stroking:rgb_RED | [stroke axis0]
 •pbuf << frame0
-•pbuf << [shift [find frame0 'x]] [] [facing [centeratwlm [TeX `$x_{i-1}$´] (0,~1)]]
-•pbuf << [shift [find frame0 'y]] [] [facing [centeratwlm [TeX `$y_{i-1}$´] (0,~1)]]
-•pbuf << [shift [find frame0 'z]] [] [facing [centeratwlm [TeX `$z_{i-1}$´] (1,0)]]
+•pbuf << [shift [find frame0 'x]] [] [facing [centeratwlm [teX `$x_{i-1}$´] (0,~1)]]
+•pbuf << [shift [find frame0 'y]] [] [facing [centeratwlm [teX `$y_{i-1}$´] (0,~1)]]
+•pbuf << [shift [find frame0 'z]] [] [facing [centeratwlm [teX `$z_{i-1}$´] (1,0)]]
 •pbuf << @stroking:rgb_RED | [stroke axis1]
 •pbuf << frame1
-•pbuf << [shift [find frame1 'x]] [] [facing [centeratwlm [TeX `$x_{i}$´] (0,~1)]]
-•pbuf << [shift [find frame1 'y]] [] [facing [centeratwlm [TeX `$y_{i}$´] (1,0)]]
-•pbuf << [shift [find frame1 'z]] [] [facing [centeratwlm [TeX `$z_{i}$´] (1,0)]]
+•pbuf << [shift [find frame1 'x]] [] [facing [centeratwlm [teX `$x_{i}$´] (0,~1)]]
+•pbuf << [shift [find frame1 'y]] [] [facing [centeratwlm [teX `$y_{i}$´] (1,0)]]
+•pbuf << [shift [find frame1 'z]] [] [facing [centeratwlm [teX `$z_{i}$´] (1,0)]]
 •pbuf << @stroking:rgb_RED | [stroke axis2]
 @width: 0.5bp
 |
@@ -228,7 +228,7 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
     |** This is the distance $a_{i-1}$ along with angle marks.
     pth: tf0d [] ( (0u,0u,0u)--(a0,0u,0u) )
     •pbuf << stroke [] pth
-    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i-1}$´] (0,1)]]
+    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [teX `$a_{i-1}$´] (0,1)]]
     •pbuf << stroke [] [myRightAnglePath [tf0d (0u,0u,0u)] [axis0 0].t [pth 0].t]
     •pbuf << stroke [] [myRightAnglePath [tf0d (a0,0u,0u)] [axis1 0].t [pth 1].rt]
   }
@@ -236,7 +236,7 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
     |** This is the distance $a_{i}$ along with angle marks.
     pth: tf1d [] ( (0u,0u,0u)--(a1,0u,0u) )
     •pbuf << stroke [] pth
-    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [TeX `$a_{i}$´] (0,1)]]
+    •pbuf << [shift [pth 0.5*[abs pth]].p] [] [facing [centeratwlm [teX `$a_{i}$´] (0,1)]]
     •pbuf << stroke [] [myRightAnglePath [tf1d (0u,0u,0u)] [axis1 0].t [pth 0].t]
     •pbuf << stroke [] [myRightAnglePath [tf1d (a1,0u,0u)] [axis2 0].t [pth 1].rt]
 
@@ -251,7 +251,7 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
     •pbuf << myDash | stroke [] helper1
     •pbuf << myDash | stroke [] helper2
     •pbuf << [stroke arc head:[metaPostArrow3D (0,0,1) ahLength:5bp ...]]
-    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\theta_{i}$´] (~1,0)]]
+    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [teX `$\theta_{i}$´] (~1,0)]]
   }
   {
     |** This is the angle $\alpha_{i-1}$ along helpers and angle marks.
@@ -260,10 +260,10 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
     arc: tf0d*[rotate3D (0,0,1) 90°]*[rotate3D (1,0,0) 90°] [] [immerse (0,~angleR)>(1%c^0°)--(1%c^180°+alpha0)<(angleR*[dir ~90°+alpha0])]
     •pbuf << myDash | stroke [] helper
     •pbuf << [stroke arc head:[metaPostArrow3D [axis1 0].t ahLength:5bp ...]]
-    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [TeX `$\alpha_{i-1}$´] (~1,1)]]
+    •pbuf << [shift [arc 0.5*[abs arc]].p] [] [facing [centeratwlm [teX `$\alpha_{i-1}$´] (~1,1)]]
   }
 }
-•pbuf << [shift 0.5 * ([tf0d (a0,0u,0u)] + [tf1d (0u,0u,0u)])] [] [facing [centeratwlm [TeX `$d_{i}$´] (~1,0)]]
+•pbuf << [shift 0.5 * ([tf0d (a0,0u,0u)] + [tf1d (0u,0u,0u)])] [] [facing [centeratwlm [teX `$d_{i}$´] (~1,0)]]
 
 zbuf: •zbuf;
 pbuf: •pbuf;

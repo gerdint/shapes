@@ -515,7 +515,7 @@ Escape "¢"|"¤"
 
 "cycle" { return T_cycle; }
 
-"TeX" { return T_tex; }
+"teX" { return T_tex; }
 
 "continuation" { return T_continuation; }
 "continue" { return T_continue; }

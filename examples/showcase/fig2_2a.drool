@@ -1,25 +1,25 @@
 ##needs blockdraw_wfo
 
-G1: [putblockOrigin [longblock [TeX `Amp´]]]
-G2: [putblockNearRight [longblock [TeX `Motor´]] G1]
-F:  [putblockNearLeft [longblock [TeX `$K$´]] G1]
-S:  [putblockNearLeft [sumpicture] F]
+g1: [putblockOrigin •page [longblock [teX `Amp´]]]
+g2: [putblockNearRight •page [longblock [teX `Motor´]] g1]
+f:  [putblockNearLeft •page [longblock [teX `$K$´]] g1]
+s:  [putblockNearLeft •page [sumpicture] f]
 
-sy: [putblockVeryNearRight [splitdot] G2]
+sy: [putblockVeryNearRight •page [splitdot] g2]
 
-ty: [putblockFarRight POINTPICTURE G2]
-tr: [putblockFarLeft POINTPICTURE S]
+ty: [putblockFarRight •page pointpicture g2]
+tr: [putblockFarLeft •page pointpicture s]
 
-[ignore [connect tr S]]
-@<< [leftpointsign S `+´]
-{ p: [connect S F]
-  @<< [putlabelAbove [TeX `$e$´] [mspoint p 0.5] 0] }
-{p: [connect F G1]
- @<< [putlabelAbove [TeX `$u$´] [mspoint p 0.5] 0] }
-[ignore [connect G1 G2]]
-[ignore [connect G2 ty]]
-[ignore [bbconnect sy S 0.5cm]]
-@<< [bottompointsign S `-´]
+[ignore [connect •page tr s]]
+•page << [leftpointsign s `+´]
+{ p: [connect •page s f]
+  •page << [putlabelAbove [teX `$e$´] [mspoint p 0.5] 0] }
+{p: [connect •page f g1]
+  •page << [putlabelAbove [teX `$u$´] [mspoint p 0.5] 0] }
+[ignore [connect •page g1 g2]]
+[ignore [connect •page g2 ty]]
+[ignore [bbconnect •page sy s 0.5cm]]
+•page << [bottompointsign s `-´]
 
-@<< [putlabelAbove [TeX `$r$´] [toppoint tr 1 1] ~1]
-@<< [putlabelAbove [TeX `$y$´] [toppoint ty 1 1] 1]
+•page << [putlabelAbove [teX `$r$´] [toppoint tr 1 1] ~1]
+•page << [putlabelAbove [teX `$y$´] [toppoint ty 1 1] 1]

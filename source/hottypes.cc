@@ -133,6 +133,42 @@ Kernel::WarmTriple::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
+Kernel::WarmIgnore::WarmIgnore( )
+{ }
+
+Kernel::WarmIgnore::~WarmIgnore( )
+{ }
+
+RefCountPtr< const Lang::Class > Kernel::WarmIgnore::TypeID( new Lang::SystemFinalClass( strrefdup( "#Ignore" ) ) );
+TYPEINFOIMPL_STATE( WarmIgnore );
+
+void
+Kernel::WarmIgnore::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+{
+  // Ignore piece!
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+		    evalState );
+}
+
+void
+Kernel::WarmIgnore::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "An ignore state cannot be frozen." ) );
+}
+
+void
+Kernel::WarmIgnore::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+  throw Exceptions::MiscellaneousRequirement( strrefdup( "An ignore state cannot be peeked." ) );
+}
+
+void
+Kernel::WarmIgnore::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
 Kernel::WarmOstream::WarmOstream( std::ostream & os )
   : os_( os )
 { }

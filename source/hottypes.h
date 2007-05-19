@@ -102,6 +102,18 @@ namespace MetaPDF
       TYPEINFODECL;
     };
     
+    class WarmIgnore : public Kernel::State
+    {
+    public:
+      WarmIgnore( );
+      virtual ~WarmIgnore( );
+      virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+      virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+      TYPEINFODECL;
+    };
+    
     class WarmOstream : public Kernel::State
     {
       std::ostream & os_;

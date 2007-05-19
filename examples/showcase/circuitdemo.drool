@@ -1,32 +1,33 @@
 ##needs blockdraw_wfo
 ##needs circuitparts
 
-##needs bookprefs
+##needs bookprefs : ../applications
 
 bookprefs & @defaultunit:1%c
 |
 { |** book preferences active
 
-t1: [putblockOrigin [termcircle]]
+t1: [putblockOrigin •page [termcircle]]
 
-R: [putblockNearRight [resistance] t1]
-L: [putblockNearRight [inductance] R]
-h: [putblockNearRight POINTPICTURE L]
-C: [putblockNearBelow [[rotate 90°] [capacitance]] h]
+r: [putblockNearRight •page [resistance] t1]
+l: [putblockNearRight •page [inductance] r]
+h: [putblockNearRight •page pointpicture l]
+c: [putblockNearBelow •page [[rotate 90°] [capacitance]] h]
 
-t2: [putblockNearBelow [termcircle] C]
+t2: [putblockNearBelow •page [termcircle] c]
  
-@<< [putlabelAbove [TeX `$R$´] [toppoint R] 0]
-@<< [putlabelAbove [TeX `$L$´] [toppoint L] 0]
-@<< [putlabelLeft [TeX `$C$´] [leftpoint C] 0]
+•page << [putlabelAbove [teX `$R$´] [toppoint r] 0]
+•page << [putlabelAbove [teX `$L$´] [toppoint l] 0]
+•page << [putlabelLeft [teX `$C$´] [leftpoint c] 0]
 
-@implicitdraw: false & @width:@connectionlw  |** We don't wan't the usual arrowheads on the connections
+@width:@connectionlw
 |
 {
-  @<< [stroke [connect t1 R]]
-  @<< [stroke [connect R L]]
-  @<< [stroke [connect L C]]
-  @<< [stroke [connect C t2]]
+  |** We don't wan't the usual arrowheads on the connections, so the implicitly drawn connection must be ignored.
+  •page << [stroke [connect •ignore t1 r]]
+  •page << [stroke [connect •ignore r l]]
+  •page << [stroke [connect •ignore l c]]
+  •page << [stroke [connect •ignore c t2]]
 }
 
 } |** end of book preferences

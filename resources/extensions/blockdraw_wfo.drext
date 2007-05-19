@@ -4,28 +4,26 @@
 ##needs circle
 ##needs arrowheads
 
-dynamic @longblockrx I 0.7cm
-dynamic @longblockry I 0.4cm
-dynamic @smallblockr I 0.3cm
-dynamic @fracblockry I 0.5cm
+dynamic @longblockrx identity 0.7cm
+dynamic @longblockry identity 0.4cm
+dynamic @smallblockr identity 0.3cm
+dynamic @fracblockry identity 0.5cm
 
-dynamic @connectionlw I 0.8bp
-dynamic @blocklw I 0.8bp
+dynamic @connectionlw identity 0.8bp
+dynamic @blocklw identity 0.8bp
 
-dynamic @abovelabelmargin I 1.5mm
-dynamic @belowlabelmargin I 1.5mm
-dynamic @leftrightlabelmargin I 1mm
-dynamic @signmarginslide I 1.5mm
-dynamic @signmarginoffset I 2mm
+dynamic @abovelabelmargin identity 1.5mm
+dynamic @belowlabelmargin identity 1.5mm
+dynamic @leftrightlabelmargin identity 1mm
+dynamic @signmarginslide identity 1.5mm
+dynamic @signmarginoffset identity 2mm
 
-dynamic @blockspaceverynear I 3mm
-dynamic @blockspacenear I 6mm
-dynamic @blockspacefar I 10mm
-dynamic @blockspaceveryfar I 15mm
+dynamic @blockspaceverynear identity 3mm
+dynamic @blockspacenear identity 6mm
+dynamic @blockspacefar identity 10mm
+dynamic @blockspaceveryfar identity 15mm
 
-dynamic @textscaling I [scale 1]
-
-dynamic @implicitdraw I true
+dynamic @textscaling identity [scale 1]
 
 centerlabel: \ obj .> [centerx [centeryX obj]]
 
@@ -33,68 +31,62 @@ putlabelAbove: \ lbl z x .> [[shift z + (0cm,@abovelabelmargin)] [centerxat lbl 
 putlabelBelow: \ lbl z x .> [[shift z + (0cm,~@belowlabelmargin)] [centeryatX [centerxat lbl x] 1]]
 putlabelLeft: \ lbl z y .> [[shift z + (~@leftrightlabelmargin,0cm)] [centeryatX [centerxat lbl 1] y]]
 putlabelRight: \ lbl z y .> [[shift z + (@leftrightlabelmargin,0cm)] [centeryatX lbl y]]
-leftpointsign: \ obj str n:1 i:1 .> [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [centerat [TeX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-rightpointsign: \ obj str n:1 i:1 .> [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [centerat [TeX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-bottompointsign: \ obj str n:1 i:1 .> [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [centerat [TeX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-toppointsign: \ obj str n:1 i:1 .> [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [centerat [TeX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
+leftpointsign: \ obj str n:1 i:1 .> [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
+rightpointsign: \ obj str n:1 i:1 .> [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
+bottompointsign: \ obj str n:1 i:1 .> [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
+toppointsign: \ obj str n:1 i:1 .> [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
 
-putblockOrigin: \ newBlock .> {
-  [if @implicitdraw
-    { @<< newBlock }]
+putblockOrigin: \ •dst newBlock .> {
+  •dst << newBlock
   newBlock
 }
 
-putblockLeft: \ newBlock oldBlock dist .> {
+putblockLeft: \ •dst newBlock oldBlock dist .> {
   res: [[shift [leftpoint oldBlock 1 1]+(~dist,0)] [centerxat newBlock 1]]
-  [if @implicitdraw
-    { @<< res }]
+  •dst << res
   res
 }
-putblockNearLeft: \ newBlock oldBlock .> [putblockLeft newBlock oldBlock @blockspacenear]
-putblockFarLeft: \ newBlock oldBlock .> [putblockLeft newBlock oldBlock @blockspacefar]
-putblockVeryNearLeft: \ newBlock oldBlock .> [putblockLeft newBlock oldBlock @blockspaceverynear]
-putblockVeryFarLeft: \ newBlock oldBlock .> [putblockLeft newBlock oldBlock @blockspaceveryfar]
+putblockNearLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspacenear]
+putblockFarLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspacefar]
+putblockVeryNearLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspaceverynear]
+putblockVeryFarLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspaceveryfar]
 
-putblockRight: \ newBlock oldBlock dist .> {
+putblockRight: \ •dst newBlock oldBlock dist .> {
   res: [[shift [rightpoint oldBlock 1 1]+(dist,0)] [centerxat newBlock ~1]]
-  [if @implicitdraw
-    { @<< res }]
+  •dst << res
   res
 }
-putblockNearRight: \ newBlock oldBlock .> [putblockRight newBlock oldBlock @blockspacenear]
-putblockFarRight: \ newBlock oldBlock .> [putblockRight newBlock oldBlock @blockspacefar]
-putblockVeryNearRight: \ newBlock oldBlock .> [putblockRight newBlock oldBlock @blockspaceverynear]
-putblockVeryFarRight: \ newBlock oldBlock .> [putblockRight newBlock oldBlock @blockspaceveryfar]
+putblockNearRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspacenear]
+putblockFarRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspacefar]
+putblockVeryNearRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspaceverynear]
+putblockVeryFarRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspaceveryfar]
 
-putblockBelow: \ newBlock oldBlock dist .> {
+putblockBelow: \ •dst newBlock oldBlock dist .> {
   res: [[shift [bottompoint oldBlock 1 1]+(0,~dist)] [centeryat newBlock 1]]
-  [if @implicitdraw
-    { @<< res }]
+  •dst << res
   res
 }
-putblockNearBelow: \ newBlock oldBlock .> [putblockBelow newBlock oldBlock @blockspacenear]
-putblockFarBelow: \ newBlock oldBlock .> [putblockBelow newBlock oldBlock @blockspacefar]
-putblockVeryNearBelow: \ newBlock oldBlock .> [putblockBelow newBlock oldBlock @blockspaceverynear]
-putblockVeryFarBelow: \ newBlock oldBlock .> [putblockBelow newBlock oldBlock @blockspaceveryfar]
+putblockNearBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspacenear]
+putblockFarBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspacefar]
+putblockVeryNearBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspaceverynear]
+putblockVeryFarBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspaceveryfar]
 
-putblockAbove: \ newBlock oldBlock dist .> {
+putblockAbove: \ •dst newBlock oldBlock dist .> {
   res: [[shift [toppoint oldBlock 1 1]+(0,dist)] [centeryat newBlock ~1]]
-  [if @implicitdraw
-    { @<< res }]
+  •dst << res
   res
 }
-putblockNearAbove: \ newBlock oldBlock .> [putblockAbove newBlock oldBlock @blockspacenear]
-putblockFarAbove: \ newBlock oldBlock .> [putblockAbove newBlock oldBlock @blockspacefar]
-putblockVeryNearAbove: \ newBlock oldBlock .> [putblockAbove newBlock oldBlock @blockspaceverynear]
-putblockVeryFarAbove: \ newBlock oldBlock .> [putblockAbove newBlock oldBlock @blockspaceveryfar]
+putblockNearAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspacenear]
+putblockFarAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspacefar]
+putblockVeryNearAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspaceverynear]
+putblockVeryFarAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspaceveryfar]
 
 sizedblock: \ txt rx ry .>
- { res: Hot2D <<
-   res << [centerlabel [@textscaling txt]]
-   res << @width:@blocklw | [stroke (~rx,~ry)--(~rx,ry)--(rx,ry)--(rx,~ry)--cycle]
-   res;
-   res
- }
+ (
+   [centerlabel [@textscaling txt]]
+   &
+   ( @width:@blocklw | [stroke (~rx,~ry)--(~rx,ry)--(rx,ry)--(rx,~ry)--cycle] )
+ )
 
 longblock: \ txt .> [sizedblock txt @longblockrx @longblockry]
 squareblock: \ txt .> [sizedblock txt @smallblockr @smallblockr]
@@ -104,14 +96,13 @@ longenoughblock: \ txt .> [sizedblock txt [max @longblockrx 1mm+0.5*([xmax [bbox
 longenoughfracblock: \ txt .> [sizedblock txt [max @longblockrx 1mm+0.5*([xmax [bbox txt]]-[xmin [bbox txt]])] @fracblockry]
 
 roundblock: \ txt .>
-  { res: Hot2D <<
-    res << [centerat [@textscaling txt] (0,0)]
-    res << @width:@blocklw | [stroke [circle @smallblockr]]
-    res;
-    res
-  }
+  (
+    [centerat [@textscaling txt] (0,0)]
+    &
+    ( @width:@blocklw | [stroke [circle @smallblockr]] )
+  )
 
-sumpicture: \ .> [roundblock [TeX `$\Sigma$´]]
+sumpicture: \ .> [roundblock [teX `$\Sigma$´]]
 
 splitdot: \ .> ( @nonstroking:@stroking | [fill [circle 2.5 * @connectionlw]] )
 
@@ -119,34 +110,30 @@ termcircle: \ .> ( @width:@connectionlw | [stroke [circle 3 * @connectionlw]] )
   
 mspoint: \ pth mediation slide:0cm .> [pth mediation * [abs pth] + slide].p
 
-hhconnect: \ pa pb mediation slide .>
+hhconnect: \ •dst pa pb mediation slide .>
  {
    mid: [mediate mediation pa.x pb.x] + [if pb.x > pa.x 1 ~1] * slide
    respath: pa--( mid, pa.y )--( mid, pb.y )--pb
-   [if @implicitdraw
-      { @<< @width:@connectionlw | [stroke respath head:MetaPostArrow] }]
+   •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
    respath
   }
-vvconnect: \ pa pb mediation slide .>
+vvconnect: \ •dst pa pb mediation slide .>
   { 
     mid: [mediate mediation pa.y pb.y] + [if pb.y > pa.y 1 ~1 ] * slide
     respath: pa--( pa.x, mid )--( pb.x, mid )--pb
-    [if @implicitdraw
-      { @<< @width:@connectionlw | [stroke respath head:MetaPostArrow] }]
+    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
     respath
   }
-hvconnect: \ pa pb .>
+hvconnect: \ •dst pa pb .>
   { 
     respath: pa--( pb.x, pa.y )--pb
-    [if @implicitdraw
-      { @<< @width:@connectionlw | [stroke respath head:MetaPostArrow] }]
+    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
     respath
   }
-vhconnect: \ pa pb .>
+vhconnect: \ •dst pa pb .>
   { 
     respath: pa--( pa.x, pb.y )--pb
-    [if @implicitdraw
-      { @<< @width:@connectionlw | [stroke respath head:MetaPostArrow] }]
+    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
     respath
   }
 
@@ -157,26 +144,26 @@ rightpoint:  \ pic n:1 i:1 .> { bb: [bbox pic] ([xmax bb], [mediate i/(n+1) [ymi
 bottompoint: \ pic n:1 i:1 .> { bb: [bbox pic] ([mediate i/(n+1) [xmin bb] [xmax bb]], [ymin bb])}
 toppoint:    \ pic n:1 i:1 .> { bb: [bbox pic] ([mediate i/(n+1) [xmin bb] [xmax bb]], [ymax bb])}
 
-llconnect: \ pica picb slide .> { z1:[leftpoint pica 1 1]   z2:[leftpoint picb 1 1]   [hhconnect z1 z2 [if z1.x<z2.x 0 1] slide] }
-rrconnect: \ pica picb slide .> { z1:[rightpoint pica 1 1]  z2:[rightpoint picb 1 1]  [hhconnect z1 z2 [if z1.x>z2.x 0 1] slide] }
-bbconnect: \ pica picb slide .> { z1:[bottompoint pica 1 1] z2:[bottompoint picb 1 1] [vvconnect z1 z2 [if z1.x<z2.x 0 1] slide] }
-ttconnect: \ pica picb slide .> { z1:[toppoint pica 1 1]    z2:[toppoint picb 1 1]    [vvconnect z1 z2 [if z1.x>z2.x 0 1] slide] }
+llconnect: \ •dst pica picb slide .> { z1:[leftpoint pica 1 1]   z2:[leftpoint picb 1 1]   [hhconnect •dst z1 z2 [if z1.x<z2.x 0 1] slide] }
+rrconnect: \ •dst pica picb slide .> { z1:[rightpoint pica 1 1]  z2:[rightpoint picb 1 1]  [hhconnect •dst z1 z2 [if z1.x>z2.x 0 1] slide] }
+bbconnect: \ •dst pica picb slide .> { z1:[bottompoint pica 1 1] z2:[bottompoint picb 1 1] [vvconnect •dst z1 z2 [if z1.x<z2.x 0 1] slide] }
+ttconnect: \ •dst pica picb slide .> { z1:[toppoint pica 1 1]    z2:[toppoint picb 1 1]    [vvconnect •dst z1 z2 [if z1.x>z2.x 0 1] slide] }
 
-lrconnect: \ pica picb .> [hhconnect [leftpoint pica 1 1] [rightpoint picb 1 1] 0.5 0cm]
-rlconnect: \ pica picb .> [hhconnect [rightpoint pica 1 1] [leftpoint picb 1 1] 0.5 0cm]
-btconnect: \ pica picb .> [vvconnect [bottompoint pica 1 1] [toppoint picb 1 1] 0.5 0cm]
-tbconnect: \ pica picb .> [vvconnect [toppoint pica 1 1] [bottompoint picb 1 1] 0.5 0cm]
+lrconnect: \ •dst pica picb .> [hhconnect •dst [leftpoint pica 1 1] [rightpoint picb 1 1] 0.5 0cm]
+rlconnect: \ •dst pica picb .> [hhconnect •dst [rightpoint pica 1 1] [leftpoint picb 1 1] 0.5 0cm]
+btconnect: \ •dst pica picb .> [vvconnect •dst [bottompoint pica 1 1] [toppoint picb 1 1] 0.5 0cm]
+tbconnect: \ •dst pica picb .> [vvconnect •dst [toppoint pica 1 1] [bottompoint picb 1 1] 0.5 0cm]
 
-ltconnect: \ pica picb .> [hvconnect [leftpoint pica 1 1] [toppoint picb 1 1]]
-lbconnect: \ pica picb .> [hvconnect [leftpoint pica 1 1] [bottompoint picb 1 1]]
-rtconnect: \ pica picb .> [hvconnect [rightpoint pica 1 1] [toppoint picb 1 1]]
-rbconnect: \ pica picb .> [hvconnect [rightpoint pica 1 1] [bottompoint picb 1 1]]
-tlconnect: \ pica picb .> [vhconnect [toppoint pica 1 1] [leftpoint picb 1 1]]
-trconnect: \ pica picb .> [vhconnect [toppoint pica 1 1] [rightpoint picb 1 1]]
-blconnect: \ pica picb .> [vhconnect [bottompoint pica 1 1] [leftpoint picb 1 ]]
-brconnect: \ pica picb .> [vhconnect [bottompoint pica 1 1] [rightpoint picb 1 1]]
+ltconnect: \ •dst pica picb .> [hvconnect •dst [leftpoint pica 1 1] [toppoint picb 1 1]]
+lbconnect: \ •dst pica picb .> [hvconnect •dst [leftpoint pica 1 1] [bottompoint picb 1 1]]
+rtconnect: \ •dst pica picb .> [hvconnect •dst [rightpoint pica 1 1] [toppoint picb 1 1]]
+rbconnect: \ •dst pica picb .> [hvconnect •dst [rightpoint pica 1 1] [bottompoint picb 1 1]]
+tlconnect: \ •dst pica picb .> [vhconnect •dst [toppoint pica 1 1] [leftpoint picb 1 1]]
+trconnect: \ •dst pica picb .> [vhconnect •dst [toppoint pica 1 1] [rightpoint picb 1 1]]
+blconnect: \ •dst pica picb .> [vhconnect •dst [bottompoint pica 1 1] [leftpoint picb 1 ]]
+brconnect: \ •dst pica picb .> [vhconnect •dst [bottompoint pica 1 1] [rightpoint picb 1 1]]
 
-connect: \ pica picb .>
+connect: \ •dst pica picb .>
 { 
   bba: [bbox pica]
   bbb: [bbox picb]
@@ -188,23 +175,23 @@ connect: \ pica picb .>
   cb: [discrete_mean bbb]
   [if ca.x < cb.x - ( rxa + rxb )
       [if ca.y < cb.y - ( rya + ryb )
-      	[rbconnect pica picb]
+      	[rbconnect •dst pica picb]
       [if ca.y > cb.y + ( rya + ryb )
-	[rtconnect pica picb]
-	[rlconnect pica picb]
+	[rtconnect •dst pica picb]
+	[rlconnect •dst pica picb]
       ]]
   [if ca.x > cb.x + ( rxa + rxb )
       [if ca.y < cb.y - ( rya + ryb )
-	[lbconnect pica picb]
+	[lbconnect •dst pica picb]
       [if ca.y > cb.y + ( rya + ryb )
-	[ltconnect pica picb]
-	[lrconnect pica picb]
+	[ltconnect •dst pica picb]
+	[lrconnect •dst pica picb]
       ]]
       [if ca.y < cb.y - ( rya + ryb )
-	[tbconnect pica picb]
+	[tbconnect •dst pica picb]
       [if ca.y > cb.y + ( rya + ryb )
-	[btconnect pica picb]
-	[hvconnect ca cb]
+	[btconnect •dst pica picb]
+	[hvconnect •dst ca cb]
       ]]
     ]]
 }

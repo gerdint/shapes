@@ -9,5 +9,5 @@ eyew: 5cm
 |
 {
   •page << [stroke [view pth]] << [stroke [[shift (2*eyew,0cm)] [view [[shift (~eyew,0cm,0cm)] pth]]]]
-  •page << [[shift (5cm,9cm)] [TeX `\begin{minipage}{4cm}\begin{align*}´ + [sprintf `w_{\mathrm{eye}} &= \unit{%g}{\centi\meter}\\´ eyew/1cm] + [sprintf `z_{\mathrm{eye}} &= \unit{%g}{\centi\meter}´ @eyez/1cm] + `\end{align*}\end{minipage}´]]
+  •page << [[shift (5cm,9cm)] [teX `\begin{minipage}{4cm}\begin{align*}´ + [sprintf `w_{\mathrm{eye}} &= \unit{%g}{\centi\meter}\\´ eyew/1cm] + [sprintf `z_{\mathrm{eye}} &= \unit{%g}{\centi\meter}´ @eyez/1cm] + `\end{align*}\end{minipage}´]]
 }

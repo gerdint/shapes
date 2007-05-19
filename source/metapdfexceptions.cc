@@ -617,7 +617,7 @@ Exceptions::LookupUnknown::display( std::ostream & os ) const
       os << "There is no dynamic state called " << id << " around." << std::endl ;
       break;
     case TYPE:
-      os << "There is type called " << id << " around." << std::endl ;
+      os << "There is no type called " << id << " around." << std::endl ;
       break;
     default:
       os << "<?ERROR?" ;

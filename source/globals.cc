@@ -82,7 +82,12 @@ RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_cornercoords2D( new La
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords3D( new Lang::Core_coords3D( "coords3D" ) );
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_r( new Lang::Core_polarHandle2DFree_r( "polarHandle2DFree_r" ) );
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( new Lang::Core_polarHandle2DFree_ra( "polarHandle2DFree_ra" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( "TeX" ) );
+
+/* This belongs in consts.cc but we must make sure it is initialized before we use it below.  Note that the identifier will actually be destroyed
+ * before Ast::THE_FUNCTION_TeX is destroyed, but that should not cause a failure...
+ */
+RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "teX" );
+RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( Lang::TEX_SYNTAX_ID.getPtr( ) ) );
 
 Kernel::Arguments Kernel::EMPTY_ARGLIST( new Kernel::EvaluatedFormals( "< the empty arg list >" ) );
 RefCountPtr< const Lang::Structure > Lang::THE_EMPTY_STRUCT( new Lang::Structure( new Ast::ArgListExprs( true ), Lang::THE_CONS_NULL, true ) );
