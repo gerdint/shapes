@@ -31,6 +31,14 @@ Lang::SingleList::getField( const char * fieldId, const RefCountPtr< const Lang:
     {
       return Helpers::newValHandle( new Lang::SingleListMethodFoldR( typedSelfRef ) );
     }
+  if( strcmp( fieldId, "foldsl" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::SingleListMethodFoldSL( typedSelfRef ) );
+    }
+  if( strcmp( fieldId, "foldsr" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::SingleListMethodFoldSR( typedSelfRef ) );
+    }
   throw Exceptions::NonExistentMember( getTypeName( ), fieldId );
 }
 
@@ -102,6 +110,72 @@ namespace MetaPDF
     }
   };
 
+  class SingleFoldSLCont : public Kernel::Continuation
+  {
+    RefCountPtr< const Lang::SingleList > cdr_;
+    RefCountPtr< const Lang::Function > op_;
+    Kernel::StateHandle state_;
+    Kernel::PassedDyn dyn_;
+    Kernel::ContRef cont_;
+  public:
+    SingleFoldSLCont( const RefCountPtr< const Lang::SingleList > & cdr, const RefCountPtr< const Lang::Function > & op, Kernel::StateHandle state, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+      : Kernel::Continuation( traceLoc ), cdr_( cdr ), op_( op ), state_( state ), dyn_( dyn ), cont_( cont )
+    { }
+    virtual ~SingleFoldSLCont( ) { }
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
+    {
+      evalState->dyn_ = dyn_;
+      evalState->cont_ = cont_;
+      cdr_->foldsl( evalState, op_, val, state_, traceLoc_ );
+    }
+    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    {
+      trace->push_front( Kernel::Continuation::BackTraceElem( this, "singly linked list's foldsl" ) );
+      cont_->backTrace( trace );
+    }
+    virtual void gcMark( Kernel::GCMarkedSet & marked )
+    {
+      const_cast< Lang::SingleList * >( cdr_.getPtr( ) )->gcMark( marked );
+      const_cast< Lang::Function * >( op_.getPtr( ) )->gcMark( marked );
+      state_->gcMark( marked );
+      dyn_->gcMark( marked );
+      cont_->gcMark( marked );
+    }
+  };
+
+  class SingleFoldSRCont : public Kernel::Continuation
+  {
+    Kernel::VariableHandle car_;
+    RefCountPtr< const Lang::Function > op_;
+    Kernel::StateHandle state_;
+    Kernel::PassedDyn dyn_;
+    Kernel::ContRef cont_;
+  public:
+    SingleFoldSRCont( const Kernel::VariableHandle & car, const RefCountPtr< const Lang::Function > & op, Kernel::StateHandle state, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+      : Kernel::Continuation( traceLoc ), car_( car ), op_( op ), state_( state ),dyn_( dyn ), cont_( cont )
+    { }
+    virtual ~SingleFoldSRCont( ) { }
+    virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
+    {
+      evalState->dyn_ = dyn_;
+      evalState->cont_ = cont_;
+      op_->call( op_, evalState, val, car_, state_, traceLoc_ );
+    }
+    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    {
+      trace->push_front( Kernel::Continuation::BackTraceElem( this, "singly linked list's foldsr" ) );
+      cont_->backTrace( trace );
+    }
+    virtual void gcMark( Kernel::GCMarkedSet & marked )
+    {
+      car_->gcMark( marked );
+      const_cast< Lang::Function * >( op_.getPtr( ) )->gcMark( marked );
+      state_->gcMark( marked );
+      dyn_->gcMark( marked );
+      cont_->gcMark( marked );
+    }
+  };
+
   }
 }
 
@@ -136,6 +210,22 @@ Lang::SingleListPair::foldr( Kernel::EvalState * evalState, const RefCountPtr< c
 }
 
 void
+Lang::SingleListPair::foldsl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const
+{
+  evalState->cont_ = Kernel::ContRef( new Kernel::SingleFoldSLCont( cdr_, op, state, evalState->dyn_, evalState->cont_, callLoc ) );
+
+  op->call( op, evalState, nullResult, car_, state, callLoc );
+}
+
+void
+Lang::SingleListPair::foldsr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const
+{
+  evalState->cont_ = Kernel::ContRef( new Kernel::SingleFoldSRCont( car_, op, state, evalState->dyn_, evalState->cont_, callLoc ) );
+
+  cdr_->foldsr( evalState, op, nullResult, state, callLoc );
+}
+
+void
 Lang::SingleListPair::gcMark( Kernel::GCMarkedSet & marked )
 {
   car_->gcMark( marked );
@@ -164,6 +254,22 @@ Lang::SingleListNull::foldl( Kernel::EvalState * evalState, const RefCountPtr< c
 
 void
 Lang::SingleListNull::foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeHandle( nullResult,
+		    evalState );
+}
+
+void
+Lang::SingleListNull::foldsl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const
+{
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeHandle( nullResult,
+		    evalState );
+}
+
+void
+Lang::SingleListNull::foldsr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( nullResult,
@@ -272,6 +378,54 @@ Lang::SingleListMethodFoldR::call( Kernel::EvalState * evalState, Kernel::Argume
 		callLoc );
 }
 
+Lang::SingleListMethodFoldSL::SingleListMethodFoldSL( RefCountPtr< const Lang::SingleList > self )
+  : Lang::SingleListMethodBase( self,
+				new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldsl" ).prettyName( ).getPtr( ) ) ) )
+{
+  formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
+  formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
+  formals_->appendCoreStateFormal( "state" );
+}
+
+Lang::SingleListMethodFoldSL::~SingleListMethodFoldSL( )
+{ }
+
+void
+Lang::SingleListMethodFoldSL::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  self_->foldsl( evalState,
+		 Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldl >", args, 0, callLoc ),
+		 args.getHandle( 1 ),
+		 args.getState( 0 ),
+		 callLoc );
+}
+
+Lang::SingleListMethodFoldSR::SingleListMethodFoldSR( RefCountPtr< const Lang::SingleList > self )
+  : Lang::SingleListMethodBase( self,
+				new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldsr" ).prettyName( ).getPtr( ) ) ) )
+{
+  formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
+  formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
+  formals_->appendCoreStateFormal( "state" );
+}
+
+Lang::SingleListMethodFoldSR::~SingleListMethodFoldSR( )
+{ }
+
+void
+Lang::SingleListMethodFoldSR::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  self_->foldsr( evalState,
+		 Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldr >", args, 0, callLoc ),
+		 args.getHandle( 1 ),
+		 args.getState( 0 ),
+		 callLoc );
+
+}
 
 Lang::Structure::Structure( const Ast::ArgListExprs * argList, const RefCountPtr< const Lang::SingleList > & values, bool argListOwner )
   : argListOwner_( argListOwner ), argList_( argList ), values_( values )

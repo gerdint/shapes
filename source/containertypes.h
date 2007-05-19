@@ -26,6 +26,8 @@ namespace MetaPDF
     virtual bool isNull( ) const = 0;
     virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
     virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const = 0;
+    virtual void foldsl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const = 0;
+    virtual void foldsr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const = 0;
     virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
     TYPEINFODECL;
   };
@@ -43,6 +45,8 @@ namespace MetaPDF
     virtual bool isNull( ) const;
     virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
     virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldsl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldsr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
   };
 
@@ -54,6 +58,8 @@ namespace MetaPDF
     virtual bool isNull( ) const;
     virtual void foldl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
     virtual void foldr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldsl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const;
+    virtual void foldsr( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Function > & op, const Kernel::VariableHandle & nullResult, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
   };
 
@@ -82,6 +88,22 @@ namespace MetaPDF
   public:
     SingleListMethodFoldR( RefCountPtr< const Lang::SingleList > _self );
     virtual ~SingleListMethodFoldR( );
+    virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+  };
+
+  class SingleListMethodFoldSL : public Lang::SingleListMethodBase
+  {
+  public:
+    SingleListMethodFoldSL( RefCountPtr< const Lang::SingleList > _self );
+    virtual ~SingleListMethodFoldSL( );
+    virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+  };
+
+  class SingleListMethodFoldSR : public Lang::SingleListMethodBase
+  {
+  public:
+    SingleListMethodFoldSR( RefCountPtr< const Lang::SingleList > _self );
+    virtual ~SingleListMethodFoldSR( );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
   };
 

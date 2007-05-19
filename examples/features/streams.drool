@@ -1,25 +1,41 @@
-/*
+/**
 fibsFrom: \ n1 n2 .>
 { 
   stderr << `eval:´ << n1 << `, ´ << n2 << `¢n´
   [cons n2 [fibsFrom n2 n1+n2]]
 }
 
-Fib: [fibsFrom 0 1]
-*/
+fib: [fibsFrom 0 1]
+**/
 
 streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
-Fib : [cons 0 [cons 1 [streamadd Fib Fib.cdr]]]
+fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
 
-/*
-Fib: [cons 11 [cons 12 [cons 13 [cons 14 [list]]]]]
-*/
+/**
+fib: [cons 11 [cons 12 [cons 13 [cons 14 [list]]]]]
+**/
 
 nth: \ lst n .> [if n == 0 lst.car [nth lst.cdr n-1]]
 
-stderr << [nth Fib 0] << `¢n´
-stderr << [nth Fib 1] << `¢n´
-stderr << [nth Fib 2] << `¢n´
-stderr << [nth Fib 3] << `¢n´
+•stdout << [nth fib 0] << `¢n´
+•stdout << [nth fib 1] << `¢n´
+•stdout << [nth fib 2] << `¢n´
+•stdout << [nth fib 3] << `¢n´
 
-@<< [stroke (0cm,0cm)--(1cm,1cm)]
+
+
+|** Another interesting stream is a stream of random numbers.  This pinpoints the fact that the whole sequence is given once the seed has been set.
+
+randoms:
+{
+  helper: \ •state .> [cons [random1D •state] [helper •state]]
+
+  |** Remember that the state must be named like this; it cannot be generated as part of the expression below.
+  •rand: [newRandom (•time)]
+  [helper •rand]
+}
+
+•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
+•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
+
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

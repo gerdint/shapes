@@ -534,17 +534,23 @@ Kernel::Arguments::addOrderedArgument( const Kernel::VariableHandle & arg, Ast::
   /* Recall that if there's a sink, this will be the last argument.
    */
   if( ! isSink_ &&
-      dst_ == dstEnd_ )
+      dst_ >= dstEnd_ )
     {
-      // Put it in the sink.
-      CHECK(
-	    if( ! hasSink_ )
-	      {
-		throw Exceptions::InternalError( "Excess of arguments and no sink." );
-	      }
-	    );
-      sinkArgList_->orderedExprs_->push_back( loc );
-      sinkValues_ = RefCountPtr< Lang::SingleList >( new Lang::SingleListPair( arg, sinkValues_ ) );
+      /* If there is a sink, put it there.  Otherwise, we have detected an arity mismatch, but to generate a good
+       * error message we don't throw the message from here, but rest assured that an error will be delivered in
+       * due time when applyDefaults is invoked.
+       */
+      if( hasSink_ )
+	{
+	  sinkArgList_->orderedExprs_->push_back( loc );
+	  sinkValues_ = RefCountPtr< Lang::SingleList >( new Lang::SingleListPair( arg, sinkValues_ ) );
+	}
+      else
+	{
+	  variables_->push_back( arg );
+	  locations_.push_back( loc );
+	  ++dst_; // I'm not sure this is meaningful here...
+	}
     }
   else if( dst_ == variables_->size( ) )
     {
@@ -1056,6 +1062,110 @@ namespace MetaPDF
       cont_->gcMark( marked );
     }
   };
+
+  class FunctionTwoHandlesOneStateCont_2 : public Kernel::Continuation
+  {
+    RefCountPtr< const Lang::Function > fun_;
+    Kernel::VariableHandle arg1_;
+    Kernel::StateHandle state_;
+    Kernel::PassedDyn dyn_;
+    Kernel::ContRef cont_;
+  public:
+    FunctionTwoHandlesOneStateCont_2( const RefCountPtr< const Lang::Function > & fun, const Kernel::VariableHandle & arg1, Kernel::StateHandle state, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+      : Kernel::Continuation( traceLoc ), fun_( fun ), arg1_( arg1 ), state_( state ), dyn_( dyn ), cont_( cont )
+    { }
+    virtual ~FunctionTwoHandlesOneStateCont_2( ) { }
+    virtual void takeHandle( Kernel::VariableHandle arg2, Kernel::EvalState * evalState, bool dummy ) const
+    {
+      /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
+       * However, this continuation takes handles anyway, since handles is what goes into the argument list.
+       */
+      
+      if( arg2->isThunk( ) )
+	{
+	  arg2->force( arg2, evalState );
+	  return;
+	}
+
+      Kernel::Arguments args = fun_->newCurriedArguments( );
+      args.addOrderedArgument( arg1_, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      args.addOrderedArgument( arg2, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      args.addOrderedState( state_, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      evalState->dyn_ = dyn_;
+      evalState->cont_ = cont_;
+      fun_->call( evalState, args, traceLoc_ );
+    }
+    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    {
+      trace->push_front( Kernel::Continuation::BackTraceElem( this, "internal function call with two handles and one state, second" ) );
+      cont_->backTrace( trace );
+    }
+    virtual void gcMark( Kernel::GCMarkedSet & marked )
+    {
+      const_cast< Lang::Function * >( fun_.getPtr( ) )->gcMark( marked );
+      state_->gcMark( marked );
+      dyn_->gcMark( marked );
+      cont_->gcMark( marked );
+    }
+  };
+
+  class FunctionTwoHandlesOneStateCont_1 : public Kernel::Continuation
+  {
+    RefCountPtr< const Lang::Function > fun_;
+    Kernel::VariableHandle arg2_;
+    bool forceArg2_;
+    Kernel::StateHandle state_;
+    Kernel::PassedDyn dyn_;
+    Kernel::ContRef cont_;
+  public:
+    FunctionTwoHandlesOneStateCont_1( const RefCountPtr< const Lang::Function > & fun, const Kernel::VariableHandle & arg2, bool forceArg2, Kernel::StateHandle state, const Kernel::PassedDyn & dyn, Kernel::ContRef cont, const Ast::SourceLocation & traceLoc )
+      : Kernel::Continuation( traceLoc ), fun_( fun ), arg2_( arg2 ), forceArg2_( forceArg2 ), state_( state ), dyn_( dyn ), cont_( cont )
+    { }
+    virtual ~FunctionTwoHandlesOneStateCont_1( ) { }
+    virtual void takeHandle( Kernel::VariableHandle arg1, Kernel::EvalState * evalState, bool dummy ) const
+    {
+      /* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
+       * However, this continuation takes handles anyway, since handles is what goes into the argument list.
+       */
+      
+      if( arg1->isThunk( ) )
+	{
+	  arg1->force( arg1, evalState );
+	  return;
+	}
+
+      if( forceArg2_ )
+	{
+	  Kernel::ContRef newCont = Kernel::ContRef( new Kernel::FunctionTwoHandlesOneStateCont_2( fun_, arg1, state_, dyn_, cont_, traceLoc_ ) );
+	  evalState->cont_ = newCont;
+	  newCont->takeHandle( arg2_, evalState );
+	  return;
+	}
+
+      /* The second handle need not be forced
+       */
+      Kernel::Arguments args = fun_->newCurriedArguments( );
+      args.addOrderedArgument( arg1, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      args.addOrderedArgument( arg2_, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      args.addOrderedState( state_, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+      evalState->dyn_ = dyn_;
+      evalState->cont_ = cont_;
+      fun_->call( evalState, args, traceLoc_ );
+    }
+    virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
+    {
+      trace->push_front( Kernel::Continuation::BackTraceElem( this, "internal function call with two handles and one state, first" ) );
+      cont_->backTrace( trace );
+    }
+    virtual void gcMark( Kernel::GCMarkedSet & marked )
+    {
+      const_cast< Lang::Function * >( fun_.getPtr( ) )->gcMark( marked );
+      dyn_->gcMark( marked );
+      cont_->gcMark( marked );
+      state_->gcMark( marked );
+    }
+  };
+
   }
 }
 
@@ -1134,7 +1244,7 @@ Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kerne
 void
 Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, const Ast::SourceLocation & callLoc ) const
 {
-  const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::oneExprArgList, *evalState );
+  const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::twoExprsArgList, *evalState );
 
   /* Remember that arguments are ordered backwards!
    */
@@ -1160,6 +1270,41 @@ Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kerne
   Kernel::Arguments args = this->newCurriedArguments( );
   args.addOrderedArgument( arg1, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
   args.addOrderedArgument( arg2, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  this->call( evalState, args, callLoc );
+}
+
+void
+Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const
+{
+  /* I'm not quite sure if we should also put a dummy state argument in info...
+   */
+  const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::twoExprsArgList, *evalState );
+
+  /* Remember that arguments are ordered backwards!
+   */
+  
+  if( info->force( 1 ) )
+    {
+      Kernel::ContRef cont = Kernel::ContRef( new Kernel::FunctionTwoHandlesOneStateCont_1( selfRef, arg2, info->force( 0 ), state, evalState->dyn_, evalState->cont_, callLoc ) );
+      evalState->cont_ = cont;
+      cont->takeHandle( arg1, evalState );
+      return;
+    }
+
+  if( info->force( 0 ) )
+    {
+      Kernel::ContRef cont = Kernel::ContRef( new Kernel::FunctionTwoHandlesOneStateCont_2( selfRef, arg1, state, evalState->dyn_, evalState->cont_, callLoc ) );
+      evalState->cont_ = cont;
+      cont->takeHandle( arg2, evalState );
+      return;
+    }
+
+  /* None of the handles need to be forced
+   */
+  Kernel::Arguments args = this->newCurriedArguments( );
+  args.addOrderedArgument( arg1, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  args.addOrderedArgument( arg2, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
+  args.addOrderedState( state, & Ast::THE_INTERNAL_VALUE_EXPRESSION );
   this->call( evalState, args, callLoc );
 }
 

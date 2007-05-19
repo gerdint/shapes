@@ -11,18 +11,17 @@ seed: [newRandom (•time)]
 •stdout << (•rand3) << `, ´ << [random2D •rand3] << `¢n´
 •stdout << [random1D •rand1] << `=´ << [random1D •rand2] << `, ´ << [random2D •rand1] << `=´ << [random2D •rand2] << `¢n´
 
-|** In the future, this may be possible to make more beautiful using a fold with state.
-•page << [stroke (0cm,1cm)--(10cm,1cm)]
-      << [stroke (0cm,~1cm)--(10cm,~1cm)]
-      << [stroke (0cm,1cm*[random1D •rand3])--
-                 (1cm,1cm*[random1D •rand3])--
-                 (2cm,1cm*[random1D •rand3])--
-                 (3cm,1cm*[random1D •rand3])--
-                 (4cm,1cm*[random1D •rand3])--
-                 (5cm,1cm*[random1D •rand3])--
-                 (6cm,1cm*[random1D •rand3])--
-                 (7cm,1cm*[random1D •rand3])--
-                 (8cm,1cm*[random1D •rand3])--
-                 (9cm,1cm*[random1D •rand3])--
-                 (10cm,1cm*[random1D •rand3])]
+##needs conssupport
+
+•page << [stroke
+           [foldsl \ pth i •st .> pth--(i*1cm,[random1D •st]*1cm)
+	           emptypath2D
+		   •rand3
+		   [consify [range '0 '12]]]]
+
+|** Nowadays, we don't need conssupport for this, since foldsl is also in the kernel:
+•page << [stroke
+           [[range '0 '12].foldsl \ pth i •st .> pth--(i*1cm,(2+[random1D •st])*1cm)
+                 	           emptypath2D
+				   •rand3]]
                  

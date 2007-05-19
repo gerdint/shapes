@@ -1,3 +1,3 @@
-@<< [stroke (0cm,0cm)--(1cm,1cm)]
-@<< @width:1mm & @dash:[dashpattern 1mm 1mm] | [stroke (0cm,1cm)--(1cm,0cm)]
-@<< [stroke (0.5cm,0cm)--(0.5cm,1cm)]
+•page << [stroke (0cm,0cm)--(1cm,1cm)]
+•page << @width:1mm & @dash:[dashpattern 1mm 1mm] | [stroke (0cm,1cm)--(1cm,0cm)]
+•page << [stroke (0.5cm,0cm)--(0.5cm,1cm)]
