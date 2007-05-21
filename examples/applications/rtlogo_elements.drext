@@ -13,21 +13,21 @@
 |** are probably quite easily approximated in any other drawing tool
 |** by looking at the visual results.
 |***************************************************************************
-#author Henrik Tidefelt
+##author Henrik Tidefelt
 
 
 |** This file relies only on one simple Drool extension file, <circle.drext>.
 |** It defines the function <circle> which maps a distance to a circle with
 |** that distance as its radius, centered at the origin.
 |** Actually, it's not _quite_ a circle, but you can't see the difference!
-#needs circle
+##needs circle
 
 |***************************************************************************
 |** In the first section of this file, various lengths are defined.
 |***************************************************************************
 
 |** The unit <r> is defined by the square box having the dimensions 2<r> by 2<r>.
-#unit r = 80bp
+##unit r = 80bp
 
 |** The width of the landscape graphics used to be 670bp to contain the text "LINKÖPINGS TEKNISKA HÖGSKOLA",
 |** but we don't need all that width anymore, so it was changed to the following value:
@@ -63,7 +63,7 @@ lightGray: [gray 0.902]
 |** The use of Helvetica is inherited from previous versions of the logo.  This is good, since Helvetica
 |** need not be included in a pdf, which makes the Drool to pdf compilation easier.
 |** The horizontal scaling was chosen to give a similar visual impression to the previous version of the logo.
-theFont: @text_font:FONT_HELVETICA & @text_size:textSize & @text_horizontalscaling:0.8
+theFont: @text_font:font_HELVETICA & @text_size:textSize & @text_horizontalscaling:0.8
 
 |** This is by the definition of <r>:
 squareSide: 2r
@@ -85,8 +85,8 @@ golden: ( 1 + [sqrt 5] ) / 2
 |** colors are taken from the dynamic environment.
 
 |** The following is not official.
-#needs centering
-dynamic @RT_AT_LIU I false
+##needs centering
+dynamic @rt_at_liu identity false
 liuLogo: \ r .>
 {
   tmp: [import `LiU_staende_neg.pdf´] [] '0
@@ -98,10 +98,10 @@ liuLogo: \ r .>
           [rectangle (~r,~r) (r,r)]]
 }
 
-makeRegulator: \ .>
+makeRegulator: \ •dst .>
 (
-@cap:CAP_BUTT &
-@join:JOIN_ROUND &
+@cap:cap_BUTT &
+@join:join_ROUND &
 @defaultunit:1%c
 |
 {
@@ -115,7 +115,7 @@ makeRegulator: \ .>
     w2: w1 / golden
 
     |** Draw the vertical bar.
-    @<< @width:w1 | [stroke (0,w1)--(0,squareSide-w1)]
+    •dst << @width:w1 | [stroke (0,w1)--(0,squareSide-w1)]
 
     |** <yTop> is the height where the regulator is hinged.
     yTop: 2r - 0.4r
@@ -146,20 +146,21 @@ makeRegulator: \ .>
 	|** This piece of graphics is now composing the stroked path with one circle
 	|** for the joint, and another circle for the weight.  The locations for the circles
 	|** are specified by counting "control points" along the path.
-        ( Hot2D << @width:w2 | [stroke armPth.begin--(armPth.end-0.45*r3)]
+        ( newGroup2D
+ 	        << @width:w2 | [stroke armPth.begin--(armPth.end-0.45*r3)]
                 << [fill [shift [armPth 1].p] [] [circle r1]]
                 << [shift [armPth 2].p] []
- 		          [if @RT_AT_LIU
-			      [rotate [angle [armPth 1.5].rT] - 90°][][liuLogo r3]
+ 		          [if @rt_at_liu
+			      [rotate [angle [armPth 1.5].rt] - 90°][][liuLogo r3]
 			      [fill [circle r3]]]
 	         )
       }
 
     |** Now we draw <oneArm> and its mirror image.
-    @<< [oneArm armPth] << [oneArm [scale x:~1] [] armPth]
+    •dst << [oneArm armPth] << [oneArm [scale x:~1] [] armPth]
 
     |** Draw the hinge.
-    @<< fill [] [shift (0,yTop)] [] [circle r2]
+    •dst << fill [] [shift (0,yTop)] [] [circle r2]
 
     |** It remains to draw the slider box.  <r4> is a "roundrect parameter", and <r5> is half the height
     |** of the object (it is centered where the arms intersect with the vertical bar).  The width
@@ -174,7 +175,7 @@ makeRegulator: \ .>
 
     |** Finally, I make a closed path by joining <midPath> with its revered mirror path, and then
     |** fill the path.
-    @<< [shift (0,yTop-2*l1*[cos a])] [] [fill midPath--([scale x:~1][][reverse midPath])--cycle]
+    •dst << [shift (0,yTop-2*l1*[cos a])] [] [fill midPath--([scale x:~1][][reverse midPath])--cycle]
 }
 )
 
@@ -191,34 +192,27 @@ makeRegulator: \ .>
 |**
 |** All the lengths use here are specified relative to <r>.
 
-|** It's a function, so that the value of @RT_AT_LIU affects the result
+|** It's a function, so that the value of @rt_at_liu affects the result
 squareLogo: \ .>
 [shift (1r,0)] []
 {
   |** res is the variable to hold the image we're building up.
-  res: Hot2D <<
+  •res: newGroup2D
 
   |** First we draw the background.
-  res << @nonstroking:darkGray | [fill [rectangle (~1r,0cm) (1r,squareSide)]]
+  •res << @nonstroking:darkGray | [fill [rectangle (~1r,0cm) (1r,squareSide)]]
 
   |** Next we set some of the graphics parameters that shall be applied to
   |** the things we draw inside the scope that follows the pipe ("|") sign.
   |** The @defaultunit setting means that we like circular shapes, please ask
   |** me if you are curious about this detail!
-  @stroking:GRAY_WHITE &
-  @nonstroking:GRAY_WHITE &
-  @<<: res
+  @stroking:gray_WHITE &
+  @nonstroking:gray_WHITE
   |
-  {
-    ![makeRegulator]
-  }
+  [makeRegulator •res]
   
-  |** This means that we promise not to add any more objects to <res>, which makes <res> a variable
-  |** that can be read...
-  res;
-
-  |** ... so that we can return its value:
-  res
+  |** Freeze and return.
+  •res;
 }
 
 
@@ -249,9 +243,9 @@ yText: \ i .> 0.5 * ( squareSide - ( 3 * textSize + 2 * textSep - textVSpace ) )
 |** The kerning of the text is clearly manual, and I am not an expert in this field, so
 |** it is surely possible to do better.
 
-line0: theFont | ( HotText << [kern `AUTOMATIC CONTROL´] )
+line0: theFont | ( newText << [kern `AUTOMATIC CONTROL´] )
 
-line1: theFont | ( HotText << [kern `REGLERTEKNIK´] )
+line1: theFont | ( newText << [kern `REGLERTEKNIK´] )
 
 |** When the text has been measured in the textSize unit, it is wrapped in a correctly sized bounding box,
 |** and can then be used as any other line.
@@ -262,7 +256,7 @@ kernKO: 0.05
 |** Also note how to apply automatic kerning everywhere but between `K´ and `Ö´.  Placing kernKO among the
 |** arguments to kern would add kernKO to the default kerning, resulting in too much kerning should
 |** automatic kerning of `KÖ´ begin to work in the future.
-line2: [bboxed theFont | ( HotText << [kerning [kern `LINK´] kernKO [kern `ÖPINGS UNIVERSITET´]] )
+line2: [bboxed theFont | ( newText << [kerning [kern `LINK´] kernKO [kern `ÖPINGS UNIVERSITET´]] )
                [rectangle (0cm,0cm) (10.33*textSize,textSize)]]
 
 

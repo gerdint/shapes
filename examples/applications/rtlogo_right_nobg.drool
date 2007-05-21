@@ -12,10 +12,10 @@
 xText: bannerWidth - ( squareSpace + squareSide + textXSpace )
 
 |** We set the size of the banner simply by drawing a "nothing" with the desired bounding box.
-@<< [bboxed NULL backgroundRectangle]
+•page << [bboxed null backgroundRectangle]
 
-@<< [shift (bannerWidth-(squareSide+squareSpace),0)] [] [squareLogo]
+•page << [shift (bannerWidth-(squareSide+squareSpace),0)] [] [squareLogo]
 
-@<< [shift (xText,[yText 0])] [] [centerxat line0 1]
-@<< [shift (xText,[yText 1])] [] [centerxat line1 1]
-@<< [shift (xText,[yText 2])] [] [centerxat line2 1]
+•page << [shift (xText,[yText 0])] [] [centerxat line0 1]
+•page << [shift (xText,[yText 1])] [] [centerxat line1 1]
+•page << [shift (xText,[yText 2])] [] [centerxat line2 1]

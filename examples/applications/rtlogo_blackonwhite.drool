@@ -7,11 +7,11 @@
 
 ##needs rtlogo_elements
 
-@<< [bboxed NULL [rectangle (~1r,0cm) (1r,2r)]]
+•page << [bboxed null [rectangle (~1r,0cm) (1r,2r)]]
 
-  @stroking:GRAY_BLACK
-& @nonstroking:GRAY_BLACK
+  @stroking:gray_BLACK
+& @nonstroking:gray_BLACK
 |
 {
-  ![makeRegulator]
+  [makeRegulator •page]
 }
