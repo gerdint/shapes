@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-  As a hobby, I design and implement a computer language for the creation of 2D and 3D graphics.  The graphics are ``vector based'', and in order to get seamless integration of 2D and 3D graphics, the 3D objects must sooner or later be projected on the 2D canvas.  The challenge comes from the demand that the projection shall be represented in 2D.  The current implementation is not sufficiently robust to handle any but the smallest examples, and this project proposal is to make a replacement.
+  As a hobby, I design and implement a computer language for the creation of 2D and 3D graphics.  The graphics are ``vector based'', and in order to get seamless integration of 2D and 3D graphics, the 3D objects must sooner or later be projected on the 2D canvas.  The challenge comes from the demand that the projection shall be represented in 2D.  The current implementation is not sufficiently robust to handle any but the smallest examples and cannot readily be applied to compute sharp shadows, and this project proposal is to make a replacement.
 \end{abstract}
 
 \section*{Background}%
@@ -46,7 +46,7 @@ Some important tasks for the future are
 \item Language documentation and a user guide.
 \end{itemize}
 
-Background more specific to this project concerns the 3D graphics of Drool.  Traditionally, as far as I know, 3D graphics are projected to 2D in two ways.  The most common is to wait until the raster of the output device is known, and then render the 3D graphics in a z-buffer which incrementally keeps track of the distance to the currently closest object at each raster point.  The vector-based alternative is to sort all objects according to their distance to the eye, and then draw their 2D projections in back-to-front order.  Note that the latter technique really is vector-based since the 2D projections does not have to be rasterized.  The fallacy of this approach, however, is that it is not always possible to order the objects due to cyclic overlaps and intersections, see \figureref{zbuf}.  Although \figureref{zbuf} is created using Drool, the implementation is not robust enough to scale to bigger problems.
+Background more specific to this project concerns the 3D graphics of Drool.  Traditionally, as far as I know, 3D graphics are projected to 2D in two ways.  The most common is to wait until the raster of the output device is known, and then render the 3D graphics in a z-buffer which incrementally keeps track of the distance to the currently closest object at each raster point.  The vector-based alternative is to sort all objects according to their distance to the eye, and then draw their 2D projections in back-to-front order.  Note that the latter technique really is vector-based since the 2D projections does not have to be rasterized.  The fallacy of this approach, however, is that it is not always possible to order the objects due to cyclic overlaps and intersections, see \figureref{zbuf}.  Although \figureref{zbuf} is created using Drool, the implementation is not robust enough to scale to bigger problems.  In addition, the current design was not made with shadows in mind; the problem of computing (sharp) shadows is closely related, and should be solved using the same algorithm.
 
 \begin{figure}[tb]
   \centering
@@ -57,7 +57,7 @@ Background more specific to this project concerns the 3D graphics of Drool.  Tra
 
 \section*{Project proposal}%
 %
-The overall goal is to create a viable replacement for the current implementation of the projection of 3D objects to 2D.  Emphasis shall be on robustness and scalability.  This should be achieved using geometrical invariants in the design of the algorithm.
+The overall goal is to create a viable replacement for the current implementation of the projection of 3D objects to 2D.  The algorithm shall be applicable also to the computation of sharp shadows.  Emphasis shall be on robustness and scalability.  This should be achieved using geometrical invariants in the design of the algorithm.
 
 Students that take on this project should have a strong interest in algorithm correctness and geometry.  The project outcome should be rewarding as the result is visual by nature.
 
