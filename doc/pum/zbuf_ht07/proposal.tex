@@ -1,6 +1,5 @@
 \documentclass[a4paper]{article}
 
-\usepackage{tiddetext}
 \usepackage{parskip}
 \usepackage{url}
 
@@ -9,30 +8,6 @@
 
 \usepackage[authoryear,square]{natbib}
 \bibliographystyle{plainnat}
-
-% @Manual{Hobby94MetaPost,
-%   author = {Hobby, John D.},
-%   title = {A user's manual for {MetaPost}},
-%   organization = {AT\&T Bell Laboratories},
-%   address = {Murray Hill, NJ 07974},
-%   year = {1994},
-%   url = {http://cm.bell-labs.com/who/hobby/MetaPost.html},
-% }
-
-% @Manual{Asymptote_1.29,
-%   author = {Hammerlindl, Andy and Bowman, John and Prince, Tom},
-%   title = {Asymptote: the vector graphics language},
-%   edition = {Version 1.29svn},
-%   year = {2004},
-%   url = {http://asymptote.sourceforge.net/},
-% }
-
-% @Manual{TikZ_PGF_1.00,
-%   author = {Tantau, Till},
-%   title = {{TikZ} and {PGF} --- Manual for version 1.00},
-%   year = {2005},
-%   url = {http://sourceforge.net/projects/pgf/},
-% }
 
 
 \title{Robust geometry for a graphics language}
@@ -43,6 +18,7 @@
 %\graphicspath{../../../examples/features}
 
 \usepackage{hyperref}
+\usepackage{tiddetext}
 
 \begin{document}
 \maketitle
@@ -53,7 +29,7 @@
 
 \section*{Background}%
 %
-Some years ago, I started using the old graphics language \emph{MetaPost} \citep{Hobby94MetaPost} to make illustrations for a wide range of applications.  I was excited about the power of using a computer language to draw pictures, but after a while I was both tired of the low level of the language and found several important abstractions missing.  This is not to say that MetaPost was porly designed, but just that it is a product of its time --- since then, computers have become faster, and it has become feasible to work with higher level languages, and operations that used to be too costly to be part of the language are now affordable.
+Some years ago, I started using the old graphics language \emph{MetaPost} \citep{Hobby94MetaPost} to make illustrations for a wide range of applications.  I was excited about the power of using a computer language to draw pictures, but after a while I was both tired of the low level of the language and found several important abstractions missing.  This is not to say that MetaPost was poorly designed, but just that it is a product of its time --- since then, computers have become faster, and it has become feasible to work with higher level languages, and operations that used to be too costly to be part of the language are now affordable.
 
 There are existing languages designed to replace MetaPost, perhaps most notably \emph{Asymptote} \citep{Asymptote_1.29}.  Several graphics languages are built on top of \LaTeX{}, including \emph{PGF} and \emph{TikZ} \citep{TikZ_PGF_1.00}, but these are not really comparable since they cannot afford to work with abstractions that require extensive numerical computation.
 
@@ -70,12 +46,12 @@ Some important tasks for the future are
 \item Language documentation and a user guide.
 \end{itemize}
 
-Background more specific to this project concerns the 3D graphics of Drool.  Traditionally, as far as I know, 3D graphics are projected to 2D in two ways.  The most common is to wait until the raster of the output device is known, and then render the 3D graphics in a z-buffer which incrementally keeps track of the distance to the currently closest object at each raster point.  The vector-based altrenative is to sort all objects according to their distance to the eye, and then draw their 2D projections in back-to-front order.  Note that the latter technique really is vector-based since the 2D projections does not have to be rasterized.  The fallacy of this approach, however, is that it is not always possible to order the objects due to cyclic overlaps and intersections, see \figureref{zbuf}.  Although \figureref{zbuf} is created using Drool, the implementation is not robust enough to scale to bigger problems.
+Background more specific to this project concerns the 3D graphics of Drool.  Traditionally, as far as I know, 3D graphics are projected to 2D in two ways.  The most common is to wait until the raster of the output device is known, and then render the 3D graphics in a z-buffer which incrementally keeps track of the distance to the currently closest object at each raster point.  The vector-based alternative is to sort all objects according to their distance to the eye, and then draw their 2D projections in back-to-front order.  Note that the latter technique really is vector-based since the 2D projections does not have to be rasterized.  The fallacy of this approach, however, is that it is not always possible to order the objects due to cyclic overlaps and intersections, see \figureref{zbuf}.  Although \figureref{zbuf} is created using Drool, the implementation is not robust enough to scale to bigger problems.
 
 \begin{figure}[tb]
   \centering
   \includegraphics{../../../examples/features/zbufdemo}
-  \caption{Correct view of overlaping and intersection objects in 3D.}
+  \caption{Correct view of overlapping and intersection objects in 3D.}
   \fglabel{zbuf}
 \end{figure}
 
@@ -87,7 +63,7 @@ Students that take on this project should have a strong interest in algorithm co
 
 The implementation language is C++, and a silly lines-of-code count of the current implementation adds to about $3500$ (about $5\%$ of the project total).  A clever implementation may need less.
 
-As Drool is a non-commercial project, no salary will be given.
+As Drool is a non-commercial project, no salary will be given.  No special hardware or software is required; today, the tools used are GCC~3.4.6 or GCC~4.0.0, flex~2.5.4, bison~2.3, GNU Make~3.80, and Subversion~1.3.1.  Dependencies include GSL, BLAS, iconv, and zLib.
 
 
 \bibliography{tiddefull,tidde}
