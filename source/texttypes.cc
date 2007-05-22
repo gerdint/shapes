@@ -235,8 +235,191 @@ Lang::KernedText::KernedText( const RefCountPtr< const Kernel::TextState > & tex
   : textState_( textState ), metaState_( metaState ), maxLength_( 0 )
 { }
 
+Lang::KernedText::KernedText( const RefCountPtr< const Kernel::TextState > & textState, const RefCountPtr< const Kernel::GraphicsState > & metaState, const RefCountPtr< const Lang::String > & str)
+  : textState_( textState ), metaState_( metaState ), maxLength_( 0 )
+{
+  pushString( str );
+}
+
 Lang::KernedText::~KernedText( )
 { }
+
+Kernel::VariableHandle
+Lang::KernedText::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+  if( strcmp( fieldID, "list" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( makeList( ) ) );
+    }
+  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
+RefCountPtr< const Lang::SingleList >
+Lang::KernedText::makeList( ) const
+{
+  /* The list is first computed in a bidirectional list, and then we construct the stateless cons list.
+   */
+  
+  /* I'm lazy today, so i use a cons pair to group the horizontal step with the glyph.  The better solution
+   * would be to use a structure with nicely named fields...
+   */
+  
+  std::list< RefCountPtr< const Lang::Value > > revlist;
+
+  iconv_t converter = Helpers::requireUTF8ToMacRomanConverter( );
+
+  RefCountPtr< FontMetrics::WritingDirectionMetrics > horizontalMetrics = textState_->font_->metrics( )->horizontalMetrics_;
+  if( horizontalMetrics == NullPtr< FontMetrics::WritingDirectionMetrics >( ) )
+    {
+      throw Exceptions::FontMetricsError( textState_->font_->fontName( ), strrefdup( "No horizontal metrics defined." ) );
+    }
+  const FontMetrics::CharacterMetrics * defaultCharMetrics = horizontalMetrics->charData_[ 0 ];
+
+  Concrete::Length ySize = textState_->size_;
+  Concrete::Length xSize = ySize * textState_->horizontalScaling_;
+  Concrete::Length characterTrackKern = textState_->horizontalScaling_ * textState_->characterSpacing_;
+  Concrete::Length wordTrackKern = textState_->horizontalScaling_ * textState_->wordSpacing_;
+
+  Concrete::Length xpos = 0;
+
+  size_t bufSize = maxLength_ + 1;         // This will be enough if MacRoman coding is used, since this encoding uses only one byte per character.
+                                           // The extra one byte will be used to terminate the string.
+  char * buf = new char[ bufSize ];
+  DeleteOnExit< char > bufDeleter( buf );
+
+  typedef typeof strings_ ListType;
+  std::list< double >::const_iterator ki = kernings_.begin( );
+  for( ListType::const_iterator i = strings_.begin( ); i != strings_.end( ); ++i )
+    {
+      if( *i != NullPtr< const Lang::String >( ) )
+	{
+	  const char * inbuf = (*i)->val_.getPtr( );
+	  char * outbuf = buf;
+	  size_t inbytesleft = strlen( inbuf );
+	  size_t outbytesleft = bufSize - 1;
+	  // For some reason, my iconv header seems unaware of the const modifier...
+	  size_t count = iconv( converter,
+				& inbuf, & inbytesleft,
+				& outbuf, & outbytesleft );
+	  if( count == (size_t)(-1) )
+	    {
+	      if( errno == EILSEQ )
+		{
+		  throw Exceptions::MiscellaneousRequirement( "It is suspected that one of the UFT-8 characters used in showed text has no MacRoman representation." );
+		}
+	      else if( errno == EINVAL )
+		{
+		  throw Exceptions::MiscellaneousRequirement( "It is suspected that showed text ended with an incomplete multibyte character." );
+		}
+	      else if( errno == E2BIG )
+		{
+		  throw Exceptions::InternalError( "The buffer allocated for UTF-8 to MacRoman conversion was too small." );
+		}
+	      else
+		{
+		  std::ostringstream msg;
+		  msg << "iconv failed with an unrecognized error code: " << errno ;
+		  throw Exceptions::InternalError( strrefdup( msg ) );
+		}
+	    }
+	  *outbuf = '\0';
+	  for( const char * src = buf; *src != '\0'; ++src )
+	    {
+	      switch( *src )
+		{
+		case ' ':
+		  {
+		    // Observe textState_->wordSpacing_
+		    // In addition, it seems reasonable to not let the space character affect the bounding box.
+		    const FontMetrics::CharacterMetrics * charMetrics = horizontalMetrics->charByCode( (unsigned char)( 32 ) );
+		    xpos += xSize * charMetrics->horizontalCharWidthX_;
+		    xpos += characterTrackKern;
+		    xpos += wordTrackKern;
+		  }
+		  break;
+		case '\n':
+		  {
+		    throw Exceptions::MiscellaneousRequirement( "Newlines cannot be represented in the pos-character list." );
+		  }
+		  break;
+		default:
+		  {
+		    // Observe textState_->characterSpacing_
+		    unsigned char currentChar = *reinterpret_cast< const unsigned char * >( src );
+		    const FontMetrics::CharacterMetrics * charMetrics = horizontalMetrics->charByCode( currentChar );
+		    if( Computation::fontMetricGuessIsError && charMetrics == defaultCharMetrics )
+		      {
+			std::ostringstream msg;
+			msg << "Character at offset " << src - buf << " in \"" << buf << "\" was not found in font metrics (and according to your options, guessing is not OK)." ;
+			throw Exceptions::FontMetricsError( textState_->font_->fontName( ), strrefdup( msg ) );
+		      }
+		    revlist.push_back( RefCountPtr< const Lang::Value >
+				       ( new Lang::ConsPair
+					 ( Helpers::newValHandle( new Lang::Length( xpos ) ),
+					   Helpers::newValHandle( new Lang::KernedText( textState_, metaState_, oneMacRomanToUTF8( *src ) ) ) ) ) );
+		    /* Although not as efficient, it becomes easier to use the list if the distance is
+		     * measured from the start of the text rather than from the previous character.
+		     */
+		    //		    xpos = 0;
+		    xpos += xSize * charMetrics->horizontalCharWidthX_;
+		    xpos += characterTrackKern;
+		  }
+		}
+	    }
+	}
+      else
+	{
+	  if( ki == kernings_.end( ) )
+	    {
+	      throw Exceptions::InternalError( "Short of kerning values in KernedText::measure." );
+	    }
+	  xpos -= xSize * *ki;
+	  ++ki;
+	}
+    }
+  if( ki != kernings_.end( ) )
+    {
+      throw Exceptions::InternalError( "Too many kerning values in KernedText::writePDFVectorTo." );
+    }
+  
+  RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
+  while( revlist.size( ) > 0 )
+    {
+      res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Kernel::VariableHandle( new Kernel::Variable( revlist.back( ) ) ),
+									     res ) );
+      revlist.pop_back( );
+    }
+  return res;
+}
+
+RefCountPtr< const Lang::String >
+Lang::KernedText::oneMacRomanToUTF8( const char c )
+{
+  iconv_t converter = Helpers::requireMacRomanToUTF8Converter( );
+
+  const size_t BUF_SIZE = 9;
+  char buf[ BUF_SIZE ];
+
+  static char * charbuf = new char[ 2 ]; // This is a one time leak.
+  charbuf[0] = c;
+  charbuf[1] = '\0';
+
+  char * outbuf = buf;
+  char * inbuf = charbuf;
+  size_t inbytesleft = 1;
+  size_t outbytesleft = BUF_SIZE - 1;
+  // For some reason, my iconv header seems unaware of the const modifier...
+  size_t count = iconv( converter,
+			& inbuf, & inbytesleft,
+			& outbuf, & outbytesleft );
+  if( count == (size_t)(-1) )
+    {
+      throw Exceptions::ExternalError( "Conversion of one MacRoman character to UTF-8 failed." );
+    }
+  *outbuf = '\0';
+
+  return RefCountPtr< const Lang::String >( new Lang::String( strrefdup( buf ) ) );
+}
 
 void
 Lang::KernedText::pushString( const RefCountPtr< const Lang::String > & str )

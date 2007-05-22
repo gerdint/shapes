@@ -3916,14 +3916,42 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::ElementaryPath2D::reverse( ) const
 {
+  /* Note that reversing a closed path is not quite as straight-forward as one might first think!
+   */
+
   Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D;
   if( closed_ )
     {
       res->close( );
     }
 
-  for( const_iterator i = begin( ); i != end( ); ++i )
+  const_iterator i = begin( );
+  if( i == end( ) )
     {
+      return RefCountPtr< const Lang::ElementaryPath2D >( res );
+    }
+
+  if( closed_ )
+    {
+      // The first path point remains first!
+      ++i;
+    }
+  for( ; i != end( ); ++i )
+    {
+      Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( *((*i)->mid_) ) );
+      if( (*i)->rear_ != (*i)->mid_ )
+	{
+	  newPoint->front_ = new Concrete::Coords2D( *((*i)->rear_) );
+	}
+      if( (*i)->front_ != (*i)->mid_ )
+	{
+	  newPoint->rear_ = new Concrete::Coords2D( *((*i)->front_) );
+	}
+      res->push_front( newPoint );
+    }
+  if( closed_ )
+    {
+      i = begin( );
       Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( *((*i)->mid_) ) );
       if( (*i)->rear_ != (*i)->mid_ )
 	{

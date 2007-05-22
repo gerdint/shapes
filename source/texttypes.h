@@ -90,7 +90,9 @@ namespace MetaPDF
       size_t maxLength_;
     public:
       KernedText( const RefCountPtr< const Kernel::TextState > & textState, const RefCountPtr< const Kernel::GraphicsState > & metaState );
+      KernedText( const RefCountPtr< const Kernel::TextState > & textState, const RefCountPtr< const Kernel::GraphicsState > & metaState, const RefCountPtr< const Lang::String > & str);
       virtual ~KernedText( );
+      virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       void pushString( const RefCountPtr< const Lang::String > & str );
       void pushKerning( double kerning );
       
@@ -101,6 +103,10 @@ namespace MetaPDF
       void push( Lang::KernedText * dst ) const;
       
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+
+    private:
+      RefCountPtr< const Lang::SingleList > makeList( ) const;
+      static RefCountPtr< const Lang::String > oneMacRomanToUTF8( const char c );
     };
     
     class TextNewline : public Lang::TextOperation

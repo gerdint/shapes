@@ -18,5 +18,3 @@ baseline: @defaultunit:1%f | (0cm,~1cm)>(^45°)--(1.5cm^180°)<(3cm,~2cm)
        [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
      }
     null]
-
- 
