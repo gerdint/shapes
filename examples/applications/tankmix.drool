@@ -1,4 +1,4 @@
-#preamble \RequirePackage{sigsysnotation}
+##preamble \RequirePackage{sigsysnotation}
 
 ##needs blockdraw_wfo
 ##needs pipefigprefs
@@ -9,45 +9,45 @@ bookprefs & @defaultunit:1%c
 |
 { |** book preferences active
 
-TANK_W: 3cm
-TANK_H: 1.5cm
-TANK_L: TANK_H * 0.76
+tank_W: 3cm
+tank_H: 1.5cm
+tank_L: tank_H * 0.76
 
-y1: TANK_H + 1cm
-y2: TANK_H + 1mm
-R: 5mm
-inflow: \ x1 x2 idx .>
+y1: tank_H + 1cm
+y2: tank_H + 1mm
+r: 5mm
+inflow: \ •dst x1 x2 idx .>
 {
   d: [normalized x2 - x1]
-  @<< [stroke (x1,y1+@PIPE_WIDTH/2)--(x2-d*(R+@PIPE_WIDTH/2),y1+@PIPE_WIDTH/2)>(^[angle (d,0)])--(^90°)<(x2+d*@PIPE_WIDTH/2,y1-@PIPE_WIDTH/2-R)--(x2+d*@PIPE_WIDTH/2,y2)]
-  @<< [stroke (x1,y1-@PIPE_WIDTH/2)--(x2-d*(R+@PIPE_WIDTH/2),y1-@PIPE_WIDTH/2)>(^[angle (d,0)])--(^90°)<(x2-d*@PIPE_WIDTH/2,y1-@PIPE_WIDTH/2-R)--(x2-d*@PIPE_WIDTH/2,y2)]
-  p: (x2-d*(R+7mm),y1)--(x2-d*(R+2mm),y1)
-  @<< [stroke p head:MetaPostArrow]
-  @<< [shift [point p 0.5]+(0mm,@PIPE_WIDTH/2+2mm)] [] [centerx [TeX [sprintf `$q_{%g}$´ idx]]]
-  @<< [shift (x1+d*3mm,y1-@PIPE_WIDTH/2-2mm)] [] [centerat [TeX `Inflow´] (0,1)]
+  •dst << [stroke (x1,y1+@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1+@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2+d*@pipe_width/2,y1-@pipe_width/2-r)--(x2+d*@pipe_width/2,y2)]
+  •dst << [stroke (x1,y1-@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1-@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2-d*@pipe_width/2,y1-@pipe_width/2-r)--(x2-d*@pipe_width/2,y2)]
+  p: (x2-d*(r+7mm),y1)--(x2-d*(r+2mm),y1)
+  •dst << [stroke p head:metaPostArrow]
+  •dst << [shift [p 0.5].p+(0mm,@pipe_width/2+2mm)] [] [centerx [teX [sprintf `$q_{%g}$´ idx]]]
+  •dst << [shift (x1+d*3mm,y1-@pipe_width/2-2mm)] [] [centerat [teX `Inflow´] (0,1)]
   v: [shift ([mediate 0.4 x1 x2],y1)]*[rotate 90°] [] [valve]
-  @<< v
-  @<< [shift ([mediate 0.4 x1 x2]+0.5cm,[discrete_maximizer [bbox v] (0,1)].y)] [] [TeX [sprintf `$u_{%g}$´ idx]]
+  •dst << v
+  •dst << [shift ([mediate 0.4 x1 x2]+0.5cm,[discrete_maximizer [bbox v] (0,1)].p.y)] [] [teX [sprintf `$u_{%g}$´ idx]]
 }
 
-![inflow ~2.5cm TANK_W/3 1]
-![inflow TANK_W+2.5cm TANK_W*2/3 2]
+[inflow •page ~2.5cm tank_W/3 1]
+[inflow •page tank_W+2.5cm tank_W*2/3 2]
 
-@<< @nonstroking:[gray 0.8] | [fill (0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_L)--(0cm,TANK_L)--cycle]
+•page << @nonstroking:[gray 0.8] | [fill (0cm,0cm)--(tank_W,0cm)--(tank_W,tank_L)--(0cm,tank_L)--cycle]
 
-@<< [stroke (0cm,TANK_H)--(0cm,0cm)--(TANK_W,0cm)--(TANK_W,TANK_H)]
+•page << [stroke (0cm,tank_H)--(0cm,0cm)--(tank_W,0cm)--(tank_W,tank_H)]
 {
- p: (TANK_W+5mm,0cm)--(TANK_W+5mm,TANK_L)
- @<< [stroke p head:MetaPostArrow]
- @<< [shift [point p 0.5]+(1mm,0mm)] [] [TeX `$h$´]
+ p: (tank_W+5mm,0cm)--(tank_W+5mm,tank_L)
+ •page << [stroke p head:metaPostArrow]
+ •page << [shift [p 0.5].p+(1mm,0mm)] [] [teX `$h$´]
 }
-@<< @nonstroking:GRAY_WHITE | [[shift (TANK_W/2, TANK_L/2)] [centerlabel [TeX `Tank´]]]
-@<< [stroke (TANK_W/2,0cm)--(TANK_W/2,~1.5cm)]
-@<< [stroke (TANK_W/2+@PIPE_WIDTH,0cm)--(TANK_W/2+@PIPE_WIDTH,~1.5cm)]
+•page << @nonstroking:gray_WHITE | [[shift (tank_W/2, tank_L/2)] [centerlabel [teX `Tank´]]]
+•page << [stroke (tank_W/2,0cm)--(tank_W/2,~1.5cm)]
+•page << [stroke (tank_W/2+@pipe_width,0cm)--(tank_W/2+@pipe_width,~1.5cm)]
 {
- p: (TANK_W/2+@PIPE_WIDTH/2,~3mm)--(TANK_W/2+@PIPE_WIDTH/2,~13mm)
- @<< [stroke p head:MetaPostArrow]
- @<< [shift [point p 0.5] + (@PIPE_WIDTH/2+1mm,0mm)] [] [TeX `$q$´]
+ p: (tank_W/2+@pipe_width/2,~3mm)--(tank_W/2+@pipe_width/2,~13mm)
+ •page << [stroke p head:metaPostArrow]
+ •page << [shift [p 0.5].p + (@pipe_width/2+1mm,0mm)] [] [teX `$q$´]
 }
 
 } |** end of book preferences

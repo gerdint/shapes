@@ -4,25 +4,22 @@
 |
 {
 
-Camera: [putblockOrigin [longblock [TeX `Camera´]]]
-Vision: [putblockNearBelow [longblock [TeX `\parbox{2cm}{\centering Computer vision}´]] Camera]
-Model:  [putblockNearBelow [longblock [TeX `\parbox{2cm}{\centering 3D scene model}´]] Vision]
-IMU:  [putblockFarRight [longblock [TeX `\parbox{2cm}{\centering IMU}´]] Camera]
-Fusion:  [putblockFarRight [longblock [TeX `\parbox{2cm}{\centering Sensor fusion}´]] Vision]
-pos:
-@implicitdraw:false
-|
-[putblockFarRight [longblock [TeX `Dummy´]] Model]
+camera: [putblockOrigin •page [longblock [teX `Camera´]]]
+vision: [putblockNearBelow •page [longblock [teX `\parbox{2cm}{\centering Computer vision}´]] camera]
+model:  [putblockNearBelow •page [longblock [teX `\parbox{2cm}{\centering 3D scene model}´]] vision]
+imu:  [putblockFarRight •page [longblock [teX `\parbox{2cm}{\centering IMU}´]] camera]
+fusion:  [putblockFarRight •page [longblock [teX `\parbox{2cm}{\centering Sensor fusion}´]] vision]
+pos: [putblockFarRight •ignore [longblock [teX `Dummy´]] model]
 
-sPos: [putblockVeryNearBelow POINTPICTURE Fusion]
+sPos: [putblockVeryNearBelow •page pointpicture fusion]
 
-[ignore [connect Camera Vision]]
-[ignore [connect Vision Fusion]]
-[ignore [connect IMU Fusion]]
-[ignore [connect Model Vision]]
-[ignore [connect Fusion pos]]
-[ignore [hvconnect [leftpoint sPos] [bottompoint Vision 3 3]]]
+[ignore [connect •page camera vision]]
+[ignore [connect •page vision fusion]]
+[ignore [connect •page imu fusion]]
+[ignore [connect •page model vision]]
+[ignore [connect •page fusion pos]]
+[ignore [hvconnect •page [leftpoint sPos] [bottompoint vision 3 3]]]
 
-@<< [shift [discrete_mean [bbox pos]]] [] [centerat [TeX `\parbox{2cm}{\centering Position orientation}´] (0,0)]
+•page << [shift [discrete_mean [bbox pos]]] [] [centerat [teX `\parbox{2cm}{\centering Position orientation}´] (0,0)]
 
 }

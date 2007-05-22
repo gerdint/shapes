@@ -1,12 +1,12 @@
 ##needs arrowheads
 ##needs circle
 
-IngelasArrow: \ p .> [MetaPostArrow p ahLength:2mm]
+ingelasArrow: \ p .> [metaPostArrow p ahLength:2mm]
 
-xmax: \ p .> [point p [continuous_maximizer p (1,0)]].x
-xmin: \ p .> [point p [continuous_maximizer p (~1,0)]].x
-ymax: \ p .> [point p [continuous_maximizer p (0,1)]].y
-ymin: \ p .> [point p [continuous_maximizer p (0,~1)]].y
+xmax: \ p .> [continuous_maximizer p (1,0)].p.x
+xmin: \ p .> [continuous_maximizer p (~1,0)].p.x
+ymax: \ p .> [continuous_maximizer p (0,1)].p.y
+ymin: \ p .> [continuous_maximizer p (0,~1)].p.y
 
 mediate: \ r x1 x2 .> (1-r)*x1 + r*x2
 
@@ -34,32 +34,31 @@ box: \ x0y0 x1y1 .> x0y0--(x0y0.x,x1y1.y)--x1y1--(x1y1.x,x0y0.y)--cycle
 stdBox: \ .>
 {
   tmp: [box (~5mm,~3mm) (5mm,3mm)]
-  ( Hot2D << @nonstroking:GRAY_WHITE|[fill tmp] << [stroke tmp] )
+  ( newGroup2D << @nonstroking:gray_WHITE|[fill tmp] << [stroke tmp] )
 }
 
 rPlus: 2mm
 plusCircle: \ .>
 {
   c: [circle rPlus]
-  res: Hot2D <<
-  res << @nonstroking:GRAY_WHITE|[fill c] << [stroke c]
-  res << [centerat [TeX `$+$´] (0,0)]
-  res;
-  res
+  •res: newGroup2D
+  •res << @nonstroking:gray_WHITE|[fill c] << [stroke c]
+  •res << [centerat [teX `$+$´] (0,0)]
+  •res;
 }
 
 sigmoidPic:
 @width:0.3bp &
-@stroking:VOID &
+@stroking:void &
 @defaultunit:1%f
 |
 (
-  Hot2D << [stroke (~4.5mm,0)--(4.5mm,0)] << [stroke (0,~2.5mm)--(0,2.5mm)] << [stroke (~4.5mm,~2.5mm)>(6mm^0°)--(6mm^180°)<(4.5mm,2.5mm)]
+  newGroup2D << [stroke (~4.5mm,0)--(4.5mm,0)] << [stroke (0,~2.5mm)--(0,2.5mm)] << [stroke (~4.5mm,~2.5mm)>(6mm^0°)--(6mm^180°)<(4.5mm,2.5mm)]
 )
 
 templ: \ uLabel symbs:false .>
 {
-  theColor:[if symbs GRAY_BLACK [gray 0.7]]
+  theColor:[if symbs gray_BLACK [gray 0.7]]
   box1: @stroking:theColor|[stdBox]
   sum: [[shift (11.5mm,0)] @stroking:theColor|[plusCircle]]
   box2: [[shift (23mm,0)] box1]
@@ -67,71 +66,72 @@ templ: \ uLabel symbs:false .>
   box4: [[shift (0,~7mm)] box1]
   startPoint: \ n pic .> [leftpoint pic 3 n]+(~1cm,(n-2)*3mm)
   lineLeft: \ n pic .> [startPoint n pic]>(^0°)--(^~180°)<[leftpoint pic 3 n]
-  res: Hot2D <<
+  •res: newGroup2D
   @stroking:theColor &
   @nonstroking:theColor
   |
-  { res   << box1 << sum << box2 << box3 << box4
-    	  << [stroke [rightpoint box1 1 1]--[leftpoint sum 1 1] head:IngelasArrow]
-    	  << [stroke [rightpoint sum 1 1]--[leftpoint box2 1 1] head:IngelasArrow]
-    	  << [stroke [rightpoint box2 1 1]--[leftpoint box3 1 1] head:IngelasArrow]
-    	  << [stroke [rightpoint box4 1 1]>(^0°)--(^~90°)<[bottompoint sum 1 1] head:IngelasArrow]
-    	  << [stroke [rightpoint box3 1 1]--[leftpoint [[shift (5cm,0)] [plusCircle]] 1 1] head:IngelasArrow]
-	  << [stroke [lineLeft 2 box1] head:IngelasArrow]
-	  << [[shift [startPoint 2 box1]] [centerat [TeX uLabel] (1,0)]]
+  { •res  << box1 << sum << box2 << box3 << box4
+    	  << [stroke [rightpoint box1 1 1]--[leftpoint sum 1 1] head:ingelasArrow]
+    	  << [stroke [rightpoint sum 1 1]--[leftpoint box2 1 1] head:ingelasArrow]
+    	  << [stroke [rightpoint box2 1 1]--[leftpoint box3 1 1] head:ingelasArrow]
+    	  << [stroke [rightpoint box4 1 1]>(^0°)--(^~90°)<[bottompoint sum 1 1] head:ingelasArrow]
+    	  << [stroke [rightpoint box3 1 1]--[leftpoint [[shift (5cm,0)] [plusCircle]] 1 1] head:ingelasArrow]
+	  << [stroke [lineLeft 2 box1] head:ingelasArrow]
+	  << [[shift [startPoint 2 box1]] [centerat [teX uLabel] (1,0)]]
   }
 
-   res	  << [if symbs [centerat [TeX `$\beta_{k}$´] (0,0)] NULL]
-	  << [if symbs [[shift (0,~7mm)] [centerat [TeX `$\gamma_{k}$´] (0,0)]] NULL]
-	  << [if symbs [[shift (23mm,0)] sigmoidPic] NULL]
-	  << [if symbs [[shift (37mm,0)] [centerat [TeX `$\alpha_{k}$´] (0,0)]] NULL]
-   res;
-   res
+   •res	  << [if symbs [centerat [teX `$\beta_{k}$´] (0,0)] null]
+	  << [if symbs [[shift (0,~7mm)] [centerat [teX `$\gamma_{k}$´] (0,0)]] null]
+	  << [if symbs [[shift (23mm,0)] sigmoidPic] null]
+	  << [if symbs [[shift (37mm,0)] [centerat [teX `$\alpha_{k}$´] (0,0)]] null]
+   •res;
 }
 
 dHat: [normalized (2cm,3cm)]
-nDup: 10
+nDup: '10
 dStep: 1mm
-d: dStep*dHat*(nDup-1)
+d: dStep*dHat*(1*(nDup-'1))
 dpshift: \ len .> [shift len * dHat]
 
-[[range nDup-'1 '1 '~1].foldl \ p e .> { @<< [[shift (0,2*~15mm)]*[dpshift e*dStep] [templ `$u(t-2)$´]]   p } VOID]
-[[range nDup-'1 '1 '~1].foldl \ p e .> { @<< [[shift (0,1*~15mm)]*[dpshift e*dStep] [templ `$u(t-1)$´]]   p } VOID]
-[[range nDup-'1 '1 '~1].foldl \ p e .> { @<< [[shift (0,0*~15mm)]*[dpshift e*dStep] [templ `$u(t)$´]]   p } VOID]
+•page << [[range nDup-'1 '1 '~1].foldl ( \ p e .> p & [[shift (0,2*~15mm)]*[dpshift e*dStep] [templ `$u(t-2)$´]] ) null]
+•page << [[range nDup-'1 '1 '~1].foldl ( \ p e .> p & [[shift (0,1*~15mm)]*[dpshift e*dStep] [templ `$u(t-1)$´]] ) null]
+•page << [[range nDup-'1 '1 '~1].foldl ( \ p e .> p & [[shift (0,0*~15mm)]*[dpshift e*dStep] [templ `$u(t)$´]] ) null]
 
-@<< [[shift (0,0*~15mm)]*[dpshift 0mm] [templ `$u(t)$´ true]]
-@<< [[shift (0,1*~15mm)]*[dpshift 0mm] [templ `$u(t-1)$´ true]]
-@<< [[shift (0,2*~15mm)]*[dpshift 0mm] [templ `$u(t-2)$´ true]]
+•page << [[shift (0,0*~15mm)]*[dpshift 0mm] [templ `$u(t)$´ true]]
+•page << [[shift (0,1*~15mm)]*[dpshift 0mm] [templ `$u(t-1)$´ true]]
+•page << [[shift (0,2*~15mm)]*[dpshift 0mm] [templ `$u(t-2)$´ true]]
 
 
 plusBar:
-@nonstroking:GRAY_WHITE
+@nonstroking:gray_WHITE
 & @defaultunit:1%C
 |
 {
   f: rPlus*[normalized [[rotate 90°] d]]
   a: [angle d]
   cyl: (-f)--(d-f)>(^a)--(^)<(d+rPlus*[normalized d])>(^)--(^a)<(f+d)--f--cycle
-  ( Hot2D << [fill cyl] << [stroke cyl] << @nonstroking:GRAY_BLACK|[plusCircle] )
+  ( newGroup2D << [fill cyl] << [stroke cyl] << @nonstroking:gray_BLACK|[plusCircle] )
 }
 
-lastSum: [[shift (5cm+10mm,~15mm)+dHat*dStep*(nDup/2)] [plusCircle]]
-@<< lastSum
+lastSum: [[shift (5cm+10mm,~15mm)+dHat*dStep*(nDup*(1/2))] [plusCircle]]
+•page << lastSum
 
 muBox: [[shift (50mm,2*~15mm-7mm)] [stdBox]]
 
-@<< [[shift (5cm,0)] plusBar] << [[shift (5cm,~15mm)] plusBar] << [[shift (5cm,2*~15mm)] plusBar]
- << muBox << [[shift (50mm,2*~15mm-7mm)] [centerat [TeX `$\mu$´] (0,0)]]
- << [stroke [rightpoint muBox 1 1]>(^0°)--(^~90°)<[bottompoint lastSum 1 1] head:IngelasArrow]
+•page 
+ << [[shift (5cm,0)] plusBar] << [[shift (5cm,~15mm)] plusBar] << [[shift (5cm,2*~15mm)] plusBar]
+ << muBox << [[shift (50mm,2*~15mm-7mm)] [centerat [teX `$\mu$´] (0,0)]]
+ << [stroke [rightpoint muBox 1 1]>(^0°)--(^~90°)<[bottompoint lastSum 1 1] head:ingelasArrow]
 
 circleToCircle: \ p1 p2 .>  (p1+rPlus*[normalized p2-p1])--(p2+rPlus*[normalized p1-p2])
 
-@<< [stroke [circleToCircle ((5cm,0*~15mm) + dHat*dStep*(nDup/2))  (5cm+10mm,~15mm)+dHat*dStep*(nDup/2)] head:IngelasArrow]
- << [stroke [circleToCircle ((5cm,1*~15mm) + dHat*dStep*(nDup/2))  (5cm+10mm,~15mm)+dHat*dStep*(nDup/2)] head:IngelasArrow]
- << [stroke [circleToCircle ((5cm,2*~15mm) + dHat*dStep*(nDup/2))  (5cm+10mm,~15mm)+dHat*dStep*(nDup/2)] head:IngelasArrow]
+•page 
+ << [stroke [circleToCircle ((5cm,0*~15mm) + dHat*dStep*(nDup*(1/2)))  (5cm+10mm,~15mm)+dHat*dStep*(nDup*(1/2))] head:ingelasArrow]
+ << [stroke [circleToCircle ((5cm,1*~15mm) + dHat*dStep*(nDup*(1/2)))  (5cm+10mm,~15mm)+dHat*dStep*(nDup*(1/2))] head:ingelasArrow]
+ << [stroke [circleToCircle ((5cm,2*~15mm) + dHat*dStep*(nDup*(1/2)))  (5cm+10mm,~15mm)+dHat*dStep*(nDup*(1/2))] head:ingelasArrow]
 
 py: [rightpoint lastSum 1 1]
 py2: py + (5mm,0)
-@<< [stroke py--py2 head:IngelasArrow] << [[shift py2+(1mm,0)] [centerat [TeX `$y(t)$´] (~1,~1)]]
+•page << [stroke py--py2 head:ingelasArrow] << [[shift py2+(1mm,0)] [centerat [teX `$y(t)$´] (~1,~1)]]
 
-} /* end of "global" dynamic bindings */
+} /** end of "global" dynamic bindings **/

@@ -7,38 +7,35 @@ screwSeg: (~1cm,1cm,~1cm)<(~1cm,0cm,~1cm)>(~1cm,~1cm,~1cm)--(1cm,~1cm,~2cm)<(1cm
 deeper: \ n .> [shift (0cm,0cm,n*~2cm)]
 screw: [scale3D 1.5] [] (1cm,~1cm,0cm)<(1cm,0cm,0cm)>(1cm,1cm,0cm)--screwSeg--[[deeper 1] screwSeg]--[[deeper 2] screwSeg]--cycle
 
-world: Hot3D <<
+•world: newGroup3D
 
-@<<:world
-|
-{
-  @<< @width:0.3bp & @stroking:[gray 0.5] | [stroke screw]
+•world << @width:0.3bp & @stroking:[gray 0.5] | [stroke screw]
 
-  markStart: 0.15
-  markCount: '5
+markStart: 0.15
+markCount: '5
 
-  ![[range '0 markCount-'1].foldl
+•world <<
+  [[range '0 markCount-'1].foldl
     \ p i .>
     {
       sl: [screw (markStart + i*(1/markCount))*[abs screw]]
       len: 2.5cm
-      @<< @stroking:RGB_RED   | [stroke sl.p--(+(len*sl.T))]
-      @<< @stroking:RGB_GREEN | [stroke sl.p--(+(len*sl.N))]
-      @<< @stroking:RGB_BLUE  | [stroke sl.p--(+([if i == '0 ~1 1]*len*sl.B))]
-      @<< [shift sl.p+(~2mm,3mm,0mm)] [] [facing [centerx [TeX [sprintf `\textbf{%g}´ e+1]]]]
-      p
+      p &
+      ( newGroup3D
+        << @stroking:rgb_RED   | [stroke sl.p--(+(len*sl.t))]
+        << @stroking:rgb_GREEN | [stroke sl.p--(+(len*sl.n))]
+        << @stroking:rgb_BLUE  | [stroke sl.p--(+([if i == '0 ~1 1]*len*sl.b))]
+        << [shift sl.p+(~2mm,3mm,0mm)] [] [facing [centerx [teX [sprintf `\textbf{%d}´ i+'1]]]] )
     }
-    VOID]
+    null3D]
 
-  @<< [shift (~1.5cm,~1.5cm,0cm)] [] [facing [centerx [TeX `Hitta den som avviker!´]]]
+•world << [shift (~1.5cm,~1.5cm,0cm)] [] [facing [centerx [teX `Hitta den som avviker!´]]]
 
-}
-
-world;
+world: •world;
 
 {
-  world: [rotate3D (1,1,1) 30�] [] ../world
+  world: [rotate3D (1,1,1) 30°] [] ../world
   eyew: 5.0cm
-  @<< view [] world
-  @<< [shift (2*eyew,0cm)] [] view [] [shift (~eyew,0cm,0cm)] [] world
+  •page << view [] world
+  •page << [shift (2*eyew,0cm)] [] view [] [shift (~eyew,0cm,0cm)] [] world
 }
