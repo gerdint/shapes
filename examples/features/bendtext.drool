@@ -1,0 +1,22 @@
+##needs centering
+
+message: @text_size:5mm | [kern `Hi, Dro´ 0.3 `oler!´]
+
+•page << ( newText << message )
+
+baseline: @defaultunit:1%f | (0cm,~1cm)>(^45°)--(1.5cm^180°)<(3cm,~2cm)
+•page << @stroking:rgb_RED | [stroke baseline]
+
+•page <<
+ [message.list.foldl
+    \ pile distChar .>
+     {
+       c: ( newText << distChar.cdr )
+       sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
+       pile
+       &
+       [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+     }
+    null]
+
+ 
