@@ -11,8 +11,6 @@
 ##needs rtlogo_elements
 ##needs circle
 
-•page << [bboxed null [rectangle (~1r,0cm) (1r,2r)]]
-
   @stroking:gray_BLACK
 & @nonstroking:gray_BLACK
 |

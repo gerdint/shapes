@@ -11,8 +11,6 @@
 ##needs rtlogo_elements
 ##needs circle
 
-•page << [bboxed null [rectangle (~1r,0cm) (1r,2r)]]
-
   @stroking:gray_BLACK
 & @nonstroking:gray_BLACK
 |
@@ -88,7 +86,7 @@ largeFont: smallFont
 •page <<
 [shift (0,~0.65r)][]
 {
-  hbar: @width:0.02r| [stroke (~1r,0)--(1r,0)]
+  hbar: @width:0.010r| [stroke (~1r,0)--(1r,0)]  |** The width used to be 0.02r.
   largeFont |
   ( newGroup2D
     << [shift (0,~0.3*@text_size)] [] hbar
