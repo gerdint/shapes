@@ -405,7 +405,7 @@ Lang::KernedText::oneMacRomanToUTF8( const char c )
   charbuf[1] = '\0';
 
   char * outbuf = buf;
-  char * inbuf = charbuf;
+  const char * inbuf = charbuf;
   size_t inbytesleft = 1;
   size_t outbytesleft = BUF_SIZE - 1;
   // For some reason, my iconv header seems unaware of the const modifier...
