@@ -235,13 +235,7 @@ backgroundRectangle: [rectangle (0cm,~squareSpace) (bannerWidth,squareSide+squar
 |** Assuming that <textSep> is correct, this will make the glyphs vertically centered on the banner.
 yText: \ i .> 0.5 * ( squareSide - ( 3 * textSize + 2 * textSep - textVSpace ) ) + ( 2 - i ) * ( textSize + textSep )
 
-|** Next, the three lines of text are defined.  Since Drool does not support correct font metrics
-|** for characters like `Ö´, I have to measure the last line of text manually.  For an example of how to do this,
-|** run the file <measuretext.drool>.  The widths of the text lines are then stored in variables
-|** with logical names.
-
-|** The kerning of the text is clearly manual, and I am not an expert in this field, so
-|** it is surely possible to do better.
+|** Next, the three lines of text are defined.
 
 line0: theFont | ( newText << [kern `AUTOMATIC CONTROL´] )
 
@@ -256,31 +250,8 @@ kernKO: 0.05
 |** Also note how to apply automatic kerning everywhere but between `K´ and `Ö´.  Placing kernKO among the
 |** arguments to kern would add kernKO to the default kerning, resulting in too much kerning should
 |** automatic kerning of `KÖ´ begin to work in the future.
-line2: [bboxed theFont | ( newText << [kerning [kern `LINK´] kernKO [kern `ÖPINGS UNIVERSITET´]] )
-               [rectangle (0cm,0cm) (10.33*textSize,textSize)]]
+line2: theFont | ( newText << [kerning [kern `LINK´] kernKO [kern `ÖPINGS UNIVERSITET´]] )
 
-
-|***************************************************************************
-|** Stuff from centering.drext
-|***************************************************************************
-
-|** The following was copied from the file I call centering.drext.
-|** The function centerxat is used to position text to the right of a given point.
-
-/**
-xmax: \ p .> [continuous_maximizer p (1,0)].p.x
-xmin: \ p .> [continuous_maximizer p (~1,0)].p.x
-ymax: \ p .> [continuous_maximizer p (0,1)].p.y
-ymin: \ p .> [continuous_maximizer p (0,~1)].p.y
-
-centerxat: \ obj x .>
- {
-  thebb: [bbox obj]
-  [[shift ( 0.5*([xmin thebb]*(x-1) - [xmax thebb]*(x+1)),
-  	    0cm )]
-   obj]
- }
-**/
 
 |***************************************************************************
 |** That's it!  This is the end of the file.

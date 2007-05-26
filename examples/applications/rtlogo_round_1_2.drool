@@ -20,13 +20,19 @@
   [makeRegulator •page]
 }
 
-smallFont: @text_font:font_HELVETICA_BOLD & @text_size:0.275r & @text_horizontalscaling:1.0
+/** This is the text size, and everything related to the text should be in this unit so that it
+ ** becomes easy to change the size of the text circle relative to the regulator inside.
+ **/
+##unit t = 24bp
+
+smallFont: @text_font:font_HELVETICA_BOLD & @text_size:1t & @text_horizontalscaling:1.0
 
 |** The bent text is drawn along circular arcs, and we put the text in contact with the regulator's box at
 |** the center coordinate.
 circleCenter: (0,0.92r)
-innerRadius: 1.15r
-outerRadius: innerRadius + (smallFont|0.7*@text_size)
+innerRadius: 4.4t
+charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
+outerRadius: innerRadius + charHeight
 ballSpace: 0.24
 
 {
@@ -60,14 +66,12 @@ ballSpace: 0.24
   /** This is the lower banner.
    ** Since the text is placed on the inside of the circle, some negative kerning must be used.
    **/
-  stdkern: (0.7*(@text_size/outerRadius))
+  stdkern: charHeight/outerRadius
 
-  text: smallFont | ( @text_characterspacing:stdkern*@text_size | [kerning `•´ ~ballSpace [kern `REGL´] 0.07 [kern `ERT´] ~0.05 [kern `EKNIK´] ~ballSpace `•´ ~ballSpace [kern `LINK´] 0.17 `Ö´ 0.08 [kern `PING´] ~ballSpace `•´] )
+  text: smallFont | ( @text_characterspacing:stdkern*@text_size | [kerning `•´ ~ballSpace [kern `REGL´] 0.07 [kern `ERT´] ~0.05 [kern `EKNIK´] ~ballSpace `•´ ~ballSpace [kern `LINK´] 0.13 `Ö´ 0.03 [kern `PING´] ~ballSpace `•´] )
 
   baseline: [shift circleCenter] [] [rotate ~90° - 0.5*[xmax [bbox (newText << text)]]/outerRadius] [] [circle outerRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
-  
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.
    **/

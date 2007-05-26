@@ -11,8 +11,29 @@
 ##needs rtlogo_elements
 ##needs circle
 
-  @stroking:gray_BLACK
-& @nonstroking:gray_BLACK
+/** This is the text size, and everything related to the text should be in this unit so that it
+ ** becomes easy to change the size of the text circle relative to the regulator inside.
+ **/
+##unit t = 22bp
+
+smallFont: @text_font:font_HELVETICA_BOLD & @text_size:1t & @text_horizontalscaling:1.0
+
+|** The bent text is drawn along circular arcs, and we put the text in contact with the regulator's box at
+|** the center coordinate.
+circleCenter: (0,0.92r)
+innerRadius: 4.4t
+charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
+outerRadius: innerRadius + charHeight
+ballSpace: 0.2
+graySep: 0.3t
+
+  
+•page << @nonstroking:lightGray | [fill [shift circleCenter][][circle outerRadius + graySep]]
+•page << @nonstroking:darkGray | [fill [shift circleCenter][][circle innerRadius - graySep]]
+
+
+  @stroking:gray_WHITE
+& @nonstroking:gray_WHITE
 |
 {
   /** Recall where this places the regulator...
@@ -20,23 +41,13 @@
   [makeRegulator •page]
 }
 
-
-|** The bent text is drawn along circular arcs, and we put the text in contact with the regulator's box at
-|** the center coordinate.
-textRadius: 2r
-
-smallFont: @text_font:font_HELVETICA_BOLD & @text_size:0.2r & @text_horizontalscaling:1.0
-charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
-
 {
   /** This is the upper banner.
    ** Since the text is placed on the outside of the circle, no special kerning should be needed.
    **/
 
-  text: smallFont | [kern `REGLERTEKNIK´]
-  extraSep: 0.07r
-  textLength: [xmax [bbox (newText << text)]]
-  baseline: [shift (0,1r-(textRadius-1r)+extraSep)] [] [rotate 90° + 0.5*textLength/textRadius] [] reverse [] [circle textRadius]
+  text: smallFont | [kerning `•´ ~ballSpace [kern `REGLERTEKNIK´] ~ballSpace `•´ ~ballSpace [kern `AUTOM´] 0.08 `A´ 0.13 [kern `TIC CONTROL´] ~ballSpace `•´]
+  baseline: [shift circleCenter] [] [rotate 90° + 0.5*[xmax [bbox ( newText << text )]]/innerRadius] [] reverse [] [circle innerRadius]
 
 |**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1r,[baseline 0].p.y)--(1r,(+0r))]
@@ -61,13 +72,11 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
   /** This is the lower banner.
    ** Since the text is placed on the inside of the circle, some negative kerning must be used.
    **/
-  
-  stdkern: charHeight/textRadius
-  text: smallFont | ( @text_characterspacing:stdkern*@text_size | [kerning [kern `AUTOM´] 0.08 `A´ 0.13 [kern `TIC CONTROL´]] )
-  textLength: [xmax [bbox (newText << text)]]
-  baseline: [shift (0,1r-1.2*charHeight+(textRadius-1r))] [] [rotate ~90° - 0.5*textLength/textRadius] [] [circle textRadius]
+  stdkern: charHeight/outerRadius
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+  text: smallFont | ( @text_characterspacing:stdkern*@text_size | [kerning [kern `LINK´] 0.13 `Ö´ 0.03 [kern `PING´]] )
+
+  baseline: [shift circleCenter] [] [rotate ~90° - 0.5*([xmax [bbox (newText << text)]])/outerRadius] [] [circle outerRadius]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.
@@ -83,15 +92,4 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
          [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
        }
       null]
-}
-
-•page <<
-smallFont | 
-[shift (0,~0.65r)][]
-{
-  hbar: @width:0.010r| [stroke (~1r,0)--(1r,0)]  |** The width used to be 0.02r.
-  ( newGroup2D
-    << [shift (0,~0.3*@text_size)] [] hbar
-    << [shift (0,1.11*@text_size)] [] hbar
-    << [centerx ( newText << [kerning [kern `LINK´] kernKO [kern `ÖPING´]] )] )
 }

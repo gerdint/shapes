@@ -80,6 +80,7 @@ namespace FontMetrics
     ~WritingDirectionMetrics( );
     
     void setupLigatures( );
+    void setupAccentedLatin( );
     const CharacterMetrics * charByName( const char * name ) const;
     const CharacterMetrics * charByCode( unsigned char code ) const;
     const CharacterMetrics * charByCode( char code ) const;  // shall not be used; generates an error
@@ -158,9 +159,10 @@ namespace FontMetrics
 	verticalMetrics_( NullPtr< WritingDirectionMetrics >( ) )
     { }
     virtual ~AFM( );
-    
+
     virtual bool isBaseFont( ) const = 0;
 
+    void setupAccentedLatin( );    
     double getHorizontalKernPairXByCode( unsigned char code1, unsigned char code2 ) const;
     double getHorizontalKernPairXByCode( char code1, char code2 ) const;  // generates error
   };

@@ -97,6 +97,28 @@ FontMetrics::WritingDirectionMetrics::setupLigatures( )
     }
 }
 
+#define FILL_IN_CHARACTER_BY_NAME( code, name )\
+  {\
+    typedef typeof( nameMap_ ) NameMapType;\
+    NameMapType::const_iterator i = nameMap_.find( strrefdup( name ) );\
+    if( i == nameMap_.end( ) )\
+      {\
+	throw "No character by that accented lating name in font metrics.";\
+      }\
+    codeMap_[ code ] = i->second;\
+  }
+#define OCTAL_BYTE( x ) (64*(x/100)+8*((x%100)/10)+(x%10))
+void
+FontMetrics::WritingDirectionMetrics::setupAccentedLatin( )
+{
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 214 ), "aring" );
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 212 ), "adieresis" );
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 232 ), "odieresis" );
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 201 ), "Aring" );
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 200 ), "Adieresis" );
+  FILL_IN_CHARACTER_BY_NAME( OCTAL_BYTE( 205 ), "Odieresis" );
+}
+
 const FontMetrics::CharacterMetrics *
 FontMetrics::WritingDirectionMetrics::charByName( const char * name ) const
 {
@@ -154,6 +176,19 @@ FontMetrics::TrackKerning::operator () ( double sz ) const
 
 FontMetrics::AFM::~AFM( )
 { }
+
+void
+FontMetrics::AFM::setupAccentedLatin( )
+{
+  if( horizontalMetrics_ != NullPtr< FontMetrics::WritingDirectionMetrics >( ) )
+    {
+      horizontalMetrics_->setupAccentedLatin( );
+    }
+  if( verticalMetrics_ != NullPtr< FontMetrics::WritingDirectionMetrics >( ) )
+    {
+      verticalMetrics_->setupAccentedLatin( );
+    }
+}
 
 double
 FontMetrics::AFM::getHorizontalKernPairXByCode( unsigned char code1, unsigned char code2 ) const

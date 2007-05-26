@@ -115,7 +115,7 @@ String [^\r\n]*
 <Global>"EndFontMetrics"{HorizontalWhiteSpace}[\n] {
   if( fontMetricsDst_->horizontalMetrics_ != NullPtr< FontMetrics::WritingDirectionMetrics >( ) )
   {
-    // I const cast because I'm too tired to thing of something better.
+    // I const cast because I'm too tired to think of something better.
     FontMetrics::CharacterMetrics * defaultChar = const_cast< FontMetrics::CharacterMetrics * >( fontMetricsDst_->horizontalMetrics_->charData_[ 0 ] );
     defaultChar->xmin_ = fontMetricsDst_->fontBBoxXMin_;
     defaultChar->ymin_ = fontMetricsDst_->fontBBoxYMin_;

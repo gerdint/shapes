@@ -211,6 +211,8 @@ Lang::Font::metrics( ) const
       throw Exceptions::InternalError( strrefdup( oss ) );
     }
 
+  newMetrics->setupAccentedLatin( );
+
   return metrics_;
 }
 
@@ -330,7 +332,6 @@ Lang::KernedText::makeList( ) const
 		case ' ':
 		  {
 		    // Observe textState_->wordSpacing_
-		    // In addition, it seems reasonable to not let the space character affect the bounding box.
 		    const FontMetrics::CharacterMetrics * charMetrics = horizontalMetrics->charByCode( (unsigned char)( 32 ) );
 		    xpos += xSize * charMetrics->horizontalCharWidthX_;
 		    xpos += characterTrackKern;
@@ -417,7 +418,6 @@ Lang::KernedText::oneMacRomanToUTF8( const char c )
       throw Exceptions::ExternalError( "Conversion of one MacRoman character to UTF-8 failed." );
     }
   *outbuf = '\0';
-
   return RefCountPtr< const Lang::String >( new Lang::String( strrefdup( buf ) ) );
 }
 
