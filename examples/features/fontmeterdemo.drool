@@ -5,7 +5,9 @@ bbdraw: \ •dst obj .>
   •dst << obj << @stroking:[gray 0.5] & @width:0.3bp | [stroke [bbox obj]]
 }
 
-[bbdraw •page [[rotate 25°] myFont | (newText << `å´ )]]
+[bbdraw •page [[shift (20cm,0)]()[rotate 5°] myFont | (newText << `ÖöÅåÄäÉé´ )]]
+
+[bbdraw •page [[shift (20cm,~5cm)] myFont | (newText << [kerning `AU¢nÄU¢n´ [kern `AU¢nÄU´]] )]]
 
 [bbdraw •page [[shift (0,~3cm)]*[rotate ~15°] myFont | (newText << `Hej´ << @text_rise:0.5 | [kerning `mar´] << [kerning `d´ ~0.5 `u bra?´] )]]
 

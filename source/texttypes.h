@@ -37,6 +37,7 @@ namespace MetaPDF
     public:
       static void push_backFontMetricsPath( const char * path );
       static std::string searchGlyphList( );
+      static std::string searchCharacterEncoding( const char * encodingName );
     private:
       static std::string searchFontMetrics( RefCountPtr< const char > fontName );
       RefCountPtr< const char > fontName_;

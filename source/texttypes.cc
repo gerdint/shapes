@@ -84,6 +84,31 @@ Lang::Font::searchFontMetrics( RefCountPtr< const char > fontName )
   throw Exceptions::MissingFontMetrics( fontName, & theFontMetricsSearchPath_ );
 }
 
+std::string
+Lang::Font::searchCharacterEncoding( const char * encodingName )
+{
+  std::string res;
+
+  if( theFontMetricsSearchPath_.size( ) == 0 )
+    {
+      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.  Consider defining the environment variable DROOLFONTMETRICS." ) );
+    }
+
+  typedef typeof theFontMetricsSearchPath_ ListType;
+  for( ListType::const_iterator i = theFontMetricsSearchPath_.begin( ); i != theFontMetricsSearchPath_.end( ); ++i )
+    {
+      res = *i + "/" + encodingName + ".enc";
+      struct stat theStatDummy;
+      if( stat( res.c_str( ), & theStatDummy ) == 0 )
+	{
+	  return res;
+	}
+    }
+  std::ostringstream msg;
+  msg << "A font operation required a character encoding file for " << encodingName << ", but it was not found.  It should be named \"" << encodingName << ".enc\" and reside in a directory on the font metrics path.  Please refer to your environment variable DROOLFONTMETRICS." ;
+  throw Exceptions::MiscellaneousRequirement( strrefdup( msg ) );
+}
+
 
 Lang::Font::Font( const RefCountPtr< const char > fontName, RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const FontMetrics::BaseFont > metrics )
   : fontName_( fontName ), resource_( resource ), metrics_( metrics )
@@ -210,8 +235,6 @@ Lang::Font::metrics( ) const
       oss << "Font metrics parser failed with message: " << ball ;
       throw Exceptions::InternalError( strrefdup( oss ) );
     }
-
-  newMetrics->setupAccentedLatin( );
 
   return metrics_;
 }

@@ -585,6 +585,16 @@ String [^\r\n]*
     ;
   *end = '\0';
   currentDirectionDst_->nameMap_[ strrefdup( yytext ) ] = currentCharacter_->internalPosition_;
+  if( currentCharacter_->characterCode_ < 0 )
+    {
+      unsigned char pos;
+      if( encoding_->name_to_position( yytext, & pos ) )
+	{
+	  currentCharacter_->characterCode_ = pos;
+	  currentDirectionDst_->codeMap_[ currentCharacter_->characterCode_ ] = currentCharacter_->internalPosition_;
+	}
+    }
+
   BEGIN( CharMetrics );
 }
 

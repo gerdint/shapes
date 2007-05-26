@@ -10,6 +10,7 @@ namespace FontMetrics
   class BaseFont;
 
   class GlyphList;
+  class CharacterEncoding;
 
 }
 

@@ -2,6 +2,7 @@
 #include "charconverters.h"
 #include "metapdfexceptions.h"
 #include "glyphlist.h"
+#include "characterencoding.h"
 #include "texttypes.h"
 #include "iconvselect.h"
 
@@ -238,6 +239,60 @@ Helpers::requireGlyphList( bool cleanup )
 	  catch( ... )
 	    {
 	      throw Exceptions::InternalError( "An unrecognized exception was caught from glyph list parsing." );
+	    }
+	}
+    }
+  return *converter;
+}
+
+const FontMetrics::CharacterEncoding &
+Helpers::requireMacRomanEncoding( bool cleanup )
+{
+  static const FontMetrics::CharacterEncoding * converter = 0;
+  if( cleanup )
+    {
+      if( converter != 0 )
+	{
+	  delete converter;
+	  converter = 0;
+	}
+    }
+  else
+    {
+      if( converter == 0 )
+	{
+	  std::string filename = Lang::Font::searchCharacterEncoding( "MacRoman" );
+	  std::ifstream iFile( filename.c_str( ) );
+	  if( ! iFile.is_open( ) )
+	    {
+	      std::ostringstream oss;
+	      oss << "Could locate, but not open the character encoding " << filename ;
+	      throw Exceptions::ExternalError( strrefdup( oss ) );
+	    }
+	  try
+	    {
+	      converter = new FontMetrics::CharacterEncoding( iFile );
+	    }
+	  catch( const char * ball )
+	    {
+	      std::ostringstream oss;
+	      oss << "Parsing the character encoding " << filename << " resulted in the error: " << ball ;
+	      throw Exceptions::ExternalError( strrefdup( oss ) );
+	    }
+	  catch( const std::string ball )
+	    {
+	      std::ostringstream oss;
+	      oss << "Parsing the character encoding " << filename << " resulted in the error: " << ball ;
+	      throw Exceptions::ExternalError( strrefdup( oss ) );
+	    }
+	  catch( const MetaPDF::Exceptions::Exception & ball )
+	    {
+	      std::cerr << "Parsing the character encoding " << filename << " resulted an error.  Rethrowing." << std::endl ;
+	      throw;
+	    }
+	  catch( ... )
+	    {
+	      throw Exceptions::InternalError( "An unrecognized exception was caught from character encoding parsing." );
 	    }
 	}
     }

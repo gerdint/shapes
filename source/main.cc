@@ -1217,4 +1217,5 @@ destroyGlobals( )
   Helpers::requireUTF8ToUCS4Converter( true );  // true means "cleanup"
   Helpers::requireUTF16BEToUCS4Converter( true );  // true means "cleanup"
   Helpers::requireGlyphList( true );  // true means "cleanup"
+  Helpers::requireMacRomanEncoding( true );  // true means "cleanup"
 }

@@ -1,5 +1,6 @@
 #include "afmscanner.h"
 #include "strrefdup.h"
+#include "charconverters.h"
 
 #include <sstream>
 
@@ -10,7 +11,8 @@ AfmScanner::AfmScanner( FontMetrics::BaseFont * fontMetricsDst, std::istream * y
     currentDirectionID_( -1 ),
     activateDirectionID_( 0 ),
     metricsSets_( 0 ),
-    tellQue_( false )
+    tellQue_( false ),
+    encoding_( & MetaPDF::Helpers::requireMacRomanEncoding( ) )
 { }
 
 void

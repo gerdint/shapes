@@ -26,6 +26,7 @@ namespace MetaPDF
     iconv_t requireUTF8ToWinANSIConverter( bool cleanup = false );
 
     const FontMetrics::GlyphList & requireGlyphList( bool cleanup = false );
+    const FontMetrics::CharacterEncoding & requireMacRomanEncoding( bool cleanup = false );
   }
 }
 

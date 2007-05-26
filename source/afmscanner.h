@@ -2,6 +2,7 @@
 #define afmscanner_h
 
 #include "fontmetrics.h"
+#include "characterencoding.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer afmFlexLexer
@@ -22,6 +23,8 @@ class AfmScanner : public afmFlexLexer
 
   void throwError( const char * msg );
   void synchWritingDirection( );
+
+  const FontMetrics::CharacterEncoding * encoding_;
 
  public:
   typedef int UnionType;

@@ -33,7 +33,7 @@ zbuftriangle.o zbufline.o zbufto2D.o zbufinternals.o zsorterto2D.o \
 metapdfast.o metapdfastfun.o metapdfastvalues.o metapdfastvar.o metapdfastexpr.o \
 metapdfastexpr_unary.o metapdfastexpr_arithmetic.o metapdfastexpr_relational.o coreoperators.o metapdfastflow.o \
 classtypes.o metapdfastclass.o errorhandlers.o constructorrepresentation.o charconverters.o \
-fontmetrics.o afmscanner.o afmyylex.o fonttypes.o corefont.o glyphlist.o \
+fontmetrics.o afmscanner.o afmyylex.o fonttypes.o corefont.o glyphlist.o characterencoding.o \
 globals.o main.o
 
 FONTMETER = fontmeter
