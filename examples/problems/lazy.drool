@@ -3,6 +3,6 @@
 ##unit ux = 0.7cm
 ##unit uy = ~0.7cm
 
-p: ![someBrace (6ux,~0.5uy) (7ux,~0.5uy)]
-stderr << `Typeof p: ´ << [typeof p].name << `¢n´
-@<< [stroke p]
+p: [someBrace (6ux,~0.5uy) (7ux,~0.5uy)]
+•stderr << `Typeof p: ´ << [typeof p].name << `¢n´
+•page << [stroke p]
