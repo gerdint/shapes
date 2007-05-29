@@ -1,0 +1,52 @@
+##needs circle
+##needs centering
+
+golden: ( [sqrt 5] + 1 ) / 2
+
+t1: 1bp
+t2: 2bp
+t3: t2 * golden
+
+x1: ~2.5mm
+x3: 7mm
+sep: 2.3mm
+y2: 5mm
+x2: x3 - sep
+y1: y2 - sep
+ypart: 0.96
+
+d_curve: [[shift (0,y2)]
+  @defaultunit:1%c | (0mm,y2)>(^0°)--(1%c^)<(0.5*x3,ypart*y2)>(1%C^~10°)--(^)<(x3,0)>(^)--(1%C^10°)<(0.5*x3,~ypart*y2)>(1%c^)--(^0°)<(0mm,~y2)
+]
+r_curve: [[shift (0,y2)]
+  @defaultunit:1%c | (0mm,y1)>(^0°)--(1%c^)<(0.5*x2,ypart*y1)>(1%C^~10°)--(^)<(x2,0)>(^)--(1%C^10°)<(0.5*x2,~ypart*y1)>(1%c^)--(^0°)<(0mm,~y1)
+]
+
+fillColor: @nonstroking:[rgb 205/255 49/255 0/255]
+
+•page << fillColor | [fill d_curve--[reverse r_curve]--cycle]
+
+•page << @width:t3 & @cap:cap_BUTT | [stroke (0cm,2*y2)--(0mm,0mm)]
+•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke (x1,2*y2)--d_curve--(x1,0mm)]
+•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke r_curve]
+r_point: (7mm,~2mm)
+r_ray: r_point--(r_curve.end - 3mm).p
+•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke r_ray]
+
+o_radius: 1.2mm
+@width:t1 |
+{
+  radius: o_radius
+  c: [shift (x1,radius-0.5*t2+0.5*@width)][][circle radius]
+  •page << fillColor | [fill c]
+  •page << [stroke c]
+}
+
+@width:t1 |
+{
+  radius: o_radius
+  sl: r_ray.begin
+  c: [shift sl.p][][rotate 180°+[angle sl.t]][][shift (0,radius-0.5*t2+0.5*@width)][][circle radius]
+  •page << fillColor | [fill c]
+  •page << [stroke c]
+}
