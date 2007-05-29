@@ -86,9 +86,12 @@ namespace MetaPDF
       Node * parent_;
       const Ast::SourceLocation loc_;
     public:
+      bool imperative_;
+
       Node( const Ast::SourceLocation & loc );
       virtual ~Node( );
       void setParent( Node * parent );
+      virtual void analyze( ) = 0;
       virtual void eval( Kernel::EvalState * evalState ) const = 0;
       const Ast::SourceLocation & loc( ) const;
     };

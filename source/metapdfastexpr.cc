@@ -54,6 +54,14 @@ Ast::UnaryPrefixExpr::~UnaryPrefixExpr( )
 }
 
 void
+Ast::UnaryPrefixExpr::analyze( )
+{
+  expr_->analyze( );
+
+  imperative_ = expr_->imperative_;
+}
+
+void
 Ast::UnaryPrefixExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = expr_;
@@ -76,6 +84,14 @@ Ast::UnaryPostfixExpr::UnaryPostfixExpr( const Ast::SourceLocation & opLoc, Ast:
 Ast::UnaryPostfixExpr::~UnaryPostfixExpr( )
 {
   delete expr_;
+}
+
+void
+Ast::UnaryPostfixExpr::analyze( )
+{
+  expr_->analyze( );
+
+  imperative_ = expr_->imperative_;
 }
 
 void
@@ -159,6 +175,15 @@ Ast::BinaryInfixExpr::~BinaryInfixExpr( )
 {
   delete expr1_;
   delete expr2_;
+}
+
+void
+Ast::BinaryInfixExpr::analyze( )
+{
+  expr1_->analyze( );
+  expr2_->analyze( );
+
+  imperative_ = expr1_->imperative_ || expr2_->imperative_;
 }
 
 void

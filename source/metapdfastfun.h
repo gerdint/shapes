@@ -70,6 +70,7 @@ namespace MetaPDF
       std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs_;
       std::list< Ast::StateReference * > * orderedStates_;
       std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates_;
+      bool imperative_;
       
       class ConstIterator
       {
@@ -87,7 +88,8 @@ namespace MetaPDF
 		    std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
-      
+      void analyze( );
+
       ConstIterator begin( ) const;
       
       void evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const;
@@ -226,6 +228,7 @@ namespace MetaPDF
       CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       virtual ~CallExpr( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -236,6 +239,7 @@ namespace MetaPDF
       
       UnionExpr( const Ast::SourceLocation & loc, const Ast::ArgListExprs * argList );
       virtual ~UnionExpr( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -248,6 +252,7 @@ namespace MetaPDF
     public:      
       CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false );
       virtual ~CallSplitExpr( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -257,6 +262,7 @@ namespace MetaPDF
       DummyExpression( );
       DummyExpression( const Ast::SourceLocation & loc );
       virtual ~DummyExpression( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
   }

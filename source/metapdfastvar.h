@@ -20,6 +20,7 @@ namespace MetaPDF
       CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes );
       virtual ~CodeBracket( );
       
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
       
       void evalAt( const RefCountPtr< const Kernel::CodeBracketContInfo > & info, const std::list< Ast::Node * >::const_iterator & i, Kernel::EvalState * evalState ) const;
@@ -120,6 +121,7 @@ namespace MetaPDF
     public:
       LexiographicVariable( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~LexiographicVariable( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -129,6 +131,7 @@ namespace MetaPDF
     public:
       EvalOutsideExpr( const Ast::SourceLocation & loc, Ast::Expression * expr );
       virtual ~EvalOutsideExpr( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -139,6 +142,7 @@ namespace MetaPDF
     public:
       DefineVariable( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
       virtual ~DefineVariable( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -156,6 +160,7 @@ namespace MetaPDF
       virtual ~StructSplitReference( );
       void setStruct( Ast::SourceLocation structLoc, size_t ** structPos );
       bool isOrdered( ) const { return fieldId_ == 0; }
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -168,6 +173,7 @@ namespace MetaPDF
       StructSplitSink( );
       virtual ~StructSplitSink( );
       void setStruct( Ast::SourceLocation structLoc, size_t ** structPos, size_t consumedArguments );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -179,6 +185,7 @@ namespace MetaPDF
     public:
       AssertNoSinkNeeded( const Ast::SourceLocation & loc, size_t orderedCount, Ast::SourceLocation structLoc, size_t ** structPos );
       virtual ~AssertNoSinkNeeded( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -202,6 +209,7 @@ namespace MetaPDF
     public:
       StateReference( const Ast::SourceLocation & loc );
       virtual ~StateReference( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;  // illegal to call
       virtual Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const = 0;
     };
@@ -233,6 +241,7 @@ namespace MetaPDF
     public:
       IntroduceState( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, size_t ** idPos );
       virtual ~IntroduceState( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -243,6 +252,7 @@ namespace MetaPDF
     public:
       Insertion( Ast::StateReference * stateRef, Ast::Expression * expr );
       virtual ~Insertion( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -253,6 +263,7 @@ namespace MetaPDF
     public:
       Freeze( const Ast::SourceLocation & idLoc, const char * id, size_t ** idPos );
       virtual ~Freeze( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -262,6 +273,7 @@ namespace MetaPDF
     public:
       Peek( const Ast::SourceLocation & idLoc, Ast::StateReference * stateRef );
       virtual ~Peek( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -301,6 +313,7 @@ namespace MetaPDF
     public:
       SpecialLength( const Ast::SourceLocation & loc, double val, int sort );
       virtual ~SpecialLength( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -312,6 +325,7 @@ namespace MetaPDF
     public:
       DynamicVariable( const Ast::SourceLocation & loc, const char * id );
       virtual ~DynamicVariable( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -324,6 +338,7 @@ namespace MetaPDF
     public:
       DynamicBindingExpression( const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * expr, Kernel::Environment::LexicalKey ** idKey );
       virtual ~DynamicBindingExpression( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -337,6 +352,7 @@ namespace MetaPDF
     public:
       DynamicStateBindingExpression( const Ast::SourceLocation & loc, const Ast::SourceLocation & dstLoc, const char * dstId, Ast::StateReference * src );
       virtual ~DynamicStateBindingExpression( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -347,6 +363,7 @@ namespace MetaPDF
     public:
       WithDynamicExpr( const Ast::SourceLocation & loc, Ast::Expression * bindings, Ast::Expression * expr );
       virtual ~WithDynamicExpr( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
 
@@ -357,6 +374,7 @@ namespace MetaPDF
     public:
       DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr );
       virtual ~DynamicVariableDecl( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
 
@@ -383,6 +401,7 @@ namespace MetaPDF
     public:
       DynamicStateDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::StateReference * defaultState, size_t ** idPos );
       virtual ~DynamicStateDecl( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
 
@@ -392,6 +411,7 @@ namespace MetaPDF
     public:
       DynamicExpression( const Ast::SourceLocation & loc, Ast::Expression * expr );
       virtual ~DynamicExpression( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -402,6 +422,7 @@ namespace MetaPDF
     public:
       LexiographicType( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~LexiographicType( );
+      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     

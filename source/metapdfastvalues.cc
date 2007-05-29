@@ -25,6 +25,12 @@ Ast::Constant::~Constant( )
 { }
 
 void
+Ast::Constant::analyze( )
+{
+  imperative_ = false;
+}
+
+void
 Ast::Constant::eval( Kernel::EvalState * evalState ) const
 {
   Kernel::ContRef cont = evalState->cont_;
@@ -41,6 +47,15 @@ Ast::PolarHandle2DExpr::~PolarHandle2DExpr( )
 {
   delete rExpr_;
   delete aExpr_;
+}
+
+void
+Ast::PolarHandle2DExpr::analyze( )
+{
+  rExpr_->analyze( );
+  aExpr_->analyze( );
+
+  imperative_ = rExpr_->imperative_ || aExpr_->imperative_;
 }
 
 void
@@ -93,6 +108,14 @@ Ast::PolarHandle2DExprFree_a::~PolarHandle2DExprFree_a( )
 }
 
 void
+Ast::PolarHandle2DExprFree_a::analyze( )
+{
+  rExpr_->analyze( );
+
+  imperative_ = rExpr_->imperative_;
+}
+
+void
 Ast::PolarHandle2DExprFree_a::eval( Kernel::EvalState * evalState ) const
 {
   Kernel::ContRef cont = evalState->cont_;
@@ -109,6 +132,12 @@ Ast::EmptyExpression::EmptyExpression( const Ast::SourceLocation & loc )
 
 Ast::EmptyExpression::~EmptyExpression( )
 { }
+
+void
+Ast::EmptyExpression::analyze( )
+{
+  imperative_ = false;
+}
 
 void
 Ast::EmptyExpression::eval( Kernel::EvalState * evalState ) const

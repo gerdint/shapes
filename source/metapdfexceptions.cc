@@ -190,6 +190,34 @@ Exceptions::IntroducingExisting::display( std::ostream & os ) const
 }
 
 
+Exceptions::ExpectedImperative::ExpectedImperative( const Ast::SourceLocation & _loc )
+  : loc( _loc )
+{ }
+
+Exceptions::ExpectedImperative::~ExpectedImperative( )
+{ }
+
+void
+Exceptions::ExpectedImperative::display( std::ostream & os ) const
+{
+  os << "It makes no sense to put a pure expression before the end of a code bracket." << std::endl ;
+}
+
+
+Exceptions::IllegalImperative::IllegalImperative( const Ast::SourceLocation & _loc )
+  : loc( _loc )
+{ }
+
+Exceptions::IllegalImperative::~IllegalImperative( )
+{ }
+
+void
+Exceptions::IllegalImperative::display( std::ostream & os ) const
+{
+  os << "Imperative expressions are not allowed here." << std::endl ;
+}
+
+
 Exceptions::FreezingUndefined::FreezingUndefined( const Ast::SourceLocation & _loc, const char * _id )
   : loc( _loc ), id( _id )
 { }

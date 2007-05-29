@@ -495,6 +495,56 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
   throw Exceptions::NonExistentPosition( pos, i - 1 );
 }
 
+void
+Ast::ArgListExprs::analyze( )
+{
+  /* Traverse children
+   */
+  {
+    typedef typeof *orderedExprs_ ListType;
+    for( ListType::iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
+      {
+	(*i)->analyze( );
+      }
+  }
+  {typedef typeof *namedExprs_ ListType;
+    for( ListType::const i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
+      {
+	i->second->analyze( );
+      }
+  }
+  {
+    typedef typeof *orderedStates_ ListType;
+    for( ListType::iterator i = orderedStates_->begin( ); i != orderedStates_->end( ); ++i )
+      {
+	(*i)->analyze( );
+      }
+  }
+  {typedef typeof *namedStates_ ListType;
+    for( ListType::const i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
+      {
+	i->second->analyze( );
+      }
+  }
+  
+  /* Analyze this node given that the children have been analyzed.
+   */
+  imperative_ = orderedStates_->size( ) > 0 || namedStates_->size( ) > 0;
+  {
+    typedef typeof *orderedExprs_ ListType;
+    for( ListType::const_iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
+      {
+	imperative_ ||= (*i)->imperative_;
+      }
+  }
+  {typedef typeof *namedExprs_ ListType;
+    for( ListType::const_iterator i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
+      {
+	imperative_ ||= i->second->imperative_;
+      }
+  }
+}
+
 Ast::ArgListExprs::ConstIterator
 Ast::ArgListExprs::begin( ) const
 {
@@ -847,6 +897,22 @@ Ast::CallExpr::~CallExpr( )
 
 
 void
+Ast::CallExpr::analyze( )
+{
+  if( funExpr_ != 0 )
+    {
+      funExpr_->analyze( );
+    }
+  argList_->analyze( );
+
+  imperative_ = argList_->imperative_;
+  if( funExpr_ != 0 )
+    {
+      imperative_ ||= funExpr_->imperative_;
+    }
+}
+
+void
 Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
 {
   if( funExpr_ != 0 )
@@ -908,6 +974,14 @@ Ast::UnionExpr::~UnionExpr( )
   delete argList_;
 }
 
+
+void
+Ast::UnionExpr::analyze( )
+{
+  argList_->analyze( );
+
+  imperative_ = argList_->imperative_;
+}
 
 void
 Ast::UnionExpr::eval( Kernel::EvalState * evalState ) const
@@ -1009,6 +1083,15 @@ Ast::CallSplitExpr::~CallSplitExpr( )
 
 
 void
+Ast::CallSplitExpr::analyze( )
+{
+  funExpr_->analyze( );
+  argList_->analyze( );
+
+  imperative_ = funExpr_->imperative_ || argList_->imperative_;
+}
+
+void
 Ast::CallSplitExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = funExpr_;
@@ -1026,6 +1109,12 @@ Ast::DummyExpression::DummyExpression( const Ast::SourceLocation & loc )
 
 Ast::DummyExpression::~DummyExpression( )
 { }
+
+void
+Ast::DummyExpression::analyze( )
+{
+  imperative_ = false;
+}
 
 void
 Ast::DummyExpression::eval( Kernel::EvalState * evalState ) const

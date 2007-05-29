@@ -149,6 +149,24 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
+    class ExpectedImperative : public StaticInconsistency
+    {
+      Ast::SourceLocation loc;
+    public:
+      ExpectedImperative( const Ast::SourceLocation & _loc );
+      virtual ~ExpectedImperative( );
+      virtual void display( std::ostream & os ) const;
+    };
+
+    class IllegalImperative : public StaticInconsistency
+    {
+      Ast::SourceLocation loc;
+    public:
+      IllegalImperative( const Ast::SourceLocation & _loc );
+      virtual ~IllegalImperative( );
+      virtual void display( std::ostream & os ) const;
+    };
+
     class FileOpenError : public Exception
     {
     public:

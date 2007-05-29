@@ -765,6 +765,7 @@ main( int argc, char ** argv )
   try
     {
       metapdfparse( );
+      Ast::theProgram->analyze( );
       // The display unit is looked up after the input is scanned, so the user may use her own units
       Interaction::displayUnitFactor = Ast::theMetaPDFScanner.lookupUnitFactor( Interaction::displayUnitName );
       if( Interaction::displayUnitFactor <= 0 )

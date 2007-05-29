@@ -16,6 +16,7 @@ namespace MetaPDF
     public:
       LiteralIdentifier( const Ast::SourceLocation & loc, const char * id );
       virtual ~LiteralIdentifier( );
+      virtual void analyze( );
       virtual RefCountPtr< const char > identifier( Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const;
     };
     
@@ -25,6 +26,7 @@ namespace MetaPDF
     public:
       SameIdentifier( const Ast::IdentifierNode * orig );
       virtual ~SameIdentifier( );
+      virtual void analyze( );
       virtual RefCountPtr< const char > identifier( Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const;
     };
 

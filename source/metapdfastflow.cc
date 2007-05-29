@@ -67,6 +67,14 @@ Ast::LetDynamicECExpr::~LetDynamicECExpr( )
 }
 
 void
+Ast::LetDynamicECExpr::analyze( )
+{
+  expr_->analyze( );
+
+  imperative_ = expr_->imperative_;
+}
+
+void
 Ast::LetDynamicECExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->dyn_ = Kernel::PassedDyn( new Kernel::DynamicEnvironment( evalState->dyn_, id_, evalState->cont_ ) );

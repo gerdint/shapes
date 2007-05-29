@@ -88,6 +88,38 @@ Ast::CodeBracket::~CodeBracket( )
 
 
 void
+Ast::CodeBracket::analyze( )
+{
+  {
+    typedef list< Ast::Node * >::iterator I;
+    for( I i = nodes_->begin( ); i != nodes_->end( ); ++i )
+      {
+	(*i)->analyze( );
+      }
+  }
+
+
+  imperative_ = false;
+  {
+    typedef list< Ast::Node * >::const_iterator I;
+    for( I i = nodes_->begin( ); i != nodes_->end( ); ++i )
+      {
+	if( dynamic_cast< Ast::Expression * >( *i ) != 0 &&
+	    ! (*i)->imperative_ )
+	  {
+	    I tmp = i;
+	    ++tmp;
+	    if( tmp != nodes_->end( ) )
+	      {
+		throw Exceptions::ExpectedImperative( (*i)->loc( ) );
+	      }
+	  }
+	imperative_ ||= (*i)->imperative_;
+      }
+  }
+}
+
+void
 Ast::CodeBracket::eval( Kernel::EvalState * evalState ) const
 {
   if( nodes_->begin( ) == nodes_->end( ) )
@@ -216,6 +248,15 @@ Ast::LexiographicVariable::~LexiographicVariable( )
 }
 
 void
+Ast::LexiographicVariable::analyze( )
+{
+  /* It would make sense to check the binding here instead of at runtime.
+   */
+
+  imperative_ = false;
+}
+
+void
 Ast::LexiographicVariable::eval( Kernel::EvalState * evalState ) const
 {
   if( *idKey_ == 0 )
@@ -236,6 +277,14 @@ Ast::EvalOutsideExpr::EvalOutsideExpr( const Ast::SourceLocation & loc, Ast::Exp
 Ast::EvalOutsideExpr::~EvalOutsideExpr( )
 {
   delete expr_;
+}
+
+void
+Ast::EvalOutsideExpr::analyze( )
+{
+  expr_->analyze( );
+
+  imperative_ = expr_->imperative_;
 }
 
 void
@@ -273,12 +322,18 @@ Ast::MemberReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Argum
 
 
 
-Ast::SpecialLength::SpecialLength( const Ast::SourceLocation & loc, double val,  int sort )
+Ast::SpecialLength::SpecialLength( const Ast::SourceLocation & loc, double val, int sort )
   : Ast::Expression( loc ), val_( val ), sort_( sort )
 { }
 
 Ast::SpecialLength::~SpecialLength( )
 { }
+
+void
+Ast::SpecialLength::analyze( )
+{
+  imperative_ = false;
+}
 
 void
 Ast::SpecialLength::eval( Kernel::EvalState * evalState ) const
@@ -337,6 +392,15 @@ Ast::DynamicVariable::~DynamicVariable( )
       delete *idKey_;
     }
   delete idKey_;     //  This can be done only as long as this is not shared!
+}
+
+void
+Ast::DynamicVariable::analyze( )
+{
+  /* It would make sense to check the reference and compute the key here instead of at runtime.
+   */
+  
+  imperative_ = false;
 }
 
 void
@@ -425,6 +489,16 @@ Ast::DynamicBindingExpression::~DynamicBindingExpression( )
 }
 
 void
+Ast::DynamicBindingExpression::analyze( )
+{
+  expr_->analyze( );
+  /* It would make sense to check the reference and compute the key here instead of at runtime.
+   */
+
+  imperative_ = expr_->imperative_;
+}
+
+void
 Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
   if( *idKey_ == 0 )
@@ -460,6 +534,14 @@ Ast::DynamicStateBindingExpression::~DynamicStateBindingExpression( )
       delete *dstIdKey_;
     }
   delete dstIdKey_;     //  This can be done only as long as this is not shared!
+}
+
+void
+Ast::DynamicStateBindingExpression::analyze( )
+{
+  /* It would make sense to check references here...
+   */
+  imperative_ = false;
 }
 
 void
@@ -516,6 +598,15 @@ Ast::WithDynamicExpr::~WithDynamicExpr( )
 { }
 
 void
+Ast::WithDynamicExpr::analyze( )
+{
+  bindings_->analyze( );
+  expr_->analyze( );
+
+  imperative_ = bindings_->imperative_ || expr_->imperative_;
+}
+
+void
 Ast::WithDynamicExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = bindings_;
@@ -542,6 +633,17 @@ Ast::DynamicVariableDecl::DynamicVariableDecl( const Ast::SourceLocation & loc, 
 
 Ast::DynamicVariableDecl::~DynamicVariableDecl( )
 { }
+
+void
+Ast::DynamicVariableDecl::analyze( )
+{
+  filterExpr_->analyze( );
+  defaultExpr_->analyze( );
+  /* It would make sense to check the reference and ...
+   */
+
+  imperative_ = filterExpr_->imperative_ || defaultExpr_->imperative_;
+}
 
 void
 Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
@@ -628,6 +730,16 @@ Ast::DynamicStateDecl::DynamicStateDecl( const Ast::SourceLocation & loc, const 
 Ast::DynamicStateDecl::~DynamicStateDecl( )
 { }
 
+
+void
+Ast::DynamicStateDecl::analyze( )
+{
+  /* It would make sense to check the reference and ...
+   */
+
+  imperative_ = false;
+}
+
 void
 Ast::DynamicStateDecl::eval( Kernel::EvalState * evalState ) const
 {
@@ -698,6 +810,17 @@ Ast::DefineVariable::~DefineVariable( )
    */
 }
 
+
+void
+Ast::DefineVariable::analyze( )
+{
+  expr_->analyze( );
+  /* It would make sense to check the reference and ...
+   */
+
+  imperative_ = expr_->imperative_;
+}
+
 void
 Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
 {
@@ -706,7 +829,7 @@ Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
       *idPos_ = new size_t( evalState->env_->findLocalVariablePosition( idLoc_, id_ ) );
     }
   
-  if( expr_->immediate_ )
+  if( expr_->immediate_ || expr_->imperative_ )
     {
       evalState->cont_ = Kernel::ContRef( new Kernel::DefineVariableContinuation( evalState->env_,
 										  *idPos_,
@@ -785,6 +908,14 @@ Ast::StructSplitReference::setStruct( Ast::SourceLocation structLoc, size_t ** s
 }
 
 void
+Ast::StructSplitReference::analyze( )
+{
+  defaultExpr_->analyze( );
+
+  imperative_ = defaultExpr_->imperative_;
+}
+
+void
 Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 {
   Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
@@ -838,6 +969,12 @@ Ast::StructSplitSink::setStruct( Ast::SourceLocation structLoc, size_t ** struct
 }
 
 void
+Ast::StructSplitSink::analyze( )
+{
+  imperative_ = false;
+}
+
+void
 Ast::StructSplitSink::eval( Kernel::EvalState * evalState ) const
 {
   Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
@@ -856,6 +993,12 @@ Ast::AssertNoSinkNeeded::AssertNoSinkNeeded( const Ast::SourceLocation & loc, si
 
 Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
 { }
+
+void
+Ast::AssertNoSinkNeeded::analyze( )
+{
+  imperative_ = false;
+}
 
 void
 Ast::AssertNoSinkNeeded::eval( Kernel::EvalState * evalState ) const
@@ -921,6 +1064,14 @@ Ast::LexiographicState::~LexiographicState( )
   delete idKey_;     //  This can be done only as long as this is not shared!
 }
 
+void
+Ast::LexiographicState::analyze( )
+{
+  /* It would make sense to check the reference and...
+   */
+  imperative_ = true;
+}
+
 Kernel::StateHandle
 Ast::LexiographicState::getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const
 {
@@ -947,6 +1098,14 @@ Ast::DynamicState::~DynamicState( )
   delete idKey_;     //  This can be done only as long as this is not shared!
 }
 
+void
+Ast::DynamicState::analyze( )
+{
+  /* It would make sense to check the reference and...
+   */
+  imperative_ = true;
+}
+
 Kernel::StateHandle
 Ast::DynamicState::getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const
 {
@@ -965,6 +1124,17 @@ Ast::IntroduceState::~IntroduceState( )
   /* idPos_ shared and will be a memory leak which must not be deleted.
    * It would be easy to fix the leak using RefCountPtr< size_t >, but the leakage is constant space, so silly efficiency is prioritized.
    */
+}
+
+
+void
+Ast::IntroduceState::analyze( )
+{
+  expr_->analyze( );
+
+  /* It would make sense to check the reference and...
+   */
+  imperative_ = expr_->imperative_;
 }
 
 void
@@ -991,6 +1161,17 @@ Ast::Insertion::~Insertion( )
 { }
 
 void
+Ast::Insertion::analyze( )
+{
+  expr_->analyze( );
+
+  /* It would make sense to check the reference and...
+   */
+
+  imperative_ = true;
+}
+
+void
 Ast::Insertion::eval( Kernel::EvalState * evalState ) const
 {
   evalState->cont_ = Kernel::ContRef( new Kernel::InsertionContinuation( stateRef_->getHandle( evalState->env_, evalState->dyn_ ),
@@ -1011,6 +1192,15 @@ Ast::Freeze::~Freeze( )
   /* idPos shared and will be a memory leak which must not be deleted.
    * It would be easy to fix the leak using RefCountPtr< size_t >, but the leakage is constant space, so silly efficiency is prioritized.
    */
+}
+
+void
+Ast::Insertion::analyze( )
+{
+  /* It would make sense to check the reference and...
+   */
+
+  imperative_ = true;
 }
 
 void
@@ -1039,6 +1229,14 @@ Ast::Peek::~Peek( )
 }
 
 void
+Ast::Peek::analyze( )
+{
+  stateRef_->analyze( );
+
+  imperative_ = true;
+}
+
+void
 Ast::Peek::eval( Kernel::EvalState * evalState ) const
 {
   stateRef_->getHandle( evalState->env_, evalState->dyn_ )->peek( evalState, loc( ) );
@@ -1053,6 +1251,18 @@ Ast::DynamicExpression::DynamicExpression( const Ast::SourceLocation & loc, Ast:
 
 Ast::DynamicExpression::~DynamicExpression( )
 { }
+
+void
+Ast::DynamicExpression::analyze( )
+{
+  expr_->analyze( );
+
+  if( expr_->imperative_ )
+    {
+      throw Exceptions::IllegalImperative( expr_->loc( ) );
+    }
+  imperative_ = false;
+}
 
 void
 Ast::DynamicExpression::eval( Kernel::EvalState * evalState ) const
@@ -1077,6 +1287,14 @@ Ast::LexiographicType::~LexiographicType( )
       delete *idKey_;
     }
   delete idKey_;     //  This can be done only as long as this is not shared!
+}
+
+void
+Ast::LexiographicType::analyze( )
+{
+  /* It would make sense to check the reference and...
+   */
+  imperative_ = false;
 }
 
 void
