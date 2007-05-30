@@ -65,9 +65,6 @@ lightGray: [gray 0.902]
 |** The horizontal scaling was chosen to give a similar visual impression to the previous version of the logo.
 theFont: @text_font:font_HELVETICA & @text_size:textSize & @text_horizontalscaling:0.8
 
-|** This is by the definition of <r>:
-squareSide: 2r
-
 |** I give a name to the golden ratio:
 golden: ( 1 + [sqrt 5] ) / 2
 
@@ -98,7 +95,7 @@ liuLogo: \ r .>
           [rectangle (~r,~r) (r,r)]]
 }
 
-makeRegulator: \ •dst .>
+makeRegulator: \ r:1r •dst .>
 (
 @cap:cap_BUTT &
 @join:join_ROUND &
@@ -111,26 +108,26 @@ makeRegulator: \ •dst .>
 
     |** I use two widths, related by the golden ratio.  <w1> is the thicker, used
     |** for the bar, and <w2> is used for the arms.
-    w1: 0.10r
+    w1: 0.10*r
     w2: w1 / golden
 
     |** Draw the vertical bar.
-    •dst << @width:w1 | [stroke (0,w1)--(0,squareSide-w1)]
+    •dst << @width:w1 | [stroke (0,w1)--(0,2*r-w1)]
 
     |** <yTop> is the height where the regulator is hinged.
-    yTop: 2r - 0.4r
+    yTop: 2*r - 0.4*r
 
     |** <a> is the angle from the vertical bar to the arms.
     a: 53°
 
     |** These are the lengths of the arms; <l1> is the length of the part from the hinge to
     |** the joint, and <l2> is the length from the joint to the weight.
-    l1: 0.5r
-    l2: 1.35r
+    l1: 0.5*r
+    l2: 1.35*r
 
     |** The sizes of all the circles are related by the golden ratio.  The circles are,
     |** in order, starting with the biggest, the weight <r3>, the hinge <r2>, and the joint<r1>.
-    r3: 0.2r
+    r3: 0.2*r
     r2: r3 / golden
     r1: r2 / golden
 
@@ -171,7 +168,7 @@ makeRegulator: \ •dst .>
     |** I first construct the right side of the path.  Here's where the "not exact" description
     |** enters the picture, since the "(^)--(^)" and "(^)--(^0°)" are rather complicated Drool
     |** constructs.  Best way to see what it means here is to look at the result.
-    midPath: (0,r5)--(r2-r4,(+0cm))>(^)--(^)<(+(r4,~r4))--((+0cm),~r5+r4)>(^)--(^0°)<(0,~r5)
+    midPath: (0,r5)--(r2-r4,(+0m))>(^)--(^)<(+(r4,~r4))--((+0m),~r5+r4)>(^)--(^0°)<(0,~r5)
 
     |** Finally, I make a closed path by joining <midPath> with its revered mirror path, and then
     |** fill the path.
@@ -200,7 +197,7 @@ squareLogo: \ .>
   •res: newGroup2D
 
   |** First we draw the background.
-  •res << @nonstroking:darkGray | [fill [rectangle (~1r,0cm) (1r,squareSide)]]
+  •res << @nonstroking:darkGray | [fill [rectangle (~1r,0cm) (1r,2r)]]
 
   |** Next we set some of the graphics parameters that shall be applied to
   |** the things we draw inside the scope that follows the pipe ("|") sign.
@@ -223,7 +220,7 @@ squareLogo: \ .>
 |** This is defined as a path.  In some of the logos, this will be filled with
 |** light gray.  In others it will merely be used to manipulate the bounding
 |** box to be the same as if it had been filled with light gray.
-backgroundRectangle: [rectangle (0cm,~squareSpace) (bannerWidth,squareSide+squareSpace)]
+backgroundRectangle: [rectangle (0cm,~squareSpace) (bannerWidth,2r+squareSpace)]
 
 
 |***************************************************************************
@@ -233,7 +230,7 @@ backgroundRectangle: [rectangle (0cm,~squareSpace) (bannerWidth,squareSide+squar
 |** This function takes a text line number (in the range 0 to 2), and returns the y coordinate
 |** for the baseline of that line of text.
 |** Assuming that <textSep> is correct, this will make the glyphs vertically centered on the banner.
-yText: \ i .> 0.5 * ( squareSide - ( 3 * textSize + 2 * textSep - textVSpace ) ) + ( 2 - i ) * ( textSize + textSep )
+yText: \ i .> 0.5 * ( 2r - ( 3 * textSize + 2 * textSep - textVSpace ) ) + ( 2 - i ) * ( textSize + textSep )
 
 |** Next, the three lines of text are defined.
 

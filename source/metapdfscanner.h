@@ -57,6 +57,7 @@ class MetaPDFScanner : public metapdfFlexLexer
   void setNameOf_yyin( const char * yyinName );
   void prependStream( std::istream * is );
   void push_backNeedPath( const char * path );
+  std::string searchFile( const std::string & suffix ) const;
   void setShowFiles( bool _showFiles );
   virtual int yylex( );
   void doBeforeEachAction( );
@@ -68,7 +69,6 @@ class MetaPDFScanner : public metapdfFlexLexer
   bool currentNeedIsNeed;
   void push_frontNeedPath( const char * path );
   void pop_frontNeedPath( );
-  std::string searchFile( const std::string & suffix ) const;
   void doInclusion( );
 };
 

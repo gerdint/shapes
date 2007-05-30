@@ -86,6 +86,9 @@ namespace MetaPDF
       Node * parent_;
       const Ast::SourceLocation loc_;
     public:
+      /* This flag is related to semantics.  It must be set for any expression whose evaluation may cause side effects.
+       * Evaluation of expressions with this flag set may not be delayed, and shall be evaluated in order of appearance.
+       */
       bool imperative_;
 
       Node( const Ast::SourceLocation & loc );
@@ -99,7 +102,10 @@ namespace MetaPDF
     class Expression : public Node
     {
     public:
+      /* This flag must have no influence on semantics.  It can be used for efficiency purposes only.
+       */
       bool immediate_;
+
       Expression( const Ast::SourceLocation & loc );
       virtual ~Expression( );
     };

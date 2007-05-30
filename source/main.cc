@@ -71,9 +71,10 @@ main( int argc, char ** argv )
   string texJobName;
   string fontmetricsOutputName;
 
-  enum FilenameRequests{ FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_AFM };
+  enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_AFM };
 
   list< int > filenameRequestList;
+  list< const char * > resourceRequestList;
 
   bool evalTrace = false;
   bool evalBackTrace = false;
@@ -444,6 +445,14 @@ main( int argc, char ** argv )
 	  argv += 2;
 	  argc -= 2;
 	}
+      else if( strcmp( *argv, "--which" ) == 0 )
+	{
+	  argcAssertion( *argv, argc, 2 );
+	  filenameRequestList.push_back( FILENAME_RESOURCE );
+	  resourceRequestList.push_back( *( argv + 1 ) );
+	  argv += 2;
+	  argc -= 2;
+	}
       else if( strcmp( *argv, "--whichin" ) == 0 )
 	{
 	  filenameRequestList.push_back( FILENAME_IN );
@@ -647,8 +656,12 @@ main( int argc, char ** argv )
       xpdfAction = XPDF_RAISE;
     }
 
+  addDefaultNeedPath( );
+  addDefaultFontMetricsPath( );
+
   if( filenameRequestList.size( ) > 0 )
     {
+      list< const char * >::const_iterator resource = resourceRequestList.begin( );
       for( list< int >::const_iterator i = filenameRequestList.begin( );
 	   i != filenameRequestList.end( );
 	   ++i )
@@ -684,6 +697,21 @@ main( int argc, char ** argv )
 	      break;
 	    case FILENAME_AFM:
 	      cout << fontmetricsOutputName ;
+	      break;
+	    case FILENAME_RESOURCE:
+	      {
+		try
+		  {
+		    cout << Ast::theMetaPDFScanner.searchFile( *resource ) ;
+		  }
+		catch( const Exceptions::Exception & ball )
+		  {
+		    std::cout.flush( );
+		    ball.display( cerr );
+		    exit( 1 );
+		  }
+		++resource;
+	      }
 	      break;
 	    default:
 	      cerr << "Internal error:  filename request switch in main out of range." << endl ;
@@ -758,9 +786,6 @@ main( int argc, char ** argv )
 	}
       Kernel::the_pdfo->setOutputStream( & oFile );
     }
-
-  addDefaultNeedPath( );
-  addDefaultFontMetricsPath( );
 
   try
     {

@@ -940,6 +940,7 @@ ExprExceptConstStrings
   $$ = new Ast::CallExpr( @$,
 			  RefCountPtr< const Lang::Function >( res ),
 			  args );
+  $$->immediate_ = true;
 }
 | Expr '|' Expr
 {

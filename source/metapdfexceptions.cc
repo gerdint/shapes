@@ -279,7 +279,7 @@ Exceptions::EmptyFinalPicture::~EmptyFinalPicture( )
 void
 Exceptions::EmptyFinalPicture::display( std::ostream & os ) const
 {
-  os << "Nothing was ever drawn to the global @<<." << std::endl ;
+  os << "Nothing was ever drawn to the global #page." << std::endl ;
 }
 
 
