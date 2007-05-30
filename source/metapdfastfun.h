@@ -223,10 +223,10 @@ namespace MetaPDF
       RefCountPtr< const Lang::Function > constFun_;
     public:
       Ast::Expression * funExpr_;
-      const Ast::ArgListExprs * argList_;
+      Ast::ArgListExprs * argList_;
       
-      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
-      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
+      CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
+      CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       virtual ~CallExpr( );
       virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;
@@ -235,9 +235,9 @@ namespace MetaPDF
     class UnionExpr : public Expression
     {
     public:
-      const Ast::ArgListExprs * argList_;
+      Ast::ArgListExprs * argList_;
       
-      UnionExpr( const Ast::SourceLocation & loc, const Ast::ArgListExprs * argList );
+      UnionExpr( const Ast::SourceLocation & loc, Ast::ArgListExprs * argList );
       virtual ~UnionExpr( );
       virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;

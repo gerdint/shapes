@@ -114,7 +114,7 @@ Ast::CodeBracket::analyze( )
 		throw Exceptions::ExpectedImperative( (*i)->loc( ) );
 	      }
 	  }
-	imperative_ ||= (*i)->imperative_;
+	imperative_ = imperative_ || (*i)->imperative_;
       }
   }
 }
@@ -617,7 +617,7 @@ Ast::WithDynamicExpr::eval( Kernel::EvalState * evalState ) const
 Ast::DynamicVariableDecl::DynamicVariableDecl( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr )
   : Ast::BindNode( loc, idLoc, id ), idPos_( new size_t * ( 0 ) )
 {
-  /* This type of expression is an Ast::BindNode so that it is easy to recovnize and extract the identifier for static analysis
+  /* This type of expression is an Ast::BindNode so that it is easy to recognize and extract the identifier for static analysis
    * and similar tasks.
    *
    * The expression is implemented as a function call, since there are two subexpressions that may need evaluation.
@@ -637,12 +637,11 @@ Ast::DynamicVariableDecl::~DynamicVariableDecl( )
 void
 Ast::DynamicVariableDecl::analyze( )
 {
-  filterExpr_->analyze( );
-  defaultExpr_->analyze( );
+  impl_->analyze( );
   /* It would make sense to check the reference and ...
    */
 
-  imperative_ = filterExpr_->imperative_ || defaultExpr_->imperative_;
+  imperative_ = impl_->imperative_;
 }
 
 void
@@ -1195,7 +1194,7 @@ Ast::Freeze::~Freeze( )
 }
 
 void
-Ast::Insertion::analyze( )
+Ast::Freeze::analyze( )
 {
   /* It would make sense to check the reference and...
    */

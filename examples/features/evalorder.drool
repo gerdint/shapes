@@ -1,0 +1,7 @@
+a: { •stdout << `1´  1 }
+•stdout << a << `¢n´
+
+b: { •stdout << `2´  2 }
+c: { •stdout << `3´  3 }
+•stdout << c << `¢n´
+•stdout << b << `¢n´

@@ -507,8 +507,9 @@ Ast::ArgListExprs::analyze( )
 	(*i)->analyze( );
       }
   }
-  {typedef typeof *namedExprs_ ListType;
-    for( ListType::const i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
+  {
+    typedef typeof *namedExprs_ ListType;
+    for( ListType::iterator i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
       {
 	i->second->analyze( );
       }
@@ -520,8 +521,9 @@ Ast::ArgListExprs::analyze( )
 	(*i)->analyze( );
       }
   }
-  {typedef typeof *namedStates_ ListType;
-    for( ListType::const i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
+  {
+    typedef typeof *namedStates_ ListType;
+    for( ListType::iterator i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
       {
 	i->second->analyze( );
       }
@@ -534,13 +536,13 @@ Ast::ArgListExprs::analyze( )
     typedef typeof *orderedExprs_ ListType;
     for( ListType::const_iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
       {
-	imperative_ ||= (*i)->imperative_;
+	imperative_ = imperative_ || (*i)->imperative_;
       }
   }
   {typedef typeof *namedExprs_ ListType;
     for( ListType::const_iterator i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
       {
-	imperative_ ||= i->second->imperative_;
+	imperative_ = imperative_ || i->second->imperative_;
       }
   }
 }
@@ -878,11 +880,11 @@ Kernel::CallCont_1::gcMark( Kernel::GCMarkedSet & marked )
 
 
 
-Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, const Ast::ArgListExprs * argList, bool curry, bool procedural )
+Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry, bool procedural )
   : Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( Kernel::THE_NO_FUNCTION ), funExpr_( funExpr ), argList_( argList )
 { }
 
-Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, const Ast::ArgListExprs * argList, bool curry, bool procedural )
+Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry, bool procedural )
   : Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( constFun ), funExpr_( 0 ), argList_( argList )
 { }
 
@@ -908,7 +910,7 @@ Ast::CallExpr::analyze( )
   imperative_ = argList_->imperative_;
   if( funExpr_ != 0 )
     {
-      imperative_ ||= funExpr_->imperative_;
+      imperative_ = imperative_ || funExpr_->imperative_;
     }
 }
 
@@ -965,7 +967,7 @@ Kernel::UnionCont_last::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Ast::UnionExpr::UnionExpr( const Ast::SourceLocation & loc, const Ast::ArgListExprs * argList )
+Ast::UnionExpr::UnionExpr( const Ast::SourceLocation & loc, Ast::ArgListExprs * argList )
   : Ast::Expression( loc ), argList_( argList )
 { }
 

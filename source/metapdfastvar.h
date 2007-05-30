@@ -209,7 +209,6 @@ namespace MetaPDF
     public:
       StateReference( const Ast::SourceLocation & loc );
       virtual ~StateReference( );
-      virtual void analyze( );
       virtual void eval( Kernel::EvalState * evalState ) const;  // illegal to call
       virtual Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const = 0;
     };
@@ -221,6 +220,7 @@ namespace MetaPDF
     public:
       LexiographicState( const Ast::SourceLocation & loc, const char * id, Kernel::Environment::LexicalKey ** idKey );
       virtual ~LexiographicState( );
+      virtual void analyze( );
       Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
     };
     
@@ -231,6 +231,7 @@ namespace MetaPDF
     public:
       DynamicState( const Ast::SourceLocation & loc, const char * id );
       virtual ~DynamicState( );
+      virtual void analyze( );
       Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
     };
     
