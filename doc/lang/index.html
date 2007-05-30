@@ -1,0 +1,195 @@
+<use file="/~tidefelt/macros" />
+
+<myhtml>
+<h1>Language Reference</h1>
+<p>Without a reference documentation, the lanugage would not be defined.  On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is being ready for public use.</p>
+
+<h1>Syntax</h1>
+<p>Here, term <em>syntax</em> basically refers to everything that does not have to do with the values bound to variables in the initial environments.  Most importantly, the library functions (or <em>preamble</em>, or <em>standard procedures</em>, et&nbsp;c) are not included here.</p>
+
+<p>It might be confusing, though, to find that many of the composite expression syntaxes are implemented as function calls, which the user may become aware of when encoutering certain error messages.</p>
+
+<h2>File Inclusion and Comments</h2>
+<p>These are two very basic functions of the scanner, and have in common that they have nothing to do with the <em>meaning</em> of program code, but only where (not) to <em>find</em> the code.</p>
+
+<h3>File Inclusion</h3>
+<p>Files are included using the scanner directive <inline>#include <filename>filename</filename></inline>, which <em>must appear at the bedinning of a line</em>, like this:</p>
+<codelines>
+#include blockdraw.drool<br>
+#include ~/Library/Drool/Project Settings/book_settings.drool<br>
+</codelines>
+<p></p>
+
+<p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
+
+<h3>Comments</h3>
+<p>Comments are delimited by <inline>/*</inline> and <inline>*/</inline>, and nest.  It is recommended that multi-line comments begin each line with an asterisk (<inline>*</inline>).  It is also recommended that no code is put on the same line as a multi-line comment, since it will be very hard for the eye to see what really is commented out.</p>
+
+<h2>Atoms</h2>
+<p>Here the different scanner tokens that directly define values are described.</p>
+
+<h3>Floats</h3>
+<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and finally an optional sequence of decimal digits.  A degree sign can be appended, effectively multiplying the preceding float by pi/180.  Examples are given below.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid float?</b></td> </tr>
+<tr> <td><inline>13</inline></td> <td></td> <td>Yes (= 13)</td> </tr>
+<tr> <td><inline>~13</inline></td> <td></td> <td>Yes (= -13)</td> </tr>
+<tr> <td><inline>2.</inline></td> <td></td> <td>Yes (= 2.0)</td> </tr>
+<tr> <td><inline>~3.14</inline></td> <td></td> <td>Yes (= -3.14)</td> </tr>
+<tr> <td><inline>~180°</inline></td> <td></td> <td>Yes (= -3.14159...)</td> </tr>
+<tr> <td><inline>.609</inline></td> <td></td> <td>No (missing integer part)</td> </tr>
+<tr> <td><inline>-3.1</inline></td> <td></td> <td>No (binary minus sign)</td> </tr>
+<tr> <td><inline>1 000</inline></td> <td></td> <td>No (spaces are not allowed)</td> </tr>
+<tr> <td><inline>180 °</inline></td> <td></td> <td>No (space is not allowed)</td> </tr>
+</table>
+<p></p>
+
+<p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
+
+<h3>Lengths</h3>
+<p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
+
+<p>The following lengths are provided by the system: <inline>mm</inline>, <inline>cm</inline>, <inline>m</inline>, <inline>bp</inline> (big point, also called <em>PostScript point</em>), and <inline>in</inline>.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid length?</b></td> </tr>
+<tr> <td><inline>2.5cm</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>2.5pt</inline></td> <td></td> <td>No (unless the unit <inline>pt</inline> is defined)</td> </tr>
+<tr> <td><inline>~3mm</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>3 mm</inline></td> <td></td> <td>No (space not allowed)</td> </tr>
+<tr> <td><inline>180°mm</inline></td> <td></td> <td>No (degree sign not allowed)</td> </tr>
+</table>
+<p></p>
+
+<p>A new unit is defined as follows.  The point used by TeX is taken as an example.  The new unit will be called <inline>TeXpt</inline>, and the following appears <em>at the beginning of a line</em>:<br>
+<codelines>
+#unit TeXpt = 0.996264009963bp
+</codelines>
+</p>
+
+<h3>Strings</h3>
+<p>The string syntax in Drool is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
+
+<p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
+
+<table cellspacing="5">
+<tr> <td><b>Escape sequence</b></td> <td width="20"></td> <td><b>Resulting character</b></td> </tr>
+<tr> <td><inline>¢¢</inline></td> <td></td> <td>¢</td> </tr>
+<tr> <td><inline>¢`</inline></td> <td></td> <td>`</td> </tr>
+<tr> <td><inline>¢´</inline></td> <td></td> <td>´</td> </tr>
+<tr> <td><inline>¢n</inline></td> <td></td> <td>(a newline)</td> </tr>
+<tr> <td><inline>¢t</inline></td> <td></td> <td>(a tab character)</td> </tr>
+</table>
+<p></p>
+
+<p>It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid string?</b></td> </tr>
+<tr> <td><inline>`Hi there´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Drool string: `Hi there´´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Boing!¢b´</inline></td> <td></td> <td>No (no such escape sequence)</td> </tr>
+<tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td></td> <td>No (Unbalanced delimiter)</td> </tr>
+<tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Dear Drooler¢n¢nMulti-line,,,´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><codelines>`<br>Dear Drooler,<br><br>Multi-line...<br>´</codelines></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><codelines>`Dear Drooler,<br><br>Multi-line...´</codelines></td> <td></td> <td>Yes, but not recommended</td> </tr>
+</table>
+<p></p>
+
+<h3>Booleans</h3>
+<p>The valid Booleans are listed below.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid Boolean?</b></td> </tr>
+<tr> <td><inline>false</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>true</inline></td> <td></td> <td>Yes</td> </tr>
+</table>
+<p></p>
+
+<h3>Identifiers</h3>
+<p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
+
+<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9 and the underscore.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid identifier?</b></td> </tr>
+<tr> <td><inline>foo</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>a_1_2</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>__cplusplus</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>3cm</inline></td> <td></td> <td>No (this begins with a digit and is a length)</td> </tr>
+<tr> <td><inline>_3abc</inline></td> <td></td> <td>No (digit after underscore in first position)</td> </tr>
+</table>
+<p></p>
+
+<h3>Symbols</h3>
+<p>Symbols are entered as the apostrophe followed by an identifier.
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid symbol?</b></td> </tr>
+<tr> <td><inline>'foo</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>'28</inline></td> <td></td> <td>No (<inline>28</inline> is not an identifier)</td> </tr>
+</table>
+<p></p>
+
+<h2>Compound Syntax Constructors</h2>
+<p>This section describes syntax that denotes value construction in terms of other values and expressions, whithout doing so via a usual function call.  Values that are constructed by calling a library function are described elsewhere.  As an exception, class construction is not defined here either.</p>
+
+<h2>Bindings</h2>
+<p>Drool supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a bindings can never be changed.</p>
+
+<h2>The Default Unit</h2>
+<p>The default unit, which is used when constructing smooth paths, is an odd bird.  However, in fact it can be viewed as a function taken from a particular (parameterized) set of functions.  This section gives the details.</p>
+
+<h2>Sequential Construction</h2>
+<p>In order to provide some of the convenience that makes imperative languages popular, without sacrificing the functional binding semantics, Drool offers <em>sequential construction</em>.  This means that a variable can begin as a <em>warm binding</em>, and as long as it remains so the variable can be <em>inserted</em> to (compare the C++ insertion operator).  However, a warm variable does not denote a value, and cannot be used in expressions.  Then, the variable can be <em>frozen</em> (verb).  A <em>frozen</em> (adjective) variable is an ordinary binding.</p>
+
+<h2>Continuations</h2>
+<p>Drool is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
+
+<h2>Function Calls</h2>
+<p>Function calls can be either curried or complete, parameters can be arranged by order or name, and values can be passed either warm or cold.  This section describes these matters.</p>
+
+<h2>Classes and Type Information</h2>
+<p>The user can define new data types, here called <em>classes</em>.  Further, since Drool is dynamically typed, it sometimes becomes important to query and compare types.  Read on! </p>
+
+<h2>Laziness Control</h2>
+<p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  This section describes the simple syntax and semantics used control this matter.</p>
+
+<h1>System Bindings</h1>
+<p>The language Drool comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
+
+<h2>Graphics Functions</h2>
+<p>After all, Drool is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
+
+<p>Remember <funname>immerse</funname> and <funname>facing</funname>, and in particular the <em>scale</em> and <em>distort</em> options to <funname>facing</funname>.  The following is quite nice:
+<codelines>
+  facing: [../facing scale:true distort:true ...]<br>
+</codelines>
+</p>
+
+<h2>Hot Values</h2>
+<p>Warm bindings stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
+
+<h2>Type Objects</h2>
+<p>This section simply contains a listing of the type objects (some of which can be thought of as interfaces) provided by the system.</p>
+
+<h2>LaTeX</h2>
+
+<h2>Miscellaneous</h2>
+<p>Standard stream objects, null objects, mathematical constants, and more...</p>
+
+
+<h1>Built-in Types</h1>
+
+<h2>Simple Types</h2>
+
+<h2>Points and Paths</h2>
+
+<h2>Graphics</h2>
+
+<h2>Other</h2>
+
+</myhtml>

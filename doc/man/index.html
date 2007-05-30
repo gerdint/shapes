@@ -1,0 +1,123 @@
+<use file="/~tidefelt/macros" />
+
+<myhtml>
+<h1>Command Line Interaction with Drool</h1>
+<p>This page is under construction.  My intention is to put the kind of information that belongs in a man page here.</p>
+
+<h2>Notation</h2>
+<p>In the following, let <filename>illustration.drool</filename> be the name of a Drool source.</p>
+
+<h2>Basic Use (and the Meaning of the Last Argument) </h2>
+<p>To run a Drool source through the interpreter, and make the output appear in a file named after the source, run<br>
+<tt>
+drool illustration.<br>
+</tt>
+Note the period at the end of the filename base.  Also note that it is <em>not</em> OK to write out the full name of the source.</p>
+
+<p>Generally, the last command line argument is interpreted this way.</p>
+
+<h2>Preview</h2>
+<p>Drool can launch xpdf to show the resulting graphics.</p>
+
+<h3><tt>--xpdf</tt></h3>
+<p>This is all you have to do!  xpdf will be invoked in remote mode.</p>
+
+<h3><tt>--xpdf-remote remotename</tt></h3>
+<p>Use this to gain precise control of when new xpdf windows are launched.  The default value is the name of the viewed file.</p>
+
+<h3><tt>--xpdf-noserver</tt></h3>
+<p>This turns off remote launching.  This means that a new xpdf window will appear each time.</p>
+
+<h3><tt>--xpdf-reload</tt></h3>
+<p>This will make xpdf reload rather than raise.</p>
+
+<h3><tt>--xpdf-quit</tt></h3>
+<p>This will make the xpdf server quit rather than show your graphics.</p>
+
+<h2>Alternative Source and Destination</h2>
+<p>Of course, there are alternatives to file naming via the last argument.</p>
+
+<h3><tt>--in illustration.drool</tt></h3>
+<p>This specifies the source file.</p>
+
+<h3><tt>--out illustration.pdf</tt></h3>
+<p>This specifies the destination file.</p>
+
+<h3><tt>--texjob illustration.labels</tt></h3>
+<p>This specifies the base name for the TeX job.  This means that</p>
+<ul>
+  <li><filename>illustration.labels.tex</filename></li>
+  <li><filename>illustration.labels0.tex</filename></li>
+  <li><filename>illustration.labels1.tex</filename></li>
+  <li>...</li>
+  <li><filename>illustration.labelsk.tex</filename></li>
+</ul>
+<p>for some <em>k</em> will be used, as will all the related files created by pdfLaTeX.</p>
+
+<h3><tt>--base illustration.</tt></h3>
+<p>This specifies all of the above, that have not been specified otherwise, according to</p>
+<ul>
+  <li>Source:  <filename>illustration.drool</filename></li>
+  <li>Destinaiton:  <filename>illustration.pdf</filename></li>
+  <li>TeX job:  <filename>illustration.labels</filename></li>
+</ul>
+
+<p>The reason that the period is included is that file name completion will typically include the period.</p>
+
+<p>As was said above, the filename base can alternatively be specified without the <tt>--base</tt> tag, by placing it at the end of the list of command line arguments.  The basic use is an example of this.</p>
+
+<h3>stdin and stdout</h3>
+<p>stdin is used for input if no other input is specified.  stdout is used for output if no other output is specified.  For example, the following can be used to generate a small pdf-label from a LaTeX string:<br>
+<tt>
+echo '@&lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf<br>
+</tt>
+</p>
+
+<h3><tt>--whichin</tt></h3>
+<h3><tt>--whichout</tt></h3>
+<h3><tt>--whichtexjob</tt></h3>
+<p>All these commands make a request.  After all command line arguments have been scanned and all filenames have been determined, the requests are processed by writing them as a space-separated list (in order of appearance) on stdout.  After processing the requests, the program terminates.</p>
+
+
+<h2>Debugging</h2>
+<p>The debugging options are presented in order of usability to the average use, with most imortant first.</p>
+
+<h3><tt>--nobacktrace</tt></h3>
+<p>This turns off the backtrace that is output when an error is encountered.  The option affects both errors that are due to errors in the illustration source file, and exceptions raised due to failing consistency checks in the Drool interpreter.</p>
+
+<h3><tt>--evaltrace</tt></h3>
+<p>This turns on evaluation tracing.  This means that the interpreter will output the location of each expression it is about to evaluate together with the trace informaiton in the current continuation.</p>
+
+<h3><tt>--evalbacktrace</tt></h3>
+<p>Like <tt>--evaltrace</tt>, but with a complete backtrace in each step.</p>
+
+<h3><tt>--yydebug</tt></h3>
+<h3><tt>--metapdfdebug</tt></h3>
+<p>The two options do the same thing; they just set the flex/bison debug-flag.</p>
+
+<h3><tt>--nomemclean</tt></h3>
+<p>If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.</p>
+
+<h3><tt>--stats</tt></h3>
+<h3><tt>--nostats</tt></h3>
+<p>Turns on or off diagnostic printing of memory usage (in terms of environments) at the end of execution.</p>
+
+<h2>Garbage Collection</h2>
+<p>In the end there will be some options here, but at the moment garbage collection is never activated, so there is nothing to be specified.</p>
+
+<h2>Other</h2>
+<h3><tt>--nodtminerror</tt></h3>
+<p>By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.</p>
+
+<h3><tt>--noiteration</tt></h3>
+<p>By default, the interpreter strives to maintain a TeX source for all the labels that appear in an illustration, so that all the corresponding labels are found in one pdf file.  This will make the destinaiton file smaller compared to when using many small label-files, but requires pdfLaTeX to be run once more when the complete source is evaluated (because only then are all labels known).  However, the time penalty of running pdfLaTeX once more is too large, the current option may be specified at the price of a bigger destination file (fonts will be included repeatedly).</p>
+
+<p>Note that it may not be possible to somehow scan the program for all labels without invoking pdfLaTeX along the way, since the content of a label may depend on the dimensions of another label, like this (with the obvious definition of the function <funname>width</funname>):<br>
+<tt>
+foo: [TeX `$\int_{0}^{1}$´]<br>
+bar: [TeX ( HotString &lt;&lt; `The label foo has a width of ´ &lt;&lt; [width foo] ) ]<br>
+</tt>
+However, the Drool interpreter really makes an effort to avoid running pdfLaTeX excessively.  Most importantly, it <em>does</em> scan the program for all labels that are created by passing a string literal to the function <funname>TeX</funname> <em>when called by that name</em>.  For this reason, <funname>TeX</funname> is a language keyword rather than an ordinary identifier.</p>
+
+
+</myhtml>
