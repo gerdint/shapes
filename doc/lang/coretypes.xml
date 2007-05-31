@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE coretypes SYSTEM "types.dtd">
+<coretypes>
+  <coretype name="Length">
+    <abstraction>
+      The <typename>Length</typename> type represents a physical length.  Lengths are often specified as a scalar times a unit of length.
+    </abstraction>
+    <construction>
+      The syntax to specify a length is
+      <syntaxlines>
+	<syntaxname>float</syntaxname><syntaxname>identifier</syntaxname>
+      </syntaxlines>
+      where <syntaxname>identifier</syntaxname> must refer to a defined unit of length.
+    </construction>
+  </coretype>
+  <coretype name="Coord2D">
+    <abstraction>
+      The <typename>Coord2D</typename> type is a pair of <typename>Length</typename> ordinates.
+    </abstraction>
+    <construction>
+      The syntax to construct a coordinate object is
+      <syntaxlines>
+	( <syntaxname>Length</syntaxname>, <syntaxname>Length</syntaxname> )
+      </syntaxlines>
+    </construction>
+  </coretype>
+</coretypes>
