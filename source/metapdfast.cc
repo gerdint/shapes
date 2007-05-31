@@ -187,12 +187,6 @@ Ast::Node::Node( const Ast::SourceLocation & loc )
 Ast::Node::~Node( )
 { }
 
-void
-Ast::Node::setParent( Ast::Node * parent )
-{
-  parent_ = parent;
-}
-
 Ast::Expression::Expression( const Ast::SourceLocation & loc )
   : Ast::Node( loc ), immediate_( false )
 { }

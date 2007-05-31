@@ -25,7 +25,7 @@ namespace MetaPDF
     public:
       UnaryPrefixExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr );
       virtual ~UnaryPrefixExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
       virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg ) const;
     };
@@ -38,7 +38,7 @@ namespace MetaPDF
     public:
       UnaryPostfixExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr );
       virtual ~UnaryPostfixExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
       virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg ) const;
     };
@@ -52,7 +52,7 @@ namespace MetaPDF
     public:
       BinaryInfixExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr1,  Ast::Expression * expr2 );
       virtual ~BinaryInfixExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
       virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg1, const Lang::Value * arg2 ) const;
       const Ast::Expression * get_expr2( ) const { return expr2_; } /* to be used by the continuation */

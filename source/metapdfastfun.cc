@@ -496,36 +496,38 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
 }
 
 void
-Ast::ArgListExprs::analyze( )
+Ast::ArgListExprs::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* Traverse children
    */
   {
     typedef typeof *orderedExprs_ ListType;
     for( ListType::iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
       {
-	(*i)->analyze( );
+	(*i)->analyze( parent_ );
       }
   }
   {
     typedef typeof *namedExprs_ ListType;
     for( ListType::iterator i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
       {
-	i->second->analyze( );
+	i->second->analyze( parent_ );
       }
   }
   {
     typedef typeof *orderedStates_ ListType;
     for( ListType::iterator i = orderedStates_->begin( ); i != orderedStates_->end( ); ++i )
       {
-	(*i)->analyze( );
+	(*i)->analyze( parent_ );
       }
   }
   {
     typedef typeof *namedStates_ ListType;
     for( ListType::iterator i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
       {
-	i->second->analyze( );
+	i->second->analyze( parent_ );
       }
   }
   
@@ -899,13 +901,15 @@ Ast::CallExpr::~CallExpr( )
 
 
 void
-Ast::CallExpr::analyze( )
+Ast::CallExpr::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   if( funExpr_ != 0 )
     {
-      funExpr_->analyze( );
+      funExpr_->analyze( this );
     }
-  argList_->analyze( );
+  argList_->analyze( this );
 
   imperative_ = argList_->imperative_;
   if( funExpr_ != 0 )
@@ -978,9 +982,11 @@ Ast::UnionExpr::~UnionExpr( )
 
 
 void
-Ast::UnionExpr::analyze( )
+Ast::UnionExpr::analyze( Ast::Node * parent )
 {
-  argList_->analyze( );
+  parent_ = parent;
+  
+  argList_->analyze( this );
 
   imperative_ = argList_->imperative_;
 }
@@ -1085,10 +1091,12 @@ Ast::CallSplitExpr::~CallSplitExpr( )
 
 
 void
-Ast::CallSplitExpr::analyze( )
+Ast::CallSplitExpr::analyze( Ast::Node * parent )
 {
-  funExpr_->analyze( );
-  argList_->analyze( );
+  parent_ = parent;
+
+  funExpr_->analyze( this );
+  argList_->analyze( this );
 
   imperative_ = funExpr_->imperative_ || argList_->imperative_;
 }
@@ -1113,8 +1121,10 @@ Ast::DummyExpression::~DummyExpression( )
 { }
 
 void
-Ast::DummyExpression::analyze( )
+Ast::DummyExpression::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 

@@ -67,9 +67,11 @@ Ast::LetDynamicECExpr::~LetDynamicECExpr( )
 }
 
 void
-Ast::LetDynamicECExpr::analyze( )
+Ast::LetDynamicECExpr::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
 
   imperative_ = expr_->imperative_;
 }

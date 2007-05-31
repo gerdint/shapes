@@ -88,13 +88,15 @@ Ast::CodeBracket::~CodeBracket( )
 
 
 void
-Ast::CodeBracket::analyze( )
+Ast::CodeBracket::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   {
     typedef list< Ast::Node * >::iterator I;
     for( I i = nodes_->begin( ); i != nodes_->end( ); ++i )
       {
-	(*i)->analyze( );
+	(*i)->analyze( this );
       }
   }
 
@@ -248,8 +250,10 @@ Ast::LexiographicVariable::~LexiographicVariable( )
 }
 
 void
-Ast::LexiographicVariable::analyze( )
+Ast::LexiographicVariable::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the binding here instead of at runtime.
    */
 
@@ -280,9 +284,11 @@ Ast::EvalOutsideExpr::~EvalOutsideExpr( )
 }
 
 void
-Ast::EvalOutsideExpr::analyze( )
+Ast::EvalOutsideExpr::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
 
   imperative_ = expr_->imperative_;
 }
@@ -330,8 +336,10 @@ Ast::SpecialLength::~SpecialLength( )
 { }
 
 void
-Ast::SpecialLength::analyze( )
+Ast::SpecialLength::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 
@@ -395,8 +403,10 @@ Ast::DynamicVariable::~DynamicVariable( )
 }
 
 void
-Ast::DynamicVariable::analyze( )
+Ast::DynamicVariable::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and compute the key here instead of at runtime.
    */
   
@@ -489,9 +499,11 @@ Ast::DynamicBindingExpression::~DynamicBindingExpression( )
 }
 
 void
-Ast::DynamicBindingExpression::analyze( )
+Ast::DynamicBindingExpression::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
   /* It would make sense to check the reference and compute the key here instead of at runtime.
    */
 
@@ -537,8 +549,10 @@ Ast::DynamicStateBindingExpression::~DynamicStateBindingExpression( )
 }
 
 void
-Ast::DynamicStateBindingExpression::analyze( )
+Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check references here...
    */
   imperative_ = false;
@@ -598,10 +612,12 @@ Ast::WithDynamicExpr::~WithDynamicExpr( )
 { }
 
 void
-Ast::WithDynamicExpr::analyze( )
+Ast::WithDynamicExpr::analyze( Ast::Node * parent )
 {
-  bindings_->analyze( );
-  expr_->analyze( );
+  parent_ = parent;
+
+  bindings_->analyze( this );
+  expr_->analyze( this );
 
   imperative_ = bindings_->imperative_ || expr_->imperative_;
 }
@@ -635,9 +651,11 @@ Ast::DynamicVariableDecl::~DynamicVariableDecl( )
 { }
 
 void
-Ast::DynamicVariableDecl::analyze( )
+Ast::DynamicVariableDecl::analyze( Ast::Node * parent )
 {
-  impl_->analyze( );
+  parent_ = parent;
+
+  impl_->analyze( this );
   /* It would make sense to check the reference and ...
    */
 
@@ -731,8 +749,10 @@ Ast::DynamicStateDecl::~DynamicStateDecl( )
 
 
 void
-Ast::DynamicStateDecl::analyze( )
+Ast::DynamicStateDecl::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and ...
    */
 
@@ -811,9 +831,11 @@ Ast::DefineVariable::~DefineVariable( )
 
 
 void
-Ast::DefineVariable::analyze( )
+Ast::DefineVariable::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
   /* It would make sense to check the reference and ...
    */
 
@@ -907,9 +929,11 @@ Ast::StructSplitReference::setStruct( Ast::SourceLocation structLoc, size_t ** s
 }
 
 void
-Ast::StructSplitReference::analyze( )
+Ast::StructSplitReference::analyze( Ast::Node * parent )
 {
-  defaultExpr_->analyze( );
+  parent_ = parent;
+
+  defaultExpr_->analyze( this );
 
   imperative_ = defaultExpr_->imperative_;
 }
@@ -968,8 +992,10 @@ Ast::StructSplitSink::setStruct( Ast::SourceLocation structLoc, size_t ** struct
 }
 
 void
-Ast::StructSplitSink::analyze( )
+Ast::StructSplitSink::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 
@@ -994,8 +1020,10 @@ Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
 { }
 
 void
-Ast::AssertNoSinkNeeded::analyze( )
+Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 
@@ -1064,8 +1092,10 @@ Ast::LexiographicState::~LexiographicState( )
 }
 
 void
-Ast::LexiographicState::analyze( )
+Ast::LexiographicState::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and...
    */
   imperative_ = true;
@@ -1098,8 +1128,10 @@ Ast::DynamicState::~DynamicState( )
 }
 
 void
-Ast::DynamicState::analyze( )
+Ast::DynamicState::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and...
    */
   imperative_ = true;
@@ -1127,9 +1159,11 @@ Ast::IntroduceState::~IntroduceState( )
 
 
 void
-Ast::IntroduceState::analyze( )
+Ast::IntroduceState::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
 
   /* It would make sense to check the reference and...
    */
@@ -1160,9 +1194,11 @@ Ast::Insertion::~Insertion( )
 { }
 
 void
-Ast::Insertion::analyze( )
+Ast::Insertion::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
 
   /* It would make sense to check the reference and...
    */
@@ -1194,8 +1230,10 @@ Ast::Freeze::~Freeze( )
 }
 
 void
-Ast::Freeze::analyze( )
+Ast::Freeze::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and...
    */
 
@@ -1228,9 +1266,11 @@ Ast::Peek::~Peek( )
 }
 
 void
-Ast::Peek::analyze( )
+Ast::Peek::analyze( Ast::Node * parent )
 {
-  stateRef_->analyze( );
+  parent_ = parent;
+
+  stateRef_->analyze( this );
 
   imperative_ = true;
 }
@@ -1252,9 +1292,11 @@ Ast::DynamicExpression::~DynamicExpression( )
 { }
 
 void
-Ast::DynamicExpression::analyze( )
+Ast::DynamicExpression::analyze( Ast::Node * parent )
 {
-  expr_->analyze( );
+  parent_ = parent;
+
+  expr_->analyze( this );
 
   if( expr_->imperative_ )
     {
@@ -1289,8 +1331,10 @@ Ast::LexiographicType::~LexiographicType( )
 }
 
 void
-Ast::LexiographicType::analyze( )
+Ast::LexiographicType::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   /* It would make sense to check the reference and...
    */
   imperative_ = false;

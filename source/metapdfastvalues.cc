@@ -25,8 +25,10 @@ Ast::Constant::~Constant( )
 { }
 
 void
-Ast::Constant::analyze( )
+Ast::Constant::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 
@@ -50,10 +52,12 @@ Ast::PolarHandle2DExpr::~PolarHandle2DExpr( )
 }
 
 void
-Ast::PolarHandle2DExpr::analyze( )
+Ast::PolarHandle2DExpr::analyze( Ast::Node * parent )
 {
-  rExpr_->analyze( );
-  aExpr_->analyze( );
+  parent_ = parent;
+
+  rExpr_->analyze( this );
+  aExpr_->analyze( this );
 
   imperative_ = rExpr_->imperative_ || aExpr_->imperative_;
 }
@@ -108,9 +112,11 @@ Ast::PolarHandle2DExprFree_a::~PolarHandle2DExprFree_a( )
 }
 
 void
-Ast::PolarHandle2DExprFree_a::analyze( )
+Ast::PolarHandle2DExprFree_a::analyze( Ast::Node * parent )
 {
-  rExpr_->analyze( );
+  parent_ = parent;
+
+  rExpr_->analyze( this );
 
   imperative_ = rExpr_->imperative_;
 }
@@ -134,8 +140,10 @@ Ast::EmptyExpression::~EmptyExpression( )
 { }
 
 void
-Ast::EmptyExpression::analyze( )
+Ast::EmptyExpression::analyze( Ast::Node * parent )
 {
+  parent_ = parent;
+
   imperative_ = false;
 }
 

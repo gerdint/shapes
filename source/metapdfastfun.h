@@ -65,6 +65,7 @@ namespace MetaPDF
     class ArgListExprs
     {
       bool exprOwner_;
+      Ast::Node * parent_;
     public:
       std::list< Ast::Expression * > * orderedExprs_;
       std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs_;
@@ -88,7 +89,7 @@ namespace MetaPDF
 		    std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
-      void analyze( );
+      void analyze( Ast::Node * parent );
 
       ConstIterator begin( ) const;
       
@@ -228,7 +229,7 @@ namespace MetaPDF
       CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       virtual ~CallExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -239,7 +240,7 @@ namespace MetaPDF
       
       UnionExpr( const Ast::SourceLocation & loc, Ast::ArgListExprs * argList );
       virtual ~UnionExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -252,7 +253,7 @@ namespace MetaPDF
     public:      
       CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false );
       virtual ~CallSplitExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -262,7 +263,7 @@ namespace MetaPDF
       DummyExpression( );
       DummyExpression( const Ast::SourceLocation & loc );
       virtual ~DummyExpression( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
   }

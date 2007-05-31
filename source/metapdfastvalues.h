@@ -16,7 +16,7 @@ namespace MetaPDF
       Constant( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Value > val );
       Constant( const Ast::SourceLocation & loc, const Lang::Value * val );
       virtual ~Constant( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -27,7 +27,7 @@ namespace MetaPDF
     public:
       PolarHandle2DExpr( const Ast::SourceLocation & loc, Ast::Expression * rExpr, Ast::Expression * aExpr );
       virtual ~PolarHandle2DExpr( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -37,7 +37,7 @@ namespace MetaPDF
     public:
       PolarHandle2DExprFree_a( const Ast::SourceLocation & loc, Ast::Expression * rExpr );
       virtual ~PolarHandle2DExprFree_a( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -48,7 +48,7 @@ namespace MetaPDF
     public:
       EmptyExpression( const Ast::SourceLocation & loc );
       virtual ~EmptyExpression( );
-      virtual void analyze( );
+      virtual void analyze( Ast::Node * parent );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
   
