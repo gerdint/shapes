@@ -112,6 +112,7 @@ namespace MetaPDF
       
       void push_exprs( Ast::ArgListExprs * args ) const;
       
+      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );      
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };

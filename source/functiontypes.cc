@@ -1229,6 +1229,12 @@ Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & ar
 }
 
 void
+Lang::Function::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+{
+  throw Exceptions::InternalError( "A sytax function is not overriding the analyze method." );
+}
+
+void
 Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Kernel::ValueRef & arg2, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::Arguments args = this->newCurriedArguments( );

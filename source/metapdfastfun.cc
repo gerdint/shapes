@@ -573,6 +573,18 @@ Ast::FunctionFunction::push_exprs( Ast::ArgListExprs * args ) const
 }
 
 void
+Ast::FunctionFunction::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & parentEnv )
+{
+  Kernel::AnalysisEnvironment env( parentEnv, formals_->argumentOrder_, formals_->stateOrder_ );
+  if( ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) == 0 )
+    {
+      env.activateFunctionBoundary( );
+    }
+
+  body_->analyze( parent, env );
+}
+
+void
 Ast::FunctionFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->cont_;
@@ -908,6 +920,10 @@ Ast::CallExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & 
   if( funExpr_ != 0 )
     {
       funExpr_->analyze( this, env );
+    }
+  else
+    {
+      constFun_->analyse( this, env );
     }
   argList_->analyze( this, env );
 

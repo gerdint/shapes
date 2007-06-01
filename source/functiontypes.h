@@ -243,6 +243,7 @@ namespace MetaPDF
     public:
       Function( Kernel::EvaluatedFormals * formals );
       virtual ~Function( );
+      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );      
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const = 0;
       virtual Kernel::ValueRef transformed( const Lang::Transform2D & tf, Kernel::ValueRef self ) const;
       virtual bool isTransforming( ) const = 0;
@@ -255,7 +256,7 @@ namespace MetaPDF
       virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Ast::SourceLocation & callLoc ) const;
       virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, const Ast::SourceLocation & callLoc ) const;
       virtual void call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Kernel::VariableHandle & arg2, Kernel::StateHandle state, const Ast::SourceLocation & callLoc ) const;
-      
+
       TYPEINFODECL;
       DISPATCHDECL;
     private:
