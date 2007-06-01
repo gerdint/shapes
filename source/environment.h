@@ -245,26 +245,20 @@ namespace MetaPDF
       Kernel::Environment * getParent( );
       const Kernel::Environment * getParent( ) const;
       void clear( );
-
+      Kernel::AnalysisEnvironment * newAnalysisEnvironment( ) const;
+      
       void clear_gcMarked( ) { gcMarked_ = false; }
       bool gcMarked( ) const { return gcMarked_; }
       void gcMark( Kernel::GCMarkedSet & marked );
 
       static void collect( std::list< Kernel::Environment * > & garbageArea );
 
-      size_t findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const;
-      LexicalKey findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const;
       void define( size_t pos, const Kernel::VariableHandle & val );
       void lookup( const LexicalKey & lexKey, Kernel::EvalState * evalState ) const;
       void lookup( size_t pos, Kernel::EvalState * evalState ) const;
       VariableHandle getVarHandle( const LexicalKey & lexKey );
       VariableHandle getVarHandle( size_t pos );
 
-      // These only differ from those above by the error messages they may generate.
-      LexicalKey findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const;
-
-      size_t findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
-      LexicalKey findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const;
       void introduceState( size_t pos, Kernel::State * state );
       void freeze( size_t pos, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
       void peek( const LexicalKey & lexKey, Kernel::EvalState * evalState, const Ast::SourceLocation & loc );
@@ -272,18 +266,13 @@ namespace MetaPDF
       StateHandle getStateHandle( const LexicalKey & lexKey );
       StateHandle getStateHandle( size_t pos );
 
-      size_t findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const;
       void defineDynamic( const char * debugName, size_t pos, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
 
-      LexicalKey findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const;
       const DynamicVariableProperties & lookupDynamicVariable( const LexicalKey & lexKey ) const;
       const DynamicVariableProperties & lookupDynamicVariable( size_t pos ) const;
 
-
-      size_t findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
       void defineDynamicState( const char * debugName, size_t pos, Kernel::EvalState * evalState, Ast::StateReference * defaultState );
       
-      LexicalKey findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const;
       const DynamicStateProperties & lookupDynamicState( const LexicalKey & lexKey ) const;
       const DynamicStateProperties & lookupDynamicState( size_t pos ) const;
 
@@ -303,6 +292,49 @@ namespace MetaPDF
       const char * reverseMapDynamic( size_t pos ) const;
       const char * reverseMapState( size_t pos ) const;
       const char * reverseMapDynamicState( size_t pos ) const;
+    };
+
+    class AnalysisEnvironment
+    {
+    public:
+      typedef Kernel::Environment::LecicalKey LexicalKey;
+    private:
+      const AnalysisEnvironment & parent_;
+      typedef std::map< const char *, size_t, charPtrLess > MapType; /* this is not constant to simplify initialization of the global environment */
+
+      const MapType * bindings_;
+      const MapType * dynamicKeyBindings_;
+      const MapType * stateBindings_;
+      const MapType * dynamicStateKeyBindings_;
+
+      bool functionBoundary_;
+
+    public:
+      AnalysisEnvironment( );
+      AnalysisEnvironment( const Kernel::AnalysisEnvironment & parent, const MapType * bindings, const MapType * stateBindings );
+      ~AnalysisEnvironment( );
+      const Kernel::AnalysisEnvironment & getParent( ) const;
+      void setupDynamicKeyVariables( const MapType * _dynamicKeyBindings );
+      void setupDynamicStateKeyVariables( const MapType * _dynamicStateKeyBindings );
+      void activateFunctionBoundary( );
+
+      size_t findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const;
+      LexicalKey findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const;
+
+      // These only differ from those above by the error messages they may generate.
+      LexicalKey findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const;
+
+      size_t findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
+      LexicalKey findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const;
+
+      size_t findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const;
+      LexicalKey findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const;
+
+      size_t findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
+      LexicalKey findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const;
+    
+      bool isBaseEnvironment( ) const { return parent_ == 0; };
+
     };
 
   }

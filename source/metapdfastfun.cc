@@ -496,7 +496,7 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
 }
 
 void
-Ast::ArgListExprs::analyze( Ast::Node * parent )
+Ast::ArgListExprs::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -901,15 +901,15 @@ Ast::CallExpr::~CallExpr( )
 
 
 void
-Ast::CallExpr::analyze( Ast::Node * parent )
+Ast::CallExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
   if( funExpr_ != 0 )
     {
-      funExpr_->analyze( this );
+      funExpr_->analyze( this, env );
     }
-  argList_->analyze( this );
+  argList_->analyze( this, env );
 
   imperative_ = argList_->imperative_;
   if( funExpr_ != 0 )
@@ -982,11 +982,11 @@ Ast::UnionExpr::~UnionExpr( )
 
 
 void
-Ast::UnionExpr::analyze( Ast::Node * parent )
+Ast::UnionExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
   
-  argList_->analyze( this );
+  argList_->analyze( this, env );
 
   imperative_ = argList_->imperative_;
 }
@@ -1091,12 +1091,12 @@ Ast::CallSplitExpr::~CallSplitExpr( )
 
 
 void
-Ast::CallSplitExpr::analyze( Ast::Node * parent )
+Ast::CallSplitExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  funExpr_->analyze( this );
-  argList_->analyze( this );
+  funExpr_->analyze( this, env );
+  argList_->analyze( this, env );
 
   imperative_ = funExpr_->imperative_ || argList_->imperative_;
 }
@@ -1121,7 +1121,7 @@ Ast::DummyExpression::~DummyExpression( )
 { }
 
 void
-Ast::DummyExpression::analyze( Ast::Node * parent )
+Ast::DummyExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 

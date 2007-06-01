@@ -27,6 +27,8 @@ namespace MetaPDF
     class Environment;
     typedef Environment * PassedEnv;
     typedef std::set< Environment * > GCMarkedSet;
+
+    class AnalysisEnvironment;
     
     class DynamicEnvironment;
     typedef RefCountPtr< DynamicEnvironment > PassedDyn;

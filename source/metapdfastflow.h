@@ -32,7 +32,7 @@ namespace MetaPDF
   public:
     LetDynamicECExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & idLoc, const char * id, Expression * expr );
     virtual ~LetDynamicECExpr( );
-    virtual void analyze( Ast::Node * parent );
+    virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
     virtual void eval( Kernel::EvalState * evalState ) const;
   };
 

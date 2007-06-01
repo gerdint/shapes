@@ -898,8 +898,8 @@ ExprExceptConstStrings
   Ast::EvalSymbolFunction * res = new Ast::EvalSymbolFunction( @$, $2 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 | T_dynamic_identifier
 {
@@ -1097,18 +1097,18 @@ NamedLetExpr
     res->push_exprs( args );
     size_t ** pos = new size_t * ( 0 );
     bracket->push_back( new Ast::DefineVariable( @3,
-						    $3,
-						    new Ast::CallExpr( @$,
-									   RefCountPtr< const Lang::Function >( res ),
-									   args ),
-						    pos ) );
+						 $3,
+						 new Ast::CallExpr( @$,
+								    RefCountPtr< const Lang::Function >( res ),
+								    args ),
+						 pos ) );
   }
 
   {
     Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
     bracket->push_back( new Ast::CallExpr( @$,
-					       new Ast::LexiographicVariable( @3, $3, key ),
-					       new Ast::ArgListExprs( true ) ) );
+					   new Ast::LexiographicVariable( @3, $3, key ),
+					   new Ast::ArgListExprs( true ) ) );
   }
 
   $$ = new Ast::CodeBracket( @$, bracket );
@@ -1326,8 +1326,8 @@ SuperMemberReference
   Ast::ProtectedMemberReferenceFunction * res = new Ast::ProtectedMemberReferenceFunction( @$, @2, $3, @6, $6 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 ;
 
@@ -1348,10 +1348,10 @@ SuperCall
   Ast::ProtectedMethodReferenceFunction * res = new Ast::ProtectedMethodReferenceFunction( @$, @3, $4, $7 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      new Ast::CallExpr( @3,
-						     RefCountPtr< const Lang::Function >( res ),
-						     args ),
-			      $8 );
+			  new Ast::CallExpr( @3,
+					     RefCountPtr< const Lang::Function >( res ),
+					     args ),
+			  $8 );
 }
 | '[' '(' '#' ')' '.' MethodIdentifier ArgList ']'
 {
@@ -1359,10 +1359,10 @@ SuperCall
   Ast::ProtectedMethodReferenceFunction * res = new Ast::ProtectedMethodReferenceFunction( @$, @3, 0, $6 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      new Ast::CallExpr( @3,
-						     RefCountPtr< const Lang::Function >( res ),
-						     args ),
-			      $7 );
+			  new Ast::CallExpr( @3,
+					     RefCountPtr< const Lang::Function >( res ),
+					     args ),
+			  $7 );
 }
 ;
 
@@ -1387,8 +1387,8 @@ Class
   Ast::ClassFunction * res = new Ast::ClassFunction( @$, $4, $5, $9, $11, $12 );
   res->push_exprs( args );
   $$ = new Ast::CallExpr( @$,
-			      RefCountPtr< const Lang::Function >( res ),
-			      args );
+			  RefCountPtr< const Lang::Function >( res ),
+			  args );
 }
 ;
 
@@ -1614,9 +1614,9 @@ MethodDeclaration
   Ast::FunctionFunction * res = new Ast::FunctionFunction( @$, $4, body, $6 );
   res->push_exprs( args );
   $$ = new Ast::MemberDeclaration( @$, $3, new Ast::CallExpr( @$,
-								      RefCountPtr< const Lang::Function >( res ),
-												   args ),
-				       Ast::MEMBER_CONST | Ast::MEMBER_METHOD | ( (($6 & Ast::FUNCTION_TRANSFORMING) != 0) ? Ast::MEMBER_TRANSFORMING : 0 ) );
+							      RefCountPtr< const Lang::Function >( res ),
+							      args ),
+				   Ast::MEMBER_CONST | Ast::MEMBER_METHOD | ( (($6 & Ast::FUNCTION_TRANSFORMING) != 0) ? Ast::MEMBER_TRANSFORMING : 0 ) );
 }
 ;
 

@@ -790,7 +790,12 @@ main( int argc, char ** argv )
   try
     {
       metapdfparse( );
-      Ast::theProgram->analyze( 0 );
+      Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
+      {
+	Kernel::AnalysisEnvironment * tmpEnv( baseEnv->newAnalysisEnvironment( ) );
+	Ast::theProgram->analyze( 0, *tmpEnv );
+	delete tmpEnv;
+      }
       // The display unit is looked up after the input is scanned, so the user may use her own units
       Interaction::displayUnitFactor = Ast::theMetaPDFScanner.lookupUnitFactor( Interaction::displayUnitName );
       if( Interaction::displayUnitFactor <= 0 )
@@ -800,7 +805,6 @@ main( int argc, char ** argv )
 	}
       performIterativeStartup( texJobName );
       Kernel::theTeXLabelManager.settexJobName( texJobName );
-      Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
       RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
       Kernel::GraphicsState initState( *graphicsState );
       Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );

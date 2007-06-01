@@ -54,11 +54,11 @@ Ast::UnaryPrefixExpr::~UnaryPrefixExpr( )
 }
 
 void
-Ast::UnaryPrefixExpr::analyze( Ast::Node * parent )
+Ast::UnaryPrefixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
 
   imperative_ = expr_->imperative_;
 }
@@ -89,11 +89,11 @@ Ast::UnaryPostfixExpr::~UnaryPostfixExpr( )
 }
 
 void
-Ast::UnaryPostfixExpr::analyze( Ast::Node * parent )
+Ast::UnaryPostfixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
 
   imperative_ = expr_->imperative_;
 }
@@ -182,12 +182,12 @@ Ast::BinaryInfixExpr::~BinaryInfixExpr( )
 }
 
 void
-Ast::BinaryInfixExpr::analyze( Ast::Node * parent )
+Ast::BinaryInfixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
   
-  expr1_->analyze( this );
-  expr2_->analyze( this );
+  expr1_->analyze( this, env );
+  expr2_->analyze( this, env );
 
   imperative_ = expr1_->imperative_ || expr2_->imperative_;
 }

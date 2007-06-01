@@ -88,15 +88,22 @@ Ast::CodeBracket::~CodeBracket( )
 
 
 void
-Ast::CodeBracket::analyze( Ast::Node * parent )
+Ast::CodeBracket::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & parentEnv )
 {
   parent_ = parent;
+
+  Kernel::AnalysisEnvironment env( parentEnv, argumentOrder_, stateOrder_ );
+  if( dynamicMap_ != 0 )
+    {
+      env_.setupDynamicKeyVariables( dynamicMap_ );
+    }
+
 
   {
     typedef list< Ast::Node * >::iterator I;
     for( I i = nodes_->begin( ); i != nodes_->end( ); ++i )
       {
-	(*i)->analyze( this );
+	(*i)->analyze( this, env );
       }
   }
 
@@ -250,7 +257,7 @@ Ast::LexiographicVariable::~LexiographicVariable( )
 }
 
 void
-Ast::LexiographicVariable::analyze( Ast::Node * parent )
+Ast::LexiographicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -284,11 +291,11 @@ Ast::EvalOutsideExpr::~EvalOutsideExpr( )
 }
 
 void
-Ast::EvalOutsideExpr::analyze( Ast::Node * parent )
+Ast::EvalOutsideExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env.getParent( ) );
 
   imperative_ = expr_->imperative_;
 }
@@ -336,7 +343,7 @@ Ast::SpecialLength::~SpecialLength( )
 { }
 
 void
-Ast::SpecialLength::analyze( Ast::Node * parent )
+Ast::SpecialLength::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -403,7 +410,7 @@ Ast::DynamicVariable::~DynamicVariable( )
 }
 
 void
-Ast::DynamicVariable::analyze( Ast::Node * parent )
+Ast::DynamicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -499,11 +506,11 @@ Ast::DynamicBindingExpression::~DynamicBindingExpression( )
 }
 
 void
-Ast::DynamicBindingExpression::analyze( Ast::Node * parent )
+Ast::DynamicBindingExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
   /* It would make sense to check the reference and compute the key here instead of at runtime.
    */
 
@@ -549,7 +556,7 @@ Ast::DynamicStateBindingExpression::~DynamicStateBindingExpression( )
 }
 
 void
-Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent )
+Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -612,12 +619,12 @@ Ast::WithDynamicExpr::~WithDynamicExpr( )
 { }
 
 void
-Ast::WithDynamicExpr::analyze( Ast::Node * parent )
+Ast::WithDynamicExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  bindings_->analyze( this );
-  expr_->analyze( this );
+  bindings_->analyze( this, env );
+  expr_->analyze( this, env );
 
   imperative_ = bindings_->imperative_ || expr_->imperative_;
 }
@@ -651,11 +658,11 @@ Ast::DynamicVariableDecl::~DynamicVariableDecl( )
 { }
 
 void
-Ast::DynamicVariableDecl::analyze( Ast::Node * parent )
+Ast::DynamicVariableDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  impl_->analyze( this );
+  impl_->analyze( this, env );
   /* It would make sense to check the reference and ...
    */
 
@@ -749,7 +756,7 @@ Ast::DynamicStateDecl::~DynamicStateDecl( )
 
 
 void
-Ast::DynamicStateDecl::analyze( Ast::Node * parent )
+Ast::DynamicStateDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -831,11 +838,11 @@ Ast::DefineVariable::~DefineVariable( )
 
 
 void
-Ast::DefineVariable::analyze( Ast::Node * parent )
+Ast::DefineVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
   /* It would make sense to check the reference and ...
    */
 
@@ -929,11 +936,11 @@ Ast::StructSplitReference::setStruct( Ast::SourceLocation structLoc, size_t ** s
 }
 
 void
-Ast::StructSplitReference::analyze( Ast::Node * parent )
+Ast::StructSplitReference::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  defaultExpr_->analyze( this );
+  defaultExpr_->analyze( this, env );
 
   imperative_ = defaultExpr_->imperative_;
 }
@@ -992,7 +999,7 @@ Ast::StructSplitSink::setStruct( Ast::SourceLocation structLoc, size_t ** struct
 }
 
 void
-Ast::StructSplitSink::analyze( Ast::Node * parent )
+Ast::StructSplitSink::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -1020,7 +1027,7 @@ Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
 { }
 
 void
-Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent )
+Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -1092,7 +1099,7 @@ Ast::LexiographicState::~LexiographicState( )
 }
 
 void
-Ast::LexiographicState::analyze( Ast::Node * parent )
+Ast::LexiographicState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -1128,7 +1135,7 @@ Ast::DynamicState::~DynamicState( )
 }
 
 void
-Ast::DynamicState::analyze( Ast::Node * parent )
+Ast::DynamicState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -1159,11 +1166,11 @@ Ast::IntroduceState::~IntroduceState( )
 
 
 void
-Ast::IntroduceState::analyze( Ast::Node * parent )
+Ast::IntroduceState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
 
   /* It would make sense to check the reference and...
    */
@@ -1194,11 +1201,11 @@ Ast::Insertion::~Insertion( )
 { }
 
 void
-Ast::Insertion::analyze( Ast::Node * parent )
+Ast::Insertion::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
 
   /* It would make sense to check the reference and...
    */
@@ -1230,7 +1237,7 @@ Ast::Freeze::~Freeze( )
 }
 
 void
-Ast::Freeze::analyze( Ast::Node * parent )
+Ast::Freeze::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
@@ -1266,11 +1273,11 @@ Ast::Peek::~Peek( )
 }
 
 void
-Ast::Peek::analyze( Ast::Node * parent )
+Ast::Peek::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  stateRef_->analyze( this );
+  stateRef_->analyze( this, env );
 
   imperative_ = true;
 }
@@ -1292,11 +1299,11 @@ Ast::DynamicExpression::~DynamicExpression( )
 { }
 
 void
-Ast::DynamicExpression::analyze( Ast::Node * parent )
+Ast::DynamicExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
-  expr_->analyze( this );
+  expr_->analyze( this, env );
 
   if( expr_->imperative_ )
     {
@@ -1331,7 +1338,7 @@ Ast::LexiographicType::~LexiographicType( )
 }
 
 void
-Ast::LexiographicType::analyze( Ast::Node * parent )
+Ast::LexiographicType::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
 {
   parent_ = parent;
 
