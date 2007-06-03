@@ -496,7 +496,7 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
 }
 
 void
-Ast::ArgListExprs::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::ArgListExprs::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -506,28 +506,28 @@ Ast::ArgListExprs::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironmen
     typedef typeof *orderedExprs_ ListType;
     for( ListType::iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
       {
-	(*i)->analyze( parent_ );
+	(*i)->analyze( parent_, env );
       }
   }
   {
     typedef typeof *namedExprs_ ListType;
     for( ListType::iterator i = namedExprs_->begin( ); i != namedExprs_->end( ); ++i )
       {
-	i->second->analyze( parent_ );
+	i->second->analyze( parent_, env );
       }
   }
   {
     typedef typeof *orderedStates_ ListType;
     for( ListType::iterator i = orderedStates_->begin( ); i != orderedStates_->end( ); ++i )
       {
-	(*i)->analyze( parent_ );
+	(*i)->analyze( parent_, env );
       }
   }
   {
     typedef typeof *namedStates_ ListType;
     for( ListType::iterator i = namedStates_->begin( ); i != namedStates_->end( ); ++i )
       {
-	i->second->analyze( parent_ );
+	i->second->analyze( parent_, env );
       }
   }
   
@@ -573,12 +573,12 @@ Ast::FunctionFunction::push_exprs( Ast::ArgListExprs * args ) const
 }
 
 void
-Ast::FunctionFunction::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & parentEnv )
+Ast::FunctionFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * parentEnv )
 {
-  Kernel::AnalysisEnvironment env( parentEnv, formals_->argumentOrder_, formals_->stateOrder_ );
+  Ast::AnalysisEnvironment * env( new Ast::AnalysisEnvironment( Ast::theAnalysisEnvironmentList, parentEnv, formals_->argumentOrder_, formals_->stateOrder_ ) );
   if( ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) == 0 )
     {
-      env.activateFunctionBoundary( );
+      env->activateFunctionBoundary( );
     }
 
   body_->analyze( parent, env );
@@ -913,7 +913,7 @@ Ast::CallExpr::~CallExpr( )
 
 
 void
-Ast::CallExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::CallExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -923,7 +923,7 @@ Ast::CallExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & 
     }
   else
     {
-      constFun_->analyse( this, env );
+      const_cast< Lang::Function * >( constFun_.getPtr( ) )->analyze( this, env );
     }
   argList_->analyze( this, env );
 
@@ -998,7 +998,7 @@ Ast::UnionExpr::~UnionExpr( )
 
 
 void
-Ast::UnionExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::UnionExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
   
@@ -1107,7 +1107,7 @@ Ast::CallSplitExpr::~CallSplitExpr( )
 
 
 void
-Ast::CallSplitExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::CallSplitExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1137,7 +1137,7 @@ Ast::DummyExpression::~DummyExpression( )
 { }
 
 void
-Ast::DummyExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DummyExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 

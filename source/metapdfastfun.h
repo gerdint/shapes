@@ -89,7 +89,7 @@ namespace MetaPDF
 		    std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates );
       ArgListExprs( size_t numberOfOrderedDummyExprs );
       ~ArgListExprs( );
-      void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
+      void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 
       ConstIterator begin( ) const;
       
@@ -112,7 +112,7 @@ namespace MetaPDF
       
       void push_exprs( Ast::ArgListExprs * args ) const;
       
-      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );      
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );      
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
@@ -230,7 +230,7 @@ namespace MetaPDF
       CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
       virtual ~CallExpr( );
-      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -241,7 +241,7 @@ namespace MetaPDF
       
       UnionExpr( const Ast::SourceLocation & loc, Ast::ArgListExprs * argList );
       virtual ~UnionExpr( );
-      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -254,7 +254,7 @@ namespace MetaPDF
     public:      
       CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false );
       virtual ~CallSplitExpr( );
-      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
     
@@ -264,7 +264,7 @@ namespace MetaPDF
       DummyExpression( );
       DummyExpression( const Ast::SourceLocation & loc );
       virtual ~DummyExpression( );
-      virtual void analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env );
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void eval( Kernel::EvalState * evalState ) const;
     };
   }

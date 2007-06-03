@@ -791,11 +791,8 @@ main( int argc, char ** argv )
     {
       metapdfparse( );
       Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
-      {
-	Kernel::AnalysisEnvironment * tmpEnv( baseEnv->newAnalysisEnvironment( ) );
-	Ast::theProgram->analyze( 0, *tmpEnv );
-	delete tmpEnv;
-      }
+      Ast::theGlobalAnalysisEnvironment = baseEnv->newAnalysisEnvironment( );
+      Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
       // The display unit is looked up after the input is scanned, so the user may use her own units
       Interaction::displayUnitFactor = Ast::theMetaPDFScanner.lookupUnitFactor( Interaction::displayUnitName );
       if( Interaction::displayUnitFactor <= 0 )
@@ -847,7 +844,7 @@ main( int argc, char ** argv )
 	  abortProcedure( & oFile, outputName );
 	}
 
-      RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( baseEnv->getStateHandle( baseEnv->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
+      RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( baseEnv->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
 
       // Forcing to synch is a bad thing, due to PDF version differences.  Instead, refer to the PDF documentation
       // on the graphics state dictionary (page 180 in the PDF-1.6 reference) to find out the correct default values,

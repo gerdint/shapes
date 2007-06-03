@@ -88,8 +88,9 @@ Lang::Instance::getLocalField( const char * fieldID ) const
     {
       if( myClass->isInProtectedGetSet( fieldID ) )
 	{
-	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
-	  return env->getVarHandle( key );
+	  throw Exceptions::NotImplemented( "Instance::getLocalField" );
+	  //	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
+	  //	  return env->getVarHandle( key );
 	}
       throw Exceptions::NonExistentMember( myClass->getPrettyName( ), fieldID );
     }
@@ -97,8 +98,9 @@ Lang::Instance::getLocalField( const char * fieldID ) const
     {
       if( myClass->isInPublicGetSet( fieldID ) )
 	{
-	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
-	  return env->getVarHandle( key );
+	  throw Exceptions::NotImplemented( "Instance::getLocalField" );
+	  //	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
+	  //	  return env->getVarHandle( key );
 	}
       if( myClass->isInProtectedGetSet( fieldID ) )
 	{
@@ -126,8 +128,9 @@ Lang::Instance::tackOnLocal( const char * fieldID, Kernel::EvalState * evalState
     {
       if( myClass->isInProtectedSetSet( fieldID ) )
 	{
-	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
-	  env->tackOn( key, evalState, piece, callLoc );
+	  throw Exceptions::NotImplemented( "Instance::tackOnLocal" );
+	  //	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
+	  //	  env->tackOn( key, evalState, piece, callLoc );
 	  return;
 	}
       if( myClass->isInProtectedGetSet( fieldID ) )
@@ -140,8 +143,9 @@ Lang::Instance::tackOnLocal( const char * fieldID, Kernel::EvalState * evalState
     {
       if( myClass->isInPublicSetSet( fieldID ) )
 	{
-	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
-	  env->tackOn( key, evalState, piece, callLoc );
+	  throw Exceptions::NotImplemented( "Instance::tackOnLocal" );
+	  //	  Kernel::Environment::LexicalKey key = env->findLexicalVariableKey( Ast::THE_UNKNOWN_LOCATION, fieldID );
+	  //	  env->tackOn( key, evalState, piece, callLoc );
 	  return;
 	}
       if( myClass->isInPublicGetSet( fieldID ) )

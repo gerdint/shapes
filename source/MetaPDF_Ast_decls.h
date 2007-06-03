@@ -5,6 +5,7 @@ namespace MetaPDF
 {
   namespace Ast
   {
+    class AnalysisEnvironment;
     class ArgListExprs;
     class BinaryInfixExpr;
     class ClassFunction;
@@ -17,7 +18,7 @@ namespace MetaPDF
     class SplitDefineVariables;
     class StateReference;
     class UnaryExpr;
-    class LexiographicState;
+    class LexiographicState;    
   }
 }
 

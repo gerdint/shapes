@@ -299,6 +299,13 @@ Lang::CoreFunction::CoreFunction( const char * title, Kernel::EvaluatedFormals *
   : Lang::Function( formals ), title_( title )
 { }
 
+void
+Lang::CoreFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  /* Nothing to be done.
+   */
+}
+
 bool
 Lang::CoreFunction::isTransforming( ) const
 {
@@ -310,3 +317,4 @@ Lang::CoreFunction::getTitle( ) const
 {
   return title_;
 }
+

@@ -67,7 +67,7 @@ Ast::LetDynamicECExpr::~LetDynamicECExpr( )
 }
 
 void
-Ast::LetDynamicECExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::LetDynamicECExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 

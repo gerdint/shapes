@@ -88,14 +88,14 @@ Ast::CodeBracket::~CodeBracket( )
 
 
 void
-Ast::CodeBracket::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & parentEnv )
+Ast::CodeBracket::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * parentEnv )
 {
   parent_ = parent;
 
-  Kernel::AnalysisEnvironment env( parentEnv, argumentOrder_, stateOrder_ );
+  Ast::AnalysisEnvironment * env( new Ast::AnalysisEnvironment( Ast::theAnalysisEnvironmentList, parentEnv, argumentOrder_, stateOrder_ ) );
   if( dynamicMap_ != 0 )
     {
-      env_.setupDynamicKeyVariables( dynamicMap_ );
+      env->setupDynamicKeyVariables( dynamicMap_ );
     }
 
 
@@ -257,12 +257,14 @@ Ast::LexiographicVariable::~LexiographicVariable( )
 }
 
 void
-Ast::LexiographicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::LexiographicVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
-
-  /* It would make sense to check the binding here instead of at runtime.
-   */
+  
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalVariableKey( loc_, id_ ) );
+    }
 
   imperative_ = false;
 }
@@ -270,11 +272,6 @@ Ast::LexiographicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEn
 void
 Ast::LexiographicVariable::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalVariableKey( loc_, id_ ) );
-    }
-
   evalState->env_->lookup( **idKey_, evalState );
 }
 
@@ -291,11 +288,11 @@ Ast::EvalOutsideExpr::~EvalOutsideExpr( )
 }
 
 void
-Ast::EvalOutsideExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::EvalOutsideExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  expr_->analyze( this, env.getParent( ) );
+  expr_->analyze( this, env->getParent( ) );
 
   imperative_ = expr_->imperative_;
 }
@@ -343,7 +340,7 @@ Ast::SpecialLength::~SpecialLength( )
 { }
 
 void
-Ast::SpecialLength::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::SpecialLength::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -410,12 +407,14 @@ Ast::DynamicVariable::~DynamicVariable( )
 }
 
 void
-Ast::DynamicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check the reference and compute the key here instead of at runtime.
-   */
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalDynamicKey( loc_, id_ ) );
+    }
   
   imperative_ = false;
 }
@@ -423,11 +422,6 @@ Ast::DynamicVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnviron
 void
 Ast::DynamicVariable::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( loc_, id_ ) );
-    }
-  
   const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
   
   Kernel::VariableHandle res = dynProps.fetch( evalState->dyn_ );
@@ -506,13 +500,15 @@ Ast::DynamicBindingExpression::~DynamicBindingExpression( )
 }
 
 void
-Ast::DynamicBindingExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicBindingExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
   expr_->analyze( this, env );
-  /* It would make sense to check the reference and compute the key here instead of at runtime.
-   */
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalDynamicKey( idLoc_, id_ ) );
+    }
 
   imperative_ = expr_->imperative_;
 }
@@ -520,11 +516,6 @@ Ast::DynamicBindingExpression::analyze( Ast::Node * parent, const Kernel::Analys
 void
 Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( idLoc_, id_ ) );
-    }
-
   const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
   
   if( dynProps.forceValue( ) || expr_->immediate_ )
@@ -556,23 +547,21 @@ Ast::DynamicStateBindingExpression::~DynamicStateBindingExpression( )
 }
 
 void
-Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check references here...
-   */
+  if( *dstIdKey_ == 0 )
+    {
+      *dstIdKey_ = new Kernel::Environment::LexicalKey( env->findLexicalDynamicKey( dstLoc_, dstId_ ) );
+    }
+  
   imperative_ = false;
 }
 
 void
 Ast::DynamicStateBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
-  if( *dstIdKey_ == 0 )
-    {
-      *dstIdKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalDynamicKey( dstLoc_, dstId_ ) );
-    }
-  
   const Kernel::DynamicStateProperties & dstDynProps = evalState->env_->lookupDynamicState( **dstIdKey_ );
   
   dstDynProps.makeBinding( src_->getHandle( evalState->env_, evalState->dyn_ ), dstLoc_, evalState );
@@ -619,7 +608,7 @@ Ast::WithDynamicExpr::~WithDynamicExpr( )
 { }
 
 void
-Ast::WithDynamicExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::WithDynamicExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -658,13 +647,15 @@ Ast::DynamicVariableDecl::~DynamicVariableDecl( )
 { }
 
 void
-Ast::DynamicVariableDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicVariableDecl::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
   impl_->analyze( this, env );
-  /* It would make sense to check the reference and ...
-   */
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( env->findLocalDynamicPosition( idLoc_, id_ ) );
+    }
 
   imperative_ = impl_->imperative_;
 }
@@ -672,11 +663,6 @@ Ast::DynamicVariableDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnv
 void
 Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
-    {
-      *idPos_ = new size_t( evalState->env_->findLocalDynamicPosition( idLoc_, id_ ) );
-    }
-
   evalState->expr_ = impl_;
 }
 
@@ -756,12 +742,14 @@ Ast::DynamicStateDecl::~DynamicStateDecl( )
 
 
 void
-Ast::DynamicStateDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicStateDecl::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check the reference and ...
-   */
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( env->findLocalDynamicStatePosition( idLoc_, id_ ) );
+    }
 
   imperative_ = false;
 }
@@ -769,11 +757,6 @@ Ast::DynamicStateDecl::analyze( Ast::Node * parent, const Kernel::AnalysisEnviro
 void
 Ast::DynamicStateDecl::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
-    {
-      *idPos_ = new size_t( evalState->env_->findLocalDynamicStatePosition( idLoc_, id_ ) );
-    }
-
   evalState->env_->defineDynamicState( id_,
 				       **idPos_,
 				       evalState,
@@ -801,6 +784,16 @@ Ast::EvalSymbolFunction::push_exprs( Ast::ArgListExprs * args ) const
 }
 
 void
+Ast::EvalSymbolFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  analysisEnv_ = env;
+
+  /* expr_ shall be analyzed from the calling expression.
+   * Here, it is only used to locate errors.
+   */
+}
+
+void
 Ast::EvalSymbolFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = args.getValue( 0 );
@@ -816,7 +809,7 @@ Ast::EvalSymbolFunction::call( Kernel::EvalState * evalState, Kernel::Arguments 
     }
 
 
-  Kernel::Environment::LexicalKey key = evalState->env_->findLexicalVariableKey( loc_, val->name( ).getPtr( ) );
+  Kernel::Environment::LexicalKey key = analysisEnv_->findLexicalVariableKey( loc_, val->name( ).getPtr( ) );
 
   Kernel::PassedEnv env = evalState->env_;
   env->lookup( key, evalState );
@@ -838,25 +831,22 @@ Ast::DefineVariable::~DefineVariable( )
 
 
 void
-Ast::DefineVariable::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DefineVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
   expr_->analyze( this, env );
-  /* It would make sense to check the reference and ...
-   */
-
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( env->findLocalVariablePosition( idLoc_, id_ ) );
+    }
+  
   imperative_ = expr_->imperative_;
 }
 
 void
 Ast::DefineVariable::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
-    {
-      *idPos_ = new size_t( evalState->env_->findLocalVariablePosition( idLoc_, id_ ) );
-    }
-  
   if( expr_->immediate_ || expr_->imperative_ )
     {
       evalState->cont_ = Kernel::ContRef( new Kernel::DefineVariableContinuation( evalState->env_,
@@ -936,7 +926,7 @@ Ast::StructSplitReference::setStruct( Ast::SourceLocation structLoc, size_t ** s
 }
 
 void
-Ast::StructSplitReference::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::StructSplitReference::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -999,7 +989,7 @@ Ast::StructSplitSink::setStruct( Ast::SourceLocation structLoc, size_t ** struct
 }
 
 void
-Ast::StructSplitSink::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::StructSplitSink::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1027,7 +1017,7 @@ Ast::AssertNoSinkNeeded::~AssertNoSinkNeeded( )
 { }
 
 void
-Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1099,23 +1089,21 @@ Ast::LexiographicState::~LexiographicState( )
 }
 
 void
-Ast::LexiographicState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::LexiographicState::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check the reference and...
-   */
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalStateKey( loc_, id_ ) );
+    }
+
   imperative_ = true;
 }
 
 Kernel::StateHandle
 Ast::LexiographicState::getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalStateKey( loc_, id_ ) );
-    }
-
   return env->getStateHandle( **idKey_ );
 }
 
@@ -1135,7 +1123,7 @@ Ast::DynamicState::~DynamicState( )
 }
 
 void
-Ast::DynamicState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicState::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1166,25 +1154,23 @@ Ast::IntroduceState::~IntroduceState( )
 
 
 void
-Ast::IntroduceState::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::IntroduceState::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
   expr_->analyze( this, env );
 
-  /* It would make sense to check the reference and...
-   */
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( env->findLocalStatePosition( idLoc_, id_ ) );
+    }
+  
   imperative_ = expr_->imperative_;
 }
 
 void
 Ast::IntroduceState::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
-    {
-      *idPos_ = new size_t( evalState->env_->findLocalStatePosition( idLoc_, id_ ) );
-    }
-  
   evalState->cont_ = Kernel::ContRef( new Kernel::IntroduceStateContinuation( evalState->env_,
 									      *idPos_,
 									      evalState->cont_,
@@ -1201,14 +1187,12 @@ Ast::Insertion::~Insertion( )
 { }
 
 void
-Ast::Insertion::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::Insertion::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
+  stateRef_->analyze( this, env );
   expr_->analyze( this, env );
-
-  /* It would make sense to check the reference and...
-   */
 
   imperative_ = true;
 }
@@ -1237,12 +1221,14 @@ Ast::Freeze::~Freeze( )
 }
 
 void
-Ast::Freeze::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::Freeze::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check the reference and...
-   */
+  if( *idPos_ == 0 )
+    {
+      *idPos_ = new size_t( env->findLocalStatePosition( loc( ), id_ ) );
+    }
 
   imperative_ = true;
 }
@@ -1250,11 +1236,6 @@ Ast::Freeze::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & en
 void
 Ast::Freeze::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idPos_ == 0 )
-    {
-      *idPos_ = new size_t( evalState->env_->findLocalStatePosition( loc( ), id_ ) );
-    }
-
   evalState->env_->freeze( **idPos_, evalState, loc( ) );
 }
 
@@ -1273,7 +1254,7 @@ Ast::Peek::~Peek( )
 }
 
 void
-Ast::Peek::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::Peek::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1299,7 +1280,7 @@ Ast::DynamicExpression::~DynamicExpression( )
 { }
 
 void
-Ast::DynamicExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::DynamicExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -1338,23 +1319,21 @@ Ast::LexiographicType::~LexiographicType( )
 }
 
 void
-Ast::LexiographicType::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::LexiographicType::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
-  /* It would make sense to check the reference and...
-   */
+  if( *idKey_ == 0 )
+    {
+      *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalTypeKey( loc_, id_ ) );
+    }
+
   imperative_ = false;
 }
 
 void
 Ast::LexiographicType::eval( Kernel::EvalState * evalState ) const
 {
-  if( *idKey_ == 0 )
-    {
-      *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalTypeKey( loc_, id_ ) );
-    }
-
   evalState->env_->lookup( **idKey_, evalState );
 }
 

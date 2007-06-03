@@ -574,20 +574,28 @@ Ast::ProtectedMethodReferenceFunction::push_exprs( Ast::ArgListExprs * args ) co
 }
 
 void
-Ast::ProtectedMethodReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+Ast::ProtectedMethodReferenceFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
+  /* argument expressions shall be analyzed from the calling expression.
+   * Here, they are only used to locate errors.
+   */
+
   if( *idKey_ == 0 )
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
 	  throw Exceptions::MisplacedSuperReference( selfLoc_ );
 	}
     }
+}
 
+void
+Ast::ProtectedMethodReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
   typedef const Lang::Instance SelfType;
   RefCountPtr< const Lang::Value > untypedSelf = evalState->env_->getVarHandle( **idKey_ )->getUntyped( );
   SelfType * typedSelf = dynamic_cast< SelfType * >( untypedSelf.getPtr( ) );
@@ -640,20 +648,28 @@ Ast::ProtectedMemberReferenceFunction::push_exprs( Ast::ArgListExprs * args ) co
 }
 
 void
-Ast::ProtectedMemberReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+Ast::ProtectedMemberReferenceFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
+  /* argument expressions shall be analyzed from the calling expression.
+   * Here, they are only used to locate errors.
+   */
+
   if( *idKey_ == 0 )
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalVariableKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
 	  throw Exceptions::MisplacedSuperReference( selfLoc_ );
 	}
     }
+}
 
+void
+Ast::ProtectedMemberReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
   typedef const Lang::Instance SelfType;
   RefCountPtr< const Lang::Value > untypedSelf = evalState->env_->getVarHandle( **idKey_ )->getUntyped( );
   SelfType * typedSelf = dynamic_cast< SelfType * >( untypedSelf.getPtr( ) );
@@ -703,20 +719,28 @@ Ast::ProtectedMemberInsertionFunction::push_exprs( Ast::ArgListExprs * args ) co
 }
 
 void
-Ast::ProtectedMemberInsertionFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+Ast::ProtectedMemberInsertionFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
+  /* argument expressions shall be analyzed from the calling expression.
+   * Here, they are only used to locate errors.
+   */
+
   if( *idKey_ == 0 )
     {
       try
 	{
-	  *idKey_ = new Kernel::Environment::LexicalKey( evalState->env_->findLexicalStateKey( selfLoc_, Lang::SELF_ID ) );
+	  *idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalStateKey( selfLoc_, Lang::SELF_ID ) );
 	}
       catch( const Exceptions::LookupUnknown & ball )
 	{
 	  throw Exceptions::MisplacedSuperReference( selfLoc_ );
 	}
     }
+}
 
+void
+Ast::ProtectedMemberInsertionFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
   typedef const Lang::Instance SelfType;
   RefCountPtr< const Lang::Value > untypedSelf = evalState->env_->getVarHandle( **idKey_ )->getUntyped( );
   SelfType * typedSelf = dynamic_cast< SelfType * >( untypedSelf.getPtr( ) );

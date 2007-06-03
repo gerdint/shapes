@@ -245,7 +245,7 @@ namespace MetaPDF
       Kernel::Environment * getParent( );
       const Kernel::Environment * getParent( ) const;
       void clear( );
-      Kernel::AnalysisEnvironment * newAnalysisEnvironment( ) const;
+      Ast::AnalysisEnvironment * newAnalysisEnvironment( ) const;
       
       void clear_gcMarked( ) { gcMarked_ = false; }
       bool gcMarked( ) const { return gcMarked_; }
@@ -293,13 +293,17 @@ namespace MetaPDF
       const char * reverseMapState( size_t pos ) const;
       const char * reverseMapDynamicState( size_t pos ) const;
     };
+    
+  }
 
+  namespace Ast
+  {
     class AnalysisEnvironment
     {
     public:
-      typedef Kernel::Environment::LecicalKey LexicalKey;
+      typedef Kernel::Environment::LexicalKey LexicalKey;
     private:
-      const AnalysisEnvironment & parent_;
+      const AnalysisEnvironment * parent_;
       typedef std::map< const char *, size_t, charPtrLess > MapType; /* this is not constant to simplify initialization of the global environment */
 
       const MapType * bindings_;
@@ -310,10 +314,9 @@ namespace MetaPDF
       bool functionBoundary_;
 
     public:
-      AnalysisEnvironment( );
-      AnalysisEnvironment( const Kernel::AnalysisEnvironment & parent, const MapType * bindings, const MapType * stateBindings );
+      AnalysisEnvironment( PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > & deleter, const Ast::AnalysisEnvironment * parent, const MapType * bindings, const MapType * stateBindings );
       ~AnalysisEnvironment( );
-      const Kernel::AnalysisEnvironment & getParent( ) const;
+      const Ast::AnalysisEnvironment * getParent( ) const;
       void setupDynamicKeyVariables( const MapType * _dynamicKeyBindings );
       void setupDynamicStateKeyVariables( const MapType * _dynamicStateKeyBindings );
       void activateFunctionBoundary( );

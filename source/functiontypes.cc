@@ -1229,7 +1229,7 @@ Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & ar
 }
 
 void
-Lang::Function::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Lang::Function::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   throw Exceptions::InternalError( "A sytax function is not overriding the analyze method." );
 }

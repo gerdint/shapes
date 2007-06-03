@@ -775,6 +775,12 @@ Kernel::Environment::clear( )
    */
 }
 
+Ast::AnalysisEnvironment *
+Kernel::Environment::newAnalysisEnvironment( ) const
+{
+  return new Ast::AnalysisEnvironment( Ast::theAnalysisEnvironmentList, 0, bindings_, stateBindings_ );
+}
+
 void
 Kernel::Environment::gcMark( Kernel::GCMarkedSet & marked )
 {
@@ -817,8 +823,43 @@ Kernel::Environment::collect( std::list< Kernel::Environment * > & garbageArea )
 }
 
 
+Ast::AnalysisEnvironment::AnalysisEnvironment( PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > & deleter, const Ast::AnalysisEnvironment * parent, const MapType * bindings, const MapType * stateBindings )
+  : parent_( parent ),
+    bindings_( bindings ), dynamicKeyBindings_( 0 ),
+    stateBindings_( stateBindings ), dynamicStateKeyBindings_( 0 ),
+    functionBoundary_( false )
+{
+  deleter.push_back( this );
+}
+
+Ast::AnalysisEnvironment::~AnalysisEnvironment( )
+{ }
+
+
+const Ast::AnalysisEnvironment *
+Ast::AnalysisEnvironment::getParent( ) const
+{
+  if( isBaseEnvironment( ) )
+    {
+      throw Exceptions::MiscellaneousRequirement( "Trying to find the parent of the top level analysis environment." );
+    }
+  return parent_;
+}
+
+void
+Ast::AnalysisEnvironment::activateFunctionBoundary( )
+{
+  functionBoundary_ = true;
+}
+
+void
+Ast::AnalysisEnvironment::setupDynamicKeyVariables( const MapType * dynamicKeyBindings )
+{
+  dynamicKeyBindings_ = dynamicKeyBindings;
+}
+
 size_t
-Kernel::AnalysisEnvironment::findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLocalVariablePosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = bindings_->find( id );
   if( i == bindings_->end( ) )
@@ -840,7 +881,7 @@ Kernel::Environment::define( size_t pos, const Kernel::VariableHandle & val )
 }
 
 Kernel::Environment::LexicalKey
-Kernel::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = bindings_->find( id );
   if( i == bindings_->end( ) )
@@ -849,7 +890,7 @@ Kernel::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation &
 	{
 	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE );
 	}
-      return parent_.findLexicalVariableKey( loc, id ).oneAbove( );
+      return parent_->findLexicalVariableKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
@@ -899,7 +940,7 @@ Kernel::Environment::getVarHandle( size_t pos )
 }
 
 Kernel::Environment::LexicalKey
-Kernel::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = bindings_->find( id );
   if( i == bindings_->end( ) )
@@ -908,7 +949,7 @@ Kernel::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc
 	{
 	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE );
 	}
-      return parent_.findLexicalTypeKey( loc, id ).oneAbove( );
+      return parent_->findLexicalTypeKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
@@ -916,7 +957,7 @@ Kernel::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc
 
 
 size_t
-Kernel::AnalysisEnvironment::findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLocalStatePosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = stateBindings_->find( id );
   if( i == stateBindings_->end( ) )
@@ -927,7 +968,7 @@ Kernel::AnalysisEnvironment::findLocalStatePosition( const Ast::SourceLocation &
 }
 
 Kernel::Environment::LexicalKey
-Kernel::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   MapType::const_iterator i = stateBindings_->find( id );
   if( i == stateBindings_->end( ) )
@@ -939,11 +980,11 @@ Kernel::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & lo
       if( functionBoundary_ )
 	{
 	  // If the state is not found at all, this will throw an error.
-	  parent_.findLexicalStateKey( loc, id ).oneAbove( );  // Ignore the result!
+	  parent_->findLexicalStateKey( loc, id ).oneAbove( );  // Ignore the result!
 	  // If no error is thrown, we inform the user that the state is outside a function boundary.
 	  throw Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) );	  
 	}
-      return parent_.findLexicalStateKey( loc, id ).oneAbove( );
+      return parent_->findLexicalStateKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
@@ -1012,7 +1053,7 @@ Kernel::Environment::getStateHandle( size_t pos )
 
 
 size_t
-Kernel::AnalysisEnvironment::findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLocalDynamicPosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicKeyBindings_ == 0 )
     {
@@ -1049,11 +1090,11 @@ Kernel::Environment::defineDynamic( const char * debugName, size_t pos, const Re
 }
 
 Kernel::Environment::LexicalKey
-Kernel::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicKeyBindings_ == 0 )
     {
-      return parent_.findLexicalDynamicKey( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
 
   MapType::const_iterator i = dynamicKeyBindings_->find( id );
@@ -1066,7 +1107,7 @@ Kernel::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & 
 	  strcpy( msg + 1, id );
 	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE );
 	}
-      return parent_.findLexicalDynamicKey( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );
@@ -1096,7 +1137,7 @@ Kernel::Environment::lookupDynamicVariable( size_t pos ) const
 }
 
 size_t
-Kernel::AnalysisEnvironment::findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicStateKeyBindings_ == 0 )
     {
@@ -1135,11 +1176,11 @@ Kernel::Environment::defineDynamicState( const char * debugName, size_t pos, Ker
 
 
 Kernel::Environment::LexicalKey
-Kernel::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const
+Ast::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const
 {
   if( dynamicStateKeyBindings_ == 0 )
     {
-      return parent_.findLexicalDynamicStateKey( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
     }
 
   MapType::const_iterator i = dynamicStateKeyBindings_->find( id );
@@ -1152,7 +1193,7 @@ Kernel::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocati
 	  strcpy( msg + 1, id );
 	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE );
 	}
-      return parent_.findLexicalDynamicStateKey( loc, id ).oneAbove( );
+      return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
     }
   
   return LexicalKey( 0, i->second );

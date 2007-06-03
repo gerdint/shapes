@@ -11,6 +11,7 @@
 
 #include "elementarylength.h"
 #include "refcount.h"
+#include "ptrowner.h"
 
 // The following types do not belong to any particular namespace for some reason, and are therefore declared like this:
 class MetaPDFScanner;
@@ -128,6 +129,8 @@ namespace MetaPDF
 
     extern MetaPDFScanner theMetaPDFScanner;
     extern Ast::Expression * theProgram;
+    extern PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > theAnalysisEnvironmentList;
+    extern Ast::AnalysisEnvironment * theGlobalAnalysisEnvironment;
     extern Ast::DummyExpression THE_CORE_DEFAULT_VALUE_EXPRESSION;
     extern Ast::DummyExpression THE_INTERNAL_VALUE_EXPRESSION;
 

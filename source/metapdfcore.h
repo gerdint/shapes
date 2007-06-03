@@ -21,6 +21,7 @@ namespace MetaPDF
   public:
     CoreFunction( const char * title );
     CoreFunction( const char * title, Kernel::EvaluatedFormals * formals );
+    virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
     virtual bool isTransforming( ) const;
     const char * getTitle( ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked ){ };

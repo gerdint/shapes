@@ -25,7 +25,7 @@ Ast::Constant::~Constant( )
 { }
 
 void
-Ast::Constant::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::Constant::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -52,7 +52,7 @@ Ast::PolarHandle2DExpr::~PolarHandle2DExpr( )
 }
 
 void
-Ast::PolarHandle2DExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::PolarHandle2DExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -112,7 +112,7 @@ Ast::PolarHandle2DExprFree_a::~PolarHandle2DExprFree_a( )
 }
 
 void
-Ast::PolarHandle2DExprFree_a::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::PolarHandle2DExprFree_a::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -140,7 +140,7 @@ Ast::EmptyExpression::~EmptyExpression( )
 { }
 
 void
-Ast::EmptyExpression::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::EmptyExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 

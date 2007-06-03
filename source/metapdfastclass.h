@@ -152,6 +152,7 @@ namespace MetaPDF
       ProtectedMethodReferenceFunction( const Ast::SourceLocation & loc, const Ast::SourceLocation & selfLoc, Ast::Expression * parent, Ast::MethodIdExpr * methodId );
       ~ProtectedMethodReferenceFunction( );
       void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
       virtual bool isTransforming( ) const { return false; }
@@ -169,6 +170,7 @@ namespace MetaPDF
       ProtectedMemberReferenceFunction( const Ast::SourceLocation & loc, const Ast::SourceLocation & selfLoc, Ast::Expression * parent, const Ast::SourceLocation & idloc, const char * id );
       ~ProtectedMemberReferenceFunction( );
       void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
       virtual bool isTransforming( ) const { return false; }
@@ -187,6 +189,7 @@ namespace MetaPDF
       ProtectedMemberInsertionFunction( const Ast::SourceLocation & loc, const Ast::SourceLocation & selfLoc, Ast::Expression * parent, const Ast::SourceLocation & idloc, const char * id, Ast::Expression * pieceExpr );
       ~ProtectedMemberInsertionFunction( );
       void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
       virtual bool isTransforming( ) const { return false; }

@@ -54,7 +54,7 @@ Ast::UnaryPrefixExpr::~UnaryPrefixExpr( )
 }
 
 void
-Ast::UnaryPrefixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::UnaryPrefixExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -89,7 +89,7 @@ Ast::UnaryPostfixExpr::~UnaryPostfixExpr( )
 }
 
 void
-Ast::UnaryPostfixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::UnaryPostfixExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
 
@@ -182,7 +182,7 @@ Ast::BinaryInfixExpr::~BinaryInfixExpr( )
 }
 
 void
-Ast::BinaryInfixExpr::analyze( Ast::Node * parent, const Kernel::AnalysisEnvironment & env )
+Ast::BinaryInfixExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
   parent_ = parent;
   
