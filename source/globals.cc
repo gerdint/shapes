@@ -13,6 +13,7 @@
 #include "metapdfcore.h"
 #include "consts.h"
 #include "basicsimplex.h"
+#include "metapdfexceptions.h"
 
 #include <climits>
 
@@ -42,6 +43,9 @@ Ast::AnalysisEnvironment * Ast::theGlobalAnalysisEnvironment;
 Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION( "" );  // This is a special value.  See SourceLocation.
 Ast::DummyExpression Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< core function default value >" ) );
 Ast::DummyExpression Ast::THE_INTERNAL_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< internally passed value >" ) );
+
+PtrOwner_back_Access< std::list< Exceptions::Exception * > > Ast::theAnalsisErrorsList;
+
 
 bool Interaction::debugBacktrace = true;
 bool Interaction::debugSystem = false;

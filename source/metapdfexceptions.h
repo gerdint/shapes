@@ -4,6 +4,7 @@
 #include "MetaPDF_Ast_decls.h"
 #include "MetaPDF_Lang_decls.h"
 #include "MetaPDF_Kernel_decls.h"
+#include "MetaPDF_Exceptions_decls.h"
 
 #include "sourcelocation.h"
 #include "methodid.h"

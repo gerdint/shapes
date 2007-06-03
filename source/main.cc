@@ -793,12 +793,24 @@ main( int argc, char ** argv )
       Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
       Ast::theGlobalAnalysisEnvironment = baseEnv->newAnalysisEnvironment( );
       Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
+      if( Ast::theAnalsisErrorsList.size( ) > 0 )
+	{
+	  std::cout.flush( );
+	  typedef typeof Ast::theAnalsisErrorsList ListType;
+	  for( ListType::const_iterator i = Ast::theAnalsisErrorsList.begin( ); i != Ast::theAnalsisErrorsList.end( ); ++i )
+	    {
+	      (*i)->display( std::cerr );
+	    }
+	  exit( 1 );
+	  abortProcedure( & oFile, outputName );
+	}
+
       // The display unit is looked up after the input is scanned, so the user may use her own units
       Interaction::displayUnitFactor = Ast::theMetaPDFScanner.lookupUnitFactor( Interaction::displayUnitName );
       if( Interaction::displayUnitFactor <= 0 )
 	{
 	  std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
-	  exit( 1 );
+	  abortProcedure( & oFile, outputName );
 	}
       performIterativeStartup( texJobName );
       Kernel::theTeXLabelManager.settexJobName( texJobName );

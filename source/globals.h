@@ -6,6 +6,7 @@
 #include "MetaPDF_Computation_decls.h"
 #include "MetaPDF_Concrete_decls.h"
 #include "MetaPDF_Helpers_decls.h"
+#include "MetaPDF_Exceptions_decls.h"
 #include "SimplePDF_decls.h"
 #include "FontMetrics_decls.h"
 
@@ -133,6 +134,8 @@ namespace MetaPDF
     extern Ast::AnalysisEnvironment * theGlobalAnalysisEnvironment;
     extern Ast::DummyExpression THE_CORE_DEFAULT_VALUE_EXPRESSION;
     extern Ast::DummyExpression THE_INTERNAL_VALUE_EXPRESSION;
+
+    extern PtrOwner_back_Access< std::list< Exceptions::Exception * > > theAnalsisErrorsList;
 
     extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_coords2D;
     extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_cornercoords2D;
