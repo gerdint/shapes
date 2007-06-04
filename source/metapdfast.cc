@@ -232,3 +232,26 @@ Ast::IdentifierNode::IdentifierNode( )
 
 Ast::IdentifierNode::~IdentifierNode( )
 { }
+
+
+Ast::ErrorExpression::ErrorExpression( const Ast::SourceLocation & loc )
+  : Ast::Expression( loc )
+{ }
+
+Ast::ErrorExpression::~ErrorExpression( )
+{ }
+
+void
+Ast::ErrorExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  /*
+    That this is an error should have generated the appropriate messages elsewhere.
+   */
+}
+
+void
+Ast::ErrorExpression::eval( Kernel::EvalState * evalState ) const
+{
+  throw Exceptions::InternalError( loc_, "An ErrorExpression was evaluated" );
+}
+

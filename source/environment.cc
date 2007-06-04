@@ -18,7 +18,7 @@ using namespace std;
 
 size_t Kernel::Environment::createdCount = 0;
 size_t Kernel::Environment::liveCount = 0;
-
+Kernel::Environment::LexicalKey Kernel::Environment::theMissingKey( 0, std::numeric_limits< size_t >::max( ) );
 
 template< class T >
 class Binary
@@ -888,7 +888,8 @@ Ast::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation & lo
     {
       if( isBaseEnvironment( ) )
 	{
-	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalVariableKey( loc, id ).oneAbove( );
     }
@@ -947,7 +948,8 @@ Ast::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc, c
     {
       if( isBaseEnvironment( ) )
 	{
-	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalTypeKey( loc, id ).oneAbove( );
     }
@@ -975,14 +977,16 @@ Ast::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, 
     {
       if( isBaseEnvironment( ) )
 	{
-	  throw Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       if( functionBoundary_ )
 	{
 	  // If the state is not found at all, this will throw an error.
 	  parent_->findLexicalStateKey( loc, id ).oneAbove( );  // Ignore the result!
 	  // If no error is thrown, we inform the user that the state is outside a function boundary.
-	  throw Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) );	  
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalStateKey( loc, id ).oneAbove( );
     }
@@ -1007,7 +1011,8 @@ Kernel::Environment::freeze( size_t pos, Kernel::EvalState * evalState, const As
 {
   if( (*states_)[ pos ] == NullPtr< Kernel::State >( ) )
     {
-      throw Exceptions::FreezingUndefined( Ast::SourceLocation( "< to be determined... >" ), reverseMapState( pos ) );
+      // This is a static inconsistency, so it should be detected before we reach here...
+      throw Exceptions::FreezingUndefined( loc, reverseMapState( pos ) );
     }
   
   Kernel::StateHandle & state = (*states_)[ pos ];
@@ -1105,7 +1110,8 @@ Ast::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc
 	  char * msg = new char[ strlen( id ) + 2 ];
 	  strcpy( msg, "@" );
 	  strcpy( msg + 1, id );
-	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
@@ -1191,7 +1197,8 @@ Ast::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocation 
 	  char * msg = new char[ strlen( id ) + 2 ];
 	  strcpy( msg, "@#" );
 	  strcpy( msg + 1, id );
-	  throw Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE ) );
+	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
     }

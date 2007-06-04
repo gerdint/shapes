@@ -72,6 +72,7 @@ Escape "¢"|"¤"
 
 %option yyclass="MetaPDFScanner"
 
+%x DiscardRestOfLineAndBEGIN_INITIAL
 %x Incl
 %x Needs
 %x InclFrom
@@ -105,7 +106,11 @@ Escape "¢"|"¤"
 ^"##echo"[ \t] { BEGIN( Echo ); }
 ^"##author"[ \t] { BEGIN( Author ); }
 ^"##" {
-  throw Exceptions::ScannerError( metapdflloc, strrefdup( "All lines beginning with ## must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) );
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "All lines beginning with ## must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) ) );
+}
+
+<DiscardRestOfLineAndBEGIN_INITIAL>.* {
+  BEGIN( INITIAL );
 }
 
 <LaTeXOption>[^,\n]+ { Kernel::theTeXLabelManager.addDocumentOption( metapdflloc, yytext  ); }
@@ -145,13 +150,19 @@ Escape "¢"|"¤"
   long int s = strtol( yytext, & end, 10 );
   if( *end != '\0' )
     {
-      throw Exceptions::ScannerError( metapdflloc, strrefdup( "Failed to scan integer." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Failed to scan integer." ) ) );
     }
-  if( s < 0 )
+  else
     {
-      throw Exceptions::ScannerError( metapdflloc, strrefdup( "Random nuber generator seed must not be negative." ) );
+      if( s < 0 )
+	{
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Random nuber generator seed must not be negative." ) ) );
+	}
+      else
+	{
+	  srand( s );
+	}
     }
-  srand( s );  
 }
 <RandSeed>[\n] {
   metapdflloc.firstLine = metapdflloc.lastLine + 1;
@@ -164,9 +175,15 @@ Escape "¢"|"¤"
   newUnitName = strdup( yytext );
   BEGIN( NewUnitEqual );
 }
-<NewUnitName>. { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Expected identifier." ) ); }
+<NewUnitName>. {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected identifier." ) ) );
+  BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
+}
 <NewUnitEqual>[ \t]*"="[ \t]* { BEGIN( NewUnitValue ); }
-<NewUnitEqual>. { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Expected '='." ) ); }
+<NewUnitEqual>. {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected '='." ) ) );
+  BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
+ }
 <NewUnitValue>{Float}"bp" {
   char * end;
   double newUnitValue = metaPDFstrtod( yytext, & end );
@@ -176,7 +193,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -194,7 +211,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );	  
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -212,7 +229,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );	  
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -230,7 +247,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );	  
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -248,7 +265,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );	  
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -265,26 +282,31 @@ Escape "¢"|"¤"
   MapType::const_iterator i = unitTable.find( end );
   if( i == unitTable.end( ) )
     {
-      throw Exceptions::ScannerError( metapdflloc, strrefdup( "Reference to unknown unit." ) );
-    }
-
-  double newUnitValue = val * i->second;
-
-  i = unitTable.find( newUnitName );
-  if( i != unitTable.end( ) )
-    {
-      if( i->second != newUnitValue )
-	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Inconsistent definition of existing unit." ) );	  
-	}
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknownUnit( metapdflloc, strrefdup( end ) ) );
     }
   else
     {
-      unitTable[ newUnitName ] = newUnitValue;
+      double newUnitValue = val * i->second;
+      
+      i = unitTable.find( newUnitName );
+      if( i != unitTable.end( ) )
+	{
+	  if( i->second != newUnitValue )
+	    {
+	      Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	    }
+	}
+      else
+	{
+	  unitTable[ newUnitName ] = newUnitValue;
+	}
     }
   BEGIN( INITIAL );
 }
-<NewUnitValue>. { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Expected a length." ) ); }
+<NewUnitValue>. {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected a length." ) ) );
+  BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
+ }
 
 
 
@@ -338,9 +360,12 @@ Escape "¢"|"¤"
   MapType::const_iterator i = unitTable.find( end );
   if( i == unitTable.end( ) )
     {
-      throw Exceptions::ScannerError( metapdflloc, strrefdup( "Reference to unknown unit." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknownUnit( metapdflloc, strrefdup( end ) ) );
     }
-  metapdflval.floatVal = val * i->second;
+  else
+    {
+      metapdflval.floatVal = val * i->second;
+    }
   return T_length;
 }
 
@@ -644,7 +669,10 @@ Escape "¢"|"¤"
   *dst = '\0';
   more( );
 }
-<String>{Escape} { throw Exceptions::ScannerError( metapdflloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´nt\n]." ) ); }
+<String>{Escape} {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´nt\n]." ) ) );
+  more( );
+}
 <String>. { more( ); }
 <String><<EOF>> { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Found EOF while scanning string" ) ); }
 
@@ -696,7 +724,7 @@ Escape "¢"|"¤"
       const char * key = "Author";
       if( Kernel::the_pdfo->info_->hasKey( key ) )
 	{
-	  throw Exceptions::ScannerError( metapdflloc, strrefdup( "Multiply specified #author." ) );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Multiply specified #author." ) ) );
 	}
       (*Kernel::the_pdfo->info_)[ key ] = SimplePDF::PDF_out::newString( yytext );
     }
@@ -774,7 +802,10 @@ Escape "¢"|"¤"
   return T_dynamic_state_identifier;
 }
 
-. { throw Exceptions::ScannerError( metapdflloc, strrefdup( (string( "Scanner found unrecognized token: " ) + yytext).c_str( ) ) ); }
+. {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( (string( "Scanner found unrecognized token: " ) + yytext).c_str( ) ) ) );
+  BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
+}
 
 %%
 /* The closing %% above marks the end of the Rules section and the beginning

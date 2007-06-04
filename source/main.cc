@@ -799,6 +799,17 @@ main( int argc, char ** argv )
 	  typedef typeof Ast::theAnalsisErrorsList ListType;
 	  for( ListType::const_iterator i = Ast::theAnalsisErrorsList.begin( ); i != Ast::theAnalsisErrorsList.end( ); ++i )
 	    {
+	      {
+		typedef const Exceptions::StaticInconsistency ErrorType;
+		ErrorType * err = dynamic_cast< ErrorType * >( *i );
+		if( err != 0 )
+		  {
+		    std::cerr << err->loc( ) << ": " ;
+		    err->display( std::cerr );
+		    continue;
+		  }
+	      }
+	      std::cerr << "(Bad exception type)" << ": " ;
 	      (*i)->display( std::cerr );
 	    }
 	  exit( 1 );

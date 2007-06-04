@@ -41,9 +41,18 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class ScannerError : public Exception
+    class StaticInconsistency : public Exception
     {
-      Ast::SourceLocation loc;
+    protected:
+      Ast::SourceLocation primaryLoc_;
+    public:
+      StaticInconsistency( Ast::SourceLocation primaryLoc ) : primaryLoc_( primaryLoc ) { }
+      virtual ~StaticInconsistency( ) { }
+      const Ast::SourceLocation & loc( ) const { return primaryLoc_; }
+    };
+
+    class ScannerError : public StaticInconsistency
+    {
       RefCountPtr< const char > msg;
     public:
       ScannerError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _msg );
@@ -51,21 +60,13 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class ParserError : public Exception
+    class ParserError : public StaticInconsistency
     {
-      Ast::SourceLocation loc;
       RefCountPtr< const char > msg;
     public:
       ParserError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _msg );
       virtual ~ParserError( );
       virtual void display( std::ostream & os ) const;
-    };
-
-    class StaticInconsistency : public Exception
-    {
-    public:
-      StaticInconsistency( ) { }
-      virtual ~StaticInconsistency( ) { }
     };
 
     class MemberAlsoAbstract : public StaticInconsistency
@@ -458,15 +459,6 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class RedefiningConstant : public RuntimeError
-    {
-      RefCountPtr< const char > id;
-    public:
-      RedefiningConstant( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id );
-      virtual ~RedefiningConstant( );
-      virtual void display( std::ostream & os ) const;
-    };
-
     class ProhibitedTypeChange : public RuntimeError
     {
       RefCountPtr< const char > id;
@@ -478,7 +470,7 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class LookupUnknown : public RuntimeError
+    class LookupUnknown : public StaticInconsistency
     {
     public:
       enum Type{ VARIABLE, STATE, DYNAMIC_VARIABLE, DYNAMIC_STATE, TYPE };
@@ -491,7 +483,7 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class StateBeyondFunctionBoundary : public RuntimeError
+    class StateBeyondFunctionBoundary : public StaticInconsistency
     {
       RefCountPtr< const char > id;
     public:
@@ -500,7 +492,7 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class IntroducingExistingUnit : public RuntimeError
+    class IntroducingExistingUnit : public StaticInconsistency
     {
       RefCountPtr< const char > id;
     public:
@@ -509,16 +501,7 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
-    class RedefiningUnknownUnit : public RuntimeError
-    {
-      RefCountPtr< const char > id;
-    public:
-      RedefiningUnknownUnit( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id );
-      virtual ~RedefiningUnknownUnit( );
-      virtual void display( std::ostream & os ) const;
-    };
-
-    class LookupUnknownUnit : public RuntimeError
+    class LookupUnknownUnit : public StaticInconsistency
     {
       RefCountPtr< const char > id;
     public:

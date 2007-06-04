@@ -2,7 +2,8 @@
 #define environment_h
 
 #include <cstring>
-#include <climits>
+//#include <climits>
+#include <limits>
 
 #include "MetaPDF_Kernel_decls.h"
 #include "MetaPDF_Lang_decls.h"
@@ -193,15 +194,20 @@ namespace MetaPDF
       public:
 	size_t up_;
 	size_t pos_;
-      LexicalKey( size_t up, size_t pos )
-	: up_( up ), pos_( pos )
+	LexicalKey( size_t up, size_t pos )
+	  : up_( up ), pos_( pos )
+	{ };
+	LexicalKey( const LexicalKey & orig )
+	  : up_( orig.up_ ), pos_( orig.pos_ )
 	{ };
 	LexicalKey & oneAbove( )
 	  {
 	    ++up_;
 	    return *this;
 	  }
+	bool isMissing( ) const { return pos_ == std::numeric_limits< size_t >::max( ); }
       };
+      static LexicalKey theMissingKey;
       typedef RefCountPtr< std::vector< VariableHandle > > ValueVector;
       typedef RefCountPtr< std::vector< StateHandle > > StateVector;
     private:

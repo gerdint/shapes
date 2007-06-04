@@ -129,6 +129,15 @@ namespace MetaPDF
       virtual RefCountPtr< const char > identifier( Kernel::EvalState * evalState ) const = 0;
     };
 
+    class ErrorExpression : public Expression
+    {
+    public:
+      ErrorExpression( const Ast::SourceLocation & loc );
+      virtual ~ErrorExpression( );
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
+      virtual void eval( Kernel::EvalState * evalState ) const;
+    };
+
   }
 
 }

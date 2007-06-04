@@ -330,7 +330,7 @@ OneOrMoreArgListItems
   $$ = $1;
   if( $$->namedExprs_->size( ) != 0 )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) ) );
     }
   $$->orderedExprs_->push_back( $2 );
 }
@@ -339,7 +339,7 @@ OneOrMoreArgListItems
   $$ = $1;
   if( $$->namedStates_->size( ) != 0 )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) ) );
     }
   $$->orderedStates_->push_back( $2 );
 }
@@ -348,7 +348,7 @@ OneOrMoreArgListItems
   $$ = $1;
   if( $$->namedExprs_->find( $2 ) != $$->namedExprs_->end( ) )
     {
-      throw Exceptions::RepeatedFormal( @2, $2 );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::RepeatedFormal( @2, $2 ) );
     }
   (*$$->namedExprs_)[ $2 ] = $4;
 }
@@ -357,7 +357,7 @@ OneOrMoreArgListItems
   $$ = $1;
   if( $$->namedStates_->find( $2 ) != $$->namedStates_->end( ) )
     {
-      throw Exceptions::RepeatedFormal( @2, $2 );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::RepeatedFormal( @2, $2 ) );
     }
   (*$$->namedStates_)[ $2 ] = $4;
 }
@@ -481,11 +481,11 @@ OneOrMoreFormalsItems
   $$ = $1;
   if( $$->seenDefault_ )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) ) );
     }
   if( $$->argumentOrder_->find( $2 ) != $$->argumentOrder_->end( ) )
     {
-      throw Exceptions::RepeatedFormal( @2, $2 );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::RepeatedFormal( @2, $2 ) );
     }
   $$->argumentOrder_->insert( std::pair< const char *, size_t >( $2, $$->defaultExprs_.size( ) ) );
   $$->defaultExprs_.push_back( 0 );
@@ -496,7 +496,7 @@ OneOrMoreFormalsItems
   $$->seenDefault_ = true;
   if( $$->argumentOrder_->find( $2 ) != $$->argumentOrder_->end( ) )
     {
-      throw Exceptions::RepeatedFormal( @2, $2 );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::RepeatedFormal( @2, $2 ) );
     }
   $$->argumentOrder_->insert( std::pair< const char *, size_t >( $2, $$->defaultExprs_.size( ) ) );
   $$->defaultExprs_.push_back( $4 );
@@ -506,7 +506,7 @@ OneOrMoreFormalsItems
   $$ = $1;
   if( $$->stateOrder_->find( $2 ) != $$->stateOrder_->end( ) )
     {
-      throw Exceptions::RepeatedFormal( @2, $2 );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::RepeatedFormal( @2, $2 ) );
     }
   $$->stateOrder_->insert( std::pair< const char *, size_t >( $2, $$->stateOrder_->size( ) ) );
 }
@@ -516,11 +516,13 @@ OneOrMoreFormalsItems
 SplitFormals
 :
 {
-  throw Exceptions::ParserError( @$, strrefdup( "The list of split assignment variables must not be empty." ) );
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @$, strrefdup( "The list of split assignment variables must not be empty." ) ) );
+  $$ = new Ast::SplitDefineVariables( );
 }
 | T_split T_identifier
 {
-  throw Exceptions::ParserError( @$, strrefdup( "Just a sink in a split assignment formals list makes no sense." ) );
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @$, strrefdup( "Just a sink in a split assignment formals list makes no sense." ) ) );
+  $$ = new Ast::SplitDefineVariables( );
 }
 | OneOrMoreSplitFormals
 {
@@ -596,11 +598,11 @@ OneOrMoreSplitFormals
   $$ = $1;
   if( $$->seenNamed_ )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) ) );
     }
   if( $$->seenDefault_ )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "All order-based formals without default values must be placed before those with default values." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "All order-based formals without default values must be placed before those with default values." ) ) );
     }
   typedef typeof $$->exprs_ ListType;
   size_t ** pos = new size_t * ( 0 );
@@ -613,7 +615,7 @@ OneOrMoreSplitFormals
   $$ = $1;
   if( $$->seenNamed_ )
     {
-      throw Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Order-based formals may not appear among named formals." ) ) );
     }
   $$->seenDefault_ = true;
   typedef typeof $$->exprs_ ListType;
@@ -1085,7 +1087,7 @@ NamedLetExpr
     {
       if( *i == 0 )
 	{
-	  throw Exceptions::ParserError( @5, strrefdup( "Formals without default value are not allowed in list of let bindings." ) );
+	  Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @5, strrefdup( "Formals without default value are not allowed in list of let bindings." ) ) );
 	}
     }
 
@@ -1270,7 +1272,9 @@ OneOrMoreGroupElems
 }
 | T_splitLeft SplitFormals T_splitRight Expr
 {
-  throw Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) );
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) ) );
+  $$ = new list< Ast::Node * >( );
+  $$->push_back( new Ast::ErrorExpression( @$ ) );
 }
 | OneOrMoreGroupElems T_splitLeft SplitFormals T_splitRight ':' Expr
 {
@@ -1305,8 +1309,9 @@ OneOrMoreGroupElems
 }
 | OneOrMoreGroupElems T_splitLeft SplitFormals T_splitRight Expr
 {
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) ) );
   $$ = $1;
-  throw Exceptions::ParserError( @4, strrefdup( "Expected ':'." ) );
+  $$->push_back( new Ast::ErrorExpression( @$ ) );
 }
 ;
 
@@ -1376,11 +1381,11 @@ Class
   DeleteOnExit< char > isaDeleter( $7 );
   if( strcmp( $7, "isa" ) != 0 )
     {
-      throw Exceptions::ParserError( @7, strrefdup( "Expected \"isa\"." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @7, strrefdup( "Expected \"isa\"." ) ) );
     }
   if( ( $11 & Ast::CLASS_MODE_ABSTRACT ) != 0 && ( $11 & Ast::CLASS_MODE_FINAL ) != 0 )
     {
-      throw Exceptions::ParserError( @11, strrefdup( "Declaring a class both abstract and final is forbidden." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @11, strrefdup( "Declaring a class both abstract and final is forbidden." ) ) );
     }
 
   Ast::ArgListExprs * args = new Ast::ArgListExprs( false );
@@ -1436,7 +1441,7 @@ ClassModeSpecifier
     }
   else
     {
-      throw Exceptions::ParserError( @$, strrefdup( "This is not a valid class mode specifier" ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @$, strrefdup( "This is not a valid class mode specifier" ) ) );
     }
 }
 ;
@@ -1497,7 +1502,7 @@ ClassSection
     }
   else
     {
-      throw Exceptions::ParserError( @2, strrefdup( "This is not a valid method access specifier." ) );
+      Ast::theAnalsisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "This is not a valid method access specifier." ) ) );
     }
   $3->addModeBits( accessSpec );
   $$ = $3;

@@ -64,8 +64,8 @@ Exceptions::HandlerError::display( ostream & os ) const
 }
 
 
-Exceptions::ScannerError::ScannerError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _msg )
-  : loc( _loc ), msg( _msg )
+Exceptions::ScannerError::ScannerError( const Ast::SourceLocation & loc, RefCountPtr< const char > _msg )
+  : Exceptions::StaticInconsistency( loc ), msg( _msg )
 { }
 
 Exceptions::ScannerError::~ScannerError( )
@@ -74,12 +74,12 @@ Exceptions::ScannerError::~ScannerError( )
 void
 Exceptions::ScannerError::display( ostream & os ) const
 {
-  os << loc << "Scanner error: " << msg << std::endl ;
+  os << "Scanner error: " << msg << std::endl ;
 }
 
 
-Exceptions::ParserError::ParserError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _msg )
-  : loc( _loc ), msg( _msg )
+Exceptions::ParserError::ParserError( const Ast::SourceLocation & loc, RefCountPtr< const char > _msg )
+  : Exceptions::StaticInconsistency( loc ), msg( _msg )
 { }
 
 Exceptions::ParserError::~ParserError( )
@@ -88,12 +88,12 @@ Exceptions::ParserError::~ParserError( )
 void
 Exceptions::ParserError::display( ostream & os ) const
 {
-  os << loc << "Parser error: " << msg << std::endl ;
+  os << "Parser error: " << msg << std::endl ;
 }
 
 
 Exceptions::MemberAlsoAbstract::MemberAlsoAbstract( const Ast::SourceLocation & _memberLoc, const char * _id, const Ast::SourceLocation & _abstractLoc )
-  : memberLoc( _memberLoc ), id( _id ), abstractLoc( _abstractLoc )
+  : Exceptions::StaticInconsistency( _memberLoc ), memberLoc( _memberLoc ), id( _id ), abstractLoc( _abstractLoc )
 { }
 
 Exceptions::MemberAlsoAbstract::~MemberAlsoAbstract( )
@@ -102,12 +102,12 @@ Exceptions::MemberAlsoAbstract::~MemberAlsoAbstract( )
 void
 Exceptions::MemberAlsoAbstract::display( ostream & os ) const
 {
-  os << memberLoc << "Static inconsistency: " << "The member " << id << " is also declared abstract, at " << abstractLoc << "." << std::endl ;
+  os << "The member " << id << " is also declared abstract, at " << abstractLoc << "." << std::endl ;
 }
 
 
 Exceptions::MemberAlreadyDeclared::MemberAlreadyDeclared( const Ast::SourceLocation & _memberLoc, const char * _id, const Ast::SourceLocation & _oldLoc )
-  : memberLoc( _memberLoc ), id( _id ), oldLoc( _oldLoc )
+  : Exceptions::StaticInconsistency( _memberLoc ), memberLoc( _memberLoc ), id( _id ), oldLoc( _oldLoc )
 { }
 
 Exceptions::MemberAlreadyDeclared::~MemberAlreadyDeclared( )
@@ -116,12 +116,12 @@ Exceptions::MemberAlreadyDeclared::~MemberAlreadyDeclared( )
 void
 Exceptions::MemberAlreadyDeclared::display( ostream & os ) const
 {
-  os << memberLoc << "Static inconsistency: " << "The member " << id << " has already been declared, at " << oldLoc << "." << std::endl ;
+  os << "The member " << id << " has already been declared, at " << oldLoc << "." << std::endl ;
 }
 
 
 Exceptions::PublicGetSetInNonfinalClass::PublicGetSetInNonfinalClass( const Ast::SourceLocation & _memberLoc, const char * _id )
-  : memberLoc( _memberLoc ), id( _id )
+  : Exceptions::StaticInconsistency( _memberLoc ), memberLoc( _memberLoc ), id( _id )
 { }
 
 Exceptions::PublicGetSetInNonfinalClass::~PublicGetSetInNonfinalClass( )
@@ -130,12 +130,12 @@ Exceptions::PublicGetSetInNonfinalClass::~PublicGetSetInNonfinalClass( )
 void
 Exceptions::PublicGetSetInNonfinalClass::display( ostream & os ) const
 {
-  os << memberLoc << "Static inconsistency: " << "Only members of final classes may have the public get or set specifier.  Member in question: " << id << "." << std::endl ;
+  os << "Only members of final classes may have the public get or set specifier.  Member in question: " << id << "." << std::endl ;
 }
 
 
 Exceptions::TransformingMemberInNonfinalClass::TransformingMemberInNonfinalClass( const Ast::SourceLocation & _memberLoc, const char * _id )
-  : memberLoc( _memberLoc ), id( _id )
+  : Exceptions::StaticInconsistency( _memberLoc ), memberLoc( _memberLoc ), id( _id )
 { }
 
 Exceptions::TransformingMemberInNonfinalClass::~TransformingMemberInNonfinalClass( )
@@ -144,12 +144,12 @@ Exceptions::TransformingMemberInNonfinalClass::~TransformingMemberInNonfinalClas
 void
 Exceptions::TransformingMemberInNonfinalClass::display( ostream & os ) const
 {
-  os << memberLoc << "Static inconsistency: " << "Only members of final classes may have the <transforming> specifier.  Member in question: " << id << "." << std::endl ;
+  os << "Only members of final classes may have the <transforming> specifier.  Member in question: " << id << "." << std::endl ;
 }
 
 
 Exceptions::RepeatedFormal::RepeatedFormal( const Ast::SourceLocation & _loc, const char * _id )
-  : loc( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), loc( _loc ), id( _id )
 { }
 
 Exceptions::RepeatedFormal::~RepeatedFormal( )
@@ -158,12 +158,12 @@ Exceptions::RepeatedFormal::~RepeatedFormal( )
 void
 Exceptions::RepeatedFormal::display( ostream & os ) const
 {
-  os << loc << "Repeated formal: " << id << std::endl ;
+  os << "Repeated formal: " << id << std::endl ;
 }
 
 
 Exceptions::PassingStateOut::PassingStateOut( const Ast::SourceLocation & loc, const char * id )
-  : loc_( loc ), id_( id )
+  : Exceptions::StaticInconsistency( loc ), loc_( loc ), id_( id )
 { }
 
 Exceptions::PassingStateOut::~PassingStateOut( )
@@ -172,12 +172,12 @@ Exceptions::PassingStateOut::~PassingStateOut( )
 void
 Exceptions::PassingStateOut::display( std::ostream & os ) const
 {
-  os << loc_ << "States may not be returned." << std::endl ;
+  os << "States may not be returned." << std::endl ;
 }
 
 
 Exceptions::IntroducingExisting::IntroducingExisting( const Ast::SourceLocation & _loc, const char * _id )
-  : loc( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), loc( _loc ), id( _id )
 { }
 
 Exceptions::IntroducingExisting::~IntroducingExisting( )
@@ -186,12 +186,12 @@ Exceptions::IntroducingExisting::~IntroducingExisting( )
 void
 Exceptions::IntroducingExisting::display( std::ostream & os ) const
 {
-  os << loc << "The variable " << id << " is already introduced in this scope." << std::endl ;
+  os << "The variable " << id << " is already introduced in this scope." << std::endl ;
 }
 
 
 Exceptions::ExpectedImperative::ExpectedImperative( const Ast::SourceLocation & _loc )
-  : loc( _loc )
+  : Exceptions::StaticInconsistency( _loc ), loc( _loc )
 { }
 
 Exceptions::ExpectedImperative::~ExpectedImperative( )
@@ -205,7 +205,7 @@ Exceptions::ExpectedImperative::display( std::ostream & os ) const
 
 
 Exceptions::IllegalImperative::IllegalImperative( const Ast::SourceLocation & _loc )
-  : loc( _loc )
+  : Exceptions::StaticInconsistency( _loc ), loc( _loc )
 { }
 
 Exceptions::IllegalImperative::~IllegalImperative( )
@@ -219,7 +219,7 @@ Exceptions::IllegalImperative::display( std::ostream & os ) const
 
 
 Exceptions::FreezingUndefined::FreezingUndefined( const Ast::SourceLocation & _loc, const char * _id )
-  : loc( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), loc( _loc ), id( _id )
 { }
 
 Exceptions::FreezingUndefined::~FreezingUndefined( )
@@ -592,20 +592,6 @@ Exceptions::RedefiningUnknown::display( std::ostream & os ) const
 }
 
 
-Exceptions::RedefiningConstant::RedefiningConstant( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
-{ }
-
-Exceptions::RedefiningConstant::~RedefiningConstant( )
-{ }
-
-void
-Exceptions::RedefiningConstant::display( std::ostream & os ) const
-{
-  os << id << " is a constant" << std::endl ;
-}
-
-
 Exceptions::ProhibitedTypeChange::ProhibitedTypeChange( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id, RefCountPtr< const char > _oldType, RefCountPtr< const char > _newType )
   : Exceptions::RuntimeError( _loc ), id( _id ), oldType( _oldType ), newType( _newType )
 { }
@@ -621,7 +607,7 @@ Exceptions::ProhibitedTypeChange::display( std::ostream & os ) const
 
 
 Exceptions::LookupUnknown::LookupUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id, Type type )
-  : Exceptions::RuntimeError( _loc ), id( _id ), type_( type )
+  : Exceptions::StaticInconsistency( _loc ), id( _id ), type_( type )
 { }
 
 Exceptions::LookupUnknown::~LookupUnknown( )
@@ -654,7 +640,7 @@ Exceptions::LookupUnknown::display( std::ostream & os ) const
 
 
 Exceptions::StateBeyondFunctionBoundary::StateBeyondFunctionBoundary( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), id( _id )
 { }
 
 Exceptions::StateBeyondFunctionBoundary::~StateBeyondFunctionBoundary( )
@@ -668,7 +654,7 @@ Exceptions::StateBeyondFunctionBoundary::display( std::ostream & os ) const
 
 
 Exceptions::IntroducingExistingUnit::IntroducingExistingUnit( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), id( _id )
 { }
 
 Exceptions::IntroducingExistingUnit::~IntroducingExistingUnit( )
@@ -677,26 +663,12 @@ Exceptions::IntroducingExistingUnit::~IntroducingExistingUnit( )
 void
 Exceptions::IntroducingExistingUnit::display( std::ostream & os ) const
 {
-  os << "The unit " << id << " is already introduced." << std::endl ;
-}
-
-
-Exceptions::RedefiningUnknownUnit::RedefiningUnknownUnit( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
-{ }
-
-Exceptions::RedefiningUnknownUnit::~RedefiningUnknownUnit( )
-{ }
-
-void
-Exceptions::RedefiningUnknownUnit::display( std::ostream & os ) const
-{
-  os << "The unit " << id << " is not introduced" << std::endl ;
+  os << "Inconsistent definition of the existing unit " << id << "." << std::endl ;
 }
 
 
 Exceptions::LookupUnknownUnit::LookupUnknownUnit( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-  : Exceptions::RuntimeError( _loc ), id( _id )
+  : Exceptions::StaticInconsistency( _loc ), id( _id )
 { }
 
 Exceptions::LookupUnknownUnit::~LookupUnknownUnit( )

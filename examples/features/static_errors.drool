@@ -1,0 +1,11 @@
+•stdout << b << `¢n´
+•stdout << c << `¢n´
+
+foo: \ a .>
+{
+  •stdout << a
+}
+
+[foo 9]
+
+8
