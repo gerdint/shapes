@@ -4,6 +4,17 @@ The first line of this file shall be the current version string.  It shall be in
   Version history
 ===================
 
+====( 0.2.2 )====
+2007-06-05
+
+The interpreter now makes another pass of the code, checking variable bindings, function borders, and other static aspects of the code.  Type checking will hopefully fit in here in the future.  The three passes are:
+1) Scan and parse
+2) Analyze
+3) Evaluate
+
+The error reporting mechanism has been revised so that the errors found during static analysis are collected in a list, rather than throwing just the first we detect and then abort.
+
+
 ====( 0.2.1 )====
 2007-05-19
 
