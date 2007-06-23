@@ -1,0 +1,25 @@
+clock: \ hour minute .>
+{
+  hourLength: 4cm
+  minuteLength: 5.5cm
+  
+  hourAngle: 90° - (hour/12)*360°
+  minuteAngle: 90° - (minute/60)*360°
+
+  [bboxed
+    ( [stroke (0cm,0cm)--(hourLength*[dir hourAngle])]
+      &
+      [stroke (0cm,0cm)--(minuteLength*[dir minuteAngle])]
+    )
+    [rectangle (~minuteLength,~minuteLength) (minuteLength,minuteLength)]]
+}
+
+[setpagelabel •catalog prefix:`Am ´ number:'8]
+•stdout << `First page's label: ´ << [nextpagelabel •catalog] << `¢n´
+
+•catalog << [clock 8 0] << [clock 9 0] << [clock 10 0]
+
+[setpagelabel •catalog prefix:`Pm ´ style:'alphabet number:'33]
+•stdout << `Later page's label: ´ << [nextpagelabel •catalog] << `¢n´
+
+•catalog << [clock 3 10] << [clock 4 10] << [clock 5 10]

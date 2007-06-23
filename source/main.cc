@@ -4,6 +4,7 @@
 #include "consts.h"
 #include "metapdfexceptions.h"
 #include "hottypes.h"
+#include "multipage.h"
 #include "continuations.h"
 #include "charconverters.h"
 #include "pagecontentstates.h"
@@ -728,7 +729,6 @@ main( int argc, char ** argv )
   
   Kernel::the_pdfo->setVersion( pdfVersion );
   Kernel::the_pdfo->setVersionAction( pdfVersionAction );
-  Kernel::the_pdfo->pageResources->requireProcedureSet( SimplePDF::PDF_Resources::PROC_SET_PDF );
 
   {
     ostringstream oss;
@@ -826,7 +826,6 @@ main( int argc, char ** argv )
       performIterativeStartup( texJobName );
       Kernel::theTeXLabelManager.settexJobName( texJobName );
       RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
-      Kernel::GraphicsState initState( *graphicsState );
       Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );
 
       bool done = false;
@@ -867,21 +866,18 @@ main( int argc, char ** argv )
 	  abortProcedure( & oFile, outputName );
 	}
 
+      Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( baseEnv->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
       RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( baseEnv->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
-
-      // Forcing to synch is a bad thing, due to PDF version differences.  Instead, refer to the PDF documentation
-      // on the graphics state dictionary (page 180 in the PDF-1.6 reference) to find out the correct default values,
-      // and make sure that these are the initial values of the pdfState.
-      Kernel::PageContentStates pdfState( Kernel::the_pdfo->pageResources, true );
-      //      pdfState.forceSynchAll( Kernel::the_pdfo->contents->data, & initState );
-
-      finalPicture->shipout( Kernel::the_pdfo->contents->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
-      RefCountPtr< const Lang::ElementaryPath2D > theBBox = finalPicture->bbox( );
-
-      if( theBBox->size( ) == 0 )
+      if( catalog->isEmpty( ) && finalPicture->isNull( ) )
 	{
 	  throw Exceptions::EmptyFinalPicture( );
 	}
+      if( catalog->isEmpty( ) )
+	{
+	  catalog->tackOnPage( finalPicture, Ast::THE_UNKNOWN_LOCATION );
+	}
+
+      catalog->shipout( Kernel::the_pdfo );
 
       if( cleanupMemory )
 	{
@@ -890,14 +886,13 @@ main( int argc, char ** argv )
       
       delete baseEnv;
       delete Ast::theProgram;
-
-      Concrete::Coords2D llcorner( 0, 0 );
-      Concrete::Coords2D urcorner( 0, 0 );
-      theBBox->boundingRectangle( & llcorner, & urcorner );
-      Kernel::the_pdfo->mediabox = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( llcorner.x_.offtype< 1, 0 >( ),
-												    llcorner.y_.offtype< 1, 0 >( ),
-												    urcorner.x_.offtype< 1, 0 >( ),
-												    urcorner.y_.offtype< 1, 0 >( ) ) );
+    }
+  catch( const Exceptions::StaticInconsistency & ball )
+    {
+      std::cout.flush( );
+      std::cerr << ball.loc( ) << ": " ;
+      ball.display( cerr );
+      abortProcedure( & oFile, outputName );
     }
   catch( const Exceptions::Exception & ball )
     {

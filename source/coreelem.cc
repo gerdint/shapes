@@ -32,7 +32,7 @@ Lang::Core_gensym::call( Kernel::EvalState * evalState, Kernel::Arguments & args
 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( Kernel::ValueRef( new Lang::Symbol( ) ),
-	   evalState );
+		   evalState );
 }
 
 void

@@ -982,6 +982,14 @@ namespace MetaPDF
       virtual void display( std::ostream & os ) const;
     };
 
+    class InsertingEmptyPage : public RuntimeError
+    {
+    public:
+      InsertingEmptyPage( const Ast::SourceLocation & loc );
+      virtual ~InsertingEmptyPage( );
+      virtual void display( std::ostream & os ) const;
+    };
+
   }
 
 

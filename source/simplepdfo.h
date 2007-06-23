@@ -62,14 +62,12 @@ namespace SimplePDF
     std::ostream * os;
     std::streamoff os_start;
     
-    RefCountPtr< PDF_Object > i_root;
   public:
-    RefCountPtr< PDF_Resources > pageResources;
-    RefCountPtr< PDF_Stream_out > contents;
-    RefCountPtr< PDF_Vector > mediabox;
+    RefCountPtr< PDF_Dictionary > root_;
     RefCountPtr< PDF_Dictionary > info_;
     std::list< std::string > extensionAuthorStrings;
   private:
+    RefCountPtr< PDF_Object > i_root;
     size_t objCount;
     typedef std::list< RefCountPtr< PDF_Indirect_out > > IndirectQueueType;
     IndirectQueueType indirectQueue;
@@ -105,6 +103,15 @@ namespace SimplePDF
 
   extern RefCountPtr<PDF_Object> theTrue;
   extern RefCountPtr<PDF_Object> theFalse;
+
+  class OutlineItem
+  {
+    RefCountPtr< const char > title_;
+    size_t destinationPageIndex_;
+    std::list< RefCountPtr< OutlineItem > > kids_;
+  public:
+    RefCountPtr< SimplePDF::PDF_Dictionary > getDictionary( ) const;
+  };
 
 }
 

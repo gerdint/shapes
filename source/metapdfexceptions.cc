@@ -279,7 +279,7 @@ Exceptions::EmptyFinalPicture::~EmptyFinalPicture( )
 void
 Exceptions::EmptyFinalPicture::display( std::ostream & os ) const
 {
-  os << "Nothing was ever drawn to the global #page." << std::endl ;
+  os << "Nothing was ever put in the global #" << Lang::CATALOG_ID << " or drawn to the global #" << Lang::CANVAS_ID << "." << std::endl ;
 }
 
 
@@ -1559,6 +1559,7 @@ Exceptions::MissingFontMetrics::display( std::ostream & os ) const
   os << " }." << std::endl ;
 }
 
+
 Exceptions::FontMetricsError::FontMetricsError( const RefCountPtr< const char > & fontname, const RefCountPtr< const char > & message )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), fontname_( fontname ), message_( message )
 { }
@@ -1570,4 +1571,18 @@ void
 Exceptions::FontMetricsError::display( std::ostream & os ) const
 {
   os << "There was a problem with the font metrics for " << fontname_ << ": " << message_ << std::endl ;
+}
+
+
+Exceptions::InsertingEmptyPage::InsertingEmptyPage( const Ast::SourceLocation & loc )
+  : Exceptions::RuntimeError( loc )
+{ }
+
+Exceptions::InsertingEmptyPage::~InsertingEmptyPage( )
+{ }
+
+void
+Exceptions::InsertingEmptyPage::display( std::ostream & os ) const
+{
+  os << "Attempt to place empty page in catalog." << std::endl ;
 }

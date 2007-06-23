@@ -28,6 +28,7 @@ namespace MetaPDF
     extern RefCountPtr< const char > TEX_SYNTAX_ID;
 
     extern const char * CANVAS_ID;
+    extern const char * CATALOG_ID;
 
     extern const char * SELF_ID;
 

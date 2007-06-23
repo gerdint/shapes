@@ -345,7 +345,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 
   if( ! Kernel::the_pdfo->versionGreaterOrEqual( SimplePDF::PDF_out::PDF_1_4 ) )
     {
-      Kernel::the_pdfo->versionMessage( SimplePDF::PDF_out::PDF_1_4, "A transparency group was replaced by a plain XObject" );
+      Kernel::the_pdfo->versionMessage( SimplePDF::PDF_out::PDF_1_4, "A transparency group was replaced by a plain XObject." );
     }
   else
     {

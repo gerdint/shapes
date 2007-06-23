@@ -1376,3 +1376,25 @@ Lang::Core_facet::call( Kernel::EvalState * evalState, Kernel::Arguments & args,
 								  facetState->shadeOrder_ ) ),
 		   evalState );
 }
+
+
+Lang::Core_erase::Core_erase( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+{
+  formals_->appendCoreStateFormal( "dst" );
+}
+
+void
+Lang::Core_erase::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  typedef Kernel::WarmGroup2D StateType;
+  StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+
+  state->erase( );
+
+  Kernel::ContRef cont = evalState->cont_;
+  cont->takeValue( Lang::THE_VOID,
+		   evalState );
+}

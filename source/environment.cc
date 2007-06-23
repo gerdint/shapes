@@ -10,6 +10,7 @@
 #include "hottypes.h"
 #include "continuations.h"
 #include "statetypes.h"
+#include "multipage.h"
 #include "errorhandlers.h"
 
 using namespace MetaPDF;
@@ -417,6 +418,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefine( "nomask", Lang::THE_NONE_MASK );
 
   selfDefine( Lang::CANVAS_ID, new Kernel::WarmGroup2D );
+  selfDefine( Lang::CATALOG_ID, new Kernel::WarmCatalog );
   selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
   selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
   selfDefine( "randomdevice", new Kernel::WarmRandomDevice( "/dev/urandom" ) );
@@ -436,6 +438,11 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 
   selfDefineCoreFunction( new Lang::Core_newrandom( "newRandom" ) );
   selfDefineCoreFunction( new Lang::Core_devrandom( "devRandom" ) );
+
+  selfDefineCoreFunction( new Lang::Core_erase( "erase" ) );
+  selfDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
+  selfDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );
+  selfDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 

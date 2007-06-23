@@ -787,6 +787,34 @@ namespace MetaPDF
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
     };
 
+    class Core_erase : public Lang::CoreFunction
+    {
+    public:
+      Core_erase( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
+    class Core_nextpagenumber : public Lang::CoreFunction
+    {
+    public:
+      Core_nextpagenumber( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
+    class Core_nextpagelabel : public Lang::CoreFunction
+    {
+    public:
+      Core_nextpagelabel( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
+    class Core_setpagelabel : public Lang::CoreFunction
+    {
+    public:
+      Core_setpagelabel( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
   }
 }
 

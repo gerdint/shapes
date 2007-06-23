@@ -15,6 +15,7 @@ RefCountPtr< const char > Lang::ARCDELTA_ID = strrefdup( "arcdelta" );
 // RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "teX" );
 
 const char * Lang::CANVAS_ID = "page";
+const char * Lang::CATALOG_ID = "catalog";
 const char * Lang::SELF_ID = "self";
 const char * Kernel::SEQUENTIAL_EXPR_VAR_ID = ".seqvar"; /* Note that the leading dot puts this variable aside all user-variables. */
 const char * Kernel::SPLIT_VAR_PREFIX = ".splvar"; /* Note that the leading dot puts this variable aside all user-variables. */

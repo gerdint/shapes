@@ -299,6 +299,12 @@ Kernel::WarmGroup2D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
 }
 
 void
+Kernel::WarmGroup2D::erase( )
+{
+  pile_ = Lang::THE_NULL2D;
+}
+
+void
 Kernel::WarmGroup2D::gcMark( Kernel::GCMarkedSet & marked )
 {
   const_cast< Lang::Group2D * >( pile_.getPtr( ) )->gcMark( marked );

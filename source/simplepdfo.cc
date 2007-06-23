@@ -139,17 +139,20 @@ SimplePDF::PDF_out::PDF_out( ostream * _os )
   : version_( SimplePDF::PDF_out::PDF_1_4 ),
     versionAction_( SimplePDF::PDF_out::WARN ),
     os( _os ), os_start( static_cast< streamoff >( os->tellp( ) ) ),
-    i_root( NullPtr<PDF_Object>( ) ),
-    pageResources( new PDF_Resources ),
-    contents( new PDF_Stream_out ),
-    mediabox( new PDF_Vector( 0, 0, 150, 120 ) ),
+    root_( new PDF_Dictionary ),
     info_( new PDF_Dictionary ),
+    i_root( NullPtr< PDF_Object >( ) ),
     objCount( 0 )
 {
   indirect( RefCountPtr< PDF_Int >( new PDF_Int( 0 ) ), 65535 );
   indirectQueue.back( )->inUse = false;
 
+  i_root = indirect( root_ );
+
   (*info_)[ "Producer" ] = newString( "Drool" );
+
+  root_->dic[ "Type" ] = newName( "Catalog" );
+
 }
 
 SimplePDF::PDF_out::~PDF_out( )
@@ -168,10 +171,6 @@ SimplePDF::PDF_out::writeData( )
      << static_cast< char >( 131 ) << static_cast< char >( 132 )
      << " Treat as binary" << endl ;
 
-  RefCountPtr<PDF_Dictionary> pages( new PDF_Dictionary );
-  RefCountPtr<PDF_Dictionary> thePage( new PDF_Dictionary );
-  RefCountPtr<PDF_Dictionary> root( new PDF_Dictionary );
-  i_root = indirect( root );
   i_info = indirect( info_ );
 
   if( extensionAuthorStrings.size( ) > 0 )
@@ -188,7 +187,6 @@ SimplePDF::PDF_out::writeData( )
       (*info_)[ "ExtensionAuthors" ] = newString( oss.str( ).c_str( ) );
     }
 
-  root->dic[ "Type" ] = newName( "Catalog" );
 
   /*
   {
@@ -199,24 +197,6 @@ SimplePDF::PDF_out::writeData( )
   }
   */
 
-  RefCountPtr<PDF_Object> i_pages( indirect( pages ) );
-  root->dic[ "Pages" ] = i_pages;
-  
-  pages->dic[ "Type"  ] = newName( "Pages" );
-  {
-    RefCountPtr<PDF_Vector> pagesKids( new PDF_Vector );
-    pagesKids->vec.push_back( indirect( thePage ) );
-    pages->dic[ "Kids" ] = pagesKids;
-    pages->dic[ "Count" ] = newInt( pagesKids->vec.size( ) );
-  }
-
-  thePage->dic[ "Type" ] = newName( "Page" );
-  thePage->dic[ "Parent" ] = i_pages;
-  thePage->dic[ "MediaBox" ] = mediabox;
-  thePage->dic[ "Contents" ] = indirect( contents );
-  thePage->dic[ "Resources" ] = indirect( pageResources );
-  /* The UserUnit entry appears in PDF 1.6, and cannot be relyed on */
-  //  thePage->dic[ "UserUnit" ] = RefCountPtr< PDF_Object >( new PDF_Float( 72 / 2.52 ) );
 
   {
     typedef IndirectQueueType::iterator I;

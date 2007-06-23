@@ -5,6 +5,7 @@
 #include "MetaPDF_Kernel_decls.h"
 #include "MetaPDF_Lang_decls.h"
 #include "FontMetrics_decls.h"
+#include "SimplePDF_decls.h"
 
 #include "metapdfvalue.h"
 #include "functiontypes.h"
@@ -151,6 +152,7 @@ namespace MetaPDF
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
       RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
+      void erase( );
       TYPEINFODECL;
     };
     
