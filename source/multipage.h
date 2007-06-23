@@ -49,8 +49,11 @@ namespace MetaPDF
       virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       virtual void gcMark( Kernel::GCMarkedSet & marked );
+
       void setLabel( RefCountPtr< const char > prefix, PageLabelEntry::Style style, size_t start );
       size_t getNextPageNumber( ) const;
+      PageLabelEntry::Style getNextPageStyle( ) const;
+      RefCountPtr< const char > getNextPagePrefix( ) const;
       RefCountPtr< const char > getNextPageLabel( ) const;
 
       bool isEmpty( ) const;

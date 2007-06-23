@@ -17,9 +17,18 @@ clock: \ hour minute .>
 [setpagelabel •catalog prefix:`Am ´ number:'8]
 •stdout << `First page's label: ´ << [nextpagelabel •catalog] << `¢n´
 
-•catalog << [clock 8 0] << [clock 9 0] << [clock 10 0]
+•catalog << [clock 8 0] << [clock 9 0] 
 
-[setpagelabel •catalog prefix:`Pm ´ style:'alphabet number:'33]
+[setpagelabel •catalog number:[nextpagenumber •catalog]+'1]
+•stdout << `Skipping to page: ´ << [nextpagenumber •catalog] << `¢n´
+
+•catalog << [clock [nextpagenumber •catalog]*1 0]
+
+/** Note how the various part of the page label may be set independently of each other.
+ **/
+[setpagelabel •catalog prefix:`Pm ´]
+[setpagelabel •catalog number:'33]
+[setpagelabel •catalog style:'alphabet]
 •stdout << `Later page's label: ´ << [nextpagelabel •catalog] << `¢n´
 
 •catalog << [clock 3 10] << [clock 4 10] << [clock 5 10]

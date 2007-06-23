@@ -364,9 +364,9 @@ Lang::Core_setpagelabel::Core_setpagelabel( const char * title )
 {
   formals_->appendCoreStateFormal( "catalog" );
 
-  formals_->appendEvaluatedCoreFormal( "prefix", Helpers::newValHandle( new Lang::String( strrefdup( "" ) ) ) );
-  formals_->appendEvaluatedCoreFormal( "style", Helpers::newValHandle( new Lang::Symbol( "decimal" ) ) );
-  formals_->appendEvaluatedCoreFormal( "number", Helpers::newValHandle( new Lang::Integer( 1 ) ) );
+  formals_->appendEvaluatedCoreFormal( "prefix", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "style", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "number", Kernel::THE_VOID_VARIABLE );
 }
 
 void
@@ -378,12 +378,17 @@ Lang::Core_setpagelabel::call( Kernel::EvalState * evalState, Kernel::Arguments 
   StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
 
   size_t argsi = 0;
-  typedef const Lang::String PrefixType;
-  RefCountPtr< PrefixType > prefix = Helpers::down_cast_CoreArgument< PrefixType >( title_, args, argsi, callLoc );
-  
+  typedef const Lang::String PrefixValType;
+  RefCountPtr< PrefixValType > prefixVal = Helpers::down_cast_CoreArgument< PrefixValType >( title_, args, argsi, callLoc, true );
+  RefCountPtr< const char > prefix = state->getNextPagePrefix( );
+  if( prefixVal != NullPtr< PrefixValType >( ) )
+    {
+      prefix = prefixVal->val_;
+    }
+
   ++argsi;
   typedef const Lang::Symbol StyleType;
-  RefCountPtr< StyleType > style = Helpers::down_cast_CoreArgument< StyleType >( title_, args, 1, callLoc );
+  RefCountPtr< StyleType > style = Helpers::down_cast_CoreArgument< StyleType >( title_, args, 1, callLoc, true );
 
   static Lang::Symbol STYLE_none( "none" );
   static Lang::Symbol STYLE_decimal( "decimal" );
@@ -393,53 +398,69 @@ Lang::Core_setpagelabel::call( Kernel::EvalState * evalState, Kernel::Arguments 
   static Lang::Symbol STYLE_alphabet( "alphabet" );
 
   Kernel::WarmCatalog::PageLabelEntry::Style styleVal;
-  if( *style == STYLE_none )
+  if( style == NullPtr< StyleType >( ) )
     {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::NONE;
-    }
-  else if( *style == STYLE_decimal )
-    {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::DECIMAL;
-    }
-  else if( *style == STYLE_ROMAN )
-    {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::ROMAN;
-    }
-  else if( *style == STYLE_roman )
-    {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::rOMAN;
-    }
-  else if( *style == STYLE_ALPHABET )
-    {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::ALPHABET;
-    }
-  else if( *style == STYLE_alphabet )
-    {
-      styleVal = Kernel::WarmCatalog::PageLabelEntry::aLPHABET;
+      styleVal = state->getNextPageStyle( );
     }
   else
     {
-      std::ostringstream oss;
-      oss << "Valid page label styles are the symbols { "
-	  << STYLE_none.name( ).getPtr( ) << ", "
-	  << STYLE_decimal.name( ).getPtr( ) << ", "
-	  << STYLE_ROMAN.name( ).getPtr( ) << ", "
-	  << STYLE_roman.name( ).getPtr( ) << ", "
-	  << STYLE_alphabet.name( ).getPtr( ) << ", "
-	  << STYLE_ALPHABET.name( ).getPtr( )
-	  << " }." ;
-      throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( oss ) );
-    }
-
-  ++argsi;
-  typedef const Lang::Integer NumberType;
-  RefCountPtr< NumberType > number = Helpers::down_cast_CoreArgument< NumberType >( title_, args, argsi, callLoc );
-  if( number->val_ < 1 )
-    {
-      throw Exceptions::CoreOutOfRange( title_, args, argsi, "PDF only allows strictly positive page numbers." );
+      if( *style == STYLE_none )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::NONE;
+	}
+      else if( *style == STYLE_decimal )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::DECIMAL;
+	}
+      else if( *style == STYLE_ROMAN )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::ROMAN;
+	}
+      else if( *style == STYLE_roman )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::rOMAN;
+	}
+      else if( *style == STYLE_ALPHABET )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::ALPHABET;
+	}
+      else if( *style == STYLE_alphabet )
+	{
+	  styleVal = Kernel::WarmCatalog::PageLabelEntry::aLPHABET;
+	}
+      else
+	{
+	  std::ostringstream oss;
+	  oss << "Valid page label styles are the symbols { "
+	      << STYLE_none.name( ).getPtr( ) << ", "
+	      << STYLE_decimal.name( ).getPtr( ) << ", "
+	      << STYLE_ROMAN.name( ).getPtr( ) << ", "
+	      << STYLE_roman.name( ).getPtr( ) << ", "
+	      << STYLE_alphabet.name( ).getPtr( ) << ", "
+	      << STYLE_ALPHABET.name( ).getPtr( )
+	      << " }." ;
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( oss ) );
+	}
     }
   
-  state->setLabel( prefix->val_, styleVal, static_cast< size_t >( number->val_ ) );
+  ++argsi;
+  typedef const Lang::Integer NumberType;
+  RefCountPtr< NumberType > numberVal = Helpers::down_cast_CoreArgument< NumberType >( title_, args, argsi, callLoc, true );
+  size_t number;
+  if( numberVal != NullPtr< NumberType >( ) )
+    {
+      if( numberVal->val_ < 1 )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "PDF only allows strictly positive page numbers." );
+	}
+      number = static_cast< size_t >( numberVal->val_ );
+    }
+  else
+    {
+      number = state->getNextPageNumber( );
+    }
+
+  state->setLabel( prefix, styleVal, number );
 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( Kernel::THE_SLOT_VARIABLE,

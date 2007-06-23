@@ -93,6 +93,20 @@ Kernel::WarmCatalog::getNextPageNumber( ) const
   return lastEntry->startNumber_ + pages_.size( ) - lastEntry->pageIndex_;
 }
 
+Kernel::WarmCatalog::PageLabelEntry::Style
+Kernel::WarmCatalog::getNextPageStyle( ) const
+{
+  const Kernel::WarmCatalog::PageLabelEntry * lastEntry = labelEntries_.back( );
+  return lastEntry->style_;
+}
+
+RefCountPtr< const char >
+Kernel::WarmCatalog::getNextPagePrefix( ) const
+{
+  const Kernel::WarmCatalog::PageLabelEntry * lastEntry = labelEntries_.back( );
+  return lastEntry->prefix_;
+}
+
 RefCountPtr< const char >
 Kernel::WarmCatalog::getNextPageLabel( ) const
 {
