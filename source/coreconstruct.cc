@@ -10,6 +10,7 @@
 #include "simplepdfo.h"
 #include "metapdfastfun.h"
 #include "tagtypes.h"
+#include "multipage.h"
 #include "charconverters.h"
 #include "pagecontentstates.h"
 #include "texlabelmanager.h"
@@ -1614,4 +1615,186 @@ Lang::Core_devrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & a
   Kernel::ContRef cont = evalState->cont_;
   cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::HotRandomSeed( static_cast< size_t >( sz ), gen ) ),
 		   evalState );
+}
+
+
+Lang::Core_destination::Core_destination( const char * title )
+  : CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+{
+  formals_->appendEvaluatedCoreFormal( "remote", Kernel::THE_FALSE_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "name", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "level", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "open", Kernel::THE_FALSE_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "bold", Kernel::THE_FALSE_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "italic", Kernel::THE_FALSE_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "color", Helpers::newValHandle( new Lang::RGB( Concrete::RGB( 0, 0, 0 ) ) ) );
+  formals_->appendEvaluatedCoreFormal( "sides", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "fittobbox", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "zoom", Kernel::THE_VOID_VARIABLE );
+}
+
+void
+Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+  args.applyDefaults( );
+
+  size_t argsi = 0;
+  typedef const Lang::Boolean RemoteType;
+  bool remote = Helpers::down_cast_CoreArgument< RemoteType >( title_, args, argsi, callLoc )->val_;
+
+  ++argsi;
+  typedef const Lang::String NameType;
+  RefCountPtr< NameType > nameVal = Helpers::down_cast_CoreArgument< NameType >( title_, args, argsi, callLoc, true );
+  RefCountPtr< const char > name = RefCountPtr< const char >( NullPtr< const char >( ) );
+  if( nameVal != NullPtr< NameType >( ) )
+    {
+      name = nameVal->val_;
+    }
+  else
+    {
+      if( remote )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, 0, "The destination cannot be remote if no name is given." );
+	}
+    }
+  
+  ++argsi;
+  typedef const Lang::Integer OutlineLevelType;
+  RefCountPtr< OutlineLevelType > levelVal = Helpers::down_cast_CoreArgument< OutlineLevelType >( title_, args, argsi, callLoc, true );
+  int outlineLevel = -1; // This will remain negative only if the level is not present.
+  if( levelVal != NullPtr< OutlineLevelType >( ) )
+    {
+      outlineLevel = levelVal->val_;
+      if( outlineLevel < 0 )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "The outline level must be non-negative." );	  
+	}
+    }
+
+  ++argsi;
+  typedef const Lang::Boolean OutlineOpenType;
+  bool outlineOpen = Helpers::down_cast_CoreArgument< OutlineOpenType >( title_, args, argsi, callLoc )->val_;
+
+  ++argsi;
+  typedef const Lang::Boolean OutlineBoldType;
+  bool outlineBold = Helpers::down_cast_CoreArgument< OutlineBoldType >( title_, args, argsi, callLoc )->val_;
+
+  ++argsi;
+  typedef const Lang::Boolean OutlineItalicType;
+  bool outlineItalic = Helpers::down_cast_CoreArgument< OutlineItalicType >( title_, args, argsi, callLoc )->val_;
+
+  ++argsi;
+  typedef const Lang::RGB OutlineColorType;
+  Concrete::RGB outlineColor = Helpers::down_cast_CoreArgument< OutlineColorType >( title_, args, argsi, callLoc )->components( );
+
+  ++argsi;
+  size_t sidesMode_i = argsi;
+  typedef const Lang::Symbol SidesModeType;
+  RefCountPtr< SidesModeType > sidesVal = Helpers::down_cast_CoreArgument< SidesModeType >( title_, args, argsi, callLoc, true );
+
+  ++argsi;
+  size_t target_i = argsi;
+  typedef const Lang::Drawable2D TargetType;
+  RefCountPtr< TargetType > target = Helpers::down_cast_CoreArgument< TargetType >( title_, args, argsi, callLoc, true );
+
+  Lang::DocumentDestination::Sides sides = Lang::DocumentDestination::PAGE; // Defaults to false, unless a target is given.
+  if( target != NullPtr< TargetType >( ) )
+    {
+      sides = Lang::DocumentDestination::TOPLEFT;
+      if( remote )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, target_i, "The target can not be specified for remote destinations." );
+	}
+    }
+  static Lang::Symbol SIDES_TopLeft( "topleft" );
+  static Lang::Symbol SIDES_Page( "page" );
+  static Lang::Symbol SIDES_Top( "top" );
+  static Lang::Symbol SIDES_Left( "left" );
+  static Lang::Symbol SIDES_Rectangle( "rectangle" );
+  if( sidesVal != NullPtr< SidesModeType >( ) )
+    {
+      if( *sidesVal == SIDES_TopLeft )
+	{
+	  sides = Lang::DocumentDestination::TOPLEFT;
+	}
+      else if( *sidesVal == SIDES_Page )
+	{
+	  if( target != NullPtr< TargetType >( ) )
+	    {
+	      throw Exceptions::CoreOutOfRange( title_, args, sidesMode_i, "The sides mode cannot be page when a target object is present." );
+	    }
+	  sides = Lang::DocumentDestination::PAGE;
+	}
+      else if( *sidesVal == SIDES_Top )
+	{
+	  sides = Lang::DocumentDestination::TOP;
+	}
+      else if( *sidesVal == SIDES_Left )
+	{
+	  sides = Lang::DocumentDestination::LEFT;
+	}
+      else if( *sidesVal == SIDES_Rectangle )
+	{
+	  sides = Lang::DocumentDestination::RECTANGLE;
+	}
+      else
+	{
+	  std::ostringstream oss;
+	  oss << "Valid sides modes are the symbols { "
+	      << SIDES_TopLeft.name( ).getPtr( ) << ", "
+	      << SIDES_Page.name( ).getPtr( ) << ", "
+	      << SIDES_Top.name( ).getPtr( ) << ", "
+	      << SIDES_Left.name( ).getPtr( ) << ", "
+	      << SIDES_Rectangle.name( ).getPtr( )
+	      << " }." ;
+	  throw Exceptions::CoreOutOfRange( title_, args, sidesMode_i, strrefdup( oss ) );
+	}
+    }
+
+  ++argsi;
+  typedef const Lang::Boolean FitToType;
+  RefCountPtr< FitToType > fittobboxVal = Helpers::down_cast_CoreArgument< FitToType >( title_, args, argsi, callLoc, true );
+  bool fittobbox = false;
+  if( fittobboxVal != NullPtr< FitToType >( ) )
+    {
+      if( remote || sides == Lang::DocumentDestination::TOPLEFT || sides == Lang::DocumentDestination::RECTANGLE )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "The fit-to-bbox flag cannot be specified in this mode." );
+	}
+      fittobbox = fittobboxVal->val_;
+    }
+
+  ++argsi;
+  typedef const Lang::Float ZoomType;
+  RefCountPtr< ZoomType > zoomVal = Helpers::down_cast_CoreArgument< ZoomType >( title_, args, argsi, callLoc, true );
+  double zoom = 0; // This will remain zero only if the zoom argument is not specified.
+  if( zoomVal != NullPtr< ZoomType >( ) )
+    {
+      if( remote || sides != Lang::DocumentDestination::TOPLEFT )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "The zoom can only be specified when using the top-left sides." );	  	  
+	}
+      zoom = zoomVal->val_;
+      if( zoom <= 0 )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "The zoom value must be positive." );
+	}
+    }
+
+  Kernel::ContRef cont = evalState->cont_;
+  if( remote )
+    {
+      cont->takeValue( RefCountPtr< const Lang::Value >
+		       ( new Lang::DocumentDestination( remote, name, outlineLevel,
+							outlineOpen, outlineBold, outlineItalic, outlineColor ) ),
+		       evalState );
+    }
+  else
+    {
+      cont->takeValue( RefCountPtr< const Lang::Value >
+		       ( new Lang::DocumentDestination( name, outlineLevel,
+							outlineOpen, outlineBold, outlineItalic, outlineColor,
+							sides, target, fittobbox, zoom ) ),
+		       evalState );
+    }
 }

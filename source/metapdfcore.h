@@ -815,6 +815,13 @@ namespace MetaPDF
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
     };
 
+    class Core_destination : public Lang::CoreFunction
+    {
+    public:
+      Core_destination( const char * title );
+      virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+    };
+
   }
 }
 

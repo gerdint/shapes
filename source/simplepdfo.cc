@@ -548,3 +548,149 @@ SimplePDF::PDF_out::toString( SimplePDF::PDF_out::Version version )
 RefCountPtr<PDF_Object> SimplePDF::theTrue( new PDF_Boolean( true ) );
 RefCountPtr<PDF_Object> SimplePDF::theFalse( new PDF_Boolean( false ) );
 
+
+SimplePDF::OutlineItem::OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const MetaPDF::Concrete::RGB & color )
+  : destination_( destination ), title_( title ), isOpen_( isOpen ), fontBold_( fontBold ), fontItalic_( fontItalic ), color_( color )
+{ }
+
+SimplePDF::OutlineItem::~OutlineItem( )
+{ }
+
+void
+SimplePDF::OutlineItem::addKid( const RefCountPtr< OutlineItem > & kid )
+{
+  kids_.push_back( kid );
+}
+
+bool
+SimplePDF::OutlineItem::hasKids( ) const
+{
+  return kids_.size( ) > 0;
+}
+
+RefCountPtr< SimplePDF::PDF_Indirect_out >
+SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) const 
+{
+  RefCountPtr< SimplePDF::PDF_Dictionary > res( new SimplePDF::PDF_Dictionary );
+  RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = doc->indirect( res );
+  res->dic[ "Type"  ] = doc->newName( "Outlines" );
+
+  if( kids_.size( ) > 0 )
+    {
+      size_t openCount = 0;
+
+      typedef typeof kids_ ListType;
+      ListType::const_iterator i = kids_.begin( );
+
+      RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
+      newKid->dic[ "Parent" ] = i_res;
+      RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
+      openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+
+      RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
+
+      for( ; i != kids_.end( ); ++i )
+	{
+	  RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
+	  newKid = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	  newKid->dic[ "Prev" ] = i_newKid;
+	  i_newKid = doc->indirect( newKid );
+	  lastKid->dic[ "Next" ] = i_newKid;
+	  newKid->dic[ "Parent" ] = i_res;
+	  openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+	}
+
+      res->dic[ "First"  ] = i_first;
+      res->dic[ "Last"  ] = i_newKid;
+
+      if( openCount > 0 )
+	{
+	  res->dic[ "Count"  ] = doc->newInt( openCount );
+	}
+    }
+
+  return i_res;
+}
+
+size_t
+SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc ) const
+{
+  dstDic->dic[ "Title"  ] = doc->newString( title_.getPtr( ) );
+  dstDic->dic[ "Dest"  ] = destination_;
+  const SimplePDF::PDF_out::Version FANCY_OUTLINE_VERSION = SimplePDF::PDF_out::PDF_1_3;
+  if( fontBold_ || fontItalic_ )
+    {
+      if( doc->versionGreaterOrEqual( FANCY_OUTLINE_VERSION ) )
+	{
+	  dstDic->dic[ "F"  ] = doc->newInt( ( fontBold_ ? 1 : 0 ) + ( fontItalic_ ? 2 : 0 ) );
+	}
+      else
+	{
+	  doc->versionMessage( FANCY_OUTLINE_VERSION, "The outline item font flags were ignored." );
+	}      
+    }
+  if( color_.mean( ) > 0 )
+    {
+      if( doc->versionGreaterOrEqual( FANCY_OUTLINE_VERSION ) )
+	{
+	  dstDic->dic[ "C"  ] = color_.componentVector( );
+	}
+      else
+	{
+	  doc->versionMessage( FANCY_OUTLINE_VERSION, "The outline item color was ignored." );
+	}
+    }
+
+
+  size_t openCount = 0;
+
+  if( kids_.size( ) > 0 )
+    {
+      typedef typeof kids_ ListType;
+      ListType::const_iterator i = kids_.begin( );
+
+      RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
+      newKid->dic[ "Parent" ] = i_dstDic;
+      RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
+      openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+
+      RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
+
+      for( ; i != kids_.end( ); ++i )
+	{
+	  RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
+	  newKid = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	  newKid->dic[ "Prev" ] = i_newKid;
+	  i_newKid = doc->indirect( newKid );
+	  lastKid->dic[ "Next" ] = i_newKid;
+	  newKid->dic[ "Parent" ] = i_dstDic;
+	  openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+	}
+
+      dstDic->dic[ "First"  ] = i_first;
+      dstDic->dic[ "Last"  ] = i_newKid;
+
+      if( openCount > 0 )
+	{
+	  dstDic->dic[ "Count"  ] = doc->newInt( openCount );
+	}
+    }  
+
+  if( openCount > 0 )
+    {
+      if( isOpen_ )
+	{
+	  dstDic->dic[ "Count"  ] = doc->newInt( openCount );
+	}
+      else
+	{
+	  dstDic->dic[ "Count"  ] = doc->newInt( -openCount );
+	}
+    }
+  
+  if( isOpen_ )
+    {
+      ++openCount;
+    }
+  return openCount;
+}

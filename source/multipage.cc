@@ -11,6 +11,168 @@
 
 using namespace MetaPDF;
 
+Lang::DocumentDestination::DocumentDestination( bool remote, RefCountPtr< const char > name, int outlineLevel,
+						bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor )
+  : remote_( remote ), name_( name ), outlineLevel_( outlineLevel ),
+    outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
+    target_( NullPtr< const Lang::Drawable2D >( ) )
+{
+  if( ! remote_ )
+    {
+      throw Exceptions::InternalError( "The constructor of DocumentDestination requires <remote> to be true." );
+    }
+  if( name_ == NullPtr< const char >( ) )
+    {
+      throw Exceptions::InternalError( "The constructor remote DocumentDestination requires <name> to be non-null." );
+    }
+}
+
+Lang::DocumentDestination::DocumentDestination( RefCountPtr< const char > name, int outlineLevel,
+						bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
+						Sides sidesMode, RefCountPtr< const Lang::Drawable2D > target, bool fittobbox, double zoom )
+  : remote_( false ), name_( name ), outlineLevel_( outlineLevel ),
+    outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
+    sidesMode_( sidesMode ), target_( target ), fittobbox_( fittobbox ), zoom_( zoom )
+{ }
+
+Lang::DocumentDestination::~DocumentDestination( )
+{ }
+
+
+RefCountPtr< const Lang::Class > Lang::DocumentDestination::TypeID( new Lang::SystemFinalClass( strrefdup( "Destination" ) ) );
+TYPEINFOIMPL( DocumentDestination );
+DISPATCHIMPL( DocumentDestination );
+
+RefCountPtr< const Lang::Geometric2D >
+Lang::DocumentDestination::transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const
+{
+  if( remote_ )
+    {
+      return self;
+    }
+  
+  return
+    RefCountPtr< const Lang::Geometric2D >
+    ( new Lang::DocumentDestination( name_, outlineLevel_,
+				     outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_,
+				     sidesMode_, target_->typed_transformed( transform, target_ ), fittobbox_, zoom_ ) );
+}
+
+RefCountPtr< const Lang::Geometric3D >
+Lang::DocumentDestination::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
+{
+  throw Exceptions::NotImplemented( "Destinations in 3D." );
+}
+
+
+void
+Lang::DocumentDestination::gcMark( Kernel::GCMarkedSet & marked )
+{
+  if( target_ != NullPtr< const Lang::Drawable2D >( ) )
+    {
+      const_cast< Lang::Drawable2D * >( target_.getPtr( ) )->gcMark( marked );
+    }
+}
+
+bool
+Lang::DocumentDestination::definesNamed( ) const
+{
+  return ! remote_ && name_ != NullPtr< const char >( );
+}
+
+RefCountPtr< const char >
+Lang::DocumentDestination::name( ) const
+{
+  return name_;
+}
+
+RefCountPtr< SimplePDF::PDF_Object >
+Lang::DocumentDestination::getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const
+{
+  if( remote_ )
+    {
+      return Kernel::the_pdfo->newString( name_.getPtr( ) );
+    }
+
+  RefCountPtr< SimplePDF::PDF_Vector > res( new SimplePDF::PDF_Vector );
+  res->vec.push_back( i_page );
+
+  Concrete::Coords2D llcorner( 0, 0 );
+  Concrete::Coords2D urcorner( 0, 0 );
+  if( target_ != NullPtr< const Lang::Drawable2D >( ) )
+    {
+      RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( );
+      if( theBBox->size( ) == 0 )
+	{
+	  throw Exceptions::MiscellaneousRequirement( "The destination target produced an empty bounding box." );
+	}
+      theBBox->boundingRectangle( & llcorner, & urcorner );
+    }
+  switch( sidesMode_ )
+    {
+    case PAGE:
+      {
+	if( fittobbox_ )
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "FitB" ) );
+	  }
+	else
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "Fit" ) );
+	  }
+      }
+      break;
+    case TOPLEFT:
+      {
+	res->vec.push_back( Kernel::the_pdfo->newName( "XYZ" ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( zoom_ ) );
+      }
+      break;
+    case TOP:
+      {
+	if( fittobbox_ )
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "FitH" ) );
+	  }
+	else
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "FitBH" ) );
+	  }
+	res->vec.push_back( Kernel::the_pdfo->newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+      }
+      break;
+    case LEFT:
+      {
+	if( fittobbox_ )
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "FitV" ) );
+	  }
+	else
+	  {
+	    res->vec.push_back( Kernel::the_pdfo->newName( "FitBV" ) );
+	  }
+	res->vec.push_back( Kernel::the_pdfo->newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+      }
+      break;
+    case RECTANGLE:
+      {
+	res->vec.push_back( Kernel::the_pdfo->newName( "FitR" ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( llcorner.y_.offtype< 1, 0 >( ) ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( urcorner.x_.offtype< 1, 0 >( ) ) );
+	res->vec.push_back( Kernel::the_pdfo->newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+      }
+      break;
+    default:
+      throw Exceptions::InternalError( "Destination's sidesMode_ out of range in getDestination." );
+    }
+
+  return res;
+}
+
+
 
 Kernel::WarmCatalog::Page::Page( const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox )
   : resources_( resources ), contents_( contents ), mediabox_( mediabox )
@@ -31,6 +193,12 @@ Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 Kernel::WarmCatalog::WarmCatalog( )
 {
   labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, NullPtr< const char >( ), PageLabelEntry::DECIMAL, 1 ) );  
+  
+  outlineStack_.reserve( 10 );
+  outlineStack_.push_back
+    ( RefCountPtr< SimplePDF::OutlineItem >
+      ( new SimplePDF::OutlineItem( RefCountPtr< SimplePDF::PDF_Object >( NullPtr< SimplePDF::PDF_Object >( ) ), strrefdup( "Top" ),
+				    true, false, false, Concrete::RGB( 0, 0, 0 ) ) ) );
 }
 
 Kernel::WarmCatalog::~WarmCatalog( )
@@ -430,5 +598,10 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	      newEntry->dic[ "St" ] = doc->newInt( (*i)->startNumber_ );
 	    }
 	}
+    }
+
+  if( outlineStack_.front( )->hasKids( ) )
+    {
+      doc->root_->dic[ "Outlines" ] = outlineStack_.front( )->getTopIndirectDictionary( doc );
     }
 }

@@ -5,6 +5,7 @@
 
 #include "SimplePDF_decls.h"
 #include "MetaPDF_Lang_decls.h"
+#include "concretecolors.h"
 
 #include <list>
 #include <set>
@@ -106,11 +107,22 @@ namespace SimplePDF
 
   class OutlineItem
   {
+    RefCountPtr< PDF_Object > destination_;
     RefCountPtr< const char > title_;
-    size_t destinationPageIndex_;
     std::list< RefCountPtr< OutlineItem > > kids_;
+    bool isOpen_;
+
+    bool fontBold_;
+    bool fontItalic_;
+    MetaPDF::Concrete::RGB color_;
   public:
-    RefCountPtr< SimplePDF::PDF_Dictionary > getDictionary( ) const;
+    OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const MetaPDF::Concrete::RGB & color );
+    ~OutlineItem( );
+    void addKid( const RefCountPtr< OutlineItem > & kid );
+
+    bool hasKids( ) const;
+    RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc ) const;
+    size_t SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc ) const;
   };
 
 }

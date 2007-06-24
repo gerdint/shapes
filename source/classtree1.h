@@ -31,7 +31,8 @@
   CLASSTREE1_LightSource( Ma, S, Mb )				\
   CLASSTREE1_LightGroup( Ma, S, Mb )				\
   CLASSTREE1_SpecularReflection( Ma, S, Mb )				\
-  CLASSTREE1_DynamicBindings( Ma, S, Mb )
+  CLASSTREE1_DynamicBindings( Ma, S, Mb )                       \
+  CLASSTREE1_DocumentDestination( Ma, S, Mb )
 #define CLASSTREE1_NoOperatorOverloadValue( Ma, S, Mb ) Ma( S, Mb, NoOperatorOverloadValue )
 #define CLASSTREE1_Drawable2D( Ma, S, Mb ) Ma( S, Mb, Drawable2D )
 #define CLASSTREE1_Drawable3D( Ma, S, Mb ) Ma( S, Mb, Drawable3D )
@@ -79,3 +80,4 @@
 #define CLASSTREE1_DynamicBindings( Ma, S, Mb ) Ma( S, Mb, DynamicBindings )
 #define CLASSTREE1_SingleDynamicBinding( Ma, S, Mb ) Ma( S, Mb, SingleDynamicBinding )
 #define CLASSTREE1_DynamicBindingsPair( Ma, S, Mb ) Ma( S, Mb, DynamicBindingsPair )
+#define CLASSTREE1_DocumentDestination( Ma, S, Mb ) Ma( S, Mb, DocumentDestination )

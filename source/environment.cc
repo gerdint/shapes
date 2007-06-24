@@ -443,6 +443,7 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
   selfDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );
   selfDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
+  selfDefineCoreFunction( new Lang::Core_destination( "destination" ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 

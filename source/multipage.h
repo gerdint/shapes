@@ -8,9 +8,58 @@
 #include "SimplePDF_decls.h"
 
 #include "hottypes.h"
+#include "tagtypes.h"
 
 namespace MetaPDF
 {
+  namespace Lang
+  {
+
+    class DocumentDestination : public Lang::Geometric2D
+    {
+    public:
+      enum Sides{ PAGE, TOPLEFT, TOP, LEFT, RECTANGLE };
+    private:
+      bool remote_;
+      /* Strings are used instead of symbols for destination names, since they are often composd from parts,
+       * like [sprintf `chap.%d.sec.%d´ chapNo secNo].
+       */
+      RefCountPtr< const char > name_; // Null if not a named destination.  Must be present if remote_.
+      int outlineLevel_; // Negative if not to appear in the document outline.
+
+      bool outlineOpen_; // Only applies if to appear in the document outline.
+      bool outlineFontBold_;
+      bool outlineFontItalic_;
+      Concrete::RGB outlineColor_;
+
+      /* The following members shall not be used for remote_ destinations.
+       */
+      Sides sidesMode_;
+      RefCountPtr< const Lang::Drawable2D > target_; // Not used if sidesMode_ is <page>.
+      bool fittobbox_; // If true, the content's bounding box is used instead of the mediabox for zooming purposes.
+      double zoom_; // If not strictly positive, zoom is unspecified.  Can only be specified in mode <topleft>.
+    public:
+      DocumentDestination( bool remote, RefCountPtr< const char > name, int outlineLevel,
+			   bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor ); // remote must be true!.
+      DocumentDestination( RefCountPtr< const char > name, int outlineLevel,
+			   bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
+			   Sides sidesMode, RefCountPtr< const Lang::Drawable2D > target, bool fittobbox, double zoom );
+      virtual ~DocumentDestination( );
+      virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const;
+      virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
+
+      virtual void gcMark( Kernel::GCMarkedSet & marked );
+
+      bool definesNamed( ) const;
+      RefCountPtr< const char > name( ) const;
+      RefCountPtr< SimplePDF::PDF_Object > getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const;
+
+      DISPATCHDECL;
+      TYPEINFODECL;
+    };
+
+  }
+
   namespace Kernel
   {
 
@@ -42,6 +91,7 @@ namespace MetaPDF
     private:
       PtrOwner_back_Access< std::list< const Page * > > pages_;
       PtrOwner_back_Access< std::list< const PageLabelEntry * > > labelEntries_;
+      std::vector< RefCountPtr< SimplePDF::OutlineItem > > outlineStack_;
     public:
       WarmCatalog( );
       virtual ~WarmCatalog( );
