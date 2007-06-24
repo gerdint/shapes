@@ -8,5 +8,6 @@
 #include "functiontypes.h"
 #include "classtypes.h"
 #include "containertypes.h"
+#include "multipage.h"
 
 #endif

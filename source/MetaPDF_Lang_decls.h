@@ -17,6 +17,7 @@ namespace MetaPDF
     class CoreFunction;
     class CoreFunction;
     class Dash;
+    class DocumentDestination;
     class Drawable2D;
     class Drawable3D;
     class DynamicBindings;
