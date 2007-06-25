@@ -17,7 +17,11 @@ clock: \ hour minute .>
 [setpagelabel •catalog prefix:`Am ´ number:'8]
 •stdout << `First page's label: ´ << [nextpagelabel •catalog] << `¢n´
 
-•catalog << [clock 8 0] << [clock 9 0] 
+•catalog << [clock 8 0]
+	    & [tag 'navigation [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]]
+	    & [tag 'navigation [destination level:'1 text:`Eight´]]
+         << [clock 9 0]
+	    & [tag 'navigation [destination level:'1 text:`Nine´]]
 
 [setpagelabel •catalog number:[nextpagenumber •catalog]+'1]
 •stdout << `Skipping to page: ´ << [nextpagenumber •catalog] << `¢n´
@@ -31,4 +35,8 @@ clock: \ hour minute .>
 [setpagelabel •catalog style:'alphabet]
 •stdout << `Later page's label: ´ << [nextpagelabel •catalog] << `¢n´
 
-•catalog << [clock 3 10] << [clock 4 10] << [clock 5 10]
+•catalog << [clock 3 10]
+  	    & [tag 'navigation [destination level:'0 text:`Afternoon´ italic:true]]
+         << [clock 4 10]
+	 << [clock 5 10]
+	    & [tag 'navigation [destination level:'1 text:`Five´ bold:true]]

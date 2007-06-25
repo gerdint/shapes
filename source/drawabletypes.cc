@@ -194,16 +194,18 @@ Lang::GroupPair2D::bbox( ) const
 void
 Lang::GroupPair2D::findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const
 {
-  car_->findTags( dst, dyn, key, tf );
+  /* Note the order!  Objects are added on the car side of a group being built, so the car side is the "latter".
+   */
   cdr_->findTags( dst, dyn, key, tf );
+  car_->findTags( dst, dyn, key, tf );
 }
 
 bool
 Lang::GroupPair2D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const
 {
   return
-    car_->findOneTag( evalState, key, tf ) ||
-    cdr_->findOneTag( evalState, key, tf );
+    cdr_->findOneTag( evalState, key, tf ) ||
+    car_->findOneTag( evalState, key, tf );
 }
 
 void
@@ -941,16 +943,18 @@ Lang::GroupPair3D::polygonize( std::list< RefCountPtr< Computation::PaintedPolyg
 void
 Lang::GroupPair3D::findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const
 {
-  car_->findTags( dst, dyn, key, tf );
+  /* See note on order in GroupPair2D!
+   */
   cdr_->findTags( dst, dyn, key, tf );
+  car_->findTags( dst, dyn, key, tf );
 }
 
 bool
 Lang::GroupPair3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const
 {
   return
-    car_->findOneTag( evalState, key, tf ) ||
-    cdr_->findOneTag( evalState, key, tf );
+    cdr_->findOneTag( evalState, key, tf ) ||
+    car_->findOneTag( evalState, key, tf );
 }
 
 void

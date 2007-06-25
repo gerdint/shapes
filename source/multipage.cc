@@ -12,9 +12,9 @@
 using namespace MetaPDF;
 
 Lang::DocumentDestination::DocumentDestination( bool remote, RefCountPtr< const char > name, int outlineLevel,
-						bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor )
+						RefCountPtr< const char > outlineText, bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor )
   : remote_( remote ), name_( name ), outlineLevel_( outlineLevel ),
-    outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
+    outlineText_( outlineText ), outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
     target_( NullPtr< const Lang::Drawable2D >( ) )
 {
   if( ! remote_ )
@@ -28,10 +28,10 @@ Lang::DocumentDestination::DocumentDestination( bool remote, RefCountPtr< const 
 }
 
 Lang::DocumentDestination::DocumentDestination( RefCountPtr< const char > name, int outlineLevel,
-						bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
+						RefCountPtr< const char > outlineText, bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
 						Sides sidesMode, RefCountPtr< const Lang::Drawable2D > target, bool fittobbox, double zoom )
   : remote_( false ), name_( name ), outlineLevel_( outlineLevel ),
-    outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
+    outlineText_( outlineText ), outlineOpen_( outlineOpen ), outlineFontBold_ ( outlineFontBold ), outlineFontItalic_( outlineFontItalic ), outlineColor_( outlineColor ),
     sidesMode_( sidesMode ), target_( target ), fittobbox_( fittobbox ), zoom_( zoom )
 { }
 
@@ -51,10 +51,15 @@ Lang::DocumentDestination::transformed( const Lang::Transform2D & transform, con
       return self;
     }
   
+  if( target_ == NullPtr< const Lang::Drawable2D >( ) )
+    {
+      return self;
+    }
+
   return
     RefCountPtr< const Lang::Geometric2D >
     ( new Lang::DocumentDestination( name_, outlineLevel_,
-				     outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_,
+				     outlineText_, outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_,
 				     sidesMode_, target_->typed_transformed( transform, target_ ), fittobbox_, zoom_ ) );
 }
 
@@ -86,14 +91,21 @@ Lang::DocumentDestination::name( ) const
   return name_;
 }
 
-RefCountPtr< SimplePDF::PDF_Object >
-Lang::DocumentDestination::getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const
+bool
+Lang::DocumentDestination::isOutlineEntry( ) const
 {
-  if( remote_ )
-    {
-      return Kernel::the_pdfo->newString( name_.getPtr( ) );
-    }
+  return outlineLevel_ >= 0;
+}
 
+size_t
+Lang::DocumentDestination::outlineLevel( ) const
+{
+  return static_cast< size_t >( outlineLevel_ );
+}
+
+RefCountPtr< SimplePDF::PDF_Vector >
+Lang::DocumentDestination::getDirectDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const
+{
   RefCountPtr< SimplePDF::PDF_Vector > res( new SimplePDF::PDF_Vector );
   res->vec.push_back( i_page );
 
@@ -172,10 +184,39 @@ Lang::DocumentDestination::getDestination( const RefCountPtr< SimplePDF::PDF_Ind
   return res;
 }
 
+RefCountPtr< SimplePDF::PDF_Object >
+Lang::DocumentDestination::getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const
+{
+  if( remote_ )
+    {
+      return Kernel::the_pdfo->newString( name_.getPtr( ) );
+    }
+  return getDirectDestination( i_page );
+}
+
+RefCountPtr< SimplePDF::OutlineItem >
+Lang::DocumentDestination::getOutlineItem( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, RefCountPtr< const char > otherText ) const
+{
+  RefCountPtr< const char > theText = otherText;
+  if( theText == NullPtr< const char >( ) )
+    {
+      theText = outlineText_;
+    }
+
+  if( name_ != NullPtr< const char >( ) )
+    {
+      return RefCountPtr< SimplePDF::OutlineItem >
+	( new SimplePDF::OutlineItem( Kernel::the_pdfo->newString( name_.getPtr( ) ), theText,
+				      outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_ ) );
+    }
+  return RefCountPtr< SimplePDF::OutlineItem >
+    ( new SimplePDF::OutlineItem( getDestination( i_page ), theText,
+				  outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_ ) );
+}
 
 
-Kernel::WarmCatalog::Page::Page( const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox )
-  : resources_( resources ), contents_( contents ), mediabox_( mediabox )
+Kernel::WarmCatalog::Page::Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox )
+  : index_( index ), resources_( resources ), contents_( contents ), mediabox_( mediabox )
 { }
 
 Kernel::WarmCatalog::Page::~Page( )
@@ -193,12 +234,6 @@ Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 Kernel::WarmCatalog::WarmCatalog( )
 {
   labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, NullPtr< const char >( ), PageLabelEntry::DECIMAL, 1 ) );  
-  
-  outlineStack_.reserve( 10 );
-  outlineStack_.push_back
-    ( RefCountPtr< SimplePDF::OutlineItem >
-      ( new SimplePDF::OutlineItem( RefCountPtr< SimplePDF::PDF_Object >( NullPtr< SimplePDF::PDF_Object >( ) ), strrefdup( "Top" ),
-				    true, false, false, Concrete::RGB( 0, 0, 0 ) ) ) );
 }
 
 Kernel::WarmCatalog::~WarmCatalog( )
@@ -213,7 +248,7 @@ Kernel::WarmCatalog::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
   typedef const Lang::Drawable2D ArgType;
   RefCountPtr< const ArgType > pageContents( Helpers::down_cast< ArgType >( piece, callLoc ) );
 
-  tackOnPage( pageContents, callLoc );
+  tackOnPage( evalState->dyn_, pageContents, callLoc );
 
   Kernel::ContRef cont = evalState->cont_;
   cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
@@ -278,11 +313,30 @@ Kernel::WarmCatalog::getNextPagePrefix( ) const
 RefCountPtr< const char >
 Kernel::WarmCatalog::getNextPageLabel( ) const
 {
-  const Kernel::WarmCatalog::PageLabelEntry * lastEntry = labelEntries_.back( );
-  size_t current = lastEntry->startNumber_ + pages_.size( ) - lastEntry->pageIndex_;
+  return getPageLabel( labelEntries_.back( ), pages_.size( ) );
+}
+
+RefCountPtr< const char >
+Kernel::WarmCatalog::getPageLabel( size_t index ) const
+{
+  typedef typeof labelEntries_ ListType;
+  ListType::const_iterator i = labelEntries_.end( );
+  --i;
+  // Note that labelEntries_.begin( )->pageIndex is 0.
+  while( (*i)->pageIndex_ > index )
+    {
+      --i;
+    }
+  return getPageLabel( *i, index );
+}
+
+RefCountPtr< const char >
+Kernel::WarmCatalog::getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * entry, size_t index ) const
+{
+  size_t current = entry->startNumber_ + index - entry->pageIndex_;
   std::ostringstream oss;
-  oss << lastEntry->prefix_.getPtr( ) ;
-  switch( lastEntry->style_ )
+  oss << entry->prefix_.getPtr( ) ;
+  switch( entry->style_ )
     {
     case PageLabelEntry::NONE:
       { }
@@ -481,7 +535,7 @@ Kernel::WarmCatalog::isEmpty( ) const
 }
 
 void
-Kernel::WarmCatalog::tackOnPage( const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc )
+Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc )
 {
   RefCountPtr< SimplePDF::PDF_Resources > resources( new SimplePDF::PDF_Resources );
   RefCountPtr< SimplePDF::PDF_Stream_out > contents( new SimplePDF::PDF_Stream_out );
@@ -507,13 +561,40 @@ Kernel::WarmCatalog::tackOnPage( const RefCountPtr< const Lang::Drawable2D > & p
 									    llcorner.y_.offtype< 1, 0 >( ),
 									    urcorner.x_.offtype< 1, 0 >( ),
 									    urcorner.y_.offtype< 1, 0 >( ) ) );
-  
-  pages_.push_back( new Page( resources, contents, mediabox ) );  
+  Page * newPage( new Page( pages_.size( ), resources, contents, mediabox ) );
+  pages_.push_back( newPage );
+
+  {  
+    static Lang::Symbol::KeyType NAVIGATION_KEY = Lang::Symbol( "navigation" ).getKey( );
+    
+    std::vector< Kernel::ValueRef > destinations;
+    pageContents->findTags( & destinations, dyn, NAVIGATION_KEY, Lang::THE_2D_IDENTITY );
+    newPage->destinations_.reserve( destinations.size( ) );
+    typedef typeof destinations ListType;
+    for( ListType::const_iterator i = destinations.begin( ); i != destinations.end( ); ++i )
+      {
+	typedef const Lang::DocumentDestination ValType;
+	RefCountPtr< ValType > dest = i->down_cast< ValType >( );
+	if( dest == NullPtr< ValType >( ) )
+	  {
+	    throw Exceptions::TypeMismatch( callLoc, "The values tagged for navigations must have a certain type.", (*i)->getTypeName( ), ValType::staticTypeName( ) );
+	  }
+	newPage->destinations_.push_back( dest );
+      }
+  }
 }
 
 void
 Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 {
+  std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > namedDestinations;
+  std::vector< RefCountPtr< SimplePDF::OutlineItem > > outlineStack;
+  outlineStack.reserve( 10 );
+  outlineStack.push_back
+    ( RefCountPtr< SimplePDF::OutlineItem >
+      ( new SimplePDF::OutlineItem( RefCountPtr< SimplePDF::PDF_Object >( NullPtr< SimplePDF::PDF_Object >( ) ), strrefdup( "Top" ),
+				    true, false, false, Concrete::RGB( 0, 0, 0 ) ) ) );
+
   RefCountPtr< SimplePDF::PDF_Dictionary > pages( new SimplePDF::PDF_Dictionary );
 
   RefCountPtr< SimplePDF::PDF_Object > i_pages( doc->indirect( pages ) );
@@ -526,7 +607,8 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
     for( ListType::const_iterator i = pages_.begin( ); i != pages_.end( ); ++i )
       {
 	RefCountPtr< SimplePDF::PDF_Dictionary > newPage( new SimplePDF::PDF_Dictionary );
-	pagesKids->vec.push_back( doc->indirect( newPage ) );
+	RefCountPtr< SimplePDF::PDF_Indirect_out > i_newPage = doc->indirect( newPage );
+	pagesKids->vec.push_back( i_newPage );
 	newPage->dic[ "Type" ] = doc->newName( "Page" );
 	newPage->dic[ "Parent" ] = i_pages;
 	newPage->dic[ "MediaBox" ] = (*i)->mediabox_;
@@ -534,6 +616,51 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	newPage->dic[ "Resources" ] = doc->indirect( (*i)->resources_ );
 	/* The UserUnit entry appears in PDF 1.6, and cannot be relyed on */
 	//  newPage->dic[ "UserUnit" ] = RefCountPtr< PDF_Object >( new PDF_Float( 72 / 2.52 ) );
+
+	typedef typeof (*i)->destinations_ DestListType;
+	for( DestListType::const_iterator j = (*i)->destinations_.begin( ); j != (*i)->destinations_.end( ); ++j )
+	  {
+	    RefCountPtr< const Lang::DocumentDestination > dest = *j;
+	    if( dest->definesNamed( ) )
+	      {
+		typedef typeof namedDestinations MapType;
+		RefCountPtr< const char > name = dest->name( );
+		if( namedDestinations.find( name ) != namedDestinations.end( ) )
+		  {
+		    std::ostringstream oss;
+		    oss << "The named destination \"" << name.getPtr( ) << "\" appeared a second time (and possibly also the first time) on the page labeled "
+			<< getPageLabel( (*i)->index_ ).getPtr( ) << ", with zero-based physical index " << (*i)->index_ << "." ;
+		    throw Exceptions::MiscellaneousRequirement( strrefdup( oss ) );
+		  }
+		namedDestinations.insert( MapType::value_type( name, dest->getDirectDestination( i_newPage ) ) );
+	      }
+	    
+	    if( dest->isOutlineEntry( ) )
+	      {
+		/* This is the index in the stack at which the item belongs.
+		   In other words, this shall be the size of outlineStack just before the new item is pushed.
+		 */
+		const size_t stackLevel = dest->outlineLevel( ) + 1;
+		
+		if( outlineStack.size( ) < stackLevel )
+		  {
+		    RefCountPtr< const char > missingText = strrefdup( " " );
+		    while( outlineStack.size( ) < stackLevel )
+		      {
+			RefCountPtr< SimplePDF::OutlineItem > missingItem = dest->getOutlineItem( i_newPage, missingText );		
+			outlineStack.back( )->addKid( missingItem );
+			outlineStack.push_back( missingItem );
+		      }
+		  }
+		while( outlineStack.size( ) > stackLevel )
+		  {
+		    outlineStack.pop_back( );
+		  }
+		RefCountPtr< SimplePDF::OutlineItem > item = dest->getOutlineItem( i_newPage );		
+		outlineStack.back( )->addKid( item );
+		outlineStack.push_back( item );
+	      }
+	  }
       }
   }
   pages->dic[ "Kids" ] = pagesKids;
@@ -600,8 +727,32 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	}
     }
 
-  if( outlineStack_.front( )->hasKids( ) )
+  if( outlineStack.front( )->hasKids( ) )
     {
-      doc->root_->dic[ "Outlines" ] = outlineStack_.front( )->getTopIndirectDictionary( doc );
+      doc->root_->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( doc );
+    }
+  if( namedDestinations.size( ) > 0 )
+    {
+      // If there are named destinations, the PDF version is already checked to be high enough.
+      RefCountPtr< SimplePDF::PDF_Dictionary > dests( new SimplePDF::PDF_Dictionary );
+      doc->root_->dic[ "Dests" ] = doc->indirect( dests );
+      dests->dic[ "Type"  ] = doc->newName( "PageLabels" );
+      {
+	RefCountPtr< SimplePDF::PDF_Vector > limits( new SimplePDF::PDF_Vector );
+	limits->vec.push_back( doc->newString( namedDestinations.begin( )->first.getPtr( ) ) );
+	limits->vec.push_back( doc->newString( namedDestinations.rbegin( )->first.getPtr( ) ) );
+	dests->dic[ "Limits"  ] = limits;
+      }
+      {
+	RefCountPtr< SimplePDF::PDF_Vector > names( new SimplePDF::PDF_Vector );
+	typedef typeof namedDestinations Maptype;
+	for( Maptype::const_iterator i = namedDestinations.begin( ); i != namedDestinations.end( ); ++i )
+	  {
+	    RefCountPtr< SimplePDF::PDF_Dictionary > newEntry( new SimplePDF::PDF_Dictionary );
+	    names->vec.push_back( doc->newString( i->first.getPtr( ) ) );
+	    names->vec.push_back( i->second );
+	  }
+	dests->dic[ "Names"  ] = names;
+      }
     }
 }

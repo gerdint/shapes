@@ -874,7 +874,7 @@ main( int argc, char ** argv )
 	}
       if( catalog->isEmpty( ) )
 	{
-	  catalog->tackOnPage( finalPicture, Ast::THE_UNKNOWN_LOCATION );
+	  catalog->tackOnPage( baseDyn, finalPicture, Ast::THE_UNKNOWN_LOCATION );
 	}
 
       catalog->shipout( Kernel::the_pdfo );

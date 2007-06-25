@@ -187,17 +187,6 @@ SimplePDF::PDF_out::writeData( )
       (*info_)[ "ExtensionAuthors" ] = newString( oss.str( ).c_str( ) );
     }
 
-
-  /*
-  {
-    RefCountPtr<PDF_Dictionary> outlines( new PDF_Dictionary );
-    outlines->dic[ "Type"  ] = newName( "Outlines" );
-    outlines->dic[ "Count" ] = newInt( 0 );
-    root->dic[ "Outlines" ] = indirect( outlines );
-  }
-  */
-
-
   {
     typedef IndirectQueueType::iterator I;
     for( I i( indirectQueue.begin( ) ); i != indirectQueue.end( ); ++i )
@@ -589,6 +578,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 
       RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
+      ++i;
       for( ; i != kids_.end( ); ++i )
 	{
 	  RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
@@ -622,7 +612,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
     {
       if( doc->versionGreaterOrEqual( FANCY_OUTLINE_VERSION ) )
 	{
-	  dstDic->dic[ "F"  ] = doc->newInt( ( fontBold_ ? 1 : 0 ) + ( fontItalic_ ? 2 : 0 ) );
+	  dstDic->dic[ "F"  ] = doc->newInt( ( fontBold_ ? 2 : 0 ) + ( fontItalic_ ? 1 : 0 ) );
 	}
       else
 	{
@@ -656,6 +646,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 
       RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
+      ++i;
       for( ; i != kids_.end( ); ++i )
 	{
 	  RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
@@ -670,10 +661,6 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
       dstDic->dic[ "First"  ] = i_first;
       dstDic->dic[ "Last"  ] = i_newKid;
 
-      if( openCount > 0 )
-	{
-	  dstDic->dic[ "Count"  ] = doc->newInt( openCount );
-	}
     }  
 
   if( openCount > 0 )
@@ -690,7 +677,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
   
   if( isOpen_ )
     {
-      ++openCount;
+      return openCount + 1;
     }
-  return openCount;
+  return 1;
 }

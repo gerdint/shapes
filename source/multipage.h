@@ -27,6 +27,7 @@ namespace MetaPDF
       RefCountPtr< const char > name_; // Null if not a named destination.  Must be present if remote_.
       int outlineLevel_; // Negative if not to appear in the document outline.
 
+      RefCountPtr< const char > outlineText_;
       bool outlineOpen_; // Only applies if to appear in the document outline.
       bool outlineFontBold_;
       bool outlineFontItalic_;
@@ -40,9 +41,9 @@ namespace MetaPDF
       double zoom_; // If not strictly positive, zoom is unspecified.  Can only be specified in mode <topleft>.
     public:
       DocumentDestination( bool remote, RefCountPtr< const char > name, int outlineLevel,
-			   bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor ); // remote must be true!.
+			   RefCountPtr< const char > outlineText, bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor ); // remote must be true!.
       DocumentDestination( RefCountPtr< const char > name, int outlineLevel,
-			   bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
+			   RefCountPtr< const char > outlineText, bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor,
 			   Sides sidesMode, RefCountPtr< const Lang::Drawable2D > target, bool fittobbox, double zoom );
       virtual ~DocumentDestination( );
       virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const;
@@ -52,8 +53,11 @@ namespace MetaPDF
 
       bool definesNamed( ) const;
       RefCountPtr< const char > name( ) const;
+      bool isOutlineEntry( ) const;
+      size_t outlineLevel( ) const;
       RefCountPtr< SimplePDF::PDF_Object > getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const;
-
+      RefCountPtr< SimplePDF::PDF_Vector > getDirectDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const;
+      RefCountPtr< SimplePDF::OutlineItem > getOutlineItem( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, RefCountPtr< const char > otherText = RefCountPtr< const char >( NullPtr< const char >( ) ) ) const;
       DISPATCHDECL;
       TYPEINFODECL;
     };
@@ -69,11 +73,13 @@ namespace MetaPDF
       class Page
       {
       public:
+	size_t index_;
 	RefCountPtr< SimplePDF::PDF_Resources > resources_;
 	RefCountPtr< SimplePDF::PDF_Stream_out > contents_;
 	RefCountPtr< SimplePDF::PDF_Vector > mediabox_;
-
-	Page( const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox );
+	std::vector< RefCountPtr< const Lang::DocumentDestination > > destinations_;
+	
+	Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox );
 	~Page( );
       };
       class PageLabelEntry
@@ -91,7 +97,6 @@ namespace MetaPDF
     private:
       PtrOwner_back_Access< std::list< const Page * > > pages_;
       PtrOwner_back_Access< std::list< const PageLabelEntry * > > labelEntries_;
-      std::vector< RefCountPtr< SimplePDF::OutlineItem > > outlineStack_;
     public:
       WarmCatalog( );
       virtual ~WarmCatalog( );
@@ -105,12 +110,16 @@ namespace MetaPDF
       PageLabelEntry::Style getNextPageStyle( ) const;
       RefCountPtr< const char > getNextPagePrefix( ) const;
       RefCountPtr< const char > getNextPageLabel( ) const;
+      RefCountPtr< const char > getPageLabel( size_t index ) const;
 
       bool isEmpty( ) const;
-      void tackOnPage( const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc );
+      void tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc );
       void shipout( SimplePDF::PDF_out * doc );
       
       TYPEINFODECL;
+
+    private:
+      RefCountPtr< const char > getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * entry, size_t index ) const;
     };
     
   }

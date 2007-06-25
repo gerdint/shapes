@@ -1624,11 +1624,13 @@ Lang::Core_destination::Core_destination( const char * title )
   formals_->appendEvaluatedCoreFormal( "remote", Kernel::THE_FALSE_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "name", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "level", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "text", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "open", Kernel::THE_FALSE_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "bold", Kernel::THE_FALSE_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "italic", Kernel::THE_FALSE_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "color", Helpers::newValHandle( new Lang::RGB( Concrete::RGB( 0, 0, 0 ) ) ) );
   formals_->appendEvaluatedCoreFormal( "sides", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "target", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "fittobbox", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "zoom", Kernel::THE_VOID_VARIABLE );
 }
@@ -1639,6 +1641,7 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
   args.applyDefaults( );
 
   size_t argsi = 0;
+  const size_t remove_i = argsi;
   typedef const Lang::Boolean RemoteType;
   bool remote = Helpers::down_cast_CoreArgument< RemoteType >( title_, args, argsi, callLoc )->val_;
 
@@ -1648,17 +1651,27 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
   RefCountPtr< const char > name = RefCountPtr< const char >( NullPtr< const char >( ) );
   if( nameVal != NullPtr< NameType >( ) )
     {
-      name = nameVal->val_;
+      const SimplePDF::PDF_out::Version STRINGDESTS_VERSION = SimplePDF::PDF_out::PDF_1_2;
+      if( Kernel::the_pdfo->versionGreaterOrEqual( STRINGDESTS_VERSION ) )
+	{
+	  name = nameVal->val_;
+	}
+      else
+	{
+	  Kernel::the_pdfo->versionMessage( STRINGDESTS_VERSION, "The naming of a destination was ignored." );
+	  // Note that this will leave name being null, and hence generate further errors if remote_.
+	}
     }
-  else
+  if( nameVal == NullPtr< NameType >( ) )  // Note why this is not an else clause!
     {
       if( remote )
 	{
-	  throw Exceptions::CoreOutOfRange( title_, args, 0, "The destination cannot be remote if no name is given." );
+	  throw Exceptions::CoreOutOfRange( title_, args, remove_i, "The destination cannot be remote if no name is given." );
 	}
     }
   
   ++argsi;
+  const size_t outlineLevel_i = argsi;
   typedef const Lang::Integer OutlineLevelType;
   RefCountPtr< OutlineLevelType > levelVal = Helpers::down_cast_CoreArgument< OutlineLevelType >( title_, args, argsi, callLoc, true );
   int outlineLevel = -1; // This will remain negative only if the level is not present.
@@ -1668,6 +1681,22 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
       if( outlineLevel < 0 )
 	{
 	  throw Exceptions::CoreOutOfRange( title_, args, argsi, "The outline level must be non-negative." );	  
+	}
+    }
+
+  ++argsi;
+  typedef const Lang::String OutlineTextType;
+  RefCountPtr< OutlineTextType > textVal = Helpers::down_cast_CoreArgument< OutlineTextType >( title_, args, argsi, callLoc, true );
+  RefCountPtr< const char > outlineText = RefCountPtr< const char >( NullPtr< const char >( ) );
+  if( textVal != NullPtr< OutlineTextType >( ) )
+    {
+      outlineText = textVal->val_;
+    }
+  else
+    {
+      if( outlineLevel >= 0 )
+	{
+	  throw Exceptions::CoreOutOfRange( title_, args, outlineLevel_i, "Without an outline text, it is not allowed to make an outline item." );
 	}
     }
 
@@ -1688,12 +1717,12 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
   Concrete::RGB outlineColor = Helpers::down_cast_CoreArgument< OutlineColorType >( title_, args, argsi, callLoc )->components( );
 
   ++argsi;
-  size_t sidesMode_i = argsi;
+  const size_t sidesMode_i = argsi;
   typedef const Lang::Symbol SidesModeType;
   RefCountPtr< SidesModeType > sidesVal = Helpers::down_cast_CoreArgument< SidesModeType >( title_, args, argsi, callLoc, true );
 
   ++argsi;
-  size_t target_i = argsi;
+  const size_t target_i = argsi;
   typedef const Lang::Drawable2D TargetType;
   RefCountPtr< TargetType > target = Helpers::down_cast_CoreArgument< TargetType >( title_, args, argsi, callLoc, true );
 
@@ -1786,14 +1815,14 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
     {
       cont->takeValue( RefCountPtr< const Lang::Value >
 		       ( new Lang::DocumentDestination( remote, name, outlineLevel,
-							outlineOpen, outlineBold, outlineItalic, outlineColor ) ),
+							outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor ) ),
 		       evalState );
     }
   else
     {
       cont->takeValue( RefCountPtr< const Lang::Value >
 		       ( new Lang::DocumentDestination( name, outlineLevel,
-							outlineOpen, outlineBold, outlineItalic, outlineColor,
+							outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor,
 							sides, target, fittobbox, zoom ) ),
 		       evalState );
     }
