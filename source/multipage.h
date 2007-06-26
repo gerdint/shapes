@@ -15,7 +15,7 @@ namespace MetaPDF
   namespace Lang
   {
 
-    class DocumentDestination : public Lang::Geometric2D
+    class DocumentDestination : public Lang::NoOperatorOverloadGeometric2D
     {
     public:
       enum Sides{ PAGE, TOPLEFT, TOP, LEFT, RECTANGLE };
@@ -58,7 +58,7 @@ namespace MetaPDF
       RefCountPtr< SimplePDF::PDF_Object > getDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const;
       RefCountPtr< SimplePDF::PDF_Vector > getDirectDestination( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const;
       RefCountPtr< SimplePDF::OutlineItem > getOutlineItem( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, RefCountPtr< const char > otherText = RefCountPtr< const char >( NullPtr< const char >( ) ) ) const;
-      DISPATCHDECL;
+
       TYPEINFODECL;
     };
 
@@ -78,6 +78,7 @@ namespace MetaPDF
 	RefCountPtr< SimplePDF::PDF_Stream_out > contents_;
 	RefCountPtr< SimplePDF::PDF_Vector > mediabox_;
 	std::vector< RefCountPtr< const Lang::DocumentDestination > > destinations_;
+	std::vector< RefCountPtr< const Lang::AnnotationBase > > annotations_;
 	
 	Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox );
 	~Page( );

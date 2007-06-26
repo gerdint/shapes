@@ -267,6 +267,12 @@ Lang::XObject::shipout( std::ostream & os, Kernel::PageContentStates * pdfState,
   os << pdfState->resources_->nameofXObject( resource_ ) << " Do" << std::endl ;
 }
 
+RefCountPtr< SimplePDF::PDF_Object >
+Lang::XObject::getResource( ) const
+{
+  return resource_;
+}
+
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::XObject::bbox( ) const
 {

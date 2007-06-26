@@ -68,6 +68,8 @@ namespace MetaPDF
 
     extern StateHandle THE_SLOT_STATE;
 
+    extern RefCountPtr< const Lang::Symbol > THE_NAVIGATION_SYMBOL;
+    extern RefCountPtr< const Lang::Symbol > THE_ANNOTATION_SYMBOL;
   }
 
   namespace Lang

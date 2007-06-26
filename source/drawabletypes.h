@@ -605,6 +605,8 @@ namespace MetaPDF
     const std::string & getDebugStr( ) const;
     virtual void show( std::ostream & os ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );
+
+    RefCountPtr< SimplePDF::PDF_Object > getResource( ) const;
   };
 
   class TransparencyGroup : public Lang::XObject

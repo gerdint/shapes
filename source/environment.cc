@@ -445,6 +445,9 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   selfDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
   selfDefineCoreFunction( new Lang::Core_destination( "destination" ) );
 
+  selfDefineCoreFunction( new Lang::Core_annotationsite( "site" ) );
+  selfDefineCoreFunction( new Lang::Core_annotation_text( "annotationText" ) );
+
   selfDefineClass( Lang::THE_OBJECT );
 
   selfDefineClass( Lang::Class::TypeID );
@@ -786,7 +789,17 @@ Kernel::Environment::clear( )
 Ast::AnalysisEnvironment *
 Kernel::Environment::newAnalysisEnvironment( ) const
 {
-  return new Ast::AnalysisEnvironment( Ast::theAnalysisEnvironmentList, 0, bindings_, stateBindings_ );
+  Ast::AnalysisEnvironment * res = new Ast::AnalysisEnvironment( Ast::theAnalysisEnvironmentList, 0, bindings_, stateBindings_ );
+  if( dynamicKeyBindings_ != 0 )
+    {
+      res->setupDynamicKeyVariables( dynamicKeyBindings_ );
+    }
+  if( dynamicStateKeyBindings_ != 0 )
+    {
+      res->setupDynamicStateKeyVariables( dynamicStateKeyBindings_ );
+    }
+
+  return res;
 }
 
 void
@@ -864,6 +877,12 @@ void
 Ast::AnalysisEnvironment::setupDynamicKeyVariables( const MapType * dynamicKeyBindings )
 {
   dynamicKeyBindings_ = dynamicKeyBindings;
+}
+
+void
+Ast::AnalysisEnvironment::setupDynamicStateKeyVariables( const MapType * dynamicStateKeyBindings )
+{
+  dynamicStateKeyBindings_ = dynamicStateKeyBindings;
 }
 
 size_t
@@ -1107,24 +1126,33 @@ Ast::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc
 {
   if( dynamicKeyBindings_ == 0 )
     {
-      return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
-    }
-
-  MapType::const_iterator i = dynamicKeyBindings_->find( id );
-  if( i == dynamicKeyBindings_->end( ) )
-    {
       if( isBaseEnvironment( ) )
 	{
-	  char * msg = new char[ strlen( id ) + 2 ];
-	  strcpy( msg, "@" );
-	  strcpy( msg + 1, id );
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE ) );
-	  return Kernel::Environment::theMissingKey;
+	  goto error;
 	}
       return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
     }
+  {
+    MapType::const_iterator i = dynamicKeyBindings_->find( id );
+    if( i == dynamicKeyBindings_->end( ) )
+      {
+	if( isBaseEnvironment( ) )
+	  {
+	    goto error;
+	  }
+	return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
+      }
+    
+    return LexicalKey( 0, i->second );
+  }
   
-  return LexicalKey( 0, i->second );
+ error:
+  char * msg = new char[ strlen( id ) + 2 ];
+  strcpy( msg, "@" );
+  strcpy( msg + 1, id );
+  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE ) );
+  return Kernel::Environment::theMissingKey;
+
 }
 
 const Kernel::DynamicVariableProperties &

@@ -232,6 +232,7 @@ namespace MetaPDF
       ~Dash( );
       TYPEINFODECL;
       void setDash( std::ostream & os ) const;
+      RefCountPtr< SimplePDF::PDF_Vector > getDashArray( ) const;
       RefCountPtr< const Lang::Dash > scaled( double factor ) const;
       RefCountPtr< const Lang::Dash > shifted( Concrete::Length dist ) const;
       Concrete::Length length( ) const;

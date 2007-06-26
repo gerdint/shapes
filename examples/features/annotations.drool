@@ -1,0 +1,12 @@
+##needs circle
+
+•page << [stroke [circle 5cm]]
+
+myFont: @text_font:font_HELVETICA & @text_size:1cm
+
+bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]]
+•page << bar
+
+•page << [annotationText site:[site target:bar]
+      	 		 title:`Extended version´
+			 icon:`Help´]

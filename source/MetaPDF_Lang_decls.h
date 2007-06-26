@@ -6,6 +6,8 @@ namespace MetaPDF
   namespace Lang
   {
     class Alpha;
+    class AnnotationBase;
+    class AnnotationSite;
     class BinaryOperatorFunction;
     class Boolean;
     class Class;

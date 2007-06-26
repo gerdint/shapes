@@ -1172,9 +1172,26 @@ Lang::Dash::setDash( ostream & os ) const
   os << "[ " ;
   for( list< Concrete::Length >::const_iterator i = pattern_->begin( ); i != pattern_->end( ); ++i )
     {
-	  os << Concrete::Length::offtype( *i ) * scale_ << " " ;
+      os << Concrete::Length::offtype( *i ) * scale_ << " " ;
     }
   os << "] " << Concrete::Length::offtype( phase_ ) * scale_ << " d " ;
+}
+
+RefCountPtr< SimplePDF::PDF_Vector >
+Lang::Dash::getDashArray( ) const
+{
+  if( scale_ < 0 )
+    {
+      throw Exceptions::MiscellaneousRequirement( "The same-as-before dash cannot be represented in PDF." );
+    }
+
+  RefCountPtr< SimplePDF::PDF_Vector > res = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector );
+  for( list< Concrete::Length >::const_iterator i = pattern_->begin( ); i != pattern_->end( ); ++i )
+    {
+      res->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( *i ) * scale_ ) );
+    }
+  
+  return res;
 }
 
 RefCountPtr< const Lang::Dash >

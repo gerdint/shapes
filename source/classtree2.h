@@ -1,5 +1,6 @@
 #define CLASSTREE2_ROOT( Ma, S, Mb )		\
   CLASSTREE2_NoOperatorOverloadValue( Ma, S, Mb )				\
+  CLASSTREE2_NoOperatorOverloadGeometric2D( Ma, S, Mb )				\
   CLASSTREE2_Drawable2D( Ma, S, Mb )				\
   CLASSTREE2_Drawable3D( Ma, S, Mb )				\
   CLASSTREE2_Symbol( Ma, S, Mb )				\
@@ -31,9 +32,9 @@
   CLASSTREE2_LightSource( Ma, S, Mb )				\
   CLASSTREE2_LightGroup( Ma, S, Mb )				\
   CLASSTREE2_SpecularReflection( Ma, S, Mb )				\
-  CLASSTREE2_DynamicBindings( Ma, S, Mb )                       \
-  CLASSTREE2_DocumentDestination( Ma, S, Mb )
+  CLASSTREE2_DynamicBindings( Ma, S, Mb )
 #define CLASSTREE2_NoOperatorOverloadValue( Ma, S, Mb ) Ma( S, Mb, NoOperatorOverloadValue )
+#define CLASSTREE2_NoOperatorOverloadGeometric2D( Ma, S, Mb ) Ma( S, Mb, NoOperatorOverloadGeometric2D )
 #define CLASSTREE2_Drawable2D( Ma, S, Mb ) Ma( S, Mb, Drawable2D )
 #define CLASSTREE2_Drawable3D( Ma, S, Mb ) Ma( S, Mb, Drawable3D )
 #define CLASSTREE2_Symbol( Ma, S, Mb ) Ma( S, Mb, Symbol )
@@ -80,4 +81,3 @@
 #define CLASSTREE2_DynamicBindings( Ma, S, Mb ) Ma( S, Mb, DynamicBindings )
 #define CLASSTREE2_SingleDynamicBinding( Ma, S, Mb ) Ma( S, Mb, SingleDynamicBinding )
 #define CLASSTREE2_DynamicBindingsPair( Ma, S, Mb ) Ma( S, Mb, DynamicBindingsPair )
-#define CLASSTREE2_DocumentDestination( Ma, S, Mb ) Ma( S, Mb, DocumentDestination )

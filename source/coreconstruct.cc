@@ -1633,6 +1633,7 @@ Lang::Core_destination::Core_destination( const char * title )
   formals_->appendEvaluatedCoreFormal( "target", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "fittobbox", Kernel::THE_VOID_VARIABLE );
   formals_->appendEvaluatedCoreFormal( "zoom", Kernel::THE_VOID_VARIABLE );
+  formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_TRUE_VARIABLE );
 }
 
 void
@@ -1810,20 +1811,37 @@ Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments &
 	}
     }
 
+  ++argsi;
+  typedef const Lang::Boolean DoTransformType;
+  bool doTransform = Helpers::down_cast_CoreArgument< DoTransformType >( title_, args, argsi, callLoc )->val_;
+
   Kernel::ContRef cont = evalState->cont_;
   if( remote )
     {
+      RefCountPtr< const Lang::DocumentDestination >
+	taggedObj( new Lang::DocumentDestination( remote, name, outlineLevel,
+						  outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor ) );
       cont->takeValue( RefCountPtr< const Lang::Value >
-		       ( new Lang::DocumentDestination( remote, name, outlineLevel,
-							outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor ) ),
+		       ( new Lang::TaggedValue2D( Kernel::THE_NAVIGATION_SYMBOL, taggedObj ) ),
 		       evalState );
     }
   else
     {
-      cont->takeValue( RefCountPtr< const Lang::Value >
-		       ( new Lang::DocumentDestination( name, outlineLevel,
-							outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor,
-							sides, target, fittobbox, zoom ) ),
-		       evalState );
+      RefCountPtr< const Lang::DocumentDestination >
+	taggedObj( new Lang::DocumentDestination( name, outlineLevel,
+						  outlineText, outlineOpen, outlineBold, outlineItalic, outlineColor,
+						  sides, target, fittobbox, zoom ) );
+      if( doTransform )
+	{
+	  cont->takeValue( RefCountPtr< const Lang::Value >
+			   ( new Lang::TaggedGeometric2D( Kernel::THE_NAVIGATION_SYMBOL, taggedObj ) ),
+			   evalState );
+	}
+      else
+	{
+	  cont->takeValue( RefCountPtr< const Lang::Value >
+			   ( new Lang::TaggedValue2D( Kernel::THE_NAVIGATION_SYMBOL, taggedObj ) ),
+			   evalState );
+	}
     }
 }

@@ -52,7 +52,11 @@ Lang::Value::getTypeName( ) const
   return this->getClass( )->getPrettyName( );
 }
 
+
 DISPATCHIMPL( NoOperatorOverloadValue );
+
+DISPATCHIMPL( NoOperatorOverloadGeometric2D );
+
 
 //RefCountPtr< const Lang::Class > Lang::NoOperatorOverloadValue::TypeID( new Lang::SystemFinalClass( strrefdup( "NonDispatching" ) ) );
 //TYPEINFOIMPL( NoOperatorOverloadValue );

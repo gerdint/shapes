@@ -82,6 +82,15 @@ namespace MetaPDF
 	TYPEINFODECL;
       };
 
+  class NoOperatorOverloadGeometric2D : public Lang::Geometric2D
+      {
+      public:
+	NoOperatorOverloadGeometric2D( ){ }
+	virtual ~NoOperatorOverloadGeometric2D( ){ }
+	DISPATCHDECL;
+	//    TYPEINFODECL;
+      };
+
   class Geometric3D : public Lang::Value
       {
       public:

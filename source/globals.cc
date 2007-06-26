@@ -102,6 +102,8 @@ Kernel::VariableHandle Kernel::THE_VOID_VARIABLE( new Kernel::Variable( RefCount
 Kernel::VariableHandle Kernel::THE_FALSE_VARIABLE( new Kernel::Variable( Lang::THE_FALSE ) );
 Kernel::VariableHandle Kernel::THE_TRUE_VARIABLE( new Kernel::Variable( Lang::THE_TRUE ) );
 Kernel::StateHandle Kernel::THE_SLOT_STATE = Kernel::StateHandle( NullPtr< Kernel::State >( ) );
+RefCountPtr< const Lang::Symbol > Kernel::THE_NAVIGATION_SYMBOL( ".navigation" ); /* Note that the leading dot puts this symbol aside all user-symbols. */
+RefCountPtr< const Lang::Symbol > Kernel::THE_ANNOTATION_SYMBOL( ".annotation" ); /* Note that the leading dot puts this symbol aside all user-symbols. */
 
 Lang::Transform2D Lang::THE_2D_IDENTITY( 1, 0,
 					 0, 1,

@@ -325,6 +325,14 @@ Ast::MemberReferenceFunction::push_exprs( Ast::ArgListExprs * args ) const
 }
 
 void
+Ast::MemberReferenceFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  /* The variable is analyzed as part of the arguments passed to this function, so nothing needs to be done here...
+   * unless we would be able to figure out the type of the argument, and then check if the field reference is valid.
+   */
+}
+
+void
 Ast::MemberReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->cont_;
@@ -685,6 +693,13 @@ Ast::DynamicVariableDeclFunction::push_exprs( Ast::ArgListExprs * args ) const
 {
   args->orderedExprs_->push_back( filterExpr_ );
   args->orderedExprs_->push_back( defaultExpr_ );
+}
+
+void
+Ast::DynamicVariableDeclFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  /* The analysis is carried out by the DynamicVariableDecl expression.
+   */
 }
 
 void

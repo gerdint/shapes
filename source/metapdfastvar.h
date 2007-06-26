@@ -303,6 +303,7 @@ namespace MetaPDF
       MemberReferenceFunction( const Ast::SourceLocation & loc, Ast::Expression * variable, const char * fieldID );
       virtual ~MemberReferenceFunction( );
       void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
       virtual bool isTransforming( ) const { return false; }
@@ -391,6 +392,7 @@ namespace MetaPDF
       DynamicVariableDeclFunction( const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos );
       virtual ~DynamicVariableDeclFunction( );
       void push_exprs( Ast::ArgListExprs * args ) const;
+      virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
       virtual bool isTransforming( ) const { return false; }
