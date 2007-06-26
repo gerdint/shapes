@@ -4,9 +4,10 @@
 
 myFont: @text_font:font_HELVETICA & @text_size:1cm
 
-bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]]
+bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]
 •page << bar
 
-•page << [annotationText site:[site target:bar]
-      	 		 title:`Extended version´
-			 icon:`Help´]
+•page << [annotationText site:[site target:bar
+				    text:`The long story just goes on and on...´
+				    width: 2bp]
+      	 		 title:`Extended version´]

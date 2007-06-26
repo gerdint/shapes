@@ -75,7 +75,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
   RefCountPtr< SimplePDF::PDF_Dictionary > res = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 
   res->dic[ "Type" ] = SimplePDF::PDF_out::newName( "Annot" );
-  res->dic[ "SubType" ] = SimplePDF::PDF_out::newName( subtype );
+  res->dic[ "Subtype" ] = SimplePDF::PDF_out::newName( subtype );
   {
     Concrete::Coords2D llcorner( 0, 0 );
     Concrete::Coords2D urcorner( 0, 0 );
