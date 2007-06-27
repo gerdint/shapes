@@ -51,6 +51,16 @@ namespace MetaPDF
       const Ast::SourceLocation & loc( ) const { return primaryLoc_; }
     };
 
+    class PostCondition : public Exception
+    {
+    protected:
+      Ast::SourceLocation primaryLoc_;
+    public:
+      PostCondition( Ast::SourceLocation primaryLoc ) : primaryLoc_( primaryLoc ) { }
+      virtual ~PostCondition( ) { }
+      const Ast::SourceLocation & loc( ) const { return primaryLoc_; }
+    };
+
     class ScannerError : public StaticInconsistency
     {
       RefCountPtr< const char > msg;
@@ -987,6 +997,16 @@ namespace MetaPDF
     public:
       InsertingEmptyPage( const Ast::SourceLocation & loc );
       virtual ~InsertingEmptyPage( );
+      virtual void display( std::ostream & os ) const;
+    };
+
+    class UndefinedCrossRef : public PostCondition
+    {
+    private:
+      RefCountPtr< const char > ref_;
+    public:
+      UndefinedCrossRef( const Ast::SourceLocation & _loc, RefCountPtr< const char > ref );
+      virtual ~UndefinedCrossRef( );
       virtual void display( std::ostream & os ) const;
     };
 

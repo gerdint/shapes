@@ -63,7 +63,7 @@ namespace MetaPDF
       AnnotationBase( const RefCountPtr< const Lang::AnnotationSite > & site );
       virtual ~AnnotationBase( );
 
-      RefCountPtr< SimplePDF::PDF_Dictionary > virtual getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc ) const = 0;
+      RefCountPtr< SimplePDF::PDF_Dictionary > virtual getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const = 0;
 
       virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
 
@@ -83,11 +83,30 @@ namespace MetaPDF
       virtual ~TextAnnotation( );
 
       virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const;
-      RefCountPtr< SimplePDF::PDF_Dictionary > virtual getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc ) const;
+      RefCountPtr< SimplePDF::PDF_Dictionary > virtual getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const;
+      virtual void subtypeGcMark( Kernel::GCMarkedSet & marked );
+    };
+
+    class LinkAnnotation : public Lang::AnnotationBase
+    {
+    public:
+      enum Kind{ LAUNCH_FILE, LAUNCH_URI, DOC_LINK };
+    private:
+      Ast::SourceLocation loc_;
+      char highlight_; // Make sure that this is a value from table 8.20 in the PDF-1.6 reference.
+      RefCountPtr< const char > destination_;
+      Kind kind_;
+    public:
+      LinkAnnotation( const RefCountPtr< const Lang::AnnotationSite > & site, const Ast::SourceLocation & loc, char highlight, const RefCountPtr< const char > & destination, Kind kind );
+      virtual ~LinkAnnotation( );
+
+      virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const;
+      RefCountPtr< SimplePDF::PDF_Dictionary > virtual getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const;
       virtual void subtypeGcMark( Kernel::GCMarkedSet & marked );
     };
 
   }
+
 }
 
 

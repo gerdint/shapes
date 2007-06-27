@@ -611,10 +611,13 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 				    true, false, false, Concrete::RGB( 0, 0, 0 ) ) ) );
 
   RefCountPtr< SimplePDF::PDF_Dictionary > pages( new SimplePDF::PDF_Dictionary );
+  RefCountPtr< SimplePDF::PDF_Dictionary > names( new SimplePDF::PDF_Dictionary );
 
   RefCountPtr< SimplePDF::PDF_Object > i_pages( doc->indirect( pages ) );
   doc->root_->dic[ "Pages" ] = i_pages;
   
+  std::list< std::pair< const Page *, std::pair< RefCountPtr< SimplePDF::PDF_Dictionary >, RefCountPtr< SimplePDF::PDF_Indirect_out > > > > annotations;
+
   pages->dic[ "Type"  ] = SimplePDF::PDF_out::newName( "Pages" );
   RefCountPtr< SimplePDF::PDF_Vector > pagesKids( new SimplePDF::PDF_Vector );
   {
@@ -679,22 +682,35 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 
 	if( (*i)->annotations_.size( ) > 0 )
 	  {
-	    RefCountPtr< SimplePDF::PDF_Vector > annots( new SimplePDF::PDF_Vector );
-	    newPage->dic[ "Annots" ] = doc->indirect( annots );
-	    annots->vec.reserve( (*i)->annotations_.size( ) );
-
-	    typedef typeof (*i)->annotations_ AnnotListType;
-	    for( AnnotListType::const_iterator j = (*i)->annotations_.begin( ); j != (*i)->annotations_.end( ); ++j )
-	      {
-		RefCountPtr< const Lang::AnnotationBase > annot = *j;
-		annots->vec.push_back( doc->indirect( annot->getDictionary( i_newPage, doc ) ) );
-	      }
+	    typedef typeof annotations ListType;
+	    annotations.push_back( ListType::value_type( *i, ListType::value_type::second_type( newPage, i_newPage ) ) );
 	  }
 
       }
   }
   pages->dic[ "Kids" ] = pagesKids;
   pages->dic[ "Count" ] = SimplePDF::PDF_out::newInt( pagesKids->vec.size( ) );
+
+  {
+    typedef std::list< std::pair< const Page *, std::pair< RefCountPtr< SimplePDF::PDF_Dictionary >, RefCountPtr< SimplePDF::PDF_Indirect_out > > > > ListType;
+    for( ListType::const_iterator h = annotations.begin( ); h != annotations.end( ); ++h )
+      {
+	const Page * i = h->first;
+	RefCountPtr< SimplePDF::PDF_Dictionary > newPage = h->second.first;
+	RefCountPtr< SimplePDF::PDF_Indirect_out > i_newPage = h->second.second;
+	RefCountPtr< SimplePDF::PDF_Vector > annots( new SimplePDF::PDF_Vector );
+	newPage->dic[ "Annots" ] = doc->indirect( annots );
+	annots->vec.reserve( i->annotations_.size( ) );
+	
+	typedef typeof i->annotations_ AnnotListType;
+	for( AnnotListType::const_iterator j = i->annotations_.begin( ); j != i->annotations_.end( ); ++j )
+	  {
+	    RefCountPtr< const Lang::AnnotationBase > annot = *j;
+	    annots->vec.push_back( doc->indirect( annot->getDictionary( i_newPage, doc, namedDestinations ) ) );
+	  }
+      }
+
+  }
 
   const SimplePDF::PDF_out::Version PAGELABELS_VERSION = SimplePDF::PDF_out::PDF_1_3;
   if( Kernel::the_pdfo->versionGreaterOrEqual( PAGELABELS_VERSION ) )
@@ -765,14 +781,17 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
     {
       // If there are named destinations, the PDF version is already checked to be high enough.
       RefCountPtr< SimplePDF::PDF_Dictionary > dests( new SimplePDF::PDF_Dictionary );
-      doc->root_->dic[ "Dests" ] = doc->indirect( dests );
-      dests->dic[ "Type"  ] = SimplePDF::PDF_out::newName( "PageLabels" );
-      {
-	RefCountPtr< SimplePDF::PDF_Vector > limits( new SimplePDF::PDF_Vector );
-	limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.begin( )->first.getPtr( ) ) );
-	limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.rbegin( )->first.getPtr( ) ) );
-	dests->dic[ "Limits"  ] = limits;
-      }
+      names->dic[ "Dests" ] = doc->indirect( dests );
+//       RefCountPtr< SimplePDF::PDF_Vector > kids( new SimplePDF::PDF_Vector );
+//       dests->dic[ "Kids" ] = kids;
+//       RefCountPtr< SimplePDF::PDF_Dictionary > kid( new SimplePDF::PDF_Dictionary );
+//       kids->vec.push_back( kid );
+//       {
+//       	RefCountPtr< SimplePDF::PDF_Vector > limits( new SimplePDF::PDF_Vector );
+//       	limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.begin( )->first.getPtr( ) ) );
+//       	limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.rbegin( )->first.getPtr( ) ) );
+//       	kid->dic[ "Limits"  ] = limits;
+//       }
       {
 	RefCountPtr< SimplePDF::PDF_Vector > names( new SimplePDF::PDF_Vector );
 	typedef typeof namedDestinations Maptype;
@@ -784,5 +803,10 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	  }
 	dests->dic[ "Names"  ] = names;
       }
+    }
+
+  if( names->dic.size( ) > 0 )
+    {
+      doc->root_->dic[ "Names" ] = doc->indirect( names );
     }
 }

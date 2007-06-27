@@ -44,7 +44,8 @@ Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION( "" );  // This is a special value
 Ast::DummyExpression Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< core function default value >" ) );
 Ast::DummyExpression Ast::THE_INTERNAL_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< internally passed value >" ) );
 
-PtrOwner_back_Access< std::list< Exceptions::Exception * > > Ast::theAnalsisErrorsList;
+PtrOwner_back_Access< std::list< Exceptions::Exception * > > Kernel::thePostCheckErrorsList;
+PtrOwner_back_Access< std::list< Exceptions::Exception * > > Ast::theAnalysisErrorsList;
 
 
 bool Interaction::debugBacktrace = true;

@@ -234,7 +234,7 @@ Lang::TextAnnotation::transformed( const Lang::Transform2D & transform, const Re
 }
 
 RefCountPtr< SimplePDF::PDF_Dictionary >
-Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc ) const
+Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
 {
   RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Text", i_page, doc );
   if( title_ != NullPtr< const char >( ) )
@@ -260,3 +260,74 @@ Lang::TextAnnotation::subtypeGcMark( Kernel::GCMarkedSet & marked )
    */
 }
 
+
+Lang::LinkAnnotation::LinkAnnotation( const RefCountPtr< const Lang::AnnotationSite > & site, const Ast::SourceLocation & loc, char highlight, const RefCountPtr< const char > & destination, Lang::LinkAnnotation::Kind kind )
+  : Lang::AnnotationBase( site ), loc_( loc ), highlight_( highlight ), destination_( destination ), kind_( kind )
+{ }
+
+Lang::LinkAnnotation::~LinkAnnotation( )
+{ }
+
+RefCountPtr< const Lang::Geometric2D >
+Lang::LinkAnnotation::transformed( const Lang::Transform2D & transform, const RefCountPtr< const Lang::Geometric2D > & self ) const
+{
+  return RefCountPtr< const Lang::Geometric2D >
+    ( new LinkAnnotation( site_->typed_transformed( transform ), loc_, highlight_, destination_, kind_ ) );
+}
+
+RefCountPtr< SimplePDF::PDF_Dictionary >
+Lang::LinkAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
+{
+  RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Link", i_page, doc );
+  if( highlight_ != 'I' )
+    {
+      char buf[2];
+      buf[0] = highlight_;
+      buf[1] = '\0';
+      res->dic[ "H" ] = SimplePDF::PDF_out::newName( buf );
+    }
+
+  switch( kind_ )
+    {
+    case LAUNCH_FILE:
+      {
+	RefCountPtr< SimplePDF::PDF_Dictionary > action = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	res->dic[ "A" ] = action;
+	action->dic[ "S" ] = SimplePDF::PDF_out::newName( "Launch" );
+	action->dic[ "F" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+      }
+      break;
+    case LAUNCH_URI:
+      {
+	RefCountPtr< SimplePDF::PDF_Dictionary > action = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	res->dic[ "A" ] = action;
+	action->dic[ "S" ] = SimplePDF::PDF_out::newName( "URI" );
+	action->dic[ "URI" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+	//      RefCountPtr< SimplePDF::PDF_Dictionary > filespec = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	//      action->dic[ "F" ] = filespec;
+	//      filespec->dic[ "FS" ] = SimplePDF::PDF_out::newName( "URI" );
+	//      filespec->dic[ "F" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+      }
+      break;
+    case DOC_LINK:
+      {
+	if( namedDestinations.find( destination_ ) == namedDestinations.end( ) )
+	  {
+	    Kernel::thePostCheckErrorsList.push_back( new Exceptions::UndefinedCrossRef( loc_, destination_ ) );
+	  }
+	res->dic[ "Dest" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+      }
+      break;
+    default:
+      throw Exceptions::InternalError( "Link annotation type out of range." );
+    }
+
+  return res;
+}
+
+void
+Lang::LinkAnnotation::subtypeGcMark( Kernel::GCMarkedSet & marked )
+{
+  /* Nothing to mark.
+   */
+}

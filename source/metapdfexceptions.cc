@@ -1586,3 +1586,17 @@ Exceptions::InsertingEmptyPage::display( std::ostream & os ) const
 {
   os << "Attempt to place empty page in catalog." << std::endl ;
 }
+
+
+Exceptions::UndefinedCrossRef::UndefinedCrossRef( const Ast::SourceLocation & _loc, RefCountPtr< const char > ref )
+  : Exceptions::PostCondition( _loc ), ref_( ref )
+{ }
+
+Exceptions::UndefinedCrossRef::~UndefinedCrossRef( )
+{ }
+
+void
+Exceptions::UndefinedCrossRef::display( std::ostream & os ) const
+{
+  os << "The cross reference \"" << ref_ << "\" is not defined." << std::endl ;
+}

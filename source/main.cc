@@ -793,11 +793,11 @@ main( int argc, char ** argv )
       Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
       Ast::theGlobalAnalysisEnvironment = baseEnv->newAnalysisEnvironment( );
       Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
-      if( Ast::theAnalsisErrorsList.size( ) > 0 )
+      if( Ast::theAnalysisErrorsList.size( ) > 0 )
 	{
 	  std::cout.flush( );
-	  typedef typeof Ast::theAnalsisErrorsList ListType;
-	  for( ListType::const_iterator i = Ast::theAnalsisErrorsList.begin( ); i != Ast::theAnalsisErrorsList.end( ); ++i )
+	  typedef typeof Ast::theAnalysisErrorsList ListType;
+	  for( ListType::const_iterator i = Ast::theAnalysisErrorsList.begin( ); i != Ast::theAnalysisErrorsList.end( ); ++i )
 	    {
 	      {
 		typedef const Exceptions::StaticInconsistency ErrorType;
@@ -812,7 +812,6 @@ main( int argc, char ** argv )
 	      std::cerr << "(Bad exception type)" << ": " ;
 	      (*i)->display( std::cerr );
 	    }
-	  exit( 1 );
 	  abortProcedure( & oFile, outputName );
 	}
 
@@ -937,6 +936,28 @@ main( int argc, char ** argv )
       cerr << "Caught (...) ball at top level." << endl ;
       cerr << "This shit should not be thrown!  Use Exceptions::Exception derivatives!" << endl ;
       exit( 1 );
+    }
+
+  if( Kernel::thePostCheckErrorsList.size( ) > 0 )
+    {
+      std::cout.flush( );
+      typedef typeof Kernel::thePostCheckErrorsList ListType;
+      for( ListType::const_iterator i = Kernel::thePostCheckErrorsList.begin( ); i != Kernel::thePostCheckErrorsList.end( ); ++i )
+	{
+	  {
+	    typedef const Exceptions::PostCondition ErrorType;
+	    ErrorType * err = dynamic_cast< ErrorType * >( *i );
+	    if( err != 0 )
+	      {
+		std::cerr << err->loc( ) << ": " ;
+		err->display( std::cerr );
+		continue;
+	      }
+	  }
+	  std::cerr << "(Bad exception type)" << ": " ;
+	  (*i)->display( std::cerr );
+	}
+      abortProcedure( & oFile, outputName );
     }
 
   if( memoryStats )

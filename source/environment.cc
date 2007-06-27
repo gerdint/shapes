@@ -447,6 +447,8 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
 
   selfDefineCoreFunction( new Lang::Core_annotationsite( "site" ) );
   selfDefineCoreFunction( new Lang::Core_annotation_text( "annotationText" ) );
+  selfDefineCoreFunction( new Lang::Core_annotation_launch( "annotationLaunch" ) );
+  selfDefineCoreFunction( new Lang::Core_annotation_link( "annotationLink" ) );
 
   selfDefineClass( Lang::THE_OBJECT );
 
@@ -915,7 +917,7 @@ Ast::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation & lo
     {
       if( isBaseEnvironment( ) )
 	{
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::VARIABLE ) );
 	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalVariableKey( loc, id ).oneAbove( );
@@ -975,7 +977,7 @@ Ast::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc, c
     {
       if( isBaseEnvironment( ) )
 	{
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::TYPE ) );
 	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalTypeKey( loc, id ).oneAbove( );
@@ -1004,7 +1006,7 @@ Ast::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, 
     {
       if( isBaseEnvironment( ) )
 	{
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknown( loc, strrefdup( id ), Exceptions::LookupUnknown::STATE ) );
 	  return Kernel::Environment::theMissingKey;
 	}
       if( functionBoundary_ )
@@ -1012,7 +1014,7 @@ Ast::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, 
 	  // If the state is not found at all, this will throw an error.
 	  parent_->findLexicalStateKey( loc, id ).oneAbove( );  // Ignore the result!
 	  // If no error is thrown, we inform the user that the state is outside a function boundary.
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::StateBeyondFunctionBoundary( loc, strrefdup( id ) ) );
 	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalStateKey( loc, id ).oneAbove( );
@@ -1150,7 +1152,7 @@ Ast::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc
   char * msg = new char[ strlen( id ) + 2 ];
   strcpy( msg, "@" );
   strcpy( msg + 1, id );
-  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_VARIABLE ) );
   return Kernel::Environment::theMissingKey;
 
 }
@@ -1233,7 +1235,7 @@ Ast::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocation 
 	  char * msg = new char[ strlen( id ) + 2 ];
 	  strcpy( msg, "@#" );
 	  strcpy( msg + 1, id );
-	  Ast::theAnalsisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknown( loc, RefCountPtr< const char >( msg ), Exceptions::LookupUnknown::DYNAMIC_STATE ) );
 	  return Kernel::Environment::theMissingKey;
 	}
       return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );

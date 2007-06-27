@@ -1,3 +1,5 @@
+##needs circle
+
 clock: \ hour minute .>
 {
   hourLength: 4cm
@@ -20,6 +22,15 @@ clock: \ hour minute .>
 •catalog << [clock 8 0]
 	    & [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]
 	    & [destination level:'1 text:`Eight´]
+	    & {
+	      bar: [shift (3cm,1cm)][]stroke[][circle 5mm]
+  	      bar
+	      &
+	      [annotationLink site:[site target:bar
+	  			         text:`Leave this place!´
+				         width: 2bp]
+      	 		   name:`four in the afternoon´]	      
+	    }
          << [clock 9 0]
 	    & [destination level:'1 text:`Nine´]
 
@@ -38,5 +49,6 @@ clock: \ hour minute .>
 •catalog << [clock 3 10]
   	    & [destination level:'0 text:`Afternoon´ italic:true]
          << [clock 4 10]
+  	    & [destination name:`four in the afternoon´]
 	 << [clock 5 10]
 	    & [destination level:'1 text:`Five´ bold:true]

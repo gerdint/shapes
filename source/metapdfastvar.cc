@@ -30,7 +30,7 @@ Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::
 	      {
 		if( argumentOrder_->find( name ) != argumentOrder_->end( ) )
 		  {
-		    Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
+		    Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
 		    continue;
 		  }
 		argumentOrder_->insert( std::pair< const char *, size_t >( name, argumentOrder_->size( ) ) );
@@ -44,7 +44,7 @@ Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::
 	      {
 		if( stateOrder_->find( name ) != stateOrder_->end( ) )
 		  {
-		    Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
+		    Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
 		    continue;
 		  }
 		stateOrder_->insert( std::pair< const char *, size_t >( name, stateOrder_->size( ) ) );
@@ -62,7 +62,7 @@ Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::
 		  }
 		if( dynamicMap_->find( name ) != dynamicMap_->end( ) )
 		  {
-		    Ast::theAnalsisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
+		    Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExisting( tmp->idLoc( ), name ) );
 		    continue;
 		  }
 		dynamicMap_->insert( std::pair< const char *, size_t >( name, dynamicMap_->size( ) ) );
@@ -123,7 +123,7 @@ Ast::CodeBracket::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * 
 	    ++tmp;
 	    if( tmp != nodes_->end( ) )
 	      {
-		Ast::theAnalsisErrorsList.push_back( new Exceptions::ExpectedImperative( (*i)->loc( ) ) );
+		Ast::theAnalysisErrorsList.push_back( new Exceptions::ExpectedImperative( (*i)->loc( ) ) );
 	      }
 	  }
 	imperative_ = imperative_ || (*i)->imperative_;
@@ -1306,7 +1306,7 @@ Ast::DynamicExpression::analyze( Ast::Node * parent, const Ast::AnalysisEnvironm
 
   if( expr_->imperative_ )
     {
-      Ast::theAnalsisErrorsList.push_back( new Exceptions::IllegalImperative( expr_->loc( ) ) );
+      Ast::theAnalysisErrorsList.push_back( new Exceptions::IllegalImperative( expr_->loc( ) ) );
     }
   imperative_ = false;
 }

@@ -70,6 +70,8 @@ namespace MetaPDF
 
     extern RefCountPtr< const Lang::Symbol > THE_NAVIGATION_SYMBOL;
     extern RefCountPtr< const Lang::Symbol > THE_ANNOTATION_SYMBOL;
+
+    extern PtrOwner_back_Access< std::list< Exceptions::Exception * > > thePostCheckErrorsList;
   }
 
   namespace Lang
@@ -137,7 +139,7 @@ namespace MetaPDF
     extern Ast::DummyExpression THE_CORE_DEFAULT_VALUE_EXPRESSION;
     extern Ast::DummyExpression THE_INTERNAL_VALUE_EXPRESSION;
 
-    extern PtrOwner_back_Access< std::list< Exceptions::Exception * > > theAnalsisErrorsList;
+    extern PtrOwner_back_Access< std::list< Exceptions::Exception * > > theAnalysisErrorsList;
 
     extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_coords2D;
     extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_cornercoords2D;

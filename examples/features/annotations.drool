@@ -4,10 +4,29 @@
 
 myFont: @text_font:font_HELVETICA & @text_size:1cm
 
-bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]
-•page << bar
+{
+  bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]
+  •page << bar
+  •page << [annotationText site:[site target:bar
+	  			      text:`The long story just goes on and on...´
+				      width: 2bp]
+      	 		   title:`Extended version´]
+}
 
-•page << [annotationText site:[site target:bar
-				    text:`The long story just goes on and on...´
-				    width: 2bp]
-      	 		 title:`Extended version´]
+{
+  bar: [shift (3cm,1cm)][]stroke[][circle 5mm]
+  •page << bar
+  •page << [annotationLaunch site:[site target:bar
+	  			        text:`The true source.´
+				        width: 2bp]
+      	 		   file:`http://www.rt.isy.liu.se/~tidefelt/projects/drool/´]
+}
+
+{
+  bar: [shift (3cm,2cm)][]stroke[][circle 5mm]
+  •page << bar
+  •page << [annotationLaunch site:[site target:bar
+	  			        text:`The look.´
+				        width: 2bp]
+      	 		   file:`../applications/droo.pdf´]
+}
