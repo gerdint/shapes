@@ -1,7 +1,10 @@
+#include "MetaPDF_Kernel_decls.h"
+
 #include "consts.h"
 #include "metapdfexceptions.h"
 #include "classtypes.h"
 #include "statetypes.h"
+#include "fonttypes.h"
 
 using namespace MetaPDF;
 
@@ -84,4 +87,3 @@ const double Computation::RREL_TABLE[RREL_SIZE] =
    2.7440092614738933,3.5090279091817442,
    4.590771723726686,6.112526284299868,8.144027798714662,
    10.441038625842998,12.076454051457787,13};
-

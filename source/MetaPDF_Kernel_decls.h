@@ -61,6 +61,20 @@ namespace MetaPDF
 
     class TeXLabelManager;
 
+    void registerGlobals( Kernel::Environment * env );
+    void registerDynamic( Kernel::Environment * env );
+    void registerHot( Kernel::Environment * env );
+    void registerClasses( Kernel::Environment * env );
+
+    void registerCore_elem( Kernel::Environment * env );
+    void registerCore_point( Kernel::Environment * env );
+    void registerCore_path( Kernel::Environment * env );
+    void registerCore_draw( Kernel::Environment * env );
+    void registerCore_construct( Kernel::Environment * env );
+    void registerCore_font( Kernel::Environment * env );
+    void registerCore_misc( Kernel::Environment * env );
+    void registerCore_state( Kernel::Environment * env );
+    void registerCore_annotation( Kernel::Environment * env );
   }
 }
 

@@ -733,3 +733,41 @@ Lang::DynamicExpression::gcMark( Kernel::GCMarkedSet & marked )
 {
   env_->gcMark( marked );
 }
+
+
+void
+Kernel::registerDynamic( Kernel::Environment * env )
+{
+  env->initDefineDynamic( new Kernel::WidthDynamicVariableProperties( "width" ) );
+  env->initDefineDynamic( new Kernel::CapStyleDynamicVariableProperties( "cap" ) );
+  env->initDefineDynamic( new Kernel::JoinStyleDynamicVariableProperties( "join" ) );
+  env->initDefineDynamic( new Kernel::MiterLimitDynamicVariableProperties( "miterlimit" ) );
+  env->initDefineDynamic( new Kernel::StrokingDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_STROKING ) );
+  env->initDefineDynamic( new Kernel::NonStrokingDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_NONSTROKING ) );
+  env->initDefineDynamic( new Kernel::DashDynamicVariableProperties( "dash" ) );
+  env->initDefineDynamic( new Kernel::BlendModeDynamicVariableProperties( "blend" ) );
+  env->initDefineDynamic( new Kernel::AlphaDynamicVariableProperties( "nonstrokingalpha", false ) );
+  env->initDefineDynamic( new Kernel::AlphaDynamicVariableProperties( "strokingalpha", true ) );
+
+  env->initDefineDynamic( new Kernel::ReflectionsDynamicVariableProperties( "reflections" ) );
+  env->initDefineDynamic( new Kernel::AutoIntensityDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY ) );
+  env->initDefineDynamic( new Kernel::AutoScatteringDynamicVariableProperties( "autoscattering" ) );
+  env->initDefineDynamic( new Kernel::ViewResolutionDynamicVariableProperties( "facetresolution" ) );
+  env->initDefineDynamic( new Kernel::ShadeOrderDynamicVariableProperties( "shadeorder" ) );
+
+  env->initDefineDynamic( new Kernel::CharacterSpacingDynamicVariableProperties( "text_characterspacing" ) );
+  env->initDefineDynamic( new Kernel::WordSpacingDynamicVariableProperties( "text_wordspacing" ) );
+  env->initDefineDynamic( new Kernel::HorizontalScalingDynamicVariableProperties( "text_horizontalscaling" ) );
+  env->initDefineDynamic( new Kernel::LeadingDynamicVariableProperties( "text_leading" ) );
+  env->initDefineDynamic( new Kernel::FontDynamicVariableProperties( "text_font" ) );
+  env->initDefineDynamic( new Kernel::TextSizeDynamicVariableProperties( "text_size" ) );
+  env->initDefineDynamic( new Kernel::TextRenderingModeDynamicVariableProperties( "text_rendering" ) );
+  env->initDefineDynamic( new Kernel::TextRiseDynamicVariableProperties( "text_rise" ) );
+  env->initDefineDynamic( new Kernel::TextKnockoutDynamicVariableProperties( "text_knockout" ) );
+
+  env->initDefineDynamic( new Kernel::EyeZDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_EYEZ ) );
+  env->initDefineDynamic( new Kernel::DefaultUnitDynamicVariableProperties( "defaultunit" ) );
+  //  env->initDefineDynamic( new Kernel::DefaultDestinationDynamicVariableProperties( "<<" ) );
+  env->initDefineDynamic( new Kernel::BlendSpaceDynamicVariableProperties( "blendspace" ) );
+}
+

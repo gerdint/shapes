@@ -227,17 +227,6 @@ namespace MetaPDF
       PtrOwner_back_Access< std::list< const char * > > charPtrDeletionList_;
       bool functionBoundary_;
 
-      void selfDefineCoreFunction( Lang::CoreFunction * fun );
-      void selfDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun );
-      void selfDefineHandle( const char * id, const Kernel::VariableHandle & val );
-      void selfDefine( const char * id, const RefCountPtr< const Lang::Value > & val );
-      void selfDefine( const char * id, Kernel::StateHandle state );
-      void selfDefineClass( const RefCountPtr< const Lang::Class > & cls );
-
-      void selfDefineDynamic( DynamicVariableProperties * dynProps );
-      void selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
-      void selfDefineDynamicHandler( const char * id, const char * msg );
-
       bool gcMarked_;
 
     public:
@@ -292,6 +281,18 @@ namespace MetaPDF
       size_t recursivePrint( std::ostream & os, std::set< MapType::key_type > * shadowed ) const;
 
       bool isBaseEnvironment( ) const { return parent_ == 0; };
+
+      /* The following public methods shall only be unsed on the base environment immediately after it has been created.
+       */
+      void initDefineCoreFunction( Lang::CoreFunction * fun );
+      void initDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun );
+      void initDefineHandle( const char * id, const Kernel::VariableHandle & val );
+      void initDefine( const char * id, const RefCountPtr< const Lang::Value > & val );
+      void initDefine( const char * id, Kernel::StateHandle state );
+      void initDefineClass( const RefCountPtr< const Lang::Class > & cls );
+      void initDefineDynamic( DynamicVariableProperties * dynProps );
+      void initDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
+      void initDefineDynamicHandler( const char * id, const char * msg );
 
     private:
       const char * reverseMapVariable( size_t pos ) const;

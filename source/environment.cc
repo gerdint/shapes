@@ -256,19 +256,19 @@ Kernel::DynamicStateProperties::~DynamicStateProperties( )
 
 
 void
-Kernel::Environment::selfDefineCoreFunction( Lang::CoreFunction * fun )
+Kernel::Environment::initDefineCoreFunction( Lang::CoreFunction * fun )
 {
-  selfDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( fun ) ) ) );
+  initDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( RefCountPtr< const Lang::Value >( fun ) ) ) );
 }
 
 void
-Kernel::Environment::selfDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun )
+Kernel::Environment::initDefineCoreFunction( RefCountPtr< const Lang::CoreFunction > fun )
 {
-  selfDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( fun ) ) );
+  initDefineHandle( fun->getTitle( ), Kernel::VariableHandle( new Kernel::Variable( fun ) ) );
 }
 
 void
-Kernel::Environment::selfDefineHandle( const char * id, const Kernel::VariableHandle & val )
+Kernel::Environment::initDefineHandle( const char * id, const Kernel::VariableHandle & val )
 {
   if( bindings_->find( id ) != bindings_->end( ) )
     {
@@ -281,13 +281,13 @@ Kernel::Environment::selfDefineHandle( const char * id, const Kernel::VariableHa
 }
 
 void
-Kernel::Environment::selfDefine( const char * id, const RefCountPtr< const Lang::Value > & val )
+Kernel::Environment::initDefine( const char * id, const RefCountPtr< const Lang::Value > & val )
 {
-  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( val ) ) );
+  initDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( val ) ) );
 }
 
 void
-Kernel::Environment::selfDefine( const char * id, Kernel::StateHandle state )
+Kernel::Environment::initDefine( const char * id, Kernel::StateHandle state )
 {
   if( stateBindings_->find( id ) != stateBindings_->end( ) )
     {
@@ -300,16 +300,16 @@ Kernel::Environment::selfDefine( const char * id, Kernel::StateHandle state )
 }
 
 void
-Kernel::Environment::selfDefineClass( const RefCountPtr< const Lang::Class > & cls )
+Kernel::Environment::initDefineClass( const RefCountPtr< const Lang::Class > & cls )
 {
   RefCountPtr< const char > idRef = cls->getPrettyName( );
   const char * id = strdup( idRef.getPtr( ) );
   charPtrDeletionList_.push_back( id );
-  selfDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( cls ) ) );
+  initDefineHandle( id, Kernel::VariableHandle( new Kernel::Variable( cls ) ) );
 }
 
 void
-Kernel::Environment::selfDefineDynamic( DynamicVariableProperties * dynProps )
+Kernel::Environment::initDefineDynamic( DynamicVariableProperties * dynProps )
 {
   if( dynamicKeyBindings_->find( dynProps->getName( ) ) != dynamicKeyBindings_->end( ) )
     {
@@ -322,7 +322,7 @@ Kernel::Environment::selfDefineDynamic( DynamicVariableProperties * dynProps )
 }
 
 void
-Kernel::Environment::selfDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal )
+Kernel::Environment::initDefineDynamic( const char * id, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal )
 {
   if( dynamicKeyBindings_->find( id ) != dynamicKeyBindings_->end( ) )
     {
@@ -336,9 +336,9 @@ Kernel::Environment::selfDefineDynamic( const char * id, const RefCountPtr< cons
 }
 
 void
-Kernel::Environment::selfDefineDynamicHandler( const char * id, const char * msg )
+Kernel::Environment::initDefineDynamicHandler( const char * id, const char * msg )
 {
-  selfDefineDynamic( id,
+  initDefineDynamic( id,
 		     Lang::THE_IDENTITY,
 		     Helpers::newValHandle( new Lang::ExceptionWrapper< Exceptions::HandlerError >( id, msg ) ) );
 }
@@ -358,289 +358,6 @@ Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageAr
   garbageArea.push_back( this );
   ++createdCount;
   ++liveCount;
-  selfDefine( "cap_BUTT", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_BUTT ) ) );
-  selfDefine( "cap_ROUND", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_ROUND ) ) );
-  selfDefine( "cap_SQUARE", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_SQUARE ) ) );
-  selfDefine( "join_MITER", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_MITER ) ) );
-  selfDefine( "join_ROUND", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_ROUND ) ) );
-  selfDefine( "join_BEVEL", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_BEVEL ) ) );
-  selfDefine( "gray_BLACK", Lang::THE_BLACK );
-  selfDefine( "gray_WHITE", RefCountPtr< const Lang::Gray >( new Lang::Gray( Concrete::Gray( 1 ) ) ) );
-  selfDefine( "rgb_BLACK", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 0, 0 ) ) ) );
-  selfDefine( "rgb_WHITE", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 1, 1 ) ) ) );
-  selfDefine( "rgb_RED", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 0, 0 ) ) ) );
-  selfDefine( "rgb_GREEN", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 1, 0 ) ) ) );
-  selfDefine( "rgb_BLUE", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 0, 1 ) ) ) );
-  selfDefine( "rgb_YELLOW", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 1, 0 ) ) ) );
-  selfDefine( "rgb_CYAN", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 1, 1 ) ) ) );
-  selfDefine( "rgb_MAGENTA", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 0, 1 ) ) ) );
-  selfDefine( "blend_NORMAL", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::NORMAL ) ) );
-  selfDefine( "blend_MULTIPLY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::MULTIPLY ) ) );
-  selfDefine( "blend_SCREEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SCREEN ) ) );
-  selfDefine( "blend_OVERLAY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::OVERLAY ) ) );
-  selfDefine( "blend_DARKEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::DARKEN ) ) );
-  selfDefine( "blend_LIGHTEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::LIGHTEN ) ) );
-  selfDefine( "blend_COLOR_DODGE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR_DODGE ) ) );
-  selfDefine( "blend_COLOR_BURN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR_BURN ) ) );
-  selfDefine( "blend_HARD_LIGHT", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::HARD_LIGHT ) ) );
-  selfDefine( "blend_SOFT_LIGHT", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SOFT_LIGHT ) ) );
-  selfDefine( "blend_DIFFERENCE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::DIFFERENCE ) ) );
-  selfDefine( "blend_EXCLUSION", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::EXCLUSION ) ) );
-  selfDefine( "blend_HUE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::HUE ) ) );
-  selfDefine( "blend_SATURATION", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SATURATION ) ) );
-  selfDefine( "blend_COLOR", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR ) ) );
-  selfDefine( "blend_LUMINOSITY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::LUMINOSITY ) ) );
-  selfDefine( "device_GRAY", Lang::THE_COLOR_SPACE_DEVICE_GRAY );
-  selfDefine( "device_RGB",  Lang::THE_COLOR_SPACE_DEVICE_RGB );
-  selfDefine( "device_CMYK", RefCountPtr< const Lang::ColorSpace >( new Lang::DeviceColorSpace< Lang::CMYK >( "DeviceCMYK", 4 ) ) );
-
-  selfDefine( "font_TIMES_ROMAN", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ROMAN ) ) );
-  selfDefine( "font_TIMES_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLD ) ) );
-  selfDefine( "font_TIMES_ITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ITALIC ) ) );
-  selfDefine( "font_TIMES_BOLDITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLDITALIC ) ) );
-  selfDefine( "font_HELVETICA", Lang::THE_FONT_HELVETICA );
-  selfDefine( "font_HELVETICA_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLD ) ) );
-  selfDefine( "font_HELVETICA_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_OBLIQUE ) ) );
-  selfDefine( "font_HELVETICA_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLDOBLIQUE ) ) );
-  selfDefine( "font_COURIER", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER ) ) );
-  selfDefine( "font_COURIER_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLD ) ) );
-  selfDefine( "font_COURIER_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_OBLIQUE ) ) );
-  selfDefine( "font_COURIER_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLDOBLIQUE ) ) );
-  selfDefine( "font_SYMBOL", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::SYMBOL ) ) );
-  selfDefine( "font_ZAPFDINGBATS", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::ZAPFDINGBATS ) ) );
-
-  selfDefine( "null", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_NULL2D ) );
-  selfDefine( "null3D", static_cast< RefCountPtr< const Lang::Geometric3D > >( Lang::THE_NULL3D ) );
-  selfDefine( "void", Lang::THE_VOID );
-  selfDefine( "pointpicture", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_POINTPICTURE ) );
-  selfDefine( "emptypath2D", Lang::THE_EMPTYPATH2D );
-  selfDefine( "emptypath3D", Lang::THE_EMPTYPATH3D );
-  selfDefine( "nomask", Lang::THE_NONE_MASK );
-
-  selfDefine( Lang::CANVAS_ID, new Kernel::WarmGroup2D );
-  selfDefine( Lang::CATALOG_ID, new Kernel::WarmCatalog );
-  selfDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
-  selfDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
-  selfDefine( "randomdevice", new Kernel::WarmRandomDevice( "/dev/urandom" ) );
-  selfDefine( "time", new Kernel::WarmTime );
-  selfDefine( "ignore", new Kernel::WarmIgnore );
-
-  selfDefine( "newIgnore", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmIgnore > ) );
-  selfDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
-  selfDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
-  selfDefine( "newZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
-  selfDefine( "newZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
-  selfDefine( "newString", Kernel::ValueRef( new Lang::HotDefault< Kernel::Warm_ostringstream > ) );
-  selfDefine( "newLights", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroupLights > ) );
-  selfDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
-  selfDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
-  selfDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
-
-  selfDefineCoreFunction( new Lang::Core_newrandom( "newRandom" ) );
-  selfDefineCoreFunction( new Lang::Core_devrandom( "devRandom" ) );
-
-  selfDefineCoreFunction( new Lang::Core_erase( "erase" ) );
-  selfDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
-  selfDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );
-  selfDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
-  selfDefineCoreFunction( new Lang::Core_destination( "destination" ) );
-
-  selfDefineCoreFunction( new Lang::Core_annotationsite( "site" ) );
-  selfDefineCoreFunction( new Lang::Core_annotation_text( "annotationText" ) );
-  selfDefineCoreFunction( new Lang::Core_annotation_launch( "annotationLaunch" ) );
-  selfDefineCoreFunction( new Lang::Core_annotation_link( "annotationLink" ) );
-
-  selfDefineClass( Lang::THE_OBJECT );
-
-  selfDefineClass( Lang::Class::TypeID );
-
-  selfDefineClass( Lang::Void::TypeID );
-  selfDefineClass( Lang::Symbol::TypeID );
-  selfDefineClass( Lang::Float::TypeID );
-  selfDefineClass( Lang::Length::TypeID );
-  selfDefineClass( Lang::Boolean::TypeID );
-  selfDefineClass( Lang::String::TypeID );
-  selfDefineClass( Lang::FloatPair::TypeID );
-  selfDefineClass( Lang::Coords2D::TypeID );
-  selfDefineClass( Lang::CornerCoords2D::TypeID );
- 
-  selfDefineClass( Lang::Function::TypeID );
-  selfDefineClass( Lang::Transform2D::TypeID );
-  selfDefineClass( Lang::Transform3D::TypeID );
-
-  selfDefineClass( Lang::Drawable2D::TypeID );
-  selfDefineClass( Lang::Drawable3D::TypeID );
-  selfDefineClass( Lang::Color::TypeID );
-
-  selfDefineCoreFunction( new Lang::Core_typeof( "typeof" ) );
-  selfDefineCoreFunction( new Lang::Core_error( "error" ) );
-  selfDefineCoreFunction( new Lang::Core_show( "show" ) );
-  selfDefineCoreFunction( new Lang::Core_if( "if" ) );
-  selfDefineCoreFunction( new Lang::NullFunction( "ignore" ) );
-  selfDefineCoreFunction( new Lang::Core_rectangle( "rectangle" ) );
-  selfDefineCoreFunction( new Lang::Core_memoryinfo( "memoryinfo" ) );
-  selfDefineCoreFunction( new Lang::Core_hot( "hot" ) );
-
-  selfDefineCoreFunction( new Lang::Core_gensym( "gensym" ) );
-  selfDefineCoreFunction( new Lang::Core_tag( "tag" ) );
-  selfDefineCoreFunction( new Lang::Core_find( "find" ) );
-  selfDefineCoreFunction( new Lang::Core_findall( "findall" ) );
-
-  selfDefineCoreFunction( new Lang::Core_mod( "mod" ) );
-  selfDefineCoreFunction( new Lang::Core_ceil( "ceil" ) );
-  selfDefineCoreFunction( new Lang::Core_floor( "floor" ) );
-  selfDefineCoreFunction( new Lang::Core_rint( "round" ) );
-  selfDefineCoreFunction( new Lang::Core_cos( "cos" ) );
-  selfDefineCoreFunction( new Lang::Core_sin( "sin" ) );
-  selfDefineCoreFunction( new Lang::Core_tan( "tan" ) );
-  selfDefineCoreFunction( new Lang::Core_cot( "cot" ) );
-  selfDefineCoreFunction( new Lang::Core_arccos( "arccos" ) );
-  selfDefineCoreFunction( new Lang::Core_arcsin( "arcsin" ) );
-  selfDefineCoreFunction( new Lang::Core_arctan( "arctan" ) );
-  selfDefineCoreFunction( new Lang::Core_min( "min" ) );
-  selfDefineCoreFunction( new Lang::Core_max( "max" ) );
-  selfDefineCoreFunction( new Lang::Core_sqrt( "sqrt" ) );
-  selfDefineCoreFunction( new Lang::Core_abs( "abs" ) );
-  selfDefineCoreFunction( new Lang::Core_angle( "angle" ) );
-  selfDefineCoreFunction( new Lang::Core_dir( "dir" ) );
-  selfDefineCoreFunction( new Lang::Core_normalized( "normalized" ) );
-  selfDefineCoreFunction( new Lang::Core_cross( "cross" ) );
-  selfDefineCoreFunction( new Lang::Core_orthogonal( "orthogonal" ) );
-
-  selfDefineCoreFunction( new Lang::Core_randomNatural( "randomN" ) );
-  selfDefineCoreFunction( new Lang::Core_randomBall1D( "random1D" ) );
-  selfDefineCoreFunction( new Lang::Core_randomBall2D( "random2D" ) );
-  selfDefineCoreFunction( new Lang::Core_randomBall3D( "random3D" ) );
-
-  selfDefineCoreFunction( new Lang::Core_stroke( "stroke" ) );
-  selfDefineCoreFunction( new Lang::Core_fill( "fill" ) );
-  selfDefineCoreFunction( new Lang::Core_fillstar( "fillodd" ) );
-  selfDefineCoreFunction( new Lang::Core_facetnormal( "facetnormal" ) );
-  selfDefineCoreFunction( new Lang::Core_facet( "facet" ) );
-
-  selfDefineCoreFunction( new Lang::Core_formxo( "formxo" ) );
-  selfDefineCoreFunction( new Lang::Core_transparencygroup( "tgroup" ) );
-
-  selfDefineDynamic( new Kernel::WidthDynamicVariableProperties( "width" ) );
-  selfDefineDynamic( new Kernel::CapStyleDynamicVariableProperties( "cap" ) );
-  selfDefineDynamic( new Kernel::JoinStyleDynamicVariableProperties( "join" ) );
-  selfDefineDynamic( new Kernel::MiterLimitDynamicVariableProperties( "miterlimit" ) );
-  selfDefineDynamic( new Kernel::StrokingDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_STROKING ) );
-  selfDefineDynamic( new Kernel::NonStrokingDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_NONSTROKING ) );
-  selfDefineDynamic( new Kernel::DashDynamicVariableProperties( "dash" ) );
-  selfDefineDynamic( new Kernel::BlendModeDynamicVariableProperties( "blend" ) );
-  selfDefineDynamic( new Kernel::AlphaDynamicVariableProperties( "nonstrokingalpha", false ) );
-  selfDefineDynamic( new Kernel::AlphaDynamicVariableProperties( "strokingalpha", true ) );
-
-  selfDefineDynamic( new Kernel::ReflectionsDynamicVariableProperties( "reflections" ) );
-  selfDefineDynamic( new Kernel::AutoIntensityDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY ) );
-  selfDefineDynamic( new Kernel::AutoScatteringDynamicVariableProperties( "autoscattering" ) );
-  selfDefineDynamic( new Kernel::ViewResolutionDynamicVariableProperties( "facetresolution" ) );
-  selfDefineDynamic( new Kernel::ShadeOrderDynamicVariableProperties( "shadeorder" ) );
-
-  selfDefineDynamic( new Kernel::CharacterSpacingDynamicVariableProperties( "text_characterspacing" ) );
-  selfDefineDynamic( new Kernel::WordSpacingDynamicVariableProperties( "text_wordspacing" ) );
-  selfDefineDynamic( new Kernel::HorizontalScalingDynamicVariableProperties( "text_horizontalscaling" ) );
-  selfDefineDynamic( new Kernel::LeadingDynamicVariableProperties( "text_leading" ) );
-  selfDefineDynamic( new Kernel::FontDynamicVariableProperties( "text_font" ) );
-  selfDefineDynamic( new Kernel::TextSizeDynamicVariableProperties( "text_size" ) );
-  selfDefineDynamic( new Kernel::TextRenderingModeDynamicVariableProperties( "text_rendering" ) );
-  selfDefineDynamic( new Kernel::TextRiseDynamicVariableProperties( "text_rise" ) );
-  selfDefineDynamic( new Kernel::TextKnockoutDynamicVariableProperties( "text_knockout" ) );
-
-  selfDefineDynamic( new Kernel::EyeZDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_EYEZ ) );
-  selfDefineDynamic( new Kernel::DefaultUnitDynamicVariableProperties( "defaultunit" ) );
-  //  selfDefineDynamic( new Kernel::DefaultDestinationDynamicVariableProperties( "<<" ) );
-  selfDefineDynamic( new Kernel::BlendSpaceDynamicVariableProperties( "blendspace" ) );
-
-  selfDefineDynamicHandler( Lang::HANDLER_NO_INTERSECTION, "Failed to find intersection." );
-
-  selfDefineCoreFunction( new Lang::Core_dashpattern( "dashpattern" ) );
-  selfDefineCoreFunction( new Lang::Core_gray( "gray" ) );
-  selfDefineCoreFunction( new Lang::Core_rgb( "rgb" ) );
-  selfDefineCoreFunction( new Lang::Core_cmyk( "cmyk" ) );
-  selfDefineCoreFunction( new Lang::Core_shape( "shape" ) );
-  selfDefineCoreFunction( new Lang::Core_opacity( "opacity" ) );
-  selfDefineCoreFunction( new Lang::Core_alphamask( "alphamask" ) );
-  selfDefineCoreFunction( new Lang::Core_luminositymask( "luminositymask" ) );
-  selfDefineCoreFunction( new Lang::Core_textrenderingmode( "textmode" ) );
-  selfDefineCoreFunction( new Lang::Core_manualkern( "kerning" ) );
-  selfDefineCoreFunction( new Lang::Core_automatickern( "kern" ) );
-  selfDefineCoreFunction( new Lang::Core_phong( "phong" ) );
-  selfDefineCoreFunction( Lang::THE_NO_ARROW );
-  selfDefineCoreFunction( Lang::THE_IDENTITY );
-
-  selfDefineCoreFunction( Ast::THE_FUNCTION_coords2D );
-  selfDefineCoreFunction( Ast::THE_FUNCTION_cornercoords2D );
-  selfDefineCoreFunction( Ast::THE_FUNCTION_coords3D );
-  selfDefineCoreFunction( Ast::THE_FUNCTION_TeX );
-
-  selfDefineCoreFunction( new Lang::Core_cons( "cons" ) );
-  selfDefineCoreFunction( new Lang::Core_list( "list" ) );
-  selfDefineCoreFunction( new Lang::Core_isnull( "isnull" ) );
-  selfDefineCoreFunction( new Lang::Core_range( "range" ) );
-  selfDefineCoreFunction( new Lang::Core_affinetransform( "affinetransform" ) );
-  selfDefineCoreFunction( new Lang::Core_shift( "shift" ) );
-  selfDefineCoreFunction( new Lang::Core_rotate( "rotate" ) );
-  selfDefineCoreFunction( new Lang::Core_rotate3d( "rotate3D" ) );
-  selfDefineCoreFunction( new Lang::Core_scale( "scale" ) );
-  selfDefineCoreFunction( new Lang::Core_scale3d( "scale3D" ) );
-  selfDefineCoreFunction( new Lang::Core_affinetransform3D( "affinetransform3D" ) );
-  selfDefineCoreFunction( new Lang::Core_inverse( "inverse" ) );
-  selfDefineCoreFunction( new Lang::Core_controlling( "controlling" ) );
-  selfDefineCoreFunction( new Lang::Core_controlling_hull( "controlling_hull" ) );
-  selfDefineCoreFunction( new Lang::Core_bbox( "bbox" ) );
-  selfDefineCoreFunction( new Lang::Core_bboxed( "bboxed" ) );
-  selfDefineCoreFunction( new Lang::Core_clip( "clip", "W" ) );
-  selfDefineCoreFunction( new Lang::Core_clip( "clipodd", "W*" ) );
-  selfDefineCoreFunction( new Lang::Core_from3Dto2D( "view" ) );
-  selfDefineCoreFunction( new Lang::Core_from2Dto3D( "immerse" ) );
-  selfDefineCoreFunction( new Lang::Core_facing2Din3D( "facing" ) );
-
-  selfDefineCoreFunction( new Lang::Core_duration( "duration" ) );
-  selfDefineCoreFunction( new Lang::Core_controlling_maximizer( "controlling_maximizer" ) );
-  selfDefineCoreFunction( new Lang::Core_discrete_mean( "discrete_mean" ) );
-  selfDefineCoreFunction( new Lang::Core_discrete_maximizer( "discrete_maximizer" ) );
-  selfDefineCoreFunction( new Lang::Core_discrete_approximator( "discrete_approximator" ) );
-  selfDefineCoreFunction( new Lang::Core_continuous_mean( "continuous_mean" ) );
-  selfDefineCoreFunction( new Lang::Core_continuous_maximizer( "continuous_maximizer" ) );
-  selfDefineCoreFunction( new Lang::Core_continuous_approximator( "continuous_approximator" ) );
-  //  selfDefineCoreFunction( new Lang::Core_subpath( "subpath" ) );
-  selfDefineCoreFunction( new Lang::Core_reverse( "reverse" ) );
-  selfDefineCoreFunction( new Lang::Core_meetpaths( "meetpaths" ) );
-  selfDefineCoreFunction( new Lang::Core_intersection( "intersection" ) );
-
-  selfDefineCoreFunction( new Lang::Core_ambient_light( "ambient_light" ) );
-  selfDefineCoreFunction( new Lang::Core_specular_light( "specular_light" ) );
-  selfDefineCoreFunction( new Lang::Core_distant_light( "distant_light" ) );
-
-  selfDefineCoreFunction( new Lang::Core_makeglyph( "basicglyph", Lang::Type3Glyph::BASIC ) );
-  selfDefineCoreFunction( new Lang::Core_makeglyph( "coloredglyph", Lang::Type3Glyph::COLORED ) );
-
-
-  /* Obsolete functions; use path sliders instead! */
-//   selfDefineCoreFunction( new Lang::Core_point( "point" ) );
-//   selfDefineCoreFunction( new Lang::Core_speed( "speed" ) );
-//   selfDefineCoreFunction( new Lang::Core_reversespeed( "reversespeed" ) );
-//   selfDefineCoreFunction( new Lang::Core_direction( "direction" ) );
-//   selfDefineCoreFunction( new Lang::Core_reversedirection( "reversedirection" ) );
-//   selfDefineCoreFunction( new Lang::Core_arctime( "arctime" ) );
-
-  
-  /* subpath functions yet to be implemented */
-  //  selfDefineCoreFunction( new Lang::Core_directiontime( "directiontime" ) );
-  //  selfDefineCoreFunction( new Lang::Core_nearesttimes( "nearesttimes" ) ); /* generalizes distance between subpaths */
-  //  selfDefineCoreFunction( new Lang::Core_slidetimes( "slidetimes" ) ); /* "directional distance" between subpaths */
-  //  selfDefineCoreFunction( new Lang::Core_sidepath( "sidepath" ) );
-
-  //  selfDefineCoreFunction( new Lang::Core_convhull( "convhull" ) ); /* convex hull of a (full) path */
-
-  selfDefineCoreFunction( new Lang::Core_vector( "vector" ) );
-  selfDefineCoreFunction( new Lang::Core_importPDFpages( "import" ) );
-
-  selfDefineCoreFunction( new Lang::Core_sprintf( "sprintf" ) );
-  selfDefineCoreFunction( new Lang::Core_strftime( "strftime" ) );
-
 }
 
 Kernel::Environment::Environment( std::list< Kernel::Environment * > & garbageArea, Environment * parent, MapType * bindings, const RefCountPtr< std::vector< VariableHandle > > & values, MapType * stateBindings, const RefCountPtr< std::vector< StateHandle > > & states )

@@ -1607,3 +1607,28 @@ Kernel::WarmRandomState::peekImpl( Kernel::EvalState * evalState, const Ast::Sou
 void
 Kernel::WarmRandomState::gcMark( Kernel::GCMarkedSet & marked )
 { }
+
+
+void
+Kernel::registerHot( Kernel::Environment * env )
+{
+  env->initDefine( Lang::CANVAS_ID, new Kernel::WarmGroup2D );
+  env->initDefine( Lang::CATALOG_ID, new Kernel::WarmCatalog );
+  env->initDefine( "stdout", new Kernel::WarmOstream( std::cout ) );
+  env->initDefine( "stderr", new Kernel::WarmOstream( std::cerr ) );
+  env->initDefine( "randomdevice", new Kernel::WarmRandomDevice( "/dev/urandom" ) );
+  env->initDefine( "time", new Kernel::WarmTime );
+  env->initDefine( "ignore", new Kernel::WarmIgnore );
+
+  env->initDefine( "newIgnore", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmIgnore > ) );
+  env->initDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
+  env->initDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
+  env->initDefine( "newZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
+  env->initDefine( "newZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
+  env->initDefine( "newString", Kernel::ValueRef( new Lang::HotDefault< Kernel::Warm_ostringstream > ) );
+  env->initDefine( "newLights", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroupLights > ) );
+  env->initDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
+  env->initDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
+  env->initDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
+}
+

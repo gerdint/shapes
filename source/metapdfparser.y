@@ -25,6 +25,7 @@
 #include "charptrless.h"
 #include "autoonoff.h"
 #include "metapdfcore.h"
+#include "coreast.h"
 #include "texlabelmanager.h"
 
 using namespace MetaPDF;

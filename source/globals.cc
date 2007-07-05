@@ -75,26 +75,12 @@ RefCountPtr< const Lang::Boolean > Lang::THE_TRUE( new Lang::Boolean( true ) );
 RefCountPtr< const Lang::Gray > Lang::THE_BLACK( new Lang::Gray( Concrete::Gray( 0 ) ) );
 RefCountPtr< const Lang::Alpha > Lang::THE_OPAQUE( new Lang::Alpha( false, 1 ) );
 RefCountPtr< const Lang::Class > Lang::THE_OBJECT( new Lang::Object( ) );
-RefCountPtr< const Lang::CoreFunction > Lang::THE_NO_ARROW( new Lang::Core_noArrow( "no_arrow" ) );
-RefCountPtr< const Lang::CoreFunction > Lang::THE_IDENTITY( new Lang::Core_identity( "identity" ) );
 RefCountPtr< const Lang::Dash > Lang::THE_SOLID_DASH( new Lang::Dash( ) );
 RefCountPtr< const Lang::SoftMask > Lang::THE_NONE_MASK( new Lang::SoftMask( ) );
 RefCountPtr< const Lang::SoftMask > Lang::THE_SAME_MASK( new Lang::SoftMask( ) );
 
 RefCountPtr< const char > BuiltInFonts::HELVETICA = strrefdup( "Helvetica" );
 RefCountPtr< const Lang::Font > Lang::THE_FONT_HELVETICA( new Lang::Font( BuiltInFonts::HELVETICA ) );
-
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords2D( new Lang::Core_coords2D( "coords2D" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_cornercoords2D( new Lang::Core_cornercoords2D( "cornercoords2D" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords3D( new Lang::Core_coords3D( "coords3D" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_r( new Lang::Core_polarHandle2DFree_r( "polarHandle2DFree_r" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( new Lang::Core_polarHandle2DFree_ra( "polarHandle2DFree_ra" ) );
-
-/* This belongs in consts.cc but we must make sure it is initialized before we use it below.  Note that the identifier will actually be destroyed
- * before Ast::THE_FUNCTION_TeX is destroyed, but that should not cause a failure...
- */
-RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "teX" );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( Lang::TEX_SYNTAX_ID.getPtr( ) ) );
 
 Kernel::Arguments Kernel::EMPTY_ARGLIST( new Kernel::EvaluatedFormals( "< the empty arg list >" ) );
 RefCountPtr< const Lang::Structure > Lang::THE_EMPTY_STRUCT( new Lang::Structure( new Ast::ArgListExprs( true ), Lang::THE_CONS_NULL, true ) );
@@ -113,3 +99,63 @@ Lang::Transform3D Lang::THE_3D_IDENTITY( 1, 0, 0,
 					 0, 1, 0,
 					 0, 0, 1,
 					 Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH );
+
+
+void
+MetaPDF::Kernel::registerGlobals( Kernel::Environment * env )
+{
+  env->initDefine( "cap_BUTT", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_BUTT ) ) );
+  env->initDefine( "cap_ROUND", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_ROUND ) ) );
+  env->initDefine( "cap_SQUARE", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_SQUARE ) ) );
+  env->initDefine( "join_MITER", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_MITER ) ) );
+  env->initDefine( "join_ROUND", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_ROUND ) ) );
+  env->initDefine( "join_BEVEL", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_BEVEL ) ) );
+  env->initDefine( "gray_BLACK", Lang::THE_BLACK );
+  env->initDefine( "gray_WHITE", RefCountPtr< const Lang::Gray >( new Lang::Gray( Concrete::Gray( 1 ) ) ) );
+  env->initDefine( "rgb_BLACK", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 0, 0 ) ) ) );
+  env->initDefine( "rgb_WHITE", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 1, 1 ) ) ) );
+  env->initDefine( "rgb_RED", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 0, 0 ) ) ) );
+  env->initDefine( "rgb_GREEN", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 1, 0 ) ) ) );
+  env->initDefine( "rgb_BLUE", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 0, 1 ) ) ) );
+  env->initDefine( "rgb_YELLOW", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 1, 0 ) ) ) );
+  env->initDefine( "rgb_CYAN", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 1, 1 ) ) ) );
+  env->initDefine( "rgb_MAGENTA", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 0, 1 ) ) ) );
+  env->initDefine( "blend_NORMAL", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::NORMAL ) ) );
+  env->initDefine( "blend_MULTIPLY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::MULTIPLY ) ) );
+  env->initDefine( "blend_SCREEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SCREEN ) ) );
+  env->initDefine( "blend_OVERLAY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::OVERLAY ) ) );
+  env->initDefine( "blend_DARKEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::DARKEN ) ) );
+  env->initDefine( "blend_LIGHTEN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::LIGHTEN ) ) );
+  env->initDefine( "blend_COLOR_DODGE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR_DODGE ) ) );
+  env->initDefine( "blend_COLOR_BURN", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR_BURN ) ) );
+  env->initDefine( "blend_HARD_LIGHT", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::HARD_LIGHT ) ) );
+  env->initDefine( "blend_SOFT_LIGHT", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SOFT_LIGHT ) ) );
+  env->initDefine( "blend_DIFFERENCE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::DIFFERENCE ) ) );
+  env->initDefine( "blend_EXCLUSION", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::EXCLUSION ) ) );
+  env->initDefine( "blend_HUE", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::HUE ) ) );
+  env->initDefine( "blend_SATURATION", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::SATURATION ) ) );
+  env->initDefine( "blend_COLOR", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::COLOR ) ) );
+  env->initDefine( "blend_LUMINOSITY", RefCountPtr< const Lang::BlendMode >( new Lang::BlendMode( Lang::BlendMode::LUMINOSITY ) ) );
+  env->initDefine( "device_GRAY", Lang::THE_COLOR_SPACE_DEVICE_GRAY );
+  env->initDefine( "device_RGB",  Lang::THE_COLOR_SPACE_DEVICE_RGB );
+  env->initDefine( "device_CMYK", RefCountPtr< const Lang::ColorSpace >( new Lang::DeviceColorSpace< Lang::CMYK >( "DeviceCMYK", 4 ) ) );
+
+  env->initDefineDynamicHandler( Lang::HANDLER_NO_INTERSECTION, "Failed to find intersection." );
+
+  env->initDefine( "null", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_NULL2D ) );
+  env->initDefine( "null3D", static_cast< RefCountPtr< const Lang::Geometric3D > >( Lang::THE_NULL3D ) );
+  env->initDefine( "void", Lang::THE_VOID );
+  env->initDefine( "pointpicture", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_POINTPICTURE ) );
+  env->initDefine( "emptypath2D", Lang::THE_EMPTYPATH2D );
+  env->initDefine( "emptypath3D", Lang::THE_EMPTYPATH3D );
+  env->initDefine( "nomask", Lang::THE_NONE_MASK );
+
+  env->initDefineCoreFunction( Lang::THE_NO_ARROW );
+  env->initDefineCoreFunction( Lang::THE_IDENTITY );
+
+  env->initDefineCoreFunction( Ast::THE_FUNCTION_coords2D );
+  env->initDefineCoreFunction( Ast::THE_FUNCTION_cornercoords2D );
+  env->initDefineCoreFunction( Ast::THE_FUNCTION_coords3D );
+  env->initDefineCoreFunction( Ast::THE_FUNCTION_TeX );
+}
+

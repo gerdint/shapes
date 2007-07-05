@@ -1,3 +1,5 @@
+#include "MetaPDF_Kernel_decls.h"
+
 #include "simplepdfi.h"
 #include "simplepdfo.h"
 #include "globals.h"
@@ -791,6 +793,19 @@ main( int argc, char ** argv )
     {
       metapdfparse( );
       Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
+      Kernel::registerGlobals( baseEnv );
+      Kernel::registerDynamic( baseEnv );
+      Kernel::registerHot( baseEnv );
+      Kernel::registerClasses( baseEnv );
+      Kernel::registerCore_elem( baseEnv );
+      Kernel::registerCore_point( baseEnv );
+      Kernel::registerCore_path( baseEnv );
+      Kernel::registerCore_draw( baseEnv );
+      Kernel::registerCore_construct( baseEnv );
+      Kernel::registerCore_font( baseEnv );
+      Kernel::registerCore_misc( baseEnv );
+      Kernel::registerCore_state( baseEnv );
+      Kernel::registerCore_annotation( baseEnv );
       Ast::theGlobalAnalysisEnvironment = baseEnv->newAnalysisEnvironment( );
       Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
       if( Ast::theAnalysisErrorsList.size( ) > 0 )
