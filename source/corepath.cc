@@ -27,7 +27,7 @@ namespace MetaPDF
     public:
       Core_bbox( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_bbox::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -50,7 +50,7 @@ namespace MetaPDF
     public:
       Core_controlling( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_controlling::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -148,7 +148,7 @@ namespace MetaPDF
     public:
       Core_controlling_hull( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_controlling_hull::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -167,7 +167,7 @@ namespace MetaPDF
     public:
       Core_subpath( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_subpath::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 3;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -229,7 +229,7 @@ namespace MetaPDF
     public:
       Core_reverse( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_reverse::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -275,7 +275,7 @@ namespace MetaPDF
     public:
       Core_meetpaths( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_meetpaths::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -449,6 +449,53 @@ namespace MetaPDF
 	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
       }
     };
+
+    class Core_upsampleinflections : public Lang::CoreFunction
+    {
+    public:
+      Core_upsampleinflections( const char * title ) : CoreFunction( title ) { }
+      virtual void
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      {
+	const size_t ARITY = 1;
+	CHECK_ARITY( args, ARITY, title_ );
+  
+	size_t argsi = 0;
+
+	try
+	  {
+	    typedef const Lang::ElementaryPath2D ArgType;
+	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( argsi ) );
+	    Kernel::ContRef cont = evalState->cont_;
+	    cont->takeValue( arg->upsample_inflections( ),
+			     evalState );
+	    return;
+	  }
+	catch( const NonLocalExit::NotThisType & ball )
+	  {
+	    /* Wrong type; never mind!.. but see below!
+	     */
+	  }
+
+	try
+	  {
+	    typedef const Lang::ElementaryPath3D ArgType;
+	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( argsi ) );
+	    Kernel::ContRef cont = evalState->cont_;
+	    cont->takeValue( arg->upsample_inflections( ),
+			     evalState );
+	    return;
+	  }
+	catch( const NonLocalExit::NotThisType & ball )
+	  {
+	    /* Wrong type; never mind!.. but see below!
+	     */
+	  }
+
+	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
+      }
+    };
+
   }
 }
 
@@ -461,9 +508,11 @@ Kernel::registerCore_path( Kernel::Environment * env )
   env->initDefineCoreFunction( new Lang::Core_controlling( "controlling" ) );
   env->initDefineCoreFunction( new Lang::Core_controlling_hull( "controlling_hull" ) );
 
-  //  env->initDefineCoreFunction( new Lang::Core_subpath( "subpath" ) );
   env->initDefineCoreFunction( new Lang::Core_reverse( "reverse" ) );
   env->initDefineCoreFunction( new Lang::Core_meetpaths( "meetpaths" ) );
+
+  env->initDefineCoreFunction( new Lang::Core_upsampleinflections( "upsample_inflections" ) );
+
   /* subpath functions yet to be implemented */
   //  env->initDefineCoreFunction( new Lang::Core_directiontime( "directiontime" ) );
   //  env->initDefineCoreFunction( new Lang::Core_nearesttimes( "nearesttimes" ) ); /* generalizes distance between subpaths */

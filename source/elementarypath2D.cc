@@ -1994,6 +1994,25 @@ Lang::ElementaryPath2D::controlling_hull( ) const
   return RefCountPtr< const Lang::ElementaryPath2D >( res );
 }
 
+RefCountPtr< const Lang::ElementaryPath2D >
+Lang::ElementaryPath2D::upsample_inflections( ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_inflections" );
+}
+
+RefCountPtr< const Lang::ElementaryPath2D >
+Lang::ElementaryPath2D::upsample_every( const Concrete::Length & period ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_every" );
+}
+
+RefCountPtr< const Lang::ElementaryPath2D >
+Lang::ElementaryPath2D::upsample_bends( double maxAngle ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_bends" );
+}
+
+
 bool
 Lang::ElementaryPath2D::isConvexPoly( Concrete::Length tol ) const
 {

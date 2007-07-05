@@ -3366,6 +3366,24 @@ Lang::ElementaryPath3D::reverse( ) const
   return RefCountPtr< const Lang::ElementaryPath3D >( res );
 }
 
+RefCountPtr< const Lang::ElementaryPath3D >
+Lang::ElementaryPath3D::upsample_inflections( ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_inflections" );
+}
+
+RefCountPtr< const Lang::ElementaryPath3D >
+Lang::ElementaryPath3D::upsample_every( const Concrete::Length & period ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_every" );
+}
+
+RefCountPtr< const Lang::ElementaryPath3D >
+Lang::ElementaryPath3D::upsample_bends( double maxAngle ) const
+{
+  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_bends" );
+}
+
 void
 Lang::ElementaryPath3D::show( std::ostream & os ) const
 {
