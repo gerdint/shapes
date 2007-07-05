@@ -33,6 +33,11 @@ Lang::Symbol::NameTableType Lang::Symbol::nameTable;
 Lang::Symbol::ReverseTableType Lang::Symbol::reverseTable;
 int Lang::Symbol::nextUnique = -1;
 
+/* The following global variables used to be in globals.cc, but now they are here to ensure they get initialized after the static variables in Lang::Symbol.
+ */
+RefCountPtr< const Lang::Symbol > Kernel::THE_NAVIGATION_SYMBOL( ".navigation" ); /* Note that the leading dot puts this symbol aside all user-symbols. */
+RefCountPtr< const Lang::Symbol > Kernel::THE_ANNOTATION_SYMBOL( ".annotation" ); /* Note that the leading dot puts this symbol aside all user-symbols. */
+
 Lang::Symbol::Symbol( )
 {
   key_ = nextUnique;
