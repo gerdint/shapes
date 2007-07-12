@@ -1997,7 +1997,99 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::ElementaryPath2D::upsample_inflections( ) const
 {
-  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_inflections" );
+  if( size( ) == 0 )
+    {
+      return Lang::THE_EMPTYPATH2D;
+    }
+
+  if( size( ) == 1 )
+    {
+      Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
+      res->push_back( new Concrete::PathPoint2D( *front( ) ) );
+      if( closed_ )
+	{
+	  res->close( );
+	}
+      return RefCountPtr< const Lang::ElementaryPath2D >( res );
+    }
+
+ Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
+  const_iterator i1 = begin( );
+  const_iterator i2 = i1;
+  ++i2;
+
+  const Concrete::Coords2D * rearHandle = 0;
+  if( closed_ )
+    {
+      const_iterator i0 = end( );
+      --i0;
+      upsample i0--i1 and store the last handle in rearHandle;
+    }
+  else
+    {
+      if( i1->rear_ != i1->mid_ )
+	{
+	  rearHandle = new Concrete::Coords2D( i1->rear_ );
+	}
+    }
+  
+  for( ; i1 != end( ); ++i1, ++i2 )
+    {
+      if( i2 == end( ) )
+	{
+	  if( closed_ )
+	    {
+	      i2 = begin( );
+	    }
+	  else
+	    {
+	      break;
+	    }
+	}
+      if( (*i1)->front_ == (*i1)->mid_ &&
+	  (*i2)->rear_ == (*i2)->mid_ )
+	{
+	  Concrete::PathPoint2D * newPoint( new Concrete::PathPoint2D( *i ) );
+	  if( rearHandle != 0 )
+	    {
+	      newPoint->rear_ = rearHandle;
+	      rearHandle = 0;
+	    }
+	  res->push_back( newPoint );
+	  continue;
+	}
+
+      Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
+      Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
+      Concrete::Bezier x1 = (*i1)->front_->x_.offtype< 0, 3 >( );
+      Concrete::Bezier y1 = (*i1)->front_->y_.offtype< 0, 3 >( );
+      Concrete::Bezier x2 = (*i2)->rear_->x_.offtype< 0, 3 >( );
+      Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
+      Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
+      Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
+      
+      Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
+      Physical< 0, 2 > kv0 = -3 * tc * tc;
+      Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
+      Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
+      Physical< 0, 2 > kv3 = 3 * t * t;
+      Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
+      Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
+      Physical< 0, 1 > ka0 = 6 * tc;
+      Physical< 0, 1 > ka1 = -12 * tc + 6 * t;
+      Physical< 0, 1 > ka2 = 6 * tc - 12 * t;
+      Physical< 0, 1 > ka3 = 6 * t;
+      Concrete::Acceleration ax = x0 * ka0 + x1 * ka1 + x2 * ka2 + x3 * ka3;
+      Concrete::Acceleration ay = y0 * ka0 + y1 * ka1 + y2 * ka2 + y3 * ka3;
+
+      solve third order polynomial...
+
+    }
+  if( closed_ )
+    {
+      res->close( );
+    }
+  return RefCountPtr< const Lang::ElementaryPath2D >( res );
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
