@@ -3,13 +3,13 @@
 
 pathpoints:
 {
-  helper: \ sl .> [if sl.looped [list] [cons sl.p [helper sl+1]]]
+  helper: \ sl .> [if sl.looped [list] [cons sl [helper sl+1]]]
   \ pth .> [helper pth.begin]
 }
 
 
 cstroke: \ pth .>
-( (@stroking:rgb_RED & @width:(0.5*@width) | [foldl \ p e .> ( p & [stroke [shift e][][circle 3*@width]])  null  [pathpoints pth]])
+( (@stroking:rgb_RED & @width:(0.5*@width) | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.n*3*@width)--(sl.n*~3*@width) )] )  null  [pathpoints pth]])
    &
    [stroke pth]
 )
@@ -18,28 +18,39 @@ cstroke: \ pth .>
   pth: (~2cm,0cm)<(0cm,0cm)>(2cm,~1cm)--(1cm,3cm)<(2cm,1cm)>(3cm,1cm)
   •page << [cstroke pth]
   •page << [cstroke [upsample_inflections [shift (5cm,0)][]pth]]
+  •page << [cstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
 }
 
 {
   pth: [[shift (0,~2cm)] (0cm,0cm)>(~2cm,0.2cm)--(3cm,~0.2cm)<(2cm,0cm)]
   •page << [cstroke pth]
   •page << [cstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [cstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
 }
 {
   pth: [[shift (0,~3cm)] (0cm,0cm)>(~2cm,0.2cm)--(3cm,0.2cm)<(2cm,0.1cm)]
   •page << [cstroke pth]
   •page << [cstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [cstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
 }
 {
   pth: [[shift (0,~4cm)] (0cm,0cm)>(~2cm,0cm)--(3cm,0cm)<(2cm,0cm)]
   •page << [cstroke pth]
   •page << [cstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [cstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
 }
 
 {
   pth: [[shift (0,~10cm)] (~2cm,0cm)<(0cm,0cm)>(2cm,~1cm)--(1cm,3cm)<(2cm,1cm)>(3cm,1cm)--cycle]
   •page << [cstroke pth]
   •page << [cstroke [upsample_inflections [shift (5cm,0)][]pth]]
+  •page << [cstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
+}
+
+{
+  pth: [[shift (0,~13cm)] [circle 2cm]]
+  •page << [cstroke pth]
+  •page << [cstroke [upsample_bends 40° [shift (5cm,0)][]pth]]
 }
 
 

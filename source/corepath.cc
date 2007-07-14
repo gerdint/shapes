@@ -477,8 +477,8 @@ namespace MetaPDF
       Core_upsampleevery( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
-	formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "period", Kernel::THE_SLOT_VARIABLE );
+	formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
       call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -487,7 +487,6 @@ namespace MetaPDF
 	
 	size_t argsi = 0;
 
-	argsi = 1;
 	typedef const Lang::Length PeriodType;
 	Concrete::Length period = Helpers::down_cast_CoreArgument< PeriodType >( title_, args, argsi, callLoc )->get( );
 	if( period <= Concrete::ZERO_LENGTH )
@@ -495,8 +494,8 @@ namespace MetaPDF
 	    throw Exceptions::CoreOutOfRange( title_, args, argsi, "The sample period must be positive." );
 	  }
 
-	argsi = 0;
-
+	++argsi;
+	
 	try
 	  {
 	    typedef const Lang::ElementaryPath2D ArgType;
@@ -537,8 +536,8 @@ namespace MetaPDF
       Core_upsamplebends( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
-	formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "angle", Kernel::THE_SLOT_VARIABLE );
+	formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
       call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -547,16 +546,16 @@ namespace MetaPDF
 	
 	size_t argsi = 0;
 
-	typedef const Lang::ElementaryPath2D PathType;
-	RefCountPtr< PathType > path = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
-
-	++argsi;
 	typedef const Lang::Float AngleType;
 	double maxAngle = Helpers::down_cast_CoreArgument< AngleType >( title_, args, argsi, callLoc )->val_;
 	if( maxAngle <= 0 )
 	  {
 	    throw Exceptions::CoreOutOfRange( title_, args, argsi, "The angle bound must be positive." );
 	  }
+
+	++argsi;
+	typedef const Lang::ElementaryPath2D PathType;
+	RefCountPtr< PathType > path = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
 
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( path->upsample( Computation::UpsampleBends( maxAngle ) ),
