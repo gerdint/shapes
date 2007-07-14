@@ -19,6 +19,9 @@ namespace MetaPDF
     class FacetInterpolatorGray;
 
     class BasicSimplex;
+
+    class Upsampler2D;
+    class Upsampler3D;
   }
 }
 

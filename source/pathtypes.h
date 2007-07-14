@@ -195,9 +195,7 @@ namespace MetaPDF
     RefCountPtr< const Lang::ElementaryPath2D > subpath( const Concrete::SplineTime t1, const Concrete::SplineTime t2 ) const;
     RefCountPtr< const Lang::ElementaryPath2D > reverse( ) const;
     RefCountPtr< const Lang::ElementaryPath2D > controlling_hull( ) const;
-    RefCountPtr< const Lang::ElementaryPath2D > upsample_inflections( ) const;
-    RefCountPtr< const Lang::ElementaryPath2D > upsample_every( const Concrete::Length & period ) const;
-    RefCountPtr< const Lang::ElementaryPath2D > upsample_bends( double maxAngle ) const;
+    RefCountPtr< const Lang::ElementaryPath2D > upsample( const Computation::Upsampler2D & sampler ) const;
 
     bool isConvexPoly( Concrete::Length tol ) const;
     bool convexPolyContains( const Concrete::Coords2D & p, Concrete::Length tol ) const;
@@ -448,9 +446,7 @@ namespace MetaPDF
 
     RefCountPtr< const Lang::ElementaryPath3D > subpath( const Concrete::SplineTime t1, const Concrete::SplineTime t2 ) const;
     RefCountPtr< const Lang::ElementaryPath3D > reverse( ) const;
-    RefCountPtr< const Lang::ElementaryPath3D > upsample_inflections( ) const;
-    RefCountPtr< const Lang::ElementaryPath3D > upsample_every( const Concrete::Length & period ) const;
-    RefCountPtr< const Lang::ElementaryPath3D > upsample_bends( double maxAngle ) const;
+    RefCountPtr< const Lang::ElementaryPath3D > upsample( const Computation::Upsampler3D & sampler ) const;
 
     virtual void show( std::ostream & os ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked );

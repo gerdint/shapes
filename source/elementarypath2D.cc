@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "angleselect.h"
 #include "bezier.h"
+#include "upsamplers.h"
 
 #include <ctype.h>
 #include <stack>
@@ -905,20 +906,14 @@ Lang::ElementaryPath2D::lineSegmentIntersection( Concrete::Time * dst, const Con
 
       Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i2)->rear_, *(*i2)->mid_ );
       Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
-      double tmp2[3];
-      {
-	using namespace MetaPDF;
-	coeffs.hyperplaneIntersection( tmp2, n, offset );
-      }
-      for( const double * it2 = tmp2; it2 != tmp2 + 3; ++it2 )
+      double tmp2[4];
+      coeffs.hyperplaneIntersections( tmp2, n, offset );
+      for( const double * it2 = tmp2; *it2 != HUGE_VAL; ++it2 )
 	{
-	  if( 0 <= *it2 && *it2 <= 1 )
+	  Concrete::Time t = MetaPDF::straightLineArcTime( Concrete::innerScalar( rInv, coeffs.point( *it2 ) - l0 ) );
+	  if( Concrete::ZERO_TIME <= t && t <= Concrete::UNIT_TIME )
 	    {
-	      Concrete::Time t = MetaPDF::straightLineArcTime( Concrete::innerScalar( rInv, coeffs.point( *it2 ) - l0 ) );
-	      if( Concrete::ZERO_TIME <= t && t <= Concrete::UNIT_TIME )
-		{
-		  res = min( res, t );
-		}
+	      res = min( res, t );
 	    }
 	}
     }
@@ -1106,12 +1101,16 @@ Lang::ElementaryPath2D::continuousMean( ) const
 }
 
 Concrete::SplineTime
-Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & d ) const
+Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & dNonUnit ) const
 {
   if( size( ) == 0 )
     {
       throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
     }
+  
+  Concrete::UnitFloatPair d( dNonUnit.x_, dNonUnit.y_ );
+  Concrete::Coords2D dBezier( d.x_, d.y_ ); // The Bezier functions requires the direction to be given with the same type as the spline space.
+
   Concrete::SplineTime res = Concrete::ZERO_TIME;
   Concrete::Length opt = -Concrete::HUGE_LENGTH;
   Concrete::Time steps = Concrete::ZERO_TIME;
@@ -1128,7 +1127,7 @@ Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & d ) const
 	    }
 	  else
 	    {
-	      Concrete::Length v = (*i1)->mid_->x_ * d.x_ + (*i1)->mid_->y_ * d.y_;
+	      Concrete::Length v = Concrete::inner( *(*i1)->mid_, d );
 	      if( v > opt )
 		{
 		  opt = v;
@@ -1137,7 +1136,7 @@ Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & d ) const
 	      break;
 	    }
 	}
-      Concrete::Length v = (*i1)->mid_->x_ * d.x_ + (*i1)->mid_->y_ * d.y_;
+      Concrete::Length v = Concrete::inner( *(*i1)->mid_, d );
       if( v > opt )
 	{
 	  opt = v;
@@ -1152,99 +1151,34 @@ Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & d ) const
 	  continue;
 	}
 
-      Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x1 = (*i1)->front_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y1 = (*i1)->front_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x2 = (*i2)->rear_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-
       /* First check the control points.  If none of the four control points improves the optimum,
        * searching further is meaningless.  Further, since the mid_ points are allways tested anyway,
        * we can assume that they already are, and conclude that they cannot improve the optimum further.
        * Therefore, there are only the two handles to check.
        */
       {
-	if( ( x1 * d.x_ + y1 * d.y_ ).offtype< 0, -3 >( ) <= opt &&
-	    ( x2 * d.x_ + y2 * d.y_ ).offtype< 0, -3 >( ) <= opt )
+	if( Concrete::inner( *(*i1)->front_, d ) <= opt &&
+	    Concrete::inner( *(*i2)->rear_, d ) <= opt )
 	  {
 	    continue;
 	  }
       }
 
-      /* This is the derivative polynomial.  We use it to see if there is
-       * any local optimizers in the interval ( 0, 1 )
-       */
-      double kd0 = ( 3 * ( d.x_ * ( -x0 + x1 ) +
-			   d.y_ * ( -y0 + y1 ) ) ).offtype< 1, -3 >( );
-      double kd1 = ( 6 * ( d.x_ * ( x0 - 2 * x1 + x2 ) +
-			   d.y_ * ( y0 - 2 * y1 + y2 ) ) ).offtype< 1, -3 >( );
-      double kd2 = ( 3 * ( d.x_ * ( -x0 + 3 * x1 - 3 * x2 + x3 ) + 
-			   d.y_ * ( -y0 + 3 * y1 - 3 * y2 + y3 ) ) ).offtype< 1, -3 >( );
-      Concrete::Time t1 = - Concrete::UNIT_TIME;
-      Concrete::Time t2 = - Concrete::UNIT_TIME;
-      if( kd2 == 0 )
+      Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i2)->rear_, *(*i2)->mid_ );
+      Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+      double optTimes[3];
+      coeffs.stationaryPoints( optTimes, dBezier ); // A HUGE_VAL is used as terminator in the result.
+
+      for( double * src = & optTimes[0]; *src != HUGE_VAL; ++src )
 	{
-	  if( kd1 != 0 )
-	    {
-	      t1 = Concrete::Time( - kd0 / kd1 );
-	    }
-	}
-      else
-	{
-	  kd0 /= kd2;
-	  kd1 /= kd2;
-	  double r2 = kd1 * kd1 * 0.25 - kd0;
-	  if( r2 >= 0 )
-	    {
-	      double r = sqrt( r2 );
-	      t1 = Concrete::Time( - 0.5 * kd1 - r );
-	      t2 = Concrete::Time( - 0.5 * kd1 + r );
-	    }
-	}
-      
-      if( Concrete::ZERO_TIME < t1 && t1 < Concrete::UNIT_TIME )
-	{
-	  Concrete::Time t = t1;
-	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-	  Physical< 0, 3 > k0 =     tc * tc * tc;
-	  Physical< 0, 3 > k1 = 3 * tc * tc * t;
-	  Physical< 0, 3 > k2 = 3 * tc * t  * t;
-	  Physical< 0, 3 > k3 =     t  * t  * t;
-	  Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
-	  Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
-	  Concrete::Length v = x * d.x_ + y * d.y_;
+	  Concrete::Length v = Concrete::inner( coeffs.point( *src ), d );
 	  if( v > opt )
 	    {
 	      opt = v;
-	      res = steps + t;
-	    }
-	}
-      if( Concrete::ZERO_TIME < t2 && t2 < Concrete::UNIT_TIME )
-	{
-	  Concrete::Time t = t2;
-	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-	  Physical< 0, 3 > k0 =     tc * tc * tc;
-	  Physical< 0, 3 > k1 = 3 * tc * tc * t;
-	  Physical< 0, 3 > k2 = 3 * tc * t  * t;
-	  Physical< 0, 3 > k3 =     t  * t  * t;
-	  Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
-	  Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
-	  Concrete::Length v = x * d.x_ + y * d.y_;
-	  if( v > opt )
-	    {
-	      opt = v;
-	      res = steps + t;
+	      res = steps + *src;
 	    }
 	}
     }
-  /*
-    if( opt == -Concrete::HUGE_LENGTH )
-    {
-    }
-  */
 
   return res;
 }
@@ -1995,42 +1929,90 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::ElementaryPath2D::upsample_inflections( ) const
+Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) const
 {
   if( size( ) == 0 )
     {
       return Lang::THE_EMPTYPATH2D;
     }
 
+  std::vector< double > sampleTimes;
+  Concrete::Coords2D rearHandle( 0, 0 );
+
+  Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
+  if( closed_ )
+    {
+      res->close( );
+    }
+
   if( size( ) == 1 )
     {
-      Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
-      res->push_back( new Concrete::PathPoint2D( *front( ) ) );
-      if( closed_ )
+      if( ! closed_ )
 	{
-	  res->close( );
+	  res->push_back( new Concrete::PathPoint2D( *front( ) ) );
+	  return RefCountPtr< const Lang::ElementaryPath2D >( res );
 	}
+
+      const_iterator i1 = begin( );
+      Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i1)->rear_, *(*i1)->mid_ );
+      sampler( & sampleTimes, controls );
+      if( sampleTimes.size( ) == 0 )
+	{
+	  res->push_back( new Concrete::PathPoint2D( *front( ) ) );
+	  return RefCountPtr< const Lang::ElementaryPath2D >( res );
+	}
+
+      Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+      {
+	// We will compute the same sub section again later, but doing it twice makes the code cleaner and more similar to the general case below.
+	Bezier::ControlPoints< Concrete::Coords2D > lastSeg( coeffs.subSection( sampleTimes.back( ), 1 ) );
+	rearHandle = lastSeg.p2_;
+      }
+      sampleTimes.push_back( 1 );
+      typedef typeof sampleTimes ListType;
+      double t0 = 0;
+      ListType::const_iterator ti = sampleTimes.begin( );
+      double t1;
+      for( ; ti != sampleTimes.end( ); t0 = t1, ++ti )
+	{
+	  t1 = *ti;
+	  Bezier::ControlPoints< Concrete::Coords2D > seg( coeffs.subSection( t0, t1 ) );
+	  Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( seg.p0_ ) );
+	  newPoint->front_ = new Concrete::Coords2D( seg.p1_ );
+	  newPoint->rear_ = new Concrete::Coords2D( rearHandle );
+	  res->push_back( newPoint );
+	  rearHandle = seg.p2_;
+	}
+
       return RefCountPtr< const Lang::ElementaryPath2D >( res );
     }
 
- Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
   const_iterator i1 = begin( );
   const_iterator i2 = i1;
   ++i2;
 
-  const Concrete::Coords2D * rearHandle = 0;
+  // Determine the initial rear handle.
   if( closed_ )
     {
       const_iterator i0 = end( );
       --i0;
-      upsample i0--i1 and store the last handle in rearHandle;
+      Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i0)->mid_, *(*i0)->front_, *(*i1)->rear_, *(*i1)->mid_ );
+      sampleTimes.clear( );  // Not needed here, but included for symmetry with the general case below.
+      sampler( & sampleTimes, controls );
+      if( sampleTimes.size( ) == 0 )
+	{
+	  rearHandle = *(*i1)->rear_;
+	}
+      else
+	{
+	  Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+	  Bezier::ControlPoints< Concrete::Coords2D > lastSeg( coeffs.subSection( sampleTimes.back( ), 1 ) );
+	  rearHandle = lastSeg.p2_;
+	}
     }
   else
     {
-      if( i1->rear_ != i1->mid_ )
-	{
-	  rearHandle = new Concrete::Coords2D( i1->rear_ );
-	}
+      rearHandle = *(*i1)->rear_;
     }
   
   for( ; i1 != end( ); ++i1, ++i2 )
@@ -2046,62 +2028,41 @@ Lang::ElementaryPath2D::upsample_inflections( ) const
 	      break;
 	    }
 	}
-      if( (*i1)->front_ == (*i1)->mid_ &&
-	  (*i2)->rear_ == (*i2)->mid_ )
+
+      Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i2)->rear_, *(*i2)->mid_ );
+      sampleTimes.clear( );
+      sampler( & sampleTimes, controls );
+      if( sampleTimes.size( ) == 0 )
 	{
-	  Concrete::PathPoint2D * newPoint( new Concrete::PathPoint2D( *i ) );
-	  if( rearHandle != 0 )
-	    {
-	      newPoint->rear_ = rearHandle;
-	      rearHandle = 0;
-	    }
+	  Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( controls.p0_ ) );
+	  newPoint->front_ = new Concrete::Coords2D( controls.p1_ );
+	  newPoint->rear_ = new Concrete::Coords2D( rearHandle );
 	  res->push_back( newPoint );
-	  continue;
+	  rearHandle = controls.p2_;
 	}
-
-      Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x1 = (*i1)->front_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y1 = (*i1)->front_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x2 = (*i2)->rear_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
+      else
+	{
+	  Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+	  sampleTimes.push_back( 1 );
+	  typedef typeof sampleTimes ListType;
+	  double t0 = 0;
+	  ListType::const_iterator ti = sampleTimes.begin( );
+	  double t1;
+	  for( ; ti != sampleTimes.end( ); t0 = t1, ++ti )
+	    {
+	      t1 = *ti;
+	      Bezier::ControlPoints< Concrete::Coords2D > seg( coeffs.subSection( t0, t1 ) );
+	      Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( seg.p0_ ) );
+	      newPoint->front_ = new Concrete::Coords2D( seg.p1_ );
+	      newPoint->rear_ = new Concrete::Coords2D( rearHandle );
+	      res->push_back( newPoint );
+	      rearHandle = seg.p2_;
+	    }
+	}
       
-      Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-      Physical< 0, 2 > kv0 = -3 * tc * tc;
-      Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
-      Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
-      Physical< 0, 2 > kv3 = 3 * t * t;
-      Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
-      Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-      Physical< 0, 1 > ka0 = 6 * tc;
-      Physical< 0, 1 > ka1 = -12 * tc + 6 * t;
-      Physical< 0, 1 > ka2 = 6 * tc - 12 * t;
-      Physical< 0, 1 > ka3 = 6 * t;
-      Concrete::Acceleration ax = x0 * ka0 + x1 * ka1 + x2 * ka2 + x3 * ka3;
-      Concrete::Acceleration ay = y0 * ka0 + y1 * ka1 + y2 * ka2 + y3 * ka3;
-
-      solve third order polynomial...
-
     }
-  if( closed_ )
-    {
-      res->close( );
-    }
+
   return RefCountPtr< const Lang::ElementaryPath2D >( res );
-}
-
-RefCountPtr< const Lang::ElementaryPath2D >
-Lang::ElementaryPath2D::upsample_every( const Concrete::Length & period ) const
-{
-  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_every" );
-}
-
-RefCountPtr< const Lang::ElementaryPath2D >
-Lang::ElementaryPath2D::upsample_bends( double maxAngle ) const
-{
-  throw Exceptions::NotImplemented( "ElementaryPath2D::upsample_bends" );
 }
 
 
@@ -3182,17 +3143,14 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 	  Concrete::Coords2D rInv = ( *(i->second) - *(i->first) ) * ( 1. / Concrete::innerScalar( *(i->second) - *(i->first), *(i->second) - *(i->first) ) );
 	  Concrete::Coords2D n( i->first->y_ - i->second->y_, i->second->x_ - i->first->x_ );
 	  double offset = Concrete::innerScalar( n, *i->first );
-	  double tmp[3];
-	  seg_a_coeffs.hyperplaneIntersection( tmp, n, offset );
-	  for( double * tmpi = tmp; tmpi != tmp + 3; ++tmpi )
+	  double tmp[4];
+	  seg_a_coeffs.hyperplaneIntersections( tmp, n, offset );
+	  for( double * tmpi = tmp; *tmpi != HUGE_VAL; ++tmpi )
 	    {
-	      if( 0 <= *tmpi && *tmpi <= 1 )
+	      Concrete::Time t2( Concrete::innerScalar( rInv, seg_a_coeffs.point( *tmpi ) - *(i->first) ) );
+	      if( Concrete::ZERO_TIME <= t2 && t2 <= Concrete::UNIT_TIME )
 		{
-		  Concrete::Time t2( Concrete::innerScalar( rInv, seg_a_coeffs.point( *tmpi ) - *(i->first) ) );
-		  if( Concrete::ZERO_TIME <= t2 && t2 <= Concrete::UNIT_TIME )
-		    {
-		      t = min( t, Concrete::Time( *tmpi ) );
-		    }
+		  t = min( t, Concrete::Time( *tmpi ) );
 		}
 	    }
 	}

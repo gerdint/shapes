@@ -8,6 +8,7 @@
 #include "metapdfexceptions.h"
 #include "consts.h"
 #include "simplepdfi.h"
+#include "upsamplers.h"
 
 #include <iostream>
 #include <sstream>
@@ -462,37 +463,11 @@ namespace MetaPDF
   
 	size_t argsi = 0;
 
-	try
-	  {
-	    typedef const Lang::ElementaryPath2D ArgType;
-	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( argsi ) );
-	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_inflections( ),
-			     evalState );
-	    return;
-	  }
-	catch( const NonLocalExit::NotThisType & ball )
-	  {
-	    /* Wrong type; never mind!.. but see below!
-	     */
-	  }
-
-	try
-	  {
-	    typedef const Lang::ElementaryPath3D ArgType;
-	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( argsi ) );
-	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_inflections( ),
-			     evalState );
-	    return;
-	  }
-	catch( const NonLocalExit::NotThisType & ball )
-	  {
-	    /* Wrong type; never mind!.. but see below!
-	     */
-	  }
-
-	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
+	typedef const Lang::ElementaryPath2D ArgType;
+	RefCountPtr< ArgType > arg = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( arg->upsample( Computation::UpsampleInflections( ) ),
+			 evalState );
       }
     };
 
@@ -527,7 +502,7 @@ namespace MetaPDF
 	    typedef const Lang::ElementaryPath2D ArgType;
 	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( argsi ) );
 	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_every( period ),
+	    cont->takeValue( arg->upsample( Computation::UpsampleEvery2D( period ) ),
 			     evalState );
 	    return;
 	  }
@@ -542,7 +517,7 @@ namespace MetaPDF
 	    typedef const Lang::ElementaryPath3D ArgType;
 	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( argsi ) );
 	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_every( period ),
+	    cont->takeValue( arg->upsample( Computation::UpsampleEvery3D( period ) ),
 			     evalState );
 	    return;
 	  }
@@ -572,7 +547,10 @@ namespace MetaPDF
 	
 	size_t argsi = 0;
 
-	argsi = 1;
+	typedef const Lang::ElementaryPath2D PathType;
+	RefCountPtr< PathType > path = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
+
+	++argsi;
 	typedef const Lang::Float AngleType;
 	double maxAngle = Helpers::down_cast_CoreArgument< AngleType >( title_, args, argsi, callLoc )->val_;
 	if( maxAngle <= 0 )
@@ -580,39 +558,9 @@ namespace MetaPDF
 	    throw Exceptions::CoreOutOfRange( title_, args, argsi, "The angle bound must be positive." );
 	  }
 
-	argsi = 0;
-
-	try
-	  {
-	    typedef const Lang::ElementaryPath2D ArgType;
-	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( argsi ) );
-	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_bends( maxAngle ),
-			     evalState );
-	    return;
-	  }
-	catch( const NonLocalExit::NotThisType & ball )
-	  {
-	    /* Wrong type; never mind!.. but see below!
-	     */
-	  }
-
-	try
-	  {
-	    typedef const Lang::ElementaryPath3D ArgType;
-	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( argsi ) );
-	    Kernel::ContRef cont = evalState->cont_;
-	    cont->takeValue( arg->upsample_bends( maxAngle ),
-			     evalState );
-	    return;
-	  }
-	catch( const NonLocalExit::NotThisType & ball )
-	  {
-	    /* Wrong type; never mind!.. but see below!
-	     */
-	  }
-
-	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( path->upsample( Computation::UpsampleBends( maxAngle ) ),
+			 evalState );
       }
     };
 

@@ -1371,12 +1371,16 @@ Lang::ElementaryPath3D::continuousMean( ) const
 }
 
 Concrete::SplineTime
-Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & d ) const
+Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & dNonUnit ) const
 {
   if( size( ) == 0 )
     {
       throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
     }
+
+  Concrete::UnitFloatTriple d( dNonUnit.x_, dNonUnit.y_, dNonUnit.z_ );
+  Concrete::Coords3D dBezier( d.x_, d.y_, d.z_ ); // The Bezier functions requires the direction to be given with the same type as the spline space.
+
   Concrete::Time res = 0;
   Concrete::Length opt = -Concrete::HUGE_LENGTH;
   Concrete::Time steps = 0;
@@ -1393,7 +1397,7 @@ Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & d ) const
 	    }
 	  else
 	    {
-	      Concrete::Length v = (*i1)->mid_->x_ * d.x_ + (*i1)->mid_->y_ * d.y_ + (*i1)->mid_->z_ * d.z_;
+	      Concrete::Length v = Concrete::inner( *(*i1)->mid_, d );
 	      if( v > opt )
 		{
 		  opt = v;
@@ -1402,7 +1406,7 @@ Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & d ) const
 	      break;
 	    }
 	}
-      Concrete::Length v = (*i1)->mid_->x_ * d.x_ + (*i1)->mid_->y_ * d.y_ + (*i1)->mid_->z_ * d.z_;
+      Concrete::Length v = Concrete::inner( *(*i1)->mid_, d );
       if( v > opt )
 	{
 	  opt = v;
@@ -1417,105 +1421,34 @@ Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & d ) const
 	  continue;
 	}
 
-      Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z0 = (*i1)->mid_->z_.offtype< 0, 3 >( );
-      Concrete::Bezier x1 = (*i1)->front_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y1 = (*i1)->front_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z1 = (*i1)->front_->z_.offtype< 0, 3 >( );
-      Concrete::Bezier x2 = (*i2)->rear_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z2 = (*i2)->rear_->z_.offtype< 0, 3 >( );
-      Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z3 = (*i2)->mid_->z_.offtype< 0, 3 >( );
-
       /* First check the control points.  If none of the four control points improves the optimum,
        * searching further is meaningless.  Further, since the mid_ points are allways tested anyway,
        * we can assume that they already are, and conclude that they cannot improve the optimum further.
        * Therefore, there are only the two handles to check.
        */
       {
-	if( ( x1 * d.x_ + y1 * d.y_ + z1 * d.z_ ).offtype< 0, -3 >( ) <= opt &&
-	    ( x2 * d.x_ + y2 * d.y_ + z2 * d.z_ ).offtype< 0, -3 >( ) <= opt )
+	if( Concrete::inner( *(*i1)->front_, d ) <= opt &&
+	    Concrete::inner( *(*i2)->rear_, d ) <= opt )
 	  {
 	    continue;
 	  }
       }
 
-      /* This is the derivative polynomial.  We use it to see if there is
-       * any local optimizers in the interval ( 0, 1 )
-       */
-      double kd0 = ( 3 * ( d.x_ * ( -x0 + x1 ) +
-			   d.y_ * ( -y0 + y1 ) ) ).offtype< 1, -3 >( );
-      double kd1 = ( 6 * ( d.x_ * ( x0 - 2 * x1 + x2 ) +
-			   d.y_ * ( y0 - 2 * y1 + y2 ) ) ).offtype< 1, -3 >( );
-      double kd2 = ( 3 * ( d.x_ * ( -x0 + 3 * x1 - 3 * x2 + x3 ) + 
-			   d.y_ * ( -y0 + 3 * y1 - 3 * y2 + y3 ) ) ).offtype< 1, -3 >( );
-      Concrete::Time t1( -1 );
-      Concrete::Time t2( -1 );
-      if( kd2 == 0 )
+      Bezier::ControlPoints< Concrete::Coords3D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i2)->rear_, *(*i2)->mid_ );
+      Bezier::PolyCoeffs< Concrete::Coords3D > coeffs( controls );
+      double optTimes[3];
+      coeffs.stationaryPoints( optTimes, dBezier ); // A HUGE_VAL is used as terminator in the result.
+
+      for( double * src = & optTimes[0]; *src != HUGE_VAL; ++src )
 	{
-	  if( kd1 != 0 )
-	    {
-	      t1 = -kd0 / kd1;
-	    }
-	}
-      else
-	{
-	  kd0 /= kd2;
-	  kd1 /= kd2;
-	  double r2 = kd1 * kd1 * 0.25 - kd0;
-	  if( r2 >= 0 )
-	    {
-	      double r = sqrt( r2 );
-	      t1 = Concrete::Time( - 0.5 * kd1 - r );
-	      t2 = Concrete::Time( - 0.5 * kd1 + r );
-	    }
-	}
-      
-      if( Concrete::ZERO_TIME < t1 && t1 < Concrete::UNIT_TIME )
-	{
-	  Concrete::Time t = t1;
-	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-	  Physical< 0, 3 > k0 =     tc * tc * tc;
-	  Physical< 0, 3 > k1 = 3 * tc * tc * t;
-	  Physical< 0, 3 > k2 = 3 * tc * t  * t;
-	  Physical< 0, 3 > k3 =     t  * t  * t;
-	  Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
-	  Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
-	  Concrete::Length z = z0 * k0 + z1 * k1 + z2 * k2 + z3 * k3;
-	  Concrete::Length v = x * d.x_ + y * d.y_ + z * d.z_;
+	  Concrete::Length v = Concrete::inner( coeffs.point( *src ), d );
 	  if( v > opt )
 	    {
 	      opt = v;
-	      res = steps + t;
-	    }
-	}
-      if( Concrete::ZERO_TIME < t2 && t2 < Concrete::UNIT_TIME )
-	{
-	  Concrete::Time t = t2;
-	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-	  Physical< 0, 3 > k0 =     tc * tc * tc;
-	  Physical< 0, 3 > k1 = 3 * tc * tc * t;
-	  Physical< 0, 3 > k2 = 3 * tc * t  * t;
-	  Physical< 0, 3 > k3 =     t  * t  * t;
-	  Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
-	  Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
-	  Concrete::Length z = z0 * k0 + z1 * k1 + z2 * k2 + z3 * k3;
-	  Concrete::Length v = x * d.x_ + y * d.y_ + z * d.z_;
-	  if( v > opt )
-	    {
-	      opt = v;
-	      res = steps + t;
+	      res = steps + *src;
 	    }
 	}
     }
-  /*
-    if( opt == -HUGE_VAL )
-    {
-    }
-  */
 
   return res;
 }
@@ -3367,21 +3300,9 @@ Lang::ElementaryPath3D::reverse( ) const
 }
 
 RefCountPtr< const Lang::ElementaryPath3D >
-Lang::ElementaryPath3D::upsample_inflections( ) const
+Lang::ElementaryPath3D::upsample( const Computation::Upsampler3D & sampler ) const
 {
-  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_inflections" );
-}
-
-RefCountPtr< const Lang::ElementaryPath3D >
-Lang::ElementaryPath3D::upsample_every( const Concrete::Length & period ) const
-{
-  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_every" );
-}
-
-RefCountPtr< const Lang::ElementaryPath3D >
-Lang::ElementaryPath3D::upsample_bends( double maxAngle ) const
-{
-  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample_bends" );
+  throw Exceptions::NotImplemented( "ElementaryPath3D::upsample" );
 }
 
 void

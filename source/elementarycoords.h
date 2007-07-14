@@ -87,6 +87,10 @@ namespace MetaPDF
 			      b.x_.offtype< 1, 0 >( ) - x_.offtype< 1, 0 >( ),
 			      bool( ) );
       }
+      Concrete::Coords2D quarterTurnCounterClockwise( ) const
+      {
+	return Concrete::Coords2D( -y_, x_ );
+      }
       Concrete::Length distanceTo( const Concrete::Coords2D & other ) const
       {
 	return hypotPhysical( x_ - other.x_, y_ - other.y_ );

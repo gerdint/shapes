@@ -21,7 +21,7 @@ pdfstructure.o pdfscanner.o pdfyylex.o simplepdfo.o simplepdfi.o consts.o \
 continuations.o \
 gettypeid.o elementarytypes.o concretecolors.o facetnormals.o facettypes.o texttypes.o \
 pagecontentstates.o \
-elementarycoords.o statetypes.o pathtypes.o elementarypath2D.o elementarypath3D.o \
+elementarycoords.o statetypes.o pathtypes.o elementarypath2D.o elementarypath3D.o bezier.o upsamplers.o \
 pathslider2D.o pathslider3D.o drawabletypes.o shadingtypes.o functiontypes.o pdffunctiontypes.o \
 lighttypes.o containertypes.o timetypes.o hottypes.o multipage.o annotations.o tagtypes.o metapdfvalue.o \
 metapdfscanner.o sourcelocation.o metapdfexceptions.o strrefdup.o \

@@ -2,7 +2,6 @@
 #define bezier_h
 
 #include <cmath>
-#include <complex>
 #include <iostream>
 
 namespace Bezier
@@ -39,8 +38,17 @@ namespace Bezier
       PolyCoeffs< T > subSection( double t0, double t1 ) const;
 
       T point( double t ) const;
-      void hyperplaneIntersection( double * t, const T & n, const double d ) const;  // finds the first t such that inner( point( t ), n ) == d
+      T velocity( double t ) const;  // This is probably never used other than being mentioned by stationaryPoints.
+      // The number of values returned in the destination argument by the following functions may vary.  A HUGE_VAL is used for termination.
+      void hyperplaneIntersections( double t[4], const T & n, const double d ) const;  // Finds all t such that inner( point( t ), n ) == d.  Note that there can be at most 3 intersections.
+      void stationaryPoints( double t[3], const T & d ) const;  // Finds all t such that inner( velocity( t ), d ) == d.  Note that there can be at most 2 stationary points.
+      void inflections( double t[3] ) const;  // Finds all t such that acceleration is parallel to velocity.  Only defined for Coords2D, which makes sense since there are generally no such points in higher dimensions.  Note that there can be at most 2 points of inflection (this is not obvious at first glance)!
     };
+
+  /* By "Bezier roots" I mean real roots in the interval [ 0, 1 ].
+   */
+  void bezierRootsOfPolynomial( double t[3], double k0, double k1, double k2 );
+  void bezierRootsOfPolynomial( double t[4], double k0, double k1, double k2, double k3 );
 
   template< class T >
     ControlPoints< T >::ControlPoints( const T & p0, const T & p1, const T & p2, const T & p3 )
@@ -96,6 +104,13 @@ namespace Bezier
     }
 
   template< class T >
+    T
+    PolyCoeffs< T >::velocity( double t ) const
+    {
+      return ( z3_ * ( ( 3./2.) * t ) + z2_ ) * ( 2 * t ) + z1_;
+    }
+
+  template< class T >
     PolyCoeffs< T >
     PolyCoeffs< T >::subSection( double t0, double t1 ) const
     {
@@ -109,114 +124,48 @@ namespace Bezier
 
   template< class T >
     void
-    PolyCoeffs< T >::hyperplaneIntersection( double t[3], const T & n, const double d ) const
+    PolyCoeffs< T >::hyperplaneIntersections( double t[4], const T & n, const double d ) const
     {
       double k3 = innerScalar( n, z3_ );
       double k2 = innerScalar( n, z2_ );
       double k1 = innerScalar( n, z1_ );
       double k0 = innerScalar( n, z0_ ) - d;
-      
-      if( k3 == 0 )
-	{
-	  if( k2 == 0 )
-	    {
-	      if( k1 == 0 )
-		{
-		  // If we reach here, the equation is identically solved for all t.
-		  if( k0 == 0 )
-		    {
-		      *t = 0;
-		    }
-		  return;
-		}
-	      else
-		{
-		  // Here k1 != 0
-		  double tmp = - k0 / k1;
-		  if( 0 <= tmp && tmp <= 1 )
-		    {
-		      *t = tmp;
-		    }
-		}
-	    }
-	  else
-	    {
-	      // Here k2 != 0
-	      k1 /= k2;
-	      k0 /= k2;
-	      double tmp_c = - 0.5 * k1;
-	      double r2 = tmp_c * tmp_c - k0;
-	      if( r2 >= 0 )
-		{
-		  double r = sqrt( r2 );
-		  {
-		    double tmp = tmp_c - r;
-		    if( 0 <= tmp && tmp <= 1 )
-		      {
-			*t = tmp;
-			return;
-		      }
-		  }
-		  {
-		    double tmp = tmp_c + r;
-		    if( 0 <= tmp && tmp <= 1 )
-		      {
-			*t = tmp;
-			return;
-		      }
-		  }
-		}
-	    }
-	  return;
-	}
-      
-      k2 /= k3;
-      k1 /= k3;
-      k0 /= k3;
 
-      /* The solution that now follows is an implementation of the first cubic formula
-       * presented on MathWorld.
-       */
-
-      typedef std::complex< double > Complex;
-
-      Complex Q( ( 3 * k1 - k2 * k2 ) / 9, 0 );
-      Complex R( 0.5 * ( ( 9 * k1 * k2 - 2 * k2 * k2 * k2 ) / 27 - k0 ), 0 );
-      Complex r = sqrt( R * R + Q * Q * Q );
-
-      Complex wCube;
-      wCube = R + r;  // ( R - r ) is also an option
-      Complex w1 = pow( wCube, 1./3 );
-      Complex w2 = w1 * exp( Complex( 0, 2 * M_PI / 3 ) );
-      Complex w3 = w1 * exp( Complex( 0, -2 * M_PI / 3 ) );
-      
-      Complex t1 = w1 - Q / w1 - k2 / 3;
-      Complex t2 = w2 - Q / w2 - k2 / 3;
-      Complex t3 = w3 - Q / w3 - k2 / 3;
-
-      t[0] = HUGE_VAL;
-      t[1] = HUGE_VAL;
-      t[2] = HUGE_VAL;
-      
-      double * dst = & t[0];
-
-      const double IMAG_TOL = 1e-10; // This is "relative" to the interesting t-range being 0..1
-      if( fabs( t1.imag( ) ) < IMAG_TOL )
-	{
-	  *dst = t1.real( );
-	  ++dst;
-	}
-      if( fabs( t2.imag( ) ) < IMAG_TOL )
-	{
-	  *dst = t2.real( );
-	  ++dst;
-	}
-      if( fabs( t3.imag( ) ) < IMAG_TOL )
-	{
-	  *dst = t3.real( );
-	  ++dst;
-	}
+      bezierRootsOfPolynomial( t, k0, k1, k2, k3 );
     }
+
+  template< class T >
+    void
+    PolyCoeffs< T >::stationaryPoints( double t[3], const T & d ) const
+    {
+      double k0 = innerScalar( z1_, d );
+      double k1 = 2 * innerScalar( z2_, d );
+      double k2 = 3 * innerScalar( z3_, d );
+
+      bezierRootsOfPolynomial( t, k0, k1, k2 );
+    }
+
+  template< class T >
+  void
+  PolyCoeffs< T >::inflections( double t[3] ) const
+  {
+    /* We begin by constructing the polynomial coefficients of the scalar product betwenn the velocity and a normal to the acceleration.
+     */
+
+    /* Note that we cannot just take any orthogonal vector for z2_ and z3_ separately; they must be constructed using the same transform.
+     * For generality, we avoid mentioning the components, although the method quarterTurnCounterClockwise is generally defined for classes
+     * with components named x_ and y_.
+     */
+    T z2n = z2_.quarterTurnCounterClockwise( );
+    T z3n = z3_.quarterTurnCounterClockwise( );
+
+    //    double k3 = 6 * innerScalar( z3_, z3n ); // Note that this vanishes!
+    double k2 = -6 * innerScalar( z3_, z2n ); // (After some simplification.)
+    double k1 = 6 * innerScalar( z1_, z3n ); // (After some simplification.)
+    double k0 = 2 * innerScalar( z1_, z2n );
+    
+    bezierRootsOfPolynomial( t, k0, k1, k2 );
+  }
 
   template< class T >
     std::ostream &
