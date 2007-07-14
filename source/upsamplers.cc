@@ -1,5 +1,6 @@
 #include "upsamplers.h"
 #include "consts.h"
+#include "pathtypes.h"
 
 #include <cmath>
 
@@ -178,11 +179,173 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 void
 Computation::UpsampleEvery2D::operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords2D > & controls ) const
 {
-  throw Exceptions::NotImplemented( "Computation::UpsampleEvery2D" );
+  if( controls.p1_ == controls.p0_ &&
+      controls.p2_ == controls.p3_ )
+    {
+      Concrete::Length totLen = ( controls.p3_ - controls.p0_ ).norm( );
+
+      double steps = ceil( totLen / period_ );
+      double sampleInterval = 1 / steps;
+      double nextSample = sampleInterval;
+      for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
+	{
+	  dst->push_back( MetaPDF::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
+	}
+    }
+  else
+    {
+      Concrete::Bezier x0 = controls.p0_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y0 = controls.p0_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier x1 = controls.p1_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y1 = controls.p1_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier x2 = controls.p2_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y2 = controls.p2_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier x3 = controls.p3_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y3 = controls.p3_.y_.offtype< 0, 3 >( );
+
+      const Concrete::Length segLengthBound =
+	( hypotPhysical( x1-x0, y1-y0 ) + hypotPhysical( x2-x1, y2-y1 ) + hypotPhysical( x3-x2, y3-y2 ) ).offtype< 0, -3 >( );
+
+      if( segLengthBound < period_ )
+	{
+	  return;
+	}
+
+      Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+      Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
+      for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
+	{
+	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
+	  Physical< 0, 2 > kv0 = -3 * tc * tc;
+	  Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
+	  Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
+	  Physical< 0, 2 > kv3 = 3 * t * t;
+	  Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
+	  Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
+	  
+	  Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
+	  tmpSum_l += dl;
+	}
+      Concrete::Length totlen = tmpSum_l * dt.offtype< 0, 1 >( );
+
+      double steps = ceil( totlen / period_ );
+      Concrete::Length sampleInterval = totlen / steps;
+      Concrete::Length nextSample = sampleInterval;
+      {
+	Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
+	Concrete::Time t = Concrete::ZERO_TIME;
+	for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
+	  {
+	    const Concrete::Length breakDiv_dt = nextSample / dt.offtype< 0, 1 >( );
+	    for( ; ; t += dt )
+	      {
+		Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
+		Physical< 0, 2 > kv0 = -3 * tc * tc;
+		Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
+		Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
+		Physical< 0, 2 > kv3 = 3 * t * t;
+		Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
+		Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
+		
+		Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
+		tmpSum_l += dl;
+		if( tmpSum_l >= breakDiv_dt )
+		  {
+		    dst->push_back( t.offtype< 0, 1 >( ) );
+		    break;
+		  }
+	      }
+	  }
+	}
+    }
 }
 
 void
 Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords3D > & controls ) const
 {
-  throw Exceptions::NotImplemented( "Computation::UpsampleEvery3D" );
+  if( controls.p1_ == controls.p0_ &&
+      controls.p2_ == controls.p3_ )
+    {
+      Concrete::Length totLen = ( controls.p3_ - controls.p0_ ).norm( );
+
+      double steps = ceil( totLen / period_ );
+      double sampleInterval = 1 / steps;
+      double nextSample = sampleInterval;
+      for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
+	{
+	  dst->push_back( MetaPDF::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
+	}
+    }
+  else
+    {
+      Concrete::Bezier x0 = controls.p0_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y0 = controls.p0_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier z0 = controls.p0_.z_.offtype< 0, 3 >( );
+      Concrete::Bezier x1 = controls.p1_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y1 = controls.p1_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier z1 = controls.p1_.z_.offtype< 0, 3 >( );
+      Concrete::Bezier x2 = controls.p2_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y2 = controls.p2_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier z2 = controls.p2_.z_.offtype< 0, 3 >( );
+      Concrete::Bezier x3 = controls.p3_.x_.offtype< 0, 3 >( );
+      Concrete::Bezier y3 = controls.p3_.y_.offtype< 0, 3 >( );
+      Concrete::Bezier z3 = controls.p3_.z_.offtype< 0, 3 >( );
+
+      const Concrete::Length segLengthBound =
+	( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
+
+      if( segLengthBound < period_ )
+	{
+	  return;
+	}
+
+      Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+      Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
+      for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
+	{
+	  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
+	  Physical< 0, 2 > kv0 = -3 * tc * tc;
+	  Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
+	  Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
+	  Physical< 0, 2 > kv3 = 3 * t * t;
+	  Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
+	  Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
+	  Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
+	  
+	  Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
+	  tmpSum_l += dl;
+	}
+      Concrete::Length totlen = tmpSum_l * dt.offtype< 0, 1 >( );
+
+      double steps = ceil( totlen / period_ );
+      Concrete::Length sampleInterval = totlen / steps;
+      Concrete::Length nextSample = sampleInterval;
+      {
+	Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
+	Concrete::Time t = Concrete::ZERO_TIME;
+	for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
+	  {
+	    const Concrete::Length breakDiv_dt = nextSample / dt.offtype< 0, 1 >( );
+	    for( ; ; t += dt )
+	      {
+		Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
+		Physical< 0, 2 > kv0 = -3 * tc * tc;
+		Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
+		Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
+		Physical< 0, 2 > kv3 = 3 * t * t;
+		Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
+		Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
+		Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
+	  
+		Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
+		tmpSum_l += dl;
+		if( tmpSum_l >= breakDiv_dt )
+		  {
+		    dst->push_back( t.offtype< 0, 1 >( ) );
+		    break;
+		  }
+	      }
+	  }
+	}
+    }
 }

@@ -257,6 +257,14 @@ namespace MetaPDF
     //     return Concrete::UnitFloatTriple( tmp * coords.x_, tmp * coords.y_, tmp * coords.z_ );
     //   }
 
+    inline bool operator == ( const Concrete::Coords3D & coords1, const Concrete::Coords3D & coords2 )
+    {
+      return coords1.x_ == coords2.x_ && coords1.y_ == coords2.y_ && coords1.z_ == coords2.z_;
+    }
+    inline bool operator != ( const Concrete::Coords3D & coords1, const Concrete::Coords3D & coords2 )
+    {
+      return ! ( coords1 == coords2 );
+    }
 
     inline double inner( const UnitFloatTriple & a, const UnitFloatTriple & b )
     {
