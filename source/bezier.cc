@@ -3,6 +3,23 @@
 #include <complex>
 
 void
+Bezier::bezierRootsOfPolynomial( double t[2], double k0, double k1 )
+{
+  double * dst = & t[0];
+    
+  if( k1 != 0 )
+    {
+      double tmp = - k0 / k1;
+      if( 0 <= tmp && tmp <= 1 )
+	{
+	  *dst = tmp;
+	  ++dst;
+	}
+    }
+  *dst = HUGE_VAL;
+}
+
+void
 Bezier::bezierRootsOfPolynomial( double t[3], double k0, double k1, double k2 )
 {
   double * dst = & t[0];

@@ -47,6 +47,7 @@ namespace Bezier
 
   /* By "Bezier roots" I mean real roots in the interval [ 0, 1 ].
    */
+  void bezierRootsOfPolynomial( double t[2], double k0, double k1 );
   void bezierRootsOfPolynomial( double t[3], double k0, double k1, double k2 );
   void bezierRootsOfPolynomial( double t[4], double k0, double k1, double k2, double k3 );
 
@@ -163,8 +164,26 @@ namespace Bezier
     double k2 = -6 * innerScalar( z3_, z2n ); // (After some simplification.)
     double k1 = 6 * innerScalar( z1_, z3n ); // (After some simplification.)
     double k0 = 2 * innerScalar( z1_, z2n );
-    
-    bezierRootsOfPolynomial( t, k0, k1, k2 );
+
+    /* If the acceleration ever vanishes, or is close to vanish, then z2_ is parallel to z3_, and k2 becomes very small.
+     * When this happens, it is a very small difference between having an inflection and not having one, and in this case we prefer
+     * to find the inflection.
+     */
+    if( k2*k2 < 0.00001 * 36 * ( innerScalar( z3_, z3_ ) * innerScalar( z2_, z2_ ) ) )
+      {
+	bezierRootsOfPolynomial( t, k0, k1 );
+	/* In this case we also add the point where the acceleration vanishes to the points of inflection.
+	 * We do this by projecting the acceleration on z3_ to get a scalar equation.
+	 */
+	double * tmp = & t[0];
+	for( ; *tmp != HUGE_VAL; ++tmp )
+	  ;
+	bezierRootsOfPolynomial( tmp, innerScalar( z3_, z2_ ), 3 * innerScalar( z3_, z3_ ) ); // A factor of 2 was taken out.
+      }
+    else
+      {
+	bezierRootsOfPolynomial( t, k0, k1, k2 );
+      }
   }
 
   template< class T >

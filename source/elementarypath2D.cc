@@ -234,7 +234,10 @@ Lang::ElementaryPath2D::timeCheck( Concrete::Time t ) const
 	}
       else if( t > Concrete::Time( duration( ) ) )
 	{
-	  throw Exceptions::OutOfRange( "The time argument must not be greater than the duration of the path." );
+	  std::ostringstream msg;
+	  msg << "The time argument must not be greater than the duration of the path: "
+	      << Concrete::Time::offtype( t ) << " > " << duration( ) << "." ;
+	  throw Exceptions::OutOfRange( strrefdup( msg ) );
 	}
     }
   return t;
@@ -2025,6 +2028,10 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 	    }
 	  else
 	    {
+	      Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( *(*i1)->mid_ ) );
+	      newPoint->front_ = new Concrete::Coords2D( *(*i1)->front_ );
+	      newPoint->rear_ = new Concrete::Coords2D( rearHandle );
+	      res->push_back( newPoint );
 	      break;
 	    }
 	}

@@ -100,11 +100,20 @@ Lang::PathSlider3D::getField( const char * fieldID, const RefCountPtr< const Lan
     }
   if( strcmp( fieldID, "past" ) == 0 )
     {
-      if( ! t_.isPast( ) )
+      if( t_.isPast( ) )
 	{
-	  return Kernel::THE_FALSE_VARIABLE;
+	  return Kernel::THE_TRUE_VARIABLE;
 	}
-      return Kernel::THE_TRUE_VARIABLE;
+      return Kernel::THE_FALSE_VARIABLE;
+    }
+  if( strcmp( fieldID, "looped" ) == 0 )
+    {
+      if( t_.t( ) > Concrete::Time( path_->duration( ) ) ||
+	  t_.t( ) < Concrete::Time( 0 ) )
+	{
+	  return Kernel::THE_TRUE_VARIABLE;
+	}
+      return Kernel::THE_FALSE_VARIABLE;
     }
   if( strcmp( fieldID, "mod" ) == 0 )
     {
@@ -116,7 +125,15 @@ Lang::PathSlider3D::getField( const char * fieldID, const RefCountPtr< const Lan
 RefCountPtr< Lang::PathSlider3D >
 Lang::PathSlider3D::move_time( const Concrete::Time delta ) const
 {
-  return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_, t_.t( ) + delta ) );
+  Concrete::Time newTime = t_.t( ) + delta;
+  if( path_->isClosed( ) )
+    {
+      return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_, newTime ) );
+    }
+  return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_,
+								    Concrete::SplineTime( newTime,
+											  Concrete::Time( 0 ) <= newTime &&
+											  newTime <= Concrete::Time( path_->duration( ) ) ) ) );
 }
 
 RefCountPtr< Lang::PathSlider3D >
@@ -126,9 +143,16 @@ Lang::PathSlider3D::move_length( const Concrete::Length delta ) const
 }
 
 RefCountPtr< Lang::PathSlider3D >
-Lang::PathSlider3D::seek_time( const Concrete::Time val ) const
+Lang::PathSlider3D::seek_time( const Concrete::Time newTime ) const
 {
-  return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_, val ) );
+  if( path_->isClosed( ) )
+    {
+      return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_, newTime ) );
+    }
+  return RefCountPtr< Lang::PathSlider3D >( new Lang::PathSlider3D( path_,
+								    Concrete::SplineTime( newTime,
+											  Concrete::Time( 0 ) <= newTime &&
+											  newTime <= Concrete::Time( path_->duration( ) ) ) ) );
 }
 
 RefCountPtr< Lang::PathSlider3D >
