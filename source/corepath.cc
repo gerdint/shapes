@@ -471,6 +471,52 @@ namespace MetaPDF
       }
     };
 
+    class Core_upsampledifferentiably : public Lang::CoreFunction
+    {
+    public:
+      Core_upsampledifferentiably( const char * title ) : CoreFunction( title ) { }
+      virtual void
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      {
+	const size_t ARITY = 1;
+	CHECK_ARITY( args, ARITY, title_ );
+  
+	size_t argsi = 0;
+
+	try
+	  {
+	    typedef const Lang::ElementaryPath2D ArgType;
+	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( argsi ) );
+	    Kernel::ContRef cont = evalState->cont_;
+	    cont->takeValue( arg->upsample( Computation::UpsampleDifferentiably2D( ) ),
+			     evalState );
+	    return;
+	  }
+	catch( const NonLocalExit::NotThisType & ball )
+	  {
+	    /* Wrong type; never mind!.. but see below!
+	     */
+	  }
+
+	try
+	  {
+	    typedef const Lang::ElementaryPath3D ArgType;
+	    RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( argsi ) );
+	    Kernel::ContRef cont = evalState->cont_;
+	    cont->takeValue( arg->upsample( Computation::UpsampleDifferentiably3D( ) ),
+			     evalState );
+	    return;
+	  }
+	catch( const NonLocalExit::NotThisType & ball )
+	  {
+	    /* Wrong type; never mind!.. but see below!
+	     */
+	  }
+
+	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
+      }
+    };
+
     class Core_upsampleevery : public Lang::CoreFunction
     {
     public:
@@ -579,6 +625,7 @@ Kernel::registerCore_path( Kernel::Environment * env )
   env->initDefineCoreFunction( new Lang::Core_meetpaths( "meetpaths" ) );
 
   env->initDefineCoreFunction( new Lang::Core_upsampleinflections( "upsample_inflections" ) );
+  env->initDefineCoreFunction( new Lang::Core_upsampledifferentiably( "upsample_balance" ) );
   env->initDefineCoreFunction( new Lang::Core_upsampleevery( "upsample_every" ) );
   env->initDefineCoreFunction( new Lang::Core_upsamplebends( "upsample_bends" ) );
 

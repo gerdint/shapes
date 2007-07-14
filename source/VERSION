@@ -4,6 +4,12 @@ The first line of this file shall be the current version string.  It shall be in
   Version history
 ===================
 
+====( 0.2.3 )====
+FILL IN DATE WHEN TAGGING!
+
+Upsampling has been added.  The interesting methods for upsampling only apply in 2D, but length-based upsampling is provided also in 3D.  Please note that there is no need to do upsample_inflections before doing upsample_bends, as this is done autimatically to ensure clear semantics.  The method upsample_balance samlpes the timewise midpoint of each segment, which I believe will make the speed equal in the incoming and outgoing side of the sample point.
+
+
 ====( 0.2.2 )====
 2007-06-05
 

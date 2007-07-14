@@ -1,8 +1,10 @@
 #include "upsamplers.h"
 #include "consts.h"
 #include "pathtypes.h"
+#include "globals.h"
 
 #include <cmath>
+#include <algorithm>
 
 using namespace MetaPDF;
 
@@ -348,4 +350,57 @@ Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const B
 	  }
 	}
     }
+}
+
+void
+Computation::UpsampleDifferentiably2D::operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords2D > & controls ) const
+{
+  /* I might have shown this some time before, but as I write this I have forgotten if there was a simple argument.  Today, I just
+   * note that the differentiable sample point is always at 0.5.  I leave the code to reproduce in case someone is curious about this.
+   */
+
+  dst->push_back( 0.5 );
+
+//   if( controls.p1_ == controls.p0_ &&
+//       controls.p2_ == controls.p3_ )
+//     {
+//       // By symmetry, we sample the mid point.
+//       dst->push_back( 0.5 );
+//       return;
+//     }
+
+//   Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+
+//   Concrete::Speed maxSpeed = std::max( std::max( ( controls.p1_ - controls.p0_ ).norm( ),
+// 						 ( controls.p2_ - controls.p1_ ).norm( ) ),
+// 				       ( controls.p3_ - controls.p2_ ).norm( ) ).offtype< 0, 1 >( );
+//   double t_tol = ( Computation::the_arcdelta / maxSpeed ).offtype< 0, 1 >( );
+
+//   double tLow = 0;
+//   double tHigh = 1;
+
+//   while( tHigh - tLow > t_tol )
+//     {
+//       double tMid = 0.5 * ( tLow + tHigh );
+//       Concrete::Length speedLow ( coeffs.subSection( 0, tMid ).velocity( 1 ).norm( ) );
+//       Concrete::Length speedHigh( coeffs.subSection( tMid, 1 ).velocity( 0 ).norm( ) );
+//       if( speedLow < speedHigh )
+// 	{
+// 	  tLow = tMid;
+// 	}
+//       else
+// 	{
+// 	  tHigh = tMid;
+// 	}
+//     }
+//   std::cerr << 0.5 * ( tLow + tHigh ) << std::endl ;
+//   dst->push_back( 0.5 * ( tLow + tHigh ) );
+}
+
+void
+Computation::UpsampleDifferentiably3D::operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords3D > & controls ) const
+{
+  /* See comments in UpsampleDifferentiably2D.
+   */
+  dst->push_back( 0.5 );
 }

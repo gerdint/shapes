@@ -67,6 +67,22 @@ namespace MetaPDF
       virtual void operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords3D > & controls ) const;
     };
 
+    class UpsampleDifferentiably2D : public Upsampler2D
+    {
+    public:
+      UpsampleDifferentiably2D( ){ }
+      virtual ~UpsampleDifferentiably2D( ){ }
+      virtual void operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords2D > & controls ) const;
+    };
+
+    class UpsampleDifferentiably3D : public Upsampler3D
+    {
+    public:
+      UpsampleDifferentiably3D( ){ }
+      virtual ~UpsampleDifferentiably3D( ){ }
+      virtual void operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords3D > & controls ) const;
+    };
+
   }
 }
 
