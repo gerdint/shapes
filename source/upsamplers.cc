@@ -70,27 +70,27 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 
   Concrete::Coords2D p0 = controls.p0_;
   double aStart;
-  Concrete::Coords2D d1( 0, 0 );
+  Concrete::UnitFloatPair d1( 1, 0, bool( ) );
   double aFinal;
   if( controls.p1_ == controls.p0_ )
     {
-      d1 = controls.p2_ - p0;
+      d1 = ( controls.p2_ - p0 ).direction( );
       Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_.offtype< 1, 0 >( ), d1.x_.offtype< 1, 0 >( ) );
+      aStart = atan2( d1.y_, d1.x_ );
       aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
     }
   else if( controls.p2_ == controls.p3_ )
     {
-      d1 = controls.p1_ - p0;
+      d1 = ( controls.p1_ - p0 ).direction( );
       Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_.offtype< 1, 0 >( ), d1.x_.offtype< 1, 0 >( ) );
+      aStart = atan2( d1.y_, d1.x_ );
       aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
     }
   else
     {
-      d1 = controls.p1_ - p0;
+      d1 = ( controls.p1_ - p0 ).direction( );
       Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_.offtype< 1, 0 >( ), d1.x_.offtype< 1, 0 >( ) );
+      aStart = atan2( d1.y_, d1.x_ );
       aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
     }
   
@@ -100,28 +100,46 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
   double a2;
   double t1 = 0;
   double t2;
-  Concrete::Coords2D d2( 0, 0 );
-  Concrete::Coords2D p3( 0, 0 );
+  Concrete::UnitFloatPair d2( 1, 0, bool( ) );
   typedef typeof inflectionSamples ListType;
   for( ListType::const_iterator inflection_i = inflectionSamples.begin( );
        inflection_i != inflectionSamples.end( );
-       ++inflection_i, a1 = a2, t1 = t2, d1 = d2, p0 = p3 )
+       ++inflection_i, a1 = a2, t1 = t2, d1 = d2 )
     {
       t2 = *inflection_i;
-      p3 = coeffs.point( t2 );
+      Bezier::ControlPoints< Concrete::Coords2D > subControls( coeffs.subSection( t1, t2 ) );
+      Concrete::Length shortLength = 1.e-4 * ( subControls.p3_ - subControls.p0_ ).norm( );
       if( t2 >= 1 )
 	{
 	  a2 = aFinal;
 	}
       else
 	{
-	  d2 = coeffs.velocity( t2 );
-	  a2 = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
-	  
+	  Concrete::Coords2D tmp = coeffs.velocity( t2 );
+	  if( tmp.norm( ) < shortLength )
+	    {
+	      tmp = coeffs.acceleration( t2 );
+	    }
+	  d2 = tmp.direction( );
+	  a2 = atan2( d2.y_, d2.x_ );
 	}
       /* Check if the turn is counter clockwise or not.
+       * Note that it is tempting to use the acceleration at t1, but this is a bad idea since it is parallel with the
+       * velocity at the points of inflection (and t1 will often be such a point).
        */
-      bool ccw = static_cast< double >( Concrete::inner( d1.quarterTurnCounterClockwise( ), p3 - p0 ).offtype< 2, 0 >( ) ) > 0.;
+      bool ccw;
+      {
+	Concrete::Length tmp = Concrete::inner( d1.quarterTurnCounterClockwise( ), subControls.p2_ - subControls.p0_ );
+	if( tmp.abs( ) > shortLength )
+	  {
+	    ccw = tmp > Concrete::ZERO_LENGTH;
+	  }
+	else
+	  {
+	    // If p2_ was in line with d1, then we use p3_ instead.  As this is our last resort, we use it unconditionally.
+	    ccw = Concrete::inner( d1.quarterTurnCounterClockwise( ), subControls.p3_ - subControls.p0_ ) > Concrete::ZERO_LENGTH;
+	  }
+      }
       if( ccw )
 	{
 	  if( a2 < a1 )

@@ -53,6 +53,10 @@ namespace MetaPDF
       {
 	return Concrete::UnitFloatPair( - x_, - y_ );
       }
+      Concrete::UnitFloatPair quarterTurnCounterClockwise( ) const
+      {
+	return Concrete::UnitFloatPair( - y_, x_ );
+      }
     };
 
     class Coords2D
@@ -89,7 +93,7 @@ namespace MetaPDF
       }
       Concrete::Coords2D quarterTurnCounterClockwise( ) const
       {
-	return Concrete::Coords2D( -y_, x_ );
+	return Concrete::Coords2D( - y_, x_ );
       }
       Concrete::Length distanceTo( const Concrete::Coords2D & other ) const
       {

@@ -36,7 +36,7 @@ cstroke: \ pth .>
   pth: [[shift (0,~2cm)] (0cm,0cm)>(~2cm,0.2cm)--(3cm,~0.2cm)<(2cm,0cm)]
   •page << [sstroke pth]
   •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
-  •page << [sstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
   •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
   •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
 }
@@ -44,7 +44,7 @@ cstroke: \ pth .>
   pth: [[shift (0,~3cm)] (0cm,0cm)>(~2cm,0.2cm)--(3cm,0.2cm)<(2cm,0.1cm)]
   •page << [sstroke pth]
   •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
-  •page << [sstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
   •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
   •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
 }
@@ -52,7 +52,7 @@ cstroke: \ pth .>
   pth: [[shift (0,~4cm)] (0cm,0cm)>(~2cm,0cm)--(3cm,0cm)<(2cm,0cm)]
   •page << [sstroke pth]
   •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
-  •page << [sstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
   •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
   •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
 }
@@ -61,7 +61,7 @@ cstroke: \ pth .>
   pth: [[shift (0,~7cm)] (~1cm,~0.5cm)--(2cm,1cm)]
   •page << [sstroke pth]
   •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
-  •page << [sstroke [upsample_inflections [shift (5cm,~0.3cm)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
   •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
   •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
 }
@@ -83,4 +83,27 @@ cstroke: \ pth .>
   •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
 }
 
-
+{
+  pth: [[shift (0,~17cm)] (0cm,0cm)>(2.5cm^45°)--(2.5cm^135°)<(2cm,0cm)]
+  •page << [sstroke pth]
+  •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
+  •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
+  •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
+}
+{
+  pth: [[shift (0,~19cm)] (0cm,0cm)>(2cm,2cm)--(0cm,2cm)<(2cm,0cm)]
+  •page << [sstroke pth]
+  •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
+  •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
+  •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
+}
+{
+  pth: [[shift (0,~21cm)] (0cm,0cm)>(4cm^45°)--(4cm^135°)<(2cm,0cm)]
+  •page << [sstroke pth]
+  •page << [cstroke [upsample_balance [shift (~5cm,0)][]pth]]
+  •page << [sstroke [upsample_inflections [shift (5cm,0cm)][]pth]]
+  •page << [sstroke [upsample_bends 60° [shift (10cm,0)][]pth]]
+  •page << [sstroke [upsample_every 1cm [shift (15cm,0)][]pth]]
+}

@@ -38,7 +38,8 @@ namespace Bezier
       PolyCoeffs< T > subSection( double t0, double t1 ) const;
 
       T point( double t ) const;
-      T velocity( double t ) const;  // This is probably never used other than being mentioned by stationaryPoints.
+      T velocity( double t ) const;
+      T acceleration( double t ) const;
       // The number of values returned in the destination argument by the following functions may vary.  A HUGE_VAL is used for termination.
       void hyperplaneIntersections( double t[4], const T & n, const double d ) const;  // Finds all t such that inner( point( t ), n ) == d.  Note that there can be at most 3 intersections.
       void stationaryPoints( double t[3], const T & d ) const;  // Finds all t such that inner( velocity( t ), d ) == d.  Note that there can be at most 2 stationary points.
@@ -109,6 +110,13 @@ namespace Bezier
     PolyCoeffs< T >::velocity( double t ) const
     {
       return ( z3_ * ( ( 3./2.) * t ) + z2_ ) * ( 2 * t ) + z1_;
+    }
+
+  template< class T >
+    T
+    PolyCoeffs< T >::acceleration( double t ) const
+    {
+      return z3_ * ( 6 * t ) + z2_ * 2;
     }
 
   template< class T >
