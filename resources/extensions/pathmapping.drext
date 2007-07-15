@@ -23,3 +23,13 @@ sidepath: \ pth dst .>
       (sl1.p + sl1.n*dst)>(^[angle sl1.t])--
       (^[angle sl2.rt])<(sl2.p - sl2.rn*dst)]
  )
+
+sidepath2: \ pth dst .>
+  [pathmap pth
+    \ sl1 sl2 .>
+    {
+      p0: sl1.p + sl1.n*dst
+      p3: sl2.p - sl2.rn*dst
+      p0 > ( (1/3)*sl1.v*( (sl1.t*p3) / (sl1.t*sl2.p) ) ^ [angle sl1.t] ) --
+      ( (1/3)*sl2.rv*( (sl2.rt*p0) / (sl2.rt*sl1.p) ) ^ [angle sl2.rt] ) < p3
+    }]

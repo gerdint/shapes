@@ -21,18 +21,39 @@ cstroke: \ pth .>
   [sstroke pth]
 )
 
+testPth: @defaultunit:1%C | (0cm,0cm)>(^~30°)--(^)<(2cm,3cm)>(^45°)--(^)<(5cm,2cm)>(^0°)--(6cm,2cm)--(8cm,4cm)
+
+test: \ •dst pth method .>
+(
 @width: 0.5bp
 |
 {
-  pth: @defaultunit:1%C | (0cm,0cm)>(^~30°)--(^)<(2cm,3cm)>(^45°)--(^)<(5cm,2cm)>(^0°)--(6cm,2cm)--(8cm,4cm)
-  •page << @stroking:rgb_RED | [cstroke pth]
-  •page << [stroke [sidepath pth 2mm]]
-  •page << [stroke [sidepath pth ~2mm]]
+  •dst << @stroking:rgb_RED | [cstroke pth]
+  •dst << [stroke [method pth 2mm]]
+  •dst << [stroke [method pth ~2mm]]
 
   {
-    pth: [shift (0,~5cm)][][upsample_bends 20° ../pth]
-    •page << @stroking:rgb_RED | [cstroke pth]
-    •page << [stroke [sidepath pth 2mm]]
-    •page << [stroke [sidepath pth ~2mm]]
+    pth: [shift (0,~5cm)][][upsample_inflections ../pth]
+    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << [stroke [method pth 2mm]]
+    •dst << [stroke [method pth ~2mm]]
+  }
+
+  {
+    pth: [shift (0,~10cm)] [] upsample_balance [] upsample_inflections [] ../pth
+    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << [stroke [method pth 2mm]]
+    •dst << [stroke [method pth ~2mm]]
+  }
+
+  {
+    pth: [shift (0,~15cm)][][upsample_bends 20° ../pth]
+    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << [stroke [method pth 2mm]]
+    •dst << [stroke [method pth ~2mm]]
   }
 }
+)
+
+[test •page testPth sidepath]
+[test •page [shift (9cm,0)][]testPth sidepath2]
