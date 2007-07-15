@@ -1,0 +1,38 @@
+##needs pathmapping
+##needs conssupport
+
+pathpoints:
+{
+  helper: \ sl .> [if sl.looped [list] [cons sl [helper sl+1]]]
+  \ pth .> [helper pth.begin]
+}
+
+
+sstroke: \ pth .>
+( (@stroking:rgb_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.n*6*@width)--(sl.n*~5*@width) )] )  null  [pathpoints pth]])
+   &
+   [stroke pth]
+)
+
+cstroke: \ pth .>
+(
+  (@stroking:rgb_GREEN & @width:(2*@width) | [stroke [controlling pth]] )
+  &
+  [sstroke pth]
+)
+
+@width: 0.5bp
+|
+{
+  pth: @defaultunit:1%C | (0cm,0cm)>(^~30°)--(^)<(2cm,3cm)>(^45°)--(^)<(5cm,2cm)>(^0°)--(6cm,2cm)--(8cm,4cm)
+  •page << @stroking:rgb_RED | [cstroke pth]
+  •page << [stroke [sidepath pth 2mm]]
+  •page << [stroke [sidepath pth ~2mm]]
+
+  {
+    pth: [shift (0,~5cm)][][upsample_bends 20° ../pth]
+    •page << @stroking:rgb_RED | [cstroke pth]
+    •page << [stroke [sidepath pth 2mm]]
+    •page << [stroke [sidepath pth ~2mm]]
+  }
+}

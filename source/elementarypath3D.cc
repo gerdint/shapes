@@ -60,6 +60,14 @@ Lang::ElementaryPath3D::getField( const char * fieldID, const RefCountPtr< const
     {
       return Helpers::newValHandle( new Lang::PathSlider3D( selfRef, Concrete::Time( duration( ) ) ) );
     }
+  if( strcmp( fieldID, "closed" ) == 0 )
+    {
+      if( closed_ )
+	{
+	  return Kernel::THE_TRUE_VARIABLE;
+	}
+      return Kernel::THE_FALSE_VARIABLE;
+    }
   throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
@@ -357,83 +365,36 @@ Lang::ElementaryPath3D::direction( Concrete::Time globalTime ) const
   const Concrete::PathPoint3D * p2;
   findSegment( globalTime, &t, &p1, &p2 );
 
-  if( t <= Concrete::ZERO_TIME )
-    {
-      /* here, t = 0, tc == 1, so
-       */
-      Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
-      Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y1 = p1->front_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z1 = p1->front_->z_.offtype< 0, 3 >( );
-      if( x1 != x0 || y1 != y0 || z1 != z0 )
-	{
-	  Concrete::Speed vx = ( x0 * (-3) + x1 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed vy = ( y0 * (-3) + y1 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed vz = ( z0 * (-3) + z1 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed v = hypotPhysical( vx, vy, vz );
-	  if( v == 0 )
-	    {
-	      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-	    }
-	  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
-	}
-      else
-	{
-	  /* Either there is no control point logically ( p1->front_ == p1->mid_ ), or they just conincide.
-	   * Either way, the velocity limit is 0, so to get the direction we must divide by t in the limit
-	   * This results in other coefficients:
-	   */
-	  Concrete::Bezier x2 = p2->rear_->x_.offtype< 0, 3 >( );
-	  Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
-	  Concrete::Bezier z2 = p2->rear_->z_.offtype< 0, 3 >( );
-	  
-	  Concrete::Speed vx = ( x0 * (-6) + x2 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed vy = ( y0 * (-6) + y2 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed vz = ( z0 * (-6) + z2 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed v = hypotPhysical( vx, vy, vz );
-	  if( v == 0 )
-	    {
-	      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-	    }
+  Bezier::ControlPoints< Concrete::Coords3D > controls( *(p1->mid_), *(p1->front_), *(p2->rear_), *(p2->mid_) );
+  Bezier::PolyCoeffs< Concrete::Coords3D > coeffs( controls );
 
-	  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
-	}
-    }
-  if( t >= Concrete::UNIT_TIME )
-    {
-      throw Exceptions::InternalError( "t1 == 1 in direction calculation" );
-    }
-  
-  Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y1 = p1->front_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z1 = p1->front_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x2 = p2->rear_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z2 = p2->rear_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-  
-  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-  Physical< 0, 2 > kv0 = -3 * tc * tc;
-  Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
-  Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
-  Physical< 0, 2 > kv3 = 3 * t * t;
-  Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
-  Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-  Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-  Concrete::Speed v = hypotPhysical( vx, vy, vz );
-  if( v == 0 )
-    {
-      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-    }
+  const Concrete::Length segLengthBound =
+    ( controls.p1_ - controls.p0_ ).norm( ) + ( controls.p2_ - controls.p1_ ).norm( ) + ( controls.p3_ - controls.p2_ ).norm( );
+  const Concrete::Length shortLength = 1.e-4 * segLengthBound;
 
-  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
+  {
+    Concrete::Coords3D d = coeffs.velocity( t.offtype< 0, 1 >( ) );
+    Concrete::Length v = d.norm( );
+    if( v > shortLength )
+      {
+	return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( d.direction( v ) ) );
+      }
+  }
+
+  /* We reach here if the velocity more or less was vanishing at t.  If we are at the beginning of a segment, the acceleration
+   * will be in the direction of the limiting velocity.  If we are at the end, the acceleration will be in the opposite direction
+   * of the limiting velocity.
+   */
+
+  {
+    Concrete::Coords3D d = ( t < 0.5 ? 1 : -1 ) * coeffs.acceleration( t.offtype< 0, 1 >( ) );
+    Concrete::Length v = d.norm( );
+    if( v > shortLength )
+      {
+	return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( d.direction( v ) ) );
+      }
+  }
+  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
 }
 
 RefCountPtr< const Lang::FloatTriple >
@@ -448,83 +409,36 @@ Lang::ElementaryPath3D::reverse_direction( Concrete::Time globalTime ) const
   const Concrete::PathPoint3D * p2;
   findSegmentReverse( globalTime, &t, &p1, &p2 );
 
-  if( t <= Concrete::ZERO_TIME )
-    {
-      throw Exceptions::InternalError( "t1 == 0 in reverse direction calculation" );
-    }
-  if( t >= Concrete::UNIT_TIME )
-    {
-      /* here, t == 1, tc == 0, so
-       */
-      Concrete::Bezier x2 = p2->rear_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z2 = p2->rear_->z_.offtype< 0, 3 >( );
-      Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
-      Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-      Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-      if( x2 != x3 || y2 != y3 || z2 != z3 )
-	{
-	  Concrete::Speed vx = ( x2 * (-3) + x3 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed vy = ( y2 * (-3) + y3 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed vz = ( z2 * (-3) + z3 * 3 ).offtype< 0, -2 >( );
-	  Concrete::Speed v = - hypotPhysical( vx, vy, vz );
-	  if( v == 0 )
-	    {
-	      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-	    }
-	  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
-	}
-      else
-	{
-	  /* Either there is no control point logically ( p2->rear_ == p2->mid_ ), or they just conincide.
-	   * Either way, the velocity limit is 0, so to get the direction we must divide by t in the limit
-	   * This results in other coefficients:
-	   */
-	  Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
-	  Concrete::Bezier y1 = p1->front_->y_.offtype< 0, 3 >( );
-	  Concrete::Bezier z1 = p1->front_->z_.offtype< 0, 3 >( );
-	  
-	  Concrete::Speed vx = ( x1 * (-6) + x3 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed vy = ( y1 * (-6) + y3 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed vz = ( z1 * (-6) + z3 * 6 ).offtype< 0, -2 >( );
-	  Concrete::Speed v = - hypotPhysical( vx, vy, vz );
-	  if( v == 0 )
-	    {
-	      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-	    }
+  Bezier::ControlPoints< Concrete::Coords3D > controls( *(p1->mid_), *(p1->front_), *(p2->rear_), *(p2->mid_) );
+  Bezier::PolyCoeffs< Concrete::Coords3D > coeffs( controls );
 
-	  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
-	}
-    }
-  
-  Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y1 = p1->front_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z1 = p1->front_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x2 = p2->rear_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z2 = p2->rear_->z_.offtype< 0, 3 >( );
-  Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
-  Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-  Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-  
-  Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
-  Physical< 0, 2 > kv0 = -3 * tc * tc;
-  Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
-  Physical< 0, 2 > kv2 = 6 * tc * t - 3 * t * t;
-  Physical< 0, 2 > kv3 = 3 * t * t;
-  Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
-  Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-  Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-  Concrete::Speed v = - hypotPhysical( vx, vy, vz );
-  if( v == 0 )
-    {
-      return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
-    }
+  const Concrete::Length segLengthBound =
+    ( controls.p1_ - controls.p0_ ).norm( ) + ( controls.p2_ - controls.p1_ ).norm( ) + ( controls.p3_ - controls.p2_ ).norm( );
+  const Concrete::Length shortLength = 1.e-4 * segLengthBound;
 
-  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( vx / v, vy / v, vz / v ) );
+  {
+    Concrete::Coords3D d = (-1) * coeffs.velocity( t.offtype< 0, 1 >( ) );
+    Concrete::Length v = d.norm( );
+    if( v > shortLength )
+      {
+	return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( d.direction( v ) ) );
+      }
+  }
+
+  /* We reach here if the velocity more or less was vanishing at t.  If we are at the beginning of a segment, the acceleration
+   * will be in the direction of the limiting velocity.  If we are at the end, the acceleration will be in the opposite direction
+   * of the limiting velocity.
+   */
+
+  {
+    Concrete::Coords3D d = ( t < 0.5 ? -1 : 1 ) * coeffs.acceleration( t.offtype< 0, 1 >( ) );
+    Concrete::Length v = d.norm( );
+    if( v > shortLength )
+      {
+	return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( d.direction( v ) ) );
+      }
+  }
+  return RefCountPtr< const Lang::FloatTriple >( new Lang::FloatTriple( 0, 0, 0 ) );
 }
 
 RefCountPtr< const Lang::FloatTriple >

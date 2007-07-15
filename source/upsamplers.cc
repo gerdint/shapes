@@ -18,6 +18,16 @@ Computation::UpsampleInflections::operator () ( std::vector< double > * dst, con
       return;
     }
 
+  /* It is sometimes a limiting case that the acceleration and velocity are parallel at one or both of the endpoints.
+   * However, it is no good to upsample at the endpoints, so we must work with a tolarance here.
+   */
+  Concrete::Speed maxSpeed = std::max( std::max( ( controls.p1_ - controls.p0_ ).norm( ),
+ 						 ( controls.p2_ - controls.p1_ ).norm( ) ),
+ 				       ( controls.p3_ - controls.p2_ ).norm( ) ).offtype< 0, 1 >( );
+  const double t_tol = ( Computation::the_arcdelta / maxSpeed ).offtype< 0, 1 >( );
+  const double t_min = t_tol;
+  const double t_max = 1 - t_tol;
+
   Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
   double t[3];
   coeffs.inflections( t );
@@ -32,19 +42,34 @@ Computation::UpsampleInflections::operator () ( std::vector< double > * dst, con
   if( *src == HUGE_VAL )
     {
       // There were one inflections.
-      dst->push_back( t[0] );
+      if( t_min < t[0] && t[0] < t_max )
+	{
+	  dst->push_back( t[0] );
+	}
       return;
     }
   // There were two inflections.
   if( t[0] <= t[1] )
     {
-      dst->push_back( t[0] );
-      dst->push_back( t[1] );
+      if( t_min < t[0] && t[0] < t_max )
+	{
+	  dst->push_back( t[0] );
+	}
+      if( t_min < t[1] && t[1] < t_max )
+	{
+	  dst->push_back( t[1] );
+	}
     }
   else
     {
-      dst->push_back( t[1] );
-      dst->push_back( t[0] );
+      if( t_min < t[1] && t[1] < t_max )
+	{
+	  dst->push_back( t[1] );
+	}
+      if( t_min < t[0] && t[0] < t_max )
+	{
+	  dst->push_back( t[0] );
+	}
     }
 }
 
@@ -64,41 +89,28 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
       return;
     }
 
+  Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
+
   std::vector< double > inflectionSamples;
   inflectionSampler( & inflectionSamples, controls );
   inflectionSamples.push_back( 1 );
 
   Concrete::Coords2D p0 = controls.p0_;
-  double aStart;
-  Concrete::UnitFloatPair d1( 1, 0, bool( ) );
-  double aFinal;
-  if( controls.p1_ == controls.p0_ )
-    {
-      d1 = ( controls.p2_ - p0 ).direction( );
-      Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_, d1.x_ );
-      aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
-    }
-  else if( controls.p2_ == controls.p3_ )
-    {
-      d1 = ( controls.p1_ - p0 ).direction( );
-      Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_, d1.x_ );
-      aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
-    }
-  else
-    {
-      d1 = ( controls.p1_ - p0 ).direction( );
-      Concrete::Coords2D d2 = controls.p3_ - controls.p2_;
-      aStart = atan2( d1.y_, d1.x_ );
-      aFinal = atan2( d2.y_.offtype< 1, 0 >( ), d2.x_.offtype< 1, 0 >( ) );
-    }
-  
-  Bezier::PolyCoeffs< Concrete::Coords2D > coeffs( controls );
-
-  double a1 = aStart;
-  double a2;
   double t1 = 0;
+  double a1;
+  Concrete::UnitFloatPair d1( 1, 0, bool( ) );
+  {
+    Concrete::Length shortLength = 1.e-4 * ( controls.p3_ - controls.p0_ ).norm( );
+    Concrete::Coords2D tmp = coeffs.velocity( t1 );
+    if( tmp.norm( ) < shortLength )
+      {
+	tmp = coeffs.acceleration( t1 );
+      }
+    d1 = tmp.direction( );
+    a1 = atan2( d1.y_, d1.x_ );
+  }
+  
+  double a2;
   double t2;
   Concrete::UnitFloatPair d2( 1, 0, bool( ) );
   typedef typeof inflectionSamples ListType;
@@ -109,20 +121,15 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
       t2 = *inflection_i;
       Bezier::ControlPoints< Concrete::Coords2D > subControls( coeffs.subSection( t1, t2 ) );
       Concrete::Length shortLength = 1.e-4 * ( subControls.p3_ - subControls.p0_ ).norm( );
-      if( t2 >= 1 )
-	{
-	  a2 = aFinal;
-	}
-      else
-	{
-	  Concrete::Coords2D tmp = coeffs.velocity( t2 );
-	  if( tmp.norm( ) < shortLength )
-	    {
-	      tmp = coeffs.acceleration( t2 );
-	    }
-	  d2 = tmp.direction( );
-	  a2 = atan2( d2.y_, d2.x_ );
-	}
+      {
+	Concrete::Coords2D tmp = coeffs.velocity( t2 );
+	if( tmp.norm( ) < shortLength )
+	  {
+	    tmp = (-1) * coeffs.acceleration( t2 ); // Note the sign!
+	  }
+	d2 = tmp.direction( );
+	a2 = atan2( d2.y_, d2.x_ );
+      }
       /* Check if the turn is counter clockwise or not.
        * Note that it is tempting to use the acceleration at t1, but this is a bad idea since it is parallel with the
        * velocity at the points of inflection (and t1 will often be such a point).
@@ -159,8 +166,10 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
       double aStep = ( a2 - a1 ) / steps;
       double a = a1 + aStep;
       double lastTime = t1;
+      //      std::cerr << "a1: " << a1*(180/M_PI) << "   a2: " << a2*(180/M_PI) << std::endl ;
       for( double i = 1; i < steps; ++i, a += aStep )
 	{
+	  //	  std::cerr << "  " << a*(180/M_PI) ;
 	  /* Locate the angle a by finding a point where the velocity is orthogonal to a vector orthogonal to a.
 	   */
 	  Concrete::UnitFloatPair da( cos( a ), sin( a ), bool( ) );
@@ -168,11 +177,11 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 	  
 	  double optTimes[3];
 	  coeffs.stationaryPoints( optTimes, an ); // A HUGE_VAL is used as terminator in the result.
-	  double best_t = HUGE_VAL;
+	  double best_t = t2;
 	  for( double * src = & optTimes[0]; *src != HUGE_VAL; ++src )
 	    {
 	      if( *src <= lastTime ||
-		  *src >= t2 )
+		  *src >= best_t )
 		{
 		  continue;
 		}
@@ -182,15 +191,17 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 		  best_t = *src;
 		}
 	    }
-	  if( best_t < HUGE_VAL )
+	  if( best_t < t2 )
 	    {
 	      dst->push_back( best_t );
 	      lastTime = best_t;
 	    }
+	  //	  std::cerr << "  (" << ( best_t < t2 ) << ")  " << best_t << std::endl ;
 	}
       if( t2 < 1 )
 	{
 	  dst->push_back( t2 );
+	  //	  std::cerr << "  final t2: " << t2 << std::endl ;
 	}
     }
     

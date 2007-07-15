@@ -1,0 +1,25 @@
+pathmap:
+{
+  helper: \ f sl1 sl2 res .>
+    [if sl2.looped
+        res
+	[helper f sl2 sl2+1 res--[f sl1 sl2]]]
+
+  \ pth f .>
+  {
+    tmp: [helper f [pth 0] [pth 1] emptypath2D]
+    [if pth.closed
+        tmp--cycle
+	tmp]
+  }
+}
+
+
+sidepath: \ pth dst .>
+ (@defaultunit:1%C
+  |
+  [pathmap pth
+    \ sl1 sl2 .>
+      (sl1.p + sl1.n*dst)>(^[angle sl1.t])--
+      (^[angle sl2.rt])<(sl2.p - sl2.rn*dst)]
+ )

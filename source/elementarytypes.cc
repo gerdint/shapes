@@ -318,6 +318,10 @@ Lang::String::show( std::ostream & os ) const
   os << val_.getPtr( ) ;
 }
 
+Lang::FloatPair::FloatPair( const Concrete::UnitFloatPair & orig )
+  : x_( orig.x_ ), y_( orig.y_ )
+{ }
+
 
 DISPATCHIMPL( FloatPair );
 

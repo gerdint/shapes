@@ -162,6 +162,7 @@ namespace MetaPDF
       double x_;
       double y_;
       FloatPair( double x, double y ) : x_( x ), y_( y ) { };
+      FloatPair( const Concrete::UnitFloatPair & orig );
       virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
       TYPEINFODECL;
       virtual void show( std::ostream & os ) const;
