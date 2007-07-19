@@ -1,0 +1,19 @@
+<define container="shapeshtml">
+<html>
+<head>
+  <title>The Shapes language documentation</title>
+  <link rel="stylesheet" href="shapes.css">
+</head>
+<body>
+<contents />
+</body>
+</html>
+</define>
+
+<define container="codelines"><table><tr><td>&nbsp;&nbsp;</td><td><tt><contents /></tt></td></tr></table></define>
+<define container="inline"><tt><contents /></tt></define>
+<define container="funname"><tt><contents /></tt></define>
+<define container="typename"><b><i><contents /></i></b></define>
+<define container="varname"><i><contents /></i></define>
+<define container="constname"><b><contents /></b></define>
+<define container="filename"><em><contents /></em></define>

@@ -1,8 +1,19 @@
-<use file="/~tidefelt/macros" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<use file="../macros" />
 
-<myhtml>
+<shapeshtml>
 <h1>Language Reference</h1>
 <p>Without a reference documentation, the lanugage would not be defined.  On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is being ready for public use.</p>
+
+<h1>Files</h1>
+<p>Before going into the language itself, let us introduce a few definitions relating to files.</p>
+
+<p>When the compiler is invoked, this shall typically result in a piece of graphics.  This is the <em>output</em> file.</p>
+
+<p>Two types of input files can be identified.  First, there are <em>application sources</em>, which are generally used to create a corresponding piece of graphics in an output file.  (Sometimes, an application source may not be meant to produce an output file by itself, but as part of another application where it is included.)  Second, there are <em>extension sources</em>, which shall not produce any graphics by themselves, but only provide functionality that can be used in applications.</p>
+
+<p>There are other types of files as well, but the introduction of these is not needed for the language reference.</p>
+
 
 <h1>Syntax</h1>
 <p>Here, term <em>syntax</em> basically refers to everything that does not have to do with the values bound to variables in the initial environments.  Most importantly, the library functions (or <em>preamble</em>, or <em>standard procedures</em>, et&nbsp;c) are not included here.</p>
@@ -13,17 +24,23 @@
 <p>These are two very basic functions of the scanner, and have in common that they have nothing to do with the <em>meaning</em> of program code, but only where (not) to <em>find</em> the code.</p>
 
 <h3>File Inclusion</h3>
-<p>Files are included using the scanner directive <inline>#include <filename>filename</filename></inline>, which <em>must appear at the bedinning of a line</em>, like this:</p>
+<p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is <inline>##needs <filename>filenamebase</filename> [: <filename>directory</filename>]</inline>, which <em>must appear at the beginning of a line</em>.  The syntax for <inline>##include</inline> is analogous, and the whitespace after the colon is mandatory, like this:</p>
 <codelines>
-#include blockdraw.drool<br>
-#include ~/Library/Drool/Project Settings/book_settings.drool<br>
+##needs blockdraw<br>
+##needs book_settings : ~/Library/Drool/Project Settings<br>
+##include background<br>
+##include foreground<br>
 </codelines>
 <p></p>
 
 <p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
 
 <h3>Comments</h3>
-<p>Comments are delimited by <inline>/*</inline> and <inline>*/</inline>, and nest.  It is recommended that multi-line comments begin each line with an asterisk (<inline>*</inline>).  It is also recommended that no code is put on the same line as a multi-line comment, since it will be very hard for the eye to see what really is commented out.</p>
+<p>Multi-line comments are delimited by <inline>/**</inline> and <inline>**/</inline>, and nest.  It is recommended that multi-line comments begin each line with <inline>**</inline>.  It is also recommended that no code is put on the same line as a multi-line comment, since it will be very hard for the eye to see what really is commented out.</p>
+
+<p>Rest-of-line comments start with <inline>|**</inline>.</p>
+
+<p>The designers of the C language may have a good point when they say that rest-of-line comments is the only type of comment to be used to comment out code.  Whether they think that rest-of-line comments may also be used for comments I don't know, but I think it would be a good idea to reserve the use of rest-of-line comments for only commenting out code, and to use multiline comments for comments (documentation).</p>
 
 <h2>Atoms</h2>
 <p>Here the different scanner tokens that directly define values are described.</p>
@@ -62,9 +79,9 @@
 </table>
 <p></p>
 
-<p>A new unit is defined as follows.  The point used by TeX is taken as an example.  The new unit will be called <inline>TeXpt</inline>, and the following appears <em>at the beginning of a line</em>:<br>
+<p>A new unit is defined as follows.  The point used by TeX is taken as an example.  The new unit will be called <inline>tex</inline>, and the following appears <em>at the beginning of a line</em>:<br>
 <codelines>
-#unit TeXpt = 0.996264009963bp
+##unit tex = 0.996264009963bp<br>
 </codelines>
 </p>
 
@@ -109,14 +126,28 @@
 </table>
 <p></p>
 
+<h3>Integers</h3>
+<p>Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:</p>
+
+<table cellspacing="5">
+<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid Integer?</b></td> </tr>
+<tr> <td><inline>'13</inline></td> <td></td> <td>Yes (= 13)</td> </tr>
+<tr> <td><inline>'~5</inline></td> <td></td> <td>Yes (= -5)</td> </tr>
+<tr> <td><inline>'0xFF</inline></td> <td></td> <td>Yes (= 255)</td> </tr>
+<tr> <td><inline>'0b110</inline></td> <td></td> <td>Yes (= 6)</td> </tr>
+<tr> <td><inline>'~0xFF</inline></td> <td></td> <td>No (negative integers must be entered with radix 10)</td> </tr>
+<tr> <td><inline>(-'0xFF)</inline></td> <td></td> <td>Yes, but this is an expression, not a token.</td> </tr>
+</table>
+<p></p>
+
 <h3>Identifiers</h3>
 <p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
 
-<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9 and the underscore.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.</p>
+<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9 and the underscore.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.  As of today, identifiers may neither begin with a capital letter.  Instead, a capital letter indicates a type name.</p>
 
 <table cellspacing="5">
 <tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid identifier?</b></td> </tr>
-<tr> <td><inline>foo</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>cool?</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>a_1_2</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>__cplusplus</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>3cm</inline></td> <td></td> <td>No (this begins with a digit and is a length)</td> </tr>
@@ -130,12 +161,86 @@
 <table cellspacing="5">
 <tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid symbol?</b></td> </tr>
 <tr> <td><inline>'foo</inline></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><inline>'28</inline></td> <td></td> <td>No (<inline>28</inline> is not an identifier)</td> </tr>
+<tr> <td><inline>'2dup</inline></td> <td></td> <td>No (<inline>2dup</inline> is not an identifier)</td> </tr>
+<tr> <td><inline>'28</inline></td> <td></td> <td>No, this is an integer</td> </tr>
 </table>
 <p></p>
 
+
 <h2>Compound Syntax Constructors</h2>
 <p>This section describes syntax that denotes value construction in terms of other values and expressions, whithout doing so via a usual function call.  Values that are constructed by calling a library function are described elsewhere.  As an exception, class construction is not defined here either.</p>
+
+<h3>Float pairs and triples</h3>
+<p>Float pairs and triples are useful generalizations of directions in 2D and 3D, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
+
+<p>The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  See the following table:</p>
+
+<table cellspacing="5">
+<tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Constructs a...</b></td> </tr>
+<tr> <td><inline>( <syntax>float-expr</syntax>, <syntax>float-expr</syntax> )</inline></td> <td></td> <td>Float pair</td> </tr>
+<tr> <td><inline>( <syntax>float-expr</syntax>, <syntax>float-expr</syntax>, <syntax>float-expr</syntax> )</inline></td> <td></td> <td>Float triple</td> </tr>
+</table>
+<p></p>
+
+<p>The following table gives a few examples.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Valid construct?</b></td> </tr>
+<tr> <td><inline>( 5, 7 )</inline></td> <td></td> <td>Yes, yields a float pair</td> </tr>
+<tr> <td><inline>( 1.2, 3.4, 5 )</inline></td> <td></td> <td>Yes, yields a float triple</td> </tr>
+<tr> <td><inline>( 5, '7 )</inline></td> <td></td> <td>No, <inline>'7</inline> is an integer</td> </tr>
+</table>
+<p></p>
+
+
+<h3>Coordinates in 2D and 3D</h3>
+<p>In this context, 2D and 3D refer to the perceivable space (3D) and plane (2D).  Coordinates are never explicitly associated with a base frame, which would imply that coordinates denoted a particular point in the perceivable spaces.  Rather, coordinates are always relative, possibly with the exception of when graphics are laid out on the output plane.  However, even when graphics are placed on the output plane, they remain relative to an artificial origin, and this is particularly obvious when the output's media box is determined <em>after</em> the contents of the output has been laid out.</p>
+
+<p>That said, we can drop the distinction of the two types of coordinates, and it is, for example, always permissible to add coordinates.  The basic way to construct coordinates is similar to how pairs/triples are constructed, but with lengths instead of floats.  One notable exception to this rule is that if one of the lengths in 2D are zero, it may be given as the <em>float</em> zero.  Coordinates may also be constructed as relative an undetermined base frame, please refer to the documentation on path construction for how the base frame may be determined later.</p>
+
+<p>The table below lists valid non-relative constructs.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Constructs a...</b></td> </tr>
+<tr> <td><inline>( <syntax>length-expr</syntax>, <syntax>length-expr</syntax> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
+<tr> <td><inline>( <syntax>length-expr</syntax>, <syntax>zero-float-expr</syntax> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
+<tr> <td><inline>( <syntax>zero-float-expr</syntax>, <syntax>length-expr</syntax> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
+<tr> <td><inline>( <syntax>length-expr</syntax>, <syntax>length-expr</syntax>, <syntax>length-expr</syntax> )</inline></td> <td></td> <td>Coordinates in 3D</td> </tr>
+</table>
+<p></p>
+
+<p>Relative coordinates are constructed using the unary plus operator.  The unary plus may be used either on a per-dimension level, or on a complete coordinates expression.  Some examples are given in the table below.</p>
+
+<table cellspacing="5">
+<tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Valid construct?</b></td> </tr>
+<tr> <td><inline>( 5cm, 7in )</inline></td> <td></td> <td>Yes, yields coordinates in the perceivable plane</td> </tr>
+<tr> <td><inline>( 5cm, 0 )</inline></td> <td></td> <td>Yes, same as <inline>( 5cm, 0m )</inline></td> </tr>
+<tr> <td><inline>( 0, 7bp )</inline></td> <td></td> <td>Yes, same as <inline>( 0m, 7bp )</inline></td> </tr>
+<tr> <td><inline>( 2mm, 7mm, 5mm )</inline></td> <td></td> <td>Yes, yields coordinates in the perceivable space</td> </tr>
+<tr> <td><inline>( 2mm, 0, 5mm )</inline></td> <td></td> <td>No, the float zero is only allowed in 2D</td> </tr>
+<tr> <td><inline>( (+0mm), 1mm ))</inline></td> <td></td> <td>Yes, the x component is relative an undetermined base frame</td> </tr>
+<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td></td> <td>Yes, same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
+<tr> <td><inline>(+ 3mm*[dir 20°])</inline></td> <td></td> <td>Yes, same as <inline>( (+ (3mm*[dir 20°]).x), (+ (3mm*[dir 20°]).y) )</inline></td> </tr>
+<tr> <td><inline>( (+0mm), 1mm, (+7mm) )</inline></td> <td></td> <td>Yes, relative coordinates may be used in both 2D and 3D</td> </tr>
+</table>
+<p></p>
+
+
+<h3>Functions and friends</h3>
+<p>Functions are at the heart of a functional language.  Powerful ways of creating functions make source code both more compact and more comprehensible.  The language is <em>not</em> curried, but contains many constructs to support <em>evaluated cuts</em>.</p>
+
+<p>There are true (pure) functions, non-pure functions, and horrible procedures, all of which are constructed similarly, but differ in how they are applied and what they are allowed to do.  First, pure functions will be discussed in detail.  Then, non-pure functions and procedures will be presented in terms of how they differ from pure functions.</p>
+
+<p>Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already)):</p>
+<codelines>
+\ x y .> [sqrt x*x + y*y]<br>
+</codelines>
+
+
+
+<h3>Structures</h3>
+<p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.</p>
+
 
 <h2>Bindings</h2>
 <p>Drool supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a bindings can never be changed.</p>
@@ -192,4 +297,4 @@
 
 <h2>Other</h2>
 
-</myhtml>
+</shapeshtml>
