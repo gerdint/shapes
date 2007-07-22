@@ -13,6 +13,7 @@
 #include "metapdfcore.h"
 #include "consts.h"
 #include "basicsimplex.h"
+#include "debuglog.h"
 #include "metapdfexceptions.h"
 
 #include <climits>
@@ -21,8 +22,10 @@ using namespace std;
 using namespace MetaPDF;
 
 MetaPDFScanner Ast::theMetaPDFScanner;
+Kernel::PassedEnv Kernel::theGlobalEnvironment = 0;
 std::list< Kernel::Environment * > Kernel::theEnvironmentList;
 SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( & cout );
+Kernel::DebugLog Kernel::theDebugLog;
 Kernel::TeXLabelManager Kernel::theTeXLabelManager;
 RefCountPtr< const Kernel::GraphicsState > Kernel::THE_NO_STATE = NullPtr< const Kernel::GraphicsState >( );
 RefCountPtr< const Kernel::GraphicsState > Kernel::THE_DEFAULT_STATE( new Kernel::GraphicsState( true ) );

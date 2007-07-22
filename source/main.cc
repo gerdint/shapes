@@ -13,6 +13,7 @@
 #include "autoonoff.h"
 #include "metapdfscanner.h"
 #include "texlabelmanager.h"
+#include "debuglog.h"
 
 #include <iostream>
 #include <iomanip>
@@ -134,6 +135,7 @@ main( int argc, char ** argv )
 	}
       else if( strcmp( *argv, "--debugstep" ) == 0 )
 	{
+	  argcAssertion( *argv, argc, 2 );
 	  char * endp;
 	  int tmp = strtol( *( argv + 1 ), & endp, 10 );
 	  if( tmp < 0 )
@@ -144,6 +146,49 @@ main( int argc, char ** argv )
 	  Interaction::debugStep = static_cast< size_t >( tmp );
 	  argv += 2;
 	  argc -= 2;
+	}
+      else if( strcmp( *argv, "--debuglog" ) == 0 )
+	{
+	  argcAssertion( *argv, argc, 2 );
+	  try
+	    {
+	      Kernel::theDebugLog.setFilename( *( argv + 1 ) );
+	    }
+	  catch( const char * ball )
+	    {
+	      std::cerr << ball << std::endl ;
+	      exit( 1 );	      
+	    }
+	  argv += 2;
+	  argc -= 2;
+	}
+      else if( strcmp( *argv, "--debuglog-stderr" ) == 0 )
+	{
+	  try
+	    {
+	      Kernel::theDebugLog.setStream( & std::cerr );
+	    }
+	  catch( const char * ball )
+	    {
+	      std::cerr << ball << std::endl ;
+	      exit( 1 );	      
+	    }
+	  argv += 1;
+	  argc -= 1;
+	}
+      else if( strcmp( *argv, "--debuglog-stdout" ) == 0 )
+	{
+	  try
+	    {
+	      Kernel::theDebugLog.setStream( & std::cout );
+	    }
+	  catch( const char * ball )
+	    {
+	      std::cerr << ball << std::endl ;
+	      exit( 1 );	      
+	    }
+	  argv += 1;
+	  argc -= 1;
 	}
       else if( strcmp( *argv, "--nodtminerror" ) == 0 )
 	{
@@ -620,7 +665,7 @@ main( int argc, char ** argv )
     {
       if( texJobName == "" )
 	{
-	  texJobName = "#metapdf.labels";
+	  texJobName = "#drool.labels";
 	}
     }
   else
@@ -640,6 +685,18 @@ main( int argc, char ** argv )
       if( fontmetricsOutputName == "" )
 	{
 	  fontmetricsOutputName = baseName + "afm";
+	}
+    }
+
+  if( ! Kernel::theDebugLog.initialized( ) )
+    {
+      if( baseName == "" )
+	{
+	  Kernel::theDebugLog.setFilename( "#drool.log" );
+	}
+      else
+	{
+	  Kernel::theDebugLog.setFilename( baseName + "log" );
 	}
     }
 
@@ -792,21 +849,21 @@ main( int argc, char ** argv )
   try
     {
       metapdfparse( );
-      Kernel::PassedEnv baseEnv = new Kernel::Environment( Kernel::theEnvironmentList );
-      Kernel::registerGlobals( baseEnv );
-      Kernel::registerDynamic( baseEnv );
-      Kernel::registerHot( baseEnv );
-      Kernel::registerClasses( baseEnv );
-      Kernel::registerCore_elem( baseEnv );
-      Kernel::registerCore_point( baseEnv );
-      Kernel::registerCore_path( baseEnv );
-      Kernel::registerCore_draw( baseEnv );
-      Kernel::registerCore_construct( baseEnv );
-      Kernel::registerCore_font( baseEnv );
-      Kernel::registerCore_misc( baseEnv );
-      Kernel::registerCore_state( baseEnv );
-      Kernel::registerCore_annotation( baseEnv );
-      Ast::theGlobalAnalysisEnvironment = baseEnv->newAnalysisEnvironment( );
+      Kernel::theGlobalEnvironment = new Kernel::Environment( Kernel::theEnvironmentList );
+      Kernel::registerGlobals( Kernel::theGlobalEnvironment );
+      Kernel::registerDynamic( Kernel::theGlobalEnvironment );
+      Kernel::registerHot( Kernel::theGlobalEnvironment );
+      Kernel::registerClasses( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_elem( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_point( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_path( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_draw( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_construct( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_font( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_misc( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_state( Kernel::theGlobalEnvironment );
+      Kernel::registerCore_annotation( Kernel::theGlobalEnvironment );
+      Ast::theGlobalAnalysisEnvironment = Kernel::theGlobalEnvironment->newAnalysisEnvironment( );
       Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
       if( Ast::theAnalysisErrorsList.size( ) > 0 )
 	{
@@ -844,7 +901,7 @@ main( int argc, char ** argv )
 
       bool done = false;
       Kernel::EvalState evalState( Ast::theProgram,
-				   baseEnv,
+				   Kernel::theGlobalEnvironment,
 				   baseDyn,
 				   Kernel::ContRef( new Kernel::ExitVoidContinuation( & done, Ast::theProgram->loc( ) ) ) );
       try
@@ -880,8 +937,8 @@ main( int argc, char ** argv )
 	  abortProcedure( & oFile, outputName );
 	}
 
-      Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( baseEnv->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
-      RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( baseEnv->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
+      Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
+      RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
       if( catalog->isEmpty( ) && finalPicture->isNull( ) )
 	{
 	  throw Exceptions::EmptyFinalPicture( );
@@ -895,10 +952,10 @@ main( int argc, char ** argv )
 
       if( cleanupMemory )
 	{
-	  baseEnv->clear( );
+	  Kernel::theGlobalEnvironment->clear( );
 	}
       
-      delete baseEnv;
+      delete Kernel::theGlobalEnvironment;
       delete Ast::theProgram;
     }
   catch( const Exceptions::StaticInconsistency & ball )

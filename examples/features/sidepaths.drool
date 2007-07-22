@@ -29,31 +29,31 @@ test: \ •dst pth method .>
 |
 {
   •dst << @stroking:rgb_RED | [cstroke pth]
-  •dst << [stroke [method pth 2mm]]
-  •dst << [stroke [method pth ~2mm]]
+  •dst << [debuglog_after `1´ ...][][stroke [method pth 2mm]]
+  •dst << [debuglog_after `1´ ...][][stroke [method pth ~2mm]]
 
   {
     pth: [shift (0,~5cm)][][upsample_inflections ../pth]
     •dst << @stroking:rgb_RED | [cstroke pth]
-    •dst << [stroke [method pth 2mm]]
-    •dst << [stroke [method pth ~2mm]]
+    •dst << [debuglog_after `2´ ...][][stroke [method pth 2mm]]
+    •dst << [debuglog_after `2´ ...][][stroke [method pth ~2mm]]
   }
 
   {
     pth: [shift (0,~10cm)] [] upsample_balance [] upsample_inflections [] ../pth
     •dst << @stroking:rgb_RED | [cstroke pth]
-    •dst << [stroke [method pth 2mm]]
-    •dst << [stroke [method pth ~2mm]]
+    •dst << [debuglog_after `3´ ...][][stroke [method pth 2mm]]
+    •dst << [debuglog_after `3´ ...][][stroke [method pth ~2mm]]
   }
 
   {
     pth: [shift (0,~15cm)][][upsample_bends 20° ../pth]
     •dst << @stroking:rgb_RED | [cstroke pth]
-    •dst << [stroke [method pth 2mm]]
-    •dst << [stroke [method pth ~2mm]]
+    •dst << [debuglog_after `4´ ...][][stroke [method pth 2mm]]
+    •dst << [debuglog_after `4´ ...][][stroke [method pth ~2mm]]
   }
 }
 )
 
-[test •page testPth sidepath]
-[test •page [shift (9cm,0)][]testPth sidepath2]
+[debuglog_before `sidepath¢n´ ...][][test •page testPth sidepath]
+|**[debuglog_before `sidepath2¢n´ ...][][test •page [shift (9cm,0)][]testPth sidepath2]

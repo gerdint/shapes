@@ -527,7 +527,7 @@ namespace MetaPDF
 		idKey = new Kernel::Environment::LexicalKey( Ast::theGlobalAnalysisEnvironment->findLexicalDynamicKey( callLoc, Lang::HANDLER_NO_INTERSECTION ) );
 	      }
 
-	    const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( *idKey );
+	    const Kernel::DynamicVariableProperties & dynProps = Kernel::theGlobalEnvironment->lookupDynamicVariable( *idKey );
       
 	    Kernel::VariableHandle handler = dynProps.fetch( evalState->dyn_ );
 

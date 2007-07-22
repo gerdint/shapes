@@ -942,7 +942,11 @@ ExprExceptConstStrings
   $$ = new Ast::CallExpr( @$,
 			  RefCountPtr< const Lang::Function >( res ),
 			  args );
-  $$->immediate_ = true;
+  /* This used to be immediate, but right now that seems utterly wrong!
+   * Imagine choosing between two continuations; then both continuations would require invokation before being "passed" to the <if> function.
+   * On the other hand, I can admit that it seems a bit uncanny to let the <if> function return the continuation invokations as thunks, not
+   * knowing when they will be forced...  But I don't think there's a choice here anyway; this expression can't be immediate.
+   */
 }
 | Expr '|' Expr
 {

@@ -51,9 +51,11 @@ namespace MetaPDF
   namespace Kernel
   {
 
+    extern Kernel::PassedEnv theGlobalEnvironment; // Useful for functions in the core refering to their home environment.
     extern std::list< Kernel::Environment * > theEnvironmentList;
     extern Kernel::TeXLabelManager theTeXLabelManager;
     extern SimplePDF::PDF_out * the_pdfo;
+    extern Kernel::DebugLog theDebugLog;
 
     extern RefCountPtr< const Kernel::GraphicsState > THE_NO_STATE;
     extern RefCountPtr< const Kernel::GraphicsState > THE_DEFAULT_STATE;

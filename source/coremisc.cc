@@ -8,6 +8,7 @@
 #include "metapdfastfun.h"
 #include "continuations.h"
 #include "multipage.h"
+#include "debuglog.h"
 
 #include <iostream>
 #include <sstream>
@@ -97,6 +98,52 @@ namespace MetaPDF
       }
     };
       
+    class Core_debuglog_before : public Lang::CoreFunction
+    {
+    public:
+      Core_debuglog_before( const char * title )
+	: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function debuglog_before >" ) )
+      {
+	formals_->appendEvaluatedCoreFormal( "msg", Kernel::THE_SLOT_VARIABLE, true );
+	formals_->appendEvaluatedCoreFormal( "result", Kernel::THE_SLOT_VARIABLE, false );
+      }
+      virtual void
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      {
+	args.applyDefaults( );
+
+	args.getValue( 0 )->show( Kernel::theDebugLog.os( ) );
+	Kernel::theDebugLog.os( ) << std::flush ;
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeHandle( args.getHandle( 1 ),
+			  evalState );
+      }
+    };
+    
+    class Core_debuglog_after : public Lang::CoreFunction
+    {
+    public:
+      Core_debuglog_after( const char * title )
+	: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function debuglog_after >" ) )
+      {
+	formals_->appendEvaluatedCoreFormal( "msg", Kernel::THE_SLOT_VARIABLE, true );
+	formals_->appendEvaluatedCoreFormal( "result", Kernel::THE_SLOT_VARIABLE, true );
+      }
+      virtual void
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      {
+	args.applyDefaults( );
+
+	args.getValue( 0 )->show( Kernel::theDebugLog.os( ) );
+	Kernel::theDebugLog.os( ) << std::flush ;
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( args.getValue( 1 ),
+			  evalState );
+      }
+    };
+    
     class Core_if : public Lang::CoreFunction
     {
     public:
@@ -363,6 +410,8 @@ Kernel::registerCore_misc( Kernel::Environment * env )
   env->initDefineCoreFunction( new Lang::Core_typeof( "typeof" ) );
   env->initDefineCoreFunction( new Lang::Core_error( "error" ) );
   env->initDefineCoreFunction( new Lang::Core_show( "show" ) );
+  env->initDefineCoreFunction( new Lang::Core_debuglog_before( "debuglog_before" ) );
+  env->initDefineCoreFunction( new Lang::Core_debuglog_after( "debuglog_after" ) );
   env->initDefineCoreFunction( new Lang::Core_if( "if" ) );
   env->initDefineCoreFunction( new Lang::NullFunction( "ignore" ) );
   env->initDefineCoreFunction( new Lang::Core_rectangle( "rectangle" ) );

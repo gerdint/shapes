@@ -52,7 +52,7 @@ WhiteSpace [ \t]
 
 UTF8 "π"|"§"
 Float [~]?[0-9]+([.][0-9]*)?
-LowerCaseLetter [a-z_]|{UTF8}
+LowerCaseLetter [a-z_?]|{UTF8}
 UpperCaseLetter [A-Z]
 Letter {LowerCaseLetter}|{UpperCaseLetter}
 Identifier {LowerCaseLetter}({Letter}|[0-9])*

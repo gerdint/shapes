@@ -1,14 +1,28 @@
 pathmap:
 {
+  meeter: \ p1 p2 .>
+   [if p1.null?
+       p2
+       (continuation cont
+         @handler_NoIntersection: \ pth1 pth2 .>
+              (continue cont (pth1.begin--pth1.end>(1%f^[angle (-pth1.end.rt)]))--((1%f^[angle (-pth2.begin.t)])<pth2.begin--pth2.end))
+         |
+         {
+           t: [debuglog_after `found´ ...][][debuglog_before `search...´ ...][][intersection p1 p2]
+           [meetpaths [p1 0]--t [continuous_approximator p2 t.p]--[p2 ∞]]
+         }
+       )
+   ]
+  
   helper: \ f sl1 sl2 res .>
     [if sl2.looped
         res
-	[helper f sl2 sl2+1 res--[f sl1 sl2]]]
+	[helper f sl2 sl2+1 [meeter res [f sl1 sl2]]]]
 
   \ pth f .>
   {
     tmp: [helper f [pth 0] [pth 1] emptypath2D]
-    [if pth.closed
+    [if pth.closed?
         tmp--cycle
 	tmp]
   }

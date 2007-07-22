@@ -47,6 +47,7 @@ namespace MetaPDF
     ContinueDynamicECFunction( const Ast::SourceLocation & idLoc, const char * id, Expression * expr );
     virtual ~ContinueDynamicECFunction( );
     void push_exprs( Ast::ArgListExprs * args ) const;
+    virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
     virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
     virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
     virtual bool isTransforming( ) const { return false; }

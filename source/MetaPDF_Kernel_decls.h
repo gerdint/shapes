@@ -61,6 +61,8 @@ namespace MetaPDF
 
     class TeXLabelManager;
 
+    class DebugLog;
+
     void registerGlobals( Kernel::Environment * env );
     void registerDynamic( Kernel::Environment * env );
     void registerHot( Kernel::Environment * env );

@@ -100,6 +100,17 @@ Ast::ContinueDynamicECFunction::push_exprs( Ast::ArgListExprs * args ) const
 }
 
 void
+Ast::ContinueDynamicECFunction::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+  /* Nothing to analyze?
+   */
+
+  /* expr_ shall be analyzed from the calling expression.
+   * Here, it is only used to locate errors.
+   */
+}
+
+void
 Ast::ContinueDynamicECFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   Kernel::ContRef cont = evalState->dyn_->getEscapeContinuation( id_, idLoc_ );

@@ -57,9 +57,17 @@ Lang::ElementaryPath2D::getField( const char * fieldID, const RefCountPtr< const
     {
       return Helpers::newValHandle( new Lang::PathSlider2D( selfRef, Concrete::Time( duration( ) ) ) );
     }
-  if( strcmp( fieldID, "closed" ) == 0 )
+  if( strcmp( fieldID, "closed?" ) == 0 )
     {
       if( closed_ )
+	{
+	  return Kernel::THE_TRUE_VARIABLE;
+	}
+      return Kernel::THE_FALSE_VARIABLE;
+    }
+  if( strcmp( fieldID, "null?" ) == 0 )
+    {
+      if( size( ) == 0 )
 	{
 	  return Kernel::THE_TRUE_VARIABLE;
 	}
