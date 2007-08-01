@@ -78,10 +78,15 @@ h3.puff {
 	margin:					0.1em 0 0 0;
 }
 
-codelines { font-family: courier margin-left: 2em; }
-inline    { font-family: courier }
-funname   { font-family: courier }
+codelines, inline, funname
+{ 
+  font-family: courier;
+}
+
+codelines { font-size: 80%; margin: 2cm 2cm 0 0; }
+inline    { }
+funname   { }
 typename  { font-style: italic; font-weight: bold; }
 varname   { font-style: italic; }
 constname { font-weight: bold; }
-filename  { font-family: sans-serif font-style: italic; }
+filename  { font-family: sans-serif; font-style: italic; }

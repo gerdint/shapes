@@ -1,3 +1,5 @@
+macros says "Hello, world!"
+
 <define container="shapeshtml">
 <html>
 <head>
