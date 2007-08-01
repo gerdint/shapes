@@ -8,6 +8,7 @@
 #include "angleselect.h"
 #include "bezier.h"
 #include "upsamplers.h"
+#include "constructorrepresentation.h"
 
 #include <ctype.h>
 #include <stack>
@@ -131,28 +132,6 @@ Lang::ElementaryPath2D::writePath( ostream & os ) const
 }
 
 void
-writeInputForm( ostream & os, const Concrete::Coords2D & p )
-{
-  static char buf[25];
-
-  os << "(" ;
-  if( p.x_ < Concrete::ZERO_LENGTH )
-    {
-      os << "~" ;
-    }
-  sprintf( buf, "%.2fbp", fabs( p.x_.offtype< 1, 0 >( ) ) );
-  os << buf ;
-  os << "," ;
-  if( p.y_ < Concrete::ZERO_LENGTH )
-    {
-      os << "~" ;
-    }
-  sprintf( buf, "%.2fbp", fabs( p.y_.offtype< 1, 0 >( ) ) );
-  os << buf ;
-  os << ")" ;
-}
-
-void
 Lang::ElementaryPath2D::writeInputForm( ostream & os ) const
 {
   for( const_iterator i = begin( ); i != end( ); ++i )
@@ -163,12 +142,12 @@ Lang::ElementaryPath2D::writeInputForm( ostream & os ) const
 	}
       if( (*i)->rear_ != (*i)->mid_ )
 	{
-	  ::writeInputForm( os, *(*i)->rear_ );
+	  os << Helpers::droolFormat( *(*i)->rear_ ) << "<" ;
 	}
-      ::writeInputForm( os, *(*i)->mid_ );
+      os << Helpers::droolFormat( *(*i)->mid_ );
       if( (*i)->front_ != (*i)->mid_ )
 	{
-	  ::writeInputForm( os, *(*i)->front_ );
+	  os << ">" << Helpers::droolFormat( *(*i)->front_ );
 	}
     }
   if( closed_ )
@@ -2991,6 +2970,7 @@ namespace MetaPDF
     void update_t_a1( Concrete::Time t );
     bool isEmpty( ) const;
 
+    void writeTimes( std::ostream & os ) const;
   private:
     static bool convexHullOneWayOverlap( const std::vector< const Concrete::Coords2D * > & poly1, const std::vector< const Concrete::Coords2D * > & poly2 );
   };
@@ -3010,6 +2990,13 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
     {
       throw Exceptions::OutOfRange( "The empty path does not intersect with anying." );
     }
+
+//   std::cerr << "p1: " ;
+//   this->writeInputForm( std::cerr );
+//   std::cerr << std::endl
+// 	    << "p2: " ;
+//   p2.writeInputForm( std::cerr );
+//   std::cerr << std::endl ;
 
   std::list< Bezier::ControlPoints< Concrete::Coords2D > > curvedSegments;
   typedef std::pair< Concrete::Coords2D *, Concrete::Coords2D * > StraightSegType;
@@ -3597,6 +3584,7 @@ Computation::IntersectionSegmentSections2D::convexHullOverlap( ) const
 bool
 Computation::IntersectionSegmentSections2D::convexHullOneWayOverlap( const std::vector< const Concrete::Coords2D * > & pointSet1, const std::vector< const Concrete::Coords2D * > & pointSet2 )
 {
+  Physical< 2, 0 > coincide_tol = 0.0001 * Computation::the_arcdelta * Computation::the_arcdelta;
   for( std::vector< const Concrete::Coords2D * >::const_iterator i0 = pointSet1.begin( ); i0 != pointSet1.end( ); ++i0 )
     {
       std::vector< const Concrete::Coords2D * >::const_iterator i1 = i0;
@@ -3611,6 +3599,10 @@ Computation::IntersectionSegmentSections2D::convexHullOneWayOverlap( const std::
 	   */
 	  const Concrete::Length tx = p1.x_ - p0.x_;
 	  const Concrete::Length ty = p1.y_ - p0.y_;
+	  if( tx * tx + ty * ty < coincide_tol )
+	    {
+	      continue;
+	    }
 	  bool counterClockwise;  // true when ( p0, p1 ) are ordered counter-clockwise around the interior.
 	  {
 	    std::vector< const Concrete::Coords2D * >::const_iterator i2 = pointSet1.begin( );
@@ -3640,7 +3632,7 @@ Computation::IntersectionSegmentSections2D::convexHullOneWayOverlap( const std::
 		  }
 		break;
 	      }
-	    continue; // the points where on different sides.
+	    continue; // the points were on different sides.
 	  checkDistance:
 
 	    bool allOutside = true;
@@ -3680,6 +3672,14 @@ Computation::IntersectionSegmentSections2D::isEmpty( ) const
 {
   return t_a1 < t_a0;
 }
+
+void
+Computation::IntersectionSegmentSections2D::writeTimes( std::ostream & os ) const
+{
+  os << Concrete::Time::offtype( t_a0 ) << "--" << Concrete::Time::offtype( t_a1 ) << ", "
+     << Concrete::Time::offtype( t_b0 ) << "--" << Concrete::Time::offtype( t_b1 ) << std::endl ;
+}
+
 
 Concrete::Speed
 Computation::IntersectionSegmentSections2D::maxSpeed_a( ) const

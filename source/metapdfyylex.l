@@ -833,7 +833,15 @@ double metaPDFstrtod( const char * str, char ** end )
 void
 MetaPDFScanner::doInclusion( )
 {
-  std::string path( searchFile( currentNeedFile + ".drext" ) );
+  std::string path;
+  if( currentNeedIsNeed )
+    {
+      path = searchFile( currentNeedFile + ".drext" );
+    }
+  else
+    {
+      path = searchFile( currentNeedFile + ".drool" );
+    }
 
   if( currentNeedIsNeed )
     {

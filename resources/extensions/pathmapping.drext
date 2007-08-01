@@ -5,7 +5,7 @@ pathmap:
        p2
        (continuation cont
          @handler_NoIntersection: \ pth1 pth2 .>
-              (continue cont (pth1.begin--pth1.end>(1%f^[angle (-pth1.end.rt)]))--((1%f^[angle (-pth2.begin.t)])<pth2.begin--pth2.end))
+              (continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rt)]))--((1%C^[angle (-pth2.begin.t)])<pth2.begin--pth2.end))
          |
          {
            t: [debuglog_after `found´ ...][][debuglog_before `search...´ ...][][intersection p1 p2]
