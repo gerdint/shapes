@@ -1,0 +1,87 @@
+tt { font-size: 1.3em;
+     font-weight: normal;
+}
+
+img {/* border style for all images */
+      border: 0;
+      }
+
+img.b {/* replacement for <br /> after images */
+        display: block; /* forces line break for content after */
+        }
+
+img.t {/* top margin control */
+        margin-top: 0.8em;
+        }
+
+img.g53 {/* scalable em 53 */
+          width: 3.3em;
+          height: 3.3em;
+          }
+
+img.g32 {/* scalable em 32 */
+          width: 2em;
+          height: 2em;
+          }
+
+img.g45 {/* scalable em 45 */
+          width: 12em;
+          height: 15em;
+          }
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 					Tahoma, Verdana, sans-serif;
+	font-weight:					normal;
+	color: 					#3A5E92;
+	margin-top:					0.8em;	
+	margin-bottom:				0.2em;	
+}
+
+h1 {
+	font-size: 					2em;
+	line-height:					normal;
+	margin-top:					0;
+}
+h2 {
+	font-size: 					1.6em;
+	line-height:					normal;	
+	margin-top:					1.2em;
+}
+
+h3 {
+	font-size: 					1.3em;
+	margin-top:					1.2em;
+}
+
+h4 {
+	font-size: 					1em;
+	font-weight:					bold;
+}
+
+h5 {
+	font-size: 					1em;
+}
+
+h2.puff {
+	font-size: 					1.6em;
+	font-weight:					bold;
+	color: 					#000;
+	padding: 					0.1em 0 0 0;
+	margin:					0.1em 0 0 0;
+}
+
+h3.puff {
+	font-size: 					1.3em;
+	font-weight:					bold;
+	color: 					#000;
+	padding: 					0.1em 0 0 0;
+	margin:					0.1em 0 0 0;
+}
+
+codelines { font-family: courier margin-left: 2em; }
+inline    { font-family: courier }
+funname   { font-family: courier }
+typename  { font-style: italic; font-weight: bold; }
+varname   { font-style: italic; }
+constname { font-weight: bold; }
+filename  { font-family: sans-serif font-style: italic; }
