@@ -78,16 +78,23 @@ h3.puff {
 	margin:					0.1em 0 0 0;
 }
 
-codelines p, inline, funname
+body { font-size: 12pt }
+
+pre, inline, funname, syntaxname
 { 
   font-family: courier;
+  font-size: 10pt
 }
 
-codelines { font-size: 80%; }
-codelines p { padding-left: 1.5em; margin: 0 0 0 0; }
+pre { margin-left: 1.5em; }
 inline    { }
 funname   { }
 typename  { font-style: italic; font-weight: bold; }
 varname   { font-style: italic; }
 constname { font-weight: bold; }
 filename  { font-family: sans-serif; font-style: italic; }
+
+syntaxname  { font-style: italic; color: #F0F; }
+bnf  { font-size: 140%; color: #00F; }
+
+remark p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
