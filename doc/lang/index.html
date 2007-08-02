@@ -30,10 +30,10 @@
 <h3>File Inclusion</h3>
 <p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is <inline>##needs <filename>filenamebase</filename> [: <filename>directory</filename>]</inline>, which <em>must appear at the beginning of a line</em>.  The syntax for <inline>##include</inline> is analogous, and the whitespace after the colon is mandatory, like this:</p>
 <codelines>
-##needs blockdraw<br>
-##needs book_settings : ~/Library/Drool/Project Settings<br>
-##include background<br>
-##include foreground<br>
+<p>##needs blockdraw</p>
+<p>##needs book_settings : ~/Library/Drool/Project Settings</p>
+<p>##include background</p>
+<p>##include foreground</p>
 </codelines>
 <p></p>
 
@@ -85,7 +85,7 @@
 
 <p>A new unit is defined as follows.  The point used by TeX is taken as an example.  The new unit will be called <inline>tex</inline>, and the following appears <em>at the beginning of a line</em>:<br>
 <codelines>
-##unit tex = 0.996264009963bp<br>
+<p>##unit tex = 0.996264009963bp</p>
 </codelines>
 </p>
 
@@ -115,8 +115,8 @@
 <tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Dear Drooler¢n¢nMulti-line,,,´</inline></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><codelines>`<br>Dear Drooler,<br><br>Multi-line...<br>´</codelines></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><codelines>`Dear Drooler,<br><br>Multi-line...´</codelines></td> <td></td> <td>Yes, but not recommended</td> </tr>
+<tr> <td><codelines><p>`</p><p>Dear Drooler,</p><p></p><p>Multi-line...</p><p>´</p></codelines></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><codelines><p>`Dear Drooler,</p><p></p><p>Multi-line...´</p></codelines></td> <td></td> <td>Yes, but not recommended</td> </tr>
 </table>
 <p></p>
 
@@ -235,9 +235,9 @@
 
 <p>There are true (pure) functions, non-pure functions, and horrible procedures, all of which are constructed similarly, but differ in how they are applied and what they are allowed to do.  First, pure functions will be discussed in detail.  Then, non-pure functions and procedures will be presented in terms of how they differ from pure functions.</p>
 
-<p>Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already)):</p>
+<p>Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already):</p>
 <codelines>
-\ x y .> [sqrt x*x + y*y]<br>
+<p>\ x y .> [sqrt x*x + y*y]</p>
 </codelines>
 
 
@@ -274,10 +274,10 @@
 <p>After all, Drool is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
 
 <p>Remember <funname>immerse</funname> and <funname>facing</funname>, and in particular the <em>scale</em> and <em>distort</em> options to <funname>facing</funname>.  The following is quite nice:
-<codelines>
-  facing: [../facing scale:true distort:true ...]<br>
-</codelines>
 </p>
+<codelines>
+<p>facing: [../facing scale:true distort:true ...]</p>
+</codelines>
 
 <h2>Hot Values</h2>
 <p>Warm bindings stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
