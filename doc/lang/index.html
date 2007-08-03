@@ -10,6 +10,36 @@
 <h1>Language reference</h1>
 <p>Without a reference documentation, the lanugage would not be defined.  On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is being ready for public use.</p>
 
+<h2>Notation</h2>
+<p>This section describes the notation used to document the language.</p>
+
+<table>
+<tr> <th>Concept</th> <th>Example</th> <th>Remark</th> </tr>
+<tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
+<tr> <td>Variable or state</td> <td><varname>stroke</varname>, <varname>•page</varname></td> <td></td> </tr>
+<tr> <td>Replacable dito</td> <td><varname class="replacable">some_var</varname>, <varname class="replacable">•destination</varname></td> <td></td> </tr>
+<tr> <td>Formal parameter name</td> <td><paramname>head</paramname></td> <td></td> </tr>
+<tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
+<tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
+<tr> <td>Type name</td> <td><typename>Path2D</typename></td> <td>Not yet supported by the language.</td> </tr>
+<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Defined by flex version 2.5.4.</td> </tr>
+<tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
+<tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
+</table>
+
+<p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntaxname>basicf-float</syntaxname><bnf>;</bnf><syntaxname>unit</syntaxname></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>
+
+<p>To denote that a piece of syntax allows expression that evaluate to a certain type, the <bnf>::</bnf> notation is used, like this:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+</table>
+
+<p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class=replacable>SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</table>
+
+
 <h1>Files</h1>
 <p>Before going into the language itself, let us introduce a few definitions relating to files.</p>
 
@@ -29,7 +59,11 @@
 <p>These are two very basic functions of the scanner, and have in common that they have nothing to do with the <em>meaning</em> of program code, but only where (not) to <em>find</em> the code.</p>
 
 <h3>File inclusion</h3>
-<p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is <inline>##needs <filename>filenamebase</filename> [: <filename>directory</filename>]</inline>, which <em>must appear at the beginning of a line</em>.  The syntax for <inline>##include</inline> is analogous, and the whitespace after the colon is mandatory, like this:</p>
+<p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is</p>
+<pre>
+##needs <filename class="replacable">filenamebase</filename> <bnf>(</bnf>: <bnf>_</bnf> <filename class="replacable">directory</filename><bnf>)?</bnf>
+</pre>
+<p>which <em>must appear at the beginning of a line</em> (note the mandatory whitespace after the colon).  The syntax for <inline>##include</inline> is analogous, like this:</p>
 <pre>
 ##needs blockdraw
 ##needs book_settings : ~/Library/Drool/Project Settings
@@ -51,6 +85,12 @@
 <p>Here the different scanner tokens that directly define values are described.</p>
 
 <h3>Floats</h3>
+<table cellspacing="5">
+<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td></tr>
+<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname> <bnf>|</bnf> <syntaxname>basic-float</syntaxname>°</inline></td></tr>
+</table>
 <p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and finally an optional sequence of decimal digits.  A degree sign can be appended, effectively multiplying the preceding float by pi/180.  Examples are given below.</p>
 
 <table cellspacing="5">
@@ -70,25 +110,32 @@
 <p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
 
 <h3>Lengths</h3>
+<table cellspacing="5">
+<tr> <td><syntaxname>length</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Length</typename></td></tr>
+<tr> <td><syntaxname>length</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname><bnf>;</bnf><syntaxname>length-unit</syntaxname></inline></td></tr>
+</table>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
 
-<p>The following lengths are provided by the system: <inline>mm</inline>, <inline>cm</inline>, <inline>m</inline>, <inline>bp</inline> (big point, also called <em>PostScript point</em>), and <inline>in</inline>.</p>
+<p>The following lengths are provided by the system: <lengthunit>mm</lengthunit>, <lengthunit>cm</lengthunit>, <lengthunit>m</lengthunit>, <lengthunit>bp</lengthunit> (big point, also called <em>PostScript point</em>), and <lengthunit>in</lengthunit>.</p>
 
 <table cellspacing="5">
 <tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid length?</b></td> </tr>
 <tr> <td><inline>2.5cm</inline></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><inline>2.5pt</inline></td> <td></td> <td>No (unless the unit <inline>pt</inline> is defined)</td> </tr>
+<tr> <td><inline>2.5pt</inline></td> <td></td> <td>No (unless the unit <lengthunit>pt</lengthunit> is defined)</td> </tr>
 <tr> <td><inline>~3mm</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>3 mm</inline></td> <td></td> <td>No (space not allowed)</td> </tr>
 <tr> <td><inline>180°mm</inline></td> <td></td> <td>No (degree sign not allowed)</td> </tr>
 </table>
 <p></p>
 
-<p>A new unit is defined as follows.  The point used by TeX is taken as an example.  The new unit will be called <inline>tex</inline>, and the following appears <em>at the beginning of a line</em>:<br>
+<p>A new unit is defined using the following syntax, which must appear <em>at the beginning of a line</em>:</p>
+<pre>
+##unit <lengthunit class="replacable">new_unit</lengthunit> = <syntaxname>length</syntaxname>
+</pre>
+<p>The point used by TeX is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:</p>
 <pre>
 ##unit tex = 0.996264009963bp
 </pre>
-</p>
 
 <h3>Strings</h3>
 <p>The string syntax in Drool is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
@@ -96,7 +143,7 @@
 <p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
 
 <table cellspacing="5">
-<tr> <td><b>Escape sequence</b></td> <td width="20"></td> <td><b>Resulting character</b></td> </tr>
+<tr align="left"> <th>Escape sequence</th> <td width="20"></td> <th>Resulting character</th> </tr>
 <tr> <td><inline>¢¢</inline></td> <td></td> <td>¢</td> </tr>
 <tr> <td><inline>¢`</inline></td> <td></td> <td>`</td> </tr>
 <tr> <td><inline>¢´</inline></td> <td></td> <td>´</td> </tr>
@@ -108,7 +155,7 @@
 <p>It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:</p>
 
 <table cellspacing="5">
-<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid string?</b></td> </tr>
+<tr align="left"> <th>Token</th> <td width="20"></td> <th>Valid string?</th> </tr>
 <tr> <td><inline>`Hi there´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Drool string: `Hi there´´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Boing!¢b´</inline></td> <td></td> <td>No (no such escape sequence)</td> </tr>
@@ -132,13 +179,14 @@ Multi-line...´
 <p></p>
 
 <h3>Booleans</h3>
-<pre>
-<syntaxname>boolean</syntaxname> <bnf>→</bnf> true <bnf>|</bnf> false
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>boolean</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Boolean</typename></td></tr>
+<tr> <td><syntaxname>boolean</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+</table>
 
 <p>The valid Booleans are listed below.</p>
 <table cellspacing="5">
-<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid Boolean?</b></td> </tr>
+<tr align="left"> <th>Token</th> <td width="20"></td> <th>Valid Boolean?</th> </tr>
 <tr> <td><inline>false</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>true</inline></td> <td></td> <td>Yes</td> </tr>
 </table>
@@ -148,7 +196,7 @@ Multi-line...´
 <p>Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:</p>
 
 <table cellspacing="5">
-<tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid Integer?</b></td> </tr>
+<tr align="left"> <th>Token</th> <td width="20"></td> <th>Valid Integer?</th> </tr>
 <tr> <td><inline>'13</inline></td> <td></td> <td>Yes (= 13)</td> </tr>
 <tr> <td><inline>'~5</inline></td> <td></td> <td>Yes (= -5)</td> </tr>
 <tr> <td><inline>'0xFF</inline></td> <td></td> <td>Yes (= 255)</td> </tr>
@@ -159,6 +207,9 @@ Multi-line...´
 <p></p>
 
 <h3>Identifiers</h3>
+<table cellspacing="5">
+<tr> <td><syntaxname>identifier</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>{LowerCaseLetter}({Letter}|[0-9])*</lexerregexp></td></tr>
+</table>
 <p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
 
 <p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9, the underscore, and the question mark.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.  As of today, identifiers may neither begin with a capital letter.  Instead, a capital letter indicates a type name.</p>
@@ -174,13 +225,14 @@ Multi-line...´
 <p></p>
 
 <h3>Symbols</h3>
-<pre>
-<syntaxname>symbol</syntaxname> <bnf>→</bnf> '<syntaxname>identifier</syntaxname>
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>symbol</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Symbol</typename></td></tr>
+<tr> <td><syntaxname>symbol</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>'<syntaxname>identifier</syntaxname></inline></td></tr>
+</table>
 <p>Note that there must not be any whitespace after the apostrophe.</p>
 
 <p>Symbols are entered as the apostrophe followed by an identifier.
-<table cellspacing="5">
+<table>
 <tr> <td><b>Token</b></td> <td width="20"></td> <td><b>Valid symbol?</b></td> </tr>
 <tr> <td><inline>'foo</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>'2dup</inline></td> <td></td> <td>No (<inline>2dup</inline> is not an identifier)</td> </tr>
@@ -193,18 +245,17 @@ Multi-line...´
 <p>This section describes syntax that denotes value construction in terms of other values and expressions, whithout doing so via a usual function call.  Values that are constructed by calling a library function are described elsewhere.  As an exception, class construction is not defined here either.</p>
 
 <h3>Float pairs and triples</h3>
-<p>Float pairs and triples are useful generalizations of directions in 2D and 3D, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
-
-<p>The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  See the following table:</p>
 
 <table cellspacing="5">
-<tr> <td><b>Syntax</b></td> <td width="20"></td> <td><b>Constructs a...</b></td> </tr>
-<tr> <td><inline>( <syntaxname>float-expr</syntaxname>, <syntaxname>float-expr</syntaxname> )</inline></td> <td></td> <td>Float pair</td> </tr>
-<tr> <td><inline>( <syntaxname>float-expr</syntaxname>, <syntaxname>float-expr</syntaxname>, <syntaxname>float-expr</syntaxname> )</inline></td> <td></td> <td>Float triple</td> </tr>
+<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatPair</typename></td></tr>
+<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>float-triple</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatTriple</typename></td></tr>
+<tr> <td><syntaxname>float-triple</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
 </table>
-<p></p>
 
-<p>The following table gives a few examples.</p>
+<p>Float pairs and triples are useful generalizations of directions in 2D and 3D, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
+
+<p>The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  The following table gives a few examples.</p>
 
 <table cellspacing="5">
 <tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Valid construct?</b></td> </tr>
@@ -214,24 +265,34 @@ Multi-line...´
 </table>
 <p></p>
 
+<h3>Offsets</h3>
+<p>Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>offset</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>OffsetLength</typename></td></tr>
+<tr> <td><syntaxname>offset</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><typename>LengthLike</typename></td> <td><bnf>=</bnf></td> <td><inline> <typename>Length</typename> | <typename>OffsetLength</typename></inline></td></tr>
+</table>
 
 <h3>Coordinates in 2D and 3D</h3>
 <p>In this context, 2D and 3D refer to the perceivable space (3D) and plane (2D).  Coordinates are never explicitly associated with a base frame, which would imply that coordinates denoted a particular point in the perceivable spaces.  Rather, coordinates are always relative, possibly with the exception of when graphics are laid out on the output plane.  However, even when graphics are placed on the output plane, they remain relative to an artificial origin, and this is particularly obvious when the output's media box is determined <em>after</em> the contents of the output has been laid out.</p>
 
 <p>That said, we can drop the distinction of the two types of coordinates, and it is, for example, always permissible to add coordinates.  The basic way to construct coordinates is similar to how pairs/triples are constructed, but with lengths instead of floats.  One notable exception to this rule is that if one of the lengths in 2D are zero, it may be given as the <em>float</em> zero.  Coordinates may also be constructed as relative an undetermined base frame, please refer to the documentation on path construction for how the base frame may be determined later.</p>
 
-<p>The table below lists valid non-relative constructs.</p>
+<p>The unary plus may be used either to construct offsets on a per-dimension level, or on a complete coordinates expression.</p>
 
+<p>The following table below lists the valid constructs.</p>
 <table cellspacing="5">
-<tr> <td><b>Syntax</b></td> <td width="20"></td> <td><b>Constructs a...</b></td> </tr>
-<tr> <td><inline>( <syntaxname>length-expr</syntaxname>, <syntaxname>length-expr</syntaxname> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
-<tr> <td><inline>( <syntaxname>length-expr</syntaxname>, <syntaxname>zero-float-expr</syntaxname> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
-<tr> <td><inline>( <syntaxname>zero-float-expr</syntaxname>, <syntaxname>length-expr</syntaxname> )</inline></td> <td></td> <td>Coordinates in 2D</td> </tr>
-<tr> <td><inline>( <syntaxname>length-expr</syntaxname>, <syntaxname>length-expr</syntaxname>, <syntaxname>length-expr</syntaxname> )</inline></td> <td></td> <td>Coordinates in 3D</td> </tr>
+<tr> <td><syntaxname>coords-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord2D</typename></td></tr>
+<tr> <td><syntaxname>coords-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, 0 )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-2D</syntaxname> )</inline></td></tr>
+<tr> <td><syntaxname>coords-3D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord3D</typename></td></tr>
+<tr> <td><syntaxname>coords-3D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-3D</syntaxname> )</inline></td></tr>
 </table>
-<p></p>
 
-<p>Relative coordinates are constructed using the unary plus operator.  The unary plus may be used either on a per-dimension level, or on a complete coordinates expression.  Some examples are given in the table below.</p>
+<p>Some examples are given in the table below.</p>
 
 <table cellspacing="5">
 <tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Valid construct?</b></td> </tr>
@@ -257,48 +318,44 @@ Multi-line...´
 <pre>
 \ x y .> [sqrt x*x + y*y]
 </pre>
-<p>This fits into</p>
-<pre>
-<syntaxname>function</syntaxname> <bnf>→</bnf> \ <bnf>(</bnf> <syntaxname>identifier</syntaxname> <bnf>|</bnf> <syntaxname>named-parameter</syntaxname> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> <syntaxname>expr</syntaxname>
-</pre>
-<p>Here,</p>
-<pre>
-<syntaxname>named-parameter</syntaxname> <bnf>→</bnf> <syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname>
-</pre>
-and
-<pre>
-<syntaxname>sink</syntaxname> <bnf>→</bnf> &lt;&gt; <syntaxname>identifier</syntaxname>
-</pre>
+<p>This fits into (note that there is only a small difference between the syntax for functions and procedures)</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>function</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Function</typename></td></tr>
+<tr> <td><syntaxname>function</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <syntaxname>identifier</syntaxname> <bnf>|</bnf> <syntaxname>named-parameter</syntaxname> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>procedure</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Procedure</typename></td></tr>
+<tr> <td><syntaxname>procedure</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <syntaxname>identifier</syntaxname> <bnf>|</bnf> <syntaxname>named-parameter</syntaxname> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> ! <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>named-parameter</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>sink</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntaxname>identifier</syntaxname></inline></td></tr>
+</table>
 
-<p>Procedures are constructed very similar to how functions are constructed:</p>
-<pre>
-<syntaxname>procedure</syntaxname> <bnf>→</bnf> \ <bnf>(</bnf> <syntaxname>argument-param</syntaxname> <bnf>|</bnf> <syntaxname>state-param</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> ! <syntaxname>expr</syntaxname>
-</pre>
-<p>The difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
+<p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
 
 <h3>Structures</h3>
 <p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a href="#funapply">function application</a> for an explanation of <syntaxname>named-expr</syntaxname>, and to see how structures may be used.</p>
 
-<pre>
-<syntaxname>struct-expr</syntaxname> <bnf>→</bnf> (&gt; <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> &lt;)
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>structure</syntaxname></td> <td><bnf>::</bnf></td> <td>&ldquo;<typename>Structure</typename>&rdquo;</td></tr>
+<tr> <td><syntaxname>structure</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> &lt;)</inline></td></tr>
+</table>
+
+<p>Note that the type of a structure is a complex type, which we don't bother to write out here.</p>
+
 
 <h2><a name="funapply">Function application and evaluated cuts</a></h2>
 <p>The basic syntax for applying (or <em>calling</em>) functions is borrowed from the Scheme language.  However, there is a predefined set of operators with fixed priorities that allow exceptions to this rule.  In addition, special syntax is used when a function is applied over a structure, and there is syntactic sugar for calling functions of just one argument.  A similar operation to calling a function is to define a new function by providing values for only some of the arguments — this is referred to as an <a href="http://srfi.schemers.org/srfi-26/srfi-26.html"><em>evaluated cut</em></a>.</p>
 
 <h3>Basic function application</h3>
-<p>The general form of a function application is</p>
-<pre>
-<syntaxname>call-expr</syntaxname> <bnf>→</bnf> [ <syntaxname>fun-expr</syntaxname> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]
-</pre>
-<p>Here, <syntaxname>fun-expr</syntaxname> is simply an expression that evaluates to a function, or some other object which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The following explanation of the syntax <syntaxname>arg-item</syntaxname> applies only when <syntaxname>fun-expr</syntaxname> evaluates to an ordinary function.</p>
+<p>Besides ordinary functions, there are some other objects which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The general form of a function application is</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>basic-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+<tr> <td><syntaxname>arg-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname> <bnf>|</bnf> <syntaxname>named-expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>named-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>|</bnf> <syntaxname>named-state</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>named-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname></inline></td></tr>
+<tr> <td><typename>Applicable</typename></td> <td><bnf>=</bnf></td> <td><typename>Function</typename> <bnf>|</bnf> <typename>AffineTransform</typename> <bnf>|</bnf> <typename>Path</typename></td> </tr>
+</table>
 
-<p>The syntax <syntaxname>arg-item</syntaxname> and <syntaxname>state-item</syntaxname> can each be either <em>ordered</em> or <em>named</em>:</p>
-<pre>
-<syntaxname>arg-item</syntaxname> <bnf>→</bnf> <syntaxname>expr</syntaxname> <bnf>|</bnf> <syntaxname>named-expr</syntaxname>
-<syntaxname>state-item</syntaxname> <bnf>→</bnf> <syntaxname>state</syntaxname> <bnf>|</bnf> <syntaxname>named-state</syntaxname>
-</pre>
-<p>but there is a rule for how these may be ordered.  The rule exist to avoid confusing situations; not because it is necessary to define the semantics.  The rule is that ordered arguments (represented by <syntaxname>expr</syntaxname>) must go before named arguments (represented by <syntaxname>named-expr</syntaxname>), and ordered states (represented by <syntaxname>state</syntaxname>) before named states (represented by <syntaxname>named-state</syntaxname>).</p>
+<p>The syntax <syntaxname>arg-item</syntaxname> and <syntaxname>state-item</syntaxname> defined above can each be either <em>ordered</em> (that is, not named) or <em>named</em>, but there is a rule for how these may be ordered.  The rule exist to avoid confusing situations; not because it is necessary to define the semantics.  The rule is that ordered arguments (represented by <syntaxname>expr</syntaxname>) must go before named arguments (represented by <syntaxname>named-expr</syntaxname>), and ordered states (represented by <syntaxname>state</syntaxname>) before named states (represented by <syntaxname>named-state</syntaxname>).</p>
 
 <remark>
 <p>Of the conceivable semantics that could be defined if named arguments were allowed to appear before ordered arguments were allowed, two will be ruled out here.  First, one could simply ignore the order of appearance, and treat all named arguments just as if they appeared after the ordered arguments.  This would obscure the actual position of ordered arguments without adding any power to the language.  Second, one could add some power to the language by interpreting the position of ordered arguments in view of what unbound arguments there are, given the named and ordered arguments seen so far in a left to right scan.  However, such semantics would also obscure the actual position of ordered arguments severely.</p>
@@ -308,12 +365,6 @@ and
 
 <p>It is not allowed to specify the same argument or state more than once by name.</p>
 
-<p>Before we go into semantics, let us just define the syntax introduced above: (<syntaxname>expr</syntaxname>, <syntaxname>identifier</syntaxname>, and <syntaxname>state</syntaxname> have been defined previously)</p>
-<pre>
-<syntaxname>named-expr</syntaxname> <bnf>→</bnf> <syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname>
-<syntaxname>named-state</syntaxname> <bnf>→</bnf> <syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname>
-</pre>
-
 <p>Recall that the formal parameters of a function is an ordered list where each element has a name (with some exceptions).  To define the semantics of a function call, it must be described how items in the application is mapped to formal parameters.  Let us first consider the passing of arguments (as opposed to states).  First, the ordered arguments in the application are mapped to the corresponding positions in the list of formal parameters.  Then, the formal parameters which have not been specified by ordered arguments may be addressed by named arguemnts.  Finally, default values are used for formal parameters which are still unassigned.  It is an error if an unassigned formal parameter has no default value.</p>
 
 <p>The semantics for passing states is analogous to that of passing arguments.</p>
@@ -322,36 +373,33 @@ and
 
 <h3>Procedure application</h3>
 <p>The general form of a procedure application is</p>
-<pre>
-<syntaxname>proc-call</syntaxname> <bnf>→</bnf> [ ! <syntaxname>proc-expr</syntaxname> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>proc-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><typename>Procedure</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+</table>
 <p>Here, <syntaxname>fun-expr</syntaxname> is simply an expression that evaluates to a procedure.  Recall that a procedure may access dynamic states, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  Besides this difference, the semantics are the same as that of a function application.</p>
 
 <h3>Unary function application</h3>
 <p>To apply a function to a single argument, one may use</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [] <syntaxname>expr</syntaxname>
-</pre>
-<p>or</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [] <syntaxname>named-expr</syntaxname>
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>unary-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>named-expr</syntaxname></inline></td></tr>
+</table>
 <p>Note that the <inline>[]</inline> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.</p>
 
 <p>Postfix alternatives for unary application may be introduced in the future.</p>
 
 <h3>Structures in function application</h3>
 <p>Structures are special values that contain ordered as well as named components.  Applying a function to a structure has the same semantics as if the ordered and named components were spliced into a basic function application.  The syntax for calling a function with a structure is:</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [...] &lt;&gt; <syntaxname>struct-expr</syntaxname>
-</pre>
-<p>Note that the <inline>[...]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>splice-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+</table>
+<p>Note that the <inline>[]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.</p>
 
 <h3>Basic evaluated cuts</h3>
 <p>The syntax for the basic evaluated cut is simple:</p>
-<pre>
-[ <syntaxname>fun-expr</syntaxname> <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> ... ]
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>basic-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> ... ]</inline></td></tr>
+</table>
 <p>Note that states cannot be bound in evaluated cuts, since this would store a reference to the state in a manner that does not match a functional language.  Also note that, as in function application, ordered arguments must be passed before named arguments.</p>
 
 <p>The semantics of the evaluated cut may not be quite as everone expects.  Ordered arguments are simply mapped to the corresponding positions in the callee's list of formal parameters, and are bound without possibility to override in the evaluated cut.  Named arguments, however, are not actually bound to the addressed formal parameters, but only assigns (or replaces) the default value for that parameter.  Hence, named arguments in the evaluated cut are possible to override.</p>
@@ -360,20 +408,17 @@ and
 
 <h3>Unary evaluated cuts</h3>
 <p>The following allows evaluated cuts to be constructed as easy as an unary function application:</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [...] <syntaxname>expr</syntaxname>
-</pre>
-<p>or</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [...] <syntaxname>named-expr</syntaxname>
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>unary-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>named-expr</syntaxname></inline></td></tr>
+</table>
 <p>Note that the <inline>[...]</inline> must be written as a single token without whitespace.</p>
 
 <h3>Structures and evaluated cuts</h3>
 <p>The syntax to use a structure for an evaluated cut is</p>
-<pre>
-<syntaxname>fun-expr</syntaxname> [...] &lt;&gt; <syntaxname>struct-expr</syntaxname>
-</pre>
+<table cellspacing="5">
+<tr> <td><syntaxname>splice-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+</table>
 
 
 <h2>Bindings</h2>
@@ -403,7 +448,7 @@ and
 <h2>Graphics functions</h2>
 <p>After all, Drool is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
 
-<p>Remember <funname>immerse</funname> and <funname>facing</funname>, and in particular the <em>scale</em> and <em>distort</em> options to <funname>facing</funname>.  The following is quite nice:
+<p>Remember <varname>immerse</varname> and <varname>facing</varname>, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <varname>facing</varname>.  The following is quite nice:
 </p>
 <pre>
 facing: [../facing scale:true distort:true ...]

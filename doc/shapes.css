@@ -80,17 +80,21 @@ h3.puff {
 
 body { font-size: 12pt }
 
-pre, inline, funname, syntaxname
+pre, inline, varname, paramname, lengthunit, lexerregexp, syntaxname, bnf
 { 
   font-family: courier;
   font-size: 10pt
 }
+varname.replacable, paramname.replacable, typename.replacable, constname.replacable, filename.replacable, lengthunit.replacable
+{ color: #CC6600; }
 
 pre { margin-left: 1.5em; }
 inline    { }
-funname   { }
+varname   { }
+lengthunit{ text-decoration: overline; }
+paramname { font-style: italic; }
 typename  { font-style: italic; font-weight: bold; }
-varname   { font-style: italic; }
+lexerregexp { color: F00; font-weight: bold; }
 constname { font-weight: bold; }
 filename  { font-family: sans-serif; font-style: italic; }
 
