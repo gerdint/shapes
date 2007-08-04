@@ -376,7 +376,7 @@ Ast::SpecialLength::eval( Kernel::EvalState * evalState ) const
     }
   if( ! sort_ & Computation::SPECIALU_DIST )
     {
-      throw Exceptions::InternalError( strrefdup( "The special unit is neither based on inflexsion or distance" ) );
+      throw Exceptions::InternalError( strrefdup( "The special unit is neither based on inflexion or distance" ) );
     }
 
   double res = 1;

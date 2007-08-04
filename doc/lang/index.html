@@ -73,7 +73,7 @@
 <p>which <em>must appear at the beginning of a line</em> (note the mandatory whitespace after the colon).  The syntax for <inline>##include</inline> is analogous, like this:</p>
 <pre>
 ##needs blockdraw
-##needs book_settings : ~/Library/Drool/Project Settings
+##needs book_settings : ~/Library/Shapes/Project Settings
 ##include background
 ##include foreground
 </pre>
@@ -144,8 +144,36 @@
 ##unit tex = 0.996264009963bp
 </pre>
 
+<h3>Special units of length</h3>
+<p>Special units of lengths are used when constructing smooth paths.  Then, it is often desirable not to have to provide the distance to control points in terms of absolute distances, but one would rather specify the distance relative to the distance between the first and final interpolation point, and the angles from the first and final interpolation points to the intermediate control points.</p>
+
+<p>The most frequent use of special units of lengths is to assign the dynamic variable <varname>@defaultunit</varname>, see <a href="#pathconstruction">path construction</a>.</p>
+
+<p>Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:</p>
+<table cellspacing="5">
+<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
+<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
+<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
+<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
+<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
+<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+</table>
+<p>The meaning of the columns is the following.  If there is a check mark in the <em>Distance</em> column, then the distance between the first and last interpolation point is used as a base length.  If there is a check mark in the <em>Circelish</em> column, then the base length is multiplied by a factor based on the near angle, in such a way that circles are approximated well.  If there is a check mark under <em>Correction</em>, a correction factor is applied based on the difference between the near angle and the far angle; if both angles are the same, there is no correction.  If there is a check mark in the <em>No inflexion</em> column, then the distance to the intermediate control point is truncated to avoid inflexions, if necessary.  The unit which is not based on the distance between the first and last interpolation point is based on the inflexion limit instead.</p>
+<remark>
+<p>I know that the description of the special lengths is really bad.  I hope it will be better once I start documenting path construction in general.</p>
+</remark>
+
+<p>For instance, the following approximates a quarter of a circle well:</p>
+<pre>
+•page << [stroke (0cm,1cm)>(1%C^0°)--(1%C^90°)<(1cm,0cm)]
+</pre>
+
 <h3>Strings</h3>
-<p>The string syntax in Drool is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
+<p>The string syntax in Shapes is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
 
 <p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
 
@@ -164,21 +192,21 @@
 <table cellspacing="5">
 <tr align="left"> <th>Token</th> <td width="20"></td> <th>Valid string?</th> </tr>
 <tr> <td><inline>`Hi there´</inline></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Drool string: `Hi there´´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Shapes string: `Hi there´´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Boing!¢b´</inline></td> <td></td> <td>No (no such escape sequence)</td> </tr>
 <tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td></td> <td>No (Unbalanced delimiter)</td> </tr>
 <tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Dear Drooler¢n¢nMulti-line...´</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Dear Shaper¢n¢nMulti-line...´</inline></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><pre>
 `
-Dear Drooler,
+Dear Shaper,
 
 Multi-line...
 ´
 </pre></td> <td></td> <td>Yes</td> </tr>
 <tr> <td><pre>
-`Dear Drooler,
+`Dear Shaper,
 
 Multi-line...´
 </pre></td> <td></td> <td>Yes, but not recommended</td> </tr>
@@ -230,6 +258,20 @@ Multi-line...´
 <tr> <td><inline>_3abc</inline></td> <td></td> <td>No (digit after underscore in first position)</td> </tr>
 </table>
 <p></p>
+
+<h3>Dynamic variables</h3>
+<table cellspacing="5">
+<tr> <td><syntaxname>dyn-var</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+</table>
+
+<h3>State references</h3>
+<p>Note that state references are not expressions.</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> <bnf>|</bnf> <syntaxname>dyn-state</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>lex-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>dyn-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+</table>
+
 
 <h3>Symbols</h3>
 <table cellspacing="5">
@@ -448,7 +490,7 @@ Multi-line...´
 <h3>Variable definitions</h3>
 <table cellspacing="5">
 <tr> <td><syntaxname>variable-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname> ;</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>lex-state</syntaxname> ;</inline></td></tr>
 </table>
 <p>The latter form is at the same time a kind of state item, and as such it is always evaluated in the second phase of the code bracket evaluation..</p>
 
@@ -457,9 +499,9 @@ Multi-line...´
 <h3>State items</h3>
 
 <table cellspacing="5">
-<tr> <td><syntaxname>state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>state</syntaxname> : <bnf>&lt;</bnf><typename>Hot</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname>state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> : <bnf>&lt;</bnf><typename>Hot</typename><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>(</bnf> &lt;&lt; <syntaxname>expr</syntaxname> <bnf>)+</bnf>  </inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state</syntaxname> ;</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> ;</inline></td></tr>
 </table>
 <p>The state items are always evaluated in order of appearance in the code bracket (note also the special kind of variable definition involving a state).</p>
 
@@ -472,8 +514,8 @@ Multi-line...´
 <h3>Dynamic declarations</h3>
 
 <table cellspacing="5">
-<tr> <td><syntaxname>dynamic-variable-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dynvar</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntaxname>dynvar</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> dynamic <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>dynamic-variable-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> dynamic <syntaxname>expr</syntaxname></inline></td></tr>
 </table>
 <p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
 
@@ -498,36 +540,163 @@ dynamic @tex_bbox_grow_rel
 
 <p>Dynamic states is a language feature with subtleties.  At this time, they will not be further discussed.  Anyway, the syntax is:</p>
 <table cellspacing="5">
-<tr> <td><syntaxname>dynamic-state-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dynstate</syntaxname> <syntaxname>state</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>dynamic-state-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dyn-state</syntaxname> <syntaxname>state</syntaxname></inline></td></tr>
 </table>
 
 
 <h2>Bindings and scoping</h2>
-<p>Drool supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a binding can never be changed.</p>
+<p>Shapes supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a binding can never be changed.</p>
 
 <h3>Lexical binding</h3>
-<p>A <em>lexical binding</em> is a variable whose definition can easily be found by a look at the source code.  </p>
+<p>A <em>lexical binding</em> is a variable whose definition can (easily) be found by a look at the source code.  Code brackets and functions play an essential role for the semantics here.</p>
 
-<h2>The default unit</h2>
-<p>The default unit, which is used when constructing smooth paths, is an odd bird.  However, in fact it can be viewed as a function taken from a particular (parameterized) set of functions.  This section gives the details.</p>
+<p>Lexical binding is perhaps most easily understood from an implementation point of view.  Whenever an expression is evaluated, the current lexical scope is defined by the <em>(lexical) environment</em>.  The environment has its own bindings, that is, mapping from some identifiers to values, and a parent environment (with the exception of the global environment, which has no parent).  When a lexical variable is evaluated, it is searched in the current environment, and if it is found, the variable evaluates to the value mapped to.  If the variable is not found, the search continues in the parent environment, and so forth.  If the search continues to the global environment, and fails there, it is an error; the variable is not bound.  To understand this process in more detail, one must understand where in the source code new environments are set up, and how they are populated with mappings from identifiers to values.</p>
 
-<h2>Sequential construction</h2>
-<p>In order to provide some of the convenience that makes imperative languages popular, without sacrificing the functional binding semantics, Drool offers <em>sequential construction</em>.  This means that a variable can begin as a <em>warm binding</em>, and as long as it remains so the variable can be <em>inserted</em> to (compare the C++ insertion operator).  However, a warm variable does not denote a value, and cannot be used in expressions.  Then, the variable can be <em>frozen</em> (verb).  A <em>frozen</em> (adjective) variable is an ordinary binding.</p>
+<p>First, functions set up a new environment for the passed arguments when they are called.  The parent of the new environment is the environment that was in scope where the function was created (this is typically not the current environment where the function is called).  The body of the function is then evaluated in the new environment.  These rules simply ensure that the variables that were in scope were the function was created are also in scope when the body of the function is evaluated (except in case of shadowing).</p>
+
+<p>A classic example of how lexical scoping works is the <varname>addn</varname> function:</p>
+<pre>
+addn: \ n .> \ x .> x + n
+inc: [addn '1]
+•stdout << [inc '3]
+</pre>
+<p>The above program prints the integer 4.  Note that <varname>n</varname> must be in scope when <inline>x + n</inline> is evaluated, even though <varname>n</varname> is not in scope where <varname>inc</varname> is invoked.  What is important is that <varname>n</varname> is in scope where the function bound to <varname>inc</varname> was created.</p>
+
+<p>Second, every code bracket sets up a new environment, under the current environment.  The new environment is both home for bindings introduced in the code bracket, and becomes the current environment for the expressions evaluated in the code bracket.  This means that the following is a valid code bracket:</p>
+<pre>
+{
+  a: '1
+  b: a + '1
+  b
+}
+</pre>
+<p>So far, this seems similar to the semantics of <varname>let*</varname> in Scheme.  However, the following code bracket is equivalent:</p>
+<pre>
+{
+  b: a + '1
+  a: '1
+  b
+}
+</pre>
+<p>This reminds more of <varname>letrec</varname> in Scheme, but the reason it works has another explanation: laziness.  The variables <varname>b</varname> and <varname>a</varname> are bound to thunks before the expression <varname>b</varname> is evaluated.</p>
+
+<p>It is possible to <em>reach out</em> from the current lexical scope to circumvent <em>shadowing</em> bindings.  The syntax for this is</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>reach-out</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>../ <syntaxname>expr</syntaxname></inline></td></tr>
+</table>
+<p>In theory, the semantics of this is simple; evaluate <syntaxname>expr</syntaxname> in the lexical environment which is the parent of the current lexical environment.  However, sometimes a deeper understanding of the language is required to see how many generations one must walk up the chain of environments to avoid a given binding.  On the other hand, with this problem in mind, empty environments are never optimized away.</p>
+
+<p>As an example of reach out, suppose we regret how we defined the paramter <paramname>depth</paramname> long time ago.  Now we have to live with it since our function is part of a library with many users which we don't want to bother with the off-by-one change that would make our implementation of the function more natural.  The following is not an option, since the function may be called with named arguments:</p>
+<pre class="bad">
+\ off_by_one_depth .>
+  {
+    depth: off_by_one_depth - '1
+    /**
+     ** Rest of body.
+     **/
+  }
+</pre>
+<p>Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <paramname>depth</paramname>.  Then we could use a reach-out:</p>
+<pre>
+\ depth .>
+  {
+    /** Important!  We deal with the off-by-one mistake here, once and for all.
+     **/
+    depth: ../depth - '1
+
+    /**
+     ** Rest of body.
+     **/
+  }
+</pre>
+<p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
+
+
+<h3>Dynamic binding</h3>
+<p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>with-dynamic</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf> | <syntaxname>expr</syntaxname></inline></td></tr>
+</table>
+<p>(Note that the vertical bar is not part of the BNF structure, but is the operator that indicates a change of dynamic scope.)</p>
+
+<p>The semantics is simply that a new dynamic environment is set up under the current dynamic environment, and populated with the provided bindings.  So far, except that the bindings are provided though special values instead of by using special syntax, this is how code brackets work.  The difference is when it comes to functions.  Calling a function <em>does not</em> change the dynamic environment.  One can think of dynamic variables as a way of passing parameters to functions without explicitly providing them as arguments; the dynamic environment is always passed implicitly.</p>
+
+<p>Dynamic bindings are constructed with the following syntax:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>dynamic-bindings</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>DynamicBindings</typename></td></tr>
+<tr> <td><syntaxname>dynamic-binding</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>DynamicBinding</typename></td></tr>
+<tr> <td><syntaxname>dynamic-bindings</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBinding</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf> & <bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname>dynamic-binding</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>dyn-var</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dyn-var</syntaxname> : dynamic <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dyn-state</syntaxname> : <syntaxname>state</syntaxname></inline></td></tr>
+</table>
+
+<p>If a dynamic variable is bound to a <em>dynamic expression</em>, this expression is re-evaluated in the current dynamic environment each time the dynamic variable is accessed.  This way, one dynamic variable can be defined relative another dynamic variable.  For instance:</p>
+<pre>
+dynamic @smallskip identity 2cm
+dynamic @bigskip identity 5cm
+test: \ •dst .> { •dst << @bigskip << `¢n´ }
+@bigskip : dynamic 4 * @smallskip
+|
+{
+  [test •stdout]
+  @smallskip:1cm | [test •stdout]
+}
+[test •stdout]
+</pre>
+<p>The program prints <inline>8<lengthunit>cm</lengthunit></inline>, followed by <inline>4<lengthunit>cm</lengthunit></inline>, and finally <inline>5<lengthunit>cm</lengthunit></inline>.</p>
+
+<p>Dynamic variables are used extensively for controlling all parts of the graphics state.  For instance, if <varname>pth</varname> is a path to be stroked, the color and width of the stroke can be set as follows:</p>
+<pre>
+•page << @stroking:rgb_RED & @width:2cm | [stroke pth]
+</pre>
+<p>or, if there are several paths to be stroked with the same pen:</p>
+<pre>
+  @stroking:rgb_RED
+& @width:2cm
+|
+{
+  •page << [stroke pth1]
+  •page << [stroke pth2]
+}
+</pre>
 
 <h2>Continuations</h2>
-<p>Drool is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
+<p>Shapes is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
+
+<p>The reader is referred to the WWW for details on continuations and continuation passing style evaluation.  One place to start would be the documentation for <varname>call-with-current-continuation</varname> found in <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/doc/r5rs-9.html#Standard-procedures">R5RS</a>.  Here, we only describe the related syntax briefely.</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>with-escape-continuation</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( escape_continuation <syntaxname>identifier</syntaxname> <syntaxname>expr</syntaxname> )</inline></td></tr>
+<tr> <td><syntaxname>invoke-escape-continuation</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( escape_continue <syntaxname>identifier</syntaxname> <syntaxname>expr</syntaxname> )</inline></td></tr>
+</table>
+<p>The construct <syntaxname>with-escape-continuation</syntaxname> introduces an escape continuation in the dynamic environment (although the identifier does not look like a dynamic variable), and evaluates the expression in the new dynamic environment.</p>
+<p>To escape through an escsape continuation, the construct <syntaxname>invoke-escape-continuation</syntaxname> is used.  The identifier must refer to an escape continuation in dynamic scope, and evaluation continues by evaluating the new expression with the appropriate continuation.</p>
+
+<p>The keywords <inline>continuation</inline> and <inline>continue</inline> are reserved for future use.</p>
+
+<remark>
+<p>Even if continuations are presently handled in a way such that it cannot be determined if they are functions or not, I find it really obscuring to hide a continuation inside a function.  Hence, if continuations are made available more generally in the future, don't expect them to be wrapped in functions.  If a function that behaves like a continuation object in Scheme is needed, such a function will be easy to construct.</p>
+</remark>
 
 <h2>Classes and type information</h2>
-<p>The user can define new data types, here called <em>classes</em>.  Further, since Drool is dynamically typed, it sometimes becomes important to query and compare types.  Read on! </p>
+<p>Since Shapes is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
 
-<h2><a name="laziness">Laziness control</a></h2>
-<p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  This section describes the simple syntax and semantics used control this matter.</p>
+<h2>Expressions in general</h2>
+<p>There are many kinds of expressions.  An expression can be either <em>non-pure</em> or <em>pure</em> depending on whether it interacts with states or not.  An expression may also be <em>immediate</em>, wither because it is of a certain kind which is always immediate, or because the user has flagged it to be immediate for some reason.  Expressions that are non-pure or immediate cannot or must not be delayed, and are evaluated in the second phase of code bracket evaluation.  While non-purity is a property that a child can (and generally does) give to its parent in the abstract syntax tree, the immediate flag is never transferred between child and parent.</p>
+
+<h3><a name="laziness">Laziness control</a></h3>
+<p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  Delayed evaluation is prohibited by flagging an expression as <em>immediate</em>:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>immediate-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>!! <syntaxname>expr</syntaxname></inline></td></tr>
+</table>
+<p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
 <h1>System bindings</h1>
-<p>The language Drool comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
+<p>The language Shapes comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
 
 <h2>Graphics functions</h2>
-<p>After all, Drool is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
+<p>After all, Shapes is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
 
 <p>Remember <varname>immerse</varname> and <varname>facing</varname>, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <varname>facing</varname>.  The following is quite nice:
 </p>
@@ -535,8 +704,11 @@ dynamic @tex_bbox_grow_rel
 facing: [../facing scale:true distort:true ...]
 </pre>
 
+<h2>Operators</h2>
+<p>States stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
+
 <h2>Hot values</h2>
-<p>Warm bindings stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
+<p>States stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
 
 <h2>Type objects</h2>
 <p>This section simply contains a listing of the type objects (some of which can be thought of as interfaces) provided by the system.</p>
@@ -555,9 +727,9 @@ facing: [../facing scale:true distort:true ...]
 
 <h2>Graphics</h2>
 
-<h2>Tolerance settings</h2>
-
 <h2>Other</h2>
+
+<h1>Tolerance settings</h1>
 
 </body>
 </html>

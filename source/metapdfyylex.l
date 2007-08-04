@@ -397,13 +397,6 @@ Escape "¢"|"¤"
   return T_speciallength;
 }
 
-{Float}[\%][i3] {
-  char * end;
-  double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_NOINFLEX );
-  return T_speciallength;
-}
-
 {Float}[\%][d4] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
@@ -429,6 +422,13 @@ Escape "¢"|"¤"
   char * end;
   double val = metaPDFstrtod( yytext, & end );
   metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX  );
+  return T_speciallength;
+}
+
+{Float}[\%][i9] {
+  char * end;
+  double val = metaPDFstrtod( yytext, & end );
+  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_NOINFLEX );
   return T_speciallength;
 }
 
@@ -544,6 +544,8 @@ Escape "¢"|"¤"
 
 "continuation" { return T_continuation; }
 "continue" { return T_continue; }
+"escape_continuation" { return T_esc_continuation; }
+"escape_continue" { return T_esc_continue; }
 
 "class" { return T_class; }
 "__members__" { return T_members; }

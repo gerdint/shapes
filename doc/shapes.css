@@ -89,6 +89,7 @@ varname.replacable, paramname.replacable, typename.replacable, constname.replaca
 { color: #CC6600; }
 
 pre { margin-left: 1.5em; }
+pre.bad { color: #900; text-decoration: line-through; }
 inline    { }
 varname   { }
 lengthunit{ text-decoration: overline; }
