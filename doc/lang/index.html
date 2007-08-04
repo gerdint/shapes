@@ -22,7 +22,7 @@
 <tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
 <tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
 <tr> <td>Type name</td> <td><typename>Path2D</typename></td> <td>Not yet supported by the language.</td> </tr>
-<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Defined by flex version 2.5.4.</td> </tr>
+<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
 <tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
 <tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
 </table>
@@ -37,6 +37,13 @@
 <p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class=replacable>SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
 <table cellspacing="5">
 <tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</table>
+
+<p>The following character classes will be used later:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>LowerCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?π§]</lexerregexp></inline></td></tr>
+<tr> <td><syntaxname>UpperCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[A-Z]</lexerregexp></inline></td></tr>
+<tr> <td><syntaxname>Letter</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>LowerCaseLetter</syntaxname> <bnf>|</bnf> <syntaxname>UpperCaseLetter</syntaxname></inline></inline></td></tr>
 </table>
 
 
@@ -420,9 +427,86 @@ Multi-line...´
 <tr> <td><syntaxname>splice-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
 </table>
 
+<h2>Code bracket</h2>
+<p>The code bracket is a rather complicated kind of expression.  It is the home of many program elements, and its sementics is defined to avoid unnecessary nesting of scoping constructs.  The general form is</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>code-bracket</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>{ <syntaxname>bracket-item</syntaxname><bnf>*</bnf> }</inline></td></tr>
+<tr> <td><syntaxname>bracket-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>variable-definition</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>splicing-definition</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state-item</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-variable-declaration</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-state-declaration</syntaxname></inline></td></tr>
+</table>
 
-<h2>Bindings</h2>
-<p>Drool supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a bindings can never be changed.</p>
+<p>The top level semantics of the code brackets is defined by two phases.  In the first phase, all items in the bracket that can be evaluated at any time and without evaluation of sub-expressions, are evaluated.  This includes variable definitions whose right hand side can be delayed using a thunk.  Any items related to states are excluded from this phase.</p>
+
+<p<>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
+
+<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a href="#expressions">expressions</a> for the details of pure and non-pure expressions.</p>
+
+<h3>Variable definitions</h3>
+<table cellspacing="5">
+<tr> <td><syntaxname>variable-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname> ;</inline></td></tr>
+</table>
+<p>The latter form is at the same time a kind of state item, and as such it is always evaluated in the second phase of the code bracket evaluation..</p>
+
+<p>The semantics of the variable definitions is simple.  Bind the the variable to the value of expression, or freeze the state and bind to the final value of the state.  The former form is delayed unless the expression in the right hand side is immediate (see <a href="#laziness">laziness control</a>) or involves states or procedure applications.</p>
+
+<h3>State items</h3>
+
+<table cellspacing="5">
+<tr> <td><syntaxname>state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>state</syntaxname> : <bnf>&lt;</bnf><typename>Hot</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>(</bnf> &lt;&lt; <syntaxname>expr</syntaxname> <bnf>)+</bnf>  </inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state</syntaxname> ;</inline></td></tr>
+</table>
+<p>The state items are always evaluated in order of appearance in the code bracket (note also the special kind of variable definition involving a state).</p>
+
+<p>The first form introduces a state.  It requires a value of the special type <typename>Hot</typename> in the right hand side.  Values of this type has the special ability to spawn fresh states.  Note that a value of type <typename>Hot</typename> will always spawn identical fresh states, since being a <em>value</em> it has no internal state of its own.  On the other hand, it never spawns the <em>same</em> state twice, so each state it spawns lives its own life.</p>
+
+<p>The second form modifies the state.  Note that states may also be modified by <a href="#expressions">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
+
+<p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
+
+<h3>Dynamic declarations</h3>
+
+<table cellspacing="5">
+<tr> <td><syntaxname>dynamic-variable-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dynvar</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntaxname>dynvar</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> dynamic <syntaxname>expr</syntaxname></inline></td></tr>
+</table>
+<p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
+
+<p>A dynamic variable may also be bound to a dynamic expression at the top level, and this is obtained using the second form of the declaration.</p>
+
+<p>Typical dynamic variable declarations may not care about the possibility to use the filter for type and range checks, and look like this:</p>
+<pre>
+dynamic @tex_bbox_grow_abs identity 1bp
+dynamic @tex_bbox_grow_rel identity 1.01
+</pre>
+<p>A simple filter could look like this:</p>
+<pre>
+dynamic @tex_bbox_grow_rel
+  \ new .>
+    [if not [typeof new].isa[]Float
+      [error `Type mismatch for @tex_bbox_grow_rel: required a Float.´]
+      [if new <= 0
+        [error `Out of range error for @tex_bbox_grow_rel: required a positive value.´]
+        new]]
+  1.01
+</pre>
+
+<p>Dynamic states is a language feature with subtleties.  At this time, they will not be further discussed.  Anyway, the syntax is:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>dynamic-state-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dynstate</syntaxname> <syntaxname>state</syntaxname></inline></td></tr>
+</table>
+
+
+<h2>Bindings and scoping</h2>
+<p>Drool supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a binding can never be changed.</p>
+
+<h3>Lexical binding</h3>
+<p>A <em>lexical binding</em> is a variable whose definition can easily be found by a look at the source code.  </p>
 
 <h2>The default unit</h2>
 <p>The default unit, which is used when constructing smooth paths, is an odd bird.  However, in fact it can be viewed as a function taken from a particular (parameterized) set of functions.  This section gives the details.</p>
@@ -433,13 +517,10 @@ Multi-line...´
 <h2>Continuations</h2>
 <p>Drool is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
 
-<h2>Function Calls</h2>
-<p>Function calls can be either curried or complete, parameters can be arranged by order or name, and values can be passed either warm or cold.  This section describes these matters.</p>
-
 <h2>Classes and type information</h2>
 <p>The user can define new data types, here called <em>classes</em>.  Further, since Drool is dynamically typed, it sometimes becomes important to query and compare types.  Read on! </p>
 
-<h2>Laziness control</h2>
+<h2><a name="laziness">Laziness control</a></h2>
 <p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  This section describes the simple syntax and semantics used control this matter.</p>
 
 <h1>System bindings</h1>

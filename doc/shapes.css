@@ -80,7 +80,7 @@ h3.puff {
 
 body { font-size: 12pt }
 
-pre, inline, varname, paramname, lengthunit, lexerregexp, syntaxname, bnf
+pre, inline, varname, paramname, lengthunit, lexerregexp, syntaxname, typename, bnf
 { 
   font-family: courier;
   font-size: 10pt
