@@ -1,7 +1,13 @@
-all: pathconstruction_small.jpg boxedeq_small.jpg
+all: pathconstruction_y_small.jpg boxedeq_y_small.jpg
 
-%.jpg: ../examples/features/%.pdf
+%_y_big.jpg: ../examples/features/%.pdf
+	convert -density 150 -resize x150 $< $@
+
+%_y_small.jpg: ../examples/features/%.pdf
+	convert -density 50 -resize x50 $< $@
+
+%_x_big.jpg: ../examples/features/%.pdf
 	convert -density 150 -resize 150x $< $@
 
-%_small.jpg: ../examples/features/%.pdf
+%_x_small.jpg: ../examples/features/%.pdf
 	convert -density 50 -resize 50x $< $@
