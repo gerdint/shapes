@@ -11,4 +11,4 @@ lst: [list 1 2 3 4 5 6]
 				20 •stdout ])
         << ` OK!¢n´
 
-   
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

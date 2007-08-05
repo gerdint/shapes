@@ -7,3 +7,5 @@ d: !![debuglog_before `4´ 4]
 •stdout << c << `¢n´
 •stdout << b << `¢n´
 •stdout << d << `¢n´
+
+•page << [stroke (0cm,0cm)--(1cm,1cm)]
