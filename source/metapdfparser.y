@@ -803,7 +803,7 @@ ExprExceptConstStrings
 : ConstantExceptStrings
 | Coords
 | PolarHandle
-| '[' T_tex ExprExceptConstStrings ']'
+| '(' T_tex ExprExceptConstStrings ')'
 {
   Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
   args->orderedExprs_->push_back( $3 );
@@ -811,7 +811,7 @@ ExprExceptConstStrings
 			  Ast::THE_FUNCTION_TeX,
 			  args );
 }
-| '[' T_tex T_string ']'
+| '(' T_tex T_string ')'
 {
   Kernel::theTeXLabelManager.announce( string( $3 ) );
   Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
