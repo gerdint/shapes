@@ -927,7 +927,7 @@ Ast::CallExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env
     }
   argList_->analyze( this, env );
 
-  imperative_ = argList_->imperative_;
+  imperative_ = procedural_ || argList_->imperative_;
   if( funExpr_ != 0 )
     {
       imperative_ = imperative_ || funExpr_->imperative_;

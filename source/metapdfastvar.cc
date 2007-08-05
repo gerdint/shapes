@@ -933,7 +933,10 @@ Ast::StructSplitReference::~StructSplitReference( )
     {
       delete fieldId_;
     }
-  delete defaultExpr_;
+  if( defaultExpr_ != 0 )
+    {
+      delete defaultExpr_;
+    }
 }
 
 void
@@ -948,9 +951,15 @@ Ast::StructSplitReference::analyze( Ast::Node * parent, const Ast::AnalysisEnvir
 {
   parent_ = parent;
 
-  defaultExpr_->analyze( this, env );
-
-  imperative_ = defaultExpr_->imperative_;
+  if( defaultExpr_ != 0 )
+    {
+      defaultExpr_->analyze( this, env );
+      imperative_ = defaultExpr_->imperative_;
+    }
+  else
+    {
+      imperative_ = false;
+    }
 }
 
 void
@@ -971,6 +980,10 @@ Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 	}
       catch( const Exceptions::NonExistentMember & ball )
 	{
+	  if( defaultExpr_ == 0 )
+	    {
+	      throw;
+	    }
 	  // Never mind, we use the default instead.  See below.
 	}
     }
@@ -984,10 +997,18 @@ Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 	}
       catch( const Exceptions::NonExistentPosition & ball )
 	{
+	  if( defaultExpr_ == 0 )
+	    {
+	      throw;
+	    }
 	  // Never mind, we use the default instead.  See below.
 	}
     }
-
+  
+  if( defaultExpr_ == 0 )
+    {
+      throw Exceptions::InternalError( "Just about to use null pointer defaultExpr_ in StructSplitReference::eval." );
+    }
   evalState->expr_ = defaultExpr_;
 }
 
@@ -1039,7 +1060,7 @@ Ast::AssertNoSinkNeeded::analyze( Ast::Node * parent, const Ast::AnalysisEnviron
 {
   parent_ = parent;
 
-  imperative_ = false;
+  imperative_ = true;
 }
 
 void

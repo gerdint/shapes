@@ -846,40 +846,22 @@ ExprExceptConstStrings
 {
   $$ = new Ast::EmptyExpression( @$ );
 }
-| '(' T_identifier T_llthan InsertionSequence ')'
+| '(' Expr T_llthan InsertionSequence ')'
 {
   std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
   
   size_t ** pos = new size_t * ( 0 );
-  Ast::StateReference * dst = new Ast::LexiographicState( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
+  Ast::StateReference * dst = new Ast::LexiographicState( @2, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
 
   bracket->push_back( new Ast::IntroduceState( @3,
 					       strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
-					       new Ast::LexiographicVariable( @2, $2, new Kernel::Environment::LexicalKey * ( 0 ) ),
+					       $2,
 					       pos ) );
   for( std::list< Ast::Expression * >::const_iterator i = $4->begin( ); i != $4->end( ); ++i )
     {
       bracket->push_back( new Ast::Insertion( dst, *i ) );
     }
   bracket->push_back( new Ast::Freeze( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
-  $$ = new Ast::CodeBracket( @$, bracket );
-}
-| '(' ':' Expr T_llthan InsertionSequence ')'
-{
-  std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
-  
-  size_t ** pos = new size_t * ( 0 );
-  Ast::StateReference * dst = new Ast::LexiographicState( @3, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
-
-  bracket->push_back( new Ast::IntroduceState( @4,
-					       strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ),
-					       $3,
-					       pos ) );
-  for( std::list< Ast::Expression * >::const_iterator i = $5->begin( ); i != $5->end( ); ++i )
-    {
-      bracket->push_back( new Ast::Insertion( dst, *i ) );
-    }
-  bracket->push_back( new Ast::Freeze( @4, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), pos ) );
   $$ = new Ast::CodeBracket( @$, bracket );
 }
 | T_surrounding Expr

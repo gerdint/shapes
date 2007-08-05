@@ -265,7 +265,31 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 	    ++next;
 	    if( next == pth->end( ) )
 	      {
-		next = pth->begin( );
+		if( closed_ )
+		  {
+		    next = pth->begin( );
+		  }
+		else
+		  {
+		    /* In this case we do something completely different.
+		     */
+		    Lang::ElementaryPath2D::iterator prev = i;
+		    --prev;
+		    if( prev == the_rend )
+		      {
+			throw Exceptions::MiscellaneousRequirement( "The angles of a singleton pathpoint cannot be determined." );
+		      }
+		    Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
+		    Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
+		    (*i)->rearAngle_ = atan2( dyRear.offtype< 1, 0 >( ), dxRear.offtype< 1, 0 >( ) );
+		    if( ! ( (*i)->rearState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
+		      {
+			(*i)->rear_->x_ = (*i)->mid_->x_ + (*i)->rearModulus_ * cos( (*i)->rearAngle_ );
+			(*i)->rear_->y_ = (*i)->mid_->y_ + (*i)->rearModulus_ * sin( (*i)->rearAngle_ );
+			(*i)->rearState_ = Concrete::PathPoint2D::COMPLETE;
+		      }
+		    continue;
+		  }
 	      }
 	    Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
 	    Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
@@ -304,7 +328,31 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 	    --prev;
 	    if( prev == the_rend )
 	      {
-		prev = the_rbegin;
+		if( closed_ )
+		  {
+		    prev = the_rbegin;
+		  }
+		else
+		  {
+		    /* In this case we do something completely different.
+		     */
+		    Lang::ElementaryPath2D::iterator next = i;
+		    ++next;
+		    if( next == pth->end( ) )
+		      {
+			throw Exceptions::MiscellaneousRequirement( "The angles of a singleton pathpoint cannot be determined." );
+		      }
+		    Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
+		    Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
+		    (*i)->frontAngle_ = atan2( dyFront.offtype< 1, 0 >( ), dxFront.offtype< 1, 0 >( ) );
+		    if( ! ( (*i)->frontState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
+		      {
+			(*i)->front_->x_ = (*i)->mid_->x_ + (*i)->frontModulus_ * cos( (*i)->frontAngle_ );
+			(*i)->front_->y_ = (*i)->mid_->y_ + (*i)->frontModulus_ * sin( (*i)->frontAngle_ );
+			(*i)->rearState_ = Concrete::PathPoint2D::COMPLETE;
+		      }
+		    continue;
+		  }
 	      }
 	    Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
 	    Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
