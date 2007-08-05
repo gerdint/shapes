@@ -420,12 +420,19 @@ s: (> a:'1  b:'2 <)
 •stdout << s.b
 </pre>
 
-<exampleswitch>Show example!</exampleswitch>
-<div class="closedexample" id="example-structures">
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr><tr align="center"><td>
+<div style="display:inline;" onclick="document.getElementById('example-structures').style.display='inline'">
+<exampleswitch>Show!</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-structures').style.display='none'">
+<exampleswitch>Hide!</exampleswitch></div> — 
+<a href="../../examples/features/values.drool">Visit!</a>
+</td></tr><tr><td><hr /></td></tr>
+<tr id="example-structures" style="display:none;"><td>
 <pre>
 <!--#include virtual="../../examples/features/values.drool" -->
-</pre>
-</div>
+</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</table>
 
 <h2><a name="funapply">Function application and evaluated cuts</a></h2>
 <p>The basic syntax for applying (or <em>calling</em>) functions is borrowed from the Scheme language.  However, there is a predefined set of operators with fixed priorities that allow exceptions to this rule.  In addition, special syntax is used when a function is applied over a structure, and there is syntactic sugar for calling functions of just one argument.  A similar operation to calling a function is to define a new function by providing values for only some of the arguments — this is referred to as an <a href="http://srfi.schemers.org/srfi-26/srfi-26.html"><em>evaluated cut</em></a>.</p>
@@ -650,6 +657,19 @@ inc: [addn '1]
 </pre>
 <p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr><tr align="center"><td>
+<div style="display:inline;" onclick="document.getElementById('example-lex-scopes').style.display='inline'">
+<exampleswitch>Show!</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-lex-scopes').style.display='none'">
+<exampleswitch>Hide!</exampleswitch></div> — 
+<a href="../../examples/features/scopes.drool">Visit!</a>
+</td></tr><tr><td><hr /></td></tr>
+<tr id="example-lex-scopes" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/scopes.drool" -->
+</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</table>
 
 <h3>Dynamic binding</h3>
 <p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct</p>
