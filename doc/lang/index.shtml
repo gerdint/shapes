@@ -357,6 +357,57 @@ Multi-line...´
 </table>
 <p></p>
 
+<h3>Polar handles and corder points in 2D</h3>
+<p><em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like</p>
+<pre>
+(+ dist*[dir ang])
+</pre>
+<p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>polar-handle-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>PolarHandle2D</typename></td></tr>
+<tr> <td><syntaxname class="new">polar-handle-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;?</bnf> )</inline></td></tr>
+</table>
+<p>When the distance is missing, it <em>may</em> fall back on <varname>@defaultunit</varname>, so be prepared to have a binding for <varname>@defaultunit</varname> in dynamic scope unless you really know that it won't be needed.</p>
+
+<remark>
+<p>A polar handle will store the distance part as a thunk, thereby capturing the current lexical and dynamic environments.  Hence, it is not when the polar handles are used to build paths, that <varname>@defaultunit</varname> may be required, but when the polar handles themselves are constructed.</p>
+</remark>
+
+<table cellspacing="5">
+<tr> <td><b>Expression</b></td> <td width="20"></td> <td><b>Valid construct?</b></td> </tr>
+<tr> <td><inline>( 5cm ^ 60° )</inline></td> <td></td> <td>Yes, equivalent to <inline>(+ 5cm*[dir 60°])</inline></td> </tr>
+<tr> <td><inline>( 1%C ^ 60° )</inline></td> <td></td> <td>Yes, but cannot be rewritten as above</td> </tr>
+<tr> <td><inline>( ^ 0.5 )</inline></td> <td></td> <td>Yes, angle in radians, may require a binding for <varname>@defaultunit</varname></td> </tr>
+<tr> <td><inline>( ^ )</inline></td> <td></td> <td>Yes, may require a binding for <varname>@defaultunit</varname></td> </tr>
+<tr> <td><inline>( 1%C ^ )</inline></td> <td></td> <td>Yes</td> </tr>
+<tr> <td><inline>( 1 ^ )</inline></td> <td></td> <td>No, <inline>1</inline> is not a length</td> </tr>
+<tr> <td><inline>( ^ 1cm )</inline></td> <td></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>
+</table>
+<p></p>
+
+<p>A <em>corner point</em> is a generalization of <typename>Coord2D</typename>.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <typename>Coord2D</typename> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</table>
+
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th>
+<tr align="center"><td><a href="../../output/cornerpoint.pdf"><img src="../../output/cornerpoint_y_big.jpg" alt="Angry"/></a></td></tr>
+<tr><td><hr /></td></tr></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-cornerpoint').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-cornerpoint').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/cornerpoint.drool">visit</a>
+</td></tr>
+<tr id="example-cornerpoint" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/cornerpoint.drool" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
+</table>
+
+<p>The concepts of polar handles and corner points in 2D have not yet been generalized to 3D.</p>
 
 <h3>Functions and friends</h3>
 <p>Functions are at the heart of a functional language.  Powerful ways of creating functions make source code both more compact and more comprehensible.  The language is <em>not</em> curried, but contains many constructs to support <em>evaluated cuts</em>, but these are presented in connection with <a href="#funapply">function calls</a>.</p>
@@ -393,7 +444,7 @@ Multi-line...´
 
 <p>Besides getting parts out of a structure by applying a function to it, it is possible to bind to multiple values in the structure at once.  The syntax is</p>
 <table cellspacing="5">
-<tr> <td><syntaxname class="new">split-define</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(< <bnf>(</bnf> <syntaxname>split-item</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)+</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> >) : <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">split-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(< <bnf>(</bnf> <syntaxname>split-item</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)+</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> >) : <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td><syntaxname class="new">split-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . <syntaxname>identifier</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . &quot;</inline></td></tr>
@@ -421,17 +472,28 @@ s: (> a:'1  b:'2 <)
 </pre>
 
 <table class="codefile">
-<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr><tr align="center"><td>
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th>
+<tr><td><hr /></td></tr></tr><tr align="center"><td>Source: 
 <div style="display:inline;" onclick="document.getElementById('example-structures').style.display='inline'">
-<exampleswitch>Show!</exampleswitch></div> — 
+<exampleswitch>show</exampleswitch></div> — 
 <div style="display:inline;" onclick="document.getElementById('example-structures').style.display='none'">
-<exampleswitch>Hide!</exampleswitch></div> — 
-<a href="../../examples/features/values.drool">Visit!</a>
-</td></tr><tr><td><hr /></td></tr>
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/values.drool">visit</a>
+</td></tr>
 <tr id="example-structures" style="display:none;"><td>
 <pre>
 <!--#include virtual="../../examples/features/values.drool" -->
-</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</pre></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>stdout: 
+<div style="display:inline;" onclick="document.getElementById('example-structures-stdout').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-structures-stdout').style.display='none'">
+<exampleswitch>hide</exampleswitch></div></td></tr>
+<tr id="example-structures-stdout" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../output/values.stdout" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
 </table>
 
 <h2><a name="funapply">Function application and evaluated cuts</a></h2>
@@ -521,7 +583,7 @@ s: (> a:'1  b:'2 <)
 <tr> <td><syntaxname class="new">code-bracket</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>{ <syntaxname>bracket-item</syntaxname><bnf>*</bnf> }</inline></td></tr>
 <tr> <td><syntaxname class="new">bracket-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>variable-definition</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>splicing-definition</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>split-definition</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state-item</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-variable-declaration</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-state-declaration</syntaxname></inline></td></tr>
@@ -532,6 +594,8 @@ s: (> a:'1  b:'2 <)
 <p<>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
 
 <p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a href="#expressions">expressions</a> for the details of pure and non-pure expressions.</p>
+
+<p>Note that <syntaxname>split-definition</syntaxname> was defined under <a href="#structures">structures</a>.</p>
 
 <h3>Variable definitions</h3>
 <table cellspacing="5">
@@ -556,6 +620,12 @@ s: (> a:'1  b:'2 <)
 <p>The second form modifies the state.  Note that states may also be modified by <a href="#expressions">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
 
 <p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
+
+<p>A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value.  The syntax is:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname class="new">peek-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <syntaxname>state</syntaxname> )</inline></td></tr>
+</table>
+<p>Note that a <syntaxname>state</syntaxname> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.</p>
 
 <h3>Dynamic declarations</h3>
 
@@ -658,17 +728,28 @@ inc: [addn '1]
 <p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
 <table class="codefile">
-<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr><tr align="center"><td>
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
 <div style="display:inline;" onclick="document.getElementById('example-lex-scopes').style.display='inline'">
-<exampleswitch>Show!</exampleswitch></div> — 
+<exampleswitch>show</exampleswitch></div> — 
 <div style="display:inline;" onclick="document.getElementById('example-lex-scopes').style.display='none'">
-<exampleswitch>Hide!</exampleswitch></div> — 
-<a href="../../examples/features/scopes.drool">Visit!</a>
-</td></tr><tr><td><hr /></td></tr>
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/scopes.drool">visit</a>
+</td></tr>
 <tr id="example-lex-scopes" style="display:none;"><td>
 <pre>
 <!--#include virtual="../../examples/features/scopes.drool" -->
-</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</pre></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>stdout: 
+<div style="display:inline;" onclick="document.getElementById('example-lex-scopes-stdout').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-lex-scopes-stdout').style.display='none'">
+<exampleswitch>hide</exampleswitch></div></td></tr>
+<tr id="example-lex-scopes-stdout" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../output/scopes.stdout" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
 </table>
 
 <h3>Dynamic binding</h3>
@@ -721,6 +802,31 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 }
 </pre>
 
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-dyn-scopes').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-dyn-scopes').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/dynamic.drool">visit</a>
+</td></tr>
+<tr id="example-dyn-scopes" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/dynamic.drool" -->
+</pre></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>stdout: 
+<div style="display:inline;" onclick="document.getElementById('example-dyn-scopes-stdout').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-dyn-scopes-stdout').style.display='none'">
+<exampleswitch>hide</exampleswitch></div></td></tr>
+<tr id="example-dyn-scopes-stdout" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../output/dynamic.stdout" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
+</table>
+
 <h2>Continuations</h2>
 <p>Shapes is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
 
@@ -738,11 +844,145 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <p>Even if continuations are presently handled in a way such that it cannot be determined if they are functions or not, I find it really obscuring to hide a continuation inside a function.  Hence, if continuations are made available more generally in the future, don't expect them to be wrapped in functions.  If a function that behaves like a continuation object in Scheme is needed, such a function will be easy to construct.</p>
 </remark>
 
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-escape').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-escape').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/escape.drool">visit</a>
+</td></tr>
+<tr id="example-escape" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/escape.drool" -->
+</pre></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>stdout: 
+<div style="display:inline;" onclick="document.getElementById('example-escape-stdout').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-escape-stdout').style.display='none'">
+<exampleswitch>hide</exampleswitch></div></td></tr>
+<tr id="example-escape-stdout" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../output/escape.stdout" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
+</table>
+
 <h2>Classes and type information</h2>
 <p>Since Shapes is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
 
-<h2>Other expressiona and expressions in general</h2>
+<h2>Other expressions and expressions in general</h2>
 <p>There are many kinds of expressions.  An expression can be either <em>non-pure</em> or <em>pure</em> depending on whether it interacts with states or not.  An expression may also be <em>immediate</em>, wither because it is of a certain kind which is always immediate, or because the user has flagged it to be immediate for some reason.  Expressions that are non-pure or immediate cannot or must not be delayed, and are evaluated in the second phase of code bracket evaluation.  While non-purity is a property that a child can (and generally does) give to its parent in the abstract syntax tree, the immediate flag is never transferred between child and parent.</p>
+
+<p>The following breaks down <syntaxname>expr</syntaxname>:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname class="new">expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <syntaxname>expr</syntaxname> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>constant</syntaxname> <bnf>|</bnf> <syntaxname>reference</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>tuple</syntaxname> <bnf>|</bnf> <syntaxname>structure</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>function</syntaxname> <bnf>|</bnf> <syntaxname>procedure</syntaxname> <bnf>|</bnf> <syntaxname>application</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>reach-out</syntaxname> <bnf>|</bnf> <syntaxname>immediate-expr</syntaxname> <bnf>|</bnf> <syntaxname>tex-expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-binding</syntaxname> <bnf>|</bnf> <syntaxname>with-dynamic</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>with-escape-continuation</syntaxname> <bnf>|</bnf> <syntaxname>invoke-escape-continuation</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>insertion-expr</syntaxname> <bnf>|</bnf> <syntaxname>empty-expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>unary</syntaxname> <bnf>|</bnf> <syntaxname>binary-arithmetic</syntaxname> <bnf>|</bnf> <syntaxname>binary-relational</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">reference</syntaxname></td> <td><bnf>→</bnf></td> <td><inline> <syntaxname>identifier</syntaxname> <bnf>|</bnf> <syntaxname>dyn-var</syntaxname> <bnf>|</bnf> <syntaxname>peek-state</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>field-ref</syntaxname> <bnf>|</bnf> <syntaxname>lookup-symbol</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">application</syntaxname></td> <td><bnf>→</bnf></td> <td><inline> <syntaxname>basic-call</syntaxname> <bnf>|</bnf> <syntaxname>proc-call</syntaxname> <bnf>|</bnf> <syntaxname>unary-call</syntaxname> <bnf>|</bnf> <syntaxname>split-call</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline> <syntaxname>basic-cute</syntaxname> <bnf>|</bnf> <syntaxname>unary-cute</syntaxname> <bnf>|</bnf> <syntaxname>split-cute</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">constant</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>float</syntaxname> <bnf>|</bnf> <syntaxname>length</syntaxname> <bnf>|</bnf> <syntaxname>string</syntaxname> <bnf>|</bnf> <syntaxname>boolean</syntaxname> <bnf>|</bnf> <syntaxname>integer</syntaxname> <bnf>|</bnf> <syntaxname>symbol</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">tuple</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>float-pair</syntaxname> <bnf>|</bnf> <syntaxname>float-triple</syntaxname> <bnf>|</bnf> <syntaxname>coords-2D</syntaxname> <bnf>|</bnf> <syntaxname>coords-3D</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>polar-handle-2D</syntaxname> <bnf>|</bnf> <syntaxname>corner-point-2D</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">unary</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>not-expr</syntaxname> <bnf>|</bnf> <syntaxname>cycle</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>negation</syntaxname> <bnf>|</bnf> <syntaxname>relative</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">binary-arithmetic</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>plus</syntaxname> <bnf>|</bnf> <syntaxname>minus</syntaxname> <bnf>|</bnf> <syntaxname>star</syntaxname> <bnf>|</bnf> <syntaxname>slash</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>plus-plus</syntaxname> <bnf>|</bnf> <syntaxname>minus-minus</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>angle</syntaxname> <bnf>|</bnf> <syntaxname>projection</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>ampersand</syntaxname> <bnf>|</bnf> <syntaxname>compose</syntaxname></inline></td></tr>
+
+<tr> <td><syntaxname class="new">binary-relational</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>less</syntaxname> <bnf>|</bnf> <syntaxname>less-equal</syntaxname> <bnf>|</bnf> <syntaxname>greater</syntaxname> <bnf>|</bnf> <syntaxname>greater-equal</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>equal</syntaxname> <bnf>|</bnf> <syntaxname>not-equal</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>and</syntaxname> <bnf>|</bnf> <syntaxname>or</syntaxname></inline> <bnf>|</bnf> <syntaxname>xor</syntaxname></inline></td></tr>
+</table>
+
+<h3><a name="pathconstruction">Path construction</a></h3>
+<p>In the end, all paths are piecewise cubic splines.  Parameterizing the splines as Bezier splines, we refer to <em>interpolation points</em> instead of <em>spline coefficients</em>.  In general, the spline has two <em>endpoints</em>, and two <em>intermediate</em> interpolation points.  The two end points may be referred to as the <em>first endpoint</em> and <em>second endpoint</em>, respectively.  The intermediate interpolation points may be referred to as the <em>first intermediate</em> and <em>second intermediate</em> interpolation point, respectively.  The intermediate interpolation points may be omitted as a shorthand for placing them at the neighboring endpoint.</p>
+
+<p>The Bezier spline will pass through the enpoints, and be contained in the convex hull of all four interpolation points.  Adjacent splines share one of the endpoints, so that the path becomes continuous.  This makes it convenient to think of the path, not as a sequence of Bezier splines, but as a sequence of points on the path, where each point on the path may have a forward and a backward control point (or <em>handle</em>).  Please refer to the WWW for more details on the splines, for instance <a href="http://en.wikipedia.org/wiki/Bézier_curve">Wikipedia</a>.  Here, we shall focus on how the handles may be laid out.</p>
+
+<p>The syntax that constructs path points with handles is:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>path-point-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>PathPoint2D</typename></td></tr>
+<tr> <td><syntaxname class="new">path-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>Coords2D</typename><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Handle2D</typename><bnf>&gt;</bnf> < <bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf> > <bnf>&lt;</bnf><typename>Handle2D</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><typename>Handle2D</typename></td> <td><bnf>=</bnf></td> <td><typename>Coords2D</typename> <bnf>|</bnf> <typename>PolarHandle2D</typename></td></tr>
+</table>
+<p>It is illegal to put a handle on a pathpoint which already has a handle in the same direction.</p>
+
+<p>Often, paths are constructed according to the pattern</p>
+<pre>
+<syntaxname>path-point-2D</syntaxname> <bnf>(</bnf> -- <syntaxname>path-point-2D</syntaxname> <bnf>)*</bnf> <bnf>(</bnf> -- cycle <bnf>)?</bnf>
+</pre>
+<p>but this is just a special case of the general</p>
+
+<table cellspacing="5">
+<tr> <td><syntaxname>simple-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>SimplePath2D</typename></td></tr>
+<tr> <td><syntaxname class="new">simple-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>cycle</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">cycle</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf> -- cycle</inline></td></tr>
+</table>
+<p>It is illegal to close a path that is already closed, or to extend a closed path.</p>
+
+<p>What remains to be described regarding simple paths is how the free parts of polar handles are determined.  When all handles have been determined, an <em>elementary</em> path has been obtained, but this concept is insignificant from the user's perspective.  Anyway, most of the computations on paths require an elementary path, and will trigger the following compuation if needed:</p>
+<ol>
+<li><p>Find all angles to handles that are determined explicitly.</p></li>
+<li><p>Propagate all known angles to any free angles on the other side of a path point (taking corner angles into account).</p></li>
+<li><p>Compute remaining angles based on the path points position relative its neighboring path points.</p><todo><p>Fill in details!</p></todo></li>
+<li><p>Compute all distances to handles that are given explicitly.  Note that this requires all angles to be known.</p></li>
+<li><p>Propagate known distances to any free distances on the other side of a path point.</p></li>
+<li><p>Use <varname>@defaultunit</varname> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>
+</ol>
+<p>Note that the rules above means that there is a subtle difference between the following two path points:</p>
+<pre>
+p1: (1%C^)<(0cm,0cm)>(1%C^)
+p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)
+</pre>
+<remark>
+<p>The difference is that <varname>p1</varname> will generally get handles of unequal length, while <varname>p2</varname> gets handles of equal length.</p>
+</remark>
+
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr align="center"><td><a href="../../output/pathconstruction.pdf"><img src="../../output/pathconstruction_y_small.jpg" alt="Angry"/></a></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-path-construction').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-path-construction').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/pathconstruction.drool">visit</a>
+</td></tr>
+<tr id="example-path-construction" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/pathconstruction.drool" -->
+</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</table>
+
+<p>When it comes to filling paths with color, it becomes necessary to handle collections of simple paths.  Sometimes, composite paths may also serve merely as a container for simple paths.  The ampersand operator is used to construct composite paths:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname>composite-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Path2D</typename></td></tr>
+<tr> <td><syntaxname class="new">composite-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>CompositePath2D</typename><bnf>&gt;</bnf> & <bnf>&lt;</bnf><typename>CompositePath2D</typename><bnf>&gt;</bnf></inline></td></tr>
+</table>
+
+<p>Paths in 3D are constructed in the same way as in 2D, although their path points cannot have polar handles.</p>
 
 <h3><a name="laziness">Laziness control</a></h3>
 <p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  Delayed evaluation is prohibited by flagging an expression as <em>immediate</em>:</p>
@@ -751,7 +991,39 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </table>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-eval-order').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-eval-order').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/evalorder.drool">visit</a>
+</td></tr>
+<tr id="example-eval-order" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/evalorder.drool" -->
+</pre></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>stdout: 
+<div style="display:inline;" onclick="document.getElementById('example-eval-order-stdout').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-eval-order-stdout').style.display='none'">
+<exampleswitch>hide</exampleswitch></div></td></tr>
+<tr id="example-eval-order-stdout" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../output/evalorder.stdout" -->
+</pre></td></tr>
+<tr><td><hr class="thick"/></td></tr>
+</table>
+
 <h3>Unary operators</h3>
+<p>The expansions of <syntaxname>unary</syntaxname> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.</p>
+<table cellspacing="5">
+<tr> <td><syntaxname class="new">negation</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( - <syntaxname>expr</syntaxname> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">relative</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <syntaxname>expr</syntaxname> )</inline></td></tr>
+<tr> <td><syntaxname class="new">not-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><typename>Boolean</typename><bnf>&gt;</bnf></inline></td></tr>
+</table>
 
 <h3>Binary arithmetic operators</h3>
 
@@ -799,11 +1071,27 @@ facing: [../facing scale:true distort:true ...]
 
 <p>To produce the labels themselves, the syntax is simply:</p>
 <table cellspacing="5">
-<tr> <td><syntaxname class="new">tex-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( teX <bnf>&lt;</bnf><typename>String</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname class="new">tex-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( TeX <bnf>&lt;</bnf><typename>String</typename><bnf>&gt;</bnf> )</inline></td></tr>
 </table>
-<p>Note that <varname>teX</varname> is not a function, although it could have been if it was not for efficiency reasons.</p>
+<p>Note that <varname>TeX</varname> is not a function, although it could have been if it was not for efficiency reasons.</p>
 
 <p>If the expression is a string literal, it is handled more efficiently than if the string must be obtained by evaluation.  The origin of the produced label is the same as in LaTeX; at the leftmost point of the baseline.  Unfortunately, fonts lie about their bounding boxes to make them look smaller, and this will cause the produced label to be slightly cropped when imported.  At the moment, I can't think of a good way to get around this problem, since a tight bounding box is important for layout purposes.</p>
+
+<table class="codefile">
+<tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
+<tr align="center"><td><a href="../../output/boxedeq.pdf"><img src="../../output/boxedeq_y_small.jpg" alt="Angry"/></a></td></tr>
+<tr><td><hr /></td></tr><tr align="center"><td>Source: 
+<div style="display:inline;" onclick="document.getElementById('example-latex-label').style.display='inline'">
+<exampleswitch>show</exampleswitch></div> — 
+<div style="display:inline;" onclick="document.getElementById('example-latex-label').style.display='none'">
+<exampleswitch>hide</exampleswitch></div> — 
+<a href="../../examples/features/boxedeq.drool">visit</a>
+</td></tr>
+<tr id="example-latex-label" style="display:none;"><td>
+<pre>
+<!--#include virtual="../../examples/features/boxedeq.drool" -->
+</pre></td></tr><tr><td><hr class="thick"/></td></tr>
+</table>
 
 <h2>Miscellaneous</h2>
 <p>Standard stream objects, null objects, mathematical constants, and more...</p>
