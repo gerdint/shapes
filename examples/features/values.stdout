@@ -1,0 +1,16 @@
+567
+9576
+687
+Field access:  a2 = 8
+The first argument is:  a1 = 6
+a = 2, b = 1
+a = 0, b = 2, c = 1
+args = 7
+x = 6, y = 7, z = 8
+From the sink, z = 8
+w = 14
+x = 6, y = 8
+a2 = 8, a3 = 7
+a2 = 8, a4 = 1000
+x = 7, y = 8, a3 = 7
+x = 7, y = 8

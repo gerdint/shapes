@@ -1,0 +1,77 @@
+%PDF-1.5
+%ÅÇÉÑ Treat as binary
+1 0 obj
+<< /PageLabels 8 0 R
+/Pages 4 0 R
+/Type /Catalog
+>>
+endobj
+2 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+3 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+4 0 obj
+<< /Count 1
+/Kids [ 5 0 R ]
+/Type /Pages
+>>
+endobj
+5 0 obj
+<< /Contents 6 0 R
+/MediaBox [ -43.019685 -85.539370 43.019685 85.539370 ]
+/Parent 4 0 R
+/Resources 7 0 R
+/Type /Page
+>>
+endobj
+6 0 obj
+<< /Length 315
+>>
+stream
+0.00 56.69 m 17.01 56.69 l 23.27 56.69 28.35 51.62 28.35 45.35 c 28.35 -45.35 l 28.35 -56.69 10.56 -56.69 0.00 -56.69 c 0.00 -56.69 l -10.56 -56.69 -28.35 -56.69 -28.35 -45.35 c -28.35 45.35 l -28.35 51.62 -23.27 56.69 -17.01 56.69 c 0.00 56.69 l  S
+-42.52 -85.04 m 42.52 -85.04 l 42.52 85.04 l -42.52 85.04 l h  S
+
+endstream 
+endobj
+7 0 obj
+<< /ProcSet [ /PDF ]
+>>
+endobj
+8 0 obj
+<< /Nums [ 0 << /S /D
+>> ]
+/Type /PageLabels
+>>
+endobj
+9 0 obj
+<< /CreationDate (D:20070805182850+0000)
+/Producer (Drool)
+/Title (pathconstruction.drool)
+>>
+endobj
+xref
+0 10
+0000000031 65535 n 
+0000000031 00000 n 
+0000000098 00000 n 
+0000000149 00000 n 
+0000000200 00000 n 
+0000000259 00000 n 
+0000000395 00000 n 
+0000000762 00000 n 
+0000000801 00000 n 
+0000000864 00000 n 
+trailer
+<< /Info 9 0 R
+/Root 1 0 R
+/Size 10
+>>
+startxref
+973
+%%EOF

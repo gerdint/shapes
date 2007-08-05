@@ -1,14 +1,14 @@
 lst: [list 1 2 3 4 5 6]
 
-•stderr << [lst.foldr (+) 0] << `¢n´
+•stdout << [lst.foldr (+) 0] << `¢n´
 
-•stderr << 10 + [lst.foldsr (\ p e •dst .> { •dst << e << ` ´  p })
-				 20 •stderr ]
+•stdout << 10 + [lst.foldsr (\ p e •dst .> { •dst << e << ` ´  p })
+				 20 •stdout ]
         << ` OK!¢n´
 
-•stderr << 10 + (continuation leave
-		  [lst.foldsr (\ p e •dst .> [if e == 4 (continue leave e) { •dst << e << ` ´  p }])
-				20 •stderr ])
+•stdout << 10 + (escape_continuation leave
+		  [lst.foldsr (\ p e •dst .> [if e == 4 (escape_continue leave e) { •dst << e << ` ´  p }])
+				20 •stdout ])
         << ` OK!¢n´
 
    

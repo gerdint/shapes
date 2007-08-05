@@ -1,0 +1,21 @@
+h: 2cm   |** This is half the height of our path
+w: 1cm   |** This is the width of our path
+r: 4mm   |** This is a corner radius
+
+/**
+ ** Construct a path as follows:
+ ** Start at (0,h) and make a horizontal line to the x-coordinate (w-r).  Make an (approximately) circular arc
+ ** to the point located r to the right and r down.  Make a vertical line to the y-coordinate (~h+r).  Finally,
+ ** make a smooth spline without inflexion that ends horizontally at (0,~h).
+ **
+ ** Then stroke the path joined with its reverse mirrored in the y-axis.
+ **/
+pth: @defaultunit:1%c | (0,h)--(w-r,(+0m))>(^)--(^)<(+(r,~r))--((+0m),~h+r)>(^)--(^0°)<(0,~h)
+
+•page << [stroke pth--[[scale x:~1] [reverse pth]]]
+
+
+/**
+ ** Allow for some space around the path we want to see!
+ **/
+•page << [stroke [rectangle (~1.5*w,~1.5*h) (1.5*w,1.5*h)]]

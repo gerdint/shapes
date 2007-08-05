@@ -1,7 +1,9 @@
-a: { •stdout << `1´  1 }
+a: [debuglog_before `1´ 1]
 •stdout << a << `¢n´
 
-b: { •stdout << `2´  2 }
-c: { •stdout << `3´  3 }
+b: [debuglog_before `2´ 2]
+c: [debuglog_before `3´ 3]
+d: !![debuglog_before `4´ 4]
 •stdout << c << `¢n´
 •stdout << b << `¢n´
+•stdout << d << `¢n´

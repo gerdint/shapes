@@ -1,13 +1,13 @@
 foo: \ a b c .> a + b + c
 
-stderr << [foo `1´ `2´ `3´] << `¢n´
+•stdout << [foo `1´ `2´ `3´] << `¢n´
 
 bar: [foo b:`BAR´ ...]
 
 ofo: [bar `ofo´ ...]
 
-stderr << [ofo `2´] << `¢n´
-stderr << [bar `1´ `3´] << `¢n´
-stderr << [foo [...] b:`2´ [...] `1´ [...] `3´] << `¢n´
+•stdout << [ofo `2´] << `¢n´
+•stdout << [bar `1´ `3´] << `¢n´
+•stdout << [foo [...] b:`2´ [...] `1´ [...] `3´] << `¢n´
 
-@<< [stroke (0cm,0cm)--(1cm,1cm)]
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

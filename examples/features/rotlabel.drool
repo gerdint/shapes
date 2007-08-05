@@ -1,4 +1,4 @@
-lbl: [immerse [TeX `$\int_{\alpha}^{\beta}$\LaTeX2e´]]
+lbl: [immerse (teX `$\int_{\alpha}^{\beta}$\LaTeX2e´)]
 
 @eyez:∞
 |

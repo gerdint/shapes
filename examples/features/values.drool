@@ -180,7 +180,7 @@
     bunch: (>  6  a3:7  a2:8  <)
 
     {
-      (<  x  y:a2  a3:."  >): bunch
+      (<  x  y:.a2  a3:."  >): bunch
       •stdout << `x = ´ << x << `, y = ´ << y << `, a3 = ´ << a3 << `¢n´
     }
 
