@@ -103,7 +103,10 @@ syntaxname { font-style: italic; color: #F0F; text-decoration: underline; }
 syntaxname.new { text-decoration: none; }
 bnf  { font-size: 140%; color: #00F; }
 
-exampleswitch { font-size: bigger; color: #9900FF; text-decoration: underline; }
+exampleswitch { font-size: bigger; color: #9900FF; text-decoration: underline; cursor:pointer }
 
 remark p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
 todo p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; }
+
+table.codefile { width:100%; background:#FFFFCC; }
+hr.thick { border:0; height:3px; color:#000; background:#000; } 
