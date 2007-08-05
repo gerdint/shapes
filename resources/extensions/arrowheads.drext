@@ -48,9 +48,9 @@ twoCircles3DArrow:
       l: [min theLength*[cos ahAngle] 0.9*[abs p]]
       e: [p 0]--[p l]
       (>
-        picture: [stroke [[shift [p 0.5*theLength*[cos ahAngle]].p]*[ztf [direction p 0.5*theLength*[cos ahAngle]]] [immerse [circle 0.5*theLength*[sin ahAngle]]]]]
+        picture: [stroke [[shift [p 0.5*theLength*[cos ahAngle]].p]*[ztf [p 0.5*theLength*[cos ahAngle]].t] [immerse [circle 0.5*theLength*[sin ahAngle]]]]]
                  &
-		 [stroke [[shift [p theLength*[cos ahAngle]].p]*[ztf [direction p theLength*[cos ahAngle]]] [immerse [circle theLength*[sin ahAngle]]]]]
+		 [stroke [[shift [p theLength*[cos ahAngle]].p]*[ztf [p theLength*[cos ahAngle]].t] [immerse [circle theLength*[sin ahAngle]]]]]
         cut: 0mm
       <)
     }
