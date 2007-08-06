@@ -5,10 +5,10 @@ stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdou
 
 .PRECIOUS: %.pdf
 
-%.pdf %.stdout: ../examples/features/%.drool
+%.pdf %.stdout: ../../examples/features/%.drool
 	drool --in $< --out $*.pdf > $*.stdout
 
-%_3.pdf: ../examples/features/%.drool
+%_3.pdf: ../../examples/features/%.drool
 	drool --v s1.3 --in $< --out $*_3.pdf > $*.stdout
 
 %_y_big.jpg: %_3.pdf
