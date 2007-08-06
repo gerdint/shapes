@@ -392,7 +392,7 @@ Multi-line...´
 
 <table class="codefile">
 <tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th>
-<tr align="center"><td><a href="../../output/cornerpoint.pdf"><img src="../../output/cornerpoint_y_big.jpg" alt="Angry"/></a></td></tr>
+<tr align="center"><td><a href="../output/cornerpoint.pdf"><img src="../output/cornerpoint_y_big.jpg" alt="Angry"/></a></td></tr>
 <tr><td><hr /></td></tr></tr><tr align="center"><td>Source: 
 <div style="display:inline;" onclick="document.getElementById('example-cornerpoint').style.display='inline'">
 <exampleswitch>show</exampleswitch></div> — 
@@ -491,7 +491,7 @@ s: (> a:'1  b:'2 <)
 <exampleswitch>hide</exampleswitch></div></td></tr>
 <tr id="example-structures-stdout" style="display:none;"><td>
 <pre>
-<!--#include virtual="../../output/values.stdout" -->
+<!--#include virtual="../output/values.stdout" -->
 </pre></td></tr>
 <tr><td><hr class="thick"/></td></tr>
 </table>
@@ -747,7 +747,7 @@ inc: [addn '1]
 <exampleswitch>hide</exampleswitch></div></td></tr>
 <tr id="example-lex-scopes-stdout" style="display:none;"><td>
 <pre>
-<!--#include virtual="../../output/scopes.stdout" -->
+<!--#include virtual="../output/scopes.stdout" -->
 </pre></td></tr>
 <tr><td><hr class="thick"/></td></tr>
 </table>
@@ -822,7 +822,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <exampleswitch>hide</exampleswitch></div></td></tr>
 <tr id="example-dyn-scopes-stdout" style="display:none;"><td>
 <pre>
-<!--#include virtual="../../output/dynamic.stdout" -->
+<!--#include virtual="../output/dynamic.stdout" -->
 </pre></td></tr>
 <tr><td><hr class="thick"/></td></tr>
 </table>
@@ -864,7 +864,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <exampleswitch>hide</exampleswitch></div></td></tr>
 <tr id="example-escape-stdout" style="display:none;"><td>
 <pre>
-<!--#include virtual="../../output/escape.stdout" -->
+<!--#include virtual="../output/escape.stdout" -->
 </pre></td></tr>
 <tr><td><hr class="thick"/></td></tr>
 </table>
@@ -961,7 +961,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)
 
 <table class="codefile">
 <tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
-<tr align="center"><td><a href="../../output/pathconstruction.pdf"><img src="../../output/pathconstruction_y_small.jpg" alt="Angry"/></a></td></tr>
+<tr align="center"><td><a href="../output/pathconstruction.pdf"><img src="../output/pathconstruction_y_small.jpg" alt="Angry"/></a></td></tr>
 <tr><td><hr /></td></tr><tr align="center"><td>Source: 
 <div style="display:inline;" onclick="document.getElementById('example-path-construction').style.display='inline'">
 <exampleswitch>show</exampleswitch></div> — 
@@ -1011,7 +1011,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)
 <exampleswitch>hide</exampleswitch></div></td></tr>
 <tr id="example-eval-order-stdout" style="display:none;"><td>
 <pre>
-<!--#include virtual="../../output/evalorder.stdout" -->
+<!--#include virtual="../output/evalorder.stdout" -->
 </pre></td></tr>
 <tr><td><hr class="thick"/></td></tr>
 </table>
@@ -1079,7 +1079,7 @@ facing: [../facing scale:true distort:true ...]
 
 <table class="codefile">
 <tr><td><hr class="thick"/></td></tr><tr align="center"><th colspan="3">Example</th></tr>
-<tr align="center"><td><a href="../../output/boxedeq.pdf"><img src="../../output/boxedeq_y_small.jpg" alt="Angry"/></a></td></tr>
+<tr align="center"><td><a href="../output/boxedeq.pdf"><img src="../output/boxedeq_y_small.jpg" alt="Angry"/></a></td></tr>
 <tr><td><hr /></td></tr><tr align="center"><td>Source: 
 <div style="display:inline;" onclick="document.getElementById('example-latex-label').style.display='inline'">
 <exampleswitch>show</exampleswitch></div> — 
