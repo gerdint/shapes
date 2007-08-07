@@ -1,0 +1,4 @@
+<book>
+<title>The Shapes language</title>
+<!--#include virtual="chap-syntax.sxml" -->
+</book>

@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>The Shapes language documentation</title>
-  <link rel="stylesheet" href="../shapes.css">
+  <link rel="stylesheet" href="../shapes.css" />
 </head>
 <body>
 
@@ -888,7 +888,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>unary</syntaxname> <bnf>|</bnf> <syntaxname>binary-arithmetic</syntaxname> <bnf>|</bnf> <syntaxname>binary-relational</syntaxname></inline></td></tr>
 
 <tr> <td><syntaxname class="new">reference</syntaxname></td> <td><bnf>→</bnf></td> <td><inline> <syntaxname>identifier</syntaxname> <bnf>|</bnf> <syntaxname>dyn-var</syntaxname> <bnf>|</bnf> <syntaxname>peek-state</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>field-ref</syntaxname> <bnf>|</bnf> <syntaxname>lookup-symbol</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>field-ref</syntaxname> <bnf>|</bnf> <syntaxname>lookup-symbol</syntaxname> <bnf>|</bnf> <syntaxname>typename</syntaxname></inline></td></tr>
 
 <tr> <td><syntaxname class="new">application</syntaxname></td> <td><bnf>→</bnf></td> <td><inline> <syntaxname>basic-call</syntaxname> <bnf>|</bnf> <syntaxname>proc-call</syntaxname> <bnf>|</bnf> <syntaxname>unary-call</syntaxname> <bnf>|</bnf> <syntaxname>split-call</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline> <syntaxname>basic-cute</syntaxname> <bnf>|</bnf> <syntaxname>unary-cute</syntaxname> <bnf>|</bnf> <syntaxname>split-cute</syntaxname></inline></td></tr>

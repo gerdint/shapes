@@ -1,0 +1,42 @@
+<chapter id="chap-syntax">
+<title>Syntax</title>
+
+<section id="syntax-atoms">
+<title>Atoms</title>
+
+<subsection id="floats">
+<title>Floats</title>
+<content>
+<syntax-table>
+<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntaxname class="new">basic-float</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td></tr>
+<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname> <bnf>|</bnf> <syntaxname>basic-float</syntaxname>°</inline></td></tr>
+</syntax-table>
+<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and finally an optional sequence of decimal digits.  A degree sign can be appended, effectively multiplying the preceding float by pi/180.  Examples are given below.</p>
+
+<token-example-table>
+<head>
+<tr> <td>Token</td> <td width="20"></td> <td>Valid float?</td> </tr>
+</head>
+<body>
+<tr> <td><inline>13</inline></td> <td></td> <td>Yes (= 13)</td> </tr>
+<tr> <td><inline>~13</inline></td> <td></td> <td>Yes (= -13)</td> </tr>
+<tr> <td><inline>2.</inline></td> <td></td> <td>Yes (= 2.0)</td> </tr>
+<tr> <td><inline>~3.14</inline></td> <td></td> <td>Yes (= -3.14)</td> </tr>
+<tr> <td><inline>~180°</inline></td> <td></td> <td>Yes (= -3.14159...)</td> </tr>
+<tr> <td><inline>.609</inline></td> <td></td> <td>No (missing integer part)</td> </tr>
+<tr> <td><inline>-3.1</inline></td> <td></td> <td>No (binary minus sign)</td> </tr>
+<tr> <td><inline>1 000</inline></td> <td></td> <td>No (spaces are not allowed)</td> </tr>
+<tr> <td><inline>180 °</inline></td> <td></td> <td>No (space is not allowed)</td> </tr>
+</body>
+</token-example-table>
+<p></p>
+
+<p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
+</content>
+</subsection>
+
+</section>
+
+</chapter>
