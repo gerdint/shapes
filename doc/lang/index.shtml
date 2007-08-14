@@ -34,7 +34,7 @@
 <tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
 </table>
 
-<p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class=replacable>SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
+<p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class="replacable">SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
 <table cellspacing="5">
 <tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
 </table>

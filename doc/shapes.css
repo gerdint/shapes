@@ -29,12 +29,19 @@ img.g45 {/* scalable em 45 */
           height: 15em;
           }
 
-h1, h2, h3, h4, h5, h6 {
+h0, h1, h2, h3, h4, h5, h6 {
 	color: 					#006633;
 	font-family: 					"Lucida Grande", sans-serif;
 	font-weight:					bold;
 	margin-top:					0.8em;	
 	margin-bottom:				0.2em;	
+}
+
+h0 {
+	font-size: 					3em;
+	line-height:					normal;
+	margin-top:					0;
+	text-align: center;
 }
 
 h1 {

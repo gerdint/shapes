@@ -2,22 +2,28 @@
 <xsl:stylesheet version="1.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:template match="/">
+<xsl:template match="/book">
   <html>
     <head>
       <title><xsl:value-of select="title" /></title>
       <link rel="stylesheet" href="../shapes.css" />
     </head>
     <body>
-    <h0><xsl:value-of select="book/title" /></h0>
-    <xsl:for-each select="book/chapter">
+    <h0><xsl:value-of select="title" /></h0>
+    <xsl:apply-templates select="top" />
+    <xsl:for-each select="section">
       <h1><xsl:value-of select="title" /></h1>
+      <xsl:apply-templates select="top" />
+      <xsl:apply-templates select="body" />
       <xsl:for-each select="section">
 	<h2><xsl:value-of select="title" /></h2>
-	<xsl:for-each select="subsection">
+	<xsl:apply-templates select="top" />
+	<xsl:apply-templates select="body" />
+	<xsl:for-each select="section">
 	  <h3><xsl:value-of select="title" /></h3>
+	  <xsl:apply-templates select="top" />
+	  <xsl:apply-templates select="body" />
 <!--	  <xsl:value-of select="content" disable-output-escaping="yes" /> -->
-	  <xsl:apply-templates select="content" />
 	</xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
@@ -27,6 +33,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="p">
   <p><xsl:apply-templates/></p>
+</xsl:template>
+
+<xsl:template match="pre">
+<pre>
+<xsl:apply-templates/>
+</pre>
 </xsl:template>
 
 <xsl:template match="inline">
@@ -40,6 +52,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="typename">
   <typename><xsl:apply-templates/></typename>
+</xsl:template>
+<xsl:template match="typename[@class='replacable']">
+  <typename class="replacable"><xsl:apply-templates/></typename>
 </xsl:template>
 <xsl:template match="lexerregexp">
   <lexerregexp><xsl:apply-templates/></lexerregexp>
@@ -61,8 +76,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
 </xsl:template>
 <xsl:template match="token-example-table">
-  <table cellspacing="5"><xsl:apply-templates select="head"/></table>
-  <table cellspacing="5"><xsl:apply-templates select="body"/></table>
+  <table cellspacing="5">
+    <xsl:apply-templates select="head"/>
+    <xsl:apply-templates select="body"/>
+  </table>
+</xsl:template>
+<xsl:template match="simple-table">
+  <table><xsl:apply-templates select="tr"/></table>
 </xsl:template>
 <xsl:template match="tr">
   <tr><xsl:apply-templates/></tr>

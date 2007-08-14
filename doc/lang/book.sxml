@@ -1,4 +1,8 @@
 <book>
-<title>The Shapes language</title>
+<title>The Shapes language reference</title>
+<top>
+<p>Without a reference documentation, the lanugage would not be defined. On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is being ready for public use.</p>
+</top>
+<!--#include virtual="chap-notation.sxml" -->
 <!--#include virtual="chap-syntax.sxml" -->
 </book>

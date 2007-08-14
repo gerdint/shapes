@@ -1,0 +1,64 @@
+<section id="chap-notation">
+<title>Notation</title>
+<top>
+<p>This chapter just explains how to understand the rest of this reference.  This includes showing how fonts and colors are used, introduction of a few elementary concepts, and even definitions of some very basic syntax elements..</p>
+</top>
+
+<section id="notation-fonts-color">
+<title>Fonts and color</title>
+<body>
+<simple-table>
+<tr> <th>Concept</th> <th>Example</th> <th>Remark</th> </tr>
+<tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
+<tr> <td>Variable or state</td> <td><varname>stroke</varname>, <varname>•page</varname></td> <td></td> </tr>
+<tr> <td>Replacable dito</td> <td><varname class="replacable">some_var</varname>, <varname class="replacable">•destination</varname></td> <td></td> </tr>
+<tr> <td>Formal parameter name</td> <td><paramname>head</paramname></td> <td></td> </tr>
+<tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
+<tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
+<tr> <td>Type name</td> <td><typename>Path2D</typename></td> <td>Not yet supported by the language.</td> </tr>
+<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
+<tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
+<tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
+</simple-table>
+
+<p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntaxname>basicf-float</syntaxname><bnf>;</bnf><syntaxname>unit</syntaxname></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>
+
+<p>To denote that a piece of syntax allows expression that evaluate to a certain type, the <bnf>::</bnf> notation is used, like this:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+</syntax-table>
+
+<p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class="replacable">SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</syntax-table>
+
+
+<p>The following character classes will be used later:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">LowerCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?π§]</lexerregexp></td></tr>
+<tr> <td><syntaxname class="new">UpperCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[A-Z]</lexerregexp></td></tr>
+<tr> <td><syntaxname class="new">Letter</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>LowerCaseLetter</syntaxname> <bnf>|</bnf> <syntaxname>UpperCaseLetter</syntaxname></inline></td></tr>
+</syntax-table>
+</body>
+
+</section>
+
+<section id="notation-nomenclature">
+<title>Nomenclature</title>
+
+<section id="notation-nomenclature-files">
+<title>Files</title>
+<body>
+<p>Before going into the language itself, let us introduce a few definitions relating to files.</p>
+
+<p>When the compiler is invoked, this shall typically result in a piece of graphics.  This is the <em>output</em> file.</p>
+
+<p>Two types of input files can be identified.  First, there are <em>application sources</em>, which are generally used to create a corresponding piece of graphics in an output file.  (Sometimes, an application source may not be meant to produce an output file by itself, but as part of another application where it is included.)  Second, there are <em>extension sources</em>, which shall not produce any graphics by themselves, but only provide functionality that can be used in applications.</p>
+
+<p>There are other types of files as well, but the introduction of these is not needed for the language reference.</p>
+</body>
+</section>
+</section>
+
+</section>
