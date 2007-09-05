@@ -1,0 +1,173 @@
+\documentclass[noamsthm]{beamer}
+% ,handout,notes=onlyslideswithnotes
+
+\usepackage[center]{tiddemath}
+\usepackage{tiddetext}
+\usepackage{tiddedae}
+\usepackage{parskip}
+
+\usepackage[utf-8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%\usepackage{beamerthemesplit}
+\usetheme{JuanLesPins}
+
+\usepackage{verbatim}
+
+\title{Shapes}
+\subtitle{--- ett hyfsat funktionellt ritspråk}
+\author{Henrik Tidefelt}
+\institute{LiTH}
+\date{\today}
+
+\newcommand{\maincoveringmode}{invisible}
+\usepackage[swedish]{babel}
+
+\providecommand{\paragraph}[1]{\textbf{#1}\,}
+
+\newcounter{tmppauses}
+
+\begin{document}
+
+% svenska är förvalt, men det här visar hur man skulle gjort för att byta till det andra språket:
+\selectlanguage{swedish}
+
+\frame{%
+\note[item]{Hälsa alla välkomna!}%
+\note[item]{Presentera mig.}
+\note[item]{Mycket hellre frågor under tiden än efteråt.}
+\titlepage}
+
+\section*{Översikt}
+\frame{\frametitle{Mål}
+  Med den här UppLYSningen hoppas jag
+  \pause
+  \begin{itemize}[<+->]
+  \item Att ni ska få ett hum om vad \Shapes är.
+  \item Få höra era invändningar mot designen som den ser ut idag.
+  \item Lyckas hitta någon testpilot.
+  \item Väcka intresse för utvecklingssamarbete.
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+
+\frame{\frametitle{Plan}
+  De stora inslagen idag är:
+  \pause
+  \begin{itemize}[<+->]
+  \item Beskriva hur språkets struktur ser ut idag.
+  \item Visa lite av de funktioner som kärnan erbjuder.
+  \item Diskutera intressanta utmaningar för framtiden.
+  \end{itemize}
+  \note[item]{Påminn om att man gärna får ställa frågor!}
+}
+
+\setbeamercovered{\maincoveringmode}
+
+\section{Introduktion}
+\frame{%
+  \begin{center}
+    {\Huge Introduktion}
+  \end{center}
+  \note{Då börjar vi\ldots}
+}
+
+\frame{\frametitle{Rötter}
+  \Shapes har sina rötter i många av de språk jag varit i kontakt med:
+  \begin{itemize}[<+->]
+  \item MetaPost (en omarbetning av Knuths MetaFont) --- \Shapes kom till när jag ledsnade på MetaPost.
+  \item Scheme --- syntax och funktions-begreppet.
+  \item Haskell --- för sina rena ideal.
+  \item C++ --- utmatningssyntaxen.
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+\frame{\frametitle{Alternativ}
+  Några andra ritspråk som finns och/eller används idag:
+  \begin{itemize}[<+->]
+  \item MetaPost
+  \item Asymptote
+  \item PGF och TikZ
+  \item Haskell~PDF
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+\frame{\frametitle{Varför \Shapes?}
+  Givet utbudet av alternativa rit-språk, varför utveckla ett till?  Här är några skäl:
+  \begin{itemize}[<+->]
+  \item Inte funktionellt orienterade (alla utom Haskell~PDF).
+  \item Dålig beräkningskapacitet (MetaPost och PDF/TikZ).
+  \item Saknar domän-specifik syntax (Haskell~PDF).
+  \item Inte publicerade när \Shapes påbörjades (Asymptote och Haskell~PDF).
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+
+\frame{\frametitle{Hello, shaper!}
+
+\texttt{
+$\bullet$page <{}< [stroke (0cm,0cm)-{}-(1cm,1cm)]
+}
+
+\pause
+
+\texttt{
+$\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
+}
+
+\pause
+
+\texttt{
+[($\backslash$ $\bullet$dst pth .> \{ $\bullet$dst <{}< stroke [] pth \} )\\
+\ \ $\bullet$page \ (0cm,0cm)-{}-(1cm,1cm)]
+}
+
+  \note[item]{Kör live-demo!}
+}
+
+\section{Språkets struktur}
+\frame{%
+  \begin{center}
+    {\Huge Språkets struktur}
+  \end{center}
+  \note[item]{Inget att säga här.}
+}
+
+\section{Funktioner i kärnan}
+\frame{%
+  \begin{center}
+    {\Huge Funktioner i kärnan}
+  \end{center}
+  \note[item]{Inget att säga här.}
+}
+
+\section{Utmaningar för framtiden}
+\frame{%
+  \begin{center}
+    {\Huge Utmaningar för framtiden}
+  \end{center}
+  \note[item]{Inget att säga här.}
+}
+
+\section{Sammanfattning}
+\frame{%
+  \begin{center}
+    {\Huge Sammanfattning}
+  \end{center}
+  \note[item]{Inget att säga här.}
+}
+\frame{\frametitle{Sammanfattning}
+  \begin{itemize}
+    \item \Shapes är\ldots
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+
+\frame{%
+  \begin{center}
+    Slut.
+  \end{center}
+  \note[item]{Tacka för uppmärksamheten!}
+}
+
+\end{document}
