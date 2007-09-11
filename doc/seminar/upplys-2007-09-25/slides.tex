@@ -1,4 +1,4 @@
-\documentclass[noamsthm]{beamer}
+\documentclass[noamsthm,handout]{beamer}
 % ,handout,notes=onlyslideswithnotes
 
 \usepackage[center]{tiddemath}
@@ -8,6 +8,7 @@
 
 \usepackage[utf-8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 
 %\usepackage{beamerthemesplit}
 \usetheme{JuanLesPins}
@@ -19,6 +20,8 @@
 \author{Henrik Tidefelt}
 \institute{LiTH}
 \date{\today}
+
+\newcommand{\inEnglish}[1]{(eng: \emph{#1})}
 
 \newcommand{\maincoveringmode}{invisible}
 \usepackage[swedish]{babel}
@@ -72,6 +75,18 @@
   \note{Då börjar vi\ldots}
 }
 
+\frame{\frametitle{Historia}
+  \begin{itemize}[<+->]
+  \item Hösten 2003: Första kontakt med MetaPost.
+  \item Sommaren 2004: Toolbox för plottning i \Matlab tar form.
+  \item Hösten 2004: Börjar undersöka möjligheten att ersätta MetaPost.
+  \item September 2005: Shapes, då kallat \emph{MetaPDF}, versionshanteras.
+  \item Januari 2007: Shapes, då kallat \emph{Drool}, har använts till stort antal figurer i en bok.
+  \item April 2007: Kontrollerade tillstånd.
+  \item September 2007: Språket heter \emph{Shapes}, och presenteras för första gången.
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
 \frame{\frametitle{Rötter}
   \Shapes har sina rötter i många av de språk jag varit i kontakt med:
   \begin{itemize}[<+->]
@@ -105,19 +120,19 @@
 
 \frame{\frametitle{Hello, shaper!}
 
-\texttt{
+\texttt{%
 $\bullet$page <{}< [stroke (0cm,0cm)-{}-(1cm,1cm)]
 }
 
 \pause
 
-\texttt{
+\texttt{%
 $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 }
 
 \pause
 
-\texttt{
+\texttt{%
 [($\backslash$ $\bullet$dst pth .> \{ $\bullet$dst <{}< stroke [] pth \} )\\
 \ \ $\bullet$page \ (0cm,0cm)-{}-(1cm,1cm)]
 }
@@ -130,21 +145,153 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   \begin{center}
     {\Huge Språkets struktur}
   \end{center}
-  \note[item]{Inget att säga här.}
+  \note[item]{Det här är kanske inte den roligaste biten av presentationen för den som är intresserad av grafik.}
 }
 
-\frame{\frametitle{Bindningar och scopes}
+\subsection{Enkla typer}
+\begin{frame}[fragile]\frametitle{Exempel på enkla typer}
+  \begin{itemize}
+  \item Flyttal: \texttt{14}, \texttt{14.5}, \texttt{~1}
+  \item Heltal: \texttt{'5}, \texttt{'$\sim$12}, \texttt{'0xFF}
+  \item Längd: \texttt{7cm}, \texttt{$\sim$3mm}, \texttt{72bp}
+  \item Sträng (mer detaljer senare): \texttt{\textasciigrave{}Hej!\textasciiacute{}}
+  \item Symbol: \texttt{'left}
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+\end{frame}
+
+\subsection{Bindningar och scopes}
+\frame{\frametitle{Lexikala bindningar}
+  Lexikala bindningar fungerar som i Scheme, men kan inte bindas om.
+
+  \texttt{%
+    a: 42
+  }
+
+  \pause
+  
+  Räckvidden \inEnglish{scope} är begränsad till en \emph{code bracket}:
+
+  \texttt{%
+    \{\\
+    \ \ a: 42\\
+    \ \ $\bullet$stdout <{}< a\\
+    \}\\
+  }
+
   \note[item]{Inget att säga här.}
 }
-\frame{\frametitle{Funktionsanrop}
+\frame{\frametitle{Lexikala bindningar --- detaljer}
+  
+  \begin{itemize}
+  \item Högerledet evalueras i samma scope som bindningen tillhör.  (Jämför \texttt{letrec} i Scheme.)\\
+    \texttt{%
+      odd:  $\backslash$ n .> [if n = '0  false [even n - '1]]\\
+      even: $\backslash$ n .> [if n = '0  true  [odd  n - '1]]
+    }
+  \item Skuggade bindningar kan nås:\\
+    \texttt{%
+      a: ../a + 7
+    }
+    \note[item]{Tillgång till skuggade bindningar kräver förståelse av vilka konstruktioner som inför en code bracket.}
+  \end{itemize}
+
   \note[item]{Inget att säga här.}
 }
+\frame{\frametitle{Dynamiska bindningar}
+  Dynamisk bindning infördes som ett sätt att undvika den imperativa spagetti-struktur som ett skrivbart \emph{graphics state} lätt kan leda till.
+
+  \texttt{%
+    @width:4bp | [stroke mypath]
+  }
+  
+  \begin{itemize}
+  \item Dynamiska variabler inleds med \texttt{@}.
+  \item Den dynamiska variabeln tillsammans med ett värde blir ett nytt värde som representerar en potentiell dynamisk bindning.
+    \note[item]{Förslag på bätte språkbruk?}
+  \item Bindningsvärden kan kombineras:\\
+    \texttt{%
+      @width:4bp \& @dash:[dashpattern 1cm 4mm]
+    }
+  \item Dynamiska bindningar sätts i scope med en ``pipe''.
+  \item En dynamisk variabel har ett filter och ett skönsvärde \inEnglish{default value}.
+  \end{itemize}
+}
+\begin{frame}\frametitle{Dynamiska värden}
+  En dynamisk variabel kan bindas till ett \emph{dynamiskt värde}.
+  \begin{itemize}
+  \item Ser ut så här:\\
+    \texttt{%
+      @bigmargin: {\color{red}dynamic} 1.3 * @smallmargin
+    }
+  \item Undviker behovet av att binda alla dynamiska variabler till argumentlösa funktioner.
+  \end{itemize}
+\end{frame}
+\subsection{Funktionsanrop}
+\frame{\frametitle{Funktionsdefinitioner}
+  Exempel:
+
+  \texttt{%
+    {\color{red}$\backslash$} x y {\color{red}.>} x * x + y * y
+  }
+
+  \pause
+  \begin{itemize}
+  \item Argumentens namn är en del av funktionens signatur.
+  \item En slask \inEnglish{sink} kan ta hand om ytterligare argument.\\
+    \texttt{%
+      $\backslash$ x y {\color{red}<>} rest .> x + y + (foo [] <>rest)
+    }
+  \item Vilka argument som helst kan få skönsvärden:\\
+  \texttt{%
+    $\backslash$ x{\color{red}:}3 y z{\color{red}:}2 .> x + y + z
+  }
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+}
+\begin{frame}\frametitle{Enkla funktionsanrop}
+  Ett enkelt funktionsanrop kan ange argument både genom ordning och genom namn.
+  
+  \texttt{%
+    hypot: $\backslash$ x y .> [sqrt x*x + y*y]
+  }
+
+  \begin{itemize}
+  \item Ordnade argument: se anrop till \texttt{sqrt}.
+  \item Namngivna argument: \texttt{[hypot y:3 x:4]}.
+  \item Blandat: Ordnade argument måste komma först.
+  \item Endast ett argument: \texttt{square [] 3} eller \texttt{square [] x:3}
+  \end{itemize}
+  
+  Märk att namngivna argument kan inte ändra betydelsen av ordnade argument!
+\end{frame}
+\begin{frame}\frametitle{Snitt}
+  Scheme: \emph{evaluated cuts}
+
+  \texttt{%
+    [hypot 3 ...]
+  }
+  \\
+  \texttt{%
+    [hypot y:4 ...]
+  }
+
+  \begin{itemize}
+  \item Ordnade argument blir helt osynliga i den nya funktionen.
+  \item Namngivna argument (er)sätter skönsvärden.
+  \item Endast ett argument: \texttt{hypot [...] 3} eller \texttt{hypot [...] y:4}
+  \end{itemize}
+  
+\end{frame}
+\subsection{Kontrollerade tillstånd}
 \frame{\frametitle{Kontrollerade tillstånd}
   \note[item]{Inget att säga här.}
 }
+\subsection{Structures}
 \frame{\frametitle{Structures}
   \note[item]{Inget att säga här.}
 }
+\subsection{Evaluering}
 \frame{\frametitle{Lat evaluering}
   \note[item]{Inget att säga här.}
 }
@@ -165,6 +312,9 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   \note[item]{Inget att säga här.}
 }
 \frame{\frametitle{Grundläggande ritning}
+  \note[item]{Inget att säga här.}
+}
+\frame{\frametitle{Travare}
   \note[item]{Inget att säga här.}
 }
 \frame{\frametitle{2D}
