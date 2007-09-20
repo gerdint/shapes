@@ -118,7 +118,8 @@
   \note[item]{Inget att säga här.}
 }
 
-\frame{\frametitle{Hello, shaper!}
+\begin{frame}[fragile]
+  \frametitle{Hello, shaper!}
 
 \texttt{%
 $\bullet$page <{}< [stroke (0cm,0cm)-{}-(1cm,1cm)]
@@ -138,7 +139,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 }
 
   \note[item]{Kör live-demo!}
-}
+\end{frame}
 
 \section{Språkets struktur}
 \frame{%
@@ -170,7 +171,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 
   \pause
   
-  Räckvidden \inEnglish{scope} är begränsad till en \emph{code bracket}:
+  Räckvidden \inEnglish{scope} är begränsad till en kod-klammer \inEnglish{code bracket}:
 
   \texttt{%
     \{\\
@@ -193,7 +194,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
     \texttt{%
       a: ../a + 7
     }
-    \note[item]{Tillgång till skuggade bindningar kräver förståelse av vilka konstruktioner som inför en code bracket.}
+    \note[item]{Tillgång till skuggade bindningar kräver förståelse av vilka konstruktioner som inför en kod-klammer.}
   \end{itemize}
 
   \note[item]{Inget att säga här.}
@@ -284,9 +285,112 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   
 \end{frame}
 \subsection{Kontrollerade tillstånd}
-\frame{\frametitle{Kontrollerade tillstånd}
+\begin{frame}\frametitle{Scenario}
+  Utgångsbudet för att skapa en komplex bild i ett funktionellt språk är att skriva ett stort uttryck som sätter ihop de ingående delarna till en helhet.
+
+  \begin{itemize}
+  \item Det skapar lätt en krystad struktur i koden.
+  \item Det stämmer illa med \emph{painter's model} och hur de flesta av oss tänker på att skapa en bild.
+  \item Intuitionen är snarare \emph{imperativ}!
+  \item \ldots men variabler kunde ju inte bindas om\ldots
+  \end{itemize}
+
   \note[item]{Inget att säga här.}
+\end{frame}
+\begin{frame}\frametitle{Kontrollerade tillstånd}
+  \Shapes erbjuder \emph{kontrollerade tillstånd} \inEnglish{limited states} för att tillåta en viss grad av imperativ stil.
+
+  \begin{itemize}
+  \item Kontrollerade tillstånd binds till variabler som inleds med $\bullet$ eller $\#$: \texttt{$\bullet$page}
+  \item De kan skickas \emph{by reference} till ``funktioner'', men kan inte returneras.
+    \note[item]{Att returnera en automatisk variabel by reference är inte bra.}
+  \item Några finns globalt, andra kan skapas genom avknoppning från speciella \emph{värden}.
+  \end{itemize}
+
+\end{frame}
+\begin{frame}\frametitle{Grundläggande operationer}
+  Det finns tre huvudsakliga operationer på ett tillstånd:
+  \begin{itemize}
+  \item
+    Lägga till \inEnglish{tack on}: \texttt{$\bullet$dst {\color{red}<{}<{}} pic}
+  \item
+    Frysa \inEnglish{freeze}, erhålla slutgiltigt värde, och förstöra: \texttt{$\bullet$dst{\color{red};}}
+    \note[item]{Används både för att frigöra resurser, och för att tydliggöra i koden att tillståndet är ute ur spelet.}
+  \item
+    Tjuvtitta \inEnglish{peek}, bör ge samma resultat som att frysa, men förstör inte tillståndet: \texttt{{\color{red}(}$\bullet$dst{\color{red})}}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}\frametitle{Exempel~1}
+\texttt{%
+mark: $\backslash$ {\color{red}$\bullet$}dst .>\\
+\{\\
+\ \ {\color{red}$\bullet$}dst {\color{red}<{}<{}} [stroke (0cm,0cm)-{}-(1cm,1cm)]\\
+\}\\
+\ \\
+{}[{}mark {\color{red}$\bullet$}page{}]{}\\
 }
+\end{frame}
+
+\begin{frame}\frametitle{Exempel~2}
+\texttt{%
+$\bullet$page <{}<\\
+{\color{red}\{}\\
+\ \ $\bullet$dst: {\color{red}newGroup2D}\\
+\ \ $\bullet$dst <{}<{} house <{}<{} car\\
+\ \ \ \ <{}<{} dog\\
+\ \ $\bullet$dst <{}<{} cow\\
+\ \ $\bullet$dst;\\
+{\color{red}\}}
+}
+
+\texttt{%
+$\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}\\
+}
+\end{frame}
+
+\begin{frame}\frametitle{Mer om tillstånd}
+  \begin{itemize}
+  \item Inbyggda tillstånds-avknoppare:\\
+    \texttt{newIgnore}, \texttt{newGroup2D}, \texttt{newGroup3D}, \texttt{newString}, \texttt{newTimer}, \texttt{newText}, \texttt{newFont}, \texttt{newZBuf}, \texttt{newZSorter}
+  \item Högre-nivå-konstruktorer:\\
+    \texttt{newRandom}, \texttt{devRandom}
+  \item Globalt definierade (interaktion med omvärlden) tillstånd:\\
+    \texttt{$\bullet$page}, \texttt{$\bullet$catalog}, \texttt{$\bullet$stdout}, \texttt{$\bullet$stderr}, \texttt{$\bullet$randomdevice}, \texttt{$\bullet$time}, \texttt{$\bullet$ignore}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{``Funktioner'' och tillstånd\ldots}
+  \begin{itemize}
+  \item Tillstånd kan skickas både ordnat och per namn, precis som argument.
+  \item En funktion kommer inte åt tillstånd utanför sin kropp.
+  \item Anrop bör ses som makro-expansion snarare än funktions-anrop.
+  \item En kod-klammer med tillstånd blir ett \emph{uttryck}; utifrån syns det inte att tillstånd används för att konstruera klammerns värde.
+  \item Ett tillstånd kan endast frysas i sin egen kod-klammer, så en funktion kan inte frysa tillstånd som den tar emot.
+  \item Tillstånds-parametrar kan inte ges skönsvärden.
+  \item Ett rent funktionsanrop kan inte påverka några tillstånd!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Procedurer}
+  En \emph{procedur} kan påverka tillstånd utanför sin egen kropp.
+
+  \begin{itemize}
+  \item Kan vara praktiskt ibland.
+  \item Svårt att analysera.
+  \item Att användas under kontrollerade former.
+  \item Skapas med egen syntax:\\
+    \texttt{proc: {\color{red}$\backslash$} arg1 arg2 {\color{red}.> !} body}
+  \item Anropas med egen syntax (annars skulle det se ut som ett rent uttryck!):\\
+    \texttt{{\color{red}[!}proc arg1 arg2{\color{red}]}}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Utmaning}
+  Dynamiska tillstånd\ldots
+\end{frame}
+
 \subsection{Structures}
 \frame{\frametitle{Structures}
   \note[item]{Inget att säga här.}
@@ -309,6 +413,14 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 }
 
 \frame{\frametitle{Kurv-konstruktion}
+  \note[item]{Inget att säga här.}
+}
+\frame{\frametitle{Travare (\emph{sliders})}
+  \begin{itemize}
+  \item Skapa utifrån kurvlängd, kurvtid, eller andra beräkningar
+  \item Punktvisa egenskaper för kurvan
+  \item Del-kurvor
+  \end{itemize}
   \note[item]{Inget att säga här.}
 }
 \frame{\frametitle{Grundläggande ritning}
