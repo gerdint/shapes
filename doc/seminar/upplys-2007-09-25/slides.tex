@@ -259,7 +259,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 
   \begin{itemize}
   \item Ordnade argument: se anrop till \texttt{sqrt}.
-  \item Namngivna argument: \texttt{[hypot y:3 x:4]}.
+  \item Namngivna argument: \texttt{[hypot y:3 x:4]}
   \item Blandat: Ordnade argument måste komma först.
   \item Endast ett argument: \texttt{square [] 3} eller \texttt{square [] x:3}
   \end{itemize}
@@ -314,7 +314,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   \item
     Lägga till \inEnglish{tack on}: \texttt{$\bullet$dst {\color{red}<{}<{}} pic}
   \item
-    Frysa \inEnglish{freeze}, erhålla slutgiltigt värde, och förstöra: \texttt{$\bullet$dst{\color{red};}}
+    Frysa \inEnglish{freeze}, erhålla slutgiltigt värde, och förstöra (endast egen kod-klammer): \texttt{$\bullet$dst{\color{red};}}
     \note[item]{Används både för att frigöra resurser, och för att tydliggöra i koden att tillståndet är ute ur spelet.}
   \item
     Tjuvtitta \inEnglish{peek}, bör ge samma resultat som att frysa, men förstör inte tillståndet: \texttt{{\color{red}(}$\bullet$dst{\color{red})}}
@@ -367,7 +367,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item En funktion kommer inte åt tillstånd utanför sin kropp.
   \item Anrop bör ses som makro-expansion snarare än funktions-anrop.
   \item En kod-klammer med tillstånd blir ett \emph{uttryck}; utifrån syns det inte att tillstånd används för att konstruera klammerns värde.
-  \item Ett tillstånd kan endast frysas i sin egen kod-klammer, så en funktion kan inte frysa tillstånd som den tar emot.
+  \item Notera att en funktion kan inte frysa tillstånd som den tar emot.
   \item Tillstånds-parametrar kan inte ges skönsvärden.
   \item Ett rent funktionsanrop kan inte påverka några tillstånd!
   \end{itemize}
@@ -378,8 +378,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 
   \begin{itemize}
   \item Kan vara praktiskt ibland.
-  \item Svårt att analysera.
-  \item Att användas under kontrollerade former.
+  \item Svårt att analysera; att användas under kontrollerade former.
   \item Skapas med egen syntax:\\
     \texttt{proc: {\color{red}$\backslash$} arg1 arg2 {\color{red}.> !} body}
   \item Anropas med egen syntax (annars skulle det se ut som ett rent uttryck!):\\
@@ -391,17 +390,88 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   Dynamiska tillstånd\ldots
 \end{frame}
 
-\subsection{Structures}
-\frame{\frametitle{Structures}
+\subsection{Strukturer}
+\begin{frame}\frametitle{Strukturer}
+  En \emph{struktur} \inEnglish{structure} generaliserar en namn-värde-avbildning för att mer likna hur en funktions formella argument binds till värden vid ett funktionsanrop.
+
+  \begin{itemize}
+  \item Både ordnade och namngivna fält.
+  \item Kan bara innehålla värden; inga tillstånd i dagsläget.
+  \item Kan vecklas ut vid funktionsanrop och bindning av variabler.
+  \item Används som slask vid funktionsanrop.
+  \item Användas för att ``returnera många värden''.
+  \end{itemize}
+
+  På så sätt uppnås en viss grad av symmetri mellan att funktionsanrop med många värden, och retur av många värden.
+
   \note[item]{Inget att säga här.}
-}
+\end{frame}
+\begin{frame}\frametitle{Konstruktion och adressering}
+  \begin{itemize}
+  \item Ordnade fält:\\
+    \texttt{s: {\color{red}(>} 12 13 14 {\color{red}<)}}
+  \item Namngivna fält:\\
+    \texttt{s: {\color{red}(>} c:14 a:12 {\color{red}<)}}
+  \item Liksom vid funktionsanrop måste ordnade fält anges före namngivna.
+  \item Adressering av namngivet fält:\\
+    \texttt{s{\color{red}.}c}
+  \item Hur komma åt ett givet ordnat fält?
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+\end{frame}
+\begin{frame}\frametitle{Funktionsanrop och slaskar}
+  \begin{itemize}
+  \item För att anropa en funktion (eller procedur) med en struktur:\\
+    \texttt{fun [] {\color{red}<>} s}\\
+    \texttt{proc [!] {\color{red}<>} s}
+  \item Skapa snitt:\\
+    \texttt{fun [...] {\color{red}<>} s}\\
+    \texttt{proc [!...] {\color{red}<>} s}
+  \item Funktioner med slask har vi sett tidigare:\\
+    \texttt{%
+      $\backslash$ x y {\color{red}<>} rest .> x + y + (foo [] <>rest)
+    }
+  \end{itemize}
+  \note[item]{Inget att säga här.}
+\end{frame}
+\begin{frame}\frametitle{Binda till delarna}
+  För att binda nya variabler till delarna av en struktur används en särskild och förhållandevis rik syntax.  Några exempel:
+  \begin{itemize}
+  \item \texttt{{\color{red}(<} first second third {\color{red}>)} {\color{red}:} (> 1 2 3 <)}
+  \item \texttt{{\color{red}(<} first second third:40 {\color{red}>)} {\color{red}:} (> 1 2 <)}
+  \item \texttt{{\color{red}(<} a:.y b:.x {\color{red}>)} {\color{red}:} (> x:1 y:2 <)}
+  \item \texttt{{\color{red}(<} a:.y:8 b:.x {\color{red}>)} {\color{red}:} (> x:1 <)}
+  \item \texttt{{\color{red}(<} a:.y:8 b:."{} {\color{red}>)} {\color{red}:} (> b:1 <)}
+  \end{itemize}
+  
+  \note[item]{Inget att säga här.}
+\end{frame}
 \subsection{Evaluering}
-\frame{\frametitle{Lat evaluering}
+\begin{frame}\frametitle{Lat evaluering}
+  \Shapes anävnder lat evaluering vid funktionsanrop och bindning av variabler.
+
+  \begin{itemize}
+  \item Imperativ kod fördröjs aldrig (viktigt att lätt känna igen).
+  \item Fördröjd evaluering kan avstras manuellt:\\
+    \texttt{a : {\color{red}!!} expr}\\
+    \texttt{[fun expr1 {\color{red}!!}expr2 expr3]}
+  \item En funktion kan peka ut vilka argument som ska skickas evaluerade (vanligt i kärnan).
+  \end{itemize}
+
   \note[item]{Inget att säga här.}
-}
-\frame{\frametitle{Continuation passing style}
+\end{frame}
+\begin{frame}\frametitle{Continuation passing style}
+  \Shapes evalueras \emph{continuation passing style}.
+  \begin{itemize}
+  \item Svansrekursion blir naturligt.
+  \item Öppnar upp för lekstuga.
+  \item Jobbigt att implementera.
+  \item Inget \emph{dynamic-wind} i dagsläget.
+  \item Begränsad tillgång; endast \emph{escape continuations} i dagsläget.
+  \item \ldots duger för enklare felhantering.
+  \end{itemize}
   \note[item]{Inget att säga här.}
-}
+\end{frame}
 
 
 \section{Funktioner i kärnan}
@@ -411,33 +481,122 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{center}
   \note[item]{Inget att säga här.}
 }
-
-\frame{\frametitle{Kurv-konstruktion}
+\subsection{Kurv-konstruktio}
+\begin{frame}\frametitle{Introduktion}
+  \Shapes arbetar med kubiska splines som enda kurv-typ.  Bezier-parameterisering:
+  \begin{center}
+    \includegraphics{figures/spline}
+  \end{center}
+  Hur vill man ange koordinaterna?
   \note[item]{Inget att säga här.}
-}
-\frame{\frametitle{Travare (\emph{sliders})}
+\end{frame}
+\begin{frame}\frametitle{Syntax}
   \begin{itemize}
-  \item Skapa utifrån kurvlängd, kurvtid, eller andra beräkningar
-  \item Punktvisa egenskaper för kurvan
-  \item Del-kurvor
+    \item En kurva byggs upp av sammankopplade \emph{kurvpunkter} \inEnglish{path points} (och delkurvor).\\
+      \texttt{pp1{\color{red}-{}-}pp2{\color{red}-{}-}pp3}
+    \item En kurvpunkt har en mittpunkt som den interpolerande kurvan passerar genom, och två kontroll-punkter (en framåt och en bakåt).\\
+      \texttt{rear{\color{red}<}mid{\color{red}>}front}
+    \item Koordinaterna \emph{kan} anges absolut:\\
+      \texttt{(0mm,0mm)>(2mm,5mm)\\-{}-(4cm,$\sim$5mm)<(6mm,0mm)>(9mm,3mm)\\-{}-(10mm,0mm)}\\
+      \begin{center}
+        \includegraphics{figures/absolute}        
+      \end{center}
   \end{itemize}
-  \note[item]{Inget att säga här.}
-}
-\frame{\frametitle{Grundläggande ritning}
-  \note[item]{Inget att säga här.}
-}
+\end{frame}
+\begin{frame}\frametitle{Relativa och polära koordinater}
+  \begin{itemize}
+  \item Kontroll-punkterna kan anges relativt den mittpunkt de tillhör, och en mittpunkt kan anges relativt föregående mittpunkt på kurvan.
+  \item Relativa koordinater kan anges med ett relativ-uttryck:\\
+    Båda koordinaterna tillsammans: \texttt{{\color{red}(+}(x,y){\color{red})}}\\
+    Var och en för sig: \texttt{(x,{\color{red}(+}y{\color{red})})}
+  \item Kontrollpunkter kan även anges relativt på polär form med speciell syntax:\\
+    \texttt{{\color{red}(}r{\color{red}\textasciicircum}a{\color{red})}}
+  \item I de polära koordinaterna kan endera eller båda komponenterna utelämnas.
+  \end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Semantik}
+  Värden för utelämnade komponenter i polära koordinater bestäms i grova drag enligt:
+  \begin{itemize}
+  \item Vinklar propageras genom mittpunkter (eventuellt hörn).
+  \item Resterande vinklar bestäms baserat på mittpunktens läge i förhållande till angränsande mittpunkter.
+  \item Radier propageras genom mittpunkter.
+  \item Resterande radier beräknas baserat på vinklar.
+  \end{itemize}
+
+  Alla effekter är lokala, vilket gör processen lättare att handtera.
+\end{frame}
+\begin{frame}\frametitle{Smarta enheter}
+  När en radie beräknas baserat på vinklar används en \emph{special-enhet} för längd.
+  \begin{itemize}
+  \item Avbildar mitt-mitt-avstånd och vinklar på radie.
+  \item $9$ special-enheter är definierade, och gör det enkelt att approximera cirkelbågar, undvika inflexioner, göra vågor, med mera.
+  \item Vilken enhet som används bestäms av \texttt{@specialunit}, men det går också bra att använda special-enheter direkt som radie-angivelse.
+  \end{itemize}
+\end{frame}
+\subsection{Travare}
 \frame{\frametitle{Travare}
-  \note[item]{Inget att säga här.}
+  En \emph{travare} \inEnglish{slider} är ett kurva-kurvtid-par.
+  \begin{itemize}
+  \item Skapa utifrån kurvlängd, kurvtid, eller andra beräkningar:\\
+    \texttt{[pth 1.3]}, \texttt{[pth 7mm]}, \texttt{pth.begin + 12mm}, \texttt{[continuous\_approximator pth (4cm,7cm)]}
+  \item Punktvisa egenskaper för kurvan (i 3D även binormaler):\\
+    \texttt{sl.p}, \texttt{sl.v}, \texttt{sl.rv}, \texttt{sl.t}, \texttt{sl.rt}, \texttt{sl.n}, \texttt{sl.rn}, 
+    \texttt{sl.ik}, \texttt{sl.rik}, \texttt{sl.time}, \texttt{sl.length}, \texttt{sl.past}, \texttt{sl.looped}, \texttt{sl.mod}
+  \item Del-kurvor:\\
+    \texttt{[pth 2cm]-{}-[pth 2.5cm]}
+  \end{itemize}
+  \note[item]{Känns som ett lyckat koncept.}
 }
-\frame{\frametitle{2D}
-  \note[item]{Inget att säga här.}
-}
-\frame{\frametitle{3D}
-  \note[item]{Inget att säga här.}
-}
-\frame{\frametitle{PDF}
-  \note[item]{Inget att säga här.}
-}
+\subsection{Grundläggande grafik}
+\begin{frame}\frametitle{Grundläggande kurv-målning}
+  För att komma igång med ritandet:
+  \begin{itemize}
+  \item För att måla kurvor:\\
+    \texttt{[{\color{red}stroke} pth]}, \texttt{[{\color{red}fill} pth]}, \texttt{[{\color{red}fillodd} pth]}
+  \item Välja färg och dylikt:\\
+    \texttt{@stroking}, \texttt{@nonstroking}, \texttt{@width}, \texttt{@dash}, \texttt{@cap}, \texttt{@join}, \texttt{@miterlimit}, \texttt{@blend}, \texttt{@nonstrokingalpha}, \texttt{@strokingalpha}
+  \item Utmatning:\\
+    \texttt{$\bullet$page <{}< pic1 <{}< pic2 <{}< pic3}
+  \end{itemize}
+  \note[item]{Inget att säga här.}  
+\end{frame}
+\begin{frame}\frametitle{Grundläggande text-målning}
+  \Shapes har stöd för de typsnitt som ingår i PDF-standarden.
+  \begin{itemize}
+  \item Manuell och automatisk kernering(?) \inEnglish{kerning}.
+  \item Tyvärr begränsat urval av tecken som kan kodas.  Dock inte sämre än att svenska tecken klarat sig.
+  \item Typsnittsegenskaper sätts som vanligt med dynamiska variabler, fångas i regel upp vid kernering.
+  \item Grafiken skapas genom att text-operationer samlas i ett tillstånd:\\
+    \texttt{({\color{red}newText} <{}< op1 <{}< op2 )}
+  \item En text-operation är oftast en sträng eller en sträng med kernering:\\
+    \texttt{({\color{red}newText} <{}< [kern \textasciigrave{}LINK\textasciiacute{} 0.15 \textasciigrave{}ÖPING\textasciiacute{})}\\
+    \begin{center}
+      \includegraphics{figures/linkoping}
+    \end{center}
+  \end{itemize}
+\end{frame}
+\subsection{2D}
+\begin{frame}\frametitle{2D}
+
+  \note{Inget att säga här.}  
+\end{frame}
+\subsection{3D}
+\begin{frame}\frametitle{3D}
+
+  \note{Inget att säga här.}  
+\end{frame}
+\subsection{PDF}
+\begin{frame}\frametitle{PDF}
+  \Shapes har stöd för
+  \begin{itemize}
+  \item Dokument med många sidor.  Varje sida läggs till \texttt{$\bullet$catalog}.
+  \item Korsreferenser och dokumentöversikt.
+  \item Sidnummer.
+  \item 
+  \end{itemize}
+  \note{Inget att säga här.}  
+\end{frame}
+\subsection{\LaTeX{} och strängar}
 \frame{\frametitle{\LaTeX{} och strängar}
   \note[item]{Inget att säga här.}
 }
@@ -456,10 +615,13 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \frame{\frametitle{Kompilera funktioner till PDF}
   \note[item]{Inget att säga här.}
 }
+\frame{\frametitle{Bättre stöd för typsnitt}
+  \note[item]{Inget att säga här.}
+}
 \frame{\frametitle{Mer grund-struktur}
   \begin{itemize}
-  \item Namespaces/packages
-  \item Användar-typer
+  \item Namespaces/packages.
+  \item Användar-typer (och -tillstånd!).
   \end{itemize}
   \note[item]{Inget att säga här.}
 }

@@ -1,0 +1,93 @@
+%PDF-1.4
+%ÅÇÉÑ Treat as binary
+1 0 obj
+<< /PageLabels 9 0 R
+/Pages 5 0 R
+/Type /Catalog
+>>
+endobj
+2 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+3 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+4 0 obj
+<< /BaseFont /Helvetica
+/Encoding /MacRomanEncoding
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+5 0 obj
+<< /Count 1
+/Kids [ 6 0 R ]
+/Type /Pages
+>>
+endobj
+6 0 obj
+<< /Contents 7 0 R
+/MediaBox [ 0.760000 -0.190000 51.720000 9.010000 ]
+/Parent 5 0 R
+/Resources 8 0 R
+/Type /Page
+>>
+endobj
+7 0 obj
+<< /Length 71
+>>
+stream
+BT
+/f0 10.000000 Tf 10.000000 TL 
+[ (LINK) 200.000000 (ÖPING) ] TJ 
+ET
+
+endstream 
+endobj
+8 0 obj
+<< /Font 11 0 R
+/ProcSet [ /PDF /Text ]
+>>
+endobj
+9 0 obj
+<< /Nums [ 0 << /S /D
+>> ]
+/Type /PageLabels
+>>
+endobj
+10 0 obj
+<< /CreationDate (D:20070923164207+0000)
+/Producer (Drool)
+/Title (linkoping.drool)
+>>
+endobj
+11 0 obj
+<< /f0 4 0 R
+>>
+endobj
+xref
+0 12
+0000000031 65535 n 
+0000000031 00000 n 
+0000000098 00000 n 
+0000000149 00000 n 
+0000000200 00000 n 
+0000000298 00000 n 
+0000000357 00000 n 
+0000000489 00000 n 
+0000000611 00000 n 
+0000000669 00000 n 
+0000000732 00000 n 
+0000000835 00000 n 
+trailer
+<< /Info 10 0 R
+/Root 1 0 R
+/Size 12
+>>
+startxref
+867
+%%EOF

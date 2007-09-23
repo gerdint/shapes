@@ -1,0 +1,4 @@
+##unit u = 2.5mm
+pth: [upsample_bends 30° (0u,0u)>(2u,5u)--(4u,~5u)<(6u,0u)>(11u,3u)--(12u,0u)]
+
+•page << [stroke pth]

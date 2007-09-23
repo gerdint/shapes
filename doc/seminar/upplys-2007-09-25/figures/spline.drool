@@ -1,0 +1,10 @@
+##needs circle
+##unit u = 0.5cm
+
+pth: @defaultunit:1%C | (0u,0u)>(^90°)--(^)<(2u,2u)>(^0°)--(3u^)<(4u,0u)>(^40°)
+
+mark: [stroke [circle 0.15u]]
+
+•page << [[range '0 [duration pth]].foldl ( \ p i .> p & [[shift [pth 1*i].p] mark] ) null]
+      << @width:2bp | [stroke pth]
+      << @stroking:rgb_RED & @width:1bp | [stroke [controlling pth]]
