@@ -503,6 +503,8 @@ Escape "¢"|"¤"
 "->" { return T_bindto; }
 "[]" { return T_emptybrackets; }
 "[...]" { return T_dddotbrackets; }
+"[!]" { return T_bangbrackets; }
+"[!...]" { return T_bangdddotbrackets; }
 "()" { return T_compose; }
 
 "(>" { return T_unionLeft; }

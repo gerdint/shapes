@@ -1018,8 +1018,8 @@ Ast::UnionExpr::eval( Kernel::EvalState * evalState ) const
 }
 
 
-Kernel::SplitCont_1::SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
-  : Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
+Kernel::SplitCont_1::SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
+  : Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), procedural_( procedural ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
 { }
 
 Kernel::SplitCont_1::~SplitCont_1( )
@@ -1030,6 +1030,16 @@ Kernel::SplitCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUnty
 {
   typedef const Lang::Function ArgType;
   RefCountPtr< ArgType > fun = Helpers::down_cast< ArgType >( funUntyped, "Split's function" );
+  
+  if( procedural_ != fun->isProcedural( ) )
+    {
+      if( procedural_ )
+	{
+	  throw Exceptions::OutOfRange( traceLoc_, "Expected procedure." );
+	}
+      throw Exceptions::OutOfRange( traceLoc_, "Expected function." );
+    }
+
   evalState->env_ = env_;
   evalState->dyn_ = dyn_;
   evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_2( fun, curry_, env_, dyn_, cont_, callLoc_ ) );
@@ -1095,8 +1105,8 @@ Kernel::SplitCont_2::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Ast::CallSplitExpr::CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry )
-  : Ast::Expression( loc ), curry_( curry ), funExpr_( funExpr ), argList_( argList )
+Ast::CallSplitExpr::CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry, bool procedural )
+  : Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), funExpr_( funExpr ), argList_( argList )
 { }
 
 Ast::CallSplitExpr::~CallSplitExpr( )
@@ -1114,14 +1124,14 @@ Ast::CallSplitExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment 
   funExpr_->analyze( this, env );
   argList_->analyze( this, env );
 
-  imperative_ = funExpr_->imperative_ || argList_->imperative_;
+  imperative_ = procedural_ || funExpr_->imperative_ || argList_->imperative_;
 }
 
 void
 Ast::CallSplitExpr::eval( Kernel::EvalState * evalState ) const
 {
   evalState->expr_ = funExpr_;
-  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_1( evalState->expr_->loc( ), argList_, curry_, *evalState, loc_ ) );
+  evalState->cont_ = Kernel::ContRef( new Kernel::SplitCont_1( evalState->expr_->loc( ), argList_, curry_, procedural_, *evalState, loc_ ) );
 }
 
 

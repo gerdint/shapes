@@ -186,12 +186,13 @@ namespace MetaPDF
     {
       Ast::Expression * argList_;
       bool curry_;
+      bool procedural_;
       Kernel::PassedEnv env_;
       Kernel::PassedDyn dyn_;
       Kernel::ContRef cont_;
       const Ast::SourceLocation & callLoc_;
     public:
-      SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
+      SplitCont_1( const Ast::SourceLocation & traceLoc, Ast::Expression * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
       virtual ~SplitCont_1( );
       virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
       virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -248,11 +249,12 @@ namespace MetaPDF
     class CallSplitExpr : public Expression
     {
       bool curry_;
+      bool procedural_;
       Ast::Expression * funExpr_;
       Ast::Expression * argList_;
 
     public:      
-      CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false );
+      CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false, bool procedural = false );
       virtual ~CallSplitExpr( );
       virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
       virtual void eval( Kernel::EvalState * evalState ) const;
