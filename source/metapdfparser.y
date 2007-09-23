@@ -412,6 +412,16 @@ CallExpr
 {
   $$ = new Ast::CallExpr( @$, $3, $4, false, true );  /* false for no curry, true for procedural */
 }
+| Expr T_bangbrackets Expr
+{
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+  args->orderedExprs_->push_back( $3 );
+  $$ = new Ast::CallExpr( @$,
+			  $1,
+			  args,
+			  false,  /* false means no curry */
+			  true ); /* true means procedural */
+}
 | Expr T_bangbrackets Split
 {
   $$ = new Ast::CallSplitExpr( @$,
@@ -419,6 +429,16 @@ CallExpr
 			       $3,
 			       false, /* false means no curry */
 			       true ); /* true means procedural */
+}
+| Expr T_bangdddotbrackets Expr
+{
+  Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+  args->orderedExprs_->push_back( $3 );
+  $$ = new Ast::CallExpr( @$,
+			  $1,
+			  args,
+			  true,  /* true means Curry */
+			  true ); /* true means procedural */
 }
 | Expr T_bangdddotbrackets Split
 {
