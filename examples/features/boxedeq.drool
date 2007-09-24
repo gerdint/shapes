@@ -5,7 +5,7 @@
 \fbox{\begin{Beqnarray*}
 &\begin{aligned}
   x &= 1 \\
-  y &= 2
+  y &= 2      % This is a comment!
 \end{aligned}
 \end{Beqnarray*}}
 ´)

@@ -52,11 +52,10 @@ armPath: \ tfStart tfEnd .>
 }
 
 edgyCylinder: \ pth0 pth1 .>
+[if [duration pth0] ≠ [duration pth1]
+    [error `edgyCylinder: Paths don't have the same duration.´]
 {
   •res: newGroup3D
-
-  [if [duration pth0] ≠ [duration pth1]
-      [error `edgyCylinder: Paths don't have the same duration.´]]
 
   •res <<
     [[range '0 [duration pth0]-'1].foldl
@@ -75,7 +74,7 @@ edgyCylinder: \ pth0 pth1 .>
       null3D]
 
   •res;
-}
+}]
 
 paintArm: \ pth width height steps .>
 {

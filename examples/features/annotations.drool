@@ -19,7 +19,7 @@ myFont: @text_font:font_HELVETICA & @text_size:1cm
   •page << [annotationLaunch site:[site target:bar
 	  			        text:`The true source.´
 				        width: 2bp]
-      	 		   file:`http://www.rt.isy.liu.se/~tidefelt/projects/drool/´]
+      	 		   file:`http://www.rt.isy.liu.se/~tidefelt/projects/shapes/´]
 }
 
 {

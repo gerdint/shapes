@@ -1,11 +1,9 @@
 ##needs circle
 ##needs arrowheads
 
+•rand: [newRandom (•time)]
 
-|** dbout: [hot 0   \ p e .> { 0 }   \ p .> 0 ] <<
-dbout: [hot 0   \ p e .> { stdout << e  0 }   \ p .> 0 ] <<
-
-Niter: '40
+nIter: '40
 
 {
  
@@ -13,61 +11,67 @@ Niter: '40
 /**
   pth: [[range '0 '3].foldl
    \ pile e .>  { sl: [pth0 e*1.]  pile--(+sl.rv*sl.rT)<(sl.p + 0.1mm*[random3D])>(+sl.v*sl.T)
-   EMPTYPATH3D]--cycle
+   emptypath3D]--cycle
 **/
-  @<< view [] [stroke pth]
+  •page << view [] [stroke pth]
 
-  timer: HotTimer <<
+  •timer: newTimer
+  •page <<
+  (
   @width: 0.2bp
   |
-  [[range '1 Niter].foldl
-   \ pile e .>
+  [[range '1 nIter].foldsl
+   \ pile e •randstate .>
    {
-    p: 1.4cm * [random3D]
-|**    tim: HotTimer <<
+    p: 1.4cm * [random3D •randstate]
+|**    tim: newTimer <<
     sl: [continuous_approximator pth p]
 |**    tim;
-    a: (p - sl.p) /_ sl.T
-    dbout << [sprintf `%g°¢n´ a / 1° ]
-|**          << [sprintf `, %gs¢n´ tim]
-    @<< view [] ( @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p] )
-    pile
+    a: (p - sl.p) /_ sl.t
+    [debuglog_before
+      [sprintf `%g°¢n´ a / 1° ] |**  [sprintf `, %gs¢n´ tim]
+      pile & [view @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p]]]
    }
-   VOID
+   null
+   •rand
   ]
-  timer;
-  stdout << [sprintf `Average time: %gs¢n´  timer / Niter]
+  )
+  timer: •timer;
+  •stdout << [sprintf `Average time: %gs¢n´  timer / nIter]
 }
 
-randPath: \ n .>
- [[range '1 n].foldl
-  \ pile e .>  { h: 3mm*[random3D]   pile--(+~h)<(1cm*[random3D])>(+h) }
-  EMPTYPATH3D]--cycle
+randPath: \ n •randstate .>
+ [[range '1 n].foldsl
+  \ pile e •st .>  { h: 3mm*[random3D •st]   pile--(+~h)<(1cm*[random3D •st])>(+h) }
+  emptypath3D •randstate]--cycle
 
 {
   sh: [shift (3cm,0cm,0cm)]
-  pth: sh [] [randPath '10]
-  @<< view [] [stroke pth]
-  @<< @stroking:RGB_RED | ( view [] [stroke controlling [] pth] )
+  pth: sh [] [randPath '10 •rand]
+  •page << view [] [stroke pth]
+  •page << @stroking:rgb_RED | ( view [] [stroke controlling [] pth] )
 
-  timer: HotTimer <<
+  •timer: newTimer
+  •page <<
+  (
   @width: 0.2bp
   |
-  [[range '1 Niter].foldl
-   \ pile e .>
+  [[range '1 nIter].foldsl
+   \ pile e •randstate .>
    {
-    p: sh [] 1.4cm * [random3D]
-|**    tim: HotTimer <<
+    p: sh [] 1.4cm * [random3D •randstate]
+|**    tim: newTimer
     sl: [continuous_approximator pth p]
 |**    tim;
-    a: (p - sl.p) /_ sl.T
-    dbout << [sprintf `%g°¢n´ a / 1° ]
-|**          << [sprintf `, %gs¢n´ tim]
-    @<< view [] ( @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p] )
-    pile
+    a: (p - sl.p) /_ sl.t
+    [debuglog_before
+      [sprintf `%g°¢n´ a / 1° ] |**  [sprintf `, %gs¢n´ tim]
+      pile & [view @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p]]]
    }
-   VOID
+   null
+   •rand
   ]
-  timer;
-  stdout << [sprintf `Average time: %gs¢n´  timer / Niter]
+  )
+  timer: •timer;
+  •stdout << [sprintf `Average time: %gs¢n´  timer / nIter]
 }
