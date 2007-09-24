@@ -1,6 +1,6 @@
 ##needs centering
 
-zbuf: HotZBuf <<
+•zbuf: newZBuf
 
 r: 10cm
 ##unit w = 3.4cm
@@ -17,19 +17,20 @@ obj:
 	 [facetnormal (r,0cm,1cm) [normalized (r,0cm,1cm)]]
 	 [facetnormal (r,5cm,0cm) [normalized (r,5cm,0cm)]]]
 
-[[range 20° 160° 20°].foldl
- \ p e .> 
+[[range 20° 160° 20°].foldsl
+ \ p e •st .> 
   !{
-    zbuf << [rotate3D (0,1,0) ~e] [] obj
+    •st << [rotate3D (0,1,0) ~e] [] obj
     p
   }
- VOID]
+ void
+ •zbuf]
 
-zbuf << [shift (10cm,3cm,10cm)] [] [specular_light [gray 0.9]]
+•zbuf << [shift (10cm,3cm,10cm)] [] [specular_light [gray 0.9]]
 
-zbuf;
+zbuf: •zbuf;
 
 tmp: [enlargebbox [view zbuf] (5mm,5mm)]
 
-@<< @nonstroking:GRAY_BLACK | [fill [bbox tmp]]
-@<< tmp
+•page << @nonstroking:gray_BLACK | [fill [bbox tmp]]
+•page << tmp
