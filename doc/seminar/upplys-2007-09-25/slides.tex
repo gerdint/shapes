@@ -9,6 +9,7 @@
 \usepackage[utf-8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
+\usepackage{wasysym}
 
 %\usepackage{beamerthemesplit}
 \usetheme{JuanLesPins}
@@ -43,7 +44,7 @@
 
 \section*{Översikt}
 \frame{\frametitle{Mål}
-  Med den här UppLYSningen hoppas jag
+  Med den här UppLYSningen hoppas jag (kanske lite naivt)
   \pause
   \begin{itemize}[<+->]
   \item Att ni ska få ett hum om vad \Shapes är.
@@ -61,6 +62,7 @@
   \item Beskriva hur språkets struktur ser ut idag.
   \item Visa lite av de funktioner som kärnan erbjuder.
   \item Diskutera intressanta utmaningar för framtiden.
+  \item Små avstickare med konkreta exempelkörningar.
   \end{itemize}
   \note[item]{Påminn om att man gärna får ställa frågor!}
 }
@@ -482,7 +484,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{center}
   \note[item]{Inget att säga här.}
 }
-\subsection{Kurv-konstruktio}
+\subsection{Kurv-konstruktion}
 \begin{frame}\frametitle{Introduktion}
   \Shapes arbetar med kubiska splines som enda kurv-typ.  Bezier-parameterisering:
   \begin{center}
@@ -524,7 +526,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Resterande radier beräknas baserat på vinklar.
   \end{itemize}
 
-  Alla effekter är lokala, vilket gör processen lättare att handtera.
+  Alla effekter är lokala, vilket gör processen lättare att hantera.
 \end{frame}
 \begin{frame}\frametitle{Smarta enheter}
   När en radie beräknas baserat på vinklar används en \emph{special-enhet} för längd.
@@ -570,7 +572,9 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
     \texttt{[tf2*tf1 obj]} = \texttt{[tf2 [tf1 obj]]}
   \item Skapas oftast med lämplig konstruktur:\\
     \texttt{[rotate 25°]}, \texttt{[shift (5mm,0mm)]}, \\
-    \texttt{[rotate3D dir:(~1,0,0) angle:45°]}, \texttt{[inverse tf]}
+    \texttt{[rotate3D dir:(~1,0,0) angle:45°]}, \texttt{[inverse tf]}\\
+    \texttt{[scale 2.5]}, \texttt{[scale y:$\sim$1]}, \texttt{[scale3D x:2 z:3]}\\
+    \texttt{[affinetransform (1,2) (3,4) (5mm,6mm)]}
   \end{itemize}
 \end{frame}
 \begin{frame}\frametitle{Grundläggande text-målning}
@@ -589,19 +593,95 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{itemize}
 \end{frame}
 \subsection{2D}
-\begin{frame}\frametitle{2D}
-
+\begin{frame}\frametitle{Pilhuvuden}
+  \begin{itemize}
+  \item Pilhuvuden kan sättas i båda ändar av en kurva som ska målas:\\
+    \texttt{[stroke pth head:hfn tail:tfn]}
+  \item Utseendet definieras av en funktion som avbildar kurvan på ett pilhuvud och ett avstånd som ska klippas bort från kurvan.
+  \item I \emph{arrowheads.drext} hittar man bland annat \texttt{metaPostArrow}.
+  \item Ett pilhuvud med många parametrar specialiseras typiskt innan det används:\\
+    \texttt{myHead: [metaPostArrow ahAngle:60° ...]}
+  \end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Geometriska beräkningar}
+  \begin{itemize}
+  \item Maximering längs kurva.
+  \item Kortaste avstånd kurva--punkt.
+  \item Skärning med kurva.
+  \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
-\subsection{3D}
-\begin{frame}\frametitle{3D}
-  Att arbeta med 3D-grafik i \Shapes.
+\begin{frame}\frametitle{Uppsampling och avbildning}
+  Om en kurva ska avildas icke-affint, måste resultatet i regel approximeras.
   \begin{itemize}
-  \item Grafik i 3D måste \emph{betraktas} från ett öga i $(0,0,\texttt{@eyez})$ med blicken mot origo, innan den kan kombineras med 2D-världen.
+  \item Kärnan i \Shapes tillhanda håller inga approximationsmetoder.
+  \item Istället uppsampling.
+  \item Se \emph{pathmapping.drext}!
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.4\paperheight,angle=90]{../../../examples/features/sidepaths}
+  \end{center}
+  \note{Inget att säga här.}  
+\end{frame}
+\begin{frame}\frametitle{Mer om uppsampling}
+  \begin{itemize}
+  \item Uppsampling kan vara ett lätt sätt att krympa onödigt stora bounding boxes.
+  \item Nersampling är svårt och finns inte i dagsläget.
+  \end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Genomskinlighet}
+  Att hantera genomskinlighet är inte helt okomplicerat.
+  \begin{center}
+    \includegraphics[height=0.6\paperheight]{../../../examples/showcase/blendarrows}
+  \end{center}
+\end{frame}
+\subsection{3D}
+\begin{frame}\frametitle{Grundläggande användning}
+  \begin{itemize}
+  \item Grafik i 3D måste \emph{betraktas} \inEnglish{view} från ett öga i $(0,0,\texttt{@eyez})$ med blicken mot origo, innan den kan kombineras med 2D-världen.
   \item Grafik i 2D kan bäddas in \inEnglish{immerse} i 3D genom att lägga till en $z$-koordinat med värdet noll.
+  \item Kurvor i 3D (formen, men inte linjebredden) approximeras till önskad precision när de betraktas.
+  \item Streckning \inEnglish{dash} hanteras streck för streck.
+  \item (Uppsampling saknas i dagsläget.)
   \end{itemize}
   \note{Inget att säga här.}
 \end{frame}
+\begin{frame}\frametitle{Geometriska beräkningar}
+  \begin{itemize}
+  \item Maximering längs kurva.
+  \item Kortaste avstånd kurva--punkt
+  \end{itemize}
+  \begin{center}
+    \includegraphics[height=0.5\paperheight]{../../../examples/features/approximators3d}
+  \end{center}
+\end{frame}
+\begin{frame}\frametitle{Avancerad användning}
+  \begin{itemize}
+  \item En yta som färgas av ljusmodellen skapas med \texttt{facet}, och kan förfinas med \texttt{facetnormal}.
+  \item Ytor kan vara enkel- (kan spara beräkningar) eller dubbelsidiga (om man är lat).
+  \item En \emph{tiebreaker} kan användas för att ordna ytor som ligger i varandra.
+  \item Ytor kan ges reflexionsegenskaper:\\
+    \texttt{@reflexions}, \texttt{@autointensity}, \texttt{@autoscattering}
+  \item Ljuskällor av olika typer:\\
+    \texttt{ambient\_light}, \texttt{specular\_light}, \texttt{distant\_light}
+  \item Dynamiska parametrar styr upplösning och teknik:\\
+    \texttt{@facetresolution}, \texttt{@shadeorder}
+  \item Överlap hanteras med två metoder, $z$-buffer och $z$-sortering.
+  \end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Exempel: $z$-buffer}
+  \begin{center}
+    \includegraphics[width=\textwidth]{../../../examples/features/zbufdemo}
+  \end{center}
+\end{frame}
+{
+\setbeamercolor{normal text}{bg=black} 
+\begin{frame}\frametitle{Exempel: ljussättning}
+  \begin{center}
+    \includegraphics[height=0.8\paperheight]{../../../examples/features/lightdemo}
+  \end{center}
+\end{frame}
+}
 \subsection{PDF}
 \begin{frame}\frametitle{PDF}
   \Shapes har stöd för
@@ -610,13 +690,38 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Korsreferenser och dokumentöversikt.
   \item Sidnummer.
   \item Text-tillägg \inEnglish{text annotations}.
+  \item Se \emph{multipage.pdf}!
   \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
-\subsection{\LaTeX{} och strängar}
-\frame{\frametitle{\LaTeX{} och strängar}
-  \note[item]{Inget att säga här.}
-}
+\subsection{Diverse}
+\begin{frame}\frametitle{\LaTeX{} och strängar}
+  \begin{itemize}
+  \item För att använda pdf\LaTeX{}:\\
+%    \texttt{(TeX \textasciigrave{}\$\alpha\$ \% this is a comment\textasciiacute)}
+  \item Syntaxen för strängar är noga utformad för att inte hamna i konflikt med \LaTeX{}.
+  \item Ovanliga escape-tecken: \texttt{\cent} och \texttt{\currency}
+  \item Undviker onödigt många anrop till pdf\LaTeX{} genom att spara resultat mellan körningar.
+  \item Se \emph{boxedeq.drool}!
+  \end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Slumptal}
+  Slumptal i ett funktionellt språk?
+  \begin{itemize}
+  \item Två globala tillstånd utgör inkörsport: \texttt{$\bullet$time} och \texttt{$\bullet$randomdevice}
+  \item Funktionerna \texttt{newRandom} och \texttt{devRandom} skapar \emph{slump-frön}.
+  \item Ett slump-frö knoppar alltid av sig ett lika dant \emph{slump-tillstånd}, och används normalt sett bara en gång:\\
+    \texttt{%
+      $\bullet$rand1: [newRandom ($\bullet$time)]\\
+      $\bullet$rand2: [devRandom $\bullet$randomdevice]
+    }
+  \item Slump-tillståndet måste skickas med när man vill ha slumptal:\\
+    \texttt{%
+      [random2D $\bullet$rand1]
+    }
+  \item Funktionellt, om än inte jätte-smidigt!
+  \end{itemize}
+\end{frame}
 
 \section{Utmaningar för framtiden}
 \frame{%
@@ -627,13 +732,29 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 }
 
 \frame{\frametitle{Trixelering}
-  \note[item]{Inget att säga här.}
+  Att rendera 3D genom en $z$-buffer kompliceras enormt av att det inte finns ett givet raster.
+  \begin{itemize}
+  \item Analysera vilka och hur många toleranser som måste sättas.
+  \item Designa algoritm med testbara invarianter.
+  \item Implementera\ldots
+  \item Kan även användas för skuggor!
+  \end{itemize}
 }
 \frame{\frametitle{Kompilera funktioner till PDF}
-  \note[item]{Inget att säga här.}
+  Just nu används färgövergångar endast vid en viss typ av ljussättning.
+  \begin{itemize}
+  \item Användaren vill kunna göra egna övergångar.
+  \item Funktioner från åskådliga planet till färgrummet ska kunna definieras på hög nivå.
+  \item Funktionerna ska fungera som vanligt i \Shapes, men också gå att kompilera till PDF!
+  \item Mycket begränsad PostScript-kalkylator.
+  \end{itemize}
 }
 \frame{\frametitle{Bättre stöd för typsnitt}
-  \note[item]{Inget att säga här.}
+  Snart lessnar man på de inbyggda typsnitten och begränsningar i teckenkodning.
+  \begin{itemize}
+  \item Reda ut hur man hanterar teckenkodningen systematiskt.
+  \item Förmodligen ta hjälp av FreeType.
+  \end{itemize}
 }
 \frame{\frametitle{Mer grund-struktur}
   \begin{itemize}
@@ -651,15 +772,20 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \note[item]{Inget att säga här.}
 }
 \frame{\frametitle{Sammanfattning}
+  Seminariet har förhoppningsvis förmedlat något om\ldots
   \begin{itemize}
-    \item \Shapes är\ldots
+    \item \Shapes ursprung och sammanhang idag.
+    \item Språkets grundelement.
+    \item Funktionalitet från kärnan.
+    \item Hur kompilatorn används.
+    \item Hur \Shapes-kod kan se ut.
   \end{itemize}
   \note[item]{Inget att säga här.}
 }
 
 \frame{%
   \begin{center}
-    Slut.
+    \includegraphics[height=0.8\paperheight]{../../../examples/showcase/kjmrobot}
   \end{center}
   \note[item]{Tacka för uppmärksamheten!}
 }
