@@ -81,6 +81,10 @@ void
 Lang::ElementaryPath2D::writePath( ostream & os ) const
 {
   const_iterator i = begin( );
+  if( i == end( ) )
+    {
+      throw Exceptions::InternalError( "Invoking writePath on the empty path." );
+    }
   const Concrete::Coords2D * p0 = (*i)->mid_;
   os << *p0 << " m " ;
   const Concrete::Coords2D * p1 = (*i)->front_;
