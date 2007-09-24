@@ -560,6 +560,18 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{itemize}
   \note[item]{Inget att säga här.}  
 \end{frame}
+\begin{frame}\frametitle{Transformationer}
+  Transformationer är affina avbildningar som applicerar på grafik och andra geometriska objekt.
+  \begin{itemize}
+  \item Används som vilken funktion som helst:\\
+    \texttt{[tf obj]}
+  \item Kan sättas ihop med multiplikationsoperatorn:\\
+    \texttt{[tf2*tf1 obj]} = \texttt{[tf2 [tf1 obj]]}
+  \item Skapas oftast med lämplig konstruktur:\\
+    \texttt{[rotate 25°]}, \texttt{[shift (5mm,0mm)]}, \\
+    \texttt{[rotate3D dir:(~1,0,0) angle:45°]}, \texttt{[inverse tf]}
+  \end{itemize}
+\end{frame}
 \begin{frame}\frametitle{Grundläggande text-målning}
   \Shapes har stöd för de typsnitt som ingår i PDF-standarden.
   \begin{itemize}
@@ -582,8 +594,12 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \end{frame}
 \subsection{3D}
 \begin{frame}\frametitle{3D}
-
-  \note{Inget att säga här.}  
+  Att arbeta med 3D-grafik i \Shapes.
+  \begin{itemize}
+  \item Grafik i 3D måste \emph{betraktas} från ett öga i $(0,0,\texttt{@eyez})$ med blicken mot origo, innan den kan kombineras med 2D-världen.
+  \item Grafik i 2D kan bäddas in \inEnglish{immerse} i 3D genom att lägga till en $z$-koordinat med värdet noll.
+  \end{itemize}
+  \note{Inget att säga här.}
 \end{frame}
 \subsection{PDF}
 \begin{frame}\frametitle{PDF}
@@ -592,7 +608,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Dokument med många sidor.  Varje sida läggs till \texttt{$\bullet$catalog}.
   \item Korsreferenser och dokumentöversikt.
   \item Sidnummer.
-  \item 
+  \item Text-tillägg \inEnglish{text annotations}.
   \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
