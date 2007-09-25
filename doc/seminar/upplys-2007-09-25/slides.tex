@@ -207,6 +207,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
       a: {\color{red}../}a + 7
     }
     \note[item]{Tillgång till skuggade bindningar kräver förståelse av vilka konstruktioner som inför en kod-klammer.}
+  \item Se \filename{scopes.drool}!
   \end{itemize}
 
   \note[item]{Inget att säga här.}
@@ -543,6 +544,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Avbildar mitt-mitt-avstånd och vinklar på radie.
   \item $9$ special-enheter är definierade, och gör det enkelt att approximera cirkelbågar, undvika inflexioner, göra vågor, med mera.
   \item Vilken enhet som används bestäms av \texttt{@specialunit}, men det går också bra att använda special-enheter direkt som radie-angivelse.
+  \item Se \filename{pathconstruction.drool}!
   \end{itemize}
 \end{frame}
 \subsection{Travare}
@@ -609,7 +611,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Pilhuvuden kan sättas i båda ändar av en kurva som ska målas:\\
     \texttt{[stroke pth head:hfn tail:tfn]}
   \item Utseendet definieras av en funktion som avbildar kurvan på ett pilhuvud och ett avstånd som ska klippas bort från kurvan.
-  \item I \emph{arrowheads.drext} hittar man bland annat \texttt{metaPostArrow}.
+  \item I \filename{arrowheads.drext} hittar man bland annat \texttt{metaPostArrow}.
   \item Ett pilhuvud med många parametrar specialiseras typiskt innan det används:\\
     \texttt{myHead: [metaPostArrow ahAngle:60° ...]}
   \end{itemize}
@@ -622,15 +624,21 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
+\begin{frame}\frametitle{Skärning kurva--kurva, exempel}
+  \begin{center}
+    \includegraphics[height=0.8\paperheight]{figures/intersections}
+  \end{center}
+  \note{Inget att säga här.}  
+\end{frame}
 \begin{frame}\frametitle{Uppsampling och avbildning}
   Om en kurva ska avildas icke-affint, måste resultatet i regel approximeras.
   \begin{itemize}
   \item Kärnan i \Shapes tillhandahåller inga approximationsmetoder.
   \item Istället uppsampling.
-  \item Se \emph{pathmapping.drext}!
+  \item Se \filename{pathmapping.drext}!
   \end{itemize}
   \begin{center}
-    \includegraphics[width=0.4\paperheight,angle=90]{../../../examples/features/sidepaths}
+    \includegraphics[width=0.4\paperheight,angle=90]{figures//sidepaths}
   \end{center}
   \note{Inget att säga här.}  
 \end{frame}
@@ -643,7 +651,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \begin{frame}\frametitle{Genomskinlighet}
   Att hantera genomskinlighet är inte helt okomplicerat.
   \begin{center}
-    \includegraphics[height=0.6\paperheight]{../../../examples/showcase/blendarrows}
+    \includegraphics[height=0.6\paperheight]{figures//blendarrows}
   \end{center}
 \end{frame}
 \subsection{3D}
@@ -663,7 +671,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Kortaste avstånd kurva--punkt
   \end{itemize}
   \begin{center}
-    \includegraphics[height=0.5\paperheight]{../../../examples/features/approximators3d}
+    \includegraphics[height=0.5\paperheight]{figures//approximators3d}
   \end{center}
 \end{frame}
 \begin{frame}\frametitle{Avancerad användning}
@@ -682,14 +690,14 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \end{frame}
 \begin{frame}\frametitle{Exempel: $z$-buffer}
   \begin{center}
-    \includegraphics[width=\textwidth]{../../../examples/features/zbufdemo}
+    \includegraphics[width=\textwidth]{figures//zbufdemo}
   \end{center}
 \end{frame}
 {
 \setbeamercolor{normal text}{bg=black} 
 \begin{frame}\frametitle{Exempel: ljussättning}
   \begin{center}
-    \includegraphics[height=0.8\paperheight]{../../../examples/features/lightdemo}
+    \includegraphics[height=0.8\paperheight]{figures//lightdemo}
   \end{center}
 \end{frame}
 }
@@ -701,7 +709,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Korsreferenser och dokumentöversikt.
   \item Sidnummer.
   \item Text-tillägg \inEnglish{text annotations}.
-  \item Se \emph{multipage.pdf}!
+  \item Se \filename{multipage.pdf}!
   \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
@@ -713,7 +721,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Syntaxen för strängar är noga utformad för att inte hamna i konflikt med \TeX{}.
   \item Ovanliga escape-tecken: \texttt{\cent} och \texttt{\currency}
   \item Undviker onödigt många anrop till pdf\LaTeX{} genom att spara resultat mellan körningar.
-  \item Se \emph{boxedeq.drool}!
+  \item Se \filename{boxedeq.drool}!
   \end{itemize}
 \end{frame}
 \begin{frame}\frametitle{Slumptal}
@@ -796,7 +804,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 
 \frame{%
   \begin{center}
-    \includegraphics[height=0.8\paperheight]{../../../examples/showcase/kjmrobot}
+    \includegraphics[height=0.8\paperheight]{figures//kjmrobot}
   \end{center}
   \note[item]{Tacka för uppmärksamheten!}
 }
