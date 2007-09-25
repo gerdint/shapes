@@ -2,9 +2,9 @@
 ##needs arrowheads
 
 intersectionCircle: \ pth1 pth2 .>
-  ( @stroking:RGB_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
+  ( @stroking:rgb_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
 
-@<< [shift (0cm,4cm)] [] [TeX `\parbox{4cm}{Lines start at black circles, and at their first intersection there's a red circle.}´]
+•page << [shift (0cm,4cm)] [] (TeX `\parbox{4cm}{Lines start at black circles, and at their first intersection there's a red circle.}´)
 
 /**
 pth1straight: (0cm,0cm)--(3cm,4cm)
@@ -15,25 +15,25 @@ pth2straight: (1cm,~2cm)--(2cm,5cm)
 |** pth2curved: (1cm,~2cm)>(1%c^0°)--(2cm,5cm)
 pth2curved: (3cm,0cm)>(2cm,0cm)--(0cm,4cm)
 
-@<< [stroke pth1straight]
-@<< [stroke pth1curved]
-@<< [stroke pth2straight]
-@<< [stroke pth2curved]
+•page << [stroke pth1straight]
+•page << [stroke pth1curved]
+•page << [stroke pth2straight]
+•page << [stroke pth2curved]
 
-@<< [intersectionCircle pth1straight pth2straight]
-@<< [intersectionCircle pth1straight pth2curved]
+•page << [intersectionCircle pth1straight pth2straight]
+•page << [intersectionCircle pth1straight pth2curved]
 stderr << `t: ´ << [intersection pth1curved pth2straight].time << `¢n´
-@<< [intersectionCircle pth1curved pth2straight]
-@<< [intersectionCircle pth1curved pth2curved]
+•page << [intersectionCircle pth1curved pth2straight]
+•page << [intersectionCircle pth1curved pth2curved]
 
 pth3faraway: (5cm,5cm)>(5cm,6cm)--(7cm,7cm)
-@<< [stroke pth3faraway]
+•page << [stroke pth3faraway]
 
 |** This will break the program by means of the default @handler_NoIntersection:
-|** @<< [intersectionCircle pth1curved pth3faraway]
+|** •page << [intersectionCircle pth1curved pth3faraway]
 
 |** This will draw nothing, since the handler returns NULL to the insertion continuation
-@<< (continuation cont
+•page << (continuation cont
       @handler_NoIntersection: \ pth1 pth2 .> (continue cont NULL)
       |
       [intersectionCircle pth1curved pth3faraway]
@@ -41,24 +41,27 @@ pth3faraway: (5cm,5cm)>(5cm,6cm)--(7cm,7cm)
 
 **/
 
-randPath: \ n .>
+randPath: \ n •state .>
  [scale 5] []
-  [[range '1 n].foldl
-   \ pile e .>  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
-   EMPTYPATH2D]
+  [[range '1 n].foldsl
+   \ pile e •st .>  pile--( ^ )<(1cm*[random2D •st])>( 2mm * (1+[random1D •st]) ^ 180°*[random1D •st] )
+   emptypath2D •state]
 
 {
+  •rand: [newRandom (•time)]
   sh: [shift (5cm,0cm)]
-  pth: sh [] [randPath '10]
-  @<< @stroking:RGB_RED | [stroke pth head: MetaPostArrow]
-|**  @<< @stroking:[gray 0.7] | [stroke controlling [] pth]
+  pth: sh [] [randPath '10 •rand]
+  •page << @stroking:rgb_RED | [stroke pth head: metaPostArrow]
+|**  •page << @stroking:[gray 0.7] | [stroke controlling [] pth]
 
+  •page <<
+  (
   @width: 0.2bp
   |
-  [[range '1 '10].foldl
-   \ pile e .>
+  [[range '1 '10].foldsl
+   \ pile e •st .>
    {
-    pth2: sh [] [randPath 4]
+    pth2: sh [] [randPath '4 •st]
 
 /**
     stderr << `pth: ´ << [point pth 2] << `>(´ << [speed pth 2] << `^´ << 180/180° * [angle [direction pth 2]] << `°)¢n´
@@ -67,16 +70,16 @@ randPath: \ n .>
     stderr << `pth2: ´ << [point pth2 0] << `>(´ << [speed pth2 0] << `^´ << 180/180° * [angle [direction pth2 0]] << `°)¢n´
     stderr << `pth2: ´ << [point pth2 1] << `>(´ << [reversespeed pth2 1] << `^´ << 180/180° * [angle [reversedirection pth2 1]] << `°)¢n´
 **/
-
-    @<< [stroke pth2 tail: \ p .> { @<< [stroke [shift p.begin.p][][circle 3mm]]  0mm }]
-|**    @<< @stroking:[gray 0.7] | [stroke controlling [] pth2]
-    @<< (continuation cont
-      @handler_NoIntersection: \ pth1 pth2 .> (continue cont [stroke [shift pth1.begin.p][][circle 4mm]])
+    pile
+    & [stroke pth2 tail: \ p .> (> picture:[stroke [shift p.begin.p][][circle 3mm]]  cut:0mm <)]
+|** & ( @stroking:[gray 0.7] | [stroke controlling [] pth2] )
+    & (escape_continuation cont
+      @handler_NoIntersection: \ pth1 pth2 .> (escape_continue cont [stroke [shift pth1.begin.p][][circle 4mm]])
       |
       [intersectionCircle pth2 pth]
-    )
-    pile
+      )
    }
-   VOID
-  ]
+   null
+   •rand
+  ])
 }
