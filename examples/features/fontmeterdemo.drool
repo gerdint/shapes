@@ -13,7 +13,7 @@ bbdraw: \ •dst obj .>
 
 [bbdraw •page [[shift (2.5cm,2cm)] myFont | (newText << [shift (6cm,~3cm)]*[rotate 30°] << [kerning `brY´ 0.3 `n¢nRadX´] )]]
 
-[bbdraw •page [[shift (0,~7cm)]*[rotate ~5°] myFont & @text_leading:1.5 | (newText << `Rad1 e lang¢nRad2´ )]]
+[bbdraw •page [[shift (0,~7cm)]*[rotate ~5°] myFont & @text_leading:1.5 | (newText << `Rad1 e lång¢nRad2´ )]]
 
 [bbdraw •page [[shift (4cm,3cm)] myFont & @text_horizontalscaling:0.8 & @text_characterspacing:10bp & @text_wordspacing:50bp | (newText << [kerning `sparse  words´] )]]
 [bbdraw •page [[shift (4cm,5cm)] myFont | (newText << [kern `AUTOMATIC (automatic kerning)´] )]]

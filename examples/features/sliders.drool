@@ -1,22 +1,27 @@
 ##needs circle
 ##needs newline
 
+•rand: [newRandom (•time)]
+
 pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cycle
 {
-  @<< [stroke pth]
+  •page << [stroke pth]
 
   c0: [stroke [circle 3bp]]
   c1: [stroke [circle 5bp]]
 
   test: \ t0 delta .> 
-  {
-    @<< [shift [pth [pth t0].length + delta].p] [] c0
-    @<< [shift ([pth t0] + delta).p] [] c1
-  }
+  (
+    [[shift [pth [pth t0].length + delta].p] c0]
+    &
+    [[shift ([pth t0] + delta).p] c1]
+  )
 
-  ![[range '0 '15].foldl
-    \ p e .> { ![test 40*[random1D] 20cm*[random1D]]  p }
-    VOID]
+  •page <<
+  [[range '0 '15].foldsl
+    \ p e •st .> ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
+    null
+    •rand]
 }
 
 {
@@ -26,15 +31,18 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cy
   c0: [stroke [circle 3bp]]
   c1: [stroke [circle 5bp]]
 
-  @<< view [] [stroke pth]
+  •page << view [] [stroke pth]
 
   test: \ t0 delta .> 
-  {
-    @<< [shift view [] [pth [pth t0].length + delta].p] [] c0
-    @<< [shift view [] ([pth t0] + delta).p] [] c1
-  }
+  (
+    [[shift view [] [pth [pth t0].length + delta].p] c0]
+    &
+    [[shift view [] ([pth t0] + delta).p] c1]
+  )
 
-  ![[range '0 '15].foldl
-    \ p e .> { ![test 40*[random1D] 20cm*[random1D]]  p }
-    VOID]
+  •page <<
+  [[range '0 '15].foldsl
+    \ p e •st .> ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
+    null
+    •rand]
 }

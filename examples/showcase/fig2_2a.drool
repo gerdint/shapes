@@ -1,8 +1,8 @@
 ##needs blockdraw_wfo
 
-g1: [putblockOrigin •page [longblock [teX `Amp´]]]
-g2: [putblockNearRight •page [longblock [teX `Motor´]] g1]
-f:  [putblockNearLeft •page [longblock [teX `$K$´]] g1]
+g1: [putblockOrigin •page [longblock (TeX `Amp´)]]
+g2: [putblockNearRight •page [longblock (TeX `Motor´)] g1]
+f:  [putblockNearLeft •page [longblock (TeX `$K$´)] g1]
 s:  [putblockNearLeft •page [sumpicture] f]
 
 sy: [putblockVeryNearRight •page [splitdot] g2]
@@ -13,13 +13,13 @@ tr: [putblockFarLeft •page pointpicture s]
 [ignore [connect •page tr s]]
 •page << [leftpointsign s `+´]
 { p: [connect •page s f]
-  •page << [putlabelAbove [teX `$e$´] [mspoint p 0.5] 0] }
+  •page << [putlabelAbove (TeX `$e$´) [mspoint p 0.5] 0] }
 {p: [connect •page f g1]
-  •page << [putlabelAbove [teX `$u$´] [mspoint p 0.5] 0] }
+  •page << [putlabelAbove (TeX `$u$´) [mspoint p 0.5] 0] }
 [ignore [connect •page g1 g2]]
 [ignore [connect •page g2 ty]]
 [ignore [bbconnect •page sy s 0.5cm]]
 •page << [bottompointsign s `-´]
 
-•page << [putlabelAbove [teX `$r$´] [toppoint tr 1 1] ~1]
-•page << [putlabelAbove [teX `$y$´] [toppoint ty 1 1] 1]
+•page << [putlabelAbove (TeX `$r$´) [toppoint tr 1 1] ~1]
+•page << [putlabelAbove (TeX `$y$´) [toppoint ty 1 1] 1]

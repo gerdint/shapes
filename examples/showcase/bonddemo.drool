@@ -6,9 +6,9 @@
 |
 {
   j1: [putblockOrigin •page [shift (1u,1u)] [] [sjunction]]
-  j2: [putblockOrigin •page [shift (2u,1u)] [] [gyjunction to_rt [teX `$\mu$´]]]
+  j2: [putblockOrigin •page [shift (2u,1u)] [] [gyjunction to_rt (TeX `$\mu$´)]]
   j3: [putblockOrigin •page [shift (3u,1u)] [] [sjunction]]
-  j4: [putblockOrigin •page [shift (4u,1u)] [] [tfjunction to_rt [teX `$r$´]]]
+  j4: [putblockOrigin •page [shift (4u,1u)] [] [tfjunction to_rt (TeX `$r$´)]]
   j5: [putblockOrigin •page [shift (5u,1u)] [] [pjunction]]
   j6: [putblockOrigin •page [shift (5u,~0.5u)][] [sjunction]]
   j7: [putblockOrigin •page [shift (5u,2u)] [] [sjunction]]
@@ -20,20 +20,20 @@
   •page << hbond [] [bgconnect j5 j6]
   •page << tbond [] [bgconnect j5 j7]
 
-  •page << tbond [] [terminalfrom •page j1 (1u,0u) [teX `R: $\phi_{1}(\bullet)$´]]
-  •page << hbond [] [terminalfrom •page j1 (1u,2u) [teX `I: $m_{1}$´]]
-  •page << hbond [] [terminalfrom •page j3 (3u,2u) [teX `I: $m_{2}$´]]
-  •page << tbond [] [terminalfrom •page j3 ( [centerof j3]+1u*[dir ~120°] ) [teX `R: $R_{2}$´]]
-  •page << tbond [] [terminalfrom •page j3 ( [centerof j3]+1u*[dir ~60°] ) [teX `R: $R_{3}$´]]
-  •page << hbond [] [terminalto   •page j6 ( [centerof j6]+(~1u,0u) ) [teX `$S_{\mathrm{e}}$´]]
-  •page << hbond [] [terminalfrom •page j6 ( [centerof j6]+(1u,0u) ) [teX `I: $m_{3}$´]]
-  •page << tbond [] [terminalfrom •page j7 (4u,2u) [teX `C: $C_{1}$´]]
-  •page << tbond [] [terminalfrom •page j7 (6u,2u) [teX `R: $R_{1}$´]]
+  •page << tbond [] [terminalfrom •page j1 (1u,0u) (TeX `R: $\phi_{1}(\bullet)$´)]
+  •page << hbond [] [terminalfrom •page j1 (1u,2u) (TeX `I: $m_{1}$´)]
+  •page << hbond [] [terminalfrom •page j3 (3u,2u) (TeX `I: $m_{2}$´)]
+  •page << tbond [] [terminalfrom •page j3 ( [centerof j3]+1u*[dir ~120°] ) (TeX `R: $R_{2}$´)]
+  •page << tbond [] [terminalfrom •page j3 ( [centerof j3]+1u*[dir ~60°] ) (TeX `R: $R_{3}$´)]
+  •page << hbond [] [terminalto   •page j6 ( [centerof j6]+(~1u,0u) ) (TeX `$S_{\mathrm{e}}$´)]
+  •page << hbond [] [terminalfrom •page j6 ( [centerof j6]+(1u,0u) ) (TeX `I: $m_{3}$´)]
+  •page << tbond [] [terminalfrom •page j7 (4u,2u) (TeX `C: $C_{1}$´)]
+  •page << tbond [] [terminalfrom •page j7 (6u,2u) (TeX `R: $R_{1}$´)]
 
   {
-    con: [terminalto •page j1 (0u,1u) [teX `$S_{\mathrm{e}}$´]]
+    con: [terminalto •page j1 (0u,1u) (TeX `$S_{\mathrm{e}}$´)]
     •page << hbond [] con
-    •page << [flowlabel con [teX `f´]]
-    •page << [effortlabel con [teX `e´]]
+    •page << [flowlabel con (TeX `f´)]
+    •page << [effortlabel con (TeX `e´)]
   }
 }

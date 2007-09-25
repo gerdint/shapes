@@ -16,9 +16,9 @@ c: [putblockNearBelow •page [[rotate 90°] [capacitance]] h]
 
 t2: [putblockNearBelow •page [termcircle] c]
  
-•page << [putlabelAbove [teX `$R$´] [toppoint r] 0]
-•page << [putlabelAbove [teX `$L$´] [toppoint l] 0]
-•page << [putlabelLeft [teX `$C$´] [leftpoint c] 0]
+•page << [putlabelAbove (TeX `$R$´) [toppoint r] 0]
+•page << [putlabelAbove (TeX `$L$´) [toppoint l] 0]
+•page << [putlabelLeft (TeX `$C$´) [leftpoint c] 0]
 
 @width:@connectionlw
 |

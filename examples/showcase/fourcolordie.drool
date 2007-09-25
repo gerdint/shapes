@@ -10,11 +10,14 @@ die: ( newGroup3D
        << @nonstroking:rgb_BLUE   | [fill z1--z3--z4--cycle]
        << @nonstroking:rgb_YELLOW | [fill z2--z3--z4--cycle] )
 
+•rand: [newRandom (•time)]
+
 world:
-  [[range '1 '5].foldl
-    \ pile e .>
+  [[range '1 '5].foldsl
+    \ pile e •st .>
       pile &
-      ( [shift 5*r*[random3D]]*[rotate3D dir:[random3D] angle:180°*[random1D]] [] die )
-    null3D]
+      ( [shift 5*r*[random3D •st]]*[rotate3D dir:[random3D •st] angle:180°*[random1D •st]] [] die )
+    null3D
+    •rand]
 
 •page << view [] ( newZBuf << world )
