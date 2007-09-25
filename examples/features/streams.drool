@@ -9,13 +9,11 @@ fib: [fibsFrom 0 1]
 **/
 
 streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
-fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
-
-/**
-fib: [cons 11 [cons 12 [cons 13 [cons 14 [list]]]]]
-**/
 
 nth: \ lst n .> [if n == 0 lst.car [nth lst.cdr n-1]]
+
+
+fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
 
 •stdout << [nth fib 0] << `¢n´
 •stdout << [nth fib 1] << `¢n´
