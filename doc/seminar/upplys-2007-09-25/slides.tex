@@ -92,10 +92,14 @@
 \frame{\frametitle{Rötter}
   \Shapes har sina rötter i många av de språk jag varit i kontakt med:
   \begin{itemize}[<+->]
-  \item MetaPost (en omarbetning av Knuths MetaFont) --- \Shapes kom till när jag ledsnade på MetaPost.
-  \item Scheme --- syntax och funktions-begreppet.
-  \item Haskell --- för sina rena ideal.
-  \item C++ --- utmatningssyntaxen.
+  \item MetaPost
+    \note[item]{(en omarbetning av Knuths MetaFont) --- \Shapes kom till när jag ledsnade på MetaPost.}
+  \item Scheme
+    \note[item]{--- syntax och funktions-begreppet.}
+  \item Haskell
+    \note[item]{--- för sina rena ideal.}
+  \item C++
+    \note[item]{--- utmatningssyntaxen.}
   \end{itemize}
   \note[item]{Inget att säga här.}
 }
@@ -113,10 +117,11 @@
 \frame{\frametitle{Varför \Shapes?}
   Givet utbudet av alternativa rit-språk, varför utveckla ett till?  Här är några skäl:
   \begin{itemize}[<+->]
-  \item Inte funktionellt orienterade (alla utom Haskell~PDF).
+  \item Inte funktionellt orienterade (alla utom Haskell~PDF och Functional MetaPost).
   \item Dålig beräkningskapacitet (MetaPost och PDF/TikZ).
   \item Saknar domän-specifik syntax (Haskell~PDF).
   \item Inte publicerade när \Shapes påbörjades (Asymptote och Haskell~PDF).
+  \item Osmidig arbetsgång (Functional MetaPost).
   \end{itemize}
   \note[item]{Inget att säga här.}
 }
@@ -128,11 +133,15 @@
 $\bullet$page <{}< [stroke (0cm,0cm)-{}-(1cm,1cm)]
 }
 
+\vspace{5mm}
+
 \pause
 
 \texttt{%
 $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
 }
+
+\vspace{5mm}
 
 \pause
 
@@ -169,7 +178,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   Lexikala bindningar fungerar som i Scheme, men kan inte bindas om.
 
   \texttt{%
-    a: 42
+    a{\color{red}:} 42
   }
 
   \pause
@@ -177,10 +186,10 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   Räckvidden \inEnglish{scope} är begränsad till en kod-klammer \inEnglish{code bracket}:
 
   \texttt{%
-    \{\\
+    {\color{red}\{}\\
     \ \ a: 42\\
     \ \ $\bullet$stdout <{}< a\\
-    \}\\
+    {\color{red}\}}\\
   }
 
   \note[item]{Inget att säga här.}
@@ -195,7 +204,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
     }
   \item Skuggade bindningar kan nås:\\
     \texttt{%
-      a: ../a + 7
+      a: {\color{red}../}a + 7
     }
     \note[item]{Tillgång till skuggade bindningar kräver förståelse av vilka konstruktioner som inför en kod-klammer.}
   \end{itemize}
@@ -231,7 +240,7 @@ $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
   \item Undviker behovet av att binda alla dynamiska variabler till argumentlösa funktioner.
   \end{itemize}
 \end{frame}
-\subsection{Funktionsanrop}
+\subsection{Funktioner och anrop}
 \frame{\frametitle{Funktionsdefinitioner}
   Exempel:
 
@@ -455,7 +464,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 
   \begin{itemize}
   \item Imperativ kod fördröjs aldrig (viktigt att lätt känna igen).
-  \item Fördröjd evaluering kan avstras manuellt:\\
+  \item Fördröjd evaluering kan avstyras manuellt:\\
     \texttt{a : {\color{red}!!} expr}\\
     \texttt{[fun expr1 {\color{red}!!}expr2 expr3]}
   \item En funktion kan peka ut vilka argument som ska skickas evaluerade (vanligt i kärnan).
@@ -538,7 +547,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \end{frame}
 \subsection{Travare}
 \frame{\frametitle{Travare}
-  En \emph{travare} \inEnglish{slider} är ett kurva-kurvtid-par.
+  En \emph{travare} \inEnglish{slider} är ett kurva--kurvtid-par.
   \begin{itemize}
   \item Skapa utifrån kurvlängd, kurvtid, eller andra beräkningar:\\
     \texttt{[pth 1.3]}, \texttt{[pth 7mm]}, \texttt{pth.begin + 12mm}, \texttt{[continuous\_approximator pth (4cm,7cm)]}
@@ -570,11 +579,13 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
     \texttt{[tf obj]}
   \item Kan sättas ihop med multiplikationsoperatorn:\\
     \texttt{[tf2*tf1 obj]} = \texttt{[tf2 [tf1 obj]]}
-  \item Skapas oftast med lämplig konstruktur:\\
+  \item Generella konstruktorer:\\
+    \texttt{[affinetransform (1,2) (3,4) (5mm,6mm)]}, \\
+    \texttt{[affinetransform3D (1,2,3) (3,4,5) (5,6,7) (8mm,9mm,0mm)]}
+  \item Specialiserade konstruktorer:\\
     \texttt{[rotate 25°]}, \texttt{[shift (5mm,0mm)]}, \\
-    \texttt{[rotate3D dir:(~1,0,0) angle:45°]}, \texttt{[inverse tf]}\\
-    \texttt{[scale 2.5]}, \texttt{[scale y:$\sim$1]}, \texttt{[scale3D x:2 z:3]}\\
-    \texttt{[affinetransform (1,2) (3,4) (5mm,6mm)]}
+    \texttt{[rotate3D dir:($\sim$1,0,0) angle:45°]}, \texttt{[inverse tf]}\\
+    \texttt{[scale 2.5]}, \texttt{[scale y:$\sim$1]}, \texttt{[scale3D x:2 z:3]}
   \end{itemize}
 \end{frame}
 \begin{frame}\frametitle{Grundläggande text-målning}
@@ -584,9 +595,9 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Tyvärr begränsat urval av tecken som kan kodas.  Dock inte sämre än att svenska tecken klarat sig.
   \item Typsnittsegenskaper sätts som vanligt med dynamiska variabler, fångas i regel upp vid kernering.
   \item Grafiken skapas genom att text-operationer samlas i ett tillstånd:\\
-    \texttt{({\color{red}newText} <{}< op1 <{}< op2 )}
+    \texttt{( {\color{red}newText} <{}< op1 <{}< op2 )}
   \item En text-operation är oftast en sträng eller en sträng med kernering:\\
-    \texttt{({\color{red}newText} <{}< [kern \textasciigrave{}LINK\textasciiacute{} 0.15 \textasciigrave{}ÖPING\textasciiacute{})}\\
+    \texttt{( {\color{red}newText} <{}< [kern \textasciigrave{}LINK\textasciiacute{} 0.15 \textasciigrave{}ÖPING\textasciiacute{}] )}\\
     \begin{center}
       \includegraphics{figures/linkoping}
     \end{center}
@@ -614,7 +625,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \begin{frame}\frametitle{Uppsampling och avbildning}
   Om en kurva ska avildas icke-affint, måste resultatet i regel approximeras.
   \begin{itemize}
-  \item Kärnan i \Shapes tillhanda håller inga approximationsmetoder.
+  \item Kärnan i \Shapes tillhandahåller inga approximationsmetoder.
   \item Istället uppsampling.
   \item Se \emph{pathmapping.drext}!
   \end{itemize}
@@ -623,7 +634,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{center}
   \note{Inget att säga här.}  
 \end{frame}
-\begin{frame}\frametitle{Mer om uppsampling}
+\begin{frame}\frametitle{Mer om sampling}
   \begin{itemize}
   \item Uppsampling kan vara ett lätt sätt att krympa onödigt stora bounding boxes.
   \item Nersampling är svårt och finns inte i dagsläget.
@@ -699,7 +710,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \begin{itemize}
   \item För att använda pdf\LaTeX{}:\\
 %    \texttt{(TeX \textasciigrave{}\$\alpha\$ \% this is a comment\textasciiacute)}
-  \item Syntaxen för strängar är noga utformad för att inte hamna i konflikt med \LaTeX{}.
+  \item Syntaxen för strängar är noga utformad för att inte hamna i konflikt med \TeX{}.
   \item Ovanliga escape-tecken: \texttt{\cent} och \texttt{\currency}
   \item Undviker onödigt många anrop till pdf\LaTeX{} genom att spara resultat mellan körningar.
   \item Se \emph{boxedeq.drool}!
