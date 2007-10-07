@@ -22,18 +22,18 @@
 
 <token-example-table>
 <head>
-<tr> <td>Token</td> <td width="20"></td> <td>Valid float?</td> </tr>
+<tr> <td>Token</td> <td>Valid float?</td> </tr>
 </head>
 <body>
-<tr> <td><inline>13</inline></td> <td></td> <td>Yes (= 13)</td> </tr>
-<tr> <td><inline>~13</inline></td> <td></td> <td>Yes (= -13)</td> </tr>
-<tr> <td><inline>2.</inline></td> <td></td> <td>Yes (= 2.0)</td> </tr>
-<tr> <td><inline>~3.14</inline></td> <td></td> <td>Yes (= -3.14)</td> </tr>
-<tr> <td><inline>~180°</inline></td> <td></td> <td>Yes (= -3.14159...)</td> </tr>
-<tr> <td><inline>.609</inline></td> <td></td> <td>No (missing integer part)</td> </tr>
-<tr> <td><inline>-3.1</inline></td> <td></td> <td>No (binary minus sign)</td> </tr>
-<tr> <td><inline>1 000</inline></td> <td></td> <td>No (spaces are not allowed)</td> </tr>
-<tr> <td><inline>180 °</inline></td> <td></td> <td>No (space is not allowed)</td> </tr>
+<tr> <td><inline>13</inline></td> <td>Yes (= 13)</td> </tr>
+<tr> <td><inline>~13</inline></td> <td>Yes (= -13)</td> </tr>
+<tr> <td><inline>2.</inline></td> <td>Yes (= 2.0)</td> </tr>
+<tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
+<tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
+<tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
+<tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
+<tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
+<tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
 </body>
 </token-example-table>
 <p></p>
@@ -121,6 +121,383 @@
 </body>
 </section>
 
+
+<section id="syntax-atoms-lengths">
+<title>Lengths</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname>length</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Length</typename></td></tr>
+<tr> <td><syntaxname class="new">length</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname><bnf>;</bnf><syntaxname>length-unit</syntaxname></inline></td></tr>
+</syntax-table>
+<p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
+
+<p>The following lengths are provided by the system: <lengthunit>mm</lengthunit>, <lengthunit>cm</lengthunit>, <lengthunit>m</lengthunit>, <lengthunit>bp</lengthunit> (big point, also called <em>PostScript point</em>), and <lengthunit>in</lengthunit>.</p>
+
+<token-example-table>
+<head>
+<tr> <td>Token</td> <td>Valid length?</td> </tr>
+</head>
+<body>
+<tr> <td><inline>2.5cm</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>2.5pt</inline></td> <td>No (unless the unit <lengthunit>pt</lengthunit> is defined)</td> </tr>
+<tr> <td><inline>~3mm</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>3 mm</inline></td> <td>No (space not allowed)</td> </tr>
+<tr> <td><inline>180°mm</inline></td> <td>No (degree sign not allowed)</td> </tr>
+</body>
+</token-example-table>
+<p></p>
+
+<p>A new unit is defined using the following syntax, which must appear <em>at the beginning of a line</em>:</p>
+<pre>
+##unit <lengthunit class="replacable">new_unit</lengthunit> = <syntaxname>length</syntaxname>
+</pre>
+<p>The point used by TeX is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:</p>
+<pre>
+##unit tex = 0.996264009963bp
+</pre>
+</body>
+</section>
+
+
+<section id="syntax-atoms-special-lengths">
+<title>Special units of length</title>
+<body>
+<p>Special units of lengths are used when constructing smooth paths.  Then, it is often desirable not to have to provide the distance to control points in terms of absolute distances, but one would rather specify the distance relative to the distance between the first and final interpolation point, and the angles from the first and final interpolation points to the intermediate control points.</p>
+
+<p>The most frequent use of special units of lengths is to assign the dynamic variable <varname>@defaultunit</varname>, see <a href="#pathconstruction">path construction</a>.</p>
+
+<p>Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:</p>
+<loose-table>
+<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
+<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
+<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
+<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
+<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
+<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
+<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+</loose-table>
+<p>The meaning of the columns is the following.  If there is a check mark in the <em>Distance</em> column, then the distance between the first and last interpolation point is used as a base length.  If there is a check mark in the <em>Circelish</em> column, then the base length is multiplied by a factor based on the near angle, in such a way that circles are approximated well.  If there is a check mark under <em>Correction</em>, a correction factor is applied based on the difference between the near angle and the far angle; if both angles are the same, there is no correction.  If there is a check mark in the <em>No inflexion</em> column, then the distance to the intermediate control point is truncated to avoid inflexions, if necessary.  The unit which is not based on the distance between the first and last interpolation point is based on the inflexion limit instead.</p>
+<remark>
+<p>I know that the description of the special lengths is really bad.  I hope it will be better once I start documenting path construction in general.</p>
+</remark>
+
+<p>For instance, the following approximates a quarter of a circle well:</p>
+<pre>
+•page &lt;&lt; [stroke (0cm,1cm)&gt;(1%C^0°)--(1%C^90°)&lt;(1cm,0cm)]
+</pre>
+</body>
+</section>
+
+<section id="syntax-atoms-strings">
+<title>Strings</title>
+<body>
+<p>The string syntax in Shapes is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
+
+<p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
+
+<token-example-table>
+<head>
+<tr> <td>Escape sequence</td> <td>Resulting character</td> </tr>
+</head>
+<body>
+<tr> <td><inline>¢¢</inline></td> <td>¢</td> </tr>
+<tr> <td><inline>¢`</inline></td> <td>`</td> </tr>
+<tr> <td><inline>¢´</inline></td> <td>´</td> </tr>
+<tr> <td><inline>¢n</inline></td> <td>(a newline)</td> </tr>
+<tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
+</body>
+</token-example-table>
+<p></p>
+
+<p>It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:</p>
+
+<token-example-table>
+<head>
+<tr> <td>Token</td> <td>Valid string?</td> </tr>
+</head>
+<body>
+<tr> <td><inline>`Hi there´</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Shapes string: `Hi there´´</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Boing!¢b´</inline></td> <td>No (no such escape sequence)</td> </tr>
+<tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td>No (Unbalanced delimiter)</td> </tr>
+<tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>`Dear Shaper¢n¢nMulti-line...´</inline></td> <td>Yes</td> </tr>
+<tr> <td><pre>
+`
+Dear Shaper,
+
+Multi-line...
+´
+</pre></td> <td>Yes</td> </tr>
+<tr> <td><pre>
+`Dear Shaper,
+
+Multi-line...´
+</pre></td> <td>Yes, but not recommended</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-atoms-booleans">
+<title>Booleans</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname>boolean</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Boolean</typename></td></tr>
+<tr> <td><syntaxname class="new">boolean</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+</syntax-table>
+
+<p>The valid Booleans are listed below.</p>
+<token-example-table>
+<head>
+<tr> <th>Token</th> <th>Valid Boolean?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>false</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>true</inline></td> <td>Yes</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-atoms-integers">
+<title>Integers</title>
+<body>
+<p>Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:</p>
+
+<token-example-table>
+<head>
+<tr> <th>Token</th> <th>Valid Integer?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>'13</inline></td> <td>Yes (= 13)</td> </tr>
+<tr> <td><inline>'~5</inline></td> <td>Yes (= -5)</td> </tr>
+<tr> <td><inline>'0xFF</inline></td> <td>Yes (= 255)</td> </tr>
+<tr> <td><inline>'0b110</inline></td> <td>Yes (= 6)</td> </tr>
+<tr> <td><inline>'~0xFF</inline></td> <td>No (negative integers must be entered with radix 10)</td> </tr>
+<tr> <td><inline>(-'0xFF)</inline></td> <td>Yes, but this is an expression, not a token.</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-atoms-identifiers">
+<title>Identifiers</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname class="new">identifier</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>{LowerCaseLetter}({Letter}|[0-9])*</lexerregexp></td></tr>
+</syntax-table>
+<p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
+
+<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9, the underscore, and the question mark.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.  As of today, identifiers may neither begin with a capital letter.  Instead, a capital letter indicates a type name.</p>
+
+<token-example-table>
+<head>
+<tr> <th>Token</th> <th>Valid identifier?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>cool?</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>a_1_2</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>__cplusplus</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>3cm</inline></td> <td>No (this begins with a digit and is a length)</td> </tr>
+<tr> <td><inline>_3abc</inline></td> <td>No (digit after underscore in first position)</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-atoms-dynamic-variables">
+<title>Dynamic variables</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname class="new">dyn-var</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+<section id="syntax-atoms-state-ref">
+<title>State references</title>
+<body>
+<p>Note that state references are not expressions.</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> <bnf>|</bnf> <syntaxname>dyn-state</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">lex-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">dyn-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntaxname>identifier</syntaxname></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+<section id="syntax-atoms-symbols">
+<title>Symbols</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname>symbol</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Symbol</typename></td></tr>
+<tr> <td><syntaxname class="new">symbol</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>'<syntaxname>identifier</syntaxname></inline></td></tr>
+</syntax-table>
+<p>Note that there must not be any whitespace after the apostrophe.</p>
+
+<p>Symbols are entered as the apostrophe followed by an identifier.</p>
+<token-example-table>
+<head>
+<tr> <th>Token</th> <th>Valid symbol?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>'foo</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>'2dup</inline></td> <td>No (<inline>2dup</inline> is not an identifier)</td> </tr>
+<tr> <td><inline>'28</inline></td> <td>No, this is an integer</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
 </section><!-- end of syntax-atoms -->
+
+<section id="syntax-compound">
+<title>Compound syntax constructors</title>
+<top>
+<p>This section describes syntax that denotes value construction in terms of other values and expressions, whithout doing so via a usual function call.  Values that are constructed by calling a library function are described elsewhere.  As an exception, class construction is not defined here either.</p>
+</top>
+
+<section id="syntax-compound-float-tuples">
+<title>Float pairs and triples</title>
+<body>
+<syntax-table>
+<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatPair</typename></td></tr>
+<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>float-triple</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatTriple</typename></td></tr>
+<tr> <td><syntaxname class="new">float-triple</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</syntax-table>
+
+<p>Float pairs and triples are useful generalizations of directions in 2D and 3D, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
+
+<p>The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  The following table gives a few examples.</p>
+
+<token-example-table>
+<head>
+<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>( 5, 7 )</inline></td> <td>Yes, yields a float pair</td> </tr>
+<tr> <td><inline>( 1.2, 3.4, 5 )</inline></td> <td>Yes, yields a float triple</td> </tr>
+<tr> <td><inline>( 5, '7 )</inline></td> <td>No, <inline>'7</inline> is an integer</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-compound-offsets">
+<title>Offsets</title>
+<body>
+<p>Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:</p>
+<syntax-table>
+<tr> <td><syntaxname>offset</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>OffsetLength</typename></td></tr>
+<tr> <td><syntaxname class="new">offset</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><typename>LengthLike</typename></td> <td><bnf>=</bnf></td> <td><inline> <typename>Length</typename> | <typename>OffsetLength</typename></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+<section id="syntax-compound-coords">
+<title>Coordinates in 2D and 3D</title>
+<body>
+<p>In this context, 2D and 3D refer to the perceivable space (3D) and plane (2D).  Coordinates are never explicitly associated with a base frame, which would imply that coordinates denoted a particular point in the perceivable spaces.  Rather, coordinates are always relative, possibly with the exception of when graphics are laid out on the output plane.  However, even when graphics are placed on the output plane, they remain relative to an artificial origin, and this is particularly obvious when the output's media box is determined <em>after</em> the contents of the output has been laid out.</p>
+
+<p>That said, we can drop the distinction of the two types of coordinates, and it is, for example, always permissible to add coordinates.  The basic way to construct coordinates is similar to how pairs/triples are constructed, but with lengths instead of floats.  One notable exception to this rule is that if one of the lengths in 2D are zero, it may be given as the <em>float</em> zero.  Coordinates may also be constructed as relative an undetermined base frame, please refer to the documentation on path construction for how the base frame may be determined later.</p>
+
+<p>The unary plus may be used either to construct offsets on a per-dimension level, or on a complete coordinates expression.</p>
+
+<p>The following table below lists the valid constructs.</p>
+<syntax-table>
+<tr> <td><syntaxname>coords-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord2D</typename></td></tr>
+<tr> <td><syntaxname class="new">coords-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, 0 )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-2D</syntaxname> )</inline></td></tr>
+<tr> <td><syntaxname>coords-3D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord3D</typename></td></tr>
+<tr> <td><syntaxname class="new">coords-3D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-3D</syntaxname> )</inline></td></tr>
+</syntax-table>
+
+<p>Some examples are given in the table below.</p>
+
+<token-example-table>
+<head>
+<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>( 5cm, 7in )</inline></td> <td>Yes, yields coordinates in the perceivable plane</td> </tr>
+<tr> <td><inline>( 5cm, 0 )</inline></td> <td>Yes, same as <inline>( 5cm, 0m )</inline></td> </tr>
+<tr> <td><inline>( 0, 7bp )</inline></td> <td>Yes, same as <inline>( 0m, 7bp )</inline></td> </tr>
+<tr> <td><inline>( 2mm, 7mm, 5mm )</inline></td> <td>Yes, yields coordinates in the perceivable space</td> </tr>
+<tr> <td><inline>( 2mm, 0, 5mm )</inline></td> <td>No, the float zero is only allowed in 2D</td> </tr>
+<tr> <td><inline>( (+0mm), 1mm ))</inline></td> <td>Yes, the x component is relative an undetermined base frame</td> </tr>
+<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td>Yes, same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
+<tr> <td><inline>(+ 3mm*[dir 20°])</inline></td> <td>Yes, same as <inline>( (+ (3mm*[dir 20°]).x), (+ (3mm*[dir 20°]).y) )</inline></td> </tr>
+<tr> <td><inline>( (+0mm), 1mm, (+7mm) )</inline></td> <td>Yes, relative coordinates may be used in both 2D and 3D</td> </tr>
+</body>
+</token-example-table>
+</body>
+</section>
+
+<section id="syntax-compound-polar">
+<title>Polar handles and corder points in 2D</title>
+<body>
+<p><em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like</p>
+<pre>
+(+ dist*[dir ang])
+</pre>
+<p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
+<syntax-table>
+<tr> <td><syntaxname>polar-handle-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>PolarHandle2D</typename></td></tr>
+<tr> <td><syntaxname class="new">polar-handle-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;?</bnf> )</inline></td></tr>
+</syntax-table>
+<p>When the distance is missing, it <em>may</em> fall back on <varname>@defaultunit</varname>, so be prepared to have a binding for <varname>@defaultunit</varname> in dynamic scope unless you really know that it won't be needed.</p>
+
+<remark>
+<p>A polar handle will store the distance part as a thunk, thereby capturing the current lexical and dynamic environments.  Hence, it is not when the polar handles are used to build paths, that <varname>@defaultunit</varname> may be required, but when the polar handles themselves are constructed.</p>
+</remark>
+
+<token-example-table>
+<head>
+<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>( 5cm ^ 60° )</inline></td> <td>Yes, equivalent to <inline>(+ 5cm*[dir 60°])</inline></td> </tr>
+<tr> <td><inline>( 1%C ^ 60° )</inline></td> <td>Yes, but cannot be rewritten as above</td> </tr>
+<tr> <td><inline>( ^ 0.5 )</inline></td> <td>Yes, angle in radians, may require a binding for <varname>@defaultunit</varname></td> </tr>
+<tr> <td><inline>( ^ )</inline></td> <td>Yes, may require a binding for <varname>@defaultunit</varname></td> </tr>
+<tr> <td><inline>( 1%C ^ )</inline></td> <td>Yes</td> </tr>
+<tr> <td><inline>( 1 ^ )</inline></td> <td>No, <inline>1</inline> is not a length</td> </tr>
+<tr> <td><inline>( ^ 1cm )</inline></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>
+</body>
+</token-example-table>
+<p></p>
+
+<p>A <em>corner point</em> is a generalization of <typename>Coord2D</typename>.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <typename>Coord2D</typename> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
+<table cellspacing="5">
+<tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</table>
+
+<example-with-output title="Example" internal-id="example-cornerpoint" pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" source="../../examples/features/cornerpoint.drool">
+<![CDATA[
+<!--#include virtual="../../examples/features/cornerpoint.drool" -->
+]]>
+</example-with-output>
+
+<p>The concepts of polar handles and corner points in 2D have not yet been generalized to 3D.</p>
+</body>
+</section>
+
+<section id="syntax-compound-">
+<title>?</title>
+<body>
+</body>
+</section>
+
+</section><!-- end of syntax-compound -->
 
 </section><!-- end of chap-syntax -->

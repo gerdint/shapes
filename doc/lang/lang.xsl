@@ -71,6 +71,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <syntaxname><xsl:apply-templates/></syntaxname>
   </xsl:element>
 </xsl:template>
+<xsl:template match="a[@href]">
+  <xsl:element name="a">
+    <xsl:attribute name="href"><xsl:value-of select="@href" /></xsl:attribute>
+    <xsl:apply-templates/>
+  </xsl:element>
+</xsl:template>
+<xsl:template match="exampleswitch[@onclick]">
+  <xsl:element name="div">
+    <xsl:attribute name="style">display:inline;</xsl:attribute>
+    <xsl:attribute name="onclick"><xsl:value-of select="@onclick" /></xsl:attribute>
+    <exampleswitch><xsl:apply-templates/></exampleswitch>
+  </xsl:element>    
+</xsl:template>
 
 <xsl:template match="syntax-table">
   <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
@@ -81,11 +94,68 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:apply-templates select="body"/>
   </table>
 </xsl:template>
-<xsl:template match="simple-table">
+<xsl:template match="tight-table">
   <table><xsl:apply-templates select="tr"/></table>
+</xsl:template>
+<xsl:template match="loose-table">
+  <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
+</xsl:template>
+<xsl:template match="example-with-output[@*]">
+  <table class="codefile">
+    <tr><td><hr class="thick"/></td></tr>
+    <tr><th colspan="3"><xsl:value-of select="@title" /></th></tr>
+    <tr align="center"><td>
+	<xsl:element name="a">
+	  <xsl:attribute name="href"><xsl:value-of select="@pdf" /></xsl:attribute>
+	  <xsl:element name="img">
+	    <xsl:attribute name="src"><xsl:value-of select="@jpg" /></xsl:attribute>
+	    <xsl:attribute name="alt">Angry</xsl:attribute>
+	  </xsl:element>
+	</xsl:element>
+    </td></tr>
+    <tr><td><hr /></td></tr>
+    <tr align="center"><td>Source: 
+	<xsl:element name="exampleswitch">
+	  <xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="@internal-id" />&apos;).style.display='inline'</xsl:attribute>
+	  show
+	</xsl:element>
+	— 
+	<xsl:element name="exampleswitch">
+	  <xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="@internal-id" />&apos;).style.display='none'</xsl:attribute>
+	  hide
+	</xsl:element>
+	— 
+	<xsl:element name="a">
+	  <xsl:attribute name="href"><xsl:value-of select="@source" /></xsl:attribute>
+	  visit
+	</xsl:element>
+    </td></tr>
+    <xsl:element name="tr">
+      <xsl:attribute name="id"><xsl:value-of select="@internal-id" /></xsl:attribute>
+      <xsl:attribute name="style">display:none;</xsl:attribute>
+      <td>
+	<pre>
+	  <xsl:apply-templates/>
+	</pre>
+      </td>
+    </xsl:element>
+    <tr><td><hr class="thick"/></td></tr>
+  </table>
 </xsl:template>
 <xsl:template match="tr">
   <tr><xsl:apply-templates/></tr>
+</xsl:template>
+<xsl:template match="token-example-table/head/tr">
+  <tr align="left"><xsl:apply-templates/></tr>
+</xsl:template>
+<xsl:template match="code-file-table/tr">
+  <tr align="center"><xsl:apply-templates/></tr>
+</xsl:template>
+<xsl:template match="tr[@align]">
+  <xsl:element name="tr">
+    <xsl:attribute name="align"><xsl:value-of select="./@align" /></xsl:attribute>
+    <xsl:apply-templates/>
+  </xsl:element>
 </xsl:template>
 <xsl:template match="head/tr/td">
   <th><xsl:apply-templates/></th>
@@ -95,6 +165,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="th">
   <th><xsl:apply-templates/></th>
+</xsl:template>
+<xsl:template match="th[@colspan]">
+  <xsl:element name="th">
+    <xsl:attribute name="colspan"><xsl:value-of select="./@colspan" /></xsl:attribute>
+    <xsl:apply-templates/>
+  </xsl:element>
+</xsl:template>
+
+<xsl:template match="img[@*]">
+  <xsl:element name="img">
+    <xsl:attribute name="src"><xsl:value-of select="@src" /></xsl:attribute>
+    <xsl:attribute name="alt"><xsl:value-of select="@alt" /></xsl:attribute>
+  </xsl:element>
 </xsl:template>
 
 </xsl:stylesheet>

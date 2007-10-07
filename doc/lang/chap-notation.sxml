@@ -7,7 +7,7 @@
 <section id="notation-fonts-color">
 <title>Fonts and color</title>
 <body>
-<simple-table>
+<loose-table>
 <tr> <th>Concept</th> <th>Example</th> <th>Remark</th> </tr>
 <tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
 <tr> <td>Variable or state</td> <td><varname>stroke</varname>, <varname>•page</varname></td> <td></td> </tr>
@@ -19,7 +19,7 @@
 <tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
 <tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
 <tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
-</simple-table>
+</loose-table>
 
 <p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntaxname>basicf-float</syntaxname><bnf>;</bnf><syntaxname>unit</syntaxname></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>
 
