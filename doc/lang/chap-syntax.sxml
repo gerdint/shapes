@@ -482,10 +482,13 @@ Multi-line...´
 <tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
 </table>
 
-<example-with-output title="Example" internal-id="example-cornerpoint" pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" source="../../examples/features/cornerpoint.drool">
+<example-with-output title="Example" internal-id="example-cornerpoint">
+<image pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" />
+<source file="../../examples/features/cornerpoint.drool">
 <![CDATA[
 <!--#include virtual="../../examples/features/cornerpoint.drool" -->
 ]]>
+</source>
 </example-with-output>
 
 <p>The concepts of polar handles and corner points in 2D have not yet been generalized to 3D.</p>
