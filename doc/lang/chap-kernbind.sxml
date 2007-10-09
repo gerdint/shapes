@@ -1,0 +1,83 @@
+<section id="chap-kernbind">
+<title>System bindings</title>
+<top>
+<p>The language Shapes comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
+</top>
+
+<section id="kernbind-graphics">
+<title>Graphics functions</title>
+<top>
+<p>After all, Shapes is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
+
+<p>Remember <varname>immerse</varname> and <varname>facing</varname>, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <varname>facing</varname>.  The following is quite nice:
+</p>
+<pre>
+facing: [../facing scale:true distort:true ...]
+</pre>
+</top>
+</section>
+
+<section id="kernbind-hot">
+<title>Hot values</title>
+<top>
+<p>States stem from hot values.  The system provides a few, all of which are important because the efficiency enhancements they bring.</p>
+</top>
+</section>
+
+<section id="kernbind-types">
+<title>Type objects</title>
+<top>
+<p>This section simply contains a listing of the type objects (some of which can be thought of as interfaces) provided by the system.</p>
+</top>
+</section>
+
+<section id="kernbind-latex">
+<title>LaTeX</title>
+<top>
+<p>The Shapes language was designed to be used with LaTeX for typesetting labels in the graphics.</p>
+</top>
+<body>
+<p>The interpreter goes to some lengths to avoid calling LaTeX too many times, but the problems this can cause is more of a tool matter than a language issue.  Here, we shall just describe the laguage constructs that relate to producing labels with LaTeX.</p>
+
+<p>First, there are a few directives that just transfer text to the top of the LaTeX document where the labels are to appear:</p>
+<pre>
+##documentclass <varname class="replacable">class-name</varname>
+##classoption <varname class="replacable">comma-separated-options</varname>
+##preamble <varname class="replacable">line-of-text</varname>
+##documenttop <varname class="replacable">line-of-text</varname>
+##no-lmodernT1
+##no-utf8
+</pre>
+<p>The default document class is <em>article</em>, but this can be changed with the first of these directives.  The following three directives are self-explanatory, and may appear several times.  The last two disable the use of packages that are otherwise included by default.  When they are not disabled, the following goes before the lines from <inline>##preamble</inline>:</p>
+<pre>
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+</pre>
+
+<p>To produce the labels themselves, the syntax is simply:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">tex-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( TeX <bnf>&lt;</bnf><typename>String</typename><bnf>&gt;</bnf> )</inline></td></tr>
+</syntax-table>
+<p>Note that <varname>TeX</varname> is not a function, although it could have been if it was not for efficiency reasons.</p>
+
+<p>If the expression is a string literal, it is handled more efficiently than if the string must be obtained by evaluation.  The origin of the produced label is the same as in LaTeX; at the leftmost point of the baseline.  Unfortunately, fonts lie about their bounding boxes to make them look smaller, and this will cause the produced label to be slightly cropped when imported.  At the moment, I can't think of a good way to get around this problem, since a tight bounding box is important for layout purposes.</p>
+
+<example-with-output title="Example" internal-id="example-boxedeq">
+<image pdf="../output/boxedeq.pdf" jpg="../output/boxedeq_y_small.jpg" />
+<source file="../../examples/features/boxedeq.drool">
+<![CDATA[<!--#include virtual="../../examples/features/boxedeq.drool" -->]]>
+</source>
+</example-with-output>
+
+</body>
+</section>
+
+<section id="kernbind-misc">
+<title>Miscellaneous</title>
+<top>
+<p>Standard stream objects, null objects, mathematical constants, and more...</p>
+</top>
+</section>
+
+</section><!-- end of chap-kernbind -->

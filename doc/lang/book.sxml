@@ -5,4 +5,8 @@
 </top>
 <!--#include virtual="chap-notation.sxml" -->
 <!--#include virtual="chap-syntax.sxml" -->
+<!--#include virtual="chap-kernbind.sxml" -->
+<!--#include virtual="chap-kerntypes.sxml" -->
+<!--#include virtual="chap-lexer.sxml" -->
+<!--#include virtual="chap-tolerances.sxml" -->
 </book>

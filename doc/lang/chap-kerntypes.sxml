@@ -1,0 +1,35 @@
+<section id="chap-kerntypes">
+<title>Built-in types</title>
+<top>
+<p>There is a large number of built-in types.  In order to use them efficiently, one needs to know things as how to construct values, what fields these values have, and important functions that operate on them.</p>
+</top>
+
+<section id="kerntypes-simple">
+<title>Simple types</title>
+<top>
+<p>By <em>simple types</em> it is referred to types of values that can be constructed using a single input token.</p>
+</top>
+</section>
+
+<section id="kerntypes-pointspaths">
+<title>Points and paths</title>
+<top>
+<p>Not much needs to be known about most of these intuitive types.</p>
+</top>
+</section>
+
+<section id="kerntypes-graphics">
+<title>Graphics</title>
+<top>
+<p>Values of the types described here can be drawn (possibly after projection to 2D).</p>
+</top>
+</section>
+
+<section id="kerntypes-other">
+<title>Other</title>
+<top>
+<p>Here, various types that don't fit in the above cathegories are placed.</p>
+</top>
+</section>
+
+</section><!-- end of chap-kerntypes -->

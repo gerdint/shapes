@@ -973,9 +973,9 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 
 <section id="syntax-types">
 <title>Classes and type information</title>
-<top>
+<body>
 <p>Since Shapes is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
-</top>
+</body>
 </section><!-- end of syntax-types -->
 
 <section id="syntax-misc-expr">
