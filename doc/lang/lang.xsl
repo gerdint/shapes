@@ -41,6 +41,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="p">
   <p><xsl:apply-templates/></p>
 </xsl:template>
+<xsl:template match="ol">
+  <ol><xsl:apply-templates/></ol>
+</xsl:template>
+<xsl:template match="ol/li">
+  <li><xsl:apply-templates/></li>
+</xsl:template>
 
 <xsl:template match="pre">
 <pre>
