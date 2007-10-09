@@ -36,7 +36,7 @@
 <tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
 </body>
 </token-example-table>
-<p></p>
+<p />
 
 <p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
 </body>
@@ -64,7 +64,7 @@
 ##include background
 ##include foreground
 </pre>
-<p></p>
+<p />
 
 <p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
 </body>
@@ -115,7 +115,7 @@
 <tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
 </body>
 </token-example-table>
-<p></p>
+<p />
 
 <p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
 </body>
@@ -145,7 +145,7 @@
 <tr> <td><inline>180°mm</inline></td> <td>No (degree sign not allowed)</td> </tr>
 </body>
 </token-example-table>
-<p></p>
+<p />
 
 <p>A new unit is defined using the following syntax, which must appear <em>at the beginning of a line</em>:</p>
 <pre>
@@ -186,7 +186,7 @@
 
 <p>For instance, the following approximates a quarter of a circle well:</p>
 <pre>
-•page &lt;&lt; [stroke (0cm,1cm)&gt;(1%C^0°)--(1%C^90°)&lt;(1cm,0cm)]
+<![CDATA[•page << [stroke (0cm,1cm)>(1%C^0°)--(1%C^90°)<(1cm,0cm)]]]>
 </pre>
 </body>
 </section>
@@ -210,7 +210,7 @@
 <tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
 </body>
 </token-example-table>
-<p></p>
+<p />
 
 <p>It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:</p>
 
@@ -448,7 +448,7 @@ Multi-line...´
 <body>
 <p><em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like</p>
 <pre>
-(+ dist*[dir ang])
+<![CDATA[(+ dist*[dir ang])]]>
 </pre>
 <p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
 <syntax-table>
@@ -475,19 +475,18 @@ Multi-line...´
 <tr> <td><inline>( ^ 1cm )</inline></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>
 </body>
 </token-example-table>
-<p></p>
+<p />
 
 <p>A <em>corner point</em> is a generalization of <typename>Coord2D</typename>.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <typename>Coord2D</typename> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
 <table cellspacing="5">
 <tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
 </table>
+<p />
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
 <image pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" />
 <source file="../../examples/features/cornerpoint.drool">
-<![CDATA[
-<!--#include virtual="../../examples/features/cornerpoint.drool" -->
-]]>
+<![CDATA[<!--#include virtual="../../examples/features/cornerpoint.drool" -->]]>
 </source>
 </example-with-output>
 
@@ -495,12 +494,232 @@ Multi-line...´
 </body>
 </section>
 
-<section id="syntax-compound-">
+<section id="syntax-compound-functions">
+<title>Functions and friends</title>
+<body>
+<p>Functions are at the heart of a functional language.  Powerful ways of creating functions make source code both more compact and more comprehensible.  The language is <em>not</em> curried, but contains many constructs to support <em>evaluated cuts</em>, but these are presented in connection with <a href="#funapply">function calls</a>.</p>
+
+<p>There are true (pure) functions, non-pure functions, and horrible procedures, all of which are constructed similarly, but differ in how they are applied and what they are allowed to do.  First, pure functions will be discussed in detail.  Then, non-pure functions and procedures will be presented in terms of how they differ from pure functions.</p>
+
+<p>Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already):</p>
+<pre>
+<![CDATA[\ x y .> [sqrt x*x + y*y]]]>
+</pre>
+<p>This fits into (note that there is only a small difference between the syntax for functions and procedures)</p>
+<syntax-table>
+<tr> <td><syntaxname>function</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Function</typename></td></tr>
+<tr> <td><syntaxname class="new">function</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntaxname>identifier</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname>procedure</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Procedure</typename></td></tr>
+<tr> <td><syntaxname class="new">function</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntaxname>identifier</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> ! <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">default</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>: <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">sink</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntaxname>identifier</syntaxname></inline></td></tr>
+</syntax-table>
+
+<p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
+
+<p>A function with a sink can take any number of arguments, and arguments by any name.  Everything that does not match the list of formals before the sink is placed in the sink, which is a <a href="#structures">structure</a>.</p>
+</body>
+</section>
+
+<section id="syntax-compound-structures">
+<title>Structures</title>
+<body>
+<p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a href="#funapply">function application</a> for an explanation of <syntaxname>named-expr</syntaxname>, and to see how structures may be used.</p>
+
+<syntax-table>
+<tr> <td><syntaxname>structure</syntaxname></td> <td><bnf>::</bnf></td> <td>“<typename>Structure</typename>”</td></tr>
+<tr> <td><syntaxname class="new">structure</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> &lt;)</inline></td></tr>
+</syntax-table>
+
+<p>Note that the type of a structure is a complex type, which we don't bother to write out here.</p>
+
+<p>Besides getting parts out of a structure by applying a function to it, it is possible to bind to multiple values in the structure at once.  The syntax is</p>
+
+<syntax-table>
+<tr> <td><syntaxname class="new">split-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&lt; <bnf>(</bnf> <syntaxname>split-item</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)+</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> &gt;) : <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">split-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . <syntaxname>identifier</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . &quot;</inline></td></tr>
+</syntax-table>
+
+<p>The semantics reminds of a function can, but there are differences.  Most importantly, the created bindings populate the <em>current</em> environment, rather than a new one.  The first (or only) identifier in the <syntaxname>split-item</syntaxname> is the identifier for the created binding.  There are ordered as well as named items; ordered items match ordered components in the structure, while named items match named components in the structure.  The ordered items are those with just one identifier.  When there are two identifiers, the latter is the name to be sought in the structure.  When there is a quotation mark (<inline>&quot;</inline>) instead of a second identifier, this means that the first identifier shall be used also as a second identifier.</p>
+
+<p>Unlike a function application, ordered and named items do not interact; a named item cannot get its value from an ordered component in the structure.  As an example, this confusing code is not legal:</p>
+<pre class="bad">
+<![CDATA[s: (> '9 <)
+(< foo:bar >) : s]]>
+</pre>
+<p>inspite the fact that the following <em>is</em> legal:</p>
+<pre>
+<![CDATA[{
+  s: (> '9 <)
+  f: \ bar .> { foo:bar  foo }
+  f [] <> s
+}]]>
+</pre>
+
+<p>Named parts can also be accessed by an ordinary field reference, like this:</p>
+<pre>
+<![CDATA[s: (> a:'1  b:'2 <)
+•stdout << s.b]]>
+</pre>
+
+<example-with-output title="Example" internal-id="example-values">
+<source file="../../examples/features/values.drool">
+<![CDATA[<!--#include virtual="../../examples/features/values.drool" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="../output/values.stdout" -->]]>
+</stdout>
+</example-with-output>
+
+</body>
+</section>
+</section><!-- end of syntax-compound -->
+
+<section id="syntax-fun-apply">
+<title>Function application and evaluated cuts</title>
+<top>
+<p>The basic syntax for applying (or <em>calling</em>) functions is borrowed from the Scheme language.  However, there is a predefined set of operators with fixed priorities that allow exceptions to this rule.  In addition, special syntax is used when a function is applied over a structure, and there is syntactic sugar for calling functions of just one argument.  A similar operation to calling a function is to define a new function by providing values for only some of the arguments — this is referred to as an <a href="http://srfi.schemers.org/srfi-26/srfi-26.html"><em>evaluated cut</em></a>.</p>
+</top>
+
+<section id="syntax-fun-apply-basic">
+<title>Basic function application</title>
+<body>
+<p>Besides ordinary functions, there are some other objects which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The general form of a function application is</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">basic-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+<tr> <td><syntaxname class="new">arg-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname> <bnf>|</bnf> <syntaxname>named-expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">named-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>|</bnf> <syntaxname>named-state</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">named-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname></inline></td></tr>
+<tr> <td><typename>Applicable</typename></td> <td><bnf>=</bnf></td> <td><typename>Function</typename> <bnf>|</bnf> <typename>AffineTransform</typename> <bnf>|</bnf> <typename>Path</typename></td> </tr>
+</syntax-table>
+
+<p>The syntax <syntaxname>arg-item</syntaxname> and <syntaxname>state-item</syntaxname> defined above can each be either <em>ordered</em> (that is, not named) or <em>named</em>, but there is a rule for how these may be ordered.  The rule exist to avoid confusing situations; not because it is necessary to define the semantics.  The rule is that ordered arguments (represented by <syntaxname>expr</syntaxname>) must go before named arguments (represented by <syntaxname>named-expr</syntaxname>), and ordered states (represented by <syntaxname>state</syntaxname>) before named states (represented by <syntaxname>named-state</syntaxname>).</p>
+
+<remark>
+<p>Of the conceivable semantics that could be defined if named arguments were allowed to appear before ordered arguments were allowed, two will be ruled out here.  First, one could simply ignore the order of appearance, and treat all named arguments just as if they appeared after the ordered arguments.  This would obscure the actual position of ordered arguments without adding any power to the language.  Second, one could add some power to the language by interpreting the position of ordered arguments in view of what unbound arguments there are, given the named and ordered arguments seen so far in a left to right scan.  However, such semantics would also obscure the actual position of ordered arguments severely.</p>
+</remark>
+
+<p>Arguments and states may appear in any order, since they do not interact at all.</p>
+
+<p>It is not allowed to specify the same argument or state more than once by name.</p>
+
+<p>Recall that the formal parameters of a function is an ordered list where each element has a name (with some exceptions).  To define the semantics of a function call, it must be described how items in the application is mapped to formal parameters.  Let us first consider the passing of arguments (as opposed to states).  First, the ordered arguments in the application are mapped to the corresponding positions in the list of formal parameters.  Then, the formal parameters which have not been specified by ordered arguments may be addressed by named arguemnts.  Finally, default values are used for formal parameters which are still unassigned.  It is an error if an unassigned formal parameter has no default value.</p>
+
+<p>It is an error if there are too many arguments or if a named argument does not match the name of any formal parameter, unless the function has a sink.</p>
+
+<p>The semantics for passing states is analogous to that of passing arguments.</p>
+
+<p>The evaluation of argument expressions is typically delayed by passing a thunk instead of a value unless the argument is immediate or the corresponding formal parameter requires the argument to be forced.  (Most elementary functions in the kernel will require all their arguments to be forced, while user-defined functions only take thunks by default.)</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-procedures">
+<title>Procedure application</title>
+<body>
+<p>The general form of a procedure application is</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">proc-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><typename>Procedure</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+</syntax-table>
+<p>Here, <syntaxname>fun-expr</syntaxname> is simply an expression that evaluates to a procedure.  Recall that a procedure may access dynamic states, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  Besides this difference, the semantics are the same as that of a function application.</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-unary">
+<title>Unary function application</title>
+<body>
+<p>To apply a function to a single argument, one may use</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">unary-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>named-expr</syntaxname></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[]</inline> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.</p>
+
+<p>Postfix alternatives for unary application may be introduced in the future.</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-structures">
+<title>Structures in function application</title>
+<body>
+<p>Structures are special values that contain ordered as well as named components.  Applying a function to a structure has the same semantics as if the ordered and named components were split in a basic function application.  The syntax for calling a function with a structure is:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">split-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-cute-basic">
+<title>Basic evaluated cuts</title>
+<body>
+<p>The syntax for the basic evaluated cut is simple:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">basic-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> ... ]</inline></td></tr>
+</syntax-table>
+<p>Note that states cannot be bound in evaluated cuts, since this would store a reference to the state in a manner that does not match a functional language.  Also note that, as in function application, ordered arguments must be passed before named arguments.</p>
+
+<p>The semantics of the evaluated cut may not be quite as everone expects.  Ordered arguments are simply mapped to the corresponding positions in the callee's list of formal parameters, and are bound without possibility to override in the evaluated cut.  Named arguments, however, are not actually bound to the addressed formal parameters, but only assigns (or replaces) the default value for that parameter.  Hence, named arguments in the evaluated cut are possible to override.</p>
+
+<p>Note that it is a bad idea to use ordered arguments with a function whose list of formal parameters is unavailable for inspection.  It is such a bad idea that it would be pointless at best to allow named arguments to bind permanentally to a formal parameter in an evaluated cut, since the use of this would be to change the positions of ordered arguments in an obscure way.</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-cute-unary">
+<title>Unary evaluated cuts</title>
+<body>
+<p>The following allows evaluated cuts to be constructed as easy as an unary function application:</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">unary-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>named-expr</syntaxname></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[...]</inline> must be written as a single token without whitespace.</p>
+</body>
+</section>
+
+<section id="syntax-fun-apply-cute-structure">
+<title>Structures and evaluated cuts</title>
+<body>
+<p>The syntax to use a structure for an evaluated cut is</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">split-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+</section><!-- end of syntax-fun-apply -->
+
+<section id="syntax-bracket">
+<title>Code bracket</title>
+<top>
+<p>The code bracket is a rather complicated kind of expression.  It is the home of many program elements, and its sementics is defined to avoid unnecessary nesting of scoping constructs.  The general form is</p>
+<syntax-table>
+<tr> <td><syntaxname class="new">code-bracket</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>{ <syntaxname>bracket-item</syntaxname><bnf>*</bnf> }</inline></td></tr>
+<tr> <td><syntaxname class="new">bracket-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>variable-definition</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>split-definition</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state-item</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-variable-declaration</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dynamic-state-declaration</syntaxname></inline></td></tr>
+</syntax-table>
+
+<p>The top level semantics of the code brackets is defined by two phases.  In the first phase, all items in the bracket that can be evaluated at any time and without evaluation of sub-expressions, are evaluated.  This includes variable definitions whose right hand side can be delayed using a thunk.  Any items related to states are excluded from this phase.</p>
+
+<p>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
+
+<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a href="#expressions">expressions</a> for the details of pure and non-pure expressions.</p>
+
+<p>Note that <syntaxname>split-definition</syntaxname> was defined under <a href="#structures">structures</a>.</p>
+</top>
+
+<section id="syntax-bracket-">
 <title>?</title>
 <body>
 </body>
 </section>
 
-</section><!-- end of syntax-compound -->
+</section><!-- end of syntax-bracket -->
 
 </section><!-- end of chap-syntax -->

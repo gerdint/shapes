@@ -31,6 +31,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </html>
 </xsl:template>
 
+<xsl:template match="secref[@id]">
+  <xsl:element name="a">
+    <xsl:attribute name="href">#sec-<xsl:value-of select="@id" /></xsl:attribute>
+    <xsl:apply-templates select="//section[@id=id]/title" />
+  </xsl:element>
+</xsl:template>
+
 <xsl:template match="p">
   <p><xsl:apply-templates/></p>
 </xsl:template>
@@ -39,6 +46,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <pre>
 <xsl:apply-templates/>
 </pre>
+</xsl:template>
+<xsl:template match="pre[@class]">
+<xsl:element name="pre">
+<xsl:attribute name="class"><xsl:value-of select="@class" /></xsl:attribute>
+<xsl:apply-templates/>
+</xsl:element>
 </xsl:template>
 
 <xsl:template match="inline">
