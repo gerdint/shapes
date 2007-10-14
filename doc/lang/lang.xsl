@@ -10,8 +10,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
     <h0><xsl:value-of select="title" /></h0>
+    <hr class="thick"/>
     <xsl:apply-templates select="top" />
-    <xsl:for-each select="section">
+    <xsl:for-each select="section[@id='chap-kerntypes']">
       <h1><xsl:value-of select="title" /></h1>
       <xsl:apply-templates select="top" />
       <xsl:apply-templates select="body" />
@@ -34,8 +35,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="secref[@id]">
   <xsl:element name="a">
     <xsl:attribute name="href">#sec-<xsl:value-of select="@id" /></xsl:attribute>
-    <xsl:apply-templates select="//section[@id=id]/title" />
+    <xsl:apply-templates />
   </xsl:element>
+</xsl:template>
+<xsl:template match="secref/title">
+  <xsl:variable name="dstid">
+    <xsl:value-of select="../@id" />
+  </xsl:variable>
+  <xsl:apply-templates select="//section[@id=$dstid]/title" />
 </xsl:template>
 
 <xsl:template match="p">

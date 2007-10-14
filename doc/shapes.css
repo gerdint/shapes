@@ -45,14 +45,16 @@ h0 {
 }
 
 h1 {
+	font-family: 					"Zapfino", sans-serif;
 	font-size: 					2em;
 	line-height:					normal;
 	margin-top:					0;
 }
 h2 {
-	font-size: 					1.6em;
-	line-height:					normal;	
-	margin-top:					1.2em;
+     text-decoration: underline;
+     font-size: 					1.6em;
+     line-height:					normal;	
+     margin-top:					1.2em;
 }
 
 h3 {

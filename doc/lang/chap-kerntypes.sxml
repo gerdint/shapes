@@ -7,29 +7,37 @@
 <section id="kerntypes-simple">
 <title>Simple types</title>
 <top>
-<p>By <em>simple types</em> it is referred to types of values that can be constructed using a single input token.</p>
+<p>By <em>simple types</em> it is referred to types of values that can be constructed using a single input token.  For this reason, their construction is also mentioned in the syntax chapter.</p>
 </top>
+
+<section id="kerntypes-simple-floats">
+<title>Float</title>
+<body>
+How floats are entered literally is described in <secref id="syntax-floats"><title /></secref> <secref id="syntax-floats">foo</secref> 
+</body>
 </section>
+
+</section>  <!-- end of kerntypes-simple -->
 
 <section id="kerntypes-pointspaths">
 <title>Points and paths</title>
 <top>
 <p>Not much needs to be known about most of these intuitive types.</p>
 </top>
-</section>
+</section>  <!-- end of kerntypes-pointspaths -->
 
 <section id="kerntypes-graphics">
 <title>Graphics</title>
 <top>
 <p>Values of the types described here can be drawn (possibly after projection to 2D).</p>
 </top>
-</section>
+</section>  <!-- end of kerntypes-graphics -->
 
 <section id="kerntypes-other">
 <title>Other</title>
 <top>
 <p>Here, various types that don't fit in the above cathegories are placed.</p>
 </top>
-</section>
+</section>  <!-- end of kerntypes-other -->
 
 </section><!-- end of chap-kerntypes -->
