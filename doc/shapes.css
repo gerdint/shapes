@@ -118,4 +118,5 @@ remark p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
 todo p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; }
 
 table.codefile { width:100%; background:#FFFFCC; }
-hr.thick { border:0; height:3px; color:#000; background:#000; } 
+table.operator-table { width:100%; background:#FFFFCC; }
+hr.thick { border:0; height:3px; color:#000; background:#000; }

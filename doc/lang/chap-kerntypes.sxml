@@ -13,7 +13,12 @@
 <section id="kerntypes-simple-floats">
 <title>Float</title>
 <body>
-How floats are entered literally is described in <secref id="syntax-floats"><title /></secref> <secref id="syntax-floats">foo</secref> 
+<p>How floats are entered literally is described in <secref-title id="syntax-floats" />.</p>
+
+<p>Floats have no fields.</p>
+
+<p>A large number of types may be scaled by floats, which makes the list of operators very long for floats.  Since dividing by a float is expected to mean the same as multiplying by the multiplicative inverse of the float, the list gets even longer:</p>
+<operator-table type="Float" />
 </body>
 </section>
 

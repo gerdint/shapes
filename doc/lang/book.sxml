@@ -9,4 +9,5 @@
 <!--#include virtual="chap-kerntypes.sxml" -->
 <!--#include virtual="chap-lexer.sxml" -->
 <!--#include virtual="chap-tolerances.sxml" -->
+<!--#include virtual="operators.sxml" -->
 </book>

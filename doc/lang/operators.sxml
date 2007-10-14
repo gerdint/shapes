@@ -1,0 +1,212 @@
+<operator-unary op="~" side="prefix">
+
+<case type="Float">
+<result><typename>Float</typename></result>
+<description>
+Negation.
+</description>
+</case>
+
+<case type="Integer">
+<result><typename>Integer</typename></result>
+<description>
+Negation.
+</description>
+</case>
+
+<case type="Length">
+<result><typename>Length</typename></result>
+<description>
+Negation.
+</description>
+</case>
+
+<case type="FloatPair">
+<result><typename>FloatPair</typename></result>
+<description>
+Scaling by negative unit.
+</description>
+</case>
+
+<case type="FloatTriple">
+<result><typename>FloatTriple</typename></result>
+<description>
+Scaling by negative unit.
+</description>
+</case>
+
+<case type="Coords-2D">
+<result><typename>Coords-2D</typename></result>
+<description>
+Scaling by negative unit.
+</description>
+</case>
+
+<case type="Coords-3D">
+<result><typename>Coords-3D</typename></result>
+<description>
+Scaling by negative unit.
+</description>
+</case>
+
+</operator-unary> <!-- end of prefix "~" -->
+
+
+<operator-unary op="+" side="prefix">
+
+<case type="Length">
+<result><typename>Offset</typename></result>
+<description>
+<em>Note: Requires enclosing parantheses!</em>  Constructs a relative length.
+</description>
+</case>
+
+<case type="Coords-2D">
+<result><typename>Offset-2D</typename></result>
+<description>
+<em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
+</description>
+</case>
+
+<case type="Coords-3D">
+<result><typename>Offset-3D</typename></result>
+<description>
+<em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
+</description>
+</case>
+
+</operator-unary> <!-- end of prefix "+" -->
+
+
+<operator-unary op="not" side="prefix">
+
+<case type="Boolean">
+<result><typename>Boolean</typename></result>
+<description>
+Negation.
+</description>
+</case>
+
+</operator-unary> <!-- end of prefix "not" -->
+
+<operator-unary op="--cycle" side="postfix">
+
+<case type="PathPoint-2D">
+<result><typename>Path-2D</typename></result>
+<description>
+Constructs a closed path with only one spline.
+</description>
+</case>
+
+<case type="Path-2D">
+<result><typename>Path-2D</typename></result>
+<description>
+Closes an open path.
+</description>
+</case>
+
+<case type="Path-3D">
+<result><typename>Path-2D</typename></result>
+<description>
+Closes an open path.
+</description>
+</case>
+
+<case type="PathPoint-3D">
+<result><typename>Path-3D</typename></result>
+<description>
+Constructs a closed path with only one spline.
+</description>
+</case>
+
+</operator-unary> <!-- end of postfix "- -cycle" (Don't mess with the ugly space in this comment!) -->
+
+
+<operator-binary op="-">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "-" -->
+
+
+<operator-binary op="+">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Addition.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "+" -->
+
+
+<operator-binary op="*">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+<case first-type="Float" second-type="Integer">
+<result><typename>Float</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+<case first-type="Integer" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+<case first-type="Float" second-type="Length">
+<result><typename>Length</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+<case first-type="Length" second-type="Float">
+<result><typename>Length</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "*" -->
+
+
+<operator-binary op="/">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Division.
+</description>
+</case>
+
+<case first-type="Float" second-type="Integer">
+<result><typename>Float</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+<case first-type="Length" second-type="Float">
+<result><typename>Length</typename></result>
+<description>
+Multiplication.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "/" -->

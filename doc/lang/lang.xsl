@@ -32,6 +32,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </html>
 </xsl:template>
 
+<xsl:template match="secref-title[@id]">
+  <xsl:variable name="dstid">
+    <xsl:value-of select="@id" />
+  </xsl:variable>
+  <xsl:element name="a">
+    <xsl:attribute name="href">#sec-<xsl:value-of select="@id" /></xsl:attribute>
+    <xsl:apply-templates select="//section[@id=$dstid]/title" />
+  </xsl:element>
+</xsl:template>
 <xsl:template match="secref[@id]">
   <xsl:element name="a">
     <xsl:attribute name="href">#sec-<xsl:value-of select="@id" /></xsl:attribute>
@@ -232,6 +241,59 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:attribute name="src"><xsl:value-of select="@src" /></xsl:attribute>
     <xsl:attribute name="alt"><xsl:value-of select="@alt" /></xsl:attribute>
   </xsl:element>
+</xsl:template>
+
+<xsl:template match="operator-table[@type]">
+  <xsl:variable name="t">
+    <xsl:value-of select="@type" />
+  </xsl:variable>
+  <table class="operator-table">
+    <tr><td colspan="5"><hr class="thick"/></td></tr>
+    <tr> <th colspan="5">Unary prefix operators</th> </tr>
+    <tr> <th></th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
+    <tr><td colspan="5"><hr /></td></tr>
+    <xsl:apply-templates select="//operator-unary[@side='prefix']/case[@type=$t]" />
+    <tr><td colspan="5"><hr class="thick"/></td></tr>
+    <tr> <th colspan="5">Unary postfix operators</th> </tr>
+    <tr> <th>Type</th> <th>Operator</th> <th></th> <th>Result</th> <th>Description</th> </tr>
+    <tr><td colspan="5"><hr /></td></tr>
+    <xsl:apply-templates select="//operator-unary[@side='postfix']/case[@type=$t]" />
+    <tr><td colspan="5"><hr class="thick"/></td></tr>
+    <tr> <th colspan="5">Binary operators</th> </tr>
+    <tr> <th>Type</th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
+    <tr><td colspan="5"><hr /></td></tr>
+    <xsl:apply-templates select="//operator-binary/case[@first-type=$t and @second-type=$t]" />
+    <xsl:apply-templates select="//operator-binary/case[@first-type=$t and @second-type!=$t]" />
+    <xsl:apply-templates select="//operator-binary/case[@first-type!=$t and @second-type=$t]" />
+    <tr><td colspan="5"><hr class="thick"/></td></tr>
+  </table>
+</xsl:template>
+<xsl:template match="operator-unary[@side='prefix']/case">
+  <tr>
+    <td align="center"></td>
+    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"><typename><xsl:value-of select="@type" /></typename></td>
+    <td align="center"><xsl:apply-templates select="result" /></td>
+    <td><xsl:apply-templates select="description" /></td>
+  </tr>
+</xsl:template>
+<xsl:template match="operator-unary[@side='postfix']/case">
+  <tr>
+    <td align="center"><typename><xsl:value-of select="@type" /></typename></td>
+    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"></td>
+    <td align="center"><xsl:apply-templates select="result" /></td>
+    <td><xsl:apply-templates select="description" /></td>
+  </tr>
+</xsl:template>
+<xsl:template match="operator-binary/case">
+  <tr>
+    <td align="center"><typename><xsl:value-of select="@first-type" /></typename></td>
+    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"><typename><xsl:value-of select="@second-type" /></typename></td>
+    <td align="center"><xsl:apply-templates select="result" /></td>
+    <td><xsl:apply-templates select="description" /></td>
+  </tr>
 </xsl:template>
 
 </xsl:stylesheet>
