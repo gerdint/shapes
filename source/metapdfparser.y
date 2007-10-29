@@ -180,8 +180,8 @@ void metapdferror( char * msg )
 %left T_llthan
 %nonassoc T_bangbang
 %left '|'
-%right T_mapsto T_emptybrackets
-%left T_dddotbrackets
+%right T_mapsto T_emptybrackets T_bangbrackets
+%left T_dddotbrackets T_bangdddotbrackets
 %left '&'
 %nonassoc T_dynamiccolon
 %left T_or T_xor

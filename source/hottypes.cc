@@ -643,7 +643,7 @@ Kernel::WarmTimer::WarmTimer( )
   int res = getrusage( RUSAGE_SELF, &ru );
   if( res != 0 )
     {
-      throw Exceptions::InternalError( strrefdup( "grtrusage failed." ) );
+      throw Exceptions::InternalError( strrefdup( "getrusage failed." ) );
     }
   start_ = ru.ru_utime;
 }
@@ -667,7 +667,7 @@ Kernel::WarmTimer::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceL
   int res = getrusage( RUSAGE_SELF, &ru );
   if( res != 0 )
     {
-      throw Exceptions::InternalError( strrefdup( "grtrusage failed." ) );
+      throw Exceptions::InternalError( strrefdup( "getrusage failed." ) );
     }
   timeval stop = ru.ru_utime;
   double time1 = start_.tv_usec / 1000000.0 + start_.tv_sec;
