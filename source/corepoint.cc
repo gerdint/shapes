@@ -27,7 +27,7 @@ namespace MetaPDF
     public:
       Core_duration( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_duration::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -71,7 +71,7 @@ namespace MetaPDF
     public:
       Core_controlling_maximizer( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_controlling_maximizer::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -136,7 +136,7 @@ namespace MetaPDF
     public:
       Core_discrete_mean( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_discrete_mean::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -182,7 +182,7 @@ namespace MetaPDF
     public:
       Core_discrete_maximizer( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_discrete_maximizer::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -249,7 +249,7 @@ namespace MetaPDF
     public:
       Core_discrete_approximator( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_discrete_approximator::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -316,7 +316,7 @@ namespace MetaPDF
     public:
       Core_continuous_mean( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_continuous_mean::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -362,7 +362,7 @@ namespace MetaPDF
     public:
       Core_continuous_maximizer( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_continuous_maximizer::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -429,7 +429,7 @@ namespace MetaPDF
     public:
       Core_continuous_approximator( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_continuous_approximator::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -499,7 +499,7 @@ namespace MetaPDF
       Core_intersection( const char * title ) : CoreFunction( title ), idKey( 0 ) { }
       virtual ~Core_intersection( ) { if( idKey != 0 ){ delete idKey; } }
       virtual void
-      Lang::Core_intersection::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );

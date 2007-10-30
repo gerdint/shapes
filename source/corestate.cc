@@ -27,7 +27,7 @@ namespace MetaPDF
     public:
       Core_dashpattern( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_dashpattern::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	RefCountPtr< std::list< Concrete::Length > > pat;
 
@@ -67,7 +67,7 @@ namespace MetaPDF
     public:
       Core_noArrow( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_noArrow::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -85,7 +85,7 @@ namespace MetaPDF
     public:
       Core_gray( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_gray::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -113,7 +113,7 @@ namespace MetaPDF
     public:
       Core_rgb( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_rgb::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 3;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -149,7 +149,7 @@ namespace MetaPDF
     public:
       Core_cmyk( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_cmyk::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 4;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -185,7 +185,7 @@ namespace MetaPDF
     public:
       Core_shape( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_shape::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -213,7 +213,7 @@ namespace MetaPDF
     public:
       Core_opacity( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_opacity::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -246,7 +246,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_alphamask::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -284,7 +284,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_luminositymask::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 

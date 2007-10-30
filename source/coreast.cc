@@ -19,11 +19,11 @@ namespace MetaPDF
     class Core_TeX : public Lang::CoreFunction
     {
     public:
-      Lang::Core_TeX::Core_TeX( const char * title )
+      Core_TeX( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_TeX::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -40,11 +40,11 @@ namespace MetaPDF
     class Core_coords2D : public Lang::CoreFunction
     {
     public:
-      Lang::Core_coords2D::Core_coords2D( const char * title )
+      Core_coords2D( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_coords2D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -123,11 +123,11 @@ namespace MetaPDF
     class Core_cornercoords2D : public Lang::CoreFunction
     {
     public:
-      Lang::Core_cornercoords2D::Core_cornercoords2D( const char * title )
+      Core_cornercoords2D( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_cornercoords2D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 3;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -143,11 +143,11 @@ namespace MetaPDF
     class Core_coords3D : public Lang::CoreFunction
     {
     public:
-      Lang::Core_coords3D::Core_coords3D( const char * title )
+      Core_coords3D( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_coords3D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 3;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -191,11 +191,11 @@ namespace MetaPDF
     class Core_polarHandle2DFree_r : public Lang::CoreFunction
     {
     public:
-      Lang::Core_polarHandle2DFree_r::Core_polarHandle2DFree_r( const char * title )
+      Core_polarHandle2DFree_r( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_polarHandle2DFree_r::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -210,11 +210,11 @@ namespace MetaPDF
     class Core_polarHandle2DFree_ra : public Lang::CoreFunction
     {
     public:
-      Lang::Core_polarHandle2DFree_ra::Core_polarHandle2DFree_ra( const char * title )
+      Core_polarHandle2DFree_ra( const char * title )
 	: CoreFunction( title )
       { }
       virtual void
-      Lang::Core_polarHandle2DFree_ra::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 0;
 	CHECK_ARITY( args, ARITY, title_ );

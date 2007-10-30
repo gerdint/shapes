@@ -35,7 +35,7 @@ namespace MetaPDF
     class Core_tag : public Lang::CoreFunction
     {
     public:
-      Lang::Core_tag::Core_tag( const char * title )
+      Core_tag( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
@@ -45,7 +45,7 @@ namespace MetaPDF
       }
       
       virtual void
-      Lang::Core_tag::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 	
@@ -145,7 +145,7 @@ namespace MetaPDF
     class Core_find : public Lang::CoreFunction
     {
     public:
-      Lang::Core_find::Core_find( const char * title )
+      Core_find( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
@@ -153,7 +153,7 @@ namespace MetaPDF
       }
       
       virtual void
-      Lang::Core_find::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 	
@@ -204,7 +204,7 @@ namespace MetaPDF
     class Core_findall : public Lang::CoreFunction
     {
     public:
-      Lang::Core_findall::Core_findall( const char * title )
+      Core_findall( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
@@ -212,7 +212,7 @@ namespace MetaPDF
       }
       
       virtual void
-      Lang::Core_findall::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 	
@@ -268,7 +268,7 @@ namespace MetaPDF
     public:
       Core_phong( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_phong::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -289,14 +289,14 @@ namespace MetaPDF
     class Core_cons : public Lang::CoreFunction
     {
     public:
-      Lang::Core_cons::Core_cons( const char * title )
+      Core_cons( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, false ) )
       {
 	formals_->appendEvaluatedCoreFormal( "car", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "cdr", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
-      Lang::Core_cons::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 2;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -313,7 +313,7 @@ namespace MetaPDF
     public:
       Core_list( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_list::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
 	if( args.size( ) > 0 )
@@ -339,7 +339,7 @@ namespace MetaPDF
     public:
       Core_isnull( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_isnull::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -355,7 +355,7 @@ namespace MetaPDF
     class Core_range : public Lang::CoreFunction
     {
     public:
-      Lang::Core_range::Core_range( const char * title )
+      Core_range( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function range >", true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "begin", Kernel::THE_SLOT_VARIABLE );
@@ -363,7 +363,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "step", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_range::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -482,7 +482,7 @@ namespace MetaPDF
     public:
       Core_affinetransform( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_affinetransform::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 3;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -506,7 +506,7 @@ namespace MetaPDF
     public:
       Core_affinetransform3D( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_affinetransform3D::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 4;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -535,7 +535,7 @@ namespace MetaPDF
     public:
       Core_shift( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_shift::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -576,13 +576,13 @@ namespace MetaPDF
     class Core_rotate : public Lang::CoreFunction
     {
     public:
-      Lang::Core_rotate::Core_rotate( const char * title )
+      Core_rotate( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "angle", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
-      Lang::Core_rotate::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -602,14 +602,14 @@ namespace MetaPDF
     class Core_rotate3d : public Lang::CoreFunction
     {
     public:
-      Lang::Core_rotate3d::Core_rotate3d( const char * title )
+      Core_rotate3d( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "dir", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "angle", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
-      Lang::Core_rotate3d::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -648,7 +648,7 @@ namespace MetaPDF
     class Core_scale : public Lang::CoreFunction
     {
     public:
-      Lang::Core_scale::Core_scale( const char * title )
+      Core_scale( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	Kernel::VariableHandle one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
@@ -658,7 +658,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "y", one );
       }
       virtual void
-      Lang::Core_scale::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
   
@@ -678,7 +678,7 @@ namespace MetaPDF
     class Core_scale3d : public Lang::CoreFunction
     {
     public:
-      Lang::Core_scale3d::Core_scale3d( const char * title )
+      Core_scale3d( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	Kernel::VariableHandle one( new Kernel::Variable( RefCountPtr< const Lang::Value >( new Lang::Float( 1 ) ) ) );
@@ -689,7 +689,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "z", one );
       }
       virtual void
-      Lang::Core_scale3d::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -713,7 +713,7 @@ namespace MetaPDF
     public:
       Core_inverse( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_inverse::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -786,7 +786,7 @@ namespace MetaPDF
     public:
       Core_formxo( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_formxo::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -836,7 +836,7 @@ namespace MetaPDF
     class Core_transparencygroup : public Lang::CoreFunction
     {
     public:
-      Lang::Core_transparencygroup::Core_transparencygroup( const char * title )
+      Core_transparencygroup( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function group >", true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "content", Kernel::THE_SLOT_VARIABLE );
@@ -844,7 +844,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "knockout", Kernel::THE_FALSE_VARIABLE );
       }
       virtual void
-      Lang::Core_transparencygroup::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
   
@@ -868,7 +868,7 @@ namespace MetaPDF
     public:
       Core_vector( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_vector::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	std::vector< RefCountPtr< const Lang::Value > > * res = new std::vector< RefCountPtr< const Lang::Value > >;
 	res->reserve( args.size( ) );
@@ -887,7 +887,7 @@ namespace MetaPDF
     class Core_interpolate : public Lang::CoreFunction
     {
     public:
-      Lang::Core_interpolate::Core_interpolate( const char * title )
+      Core_interpolate( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "function", Kernel::THE_SLOT_VARIABLE );
@@ -1089,7 +1089,7 @@ namespace MetaPDF
     class Core_ambient_light : public Lang::CoreFunction
     {
     public:
-      Lang::Core_ambient_light::Core_ambient_light( const char * title )
+      Core_ambient_light( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "color", Kernel::THE_SLOT_VARIABLE );
@@ -1130,7 +1130,7 @@ namespace MetaPDF
     class Core_specular_light : public Lang::CoreFunction
     {
     public:
-      Lang::Core_specular_light::Core_specular_light( const char * title )
+      Core_specular_light( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "color", Kernel::THE_SLOT_VARIABLE );
@@ -1184,7 +1184,7 @@ namespace MetaPDF
     class Core_distant_light : public Lang::CoreFunction
     {
     public:
-      Lang::Core_distant_light::Core_distant_light( const char * title )
+      Core_distant_light( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "color", Kernel::THE_SLOT_VARIABLE );
@@ -1233,7 +1233,7 @@ namespace MetaPDF
     class Core_textrenderingmode : public Lang::CoreFunction
     {
     public:
-      Lang::Core_textrenderingmode::Core_textrenderingmode( const char * title )
+      Core_textrenderingmode( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "fill", Kernel::THE_FALSE_VARIABLE );
@@ -1468,7 +1468,7 @@ namespace MetaPDF
     class Core_newrandom : public Lang::CoreFunction
     {
     public:
-      Lang::Core_newrandom::Core_newrandom( const char * title )
+      Core_newrandom( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "seed", Kernel::THE_SLOT_VARIABLE );
@@ -1531,7 +1531,7 @@ namespace MetaPDF
     class Core_devrandom : public Lang::CoreFunction
     {
     public:
-      Lang::Core_devrandom::Core_devrandom( const char * title )
+      Core_devrandom( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendCoreStateFormal( "device" );
@@ -1565,7 +1565,7 @@ namespace MetaPDF
     class Core_destination : public Lang::CoreFunction
     {
     public:
-      Lang::Core_destination::Core_destination( const char * title )
+      Core_destination( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "remote", Kernel::THE_FALSE_VARIABLE );

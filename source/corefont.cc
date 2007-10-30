@@ -16,7 +16,7 @@ namespace MetaPDF
     {
       Lang::Type3Glyph::Kind kind_;
     public:
-      Lang::Core_makeglyph::Core_makeglyph( const char * title, Lang::Type3Glyph::Kind kind )
+      Core_makeglyph( const char * title, Lang::Type3Glyph::Kind kind )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) ), kind_( kind )
       {
 	formals_->appendEvaluatedCoreFormal( "width", Kernel::THE_SLOT_VARIABLE );
@@ -25,7 +25,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "name", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_makeglyph::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 

@@ -82,7 +82,7 @@ namespace MetaPDF
     class Core_annotationsite : public Lang::CoreFunction
     {
     public:
-      Lang::Core_annotationsite::Core_annotationsite( const char * title )
+      Core_annotationsite( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	/* General arguments.  Only <target> is required.
@@ -118,7 +118,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "toggle", Kernel::THE_FALSE_VARIABLE );
       }
       virtual void
-      Lang::Core_annotationsite::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -286,7 +286,7 @@ namespace MetaPDF
     class Core_annotation_text : public Lang::CoreFunction
     {
     public:
-      Lang::Core_annotation_text::Core_annotation_text( const char * title )
+      Core_annotation_text( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	/* General arguments.  Only <target> is required.
@@ -298,7 +298,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "icon", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_annotation_text::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -380,7 +380,7 @@ namespace MetaPDF
     class Core_annotation_launch : public Lang::CoreFunction
     {
     public:
-      Lang::Core_annotation_launch::Core_annotation_launch( const char * title )
+      Core_annotation_launch( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	/* General arguments.  Only <target> is required.
@@ -391,7 +391,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "uri", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_annotation_launch::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -454,7 +454,7 @@ namespace MetaPDF
     class Core_annotation_link : public Lang::CoreFunction
     {
     public:
-      Lang::Core_annotation_link::Core_annotation_link( const char * title )
+      Core_annotation_link( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	/* General arguments.  Only <target> is required.
@@ -464,7 +464,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "highlight", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_annotation_link::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
