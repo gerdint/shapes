@@ -14,7 +14,7 @@
 
 #include "pdfstructure.h"
 #include "pdfscanner.h"
-#include <string.h>
+#include <string>
 #include <iostream>
 #include <iomanip>
 
@@ -101,7 +101,7 @@ IndirectDef {PlainInteger}{WhiteSpace}+{PlainInteger}{WhiteSpace}*"obj"
   const char * src( yytext + 1 );
   char c1;
   char c2;
-  string str;
+  std::string str;
 
   for( ; isblank( *src ); ++src )
     ;
@@ -290,7 +290,7 @@ endstream { return T_endstream; }
 
 <INITIAL>[ \t\n\r]+ ;
 
-. { throw( string( "PDF scanner found unrecognized token: " ) + yytext ); }
+. { throw( std::string( "PDF scanner found unrecognized token: " ) + yytext ); }
 
 %%
 /* The closing %% above marks the end of the Rules section and the beginning

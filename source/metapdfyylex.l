@@ -28,7 +28,7 @@ using namespace MetaPDF;
 #include "yyltype.h"
 #include "metapdfparser.tab.h"
 
-#include <string.h>
+#include <string>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -721,7 +721,7 @@ Escape "¢"|"¤"
 <Author>.* {
   if( stateStack.size( ) > 0 )
     {
-      Kernel::the_pdfo->extensionAuthorStrings.push_back( metapdflloc.filename + string( " by " ) + yytext );
+      Kernel::the_pdfo->extensionAuthorStrings.push_back( metapdflloc.filename + std::string( " by " ) + yytext );
     }
   else
     {
@@ -807,7 +807,7 @@ Escape "¢"|"¤"
 }
 
 . {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( (string( "Scanner found unrecognized token: " ) + yytext).c_str( ) ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( ( std::string( "Scanner found unrecognized token: " ) + yytext ).c_str( ) ) ) );
   BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
 }
 
@@ -866,7 +866,7 @@ MetaPDFScanner::doInclusion( )
       neededFiles.insert( fileID );
     }
 
-  ifstream * iFile = new ifstream( path.c_str( ) );
+  std::ifstream * iFile = new ifstream( path.c_str( ) );
   if( ! iFile->good( ) )
     {
       throw Exceptions::FileOpenError( metapdflloc, strrefdup( path.c_str( ) ) );
