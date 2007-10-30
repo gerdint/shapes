@@ -239,7 +239,7 @@ namespace MetaPDF
     class Core_alphamask : public Lang::CoreFunction
     {
     public:
-      Lang::Core_alphamask::Core_alphamask( const char * title )
+      Core_alphamask( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "group", Kernel::THE_SLOT_VARIABLE );
@@ -276,7 +276,7 @@ namespace MetaPDF
     class Core_luminositymask : public Lang::CoreFunction
     {
     public:
-      Lang::Core_luminositymask::Core_luminositymask( const char * title )
+      Core_luminositymask( const char * title )
 	: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
       {
 	formals_->appendEvaluatedCoreFormal( "group", Kernel::THE_SLOT_VARIABLE );

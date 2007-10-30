@@ -866,7 +866,7 @@ MetaPDFScanner::doInclusion( )
       neededFiles.insert( fileID );
     }
 
-  std::ifstream * iFile = new ifstream( path.c_str( ) );
+  std::ifstream * iFile = new std::ifstream( path.c_str( ) );
   if( ! iFile->good( ) )
     {
       throw Exceptions::FileOpenError( metapdflloc, strrefdup( path.c_str( ) ) );
