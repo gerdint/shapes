@@ -898,7 +898,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "decode", Kernel::THE_VOID_VARIABLE );
       }
       virtual void
-      Lang::Core_interpolate::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -911,7 +911,7 @@ namespace MetaPDF
     public:
       Core_importPDFpages( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_importPDFpages::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -957,7 +957,7 @@ namespace MetaPDF
     public:
       Core_sprintf( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_sprintf::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	if( args.size( ) == 0 )
 	  {
@@ -1068,7 +1068,7 @@ namespace MetaPDF
     public:
       Core_strftime( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_strftime::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	const size_t ARITY = 0;
 	CHECK_ARITY( args, ARITY, title_ );
@@ -1095,7 +1095,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "color", Kernel::THE_SLOT_VARIABLE );
       }
       virtual void
-      Lang::Core_ambient_light::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1138,7 +1138,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "shadows", Kernel::THE_FALSE_VARIABLE );
       }
       virtual void
-      Lang::Core_specular_light::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1191,7 +1191,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "shadows", Kernel::THE_FALSE_VARIABLE );
       }
       virtual void
-      Lang::Core_distant_light::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1241,7 +1241,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "clip", Kernel::THE_FALSE_VARIABLE );
       }
       virtual void
-      Lang::Core_textrenderingmode::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1261,7 +1261,7 @@ namespace MetaPDF
     public:
       Core_manualkern( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_manualkern::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	// Note that res is _not_ yet const.  We use a RefCountPtr to take care of memory deallocation in case some argument has the wrong type and
 	// the result is not used.
@@ -1316,7 +1316,7 @@ namespace MetaPDF
     public:
       Core_automatickern( const char * title ) : CoreFunction( title ) { }
       virtual void
-      Lang::Core_automatickern::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	iconv_t converter = Helpers::requireUTF8ToMacRomanConverter( );
 	iconv_t backconverter = Helpers::requireMacRomanToUTF8Converter( );
@@ -1475,7 +1475,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "size", Helpers::newValHandle( new Lang::Integer( 32 ) ) );
       }
       virtual void
-      Lang::Core_newrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1538,7 +1538,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "size", Helpers::newValHandle( new Lang::Integer( 32 ) ) );
       }
       virtual void
-      Lang::Core_devrandom::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
@@ -1583,7 +1583,7 @@ namespace MetaPDF
 	formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_TRUE_VARIABLE );
       }
       virtual void
-      Lang::Core_destination::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+      call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
       {
 	args.applyDefaults( );
 
