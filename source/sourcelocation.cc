@@ -2,6 +2,7 @@
 #include "charconverters.h"
 #include "globals.h"
 
+#include <cerrno>
 #include <fstream>
 
 using namespace MetaPDF;
