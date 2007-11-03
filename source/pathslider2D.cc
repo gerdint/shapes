@@ -2,7 +2,7 @@
 
 #include "metapdftypes.h"
 #include "metapdfexceptions.h"
-#include "metapdfastexpr.h"
+#include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
 #include "bezier.h"

@@ -2,9 +2,9 @@
 #include "yyltype.h"
 
 #include "metapdftypes.h"
-#include "metapdfast.h"
-#include "metapdfastflow.h"
-#include "metapdfastclass.h"
+#include "ast.h"
+#include "astflow.h"
+#include "astclass.h"
 
 using namespace MetaPDF;
 #include "metapdfparser.tab.h"

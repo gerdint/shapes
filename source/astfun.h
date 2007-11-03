@@ -1,10 +1,10 @@
-#ifndef metapdfastfun_h
-#define metapdfastfun_h
+#ifndef astfun_h
+#define astfun_h
 
 #include "MetaPDF_Ast_decls.h"
 #include "MetaPDF_Kernel_decls.h"
 
-#include "metapdfast.h"
+#include "ast.h"
 
 
 namespace MetaPDF

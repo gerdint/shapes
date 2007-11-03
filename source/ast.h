@@ -1,5 +1,5 @@
-#ifndef metapdfast_h
-#define metapdfast_h
+#ifndef ast_h
+#define ast_h
 
 #include "MetaPDF_Ast_decls.h"
 #include "MetaPDF_Kernel_decls.h"

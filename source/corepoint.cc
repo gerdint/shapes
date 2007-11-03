@@ -3,7 +3,7 @@
 #include "MetaPDF_Helpers_decls.h"
 
 #include "metapdfcore.h"
-#include "metapdfast.h"
+#include "ast.h"
 #include "globals.h"
 #include "metapdfexceptions.h"
 #include "consts.h"

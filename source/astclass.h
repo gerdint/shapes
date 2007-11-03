@@ -1,8 +1,8 @@
-#ifndef metapdfastclass_h
-#define metapdfastclass_h
+#ifndef astclass_h
+#define astclass_h
 
-#include "metapdfast.h"
-#include "metapdfastfun.h"
+#include "ast.h"
+#include "astfun.h"
 #include "consts.h"
 #include "ptrowner.h"
 #include "classtypes.h"

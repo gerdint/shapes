@@ -1,6 +1,6 @@
 #include "metapdfexceptions.h"
-#include "metapdfast.h"
-#include "metapdfastclass.h"
+#include "ast.h"
+#include "astclass.h"
 #include "globals.h"
 #include "functiontypes.h"
 

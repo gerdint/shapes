@@ -1,10 +1,10 @@
 #include "MetaPDF_Helpers_decls.h"
 
-#include "metapdfastclass.h"
+#include "astclass.h"
 #include "metapdfexceptions.h"
 #include "consts.h"
 #include "globals.h"
-#include "metapdfastvar.h"
+#include "astvar.h"
 #include "metapdfcore.h"
 
 #include <string>

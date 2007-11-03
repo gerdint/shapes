@@ -1,4 +1,4 @@
-#include "metapdfastidentifier.h"
+#include "astidentifier.h"
 #include "metapdfexceptions.h"
 
 MetaPDF::LiteralIdentifier::LiteralIdentifier( const Ast::SourceLocation & _loc, const char * _id )

@@ -1,7 +1,7 @@
 #ifndef continuations_h
 #define continuations_h
 
-#include "metapdfast.h"
+#include "ast.h"
 
 namespace MetaPDF
 {

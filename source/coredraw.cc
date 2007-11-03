@@ -9,7 +9,7 @@
 #include "simplepdfi.h"
 #include "autoonoff.h"
 #include "hottypes.h"
-#include "metapdfastfun.h"
+#include "astfun.h"
 
 #include <iostream>
 #include <sstream>

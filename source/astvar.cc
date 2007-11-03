@@ -1,9 +1,9 @@
-#include "metapdfastvar.h"
+#include "astvar.h"
 #include "metapdfexceptions.h"
 #include "globals.h"
 #include "autoonoff.h"
 #include "specialunits.h"
-#include "metapdfastfun.h"
+#include "astfun.h"
 #include "continuations.h"
 #include "containertypes.h"
 

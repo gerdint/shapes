@@ -5,8 +5,8 @@
 #include "metapdfcore.h"
 #include "globals.h"
 #include "metapdfexceptions.h"
-#include "metapdfastexpr.h"
-#include "metapdfastfun.h"
+#include "astexpr.h"
+#include "astfun.h"
 #include "consts.h"
 #include "simplepdfi.h"
 

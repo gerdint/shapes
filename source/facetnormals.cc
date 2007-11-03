@@ -1,6 +1,6 @@
 #include "drawabletypes.h"
 #include "lighttypes.h"
-#include "metapdfastclass.h"
+#include "astclass.h"
 #include "constructorrepresentation.h"
 #include "globals.h"
 

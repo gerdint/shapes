@@ -1,7 +1,7 @@
 #include "globals.h"
 #include "metapdfcore.h"
-#include "metapdfastfun.h"
-#include "metapdfastexprs.h"
+#include "astfun.h"
+#include "astexprs.h"
 
 using namespace MetaPDF;
 

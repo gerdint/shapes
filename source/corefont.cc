@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "charconverters.h"
 #include "autoonoff.h"
-#include "metapdfast.h"
+#include "ast.h"
 #include "glyphlist.h"
 
 using namespace MetaPDF;

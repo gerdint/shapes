@@ -1,9 +1,9 @@
-#ifndef metapdfastexprs_h
-#define metapdfastexprs_h
+#ifndef astexprs_h
+#define astexprs_h
 
 #include "MetaPDF_Lang_decls.h"
 
-#include "metapdfastexpr.h"
+#include "astexpr.h"
 
 namespace MetaPDF
 {

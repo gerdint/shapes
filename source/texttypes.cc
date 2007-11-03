@@ -3,7 +3,7 @@
 #include "texttypes.h"
 #include "dynamicenvironment.h"
 #include "lighttypes.h"
-#include "metapdfast.h"
+#include "ast.h"
 #include "isnan.h"
 #include "globals.h"
 #include "autoonoff.h"

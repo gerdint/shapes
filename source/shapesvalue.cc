@@ -6,7 +6,7 @@
 #if DISPATCHSTYLE == DISPATCHSTYLE_VOID
 #include "globals.h"
 #elif DISPATCHSTYLE == DISPATCHSTYLE_CASE
-#include "metapdfastexpr.h"
+#include "astexpr.h"
 #endif
 
 using namespace MetaPDF;

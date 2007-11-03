@@ -1,9 +1,9 @@
-#ifndef metapdfastvar_h
-#define metapdfastvar_h
+#ifndef astvar_h
+#define astvar_h
 
 #include "MetaPDF_Kernel_decls.h"
 
-#include "metapdfast.h"
+#include "ast.h"
 
 namespace MetaPDF
 {

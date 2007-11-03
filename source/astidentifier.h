@@ -1,7 +1,7 @@
-#ifndef metapdfastidentifier_h
-#define metapdfastidentifier_h
+#ifndef astidentifier_h
+#define astidentifier_h
 
-#include "metapdfast.h"
+#include "ast.h"
 
 
 namespace MetaPDF

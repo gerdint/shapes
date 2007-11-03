@@ -8,7 +8,7 @@
 #include "consts.h"
 #include "simplepdfi.h"
 #include "simplepdfo.h"
-#include "metapdfastfun.h"
+#include "astfun.h"
 #include "tagtypes.h"
 #include "multipage.h"
 #include "charconverters.h"

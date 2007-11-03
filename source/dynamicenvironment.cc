@@ -6,7 +6,7 @@
 #include "hottypes.h"
 #include "globals.h"
 #include "metapdfcore.h"
-#include "metapdfast.h"
+#include "ast.h"
 #include "isnan.h"
 
 #include <limits>

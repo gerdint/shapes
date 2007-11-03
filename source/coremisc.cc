@@ -5,7 +5,7 @@
 #include "metapdfexceptions.h"
 #include "consts.h"
 #include "simplepdfi.h"
-#include "metapdfastfun.h"
+#include "astfun.h"
 #include "continuations.h"
 #include "multipage.h"
 #include "debuglog.h"

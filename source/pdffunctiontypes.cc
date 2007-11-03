@@ -3,7 +3,7 @@
 #include "pdffunctiontypes.h"
 #include "globals.h"
 #include "metapdfcore.h"
-#include "metapdfast.h"
+#include "ast.h"
 
 using namespace MetaPDF;
 

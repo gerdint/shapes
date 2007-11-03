@@ -1,7 +1,7 @@
-#ifndef metapdfastflow_h
-#define metapdfastflow_h
+#ifndef astflow_h
+#define astflow_h
 
-#include "metapdfast.h"
+#include "ast.h"
 
 namespace MetaPDF
 {

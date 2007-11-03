@@ -2,12 +2,12 @@
 
 #include "metapdftypes.h"
 #include "metapdfexceptions.h"
-#include "metapdfastexpr.h"
+#include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
 #include "angleselect.h"
-#include "metapdfastvar.h"
-#include "metapdfastclass.h"
+#include "astvar.h"
+#include "astclass.h"
 #include "continuations.h"
 #include "dynamicenvironment.h"
 

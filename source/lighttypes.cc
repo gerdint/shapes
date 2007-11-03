@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "lighttypes.h"
-#include "metapdfastclass.h"
+#include "astclass.h"
 #include "globals.h"
 #include "constructorrepresentation.h"
 

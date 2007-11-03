@@ -2,8 +2,8 @@
 
 #include "metapdfscanner.h"
 #include "metapdftypes.h"
-#include "metapdfast.h"
-#include "metapdfastfun.h"
+#include "ast.h"
+#include "astfun.h"
 #include "refcount.h"
 #include "texlabelmanager.h"
 #include "statetypes.h"
