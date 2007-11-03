@@ -5,7 +5,9 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.3.0 )====
-FILL IN DATE WHEN TAGGING!
+2007-11-03
+
+Pretty much every trace of the names MetaPDF and Drool has been removed.
 
 
 ====( 0.2.3 )====
@@ -16,6 +18,7 @@ Upsampling has been added.  The interesting methods for upsampling only apply in
 Identifiers are again allowed to begin with uppercase letters.  Type names are prefixed with either a paragraph sign or a double slash.
 
 This is planned to be the last version where anything "Drool" remains.
+
 
 ====( 0.2.2 )====
 2007-06-05
