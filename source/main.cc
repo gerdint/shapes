@@ -650,7 +650,32 @@ main( int argc, char ** argv )
 	      cerr << "The name base is multiply specified." << endl ;
 	      exit( 1 );
 	    }
-	  baseName = *argv;
+	  struct stat theStat;
+	  if( stat( *argv, & theStat ) == 0 )
+	    {
+	      inputName = *argv;
+	      char * ext = *argv + strlen( *argv ) - 6;
+	      if( ext <= *argv )
+		{
+		  std::cerr << "The file name \"" << *argv << "\" is unexpectedly short." << std::endl ;
+		  exit( 1 );
+		}
+	      if( strcmp( ext, ".drool" ) != 0 )
+		{
+		  cerr << "Expected \".drool\" suffix in the file name \"" << *argv << "\"." << endl ;
+		  exit( 1 );
+		}
+	      *ext = '\0';
+	      baseName = *argv;
+	    }
+	  else if( (*argv)[ strlen( *argv ) - 1 ] == '.' )
+	    {
+	      baseName = *argv;
+	    }
+	  else
+	    {
+	      baseName = std::string( *argv ) + '.' ;
+	    }
 	  argv += 1;
 	  argc -= 1;
 	}
