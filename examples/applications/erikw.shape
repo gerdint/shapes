@@ -1,0 +1,41 @@
+##classoption 10pt
+
+##needs blockdraw_wfo
+##needs centering
+
+  @longblockrx:0.9cm
+& @blockspacefar:6mm
+& @blockspacenear:5mm
+& @blockspaceverynear:2mm
+|
+{
+
+f: [putblockOrigin •page [longblock [teX `Controller´]]]
+g: [putblockNearRight •page [longblock [teX `Robot´]] f]
+s:  [putblockNearLeft •page [sumpicture] f]
+sv:  [putblockNearRight •page [sumpicture] g]
+
+sy: [putblockVeryNearRight •page [splitdot] sv]
+
+ty: [putblockFarRight •page pointpicture sv]
+tr: [putblockFarLeft •page pointpicture s]
+tv: [putblockFarAbove •page pointpicture sv]
+
+[ignore [connect •page tr s]]
+•page << [leftpointsign s `+´]
+[ignore [connect •page s f]]
+{p: [connect •page f g]
+  •page << [putlabelAbove [teX `$u$´] [mspoint p 0.5] 0] }
+[ignore [connect •page g sv]]
+[ignore [connect •page tv sv]]
+[ignore [connect •page sv ty]]
+[ignore [bbconnect •page sy s 0.5cm]]
+•page << [bottompointsign s `-´]
+
+•page << [putlabelAbove [teX `$r$´] [toppoint tr 1 1] ~1]
+•page << [putlabelAbove [teX `$y$´] [toppoint ty 1 1] 1]
+•page << [putlabelRight [teX `$v$´] [toppoint tv 1 1] 1]
+
+}
+
+•stdout << `Bredd: ´ << [xmax [bbox (•page)]] - [xmin [bbox (•page)]] << `¢n´

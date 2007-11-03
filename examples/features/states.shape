@@ -1,4 +1,4 @@
-/** This feature example is a translation (and reordering) of the old warm.drool example
+/** This feature example is a translation (and reordering) of the old warm.shape example
  **/
 
 /** Basic use of states includes defining new states, tacking on to them, and finally using the result.

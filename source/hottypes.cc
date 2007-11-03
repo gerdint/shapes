@@ -1402,7 +1402,7 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 //     static bool shown = false;
 //     if( ! shown )
 //       {
-// 	std::cerr << "Warning: The ToUnicode CMap is not setup by Drool." << std::endl ;
+// 	std::cerr << "Warning: The ToUnicode CMap is not setup by Shapes." << std::endl ;
 // 	shown = true;
 //       }
 //   }

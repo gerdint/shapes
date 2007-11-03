@@ -63,7 +63,7 @@
 
 /** Like in (lambda args <body>) construct in Scheme, we can define a function that gets just a structure as argument.
  ** There's also a construct that corresponds to (lambda (<arglist> . moreargs) <body>).
- ** In Drool, the construct is called a "sink".  Note that functions with a sink may be tricky from a type system point
+ ** In Shapes, the construct is called a "sink".  Note that functions with a sink may be tricky from a type system point
  ** of view, so code that wish to be type-compilant should not use sinks.
  **/
 {

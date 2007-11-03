@@ -841,11 +841,11 @@ MetaPDFScanner::doInclusion( )
   std::string path;
   if( currentNeedIsNeed )
     {
-      path = searchFile( currentNeedFile + ".drext" );
+      path = searchFile( currentNeedFile + ".shext" );
     }
   else
     {
-      path = searchFile( currentNeedFile + ".drool" );
+      path = searchFile( currentNeedFile + ".shape" );
     }
 
   if( currentNeedIsNeed )

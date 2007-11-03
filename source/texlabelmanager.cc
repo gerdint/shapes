@@ -203,7 +203,7 @@ Kernel::TeXLabelManager::processRequests( )
     }
 
   texFile << setupCode ;
-  texFile << "\\btexetexthing{" << "Drool setup info" << "}{" << safeSourceHash( setupCode ) << "}" << endl ;  
+  texFile << "\\btexetexthing{" << "Shapes setup info" << "}{" << safeSourceHash( setupCode ) << "}" << endl ;  
 
   for( std::set< std::string >::const_iterator i = currentRequests.begin( );
        i != currentRequests.end( );

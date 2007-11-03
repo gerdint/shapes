@@ -231,7 +231,7 @@ Lang::ZBuf::IndexRepresentation::show( std::ostream & os, const std::vector< Con
       os << "|** 2 points: " << cornerMem[ i0  ] << " -- " << cornerMem[ i1 ] ;
       break;
     case 3:
-      os << "@<< @width:0.3bp | stroke [] " << Helpers::droolFormat( cornerMem[ i0 ] ) << "--" << Helpers::droolFormat( cornerMem[ i1 ] ) << "--" << Helpers::droolFormat( cornerMem[ i2 ] ) << "--cycle" << std::endl ;
+      os << "@<< @width:0.3bp | stroke [] " << Helpers::shapesFormat( cornerMem[ i0 ] ) << "--" << Helpers::shapesFormat( cornerMem[ i1 ] ) << "--" << Helpers::shapesFormat( cornerMem[ i2 ] ) << "--cycle" << std::endl ;
       break;
     default:
       os << "end_ out of range!" ;

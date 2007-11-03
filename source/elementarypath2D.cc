@@ -146,12 +146,12 @@ Lang::ElementaryPath2D::writeInputForm( ostream & os ) const
 	}
       if( (*i)->rear_ != (*i)->mid_ )
 	{
-	  os << Helpers::droolFormat( *(*i)->rear_ ) << "<" ;
+	  os << Helpers::shapesFormat( *(*i)->rear_ ) << "<" ;
 	}
-      os << Helpers::droolFormat( *(*i)->mid_ );
+      os << Helpers::shapesFormat( *(*i)->mid_ );
       if( (*i)->front_ != (*i)->mid_ )
 	{
-	  os << ">" << Helpers::droolFormat( *(*i)->front_ );
+	  os << ">" << Helpers::shapesFormat( *(*i)->front_ );
 	}
     }
   if( closed_ )

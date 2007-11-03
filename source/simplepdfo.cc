@@ -149,7 +149,7 @@ SimplePDF::PDF_out::PDF_out( ostream * _os )
 
   i_root = indirect( root_ );
 
-  (*info_)[ "Producer" ] = newString( "Drool" );
+  (*info_)[ "Producer" ] = newString( "Shapes" );
 
   root_->dic[ "Type" ] = newName( "Catalog" );
 

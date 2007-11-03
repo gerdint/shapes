@@ -660,9 +660,9 @@ main( int argc, char ** argv )
 		  std::cerr << "The file name \"" << *argv << "\" is unexpectedly short." << std::endl ;
 		  exit( 1 );
 		}
-	      if( strcmp( ext, ".drool" ) != 0 )
+	      if( strcmp( ext, ".shape" ) != 0 )
 		{
-		  cerr << "Expected \".drool\" suffix in the file name \"" << *argv << "\"." << endl ;
+		  cerr << "Expected \".shape\" suffix in the file name \"" << *argv << "\"." << endl ;
 		  exit( 1 );
 		}
 	      *(ext+1) = '\0';
@@ -690,14 +690,14 @@ main( int argc, char ** argv )
     {
       if( texJobName == "" )
 	{
-	  texJobName = "#drool.labels";
+	  texJobName = "#shapes.labels";
 	}
     }
   else
     {
       if( inputName == "" )
 	{
-	  inputName = baseName + "drool";
+	  inputName = baseName + "shape";
 	}
       if( outputName == "" )
 	{
@@ -717,7 +717,7 @@ main( int argc, char ** argv )
     {
       if( baseName == "" )
 	{
-	  Kernel::theDebugLog.setFilename( "#drool.log" );
+	  Kernel::theDebugLog.setFilename( "#shapes.log" );
 	}
       else
 	{
@@ -1349,7 +1349,7 @@ Interaction::systemDebugMessage( const std::string & msg )
 void
 addDefaultNeedPath( )
 {
-  char * start = getenv( "DROOLINPUTS" );
+  char * start = getenv( "SHAPESINPUTS" );
   char * tok = strsep( & start, ":" );
   while( tok != 0 )
     {
@@ -1361,7 +1361,7 @@ addDefaultNeedPath( )
 void
 addDefaultFontMetricsPath( )
 {
-  char * start = getenv( "DROOLFONTMETRICS" );
+  char * start = getenv( "SHAPESFONTMETRICS" );
   char * tok = strsep( & start, ":" );
   while( tok != 0 )
     {

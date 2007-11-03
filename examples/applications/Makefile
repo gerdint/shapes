@@ -1,14 +1,14 @@
-ALLDROOL := $(patsubst %.drool,%.pdf, $(wildcard *.drool) )
+ALLSHAPE := $(patsubst %.shape,%.pdf, $(wildcard *.shape) )
 RTLOGOS := rtlogo_right.pdf rtlogo_left.pdf rtlogo_right_nobg.pdf rtlogo_left_nobg.pdf rtlogo_square.pdf
-DROOLFLAGS = --v w1.3
+SHAPESFLAGS = --v w1.3
 
-all: $(ALLDROOL)
+all: $(ALLSHAPE)
 
 rt: $(RTLOGOS)
-$(RTLOGOS): rtlogo_elements.drext Makefile
+$(RTLOGOS): rtlogo_elements.shext Makefile
 
-%.pdf: %.drool
-	drool $(DROOLFLAGS) $*.
+%.pdf: %.shape
+	shapes $(SHAPESFLAGS) $*.
 
 .PHONY: cleanlabels
 cleanlabels:

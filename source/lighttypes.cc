@@ -292,12 +292,12 @@ Lang::SpecularLightGray::illuminateGray( const Concrete::Coords3D & point, const
 
   Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight );
 
-//   std::cerr << "Point: " << Helpers::droolFormat( point ) << std::endl ;
-//   std::cerr << "rLight: " << Helpers::droolFormat( rLight ) << std::endl ;
-//   std::cerr << "Surface normal: " << Helpers::droolFormat( unitNormal ) << std::endl ;
-//   std::cerr << "rHatReflection: " << Helpers::droolFormat( rHatReflection ) << std::endl ;
-//   std::cerr << "rEye: " << Helpers::droolFormat( rEye ) << std::endl ;
-//   std::cerr << "rHatEye: " << Helpers::droolFormat( rHatEye ) << std::endl ;
+//   std::cerr << "Point: " << Helpers::shapesFormat( point ) << std::endl ;
+//   std::cerr << "rLight: " << Helpers::shapesFormat( rLight ) << std::endl ;
+//   std::cerr << "Surface normal: " << Helpers::shapesFormat( unitNormal ) << std::endl ;
+//   std::cerr << "rHatReflection: " << Helpers::shapesFormat( rHatReflection ) << std::endl ;
+//   std::cerr << "rEye: " << Helpers::shapesFormat( rEye ) << std::endl ;
+//   std::cerr << "rHatEye: " << Helpers::shapesFormat( rHatEye ) << std::endl ;
 //   std::cerr << "  Phong's angle: " << acos( Concrete::inner( rHatReflection, rHatEye ) ) << std::endl ;
 
   // This breaks the Phong model, but I want reflection in all directions!

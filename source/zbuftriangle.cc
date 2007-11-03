@@ -928,8 +928,8 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 	//	SPLICEDEBUG( std::cerr << i->p0_ << " -- " << i->p0_ + i->d_ * i->length_ << std::endl );
 	SPLICEDEBUG( std::cerr << std::endl
 		     << "res << stroke [] "
-		     << " (" << Helpers::droolFormat( i->p0_.x_ ) << "," << Helpers::droolFormat( i->p0_.y_ )
-		     << ")--(" << Helpers::droolFormat( (i->p0_ + i->d_ * i->length_).x_ ) << "," << Helpers::droolFormat( (i->p0_ + i->d_ * i->length_).y_ ) << ")"
+		     << " (" << Helpers::shapesFormat( i->p0_.x_ ) << "," << Helpers::shapesFormat( i->p0_.y_ )
+		     << ")--(" << Helpers::shapesFormat( (i->p0_ + i->d_ * i->length_).x_ ) << "," << Helpers::shapesFormat( (i->p0_ + i->d_ * i->length_).y_ ) << ")"
 		     << std::endl );
 	i->intersections_.resize( numberOfLines, 0 );
       }
@@ -974,7 +974,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 		if( ! reuse )
 		  {
 		    //		    SPLICEDEBUG( std::cerr << tmp << "  " );
-		    SPLICEDEBUG( std::cerr << "res << [shift (" << Helpers::droolFormat( tmp.x_ ) << "," << Helpers::droolFormat( tmp.y_ ) << ")] [] stroke [] [circle 0.1mm]" << std::endl );
+		    SPLICEDEBUG( std::cerr << "res << [shift (" << Helpers::shapesFormat( tmp.x_ ) << "," << Helpers::shapesFormat( tmp.y_ ) << ")] [] stroke [] [circle 0.1mm]" << std::endl );
 		    intersectionsMem.push_back( tmp );
 		    lines[ idx_i ].intersections_[ idx_j ] = & intersectionsMem.back( );
 		    lines[ idx_j ].intersections_[ idx_i ] = & intersectionsMem.back( );

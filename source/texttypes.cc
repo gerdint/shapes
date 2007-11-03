@@ -734,7 +734,7 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
   else
     {
       Concrete::Length rise = textState_->riseConcrete( );
-      //      std::cerr << "@<< @stroking:RGB_RED | [stroke [shift " << Helpers::droolFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
+      //      std::cerr << "@<< @stroking:RGB_RED | [stroke [shift " << Helpers::shapesFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
 
       typedef typeof strings_ ListType;
       std::list< double >::const_iterator ki = kernings_.begin( );
@@ -782,14 +782,14 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 			// In addition, it seems reasonable to not let the space character affect the bounding box.
 			const FontMetrics::CharacterMetrics * charMetrics = horizontalMetrics->charByCode( (unsigned char)( 32 ) );
 			textLineMatrix->prependXShift( xSize * charMetrics->horizontalCharWidthX_ + characterTrackKern + wordTrackKern );
-			//			std::cerr << "@<< @stroking:RGB_BLUE | [stroke [shift " << Helpers::droolFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
+			//			std::cerr << "@<< @stroking:RGB_BLUE | [stroke [shift " << Helpers::shapesFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
 		      }
 		      break;
 		    case '\n':
 		      {
 			textMatrix->prependShift( Concrete::Coords2D( 0, - textState_->leadingConcrete( ) ) );
 			textLineMatrix->replaceBy( *textMatrix );
-			//			std::cerr << "@<< @stroking:RGB_RED | [stroke [shift " << Helpers::droolFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
+			//			std::cerr << "@<< @stroking:RGB_RED | [stroke [shift " << Helpers::shapesFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
 		      }
 		      break;
 		    default:
@@ -808,7 +808,7 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 			Concrete::Coords2D x0y1 = Concrete::Coords2D( xSize * charMetrics->xmin_, ySize * charMetrics->ymax_ + rise ).transformed( *textLineMatrix );
 			Concrete::Coords2D x1y0 = Concrete::Coords2D( xSize * charMetrics->xmax_, ySize * charMetrics->ymin_ + rise ).transformed( *textLineMatrix );
 			Concrete::Coords2D x1y1 = Concrete::Coords2D( xSize * charMetrics->xmax_, ySize * charMetrics->ymax_ + rise ).transformed( *textLineMatrix );
-			//			std::cerr << "@<< @width:0.3bp | [stroke "<< Helpers::droolFormat( x0y0 ) << "--" << Helpers::droolFormat( x0y1 ) << "--" << Helpers::droolFormat( x1y1 ) << "--" << Helpers::droolFormat( x1y0 ) << "--cycle]" << std::endl ;
+			//			std::cerr << "@<< @width:0.3bp | [stroke "<< Helpers::shapesFormat( x0y0 ) << "--" << Helpers::shapesFormat( x0y1 ) << "--" << Helpers::shapesFormat( x1y1 ) << "--" << Helpers::shapesFormat( x1y0 ) << "--cycle]" << std::endl ;
 
 			*xmin = std::min( *xmin, x0y0.x_ );
 			*ymin = std::min( *ymin, x0y0.y_ );
@@ -831,7 +831,7 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 			*ymax = std::max( *ymax, x1y1.y_ );
 
 			textLineMatrix->prependXShift( xSize * charMetrics->horizontalCharWidthX_ + characterTrackKern );
-			//			std::cerr << "@<< [stroke [shift " << Helpers::droolFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
+			//			std::cerr << "@<< [stroke [shift " << Helpers::shapesFormat( Concrete::Coords2D( 0, 0 ).transformed( *textLineMatrix ) ) << "] [] [circle 2bp]]" << std::endl ;
 		      }
 		    }
 		}

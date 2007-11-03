@@ -6,7 +6,7 @@ using namespace MetaPDF;
 
 
 std::string 
-Helpers::droolFormat( double scalar )
+Helpers::shapesFormat( double scalar )
 {
   std::ostringstream oss;
 
@@ -21,7 +21,7 @@ Helpers::droolFormat( double scalar )
 }
 
 std::string 
-Helpers::droolFormat( Concrete::Length length )
+Helpers::shapesFormat( Concrete::Length length )
 {
   std::ostringstream oss;
 
@@ -38,41 +38,41 @@ Helpers::droolFormat( Concrete::Length length )
 }
 
 std::string 
-Helpers::droolFormat( Concrete::Coords2D coords )
+Helpers::shapesFormat( Concrete::Coords2D coords )
 {
   std::ostringstream oss;
 
-  oss << "(" << Helpers::droolFormat( coords.x_ ) << "," << Helpers::droolFormat( coords.y_ ) << ")" ;
+  oss << "(" << Helpers::shapesFormat( coords.x_ ) << "," << Helpers::shapesFormat( coords.y_ ) << ")" ;
 
   return oss.str( );
 }
 
 std::string 
-Helpers::droolFormat( Concrete::Coords3D coords )
+Helpers::shapesFormat( Concrete::Coords3D coords )
 {
   std::ostringstream oss;
 
-  oss << "(" << Helpers::droolFormat( coords.x_ ) << "," << Helpers::droolFormat( coords.y_ ) << "," << Helpers::droolFormat( coords.z_ ) << ")" ;
+  oss << "(" << Helpers::shapesFormat( coords.x_ ) << "," << Helpers::shapesFormat( coords.y_ ) << "," << Helpers::shapesFormat( coords.z_ ) << ")" ;
 
   return oss.str( );
 }
 
 std::string 
-Helpers::droolFormat( Concrete::UnitFloatPair coords )
+Helpers::shapesFormat( Concrete::UnitFloatPair coords )
 {
   std::ostringstream oss;
 
-  oss << "(" << Helpers::droolFormat( coords.x_ ) << "," << Helpers::droolFormat( coords.y_ ) << ")" ;
+  oss << "(" << Helpers::shapesFormat( coords.x_ ) << "," << Helpers::shapesFormat( coords.y_ ) << ")" ;
 
   return oss.str( );
 }
 
 std::string 
-Helpers::droolFormat( Concrete::UnitFloatTriple coords )
+Helpers::shapesFormat( Concrete::UnitFloatTriple coords )
 {
   std::ostringstream oss;
 
-  oss << "(" << Helpers::droolFormat( coords.x_ ) << "," << Helpers::droolFormat( coords.y_ ) << "," << Helpers::droolFormat( coords.z_ ) << ")" ;
+  oss << "(" << Helpers::shapesFormat( coords.x_ ) << "," << Helpers::shapesFormat( coords.y_ ) << "," << Helpers::shapesFormat( coords.z_ ) << ")" ;
 
   return oss.str( );
 }
