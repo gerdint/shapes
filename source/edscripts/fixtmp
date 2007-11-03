@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `ls *.drool *.drext`; do
+for i in `ls *.h *.cc *.l *.y`; do
   echo Fixing $i
-  cat /home/rt/tidefelt/svnco/metapdf/edscripts/edtmp | ed -s $i
+  cat edscripts/extmp | ex -sC $i
 done

@@ -1,0 +1,3 @@
+:%s!MetaPDF!Shapes!g
+"
+:wq
