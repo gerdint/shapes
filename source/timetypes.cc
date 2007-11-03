@@ -3,7 +3,7 @@
 #include "environment.h"
 #include "classtypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::ChronologicalTime::ChronologicalTime( time_t t )

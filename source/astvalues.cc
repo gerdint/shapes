@@ -1,12 +1,12 @@
 #include "astvalues.h"
-#include "metapdfexceptions.h"
-#include "metapdfcore.h"
+#include "shapesexceptions.h"
+#include "shapescore.h"
 #include "astfun.h"
 #include "consts.h"
 #include "globals.h"
 #include "continuations.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Ast::Constant::Constant( const Ast::SourceLocation & loc, const Kernel::VariableHandle & val )

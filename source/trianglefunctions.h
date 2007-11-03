@@ -5,7 +5,7 @@
 #include "elementarycoords.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {

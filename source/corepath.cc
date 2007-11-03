@@ -1,11 +1,11 @@
 #include <cmath>
 
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "ast.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "simplepdfi.h"
 #include "upsamplers.h"
@@ -16,10 +16,10 @@
 #include <vector>
 #include <stdio.h>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

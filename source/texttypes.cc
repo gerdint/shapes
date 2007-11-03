@@ -1,4 +1,4 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "texttypes.h"
 #include "dynamicenvironment.h"
@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Object >, charRefPtrLess > Lang::Font::theFontResourceMap_;
 std::map< RefCountPtr< const char >, RefCountPtr< const FontMetrics::BaseFont >, charRefPtrLess > Lang::Font::theFontMetricsMap_;
@@ -1450,7 +1450,7 @@ Kernel::VariableHandle
 Kernel::CharacterSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->characterSpacing_ ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Length( textState->characterSpacing_ ) ) );
 }
 
 void
@@ -1474,7 +1474,7 @@ Kernel::VariableHandle
 Kernel::WordSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->wordSpacing_ ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Length( textState->wordSpacing_ ) ) );
 }
 
 void
@@ -1498,7 +1498,7 @@ Kernel::VariableHandle
 Kernel::HorizontalScalingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Float( textState->horizontalScaling_ ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Float( textState->horizontalScaling_ ) ) );
 }
 
 void
@@ -1598,7 +1598,7 @@ Kernel::VariableHandle
 Kernel::TextSizeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Length( textState->size_ ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Length( textState->size_ ) ) );
 }
 
 void
@@ -1622,7 +1622,7 @@ Kernel::VariableHandle
 Kernel::TextRenderingModeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::TextRenderingMode( textState->mode_ ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::TextRenderingMode( textState->mode_ ) ) );
 }
 
 void
@@ -1699,7 +1699,7 @@ Kernel::VariableHandle
 Kernel::TextKnockoutDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
   RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-  return Kernel::VariableHandle( MetaPDF::Helpers::newValHandle( new Lang::Boolean( ( textState->knockout_ & Kernel::TextState::KNOCKOUT_FLAG_BIT ) != 0 ) ) );
+  return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Boolean( ( textState->knockout_ & Kernel::TextState::KNOCKOUT_FLAG_BIT ) != 0 ) ) );
 }
 
 void

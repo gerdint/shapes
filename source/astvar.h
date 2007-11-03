@@ -1,11 +1,11 @@
 #ifndef astvar_h
 #define astvar_h
 
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "ast.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Ast
   {

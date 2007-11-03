@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
@@ -11,7 +11,7 @@
 #include <stack>
 #include <algorithm>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

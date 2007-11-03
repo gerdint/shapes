@@ -1,7 +1,7 @@
 #include "debuglog.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 Kernel::DebugLog::DebugLog( )
   : os_( 0 )

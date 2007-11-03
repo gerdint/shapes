@@ -1,7 +1,7 @@
 #include "globals.h"
 
-#include "metapdfscanner.h"
-#include "metapdftypes.h"
+#include "shapesscanner.h"
+#include "shapestypes.h"
 #include "ast.h"
 #include "astfun.h"
 #include "refcount.h"
@@ -10,18 +10,18 @@
 #include "pdfstructure.h"
 #include "functiontypes.h"
 #include "containertypes.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "consts.h"
 #include "basicsimplex.h"
 #include "debuglog.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 #include <climits>
 
 using namespace std;
-using namespace MetaPDF;
+using namespace Shapes;
 
-MetaPDFScanner Ast::theMetaPDFScanner;
+ShapesScanner Ast::theShapesScanner;
 Kernel::PassedEnv Kernel::theGlobalEnvironment = 0;
 std::list< Kernel::Environment * > Kernel::theEnvironmentList;
 SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( & cout );
@@ -107,7 +107,7 @@ Lang::Transform3D Lang::THE_3D_IDENTITY( 1, 0, 0,
 
 
 void
-MetaPDF::Kernel::registerGlobals( Kernel::Environment * env )
+Shapes::Kernel::registerGlobals( Kernel::Environment * env )
 {
   env->initDefine( "cap_BUTT", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_BUTT ) ) );
   env->initDefine( "cap_ROUND", RefCountPtr< const Lang::CapStyle >( new Lang::CapStyle( Lang::CapStyle::CAP_ROUND ) ) );

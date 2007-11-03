@@ -1,8 +1,8 @@
 #include "classtreemacros.h"
-#include "metapdfvalue.h"
-#include "metapdftypes.h"
+#include "shapesvalue.h"
+#include "shapestypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 #define GETTYPEID_MAKER( T ) \
 Kernel::QuickTypeID \

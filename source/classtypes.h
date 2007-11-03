@@ -1,13 +1,13 @@
 #ifndef classtypes_h
 #define classtypes_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
 #include "pdfstructure.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "environment.h"
 #include "charptrless.h"
 #include "methodid.h"
@@ -19,7 +19,7 @@
 #include <stack>
 #include <set>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {
@@ -220,7 +220,7 @@ namespace MetaPDF
 
   class UserClass : public Lang::Class
   {
-    const MetaPDF::Ast::ClassFunction * classExpr;
+    const Shapes::Ast::ClassFunction * classExpr;
     Kernel::EvaluatedFormals * formals;
     Kernel::PassedEnv env;
     RefCountPtr< std::list< std::pair< RefCountPtr< const Lang::Class >, const Ast::ArgListExprs * > > > parents;
@@ -229,7 +229,7 @@ namespace MetaPDF
     std::set< RefCountPtr< const Lang::Class > > immediateParents;
     RefCountPtr< std::map< RefCountPtr< const Lang::Class >, std::list< Ast::MemberDeclaration * > > > overrides;
   public:
-    UserClass( const MetaPDF::Ast::ClassFunction * _classExpr, Kernel::PassedEnv _env, RefCountPtr< const char > _prettyName, Kernel::EvaluatedFormals * _formals, RefCountPtr< std::list< std::pair< RefCountPtr< const Lang::Class >, const Ast::ArgListExprs * > > > _parents, RefCountPtr< std::map< RefCountPtr< const Lang::Class >, std::list< Ast::MemberDeclaration * > > > _overrides, bool _isFinal );
+    UserClass( const Shapes::Ast::ClassFunction * _classExpr, Kernel::PassedEnv _env, RefCountPtr< const char > _prettyName, Kernel::EvaluatedFormals * _formals, RefCountPtr< std::list< std::pair< RefCountPtr< const Lang::Class >, const Ast::ArgListExprs * > > > _parents, RefCountPtr< std::map< RefCountPtr< const Lang::Class >, std::list< Ast::MemberDeclaration * > > > _overrides, bool _isFinal );
     virtual ~UserClass( );
 
     virtual void gcMark( Kernel::GCMarkedSet & marked );

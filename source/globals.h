@@ -1,12 +1,12 @@
 #ifndef globals_h
 #define globals_h
 
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Computation_decls.h"
-#include "MetaPDF_Concrete_decls.h"
-#include "MetaPDF_Helpers_decls.h"
-#include "MetaPDF_Exceptions_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Computation_decls.h"
+#include "Shapes_Concrete_decls.h"
+#include "Shapes_Helpers_decls.h"
+#include "Shapes_Exceptions_decls.h"
 #include "SimplePDF_decls.h"
 #include "FontMetrics_decls.h"
 
@@ -15,10 +15,10 @@
 #include "ptrowner.h"
 
 // The following types do not belong to any particular namespace for some reason, and are therefore declared like this:
-class MetaPDFScanner;
+class ShapesScanner;
 
 
-namespace MetaPDF
+namespace Shapes
 {
 
   namespace Interaction
@@ -134,7 +134,7 @@ namespace MetaPDF
   namespace Ast
   {
 
-    extern MetaPDFScanner theMetaPDFScanner;
+    extern ShapesScanner theShapesScanner;
     extern Ast::Expression * theProgram;
     extern PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > theAnalysisEnvironmentList;
     extern Ast::AnalysisEnvironment * theGlobalAnalysisEnvironment;

@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
@@ -13,7 +13,7 @@
 #include <ctype.h>
 #include <stack>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -1251,7 +1251,7 @@ Lang::ElementaryPath3D::continuousMean( ) const
       Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
       Concrete::Bezier z3 = (*i2)->mid_->z_.offtype< 0, 3 >( );
 
-      Concrete::Time dt = MetaPDF::computeDt( hypotPhysical( (x1-x0), (y1-y0), (z1-z0) ).offtype< 0, -3 >( ) +
+      Concrete::Time dt = Shapes::computeDt( hypotPhysical( (x1-x0), (y1-y0), (z1-z0) ).offtype< 0, -3 >( ) +
 						       hypotPhysical( (x2-x1), (y2-y1), (z2-z1) ).offtype< 0, -3 >( ) +
 						       hypotPhysical( (x3-x2), (y3-y2), (z3-z2) ).offtype< 0, -3 >( ) );
 
@@ -1375,7 +1375,7 @@ Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & dNonUnit 
   return res;
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   class ApproximationPoly3D
   {
@@ -1429,7 +1429,7 @@ namespace MetaPDF
     Concrete::Time t1_;
   public:
     
-    ApproximationSegmentSection3D( const MetaPDF::ApproximationPoly3D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
+    ApproximationSegmentSection3D( const Shapes::ApproximationPoly3D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
     ApproximationSegmentSection3D * cutAfter( Concrete::Time t ) const;
     ApproximationSegmentSection3D * cutBefore( Concrete::Time t ) const;
     
@@ -1457,8 +1457,8 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
     }
 
   Concrete::Coords3D p( _p.x_.get( ), _p.y_.get( ), _p.z_.get( ) );
-  PtrOwner_back_Access< std::list< const MetaPDF::ApproximationPoly3D * > > memory;
-  typedef std::pair< MetaPDF::ApproximationSegmentSection3D *, Concrete::Length > WorkItem;
+  PtrOwner_back_Access< std::list< const Shapes::ApproximationPoly3D * > > memory;
+  typedef std::pair< Shapes::ApproximationSegmentSection3D *, Concrete::Length > WorkItem;
   std::list< WorkItem > work;
 
   Concrete::Time res = 0;
@@ -1516,15 +1516,15 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 	      if( dist < bestDist )
 		{
 		  bestDist = dist;
-		  res = steps + MetaPDF::straightLineArcTime( s );
+		  res = steps + Shapes::straightLineArcTime( s );
 		}
 	    }
 	  continue;
 	}
 
-      MetaPDF::ApproximationPoly3D * coeffs =
-	new MetaPDF::ApproximationPoly3D( *((*i1)->mid_), *((*i1)->front_), *((*i2)->rear_), *((*i2)->mid_), p );
-      MetaPDF::ApproximationSegmentSection3D * seg = new MetaPDF::ApproximationSegmentSection3D( coeffs, steps, 0, 1 );
+      Shapes::ApproximationPoly3D * coeffs =
+	new Shapes::ApproximationPoly3D( *((*i1)->mid_), *((*i1)->front_), *((*i2)->rear_), *((*i2)->mid_), p );
+      Shapes::ApproximationSegmentSection3D * seg = new Shapes::ApproximationSegmentSection3D( coeffs, steps, 0, 1 );
       Concrete::Length lowerBound = seg->convexHullDistance( ) + DISTANCE_TOL;
       if( lowerBound >= bestDist )
 	{
@@ -1557,7 +1557,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 
   while( work.size( ) > 0 )
     {
-      MetaPDF::ApproximationSegmentSection3D * seg = work.front( ).first;
+      Shapes::ApproximationSegmentSection3D * seg = work.front( ).first;
       Concrete::Length lowerBound = work.front( ).second;
       work.pop_front( );
       if( lowerBound < bestDist )
@@ -1574,7 +1574,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 	      t_tol < seg->duration( ) )
 	    {
 	      {
-		MetaPDF::ApproximationSegmentSection3D * part = seg->cutAfter( split );
+		Shapes::ApproximationSegmentSection3D * part = seg->cutAfter( split );
 		Concrete::Length lowerBound = part->convexHullDistance( ) + DISTANCE_TOL;
 		if( lowerBound >= bestDist )
 		  {
@@ -1586,7 +1586,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 		  }
 	      }
 	      {
-		MetaPDF::ApproximationSegmentSection3D * part = seg->cutBefore( split );
+		Shapes::ApproximationSegmentSection3D * part = seg->cutBefore( split );
 		Concrete::Length lowerBound = part->convexHullDistance( ) + DISTANCE_TOL;
 		if( lowerBound >= bestDist )
 		  {
@@ -1605,7 +1605,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
   return res;
 }
 
-MetaPDF::ApproximationPoly3D::ApproximationPoly3D( const Concrete::Coords3D & p0, const Concrete::Coords3D & p1, const Concrete::Coords3D & p2, const Concrete::Coords3D & p3, const Concrete::Coords3D & p )
+Shapes::ApproximationPoly3D::ApproximationPoly3D( const Concrete::Coords3D & p0, const Concrete::Coords3D & p1, const Concrete::Coords3D & p2, const Concrete::Coords3D & p3, const Concrete::Coords3D & p )
   : p_( p ), polyCoeffs_( Bezier::PolyCoeffs< Concrete::Coords3D >( Bezier::ControlPoints< Concrete::Coords3D >( p0, p1, p2, p3 ) ) )
 {
   kxD0_0_ = polyCoeffs_.z0_.x_ - p_.x_;
@@ -1646,7 +1646,7 @@ MetaPDF::ApproximationPoly3D::ApproximationPoly3D( const Concrete::Coords3D & p0
 }
 
 Concrete::Time
-MetaPDF::ApproximationPoly3D::splitTime( const Concrete::Time t_low, const Concrete::Time t_high, const Concrete::Time t_tol ) const
+Shapes::ApproximationPoly3D::splitTime( const Concrete::Time t_low, const Concrete::Time t_high, const Concrete::Time t_tol ) const
 {
   Concrete::Time t;
   Physical< 2, 0 > last_f = HUGE_VAL;
@@ -1790,13 +1790,13 @@ MetaPDF::ApproximationPoly3D::splitTime( const Concrete::Time t_low, const Concr
 }
 
 Bezier::ControlPoints< Concrete::Coords3D >
-MetaPDF::ApproximationPoly3D::getControls( const Concrete::Time t_low, const Concrete::Time t_high ) const
+Shapes::ApproximationPoly3D::getControls( const Concrete::Time t_low, const Concrete::Time t_high ) const
 {
   return Bezier::ControlPoints< Concrete::Coords3D >( polyCoeffs_.subSection( t_low.offtype< 0, 1 >( ), t_high.offtype< 0, 1 >( ) ) );
 }
 
 bool
-MetaPDF::ApproximationPoly3D::isCircular( ) const
+Shapes::ApproximationPoly3D::isCircular( ) const
 {
   Concrete::Length rmax = -HUGE_VAL;
   Concrete::Length rmin = HUGE_VAL;
@@ -1810,14 +1810,14 @@ MetaPDF::ApproximationPoly3D::isCircular( ) const
 }
 
 const Concrete::Coords3D &
-MetaPDF::ApproximationPoly3D::getPoint( ) const
+Shapes::ApproximationPoly3D::getPoint( ) const
 {
   return p_;
 }
 
 
 Concrete::Length
-MetaPDF::ApproximationPoly3D::distanceAt( Concrete::Time t ) const
+Shapes::ApproximationPoly3D::distanceAt( Concrete::Time t ) const
 {
   return hypotPhysical( kxD0_0_ + t * ( kxD0_1_ + t * ( kxD0_2_ + t * kxD0_3_ ) ),
 			kyD0_0_ + t * ( kyD0_1_ + t * ( kyD0_2_ + t * kyD0_3_ ) ),
@@ -1825,7 +1825,7 @@ MetaPDF::ApproximationPoly3D::distanceAt( Concrete::Time t ) const
 }
 
 Physical< 2, 0 >
-MetaPDF::ApproximationPoly3D::squaredDistanceAt( Concrete::Time t ) const
+Shapes::ApproximationPoly3D::squaredDistanceAt( Concrete::Time t ) const
 {
   Concrete::Length delta_x = kxD0_0_ + t * ( kxD0_1_ + t * ( kxD0_2_ + t * kxD0_3_ ) );
   Concrete::Length delta_y = kyD0_0_ + t * ( kyD0_1_ + t * ( kyD0_2_ + t * kyD0_3_ ) );
@@ -1833,24 +1833,24 @@ MetaPDF::ApproximationPoly3D::squaredDistanceAt( Concrete::Time t ) const
   return delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
 }
 
-MetaPDF::ApproximationSegmentSection3D::ApproximationSegmentSection3D( const MetaPDF::ApproximationPoly3D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 )
+Shapes::ApproximationSegmentSection3D::ApproximationSegmentSection3D( const Shapes::ApproximationPoly3D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 )
   : controls_( baseSeg->getControls( t0, t1 ) ), baseSeg_( baseSeg ), steps_( steps ), t0_( t0 ), t1_( t1 )
 { }
 
-MetaPDF::ApproximationSegmentSection3D *
-MetaPDF::ApproximationSegmentSection3D::cutAfter( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection3D *
+Shapes::ApproximationSegmentSection3D::cutAfter( Concrete::Time t ) const
 {
   return new ApproximationSegmentSection3D( baseSeg_, steps_, t0_, t );
 }
 
-MetaPDF::ApproximationSegmentSection3D *
-MetaPDF::ApproximationSegmentSection3D::cutBefore( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection3D *
+Shapes::ApproximationSegmentSection3D::cutBefore( Concrete::Time t ) const
 {
   return new ApproximationSegmentSection3D( baseSeg_, steps_, t, t1_ );
 }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   class HullSorter3D : public std::binary_function< const Concrete::Coords3D *, const Concrete::Coords3D *, bool >
   {
@@ -1877,7 +1877,7 @@ namespace MetaPDF
 }
 
 Concrete::Length
-MetaPDF::ApproximationSegmentSection3D::convexHullDistance( ) const
+Shapes::ApproximationSegmentSection3D::convexHullDistance( ) const
 {
   Concrete::Coords3D p( baseSeg_->getPoint( ) );
   std::list< const Concrete::Coords3D * > hullPoints;
@@ -1915,7 +1915,7 @@ MetaPDF::ApproximationSegmentSection3D::convexHullDistance( ) const
 }
 
 void
-MetaPDF::ApproximationSegmentSection3D::triangleDistance( std::vector< const Concrete::Coords3D * > & points, const Concrete::Coords3D & p, Concrete::Length * bestDist )
+Shapes::ApproximationSegmentSection3D::triangleDistance( std::vector< const Concrete::Coords3D * > & points, const Concrete::Coords3D & p, Concrete::Length * bestDist )
 {
   /*
    * Note: We will mess around with points, but it will be returned as passed.
@@ -2003,26 +2003,26 @@ MetaPDF::ApproximationSegmentSection3D::triangleDistance( std::vector< const Con
 
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection3D::splitTime( const Concrete::Time t_tol ) const
+Shapes::ApproximationSegmentSection3D::splitTime( const Concrete::Time t_tol ) const
 {
   Concrete::Time d = 0.2 * ( t1_ - t0_ );
   return baseSeg_->splitTime( t0_ + d, t1_ - d, t_tol );
 }
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection3D::globalTime( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection3D::globalTime( Concrete::Time t ) const
 {
   return steps_ + t;
 }
 
 Concrete::Length
-MetaPDF::ApproximationSegmentSection3D::distanceAt( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection3D::distanceAt( Concrete::Time t ) const
 {
   return baseSeg_->distanceAt( t );
 }
 
 Concrete::Speed
-MetaPDF::ApproximationSegmentSection3D::maxSpeed( ) const
+Shapes::ApproximationSegmentSection3D::maxSpeed( ) const
 {
   Concrete::Length tmp = max( hypotPhysical( controls_.p1_.x_ - controls_.p0_.x_, controls_.p1_.y_ - controls_.p0_.y_, controls_.p1_.z_ - controls_.p0_.z_ ),
 				      hypotPhysical( controls_.p2_.x_ - controls_.p1_.x_, controls_.p2_.y_ - controls_.p1_.y_, controls_.p2_.z_ - controls_.p1_.z_ ) );
@@ -2030,7 +2030,7 @@ MetaPDF::ApproximationSegmentSection3D::maxSpeed( ) const
 }
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection3D::duration( ) const
+Shapes::ApproximationSegmentSection3D::duration( ) const
 {
   return t1_ - t0_;
 }
@@ -2094,7 +2094,7 @@ Lang::ElementaryPath3D::arcLength( ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  for( Concrete::Time t = 0; t < 1; t += dt )
 	    {
@@ -2214,7 +2214,7 @@ Lang::ElementaryPath3D::arcLength( Concrete::Time tRemaining ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  const Concrete::Time tend = min( Concrete::UNIT_TIME, tRemaining );
 	  for( Concrete::Time t = 0; t < tend; t += dt )
@@ -2343,7 +2343,7 @@ Lang::ElementaryPath3D::negative_arcLength( Concrete::Time tRemaining ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  const Concrete::Time tend = min( Concrete::UNIT_TIME, tRemaining );
 	  for( Concrete::Time t = 0; t < tend; t += dt )
@@ -2439,7 +2439,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	    }
 	  const Concrete::Length segPastLength = hypotPhysical( tmp.x_ - (*i1)->mid_->x_, tmp.y_ - (*i1)->mid_->y_, tmp.z_ - (*i1)->mid_->z_ );
 	  const Concrete::Length segLength = hypotPhysical( (*i1)->mid_->x_ - (*i2)->mid_->x_, (*i1)->mid_->y_ - (*i2)->mid_->y_, (*i1)->mid_->z_ - (*i2)->mid_->z_ );
-	  splineTime += MetaPDF::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
+	  splineTime += Shapes::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
 	  goto done;
 	}
 
@@ -2470,7 +2470,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	  }
 	else
 	  {
-	    Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	    Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	    
 	    const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	    Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2536,7 +2536,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	      remainingLength -= segLength;
 	      continue;
 	    }
-	  splineTime += MetaPDF::straightLineArcTime( remainingLength / segLength );
+	  splineTime += Shapes::straightLineArcTime( remainingLength / segLength );
 	  goto done;
 	}
 
@@ -2566,7 +2566,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  
 	  const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2691,7 +2691,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	    }
 	  const Concrete::Length segPastLength = hypotPhysical( tmp.x_ - (*i1)->mid_->x_, tmp.y_ - (*i1)->mid_->y_, tmp.z_ - (*i1)->mid_->z_ );
 	  const Concrete::Length segLength = hypotPhysical( (*i1)->mid_->x_ - (*i2)->mid_->x_, (*i1)->mid_->y_ - (*i2)->mid_->y_, (*i1)->mid_->z_ - (*i2)->mid_->z_ );
-	  splineTime -= MetaPDF::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
+	  splineTime -= Shapes::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
 	  goto done;
 	}
 
@@ -2722,7 +2722,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	  }
 	else
 	  {
-	    Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	    Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	    
 	    const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	    Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2788,7 +2788,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	      remainingLength -= segLength;
 	      continue;
 	    }
-	  splineTime -= MetaPDF::straightLineArcTime( remainingLength / segLength );
+	  splineTime -= Shapes::straightLineArcTime( remainingLength / segLength );
 	  goto done;
 	}
       
@@ -2818,7 +2818,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  
 	  const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -3640,7 +3640,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
   Concrete::Bezier z3 = p3->z_.offtype< 0, 3 >( );
   
   const Concrete::Length segLengthBound = ( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
-  const Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+  const Concrete::Time dt = Shapes::computeDt( segLengthBound );
   
   Concrete::Time t1 = 0;
   laterArcTime( x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3, & t1, & remainingLength, dt );

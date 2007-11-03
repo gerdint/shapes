@@ -3,7 +3,7 @@
 #include "elementarycoords.h"
 
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 Concrete::UnitFloatPair
 Concrete::UnitFloatPair::unnormalizedScaling( double a ) const

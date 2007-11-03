@@ -1,13 +1,13 @@
 #ifndef hottypes_h
 #define hottypes_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
 #include "FontMetrics_decls.h"
 #include "SimplePDF_decls.h"
 
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "functiontypes.h"
 #include "drawabletypes.h"
 #include "lighttypes.h"
@@ -20,7 +20,7 @@
 
 
 #define TYPEINFOIMPL_STATE( T )			\
-  const RefCountPtr< const ::MetaPDF::Lang::Class > &	\
+  const RefCountPtr< const ::Shapes::Lang::Class > &	\
     Kernel::T::getClass( ) const			\
   {						\
     return TypeID;				\
@@ -32,7 +32,7 @@
     }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

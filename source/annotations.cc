@@ -1,4 +1,4 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "annotations.h"
 #include "pdfstructure.h"
@@ -6,9 +6,9 @@
 #include "drawabletypes.h"
 #include "pathtypes.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::AnnotationSite::AnnotationSite( const RefCountPtr< const Lang::Drawable2D > & target, const RefCountPtr< const char > & contentText, const RefCountPtr< const char > & identifier, size_t flags,

@@ -1,18 +1,18 @@
-#ifndef metapdfvalue_h
-#define metapdfvalue_h
+#ifndef shapesvalue_h
+#define shapesvalue_h
 
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "refcount.h"
 #include "classtreemacros.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 #include <iostream>
 #include <set>
 #include <limits.h>
 
-namespace MetaPDF
+namespace Shapes
 {
 
 #define MAKE_TYPEID( T ) TYPEID_ ## T ,
@@ -24,13 +24,13 @@ namespace MetaPDF
   }
 
 #define TYPEINFODECL							\
-  static RefCountPtr< const ::MetaPDF::Lang::Class > TypeID;		\
-  virtual const RefCountPtr< const ::MetaPDF::Lang::Class > & getClass( ) const; \
+  static RefCountPtr< const ::Shapes::Lang::Class > TypeID;		\
+  virtual const RefCountPtr< const ::Shapes::Lang::Class > & getClass( ) const; \
   static RefCountPtr< const char > staticTypeName( );			
 
 
 #define TYPEINFOIMPL( T )			\
-  const RefCountPtr< const ::MetaPDF::Lang::Class > &	\
+  const RefCountPtr< const ::Shapes::Lang::Class > &	\
     Lang::T::getClass( ) const			\
   {						\
     return TypeID;				\
@@ -49,7 +49,7 @@ namespace MetaPDF
     public:
       Value( );
       virtual ~Value( );
-      virtual const RefCountPtr< const ::MetaPDF::Lang::Class > & getClass( ) const = 0;
+      virtual const RefCountPtr< const ::Shapes::Lang::Class > & getClass( ) const = 0;
       virtual Kernel::QuickTypeID getTypeID( ) const = 0;
 
       virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;

@@ -1,4 +1,4 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "hottypes.h"
 #include "globals.h"
@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <cstring>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::Hot::Hot::Hot( )

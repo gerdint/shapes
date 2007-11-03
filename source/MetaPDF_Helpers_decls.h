@@ -1,16 +1,16 @@
-#ifndef MetaPDF_Helpers_decls
-#define MetaPDF_Helpers_decls
+#ifndef Shapes_Helpers_decls
+#define Shapes_Helpers_decls
 
 #include "refcount.h"
 
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Concrete_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Concrete_decls.h"
 
 #include <list>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Helpers
   {

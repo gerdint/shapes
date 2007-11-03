@@ -1,11 +1,11 @@
 #include <cmath>
 
 #include "astexprs.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "lighttypes.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

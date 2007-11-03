@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <iostream>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Ast
   {

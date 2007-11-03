@@ -1,9 +1,9 @@
 #ifndef annotations_h
 #define annotations_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
 #include "FontMetrics_decls.h"
 #include "SimplePDF_decls.h"
 
@@ -11,7 +11,7 @@
 #include "tagtypes.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

@@ -1,17 +1,17 @@
 #include <cmath>
 
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "continuations.h"
 #include "globals.h"
 #include "texlabelmanager.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

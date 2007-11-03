@@ -1,12 +1,12 @@
-MetaPDF::PathStatement::PathStatement( Ast::Expression * _expr )
+Shapes::PathStatement::PathStatement( Ast::Expression * _expr )
   : expr( _expr )
 { }
 
-MetaPDF::PathStatement::~PathStatement( )
+Shapes::PathStatement::~PathStatement( )
 { }
 
 const Lang::Path2D *
-MetaPDF::PathStatement::path( )
+Shapes::PathStatement::path( )
 {
   const Lang::Path2D * res = dynamic_cast< const Lang::Path2D * >( expr->value( ).getPtr( ) );
   if( res == 0 )
@@ -16,29 +16,29 @@ MetaPDF::PathStatement::path( )
   return res;
 }
 
-MetaPDF::Stroke::Stroke( Ast::Expression * _expr )
+Shapes::Stroke::Stroke( Ast::Expression * _expr )
   : PathStatement( _expr )
 { }
 
-MetaPDF::Stroke::~Stroke( )
+Shapes::Stroke::~Stroke( )
 { }
 
 void
-MetaPDF::Stroke::writeTo( ostream & os, GraphicsState * metaState, GraphicsState * pdfState )
+Shapes::Stroke::writeTo( ostream & os, GraphicsState * metaState, GraphicsState * pdfState )
 {
   path( )->stroke( os );
 }
 
 
-MetaPDF::Fill::Fill( Ast::Expression * _expr )
+Shapes::Fill::Fill( Ast::Expression * _expr )
   : PathStatement( _expr )
 { }
 
-MetaPDF::Fill::~Fill( )
+Shapes::Fill::~Fill( )
 { }
 
 void
-MetaPDF::Fill::writeTo( ostream & os, GraphicsState * metaState, GraphicsState * pdfState )
+Shapes::Fill::writeTo( ostream & os, GraphicsState * metaState, GraphicsState * pdfState )
 {
   path( )->fill( os );
 }

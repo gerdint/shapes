@@ -6,7 +6,7 @@
 #include <cmath>
 #include <algorithm>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 void
 Computation::UpsampleInflections::operator () ( std::vector< double > * dst, const Bezier::ControlPoints< Concrete::Coords2D > & controls ) const
@@ -220,7 +220,7 @@ Computation::UpsampleEvery2D::operator () ( std::vector< double > * dst, const B
       double nextSample = sampleInterval;
       for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
 	{
-	  dst->push_back( MetaPDF::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
+	  dst->push_back( Shapes::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
 	}
     }
   else
@@ -242,7 +242,7 @@ Computation::UpsampleEvery2D::operator () ( std::vector< double > * dst, const B
 	  return;
 	}
 
-      Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+      Concrete::Time dt = Shapes::computeDt( segLengthBound );
       Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
       for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
 	{
@@ -304,7 +304,7 @@ Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const B
       double nextSample = sampleInterval;
       for( double i = 1; i < steps; ++i, nextSample += sampleInterval )
 	{
-	  dst->push_back( MetaPDF::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
+	  dst->push_back( Shapes::straightLineArcTime( nextSample ).offtype< 0, 1 >( ) );
 	}
     }
   else
@@ -330,7 +330,7 @@ Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const B
 	  return;
 	}
 
-      Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+      Concrete::Time dt = Shapes::computeDt( segLengthBound );
       Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
       for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
 	{

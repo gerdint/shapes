@@ -1,17 +1,17 @@
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "simplepdfi.h"
 #include "simplepdfo.h"
 #include "globals.h"
 #include "consts.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "hottypes.h"
 #include "multipage.h"
 #include "continuations.h"
 #include "charconverters.h"
 #include "pagecontentstates.h"
 #include "autoonoff.h"
-#include "metapdfscanner.h"
+#include "shapesscanner.h"
 #include "texlabelmanager.h"
 #include "debuglog.h"
 
@@ -27,11 +27,11 @@
 #include <limits>
 #include "iconvselect.h"
 
-int metapdfparse( );
-extern int metapdfdebug;
+int shapesparse( );
+extern int shapesdebug;
 void printVersion( );
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace SimplePDF;
 using namespace std;
 
@@ -46,7 +46,7 @@ void addDefaultNeedPath( );
 void addDefaultFontMetricsPath( );
 void destroyGlobals( );
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Interaction
   {
@@ -99,13 +99,13 @@ main( int argc, char ** argv )
     {
       if( strcmp( *argv, "--yydebug" ) == 0 )
 	{
-	  metapdfdebug = 1;
+	  shapesdebug = 1;
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--metapdfdebug" ) == 0 )
+      else if( strcmp( *argv, "--shapesdebug" ) == 0 )
 	{
-	  metapdfdebug = 1;
+	  shapesdebug = 1;
 	  argv += 1;
 	  argc -= 1;
 	}
@@ -259,7 +259,7 @@ main( int argc, char ** argv )
 	}
       else if( strcmp( *argv, "--showfiles" ) == 0 )
 	{
-	  Ast::theMetaPDFScanner.setShowFiles( true );
+	  Ast::theShapesScanner.setShowFiles( true );
 	  argv += 1;
 	  argc -= 1;
 	}
@@ -365,7 +365,7 @@ main( int argc, char ** argv )
 	      exit( 1 );
 	    }
 
-	  Ast::theMetaPDFScanner.push_backNeedPath( pth );
+	  Ast::theShapesScanner.push_backNeedPath( pth );
 
 	  argv += 2;
 	  argc -= 2;
@@ -380,7 +380,7 @@ main( int argc, char ** argv )
 	      exit( 1 );
 	    }
 
-	  Ast::theMetaPDFScanner.push_backNeedPath( pth );
+	  Ast::theShapesScanner.push_backNeedPath( pth );
 
 	  argv += 1;
 	  argc -= 1;
@@ -787,7 +787,7 @@ main( int argc, char ** argv )
 	      {
 		try
 		  {
-		    cout << Ast::theMetaPDFScanner.searchFile( *resource ) ;
+		    cout << Ast::theShapesScanner.searchFile( *resource ) ;
 		  }
 		catch( const Exceptions::Exception & ball )
 		  {
@@ -835,8 +835,8 @@ main( int argc, char ** argv )
   if( inputName == "" )
     {
       (*Kernel::the_pdfo->info_)[ "Title" ] = SimplePDF::PDF_out::newString( "<stdin>" );
-      Ast::theMetaPDFScanner.switch_streams( & cin, & cerr );
-      Ast::theMetaPDFScanner.setNameOf_yyin( "stdin" );
+      Ast::theShapesScanner.switch_streams( & cin, & cerr );
+      Ast::theShapesScanner.setNameOf_yyin( "stdin" );
     }
   else
     {
@@ -847,15 +847,15 @@ main( int argc, char ** argv )
 	  cerr << "Failed to open " << inputName << " for input." << endl ;
 	  exit( 1 );
 	}
-      Ast::theMetaPDFScanner.switch_streams( & iFile, & cerr );
-      Ast::theMetaPDFScanner.setNameOf_yyin( inputName.c_str( ) );
+      Ast::theShapesScanner.switch_streams( & iFile, & cerr );
+      Ast::theShapesScanner.setNameOf_yyin( inputName.c_str( ) );
     }
 
   std::istringstream prependStreamIn;
   if( prependStreamOut.str( ).size( ) > 0 )
     {
       prependStreamIn.str( prependStreamOut.str( ) );
-      Ast::theMetaPDFScanner.prependStream( & prependStreamIn );
+      Ast::theShapesScanner.prependStream( & prependStreamIn );
     }
 
   ofstream oFile;
@@ -873,7 +873,7 @@ main( int argc, char ** argv )
 
   try
     {
-      metapdfparse( );
+      shapesparse( );
       Kernel::theGlobalEnvironment = new Kernel::Environment( Kernel::theEnvironmentList );
       Kernel::registerGlobals( Kernel::theGlobalEnvironment );
       Kernel::registerDynamic( Kernel::theGlobalEnvironment );
@@ -913,7 +913,7 @@ main( int argc, char ** argv )
 	}
 
       // The display unit is looked up after the input is scanned, so the user may use her own units
-      Interaction::displayUnitFactor = Ast::theMetaPDFScanner.lookupUnitFactor( Interaction::displayUnitName );
+      Interaction::displayUnitFactor = Ast::theShapesScanner.lookupUnitFactor( Interaction::displayUnitName );
       if( Interaction::displayUnitFactor <= 0 )
 	{
 	  std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
@@ -1179,7 +1179,7 @@ abortProcedure( ofstream * oFile, const std::string & outputName )
   exit( 1 );
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Helpers
   {
@@ -1353,7 +1353,7 @@ addDefaultNeedPath( )
   char * tok = strsep( & start, ":" );
   while( tok != 0 )
     {
-      Ast::theMetaPDFScanner.push_backNeedPath( tok );
+      Ast::theShapesScanner.push_backNeedPath( tok );
       tok = strsep( & start, ":" );
     }
 }

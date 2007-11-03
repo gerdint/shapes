@@ -1,8 +1,8 @@
 #include "concretecolors.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "sourcelocation.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 void

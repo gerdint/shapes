@@ -2,10 +2,10 @@
 #define labels_h
 
 #include "SimplePDF_decls.h"
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
 
-#include "metapdftypes.h"
+#include "shapestypes.h"
 
 #include <set>
 #include <string>
@@ -13,7 +13,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

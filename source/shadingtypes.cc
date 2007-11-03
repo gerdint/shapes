@@ -4,7 +4,7 @@
 #include "pathtypes.h"
 #include "pagecontentstates.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::Type4ShadingGray::Type4ShadingGray( RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox )

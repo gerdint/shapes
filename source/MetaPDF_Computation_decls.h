@@ -1,9 +1,9 @@
-#ifndef MetaPDF_Computation_decls_h
-#define MetaPDF_Computation_decls_h
+#ifndef Shapes_Computation_decls_h
+#define Shapes_Computation_decls_h
 
 #include <cstddef> // For size_t
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {

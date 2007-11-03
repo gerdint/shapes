@@ -2,11 +2,11 @@
 #define timetypes_h
 
 #include "refcount.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 
 #include <ctime>
 
-namespace MetaPDF
+namespace Shapes
 {
   
   namespace Lang

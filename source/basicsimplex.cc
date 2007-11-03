@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream> // For debugging
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 Computation::BasicSimplex::BasicSimplex( size_t nVars, size_t nEqns )
   : nVars_( nVars ), nEqns_( nEqns ),

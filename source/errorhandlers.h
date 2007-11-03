@@ -2,9 +2,9 @@
 #define errorhandlers_h
 
 #include "functiontypes.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
-namespace MetaPDF
+namespace Shapes
 {  
   namespace Lang
   {
@@ -35,17 +35,17 @@ namespace MetaPDF
 
 
 template< class T >
-MetaPDF::Lang::ExceptionWrapper< T >::ExceptionWrapper( const char * _title, const char * _msg )
+Shapes::Lang::ExceptionWrapper< T >::ExceptionWrapper( const char * _title, const char * _msg )
   : title( _title ), msg( _msg )
 { }
 
 template< class T >
-MetaPDF::Lang::ExceptionWrapper< T >::~ExceptionWrapper( )
+Shapes::Lang::ExceptionWrapper< T >::~ExceptionWrapper( )
 { }
 
 template< class T >
 void
-MetaPDF::Lang::ExceptionWrapper< T >::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+Shapes::Lang::ExceptionWrapper< T >::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
   throw T( msg );
 }

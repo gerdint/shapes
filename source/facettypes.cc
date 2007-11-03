@@ -4,7 +4,7 @@
 #include "ast.h"
 #include "isnan.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::ReflectionsBinding::ReflectionsBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::SpecularReflection > & reflections )

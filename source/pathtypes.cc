@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
@@ -15,12 +15,12 @@
 #include <ctype.h>
 #include <stack>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
 Concrete::Time
-MetaPDF::computeDt( Concrete::Length segLength )
+Shapes::computeDt( Concrete::Length segLength )
 {
   double dt = Computation::the_arcdelta / segLength;
   if( dt < Computation::the_dtMin )
@@ -35,7 +35,7 @@ MetaPDF::computeDt( Concrete::Length segLength )
 }
 
 Concrete::Time
-MetaPDF::straightLineArcTime( double fraction )
+Shapes::straightLineArcTime( double fraction )
 {
   typedef std::complex< double > Complex;
   Complex s( fraction, 0 );

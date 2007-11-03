@@ -3,7 +3,7 @@
 
 #include "ast.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Helpers
   {

@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "angleselect.h"
@@ -18,7 +18,7 @@
 #include <list>
 #include <algorithm>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::Drawable2D::Drawable2D( )
@@ -340,7 +340,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
       throw Exceptions::InternalError( "newTransparencyGroup: The object has no bounding box!" );
     }
 
-  using namespace MetaPDF;
+  using namespace Shapes;
   
   RefCountPtr< SimplePDF::PDF_Stream_out > form;
 

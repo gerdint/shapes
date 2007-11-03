@@ -1,14 +1,14 @@
 #ifndef fonttypes_h
 #define fonttypes_h
 
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 #include "FontMetrics_decls.h"
 
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "elementarylength.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

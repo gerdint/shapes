@@ -1,5 +1,5 @@
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "angleselect.h"
@@ -7,7 +7,7 @@
 #include "astclass.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::SingleList::SingleList( )
@@ -43,7 +43,7 @@ Lang::SingleList::getField( const char * fieldId, const RefCountPtr< const Lang:
 }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

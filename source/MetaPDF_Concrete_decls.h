@@ -1,7 +1,7 @@
-#ifndef MetaPDF_Concrete_decls_h
-#define MetaPDF_Concrete_decls_h
+#ifndef Shapes_Concrete_decls_h
+#define Shapes_Concrete_decls_h
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Concrete
   {

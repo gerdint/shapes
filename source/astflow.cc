@@ -1,13 +1,13 @@
 #include "astflow.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "astfun.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
-// MetaPDF::IfExpr::IfExpr( const Ast::SourceLocation & _loc, Ast::Expression * _predicate, Ast::Expression * _consequence, Ast::Expression * _alternative )
+// Shapes::IfExpr::IfExpr( const Ast::SourceLocation & _loc, Ast::Expression * _predicate, Ast::Expression * _consequence, Ast::Expression * _alternative )
 //   : Ast::Expression( _loc ), predicate( _predicate ), consequence( _consequence ), alternative( _alternative )
 // {
 //   predicate->setParent( this );
@@ -15,14 +15,14 @@ using namespace std;
 //   alternative->setParent( this );
 // }
 
-// MetaPDF::IfExpr::IfExpr( const Ast::SourceLocation & _loc, Ast::Expression * _predicate, Ast::Expression * _consequence )
+// Shapes::IfExpr::IfExpr( const Ast::SourceLocation & _loc, Ast::Expression * _predicate, Ast::Expression * _consequence )
 //   : loc( _loc ), predicate( _predicate ), consequence( _consequence ), alternative( 0 )
 // {
 //   predicate->setParent( this );
 //   consequence->setParent( this );
 // }
 
-// MetaPDF::IfExpr::~IfExpr( )
+// Shapes::IfExpr::~IfExpr( )
 // {
 //   delete predicate;
 //   delete consequence;
@@ -33,7 +33,7 @@ using namespace std;
 // }
 
 // RefCountPtr< const Lang::Value >
-// MetaPDF::IfExpr::value( Kernel::Environment::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+// Shapes::IfExpr::value( Kernel::Environment::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 // {
 //   RefCountPtr< const Lang::Value > predUntyped( predicate->value( dstgroup, pdfo, metaState, env ) );
 //   typedef const Lang::Boolean PredType;
@@ -52,7 +52,7 @@ using namespace std;
 //     }
 //   else
 //     {
-//       return MetaPDF::THE_VOID;
+//       return Shapes::THE_VOID;
 //     }
 // }
 

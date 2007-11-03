@@ -1,12 +1,12 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "continuations.h"
 #include "hottypes.h"
 #include "globals.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "functiontypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Kernel::IfContinuation::IfContinuation( const Kernel::VariableHandle & consequence, const Kernel::VariableHandle & alternative, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )

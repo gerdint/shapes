@@ -1,8 +1,8 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "astfun.h"
-#include "metapdfexceptions.h"
-#include "metapdfcore.h"
+#include "shapesexceptions.h"
+#include "shapescore.h"
 #include "consts.h"
 #include "globals.h"
 #include "continuations.h"
@@ -10,7 +10,7 @@
 
 #include <sstream>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

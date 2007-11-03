@@ -1,7 +1,7 @@
-#ifndef MetaPDF_Lang_decls_h
-#define MetaPDF_Lang_decls_h
+#ifndef Shapes_Lang_decls_h
+#define Shapes_Lang_decls_h
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

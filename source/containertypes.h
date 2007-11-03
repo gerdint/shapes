@@ -9,11 +9,11 @@
 #include "ptrowner.h"
 #include "refcount.h"
 #include "pdfstructure.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "environment.h"
 #include "charptrless.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

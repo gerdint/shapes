@@ -1,5 +1,5 @@
-#include "metapdfvalue.h"
-#include "metapdfexceptions.h"
+#include "shapesvalue.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "classtreemacros.h"
 
@@ -9,7 +9,7 @@
 #include "astexpr.h"
 #endif
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::Value::Value( )
@@ -34,15 +34,15 @@ Lang::Value::show( std::ostream & os ) const
 
 /*
 RefCountPtr< const Lang::Value >
-Lang::Value::transformed( const MetaPDF::Transform & transform, Kernel::ValueRef self ) const
+Lang::Value::transformed( const Shapes::Transform & transform, Kernel::ValueRef self ) const
 {
-  throw Exceptions::CoreTypeMismatch( strrefdup( "<transform>" ), 1, this->getTypeName( ), MetaPDF::SEVERAL_TYPES );  
+  throw Exceptions::CoreTypeMismatch( strrefdup( "<transform>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );  
 }
 
 RefCountPtr< const Lang::Value >
 Lang::Value::transformed( const Lang::Transform3D & transform, Kernel::ValueRef self ) const
 {
-  throw Exceptions::CoreTypeMismatch( strrefdup( "<transform3D>" ), 1, this->getTypeName( ), MetaPDF::SEVERAL_TYPES );  
+  throw Exceptions::CoreTypeMismatch( strrefdup( "<transform3D>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );  
 }
 */
 

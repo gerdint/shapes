@@ -1,11 +1,11 @@
 #ifndef ast_h
 #define ast_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "refcount.h"
-#include "metapdftypes.h"
+#include "shapestypes.h"
 #include "dynamicenvironment.h"
 #include "sourcelocation.h"
 
@@ -13,7 +13,7 @@
 #include <iostream>
 #include <string>
 
-namespace MetaPDF
+namespace Shapes
 {
 
   namespace Kernel

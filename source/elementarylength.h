@@ -3,7 +3,7 @@
 
 #include "physical.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Concrete
   {

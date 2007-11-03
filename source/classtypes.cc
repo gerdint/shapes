@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "globals.h"
 #include "consts.h"
@@ -9,14 +9,14 @@
 #include "astvar.h"
 #include "astclass.h"
 #include "autoonoff.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "astfun.h"
 
 #include <ctype.h>
 #include <stack>
 #include <string>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -253,7 +253,7 @@ Lang::Instance::shipout( std::ostream & os, Kernel::PageContentStates * pdfState
     }
 
   /*
-  RefCountPtr< const Lang::Value > val = getMethod( Kernel::MethodId( Lang::Drawable2D::TypeID, MetaPDF::MESSAGE_DRAWABLE_DRAW_ID ) )->call( dstgroup, my_pdfo, & stateCopy, Kernel::EMPTY_ARGLIST );  
+  RefCountPtr< const Lang::Value > val = getMethod( Kernel::MethodId( Lang::Drawable2D::TypeID, Shapes::MESSAGE_DRAWABLE_DRAW_ID ) )->call( dstgroup, my_pdfo, & stateCopy, Kernel::EMPTY_ARGLIST );  
   if( dynamic_cast< const Lang::Void * >( val.getPtr( ) ) == 0 )
     {
       throw Exceptions::TypeMismatch( val->getTypeName( ), Lang::Void::staticTypeName( ) );
@@ -954,7 +954,7 @@ Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & 
 //   //    {
 //   //      envValues->push_back( NullPtr< Kernel::Variable >( ) );
 //   //    }
-//   Kernel::PassedEnv instanceEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, evalState->env_, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
+//   Kernel::PassedEnv instanceEnv( new Kernel::Environment( Shapes::theEnvironmentList, evalState->env_, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
 
 //   //  std::vector< VariableHandle > * envValues = new std::vector< VariableHandle >;
 //   //  envValues->reserve( argumentOrder->size( ) );
@@ -962,7 +962,7 @@ Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & 
 //   //    {
 //   //      envValues->push_back( NullPtr< Kernel::Variable >( ) );
 //   //    }
-//   Kernel::PassedEnv privateEnv( new Kernel::Environment( MetaPDF::theEnvironmentList, instanceEnv, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
+//   Kernel::PassedEnv privateEnv( new Kernel::Environment( Shapes::theEnvironmentList, instanceEnv, argumentOrder, RefCountPtr< std::vector< VariableHandle > >( envValues ) ) );
 
 //   RefCountPtr< Lang::Instance > instanceSelf = RefCountPtr< Lang::Instance >( new Lang::Instance( instanceEnv, privateEnv, selfRef, false, evalState->dyn_ ) );
 

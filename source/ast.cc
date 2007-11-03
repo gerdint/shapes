@@ -1,7 +1,7 @@
 #include "ast.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -76,7 +76,7 @@ Kernel::Continuation::backTrace( std::ostream & os )
     }
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

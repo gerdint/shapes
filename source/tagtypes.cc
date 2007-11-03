@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "ast.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::TaggedValue2D::TaggedValue2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Value > & val )

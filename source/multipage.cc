@@ -1,4 +1,4 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "multipage.h"
 #include "annotations.h"
@@ -7,10 +7,10 @@
 #include "pagecontentstates.h"
 #include "continuations.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 Lang::DocumentDestination::DocumentDestination( bool remote, RefCountPtr< const char > name, int outlineLevel,
 						RefCountPtr< const char > outlineText, bool outlineOpen, bool outlineFontBold, bool outlineFontItalic, const Concrete::RGB & outlineColor )

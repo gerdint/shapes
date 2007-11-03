@@ -1,5 +1,5 @@
 #include "characterencoding.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 
 using namespace FontMetrics;

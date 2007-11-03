@@ -1,7 +1,7 @@
 #ifndef concretecolors_h
 #define concretecolors_h
 
-#include "MetaPDF_Ast_decls.h"
+#include "Shapes_Ast_decls.h"
 
 #include "pdfstructure.h"
 #include "refcount.h"
@@ -9,7 +9,7 @@
 #include <iostream>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Concrete
   {

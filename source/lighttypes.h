@@ -1,15 +1,15 @@
 #ifndef lighttypes_h
 #define lighttypes_h
 
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include "refcount.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "statetypes.h"
 #include "functiontypes.h"
 #include "elementarycoords.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

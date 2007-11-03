@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
@@ -14,7 +14,7 @@
 #include <stack>
 #include <algorithm>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -820,7 +820,7 @@ Lang::ElementaryPath2D::lineSegmentIntersection( Concrete::Time * dst, const Con
 	    {
 	      intersection = (1. / det ) * Concrete::Coords2D( n2.y_ * offset - n.y_ * offset2, n.x_ * offset2 - n2.x_ * offset );
 	    }
-	  Concrete::Time t = MetaPDF::straightLineArcTime( Concrete::innerScalar( rInv, intersection - l0 ) );
+	  Concrete::Time t = Shapes::straightLineArcTime( Concrete::innerScalar( rInv, intersection - l0 ) );
 	  if( Concrete::ZERO_TIME <= t && t <= Concrete::UNIT_TIME )
 	    {
 	      Concrete::Time t2( Concrete::innerScalar( rInv, *(*i1)->mid_ + t.offtype< 0, 1 >( ) * *(*i2)->mid_ - l0 ) );
@@ -838,7 +838,7 @@ Lang::ElementaryPath2D::lineSegmentIntersection( Concrete::Time * dst, const Con
       coeffs.hyperplaneIntersections( tmp2, n, offset );
       for( const double * it2 = tmp2; *it2 != HUGE_VAL; ++it2 )
 	{
-	  Concrete::Time t = MetaPDF::straightLineArcTime( Concrete::innerScalar( rInv, coeffs.point( *it2 ) - l0 ) );
+	  Concrete::Time t = Shapes::straightLineArcTime( Concrete::innerScalar( rInv, coeffs.point( *it2 ) - l0 ) );
 	  if( Concrete::ZERO_TIME <= t && t <= Concrete::UNIT_TIME )
 	    {
 	      res = min( res, t );
@@ -992,7 +992,7 @@ Lang::ElementaryPath2D::continuousMean( ) const
       Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
       Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
       
-      Concrete::Time dt = MetaPDF::computeDt( hypotPhysical( (x1-x0), (y1-y0) ).offtype< 0, -3 >( ) +
+      Concrete::Time dt = Shapes::computeDt( hypotPhysical( (x1-x0), (y1-y0) ).offtype< 0, -3 >( ) +
 						       hypotPhysical( (x2-x1), (y2-y1) ).offtype< 0, -3 >( ) +
 						       hypotPhysical( (x3-x2), (y3-y2) ).offtype< 0, -3 >( ) );
 
@@ -1111,7 +1111,7 @@ Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & dNonUnit ) 
   return res;
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   class ApproximationPoly2D
   {
@@ -1157,7 +1157,7 @@ namespace MetaPDF
     Concrete::Time t1_;
   public:
     
-    ApproximationSegmentSection2D( const MetaPDF::ApproximationPoly2D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
+    ApproximationSegmentSection2D( const Shapes::ApproximationPoly2D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
     ApproximationSegmentSection2D * cutAfter( Concrete::Time t ) const;
     ApproximationSegmentSection2D * cutBefore( Concrete::Time t ) const;
     
@@ -1181,8 +1181,8 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
     }
 
   Concrete::Coords2D p( coordPoint.x_.get( ), coordPoint.y_.get( ) );
-  PtrOwner_back_Access< std::list< const MetaPDF::ApproximationPoly2D * > > memory;
-  typedef std::pair< MetaPDF::ApproximationSegmentSection2D *, Concrete::Length > WorkItem;
+  PtrOwner_back_Access< std::list< const Shapes::ApproximationPoly2D * > > memory;
+  typedef std::pair< Shapes::ApproximationSegmentSection2D *, Concrete::Length > WorkItem;
   std::list< WorkItem > work;
 
   Concrete::SplineTime res = Concrete::ZERO_TIME;
@@ -1237,15 +1237,15 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 	      if( dist < bestDist )
 		{
 		  bestDist = dist;
-		  res = steps + MetaPDF::straightLineArcTime( s );
+		  res = steps + Shapes::straightLineArcTime( s );
 		}
 	    }
 	  continue;
 	}
 
-      MetaPDF::ApproximationPoly2D * coeffs =
-	new MetaPDF::ApproximationPoly2D( *((*i1)->mid_), *((*i1)->front_), *((*i2)->rear_), *((*i2)->mid_), p );
-      MetaPDF::ApproximationSegmentSection2D * seg = new MetaPDF::ApproximationSegmentSection2D( coeffs, steps, Concrete::ZERO_TIME, Concrete::UNIT_TIME );
+      Shapes::ApproximationPoly2D * coeffs =
+	new Shapes::ApproximationPoly2D( *((*i1)->mid_), *((*i1)->front_), *((*i2)->rear_), *((*i2)->mid_), p );
+      Shapes::ApproximationSegmentSection2D * seg = new Shapes::ApproximationSegmentSection2D( coeffs, steps, Concrete::ZERO_TIME, Concrete::UNIT_TIME );
       Concrete::Length lowerBound = seg->convexHullDistance( ) + DISTANCE_TOL;
       if( lowerBound >= bestDist )
 	{
@@ -1278,7 +1278,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 
   while( work.size( ) > 0 )
     {
-      MetaPDF::ApproximationSegmentSection2D * seg = work.front( ).first;
+      Shapes::ApproximationSegmentSection2D * seg = work.front( ).first;
       Concrete::Length lowerBound = work.front( ).second;
       work.pop_front( );
       if( lowerBound < bestDist )
@@ -1295,7 +1295,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 	      t_tol < seg->duration( ) )
 	    {
 	      {
-		MetaPDF::ApproximationSegmentSection2D * part = seg->cutAfter( split );
+		Shapes::ApproximationSegmentSection2D * part = seg->cutAfter( split );
 		Concrete::Length lowerBound = part->convexHullDistance( ) + DISTANCE_TOL;
 		if( lowerBound >= bestDist )
 		  {
@@ -1307,7 +1307,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 		  }
 	      }
 	      {
-		MetaPDF::ApproximationSegmentSection2D * part = seg->cutBefore( split );
+		Shapes::ApproximationSegmentSection2D * part = seg->cutBefore( split );
 		Concrete::Length lowerBound = part->convexHullDistance( ) + DISTANCE_TOL;
 		if( lowerBound >= bestDist )
 		  {
@@ -1326,7 +1326,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
   return res;
 }
 
-MetaPDF::ApproximationPoly2D::ApproximationPoly2D( const Concrete::Coords2D & p0, const Concrete::Coords2D & p1, const Concrete::Coords2D & p2, const Concrete::Coords2D & p3, const Concrete::Coords2D & p )
+Shapes::ApproximationPoly2D::ApproximationPoly2D( const Concrete::Coords2D & p0, const Concrete::Coords2D & p1, const Concrete::Coords2D & p2, const Concrete::Coords2D & p3, const Concrete::Coords2D & p )
   : p_( p ), polyCoeffs_( Bezier::PolyCoeffs< Concrete::Coords2D >( Bezier::ControlPoints< Concrete::Coords2D >( p0, p1, p2, p3 ) ) )
 {
   kxD0_0_ = polyCoeffs_.z0_.x_ - p.x_;
@@ -1359,7 +1359,7 @@ MetaPDF::ApproximationPoly2D::ApproximationPoly2D( const Concrete::Coords2D & p0
 }
 
 Concrete::Time
-MetaPDF::ApproximationPoly2D::splitTime( const Concrete::Time t_low, const Concrete::Time t_high, const Concrete::Time t_tol ) const
+Shapes::ApproximationPoly2D::splitTime( const Concrete::Time t_low, const Concrete::Time t_high, const Concrete::Time t_tol ) const
 {
   Concrete::Time t;
   Physical< 2, 0 > last_f( HUGE_VAL );
@@ -1494,13 +1494,13 @@ MetaPDF::ApproximationPoly2D::splitTime( const Concrete::Time t_low, const Concr
 }
 
 Bezier::ControlPoints< Concrete::Coords2D >
-MetaPDF::ApproximationPoly2D::getControls( const Concrete::Time t_low, const Concrete::Time t_high ) const
+Shapes::ApproximationPoly2D::getControls( const Concrete::Time t_low, const Concrete::Time t_high ) const
 {
   return Bezier::ControlPoints< Concrete::Coords2D >( polyCoeffs_.subSection( t_low.offtype< 0, 1 >( ), t_high.offtype< 0, 1 >( ) ) );
 }
 
 bool
-MetaPDF::ApproximationPoly2D::isCircular( ) const
+Shapes::ApproximationPoly2D::isCircular( ) const
 {
   Concrete::Length rmax = -Concrete::HUGE_LENGTH;
   Concrete::Length rmin = Concrete::HUGE_LENGTH;
@@ -1514,45 +1514,45 @@ MetaPDF::ApproximationPoly2D::isCircular( ) const
 }
 
 const Concrete::Coords2D &
-MetaPDF::ApproximationPoly2D::getPoint( ) const
+Shapes::ApproximationPoly2D::getPoint( ) const
 {
   return p_;
 }
 
 
 Concrete::Length
-MetaPDF::ApproximationPoly2D::distanceAt( Concrete::Time t ) const
+Shapes::ApproximationPoly2D::distanceAt( Concrete::Time t ) const
 {
   return hypotPhysical( kxD0_0_ + t * ( kxD0_1_ + t * ( kxD0_2_ + t * kxD0_3_ ) ),
 		kyD0_0_ + t * ( kyD0_1_ + t * ( kyD0_2_ + t * kyD0_3_ ) ) );
 }
 
 Physical< 2, 0 >
-MetaPDF::ApproximationPoly2D::squaredDistanceAt( Concrete::Time t ) const
+Shapes::ApproximationPoly2D::squaredDistanceAt( Concrete::Time t ) const
 {
   Concrete::Length deltax = kxD0_0_ + t * ( kxD0_1_ + t * ( kxD0_2_ + t * kxD0_3_ ) );
   Concrete::Length deltay = kyD0_0_ + t * ( kyD0_1_ + t * ( kyD0_2_ + t * kyD0_3_ ) );
   return deltax * deltax + deltay * deltay;
 }
 
-MetaPDF::ApproximationSegmentSection2D::ApproximationSegmentSection2D( const MetaPDF::ApproximationPoly2D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 )
+Shapes::ApproximationSegmentSection2D::ApproximationSegmentSection2D( const Shapes::ApproximationPoly2D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 )
   : controls_( baseSeg->getControls( t0, t1 ) ), baseSeg_( baseSeg ), steps_( steps ), t0_( t0 ), t1_( t1 )
 { }
 
-MetaPDF::ApproximationSegmentSection2D *
-MetaPDF::ApproximationSegmentSection2D::cutAfter( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection2D *
+Shapes::ApproximationSegmentSection2D::cutAfter( Concrete::Time t ) const
 {
   return new ApproximationSegmentSection2D( baseSeg_, steps_, t0_, t );
 }
 
-MetaPDF::ApproximationSegmentSection2D *
-MetaPDF::ApproximationSegmentSection2D::cutBefore( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection2D *
+Shapes::ApproximationSegmentSection2D::cutBefore( Concrete::Time t ) const
 {
   return new ApproximationSegmentSection2D( baseSeg_, steps_, t, t1_ );
 }
 
 Concrete::Length
-MetaPDF::ApproximationSegmentSection2D::convexHullDistance( ) const
+Shapes::ApproximationSegmentSection2D::convexHullDistance( ) const
 {
   Concrete::Coords2D p( baseSeg_->getPoint( ) );
 
@@ -1646,37 +1646,37 @@ MetaPDF::ApproximationSegmentSection2D::convexHullDistance( ) const
 }
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection2D::splitTime( const Concrete::Time t_tol ) const
+Shapes::ApproximationSegmentSection2D::splitTime( const Concrete::Time t_tol ) const
 {
   Concrete::Time d = 0.2 * ( t1_ - t0_ );
   return baseSeg_->splitTime( t0_ + d, t1_ - d, t_tol );
 }
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection2D::globalTime( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection2D::globalTime( Concrete::Time t ) const
 {
   return steps_ + t;
 }
 
 Concrete::Length
-MetaPDF::ApproximationSegmentSection2D::distanceAt( Concrete::Time t ) const
+Shapes::ApproximationSegmentSection2D::distanceAt( Concrete::Time t ) const
 {
   return baseSeg_->distanceAt( t );
 }
 
 Concrete::Speed
-MetaPDF::ApproximationSegmentSection2D::maxSpeed( ) const
+Shapes::ApproximationSegmentSection2D::maxSpeed( ) const
 {
   return baseSeg_->maxSpeed( );
 }
 
 Concrete::Time
-MetaPDF::ApproximationSegmentSection2D::duration( ) const
+Shapes::ApproximationSegmentSection2D::duration( ) const
 {
   return t1_ - t0_;
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   class HullSorter2D : public std::binary_function< const Concrete::Coords2D *, const Concrete::Coords2D *, bool >
   {
@@ -1806,7 +1806,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
   
   /* Step 2: Sort remaining points.
    */
-  std::sort( sortedPoints.begin( ), sortedPoints.end( ), MetaPDF::HullSorter2D( *start ) );
+  std::sort( sortedPoints.begin( ), sortedPoints.end( ), Shapes::HullSorter2D( *start ) );
   
   /* Step 3: Construct hull.  The pointers are first placed in a list, and only copied to the new path once we know
    * what points belong to the hull.
@@ -2154,7 +2154,7 @@ Lang::ElementaryPath2D::arcLength( ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
 	    {
@@ -2270,7 +2270,7 @@ Lang::ElementaryPath2D::arcLength( Concrete::Time tRemaining ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  const Concrete::Time tend = min( Concrete::UNIT_TIME, tRemaining );
 	  for( Concrete::Time t = Concrete::ZERO_TIME; t < tend; t += dt )
@@ -2395,7 +2395,7 @@ Lang::ElementaryPath2D::negative_arcLength( Concrete::Time tRemaining ) const
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 	  const Concrete::Time tend = min( Concrete::UNIT_TIME, tRemaining );
 	  for( Concrete::Time t = Concrete::ZERO_TIME; t < tend; t += dt )
@@ -2490,7 +2490,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	    }
 	  const Concrete::Length segPastLength = hypotPhysical( tmp.x_ - (*i1)->mid_->x_, tmp.y_ - (*i1)->mid_->y_ );
 	  const Concrete::Length segLength = hypotPhysical( (*i1)->mid_->x_ - (*i2)->mid_->x_, (*i1)->mid_->y_ - (*i2)->mid_->y_ );
-	  splineTime += MetaPDF::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
+	  splineTime += Shapes::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
 	  goto done;
 	}
 
@@ -2518,7 +2518,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	  }
 	else
 	  {
-	    Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	    Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	    
 	    const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	    Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2583,7 +2583,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	      remainingLength -= segLength;
 	      continue;
 	    }
-	  splineTime += MetaPDF::straightLineArcTime( remainingLength / segLength );
+	  splineTime += Shapes::straightLineArcTime( remainingLength / segLength );
 	  goto done;
 	}
 
@@ -2610,7 +2610,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  
 	  const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2734,7 +2734,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	    }
 	  const Concrete::Length segPastLength = hypotPhysical( tmp.x_ - (*i1)->mid_->x_, tmp.y_ - (*i1)->mid_->y_ );
 	  const Concrete::Length segLength = hypotPhysical( (*i1)->mid_->x_ - (*i2)->mid_->x_, (*i1)->mid_->y_ - (*i2)->mid_->y_ );
-	  splineTime -= MetaPDF::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
+	  splineTime -= Shapes::straightLineArcTime( ( segPastLength + remainingLength ) / segLength ) - t0;
 	  goto done;
 	}
 
@@ -2762,7 +2762,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	  }
 	else
 	  {
-	    Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	    Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	    
 	    const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	    Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2827,7 +2827,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	      remainingLength -= segLength;
 	      continue;
 	    }
-	  splineTime -= MetaPDF::straightLineArcTime( remainingLength / segLength );
+	  splineTime -= Shapes::straightLineArcTime( remainingLength / segLength );
 	  goto done;
 	}
       
@@ -2854,7 +2854,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 	}
       else
 	{
-	  Concrete::Time dt = MetaPDF::computeDt( segLengthBound );
+	  Concrete::Time dt = Shapes::computeDt( segLengthBound );
 	  
 	  const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 	  Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
@@ -2884,7 +2884,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
   return splineTime;
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {

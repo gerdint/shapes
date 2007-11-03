@@ -1,11 +1,11 @@
 #ifndef astexprs_h
 #define astexprs_h
 
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include "astexpr.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Ast
   {

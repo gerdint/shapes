@@ -2,9 +2,9 @@
 
 #include "simplepdfo.h"
 #include "simplepdfi.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "texlabelmanager.h"
-#include "metapdftypes.h"
+#include "shapestypes.h"
 #include "globals.h"
 
 using namespace std;
@@ -30,19 +30,19 @@ PDF_Resources::writeTo( std::ostream & os ) const
   PDF_Dictionary dic;
   if( xobject->dic.size( ) > 0 )
     {
-      dic[ "XObject" ] = MetaPDF::Kernel::the_pdfo->indirect( xobject );
+      dic[ "XObject" ] = Shapes::Kernel::the_pdfo->indirect( xobject );
     }
   if( graphicsStates->dic.size( ) > 0 )
     {
-      dic[ "ExtGState" ] = MetaPDF::Kernel::the_pdfo->indirect( graphicsStates );
+      dic[ "ExtGState" ] = Shapes::Kernel::the_pdfo->indirect( graphicsStates );
     }
   if( colorSpaces->dic.size( ) > 0 )
     {
-      dic[ "ColorSpaces" ] = MetaPDF::Kernel::the_pdfo->indirect( colorSpaces );
+      dic[ "ColorSpaces" ] = Shapes::Kernel::the_pdfo->indirect( colorSpaces );
     }
   if( fonts->dic.size( ) > 0 )
     {
-      dic[ "Font" ] = MetaPDF::Kernel::the_pdfo->indirect( fonts );
+      dic[ "Font" ] = Shapes::Kernel::the_pdfo->indirect( fonts );
     }
   if( procSetsVector->vec.size( ) > 0 )
     {
@@ -50,7 +50,7 @@ PDF_Resources::writeTo( std::ostream & os ) const
     }
   if( shadings->dic.size( ) > 0 )
     {
-      dic[ "Shading" ] = MetaPDF::Kernel::the_pdfo->indirect( shadings );
+      dic[ "Shading" ] = Shapes::Kernel::the_pdfo->indirect( shadings );
     }
   dic.writeTo( os );
 }
@@ -265,10 +265,10 @@ SimplePDF::PDF_out::indirect( RefCountPtr<PDF_Object> obj, size_t v )
   return indirectQueue.back( );
 }
 
-RefCountPtr< const std::vector< RefCountPtr< const MetaPDF::Lang::XObject > > >
+RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > >
 SimplePDF::PDF_out::addPagesAsXObjects( RefCountPtr< PDF_in > pdfi )
 {
-  using namespace MetaPDF;
+  using namespace Shapes;
   
   importSources.push_back( pdfi ); // Keep the source alive so that it can be used when finally producing output
   IndirectRemapType indirectRemap;
@@ -346,9 +346,9 @@ SimplePDF::PDF_out::addPagesAsXObjects( RefCountPtr< PDF_in > pdfi )
 }
 
 void
-SimplePDF::PDF_out::importBtexEtexThings( RefCountPtr< PDF_in > pdfi, MetaPDF::Kernel::TeXLabelManager::MapType * dstMap, const std::string & setupCodeHash )
+SimplePDF::PDF_out::importBtexEtexThings( RefCountPtr< PDF_in > pdfi, Shapes::Kernel::TeXLabelManager::MapType * dstMap, const std::string & setupCodeHash )
 {
-  using namespace MetaPDF;
+  using namespace Shapes;
 
   importSources.push_back( pdfi ); // Keep the source alive so that it can be used when finally producing output
   IndirectRemapType indirectRemap;
@@ -432,7 +432,7 @@ SimplePDF::PDF_out::importBtexEtexThings( RefCountPtr< PDF_in > pdfi, MetaPDF::K
 	}
 
       RefCountPtr< PDF_Object > indirection = indirect( newObj );
-      dstMap->insert( MetaPDF::Kernel::TeXLabelManager::MapType::value_type( texStr, RefCountPtr< const Lang::XObject >( new Lang::XObject( indirection, RefCountPtr< const Lang::ElementaryPath2D >( bboxpath ) ) ) ) );
+      dstMap->insert( Shapes::Kernel::TeXLabelManager::MapType::value_type( texStr, RefCountPtr< const Lang::XObject >( new Lang::XObject( indirection, RefCountPtr< const Lang::ElementaryPath2D >( bboxpath ) ) ) ) );
     }
 }
 
@@ -492,7 +492,7 @@ SimplePDF::PDF_out::newFloat( PDF_Float::ValueType val )
 void
 SimplePDF::PDF_out::versionMessage( Version required, const char * message )
 {
-  using namespace MetaPDF;
+  using namespace Shapes;
   
   switch( versionAction_ )
     {
@@ -530,7 +530,7 @@ SimplePDF::PDF_out::toString( SimplePDF::PDF_out::Version version )
     case PDF_1_6:
       return "PDF-1.6" ;
     default:
-      throw MetaPDF::Exceptions::InternalError( "PDF version out of range." );
+      throw Shapes::Exceptions::InternalError( "PDF version out of range." );
     }
 }
 
@@ -538,7 +538,7 @@ RefCountPtr<PDF_Object> SimplePDF::theTrue( new PDF_Boolean( true ) );
 RefCountPtr<PDF_Object> SimplePDF::theFalse( new PDF_Boolean( false ) );
 
 
-SimplePDF::OutlineItem::OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const MetaPDF::Concrete::RGB & color )
+SimplePDF::OutlineItem::OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const Shapes::Concrete::RGB & color )
   : destination_( destination ), title_( title ), isOpen_( isOpen ), fontBold_( fontBold ), fontItalic_( fontItalic ), color_( color )
 { }
 

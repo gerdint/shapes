@@ -1,7 +1,7 @@
 #include "glyphlist.h"
 #include "charconverters.h"
 #include "autoonoff.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "charconverters.h"
 
 #include <cstring>
@@ -152,16 +152,16 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
   const size_t BUF_SIZE = 64;
   static char buf[ BUF_SIZE ];
 
-  iconv_t converter = MetaPDF::Helpers::requireUTF8ToUCS4Converter( );
+  iconv_t converter = Shapes::Helpers::requireUTF8ToUCS4Converter( );
   if( *code == '\0' )
     {
-      throw MetaPDF::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  The source value is empty." );
+      throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  The source value is empty." );
     }
 
   size_t inbytesMax = strlen( code );
   if( 8 * inbytesMax > BUF_SIZE )  // 8 for the size of a UTF-16BE code point.
     {
-      throw MetaPDF::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  This many bytes definitely represents more than one UTF-8 character." );
+      throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  This many bytes definitely represents more than one UTF-8 character." );
     }
   
   char * outbuf;
@@ -188,34 +188,34 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
 	    }
 	  else if( errno == EILSEQ )
 	    {
-	      throw MetaPDF::Exceptions::ExternalError( "An invalid UTF-8 byte was encountered." );
+	      throw Shapes::Exceptions::ExternalError( "An invalid UTF-8 byte was encountered." );
 	    }
 	  else if( errno == E2BIG )
 	    {
-	      throw MetaPDF::Exceptions::InternalError( "The buffer allocated for UTF-8 to UTF-16BE conversion was too small." );
+	      throw Shapes::Exceptions::InternalError( "The buffer allocated for UTF-8 to UTF-16BE conversion was too small." );
 	    }
 	  else
 	    {
 	      std::ostringstream msg;
 	      msg << "iconv failed with an unrecognized error code: " << errno ;
-	      throw MetaPDF::Exceptions::InternalError( strrefdup( msg ) );
+	      throw Shapes::Exceptions::InternalError( strrefdup( msg ) );
 	    }
 	}
       if( inbytesGuess < inbytesMax )
 	{
-	  throw MetaPDF::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  Found more than one character." );
+	  throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:  Found more than one character." );
 	}
       success = true;
       break;
     }
   if( ! success )
     {
-      throw MetaPDF::Exceptions::MiscellaneousRequirement( "The single UTF-8 character to be converted to UTF-16BE was incompletene." );
+      throw Shapes::Exceptions::MiscellaneousRequirement( "The single UTF-8 character to be converted to UTF-16BE was incompletene." );
     }
   size_t bytesUsed = outbuf - buf;
   if( bytesUsed > 8 )
     {
-      throw MetaPDF::Exceptions::ExternalError( "Conversion of one UTF-8 character to UTF-16BE resulted in more than 8 bytes." );
+      throw Shapes::Exceptions::ExternalError( "Conversion of one UTF-8 character to UTF-16BE resulted in more than 8 bytes." );
     }
   // Next we proceed in two steps.  I can't see what the probelm here is, but it could be some alignment stuff...
   // 1) Place in most significant bytes of a UnicodeType, with crap to the left.
@@ -242,7 +242,7 @@ GlyphList::readfile( std::istream & iFile )
   size_t BUF_SIZE = 255;
   char buf[ BUF_SIZE ];
 
-  iconv_t converterUTF16BEToUCS4 = MetaPDF::Helpers::requireUTF16BEToUCS4Converter( );
+  iconv_t converterUTF16BEToUCS4 = Shapes::Helpers::requireUTF16BEToUCS4Converter( );
 
   char c;
   iFile.get( c );
@@ -281,7 +281,7 @@ GlyphList::readfile( std::istream & iFile )
 	  iFile.getline( buf, BUF_SIZE );
 	  continue;
 	}
-      catch( const MetaPDF::Exceptions::Exception & ball )
+      catch( const Shapes::Exceptions::Exception & ball )
 	{
 	  throw;
 	}

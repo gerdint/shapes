@@ -1,7 +1,7 @@
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 void
 Kernel::registerClasses( Kernel::Environment * env )

@@ -1,15 +1,15 @@
 #ifndef drawabletypes_h
 #define drawabletypes_h
 
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Computation_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Computation_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
 #include "pdfstructure.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "environment.h"
 #include "charptrless.h"
 #include "functiontypes.h"
@@ -21,7 +21,7 @@
 #include <stack>
 #include <set>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {
@@ -957,7 +957,7 @@ namespace MetaPDF
 
 
 template< class T >
-::MetaPDF::Computation::UndirectedEdgeMatrix< T >::UndirectedEdgeMatrix( size_t size )
+::Shapes::Computation::UndirectedEdgeMatrix< T >::UndirectedEdgeMatrix( size_t size )
 : size_( size )
 {
   mem_.reserve( size_ );
@@ -969,7 +969,7 @@ template< class T >
 }
 
 template< class T >
-::MetaPDF::Computation::UndirectedEdgeMatrix< T >::UndirectedEdgeMatrix( size_t size, const T & elem )
+::Shapes::Computation::UndirectedEdgeMatrix< T >::UndirectedEdgeMatrix( size_t size, const T & elem )
 : size_( size )
 {
   mem_.reserve( size_ );
@@ -981,12 +981,12 @@ template< class T >
 }
 
 template< class T >
-::MetaPDF::Computation::UndirectedEdgeMatrix< T >::~UndirectedEdgeMatrix( )
+::Shapes::Computation::UndirectedEdgeMatrix< T >::~UndirectedEdgeMatrix( )
 { }
 
 template< class T >
 T &
-::MetaPDF::Computation::UndirectedEdgeMatrix< T >::operator [] ( const UndirectedEdge & idx )
+::Shapes::Computation::UndirectedEdgeMatrix< T >::operator [] ( const UndirectedEdge & idx )
 {
   size_t low = idx.low( );
   return mem_[ low ][ idx.high( ) - low ];
@@ -994,7 +994,7 @@ T &
 
 template< class T >
 const T &
-::MetaPDF::Computation::UndirectedEdgeMatrix< T >::operator [] ( const UndirectedEdge & idx ) const
+::Shapes::Computation::UndirectedEdgeMatrix< T >::operator [] ( const UndirectedEdge & idx ) const
 {
   size_t low = idx.low( );
   return mem_[ low ][ idx.high( ) - low ];

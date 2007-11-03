@@ -1,5 +1,5 @@
 #include "astvar.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "globals.h"
 #include "autoonoff.h"
 #include "specialunits.h"
@@ -7,7 +7,7 @@
 #include "continuations.h"
 #include "containertypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

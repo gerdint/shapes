@@ -5,16 +5,16 @@
 //#include <climits>
 #include <limits>
 
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Ast_decls.h"
 
 #include "refcount.h"
 #include "charptrless.h"
 #include "ptrowner.h"
 #include "sourcelocation.h"
-#include "metapdfexceptions.h"
-#include "metapdfvalue.h"
+#include "shapesexceptions.h"
+#include "shapesvalue.h"
 // #include "dynamicenvironment.h"
 
 #include <map>
@@ -22,7 +22,7 @@
 #include <vector>
 
 
-namespace MetaPDF
+namespace Shapes
 {
 
   namespace Computation
@@ -146,7 +146,7 @@ namespace MetaPDF
       void peek( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
       void freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
-      virtual const RefCountPtr< const ::MetaPDF::Lang::Class > & getClass( ) const = 0;
+      virtual const RefCountPtr< const ::Shapes::Lang::Class > & getClass( ) const = 0;
       RefCountPtr< const char > getTypeName( ) const;
       bool isAlive( ) const;
       virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;

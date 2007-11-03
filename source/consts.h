@@ -10,7 +10,7 @@
 
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Interaction
   {

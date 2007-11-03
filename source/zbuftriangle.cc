@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "angleselect.h"
@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <limits>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 #define SPLICEDEBUG( code ) // code
@@ -868,18 +868,18 @@ Computation::ZBufTriangle::pushIfUnique( std::vector< Computation::SplicingLine 
   dst->push_back( Computation::SplicingLine( p0, p1 - p0, isTriangleSide ) );
 }
 
-namespace MetaPDF
+namespace Shapes
 {
   typedef std::pair< const Concrete::Coords2D *, const Concrete::Coords2D * > VisitType;
 }
 namespace std
 {
   template< >
-  class less< MetaPDF::VisitType >
+  class less< Shapes::VisitType >
   {
   public:
-    bool operator () ( const MetaPDF::VisitType & p1,
-		       const MetaPDF::VisitType & p2 )
+    bool operator () ( const Shapes::VisitType & p1,
+		       const Shapes::VisitType & p2 )
     {
       if( p1.first < p2.first )
 	{

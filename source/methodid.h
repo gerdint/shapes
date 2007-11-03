@@ -1,11 +1,11 @@
 #ifndef methodid_h
 #define methodid_h
 
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include "refcount.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

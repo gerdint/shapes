@@ -1,10 +1,10 @@
 #ifndef facettypes_h
 #define facettypes_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Computation_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Computation_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
@@ -19,7 +19,7 @@
 #include <set>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

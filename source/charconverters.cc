@@ -1,6 +1,6 @@
 #include "strrefdup.h"
 #include "charconverters.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "glyphlist.h"
 #include "characterencoding.h"
 #include "texttypes.h"
@@ -13,7 +13,7 @@
 
 
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 const char * Helpers::theUCS4EncodingName = "UCS-4-INTERNAL";
 
@@ -231,7 +231,7 @@ Helpers::requireGlyphList( bool cleanup )
 	      oss << "Parsing the glyph list " << filename << " resulted in the error: " << ball ;
 	      throw Exceptions::ExternalError( strrefdup( oss ) );
 	    }
-	  catch( const MetaPDF::Exceptions::Exception & ball )
+	  catch( const Shapes::Exceptions::Exception & ball )
 	    {
 	      std::cerr << "Parsing the glyph list " << filename << " resulted an error.  Rethrowing." << std::endl ;
 	      throw;
@@ -285,7 +285,7 @@ Helpers::requireMacRomanEncoding( bool cleanup )
 	      oss << "Parsing the character encoding " << filename << " resulted in the error: " << ball ;
 	      throw Exceptions::ExternalError( strrefdup( oss ) );
 	    }
-	  catch( const MetaPDF::Exceptions::Exception & ball )
+	  catch( const Shapes::Exceptions::Exception & ball )
 	    {
 	      std::cerr << "Parsing the character encoding " << filename << " resulted an error.  Rethrowing." << std::endl ;
 	      throw;

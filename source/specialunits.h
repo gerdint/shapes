@@ -2,7 +2,7 @@
 #define specialunits_h
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {

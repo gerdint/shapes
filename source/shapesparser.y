@@ -1,6 +1,6 @@
-/* File: metapdfparser.y
+/* File: shapesparser.y
  * --------------
- * Yacc input file to generate the parser for the MetaPDF language
+ * Yacc input file to generate the parser for the Shapes language
  */
 
 %{
@@ -11,7 +11,7 @@
  * file inclusions or C++ variable declarations/prototypes that are needed
  * by your code here.
  */
-#include "metapdftypes.h"
+#include "shapestypes.h"
 #include "ast.h"
 #include "astflow.h"
 #include "astexprs.h"
@@ -20,32 +20,32 @@
 #include "astvar.h"
 #include "astidentifier.h"
 #include "astclass.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "charptrless.h"
 #include "autoonoff.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "texlabelmanager.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 #include "yyltype.h"
-extern YYLTYPE metapdflloc;
+extern YYLTYPE shapeslloc;
 
 #ifdef yylex
   /* This is ugly.
    * Warning! Warning! Warning!
    * We'll soon use that yylex was defined as
-   *   #define yylex metapdflex
+   *   #define yylex shapeslex
    * in order to reset it after we're done with the inclusion.
    */
 #undef yylex
 #include "globals.h"
-#include "metapdfscanner.h"
-int metapdflex( )
+#include "shapesscanner.h"
+int shapeslex( )
 {
-  return Ast::theMetaPDFScanner.yylex( );
+  return Ast::theShapesScanner.yylex( );
 }
-#define yylex metapdflex
+#define yylex shapeslex
 #endif
 
 #include "refcount.h"
@@ -57,17 +57,17 @@ int metapdflex( )
 using namespace std;
 
 
-int metapdflex( );
+int shapeslex( );
 
 
-void metapdferror( RefCountPtr< const char > msg )
+void shapeserror( RefCountPtr< const char > msg )
 {
-  throw Exceptions::ParserError( metapdflloc, msg );
+  throw Exceptions::ParserError( shapeslloc, msg );
 }
 
-void metapdferror( char * msg )
+void shapeserror( char * msg )
 {
-  metapdferror( strrefdup( msg ) );
+  shapeserror( strrefdup( msg ) );
 }
 
 
@@ -221,7 +221,7 @@ Program
 }
 | Group error
 {
-  metapdferror( "Expecting end of file." );
+  shapeserror( "Expecting end of file." );
 }
 ;
 
@@ -1211,12 +1211,12 @@ GroupElem
 }
 | Expr '.' T_identifier T_llthan InsertionSequence
 {
-  metapdferror( "MemberInsertionSequence not implemented" );
+  shapeserror( "MemberInsertionSequence not implemented" );
   //  $$ = new Ast::MemberInsertionSequence( @$, $1, $3, $5 );
 }
 | '(' '#' Expr ')' '.' T_identifier T_llthan InsertionSequence
 {
-  metapdferror( "ProtectedMemberInsertionSequence not implemented" );
+  shapeserror( "ProtectedMemberInsertionSequence not implemented" );
   //  $$ = new Ast::ProtectedMemberInsertionSequence( @$, @2, $3, $6, $8 );
 }
 ;

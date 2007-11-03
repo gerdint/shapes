@@ -3,14 +3,14 @@
 
 #include <cmath>
 
-#include "MetaPDF_Concrete_decls.h"
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Concrete_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include "elementarylength.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
 
   namespace Concrete

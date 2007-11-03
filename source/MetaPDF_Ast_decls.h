@@ -1,7 +1,7 @@
-#ifndef MetaPDF_Ast_decls_h
-#define MetaPDF_Ast_decls_h
+#ifndef Shapes_Ast_decls_h
+#define Shapes_Ast_decls_h
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Ast
   {

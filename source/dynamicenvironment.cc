@@ -1,17 +1,17 @@
 #include <cmath>
 
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "dynamicenvironment.h"
 #include "hottypes.h"
 #include "globals.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "ast.h"
 #include "isnan.h"
 
 #include <limits>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 void

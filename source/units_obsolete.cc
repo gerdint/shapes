@@ -27,17 +27,17 @@
 
 
 
-MetaPDF::UserLength::UserLength( const Ast::SourceLocation & _loc, double _val, const char * _unit )
+Shapes::UserLength::UserLength( const Ast::SourceLocation & _loc, double _val, const char * _unit )
   : loc( _loc ), val( _val ), unit( _unit )
 { }
 
-MetaPDF::UserLength::~UserLength( )
+Shapes::UserLength::~UserLength( )
 {
   delete unit;
 }
 
 void
-MetaPDF::UserLength::eval( Kernel::EvalState * evalState ) const
+Shapes::UserLength::eval( Kernel::EvalState * evalState ) const
 {
   Kernel::ContRef cont = evalState->cont_;
   (*cont)( Kernel::ValueRef( new Lang::Length( val * evalState->env->lookupUnit( loc, unit ) ) ),
@@ -45,30 +45,30 @@ MetaPDF::UserLength::eval( Kernel::EvalState * evalState ) const
 }
 
 const Ast::SourceLocation &
-MetaPDF::UserLength::firstLoc( ) const
+Shapes::UserLength::firstLoc( ) const
 {
   return loc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::UserLength::lastLoc( ) const
+Shapes::UserLength::lastLoc( ) const
 {
   return loc;
 }
 
 
-MetaPDF::IntroduceUnitStmt::IntroduceUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
+Shapes::IntroduceUnitStmt::IntroduceUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
   : idLoc( _idLoc ), id( _id ), expr( _expr )
 { }
 
-MetaPDF::IntroduceUnitStmt::~IntroduceUnitStmt( )
+Shapes::IntroduceUnitStmt::~IntroduceUnitStmt( )
 {
   delete id;
   delete expr;
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::IntroduceUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::IntroduceUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;
@@ -78,34 +78,34 @@ MetaPDF::IntroduceUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::P
       throw Exceptions::TypeMismatch( expr, untypedVal->getTypeName( ), ArgType::staticTypeName( ) );
     }
   env->defineUnit( idLoc, id, val->getVal( ) );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::IntroduceUnitStmt::firstLoc( ) const
+Shapes::IntroduceUnitStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::IntroduceUnitStmt::lastLoc( ) const
+Shapes::IntroduceUnitStmt::lastLoc( ) const
 {
   return expr->lastLoc( );
 }
 
 
-MetaPDF::AssignUnitStmt::AssignUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
+Shapes::AssignUnitStmt::AssignUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
   : idLoc( _idLoc ), id( _id ), expr( _expr )
 { }
 
-MetaPDF::AssignUnitStmt::~AssignUnitStmt( )
+Shapes::AssignUnitStmt::~AssignUnitStmt( )
 {
   delete id;
   delete expr;
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::AssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::AssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;
@@ -115,17 +115,17 @@ MetaPDF::AssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_
       throw Exceptions::TypeMismatch( expr, untypedVal->getTypeName( ), ArgType::staticTypeName( ) );
     }
   env->redefineUnit( idLoc, id, val->getVal( ) );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::AssignUnitStmt::firstLoc( ) const
+Shapes::AssignUnitStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::AssignUnitStmt::lastLoc( ) const
+Shapes::AssignUnitStmt::lastLoc( ) const
 {
   return expr->lastLoc( );
 }

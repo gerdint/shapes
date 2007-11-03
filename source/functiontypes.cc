@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "angleselect.h"
@@ -19,7 +19,7 @@
 #include <ctype.h>
 #include <stack>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 void displayArray( std::ostream & os, const double * pr, size_t m, size_t n )
@@ -403,8 +403,8 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 	// First we compute a unit vector in the plane
 	static const Concrete::UnitFloatTriple xHat( 1, 0, 0 );	
 	static const Concrete::UnitFloatTriple yHat( 0, 1, 0 );
-	Concrete::UnitFloatTriple r1 = MetaPDF::cross( unitNormal_, xHat );
-	Concrete::UnitFloatTriple r2 = MetaPDF::cross( unitNormal_, yHat );
+	Concrete::UnitFloatTriple r1 = Shapes::cross( unitNormal_, xHat );
+	Concrete::UnitFloatTriple r2 = Shapes::cross( unitNormal_, yHat );
 	Concrete::UnitFloatTriple r( 0, 0, 0 );
 	if( r1.norm( ) > r2.norm( ) )
 	  {
@@ -436,7 +436,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 
 	// Now it is easy to find two more points that span the plane together with x0
 	Concrete::Coords3D x1 = x0 + r;
-	Concrete::Coords3D x2 = x0 + MetaPDF::cross( unitNormal_, r );
+	Concrete::Coords3D x2 = x0 + Shapes::cross( unitNormal_, r );
 
 	// Now we see where these points go...
 	Concrete::Coords3D Tx0 = x0.transformed( tf );
@@ -444,7 +444,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 	Concrete::Coords3D Tx2 = x2.transformed( tf );
 
 	// ... from which the new equation may be computed.
-	Concrete::UnitFloatTriple Tnormal = MetaPDF::cross( Tx1 - Tx0, Tx2 - Tx0 );
+	Concrete::UnitFloatTriple Tnormal = Shapes::cross( Tx1 - Tx0, Tx2 - Tx0 );
 	double TnormalNorm = Tnormal.norm( );
 	if( TnormalNorm == 0 )
 	  {
@@ -940,7 +940,7 @@ Kernel::Arguments::getStates( )
 }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

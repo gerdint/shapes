@@ -16,8 +16,8 @@
 #include "classtree1.h"
 #include "classtree2.h"
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "SimplePDF_decls.h"
 
@@ -49,7 +49,7 @@
 /* Declare all the Lang::Value children classes
  */
 #define DECLARECLASS_( T ) class T;
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

@@ -5,7 +5,7 @@
 #include "pagecontentstates.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::Type3Glyph::Type3Glyph( Kind kind, CodeType code, const RefCountPtr< const char > & name, const RefCountPtr< const Lang::Drawable2D > & glyph, Concrete::Length widthX, Concrete::Length xmin, Concrete::Length ymin, Concrete::Length xmax, Concrete::Length ymax )

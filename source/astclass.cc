@@ -1,15 +1,15 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "astclass.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "globals.h"
 #include "astvar.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 
 #include <string>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Ast::MethodIdExpr::MethodIdExpr( const Ast::SourceLocation & loc, Ast::Expression * classPart, const char * name )

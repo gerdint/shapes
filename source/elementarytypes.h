@@ -1,14 +1,14 @@
 #ifndef elementarytypes_h
 #define elementarytypes_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Concrete_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Concrete_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
 #include "pdfstructure.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "charptrless.h"
 #include "elementarylength.h"
 #include "consts.h"
@@ -19,7 +19,7 @@
 #include <set>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   
   namespace Concrete

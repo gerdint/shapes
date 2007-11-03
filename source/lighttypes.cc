@@ -5,7 +5,7 @@
 #include "globals.h"
 #include "constructorrepresentation.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::SpecularReflection::SpecularReflection( )

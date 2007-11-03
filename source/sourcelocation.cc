@@ -5,7 +5,7 @@
 #include <cerrno>
 #include <fstream>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Ast::SourceLocation::SourceLocation( )

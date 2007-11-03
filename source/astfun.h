@@ -1,13 +1,13 @@
 #ifndef astfun_h
 #define astfun_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "ast.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

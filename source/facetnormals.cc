@@ -4,7 +4,7 @@
 #include "constructorrepresentation.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::FacetNormalGray::FacetNormalGray( const Concrete::Coords3D & position,

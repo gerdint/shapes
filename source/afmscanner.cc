@@ -12,7 +12,7 @@ AfmScanner::AfmScanner( FontMetrics::BaseFont * fontMetricsDst, std::istream * y
     activateDirectionID_( 0 ),
     metricsSets_( 0 ),
     tellQue_( false ),
-    encoding_( & MetaPDF::Helpers::requireMacRomanEncoding( ) )
+    encoding_( & Shapes::Helpers::requireMacRomanEncoding( ) )
 { }
 
 void

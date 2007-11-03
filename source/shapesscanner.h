@@ -1,5 +1,5 @@
-#ifndef metapdfscanner_h
-#define metapdfscanner_h
+#ifndef shapesscanner_h
+#define shapesscanner_h
 
 #include "sourcelocation.h"
 #include "charptrless.h"
@@ -13,10 +13,10 @@
 #include <string>
 
 #undef yyFlexLexer
-#define yyFlexLexer metapdfFlexLexer
+#define yyFlexLexer shapesFlexLexer
 #include <FlexLexer.h>
 
-class MetaPDFScanner : public metapdfFlexLexer
+class ShapesScanner : public shapesFlexLexer
 {
   struct FileID
   {
@@ -37,7 +37,7 @@ class MetaPDFScanner : public metapdfFlexLexer
     }
   };
   std::stack< yy_buffer_state * > stateStack;
-  std::stack< ::MetaPDF::Ast::SourceLocation > locStack;
+  std::stack< ::Shapes::Ast::SourceLocation > locStack;
   std::stack< size_t > pathCountStack;
   unsigned int quoteDepth;
   bool moreState;
@@ -52,8 +52,8 @@ class MetaPDFScanner : public metapdfFlexLexer
   std::istream * appendStream_;
  public:
   //  Ast::SourceLocation loc;
-  MetaPDFScanner( std::istream * yyin = 0, std::ostream * yyout = 0 );
-  virtual ~MetaPDFScanner( );
+  ShapesScanner( std::istream * yyin = 0, std::ostream * yyout = 0 );
+  virtual ~ShapesScanner( );
   void setNameOf_yyin( const char * yyinName );
   void prependStream( std::istream * is );
   void push_backNeedPath( const char * path );

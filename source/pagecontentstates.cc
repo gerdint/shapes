@@ -1,6 +1,6 @@
 #include "pagecontentstates.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Kernel::PageContentStates::PageContentStates( RefCountPtr< SimplePDF::PDF_Resources > & resources, bool setDefaults )

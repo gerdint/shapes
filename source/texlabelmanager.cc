@@ -2,7 +2,7 @@
 #include "dynamicenvironment.h"
 #include "simplepdfo.h"
 #include "simplepdfi.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "globals.h"
 
 #include <fstream>
@@ -17,9 +17,9 @@
 #include <iomanip>
 
 using namespace std;
-using namespace MetaPDF;
+using namespace Shapes;
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Interaction
   {

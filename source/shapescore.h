@@ -1,15 +1,15 @@
-#ifndef metapdfcore_h
-#define metapdfcore_h
+#ifndef shapescore_h
+#define shapescore_h
 
 #include <list>
 #include <iostream>
 #include <string>
 
 #include "refcount.h"
-#include "metapdftypes.h"
+#include "shapestypes.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

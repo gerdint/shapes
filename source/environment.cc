@@ -1,11 +1,11 @@
 #include <cmath>
 
 #include "environment.h"
-#include "metapdfexceptions.h"
-#include "metapdfcore.h"
+#include "shapesexceptions.h"
+#include "shapescore.h"
 #include "consts.h"
 #include "globals.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "classtypes.h"
 #include "hottypes.h"
 #include "continuations.h"
@@ -13,7 +13,7 @@
 #include "multipage.h"
 #include "errorhandlers.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

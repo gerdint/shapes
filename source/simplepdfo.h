@@ -4,7 +4,7 @@
 #include "pdfstructure.h"
 
 #include "SimplePDF_decls.h"
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 #include "concretecolors.h"
 
 #include <list>
@@ -90,8 +90,8 @@ namespace SimplePDF
 
     RefCountPtr< PDF_Indirect_out > indirect( RefCountPtr< PDF_Object > obj, size_t v = 0 );
     
-    RefCountPtr< const std::vector< RefCountPtr< const MetaPDF::Lang::XObject > > > addPagesAsXObjects( RefCountPtr< PDF_in > pdfi );
-    void importBtexEtexThings( RefCountPtr< PDF_in > pdfi, std::map< std::string, RefCountPtr< const MetaPDF::Lang::XObject > > * dstMap, const std::string & setupCodeHash );
+    RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > > addPagesAsXObjects( RefCountPtr< PDF_in > pdfi );
+    void importBtexEtexThings( RefCountPtr< PDF_in > pdfi, std::map< std::string, RefCountPtr< const Shapes::Lang::XObject > > * dstMap, const std::string & setupCodeHash );
 
     static RefCountPtr<PDF_Object> newName( const char * str );
     static RefCountPtr<PDF_Object> newString( const char * str );
@@ -114,9 +114,9 @@ namespace SimplePDF
 
     bool fontBold_;
     bool fontItalic_;
-    MetaPDF::Concrete::RGB color_;
+    Shapes::Concrete::RGB color_;
   public:
-    OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const MetaPDF::Concrete::RGB & color );
+    OutlineItem( const RefCountPtr< PDF_Object > & destination, const RefCountPtr< const char > & title, bool isOpen, bool fontBold, bool fontItalic, const Shapes::Concrete::RGB & color );
     ~OutlineItem( );
     void addKid( const RefCountPtr< OutlineItem > & kid );
 

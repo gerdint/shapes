@@ -1,14 +1,14 @@
-#ifndef MetaPDF_Kernel_decls_h
-#define MetaPDF_Kernel_decls_h
+#ifndef Shapes_Kernel_decls_h
+#define Shapes_Kernel_decls_h
 
 #include "refcount.h"
 
-#include "MetaPDF_Lang_decls.h"
+#include "Shapes_Lang_decls.h"
 
 #include <set>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

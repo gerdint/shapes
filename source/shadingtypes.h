@@ -4,7 +4,7 @@
 #include "drawabletypes.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

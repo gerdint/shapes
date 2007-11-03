@@ -1,10 +1,10 @@
 #include <cmath>
 
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "astfun.h"
 #include "consts.h"
@@ -16,7 +16,7 @@
 #include <vector>
 #include <stdio.h>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 RefCountPtr< const Lang::ElementaryPath2D >

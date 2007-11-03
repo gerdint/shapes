@@ -1,7 +1,7 @@
 /*
- * File:  metapdfyylex.l
+ * File:  shapesyylex.l
  * ----------------
- * Lex inupt file to generate the yylex method for the scanning of the MetaPDF language.
+ * Lex inupt file to generate the yylex method for the scanning of the Shapes language.
  */
 
 %{
@@ -14,19 +14,19 @@
 
 #include <cmath>
 
-#include "metapdfscanner.h"
-#include "metapdfvalue.h"
-#include "metapdftypes.h"
+#include "shapesscanner.h"
+#include "shapesvalue.h"
+#include "shapestypes.h"
 #include "astflow.h"
 #include "astvar.h"
 #include "astclass.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "texlabelmanager.h"
 #include "globals.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 #include "yyltype.h"
-#include "metapdfparser.tab.h"
+#include "shapesparser.tab.h"
 
 #include <string>
 #include <cstdlib>
@@ -70,7 +70,7 @@ Escape "¢"|"¤"
 %option noyywrap
 %option yylineno
 
-%option yyclass="MetaPDFScanner"
+%option yyclass="ShapesScanner"
 
 %x DiscardRestOfLineAndBEGIN_INITIAL
 %x Incl
@@ -97,8 +97,8 @@ Escape "¢"|"¤"
 ^"##documentclass"[ \t]+ { BEGIN( LaTeXClass ); }
 ^"##preamble"[ \t] { BEGIN( LaTeXPreamble ); }
 ^"##documenttop"[ \t] { BEGIN( LaTeXDocumentTop ); }
-^"##no-lmodernT1"[\n] { Kernel::theTeXLabelManager.setlmodernT1( metapdflloc, false ); }
-^"##no-utf8"[\n] { Kernel::theTeXLabelManager.setutf8( metapdflloc, false ); }
+^"##no-lmodernT1"[\n] { Kernel::theTeXLabelManager.setlmodernT1( shapeslloc, false ); }
+^"##no-utf8"[\n] { Kernel::theTeXLabelManager.setutf8( shapeslloc, false ); }
 ^"##seed"[ \t]+ { BEGIN( RandSeed ); }
 ^"##unit"[ \t]+ { BEGIN( NewUnitName ); }
 ^"##include"[ \t]+ { BEGIN( Incl ); }
@@ -106,42 +106,42 @@ Escape "¢"|"¤"
 ^"##echo"[ \t] { BEGIN( Echo ); }
 ^"##author"[ \t] { BEGIN( Author ); }
 ^"##" {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "All lines beginning with ## must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "All lines beginning with ## must be scanner specials.  Please use a leading horizontal whitespace if this is not what is intended." ) ) );
 }
 
 <DiscardRestOfLineAndBEGIN_INITIAL>.* {
   BEGIN( INITIAL );
 }
 
-<LaTeXOption>[^,\n]+ { Kernel::theTeXLabelManager.addDocumentOption( metapdflloc, yytext  ); }
+<LaTeXOption>[^,\n]+ { Kernel::theTeXLabelManager.addDocumentOption( shapeslloc, yytext  ); }
 <LaTeXOption>[\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
   BEGIN( INITIAL );
 }
   
-<LaTeXClass>.+ { Kernel::theTeXLabelManager.setDocumentClass( metapdflloc, yytext ); }
+<LaTeXClass>.+ { Kernel::theTeXLabelManager.setDocumentClass( shapeslloc, yytext ); }
 <LaTeXClass>[\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
   BEGIN( INITIAL );
 }
   
-<LaTeXPreamble>.* { Kernel::theTeXLabelManager.addPreambleLine( metapdflloc, yytext ); }
+<LaTeXPreamble>.* { Kernel::theTeXLabelManager.addPreambleLine( shapeslloc, yytext ); }
 <LaTeXPreamble>[\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
   BEGIN( INITIAL );
 }
 
-<LaTeXDocumentTop>.* { Kernel::theTeXLabelManager.addDocumentTopLine( metapdflloc, yytext );  }
+<LaTeXDocumentTop>.* { Kernel::theTeXLabelManager.addDocumentTopLine( shapeslloc, yytext );  }
 <LaTeXDocumentTop>[\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
   BEGIN( INITIAL );
 }
 
@@ -150,13 +150,13 @@ Escape "¢"|"¤"
   long int s = strtol( yytext, & end, 10 );
   if( *end != '\0' )
     {
-      Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Failed to scan integer." ) ) );
+      Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Failed to scan integer." ) ) );
     }
   else
     {
       if( s < 0 )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Random nuber generator seed must not be negative." ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Random nuber generator seed must not be negative." ) ) );
 	}
       else
 	{
@@ -165,9 +165,9 @@ Escape "¢"|"¤"
     }
 }
 <RandSeed>[\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
   BEGIN( INITIAL );
 }
 
@@ -176,12 +176,12 @@ Escape "¢"|"¤"
   BEGIN( NewUnitEqual );
 }
 <NewUnitName>. {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected identifier." ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Expected identifier." ) ) );
   BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
 }
 <NewUnitEqual>[ \t]*"="[ \t]* { BEGIN( NewUnitValue ); }
 <NewUnitEqual>. {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected '='." ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Expected '='." ) ) );
   BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
  }
 <NewUnitValue>{Float}"bp" {
@@ -193,7 +193,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -211,7 +211,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -229,7 +229,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -247,7 +247,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -265,7 +265,7 @@ Escape "¢"|"¤"
     {
       if( i->second != newUnitValue )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	}
     }
   else
@@ -282,7 +282,7 @@ Escape "¢"|"¤"
   MapType::const_iterator i = unitTable.find( end );
   if( i == unitTable.end( ) )
     {
-      Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknownUnit( metapdflloc, strrefdup( end ) ) );
+      Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknownUnit( shapeslloc, strrefdup( end ) ) );
     }
   else
     {
@@ -293,7 +293,7 @@ Escape "¢"|"¤"
 	{
 	  if( i->second != newUnitValue )
 	    {
-	      Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( metapdflloc, strrefdup( newUnitName ) ) );
+	      Ast::theAnalysisErrorsList.push_back( new Exceptions::IntroducingExistingUnit( shapeslloc, strrefdup( newUnitName ) ) );
 	    }
 	}
       else
@@ -304,7 +304,7 @@ Escape "¢"|"¤"
   BEGIN( INITIAL );
 }
 <NewUnitValue>. {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Expected a length." ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Expected a length." ) ) );
   BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
  }
 
@@ -312,43 +312,43 @@ Escape "¢"|"¤"
 
 {Float}"°" {
   char * end;
-  metapdflval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
+  shapeslval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
   return T_float;
 }
 
 {Float}{Escape}"degree" {
   char * end;
-  metapdflval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
+  shapeslval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
   return T_float;
 }
 
 {Float}"bp" {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end );
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end );
   return T_length;
 }
 
 {Float}"mm" {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
   return T_length;
 }
 
 {Float}"cm" {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end ) * ( 72 / 2.54 );
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 72 / 2.54 );
   return T_length;
 }
 
 {Float}"m" {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end ) * ( 100 * 72 / 2.54 );
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 100 * 72 / 2.54 );
   return T_length;
 }
 
 {Float}"in" {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end ) * 72;
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * 72;
   return T_length;
 }
 
@@ -360,11 +360,11 @@ Escape "¢"|"¤"
   MapType::const_iterator i = unitTable.find( end );
   if( i == unitTable.end( ) )
     {
-      Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknownUnit( metapdflloc, strrefdup( end ) ) );
+      Ast::theAnalysisErrorsList.push_back( new Exceptions::LookupUnknownUnit( shapeslloc, strrefdup( end ) ) );
     }
   else
     {
-      metapdflval.floatVal = val * i->second;
+      shapeslval.floatVal = val * i->second;
     }
   return T_length;
 }
@@ -372,70 +372,70 @@ Escape "¢"|"¤"
 {Float}[\%][D0] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST );
   return T_speciallength;
 }
 
 {Float}[\%][C1] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC );
   return T_speciallength;
 }
 
 {Float}[\%][M2] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR );
   return T_speciallength;
 }
 
 {Float}[\%][F3] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR );
   return T_speciallength;
 }
 
 {Float}[\%][d4] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_NOINFLEX );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_NOINFLEX );
   return T_speciallength;
 }
 
 {Float}[\%][c5] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_NOINFLEX  );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_NOINFLEX  );
   return T_speciallength;
 }
 
 {Float}[\%][m6] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX  );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX  );
   return T_speciallength;
 }
 
 {Float}[\%][f7] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX  );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX  );
   return T_speciallength;
 }
 
 {Float}[\%][i9] {
   char * end;
   double val = metaPDFstrtod( yytext, & end );
-  metapdflval.expr = new Ast::SpecialLength( metapdflloc, val, Computation::SPECIALU_NOINFLEX );
+  shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_NOINFLEX );
   return T_speciallength;
 }
 
 
 {Float} {
   char * end;
-  metapdflval.floatVal = metaPDFstrtod( yytext, & end );
+  shapeslval.floatVal = metaPDFstrtod( yytext, & end );
   return T_float;
 }
 
@@ -451,39 +451,39 @@ Escape "¢"|"¤"
   int absval = strtol( src, & end, 10 );
   if( negative )
     {
-      metapdflval.intVal = - absval;
+      shapeslval.intVal = - absval;
     }
   else
     {
-      metapdflval.intVal = absval;
+      shapeslval.intVal = absval;
     }
   return T_int;
 }
 
 "\'0x"[0-9A-F]+ {
   char * end;
-  metapdflval.intVal = strtol( yytext + 3, & end, 16 );
+  shapeslval.intVal = strtol( yytext + 3, & end, 16 );
   return T_int;
 }
 
 "\'0b"[0-1]+ {
   char * end;
-  metapdflval.intVal = strtol( yytext + 3, & end, 2 );
+  shapeslval.intVal = strtol( yytext + 3, & end, 2 );
   return T_int;
 }
 
 "∞" {
-  metapdflval.floatVal = HUGE_VAL;
+  shapeslval.floatVal = HUGE_VAL;
   return T_float;
 }
 
 "true" {
-  metapdflval.boolVal = true;
+  shapeslval.boolVal = true;
   return T_bool;
 }
 
 "false" {
-  metapdflval.boolVal = false;
+  shapeslval.boolVal = false;
   return T_bool;
 }
 
@@ -559,14 +559,14 @@ Escape "¢"|"¤"
 {WhiteSpace}+ ;
 
 [\n] {
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
 }
 
-<INITIAL>"|**".*[\n] { ++metapdflloc.lastLine; metapdflloc.lastColumn = 0; }
+<INITIAL>"|**".*[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
 <INITIAL>"/**" { quoteDepth = 1; BEGIN( Comment ); }
-<INITIAL>"**/" { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Found closing comment delimiter outside comment" ) ); }
+<INITIAL>"**/" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing comment delimiter outside comment" ) ); }
 <Comment>"/**" { ++quoteDepth; more( ); }
 <Comment>"**/" {
   --quoteDepth;
@@ -580,28 +580,28 @@ Escape "¢"|"¤"
     }
 }
 <Comment>. { }
-<Comment>[\n] { ++metapdflloc.lastLine; metapdflloc.lastColumn = 0; }
-<Comment><<EOF>> { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Found EOF while scanning comment" ) ); }
+<Comment>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
+<Comment><<EOF>> { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment" ) ); }
 
 <INITIAL>[`][\n]? {
   if( yyleng > 1 )
     {
-      ++metapdflloc.lastLine;
-      metapdflloc.lastColumn = 0;
+      ++shapeslloc.lastLine;
+      shapeslloc.lastColumn = 0;
     }
   quoteDepth = 1;
   BEGIN( String );
 }
-<INITIAL>"´" { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Found closing quote outside string" ) ); }
+<INITIAL>"´" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing quote outside string" ) ); }
 <String>"`" { ++quoteDepth; more( ); }
 <String>"´" {
   --quoteDepth;
   if( quoteDepth == 0 )
     {
       yytext[ yyleng - 2 ] = '\0';
-      metapdflval.str = new char[ yyleng - 1 ];
+      shapeslval.str = new char[ yyleng - 1 ];
       {
-	char * dst = metapdflval.str;
+	char * dst = shapeslval.str;
 	char * src = yytext;
 	char * end = yytext + yyleng - 2;    // the "- 1" comes from empirical studies...
 	for( ; src != end; ++src )
@@ -619,13 +619,13 @@ Escape "¢"|"¤"
 	 * The last of the three conditions ensures that the trailing newline was not generated
 	 * as an escape sequence, in which case it shall be kept.
 	 */
-	if( dst > metapdflval.str && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
+	if( dst > shapeslval.str && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
 	  {
 	    --dst;
 	  }
 	*dst = '\0';
       }
-      --metapdflloc.firstColumn;
+      --shapeslloc.firstColumn;
       BEGIN( INITIAL );
       return T_string;
     }
@@ -634,7 +634,7 @@ Escape "¢"|"¤"
       more( );
     }
 }
-<String>[\n] { ++metapdflloc.lastLine; metapdflloc.lastColumn = 0; more( ); }
+<String>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; more( ); }
 <String>{Escape}[`nt\n] {
   // The escaped characters each occupy 1 byte
   char * dst = yytext + yyleng - 3; // 3 = 2 + 1
@@ -647,8 +647,8 @@ Escape "¢"|"¤"
       *dst = '\t';
       break;
     case '\n':
-      ++metapdflloc.lastLine;
-      metapdflloc.lastColumn = 0;
+      ++shapeslloc.lastLine;
+      shapeslloc.lastColumn = 0;
       *dst = '\0';
       break;
     default:
@@ -674,11 +674,11 @@ Escape "¢"|"¤"
   more( );
 }
 <String>{Escape} {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´nt\n]." ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´nt\n]." ) ) );
   more( );
 }
 <String>. { more( ); }
-<String><<EOF>> { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Found EOF while scanning string" ) ); }
+<String><<EOF>> { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) ); }
 
 <Incl>[^ \t\n]+ {
   currentNeedFile = yytext;
@@ -697,8 +697,8 @@ Escape "¢"|"¤"
 <InclFrom>[ \t]+ { }
 <InclFrom>[\n] { doInclusion( ); }
 <InclFrom>":"[ \t]+ { BEGIN( InclPath ); }
-<InclFrom>":". { throw Exceptions::ScannerError( metapdflloc, strrefdup( "The \":\" must be followed by whitespace." ) ); }
-<InclFrom>. { throw Exceptions::ScannerError( metapdflloc, strrefdup( "Expected \":\"." ) ); }
+<InclFrom>":". { throw Exceptions::ScannerError( shapeslloc, strrefdup( "The \":\" must be followed by whitespace." ) ); }
+<InclFrom>. { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Expected \":\"." ) ); }
 
 <InclPath>[ \t]+ { }
 <InclPath>[^ \t\n]+ {
@@ -708,7 +708,7 @@ Escape "¢"|"¤"
 <InclPath>[\n] {
   if( currentNeedPushCount == 0 )
     {
-      throw Exceptions::ScannerError( metapdflloc, strrefdup( "Missing paths after \"from\"." ) );
+      throw Exceptions::ScannerError( shapeslloc, strrefdup( "Missing paths after \"from\"." ) );
     }
   doInclusion( );
 }
@@ -721,14 +721,14 @@ Escape "¢"|"¤"
 <Author>.* {
   if( stateStack.size( ) > 0 )
     {
-      Kernel::the_pdfo->extensionAuthorStrings.push_back( metapdflloc.filename + std::string( " by " ) + yytext );
+      Kernel::the_pdfo->extensionAuthorStrings.push_back( shapeslloc.filename + std::string( " by " ) + yytext );
     }
   else
     {
       const char * key = "Author";
       if( Kernel::the_pdfo->info_->hasKey( key ) )
 	{
-	  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( "Multiply specified #author." ) ) );
+	  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Multiply specified #author." ) ) );
 	}
       (*Kernel::the_pdfo->info_)[ key ] = SimplePDF::PDF_out::newString( yytext );
     }
@@ -754,7 +754,7 @@ Escape "¢"|"¤"
     yy_delete_buffer( YY_CURRENT_BUFFER );
     yy_switch_to_buffer( stateStack.top( ) );
     stateStack.pop( );
-    metapdflloc = locStack.top( );
+    shapeslloc = locStack.top( );
     locStack.pop( );
     for( size_t tmp = pathCountStack.top( ); tmp > 0; --tmp )
       {
@@ -765,17 +765,17 @@ Escape "¢"|"¤"
 }
 
 {Identifier} {
-  metapdflval.str = strdup( yytext );
+  shapeslval.str = strdup( yytext );
   return T_identifier;
 }
 {TypeMark}{Identifier} {
   const char * id = yytext + 2; // The type mark is allways 2 bytes.
-  metapdflval.str = strdup( id );
+  shapeslval.str = strdup( id );
   return T_typename;
 }
 
 {DynamicMark}{Identifier} {
-  metapdflval.str = strdup( yytext + 1 );
+  shapeslval.str = strdup( yytext + 1 );
   return T_dynamic_identifier;
 }
 {StateMark}{Identifier} {
@@ -789,7 +789,7 @@ Escape "¢"|"¤"
     {
       id += 3;
     }
-  metapdflval.str = strdup( id );
+  shapeslval.str = strdup( id );
   return T_state_identifier;
 }
 {DynamicMark}{StateMark}{Identifier} {
@@ -803,12 +803,12 @@ Escape "¢"|"¤"
     {
       id += 3;
     }
-  metapdflval.str = strdup( id );
+  shapeslval.str = strdup( id );
   return T_dynamic_state_identifier;
 }
 
 . {
-  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( metapdflloc, strrefdup( ( std::string( "Scanner found unrecognized token: " ) + yytext ).c_str( ) ) ) );
+  Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( ( std::string( "Scanner found unrecognized token: " ) + yytext ).c_str( ) ) ) );
   BEGIN( DiscardRestOfLineAndBEGIN_INITIAL );
 }
 
@@ -836,7 +836,7 @@ double metaPDFstrtod( const char * str, char ** end )
 }
 
 void
-MetaPDFScanner::doInclusion( )
+ShapesScanner::doInclusion( )
 {
   std::string path;
   if( currentNeedIsNeed )
@@ -853,14 +853,14 @@ MetaPDFScanner::doInclusion( )
       struct stat theStat;
       if( stat( path.c_str( ), & theStat ) != 0 )
 	{
-	  throw Exceptions::FileOpenError( metapdflloc, strrefdup( path.c_str( ) ), Exceptions::FileOpenError::STAT );
+	  throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), Exceptions::FileOpenError::STAT );
 	}
       FileID fileID( theStat );
       if( neededFiles.find( fileID ) != neededFiles.end( ) )
 	{
-	  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-	  metapdflloc.lastLine = metapdflloc.firstLine;
-	  metapdflloc.lastColumn = 0;
+	  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+	  shapeslloc.lastLine = shapeslloc.firstLine;
+	  shapeslloc.lastColumn = 0;
 	  BEGIN( INITIAL );
 	  return;
 	}
@@ -870,15 +870,15 @@ MetaPDFScanner::doInclusion( )
   std::ifstream * iFile = new std::ifstream( path.c_str( ) );
   if( ! iFile->good( ) )
     {
-      throw Exceptions::FileOpenError( metapdflloc, strrefdup( path.c_str( ) ) );
+      throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ) );
     }
 
-  metapdflloc.firstLine = metapdflloc.lastLine + 1;
-  metapdflloc.lastLine = metapdflloc.firstLine;
-  metapdflloc.lastColumn = 0;
+  shapeslloc.firstLine = shapeslloc.lastLine + 1;
+  shapeslloc.lastLine = shapeslloc.firstLine;
+  shapeslloc.lastColumn = 0;
 
-  locStack.push( metapdflloc );
-  metapdflloc = Ast::SourceLocation( strdup( path.c_str( ) ) );
+  locStack.push( shapeslloc );
+  shapeslloc = Ast::SourceLocation( strdup( path.c_str( ) ) );
   stateStack.push( YY_CURRENT_BUFFER );
   yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
   pathCountStack.push( currentNeedPushCount );
@@ -887,7 +887,7 @@ MetaPDFScanner::doInclusion( )
 }
 
 void
-MetaPDFScanner::prependStream( std::istream * is )
+ShapesScanner::prependStream( std::istream * is )
 {
   appendStream_ = yyin;
   yy_switch_to_buffer( yy_create_buffer( is, YY_BUF_SIZE ) );

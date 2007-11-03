@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {

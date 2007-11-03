@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "angleselect.h"
@@ -18,7 +18,7 @@
 #include <list>
 #include <algorithm>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 #define SPLICEDEBUG( code ) // code

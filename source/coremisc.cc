@@ -1,8 +1,8 @@
 #include <cmath>
 
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "globals.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "simplepdfi.h"
 #include "astfun.h"
@@ -17,10 +17,10 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

@@ -1,13 +1,13 @@
 #include <cmath>
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "consts.h"
 #include "angleselect.h"
 
 #include <stack>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 

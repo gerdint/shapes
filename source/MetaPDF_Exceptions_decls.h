@@ -1,8 +1,8 @@
-#ifndef MetaPDF_Exceptions_decls
-#define MetaPDF_Exceptions_decls
+#ifndef Shapes_Exceptions_decls
+#define Shapes_Exceptions_decls
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Exceptions
   {

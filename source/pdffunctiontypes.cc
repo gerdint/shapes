@@ -1,11 +1,11 @@
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
 #include "pdffunctiontypes.h"
 #include "globals.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "ast.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::PDF_Function::PDF_Function( SubType subType, size_t outputDimension, size_t inputDimension, bool rangeIsActive )

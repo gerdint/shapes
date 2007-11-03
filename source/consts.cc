@@ -1,12 +1,12 @@
-#include "MetaPDF_Kernel_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "consts.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "classtypes.h"
 #include "statetypes.h"
 #include "fonttypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 RefCountPtr< const char > Interaction::SEVERAL_TYPES = strrefdup( "(several types)" );
 RefCountPtr< const char > Interaction::PUBLIC_SCOPE_NAME = strrefdup( "public" );

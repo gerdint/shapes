@@ -3,7 +3,7 @@
 #include "trianglefunctions.h"
 
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Concrete::Coords2D

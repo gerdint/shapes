@@ -1,14 +1,14 @@
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "globals.h"
 #include "charconverters.h"
 #include "autoonoff.h"
 #include "ast.h"
 #include "glyphlist.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

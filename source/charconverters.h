@@ -8,7 +8,7 @@
 #include "FontMetrics_decls.h"
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Helpers
   {

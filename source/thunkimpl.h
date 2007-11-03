@@ -1,5 +1,5 @@
 #include "ast.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
 template< class T >
 Kernel::Thunk< T >::Thunk< T >( Ast::Expression * _expr, const Kernel::GraphicsState * _metaState, Kernel::PassedEnv _env )

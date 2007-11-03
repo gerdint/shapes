@@ -6,7 +6,7 @@
 #include <string>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

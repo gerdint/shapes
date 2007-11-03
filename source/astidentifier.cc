@@ -1,25 +1,25 @@
 #include "astidentifier.h"
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 
-MetaPDF::LiteralIdentifier::LiteralIdentifier( const Ast::SourceLocation & _loc, const char * _id )
+Shapes::LiteralIdentifier::LiteralIdentifier( const Ast::SourceLocation & _loc, const char * _id )
   : loc( _loc ), id( strdup( _id ) )
 { }
 
-MetaPDF::LiteralIdentifier::~LiteralIdentifier( )
+Shapes::LiteralIdentifier::~LiteralIdentifier( )
 { }
 
 RefCountPtr< const char >
-MetaPDF::LiteralIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::LiteralIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   return id;
 }
 
 
-MetaPDF::SameIdentifier::SameIdentifier( const MetaPDF::IdentifierNode * _orig )
+Shapes::SameIdentifier::SameIdentifier( const Shapes::IdentifierNode * _orig )
   : orig( _orig )
 { }
 
-MetaPDF::SameIdentifier::~SameIdentifier( )
+Shapes::SameIdentifier::~SameIdentifier( )
 {
   /* The point is that we don't delete the original identifier here.
      We must hope that the original is not deleted before us...
@@ -27,7 +27,7 @@ MetaPDF::SameIdentifier::~SameIdentifier( )
 }
 
 RefCountPtr< const char >
-MetaPDF::SameIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::SameIdentifier::identifier( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   return orig->identifier( dstgroup, pdfo, metaState, env );
 }

@@ -6,7 +6,7 @@
 #include "texttypes.h"
 #include "simplepdfo.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

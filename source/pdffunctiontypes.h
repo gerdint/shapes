@@ -4,7 +4,7 @@
 #include "functiontypes.h"
 #include "simplepdfo.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

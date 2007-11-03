@@ -1,12 +1,12 @@
 #include "globals.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "astfun.h"
 #include "astexprs.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {
@@ -109,7 +109,7 @@ namespace MetaPDF
 }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Lang
   {

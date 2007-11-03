@@ -1,10 +1,10 @@
-#include "metapdfexceptions.h"
+#include "shapesexceptions.h"
 #include "ast.h"
 #include "astclass.h"
 #include "globals.h"
 #include "functiontypes.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -284,7 +284,7 @@ Exceptions::EmptyFinalPicture::display( std::ostream & os ) const
 
 
 Exceptions::TeXSetupHasChanged::TeXSetupHasChanged( )
-  : MetaPDF::Exceptions::InternalError( "The TeX context check failed while loading fresh labels." )
+  : Shapes::Exceptions::InternalError( "The TeX context check failed while loading fresh labels." )
 { }
 
 Exceptions::TeXSetupHasChanged::~TeXSetupHasChanged( )
@@ -1254,7 +1254,7 @@ Exceptions::InstantiatingAbstractClass::display( ostream & os ) const
 }
 
 
-Exceptions::FailedToDeclareClassAbstract::FailedToDeclareClassAbstract( RefCountPtr< const Lang::Class > _cls, const MetaPDF::Ast::ClassFunction * _classExpr )
+Exceptions::FailedToDeclareClassAbstract::FailedToDeclareClassAbstract( RefCountPtr< const Lang::Class > _cls, const Shapes::Ast::ClassFunction * _classExpr )
   : Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), cls( _cls ), classExpr( _classExpr )
 { }
 

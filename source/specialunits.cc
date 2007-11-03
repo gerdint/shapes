@@ -7,7 +7,7 @@
 #include <iostream> /* I get size_t from here... */
 #include <limits>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 double
 Computation::specialUnitCircleHandle( double a0 )

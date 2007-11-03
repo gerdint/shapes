@@ -1,5 +1,5 @@
-#ifndef metapdftypes_h
-#define metapdftypes_h
+#ifndef shapestypes_h
+#define shapestypes_h
 
 #include "elementarytypes.h"
 #include "statetypes.h"

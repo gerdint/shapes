@@ -13,8 +13,8 @@ DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
 -D'VERSION_REVISION="$(shell svn info .. | sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //')"' \
 -D'VERSION_NUMBER="$(shell cat VERSION | sed -e '2,$$ d')"'
 
-PROGRAM = ../bin/drool
-OBJECTS = metapdfyylex.o \
+PROGRAM = ../bin/shapes
+OBJECTS = shapesyylex.o \
 pdfstructure.o pdfscanner.o pdfyylex.o simplepdfo.o simplepdfi.o consts.o \
 ../tools/source/autoonoff.o \
 ../tools/source/physical.o \
@@ -23,16 +23,16 @@ gettypeid.o elementarytypes.o concretecolors.o facetnormals.o facettypes.o textt
 pagecontentstates.o \
 elementarycoords.o statetypes.o pathtypes.o elementarypath2D.o elementarypath3D.o bezier.o upsamplers.o \
 pathslider2D.o pathslider3D.o drawabletypes.o shadingtypes.o functiontypes.o pdffunctiontypes.o \
-lighttypes.o containertypes.o timetypes.o hottypes.o multipage.o annotations.o tagtypes.o metapdfvalue.o \
-metapdfscanner.o sourcelocation.o metapdfexceptions.o strrefdup.o \
-metapdfparser.o environment.o dynamicenvironment.o registerclasses.o \
-metapdfcore.o coreast.o coreelem.o coreconstruct.o coreannotation.o corepoint.o corepath.o coremisc.o coredraw.o corestate.o \
+lighttypes.o containertypes.o timetypes.o hottypes.o multipage.o annotations.o tagtypes.o shapesvalue.o \
+shapesscanner.o sourcelocation.o shapesexceptions.o strrefdup.o \
+shapesparser.o environment.o dynamicenvironment.o registerclasses.o \
+shapescore.o coreast.o coreelem.o coreconstruct.o coreannotation.o corepoint.o corepath.o coremisc.o coredraw.o corestate.o \
 angleselect.o texlabelmanager.o specialunits.o trianglefunctions.o basicsimplex.o \
 computeelementarypath.o \
 zbuftriangle.o zbufline.o zbufto2D.o zbufinternals.o zsorterto2D.o \
-metapdfast.o metapdfastfun.o metapdfastvalues.o metapdfastvar.o metapdfastexpr.o \
-metapdfastexpr_unary.o metapdfastexpr_arithmetic.o metapdfastexpr_relational.o coreoperators.o metapdfastflow.o \
-classtypes.o metapdfastclass.o errorhandlers.o constructorrepresentation.o charconverters.o \
+ast.o astfun.o astvalues.o astvar.o astexpr.o \
+astexpr_unary.o astexpr_arithmetic.o astexpr_relational.o coreoperators.o astflow.o \
+classtypes.o astclass.o errorhandlers.o constructorrepresentation.o charconverters.o \
 fontmetrics.o afmscanner.o afmyylex.o fonttypes.o corefont.o glyphlist.o characterencoding.o \
 debuglog.o globals.o main.o
 
@@ -40,7 +40,7 @@ FONTMETER = fontmeter
 FONTMETEROBJECTS = testers/fontmeter.o strrefdup.o fontmetrics.o afmscanner.o afmyylex.o
 
 NONCOMPILED := $(patsubst %.o,%.cc, $(filter-out ../tools/source/autoonoff.o $(wildcard *.o), $(OBJECTS) ) )
-BUTmetapdfvalue := $(filter-out metapdfvalue.o, $(OBJECTS) )
+BUTshapesvalue := $(filter-out shapesvalue.o, $(OBJECTS) )
 
 
 # When building a release version, the CHECK macro may be turned off by -DNOCHECK
@@ -97,10 +97,10 @@ install:
 
 .PHONY: clean
 clean: 
-	rm -f metapdfyylex.cc *.o $(THELIB) $(PROGRAM) 
+	rm -f shapesyylex.cc *.o $(THELIB) $(PROGRAM) 
 .PHONY: cleansome
 cleansome: 
-	rm -f metapdfyylex.cc $(BUTmetapdfvalue) $(THELIB) $(PROGRAM) 
+	rm -f shapesyylex.cc $(BUTshapesvalue) $(THELIB) $(PROGRAM) 
 
 $(LEXERFIXER): ../tools/source/lexerfixer.l
 	flex $<
@@ -108,8 +108,8 @@ $(LEXERFIXER): ../tools/source/lexerfixer.l
 
 gettypeid.o: classtree1.h classtree2.h
 
-# metapdfparser.o: metapdfast*.h
-metapdfyylex.cc: metapdfparser.tab.h
+# shapesparser.o: ast*.h
+shapesyylex.cc: shapesparser.tab.h
 
 tools/bin/unbalanced: ../tools/source/unbalanced.l
 	flex $<

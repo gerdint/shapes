@@ -1,6 +1,6 @@
 #include "errorhandlers.h"
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 Lang::ErrorHandler::ErrorHandler( )

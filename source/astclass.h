@@ -8,7 +8,7 @@
 #include "classtypes.h"
 #include "charptrless.h"
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Ast
   {

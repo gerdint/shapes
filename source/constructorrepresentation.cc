@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-using namespace MetaPDF;
+using namespace Shapes;
 
 
 std::string 

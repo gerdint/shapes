@@ -1,124 +1,124 @@
 | T_identifier T_flassign Expr
 {
-  $$ = new MetaPDF::FluidLetAssignStmt( @1, $1, $3 );
+  $$ = new Shapes::FluidLetAssignStmt( @1, $1, $3 );
 }
 | Expr '.' T_identifier T_flassign Expr
 {
-  $$ = new MetaPDF::MemberFluidLetAssignStmt( @$, $1, $3, $5 );
+  $$ = new Shapes::MemberFluidLetAssignStmt( @$, $1, $3, $5 );
 }
 
 
 
-MetaPDF::ResetVariableStmt::ResetVariableStmt( const Ast::SourceLocation & _idLoc, Kernel::VariableHandle _var, Kernel::ValueRef _val )
+Shapes::ResetVariableStmt::ResetVariableStmt( const Ast::SourceLocation & _idLoc, Kernel::VariableHandle _var, Kernel::ValueRef _val )
   : idLoc( _idLoc ), var( _var ), val( _val )
 { }
 
-MetaPDF::ResetVariableStmt::~ResetVariableStmt( )
+Shapes::ResetVariableStmt::~ResetVariableStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetVariableStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::ResetVariableStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   var->quickSetVal( val );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetVariableStmt::firstLoc( ) const
+Shapes::ResetVariableStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetVariableStmt::lastLoc( ) const
+Shapes::ResetVariableStmt::lastLoc( ) const
 {
   return idLoc;
 }
 
 
-MetaPDF::ResetMemberStmt::ResetMemberStmt( const Ast::SourceLocation & _loc, RefCountPtr< const Lang::Instance > _var, RefCountPtr< const char > _fieldID, Kernel::ValueRef _val )
+Shapes::ResetMemberStmt::ResetMemberStmt( const Ast::SourceLocation & _loc, RefCountPtr< const Lang::Instance > _var, RefCountPtr< const char > _fieldID, Kernel::ValueRef _val )
   : loc( _loc ), var( _var ), fieldID( _fieldID ), val( _val )
 { }
 
-MetaPDF::ResetMemberStmt::~ResetMemberStmt( )
+Shapes::ResetMemberStmt::~ResetMemberStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetMemberStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::ResetMemberStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   var->assignMember( fieldID, val );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetMemberStmt::firstLoc( ) const
+Shapes::ResetMemberStmt::firstLoc( ) const
 {
   return loc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetMemberStmt::lastLoc( ) const
+Shapes::ResetMemberStmt::lastLoc( ) const
 {
   return loc;
 }
 
 
-MetaPDF::ResetUnitStmt::ResetUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, double _val )
+Shapes::ResetUnitStmt::ResetUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, double _val )
   : idLoc( _idLoc ), id( _id ), val( _val )
 { }
 
-MetaPDF::ResetUnitStmt::~ResetUnitStmt( )
+Shapes::ResetUnitStmt::~ResetUnitStmt( )
 { }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::ResetUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::ResetUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   env->redefineUnit( idLoc, id, val );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetUnitStmt::firstLoc( ) const
+Shapes::ResetUnitStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::ResetUnitStmt::lastLoc( ) const
+Shapes::ResetUnitStmt::lastLoc( ) const
 {
   return idLoc;
 }
 
 
 
-MetaPDF::FluidLetAssignStmt::FluidLetAssignStmt( const Ast::SourceLocation & _idLoc, MetaPDF::IdentifierNode * _id, Ast::Expression * _expr )
+Shapes::FluidLetAssignStmt::FluidLetAssignStmt( const Ast::SourceLocation & _idLoc, Shapes::IdentifierNode * _id, Ast::Expression * _expr )
   : idLoc( _idLoc ), id( _id ), expr( _expr )
 { }
 
-MetaPDF::FluidLetAssignStmt::~FluidLetAssignStmt( )
+Shapes::FluidLetAssignStmt::~FluidLetAssignStmt( )
 {
   delete id;
   delete expr;
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::FluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::FluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const char > idStr = id->identifier( dstgroup, pdfo, metaState, env );
   Kernel::VariableHandle var = env->getVarHandle( idLoc, idStr );
-  metaState->doAtEndOfGroup->push_front( new MetaPDF::ResetVariableStmt( idLoc, var, env->lookup( idLoc, id->identifier( dstgroup, pdfo, metaState, env ) ) ) );
+  metaState->doAtEndOfGroup->push_front( new Shapes::ResetVariableStmt( idLoc, var, env->lookup( idLoc, id->identifier( dstgroup, pdfo, metaState, env ) ) ) );
   var->setVal( idLoc, idStr, expr->value( dstgroup, pdfo, metaState, env ) );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::FluidLetAssignStmt::firstLoc( ) const
+Shapes::FluidLetAssignStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::FluidLetAssignStmt::lastLoc( ) const
+Shapes::FluidLetAssignStmt::lastLoc( ) const
 {
   return expr->lastLoc( );
 }
@@ -126,11 +126,11 @@ MetaPDF::FluidLetAssignStmt::lastLoc( ) const
 
 
 
-MetaPDF::MemberFluidLetAssignStmt::MemberFluidLetAssignStmt( const Ast::SourceLocation & _loc, Ast::Expression * _variable, MetaPDF::IdentifierNode * _fieldID, Ast::Expression * _expr )
+Shapes::MemberFluidLetAssignStmt::MemberFluidLetAssignStmt( const Ast::SourceLocation & _loc, Ast::Expression * _variable, Shapes::IdentifierNode * _fieldID, Ast::Expression * _expr )
   : loc( _loc ), variable( _variable ), fieldID( _fieldID ), expr( _expr )
 { }
 
-MetaPDF::MemberFluidLetAssignStmt::~MemberFluidLetAssignStmt( )
+Shapes::MemberFluidLetAssignStmt::~MemberFluidLetAssignStmt( )
 {
   delete variable;
   delete fieldID;
@@ -138,7 +138,7 @@ MetaPDF::MemberFluidLetAssignStmt::~MemberFluidLetAssignStmt( )
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::MemberFluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::MemberFluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   Kernel::ValueRef untypedVar = variable->value( dstgroup, pdfo, metaState, env );
 
@@ -151,38 +151,38 @@ MetaPDF::MemberFluidLetAssignStmt::value( Kernel::VariableHandle dstgroup, Simpl
 
   RefCountPtr< const char > id = fieldID->identifier( dstgroup, pdfo, metaState, env );
 
-  metaState->doAtEndOfGroup->push_front( new MetaPDF::ResetMemberStmt( loc, typedVar, id, typedVar->getField( id ) ) );
+  metaState->doAtEndOfGroup->push_front( new Shapes::ResetMemberStmt( loc, typedVar, id, typedVar->getField( id ) ) );
   typedVar->assignMember( id, expr->value( dstgroup, pdfo, metaState, env ) );
 
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::MemberFluidLetAssignStmt::firstLoc( ) const
+Shapes::MemberFluidLetAssignStmt::firstLoc( ) const
 {
   return loc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::MemberFluidLetAssignStmt::lastLoc( ) const
+Shapes::MemberFluidLetAssignStmt::lastLoc( ) const
 {
   return loc;
 }
 
 
 
-MetaPDF::FluidLetAssignUnitStmt::FluidLetAssignUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
+Shapes::FluidLetAssignUnitStmt::FluidLetAssignUnitStmt( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr )
   : idLoc( _idLoc ), id( _id ), expr( _expr )
 { }
 
-MetaPDF::FluidLetAssignUnitStmt::~FluidLetAssignUnitStmt( )
+Shapes::FluidLetAssignUnitStmt::~FluidLetAssignUnitStmt( )
 {
   delete id;
   delete expr;
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::FluidLetAssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::FluidLetAssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   RefCountPtr< const Lang::Value > untypedVal = expr->value( dstgroup, pdfo, metaState, env );
   typedef const Lang::Length ArgType;
@@ -191,36 +191,36 @@ MetaPDF::FluidLetAssignUnitStmt::value( Kernel::VariableHandle dstgroup, SimpleP
     {
       throw Exceptions::TypeMismatch( expr, untypedVal->getTypeName( ), ArgType::staticTypeName( ) );
     }
-  metaState->doAtEndOfGroup->push_front( new MetaPDF::ResetUnitStmt( idLoc, id, env->lookupUnit( idLoc, id ) ) );
+  metaState->doAtEndOfGroup->push_front( new Shapes::ResetUnitStmt( idLoc, id, env->lookupUnit( idLoc, id ) ) );
   env->redefineUnit( idLoc, id, val->getVal( ) );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }
 
 const Ast::SourceLocation &
-MetaPDF::FluidLetAssignUnitStmt::firstLoc( ) const
+Shapes::FluidLetAssignUnitStmt::firstLoc( ) const
 {
   return idLoc;
 }
 
 const Ast::SourceLocation &
-MetaPDF::FluidLetAssignUnitStmt::lastLoc( ) const
+Shapes::FluidLetAssignUnitStmt::lastLoc( ) const
 {
   return expr->lastLoc( );
 }
 
 
-MetaPDF::IntroduceCold::IntroduceCold( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr, size_t ** _idPos )
+Shapes::IntroduceCold::IntroduceCold( const Ast::SourceLocation & _idLoc, const char * _id, Ast::Expression * _expr, size_t ** _idPos )
   : Ast::BindNode( Ast::SourceLocation( _idLoc, _expr->loc( ) ), _idLoc, _id ), expr( _expr ), idPos( _idPos )
 { }
 
-MetaPDF::IntroduceCold::~IntroduceCold( )
+Shapes::IntroduceCold::~IntroduceCold( )
 {
   delete id;
   delete expr;
 }
 
 void
-MetaPDF::IntroduceCold::eval( Kernel::EvalState * evalState ) const
+Shapes::IntroduceCold::eval( Kernel::EvalState * evalState ) const
 {
   if( *idPos == 0 )
     {
@@ -231,19 +231,19 @@ MetaPDF::IntroduceCold::eval( Kernel::EvalState * evalState ) const
 }
 
 
-MetaPDF::AssignStmt::AssignStmt( const Ast::SourceLocation & _idLoc, MetaPDF::IdentifierNode * _id, Ast::Expression * _expr )
+Shapes::AssignStmt::AssignStmt( const Ast::SourceLocation & _idLoc, Shapes::IdentifierNode * _id, Ast::Expression * _expr )
   : idLoc( _idLoc ), id( _id ), expr( _expr )
 { }
 
-MetaPDF::AssignStmt::~AssignStmt( )
+Shapes::AssignStmt::~AssignStmt( )
 {
   delete id;
   delete expr;
 }
 
 RefCountPtr< const Lang::Value >
-MetaPDF::AssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
+Shapes::AssignStmt::value( Kernel::VariableHandle dstgroup, SimplePDF::PDF_out * pdfo, Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const
 {
   env->redefine( idLoc, id->identifier( dstgroup, pdfo, metaState, env ), expr->value( dstgroup, pdfo, metaState, env ) );
-  return MetaPDF::THE_VOID;
+  return Shapes::THE_VOID;
 }

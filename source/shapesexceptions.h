@@ -1,10 +1,10 @@
-#ifndef metapdfexceptions_h
-#define metapdfexceptions_h
+#ifndef shapesexceptions_h
+#define shapesexceptions_h
 
-#include "MetaPDF_Ast_decls.h"
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Exceptions_decls.h"
+#include "Shapes_Ast_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Exceptions_decls.h"
 
 #include "sourcelocation.h"
 #include "methodid.h"
@@ -19,7 +19,7 @@
 #include <map>
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Exceptions
   {
@@ -785,9 +785,9 @@ namespace MetaPDF
     class FailedToDeclareClassAbstract : public RuntimeError
     {
       RefCountPtr< const Lang::Class > cls;
-      const MetaPDF::Ast::ClassFunction * classExpr;
+      const Shapes::Ast::ClassFunction * classExpr;
     public:
-      FailedToDeclareClassAbstract( RefCountPtr< const Lang::Class > _cls, const MetaPDF::Ast::ClassFunction * _classExpr );
+      FailedToDeclareClassAbstract( RefCountPtr< const Lang::Class > _cls, const Shapes::Ast::ClassFunction * _classExpr );
       virtual ~FailedToDeclareClassAbstract( );
       virtual void display( std::ostream & os ) const;
     };
@@ -1019,7 +1019,7 @@ namespace MetaPDF
     // The exceptions in this namespace does not represent ordinary exception conditions in the program.
     // Rather, they can be seen as alternative ways for particular functions to return.  Thus, the caller
     // of such a function shall always take care of any such exceptions, and not let these be passed up.
-    // For this reason, the classes in this namespace does not inherit from MetaPDF::Exceptions::Exception.
+    // For this reason, the classes in this namespace does not inherit from Shapes::Exceptions::Exception.
 
     class NonLocalExitBase
     {

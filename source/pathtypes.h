@@ -3,16 +3,16 @@
 
 #include <cmath>
 
-#include "MetaPDF_Lang_decls.h"
-#include "MetaPDF_Computation_decls.h"
-#include "MetaPDF_Kernel_decls.h"
-#include "MetaPDF_Concrete_decls.h"
-#include "MetaPDF_Ast_decls.h"
+#include "Shapes_Lang_decls.h"
+#include "Shapes_Computation_decls.h"
+#include "Shapes_Kernel_decls.h"
+#include "Shapes_Concrete_decls.h"
+#include "Shapes_Ast_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
 #include "pdfstructure.h"
-#include "metapdfvalue.h"
+#include "shapesvalue.h"
 #include "environment.h"
 #include "charptrless.h"
 #include "functiontypes.h"
@@ -26,7 +26,7 @@
 
 
 
-namespace MetaPDF
+namespace Shapes
 {
 
   Concrete::Time computeDt( Concrete::Length segLength ); // it is sufficient to provide an over-estimate of the segment's length

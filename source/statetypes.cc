@@ -1,16 +1,16 @@
 #include <cmath>
 
-#include "MetaPDF_Helpers_decls.h"
+#include "Shapes_Helpers_decls.h"
 
-#include "metapdftypes.h"
-#include "metapdfexceptions.h"
+#include "shapestypes.h"
+#include "shapesexceptions.h"
 #include "astexpr.h"
 #include "consts.h"
 #include "globals.h"
 #include "angleselect.h"
 #include "astvar.h"
 #include "astclass.h"
-#include "metapdfcore.h"
+#include "shapescore.h"
 #include "simplepdfo.h"
 #include "isnan.h"
 #include "pdffunctiontypes.h"
@@ -19,7 +19,7 @@
 #include <ctype.h>
 #include <stack>
 
-using namespace MetaPDF;
+using namespace Shapes;
 using namespace std;
 
 
@@ -80,7 +80,7 @@ Lang::UserDynamicBinding::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Kernel
   {

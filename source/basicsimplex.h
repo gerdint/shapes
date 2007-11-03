@@ -1,11 +1,11 @@
 #ifndef basicsimplex_h
 #define basicsimplex_h
 
-#include "MetaPDF_Computation_decls.h"
+#include "Shapes_Computation_decls.h"
 
 #include <cstddef>
 
-namespace MetaPDF
+namespace Shapes
 {
   namespace Computation
   {
