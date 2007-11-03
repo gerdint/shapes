@@ -30,10 +30,10 @@ centerx: \ obj .> [centerxat obj 0]
 centery: \ obj .> [centeryat obj 0]
 
 centeryX:
- {thebb: [bbox [teX `$X$´]]
+ {thebb: [bbox (TeX `$X$´)]
   [shift (0cm, ~0.5*([ymax thebb] + [ymin thebb]))]}
 centeryatX:
- {thebb: [bbox [teX `$X$´]]
+ {thebb: [bbox (TeX `$X$´)]
   \ obj y .> [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
 
 centerof: \ obj .> { thebb: [bbox obj]  (0.5*([xmin thebb]+[xmax thebb]),0.5*([ymin thebb]+[ymax thebb])) }

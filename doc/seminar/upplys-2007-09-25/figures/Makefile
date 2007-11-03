@@ -1,6 +1,6 @@
 SHAPES=drool --v w1.4
 
-all: spline.pdf absolute.pdf linkoping.pdf sidepaths.pdf blendarrows.pdf approximators3d.pdf zbufdemo.pdf lightdemo.pdf kjmrobot.pdf intersections.pdf
+all: spline.pdf absolute.pdf linkoping.pdf sidepaths.pdf blendarrows.pdf approximators3d.pdf zbufdemo.pdf lightdemo.pdf kjmrobot.pdf intersections.pdf fontmeterdemo.pdf
 
 %.pdf: %.drool
 	$(SHAPES) $*.

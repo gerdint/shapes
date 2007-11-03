@@ -32,10 +32,10 @@ putlabelAbove: \ lbl z x .> [[shift z + (0cm,@abovelabelmargin)] [centerxat lbl 
 putlabelBelow: \ lbl z x .> [[shift z + (0cm,~@belowlabelmargin)] [centeryatX [centerxat lbl x] 1]]
 putlabelLeft: \ lbl z y .> [[shift z + (~@leftrightlabelmargin,0cm)] [centeryatX [centerxat lbl 1] y]]
 putlabelRight: \ lbl z y .> [[shift z + (@leftrightlabelmargin,0cm)] [centeryatX lbl y]]
-leftpointsign: \ obj str n:1 i:1 .> [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-rightpointsign: \ obj str n:1 i:1 .> [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-bottompointsign: \ obj str n:1 i:1 .> [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
-toppointsign: \ obj str n:1 i:1 .> [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [centerat [teX [sprintf `$\scriptsize %s$´ str]] (0,0)]]
+leftpointsign: \ obj str n:1 i:1 .> [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+rightpointsign: \ obj str n:1 i:1 .> [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+bottompointsign: \ obj str n:1 i:1 .> [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+toppointsign: \ obj str n:1 i:1 .> [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
 
 putblockOrigin: \ •dst newBlock .> {
   •dst << newBlock
@@ -103,7 +103,7 @@ roundblock: \ txt .>
     ( @width:@blocklw | [stroke [circle @smallblockr]] )
   )
 
-sumpicture: \ .> [roundblock [teX `$\Sigma$´]]
+sumpicture: \ .> [roundblock (TeX `$\Sigma$´)]
 
 splitdot: \ .> ( @nonstroking:@stroking | [fill [circle 2.5 * @connectionlw]] )
 

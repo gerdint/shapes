@@ -133,22 +133,22 @@
 $\bullet$page <{}< [stroke (0cm,0cm)-{}-(1cm,1cm)]
 }
 
-\vspace{5mm}
+% \vspace{5mm}
 
-\pause
+% \pause
 
-\texttt{%
-$\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
-}
+% \texttt{%
+% $\bullet$page <{}< stroke [] ((0cm,0cm)-{}-(1cm,1cm))
+% }
 
-\vspace{5mm}
+% \vspace{5mm}
 
-\pause
+% \pause
 
-\texttt{%
-[($\backslash$ $\bullet$dst pth .> \{ $\bullet$dst <{}< stroke [] pth \} )\\
-\ \ $\bullet$page \ (0cm,0cm)-{}-(1cm,1cm)]
-}
+% \texttt{%
+% [($\backslash$ $\bullet$dst pth .> \{ $\bullet$dst <{}< stroke [] pth \} )\\
+% \ \ $\bullet$page \ (0cm,0cm)-{}-(1cm,1cm)]
+% }
 
   \note[item]{Kör live-demo!}
 \end{frame}
@@ -607,6 +607,11 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
     \end{center}
   \end{itemize}
 \end{frame}
+\begin{frame}
+  \begin{center}
+    \includegraphics[width=0.9\paperwidth]{figures/fontmeterdemo}
+  \end{center}
+\end{frame}
 \subsection{2D}
 \begin{frame}\frametitle{Pilhuvuden}
   \begin{itemize}
@@ -626,9 +631,9 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \end{itemize}
   \note{Inget att säga här.}  
 \end{frame}
-\begin{frame}\frametitle{Skärning kurva--kurva, exempel}
+\begin{frame}
   \begin{center}
-    \includegraphics[height=0.8\paperheight]{figures/intersections}
+    \includegraphics[height=0.9\paperheight]{figures/intersections}
   \end{center}
   \note{Inget att säga här.}  
 \end{frame}
@@ -670,7 +675,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
 \begin{frame}\frametitle{Geometriska beräkningar}
   \begin{itemize}
   \item Maximering längs kurva.
-  \item Kortaste avstånd kurva--punkt
+  \item Kortaste avstånd kurva--punkt.
   \end{itemize}
   \begin{center}
     \includegraphics[height=0.5\paperheight]{figures//approximators3d}
@@ -690,14 +695,14 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \item Överlap hanteras med två metoder, $z$-buffer och $z$-sortering.
   \end{itemize}
 \end{frame}
-\begin{frame}\frametitle{Exempel: $z$-buffer}
+\begin{frame}
   \begin{center}
     \includegraphics[width=\textwidth]{figures//zbufdemo}
   \end{center}
 \end{frame}
 {
 \setbeamercolor{normal text}{bg=black} 
-\begin{frame}\frametitle{Exempel: ljussättning}
+\begin{frame}
   \begin{center}
     \includegraphics[height=0.8\paperheight]{figures//lightdemo}
   \end{center}
@@ -756,7 +761,7 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   Att rendera 3D genom en $z$-buffer kompliceras enormt av att det inte finns ett givet raster.
   \begin{itemize}
   \item Analysera vilka och hur många toleranser som måste sättas.
-  \item Designa algoritm med testbara invarianter.
+  \item Designa algoritm utifrån invarianter.
   \item Implementera\ldots
   \item Kan även användas för skuggor!
   \end{itemize}
@@ -797,9 +802,9 @@ $\bullet$page <{}< {\color{red}(} newGroup2D <{}< sun <{}< clouds {\color{red})}
   \begin{itemize}
     \item \Shapes ursprung och sammanhang idag.
     \item Språkets grundelement.
-    \item Funktionalitet från kärnan.
-    \item Hur kompilatorn används.
+    \item Funktionalitet i kärnan.
     \item Hur \Shapes-kod kan se ut.
+    \item Hur kompilatorn används.
   \end{itemize}
   \note[item]{Inget att säga här.}
 }
