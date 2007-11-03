@@ -665,7 +665,7 @@ main( int argc, char ** argv )
 		  cerr << "Expected \".drool\" suffix in the file name \"" << *argv << "\"." << endl ;
 		  exit( 1 );
 		}
-	      *ext = '\0';
+	      *(ext+1) = '\0';
 	      baseName = *argv;
 	    }
 	  else if( (*argv)[ strlen( *argv ) - 1 ] == '.' )

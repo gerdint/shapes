@@ -2,7 +2,7 @@ metaPostArrow: \ p ahLength:void ahAngle:30° fillAsStroking:true .>
  (@blend:blend_NORMAL
   |
   { z: [p 0].p
-    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    theLength: [if [typeof ahLength]==§Void @width*5 ahLength]
     l: [min theLength 0.9*[abs p]]
     e: [p 0]--[p l]
     (>
@@ -20,7 +20,7 @@ triangleArrow: \ p ahLength:void ahAngle:30° fillAsStroking:true .>
   { sl: [p 0]
     z: sl.p
     d: [angle sl.t]
-    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    theLength: [if [typeof ahLength]==§Void @width*5 ahLength]
     (>
       picture: @nonstroking:[if fillAsStroking @stroking @nonstroking]
                |
@@ -44,7 +44,7 @@ twoCircles3DArrow:
 
   \ p ahLength:void ahAngle:30° .>
     { z: [p 0]
-      theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+      theLength: [if [typeof ahLength]==§Void @width*5 ahLength]
       l: [min theLength*[cos ahAngle] 0.9*[abs p]]
       e: [p 0]--[p l]
       (>
@@ -58,7 +58,7 @@ twoCircles3DArrow:
 
 metaPostArrow3D: \ normal p ahLength:void ahAngle:30° .>
   { z: [p 0].p
-    theLength: [if [typeof ahLength]==Void @width*5 ahLength]
+    theLength: [if [typeof ahLength]==§Void @width*5 ahLength]
     l: [min theLength 0.9*[abs p]]
     e: [p 0]--[p l]
     rev: [reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]
@@ -73,7 +73,7 @@ metaPostArrow3D: \ normal p ahLength:void ahAngle:30° .>
 triangleArrow3D: \ p normal:(0,0,1) ahLength:void ahAngle:30° .>
   { sl: [p 0]
     z: sl.p
-    l: [if [typeof ahLength]==Void @width*5 ahLength]
+    l: [if [typeof ahLength]==§Void @width*5 ahLength]
     rotDir1: [cross sl.t [orthogonal sl.t]]
     (>
       picture:

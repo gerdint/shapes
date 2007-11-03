@@ -31,7 +31,7 @@ someBrace: [heightBrace height:4mm ...]
 
 closedBrace: \ p0 p1 height width:void .>
 {
-  lowHeight: height - [if [typeof width]==Void @width width]
+  lowHeight: height - [if [typeof width]==§Void @width width]
   lowBrace:  [reverse [genericBrace p0 p1 aEnd:70° rEndFactor:1.3 aMid:55° rMidFactor:1.6 extendLimitFactor:11 height:lowHeight]]
   highBrace:          [genericBrace p0 p1 aEnd:80° rEndFactor:1.3 aMid:50° rMidFactor:1.6 extendLimitFactor:11 height:height]
   lowBrace--highBrace--cycle

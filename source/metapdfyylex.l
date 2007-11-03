@@ -50,15 +50,15 @@ double metaPDFstrtod( const char * str, char ** end );
 
 WhiteSpace [ \t]
 
-UTF8 "π"|"§"
 Float [~]?[0-9]+([.][0-9]*)?
-LowerCaseLetter [a-z_?]|{UTF8}
+Greek "α"|"β"|"γ"|"Γ"|"δ"|"Δ"|"ε"|"ζ"|"η"|"Θ"|"ι"|"κ"|"λ"|"Λ"|"μ"|"ν"|"χ"|"Ξ"|"π"|"Π"|"ρ"|"σ"|"Σ"|"τ"|"ϕ"|"ω"|"Ω"
+LowerCaseLetter [a-z_?]
 UpperCaseLetter [A-Z]
-Letter {LowerCaseLetter}|{UpperCaseLetter}
-Identifier {LowerCaseLetter}({Letter}|[0-9])*
-Typename {UpperCaseLetter}({Letter}|[0-9])*
+Letter {LowerCaseLetter}|{UpperCaseLetter}|{Greek}
+Identifier {Letter}({Letter}|[0-9])*
 DynamicMark "@"
 StateMark "#"|"•"
+TypeMark "//"|"§"
 
 /*
   At the moment, escape characters must occypy exactly 2 bytes.
@@ -768,8 +768,9 @@ Escape "¢"|"¤"
   metapdflval.str = strdup( yytext );
   return T_identifier;
 }
-{Typename} {
-  metapdflval.str = strdup( yytext );
+{TypeMark}{Identifier} {
+  const char * id = yytext + 2; // The type mark is allways 2 bytes.
+  metapdflval.str = strdup( id );
   return T_typename;
 }
 
