@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `ls ../../examples/features/*.drool ../../examples/showcase/*.drool ../../examples/problems/*.drool ../../examples/misc/*.drool ../../examples/applications/*.drool ../../resources/extensions/*.drext`; do
+for i in `ls ../../examples/features/*.shape ../../examples/showcase/*.shape ../../examples/problems/*.shape ../../examples/misc/*.shape ../../examples/applications/*.shape ../../resources/extensions/*.shext`; do
   echo Fixing $i
-  cat ./exdroolsource | ex -sC $i
+  cat ./exshapessource | ex -sC $i
 done

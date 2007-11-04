@@ -1,7 +1,7 @@
 # Important:  The tests in this cathegory shall use stdout for the output.
 # The produced graphics is not used in the test, and neither is stderr.
 #
-# To create a new test, add the Drool source, say test1.drool to this directory.  Then
+# To create a new test, add the Shapes source, say test1.shape to this directory.  Then
 #   make test1.correct
 # That's all one has to do.
 #
@@ -13,8 +13,8 @@
 #   make clean
 #   make
 
-ALLTEST := $(patsubst %.drool,%.test, $(wildcard *.drool) )
-DROOL = ../../bin/drool
+ALLTEST := $(patsubst %.shape,%.test, $(wildcard *.shape) )
+SHAPES = ../../bin/shapes
 
 ALL: report
 
@@ -31,8 +31,8 @@ report: $(ALLTEST)
 %.correct: %.out
 	mv $< $@
 
-%.out: %.drool $(DROOL)
-	-$(DROOL) $*. > $@
+%.out: %.shape $(SHAPES)
+	-$(SHAPES) $*. > $@
 
 .PHONY: clean
 clean:

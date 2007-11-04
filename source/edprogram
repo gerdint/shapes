@@ -1,3 +1,0 @@
-,s/makeBinding( MetaPDF::HandleType &/makeBinding( MetaPDF::HandleType/g
-
-,w
