@@ -53,6 +53,7 @@ String [^\r\n]*
 %option c++
 %option noyywrap
 
+%option prefix="afm"
 %option yyclass="AfmScanner"
 
 %x Global

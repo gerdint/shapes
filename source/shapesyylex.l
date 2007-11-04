@@ -70,6 +70,7 @@ Escape "¢"|"¤"
 %option noyywrap
 %option yylineno
 
+%option prefix="shapes"
 %option yyclass="ShapesScanner"
 
 %x DiscardRestOfLineAndBEGIN_INITIAL

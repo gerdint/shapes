@@ -3,7 +3,7 @@ LD = g++
 AR = ar
 YACC = $(shell ../tools/source/whichYACC)
 LEX = flex++
-LEXERFIXER = ../tools/source/lexerfixer
+LEXERFIXER = ../tools/source/lexerfixer-$(shell flex --version | sed -e 's/flex //g' -e 's/\./-/g')
 LBLAS = $(shell ../tools/source/whichlBLAS)
 LLAPACK = $(shell ../tools/source/whichlLAPACK)
 ILAPACK := $(shell ../tools/source/whichiLAPACK)
@@ -68,8 +68,9 @@ LIBS = -lm -lc -ll -lz -lgsl $(LBLAS) $(LICONV)
 all:$(PROGRAM) $(LEXERFIXER)
 
 %yylex.cc: %yylex.l %scanner.h $(LEXERFIXER)
-	$(LEX) $(LEXFLAGS) $<
-	$(LEXERFIXER) < lex.yy.cc > $@
+	$(LEX) $(LEXFLAGS) -o$@ $<
+#	$(LEX) $(LEXFLAGS) -olex.yy.cc $<
+#	$(LEXERFIXER) < lex.yy.cc > $@
 #	sed -e 's/class istream;/#include <iostream>\nusing namespace std;/' < lex.yy.cc > $@
 
 %.o : %.cc
@@ -102,7 +103,7 @@ clean:
 cleansome: 
 	rm -f shapesyylex.cc $(BUTshapesvalue) $(THELIB) $(PROGRAM) 
 
-$(LEXERFIXER): ../tools/source/lexerfixer.l
+lexerfixer-%: lexerfixer-%.l
 	flex $<
 	$(CC) $(CFLAGS) -o $@ lex.yy.c
 

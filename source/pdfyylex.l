@@ -55,6 +55,7 @@ IndirectDef {PlainInteger}{WhiteSpace}+{PlainInteger}{WhiteSpace}*"obj"
 %option c++
 %option noyywrap
 
+%option prefix="pdf"
 %option yyclass="PdfScanner"
 
 %x StringState
