@@ -3,7 +3,6 @@ LD = g++
 AR = ar
 YACC = $(shell ../tools/source/whichYACC)
 LEX = flex++
-LEXERFIXER = ../tools/source/lexerfixer-$(shell flex --version | sed -e 's/flex //g' -e 's/\./-/g')
 LBLAS = $(shell ../tools/source/whichlBLAS)
 LLAPACK = $(shell ../tools/source/whichlLAPACK)
 ILAPACK := $(shell ../tools/source/whichiLAPACK)
@@ -65,13 +64,10 @@ INCS = -I../tools/include -I$(SVNCO)/include
 
 LIBS = -lm -lc -ll -lz -lgsl $(LBLAS) $(LICONV)
 
-all:$(PROGRAM) $(LEXERFIXER)
+all:$(PROGRAM)
 
-%yylex.cc: %yylex.l %scanner.h $(LEXERFIXER)
+%yylex.cc: %yylex.l %scanner.h
 	$(LEX) $(LEXFLAGS) -o$@ $<
-#	$(LEX) $(LEXFLAGS) -olex.yy.cc $<
-#	$(LEXERFIXER) < lex.yy.cc > $@
-#	sed -e 's/class istream;/#include <iostream>\nusing namespace std;/' < lex.yy.cc > $@
 
 %.o : %.cc
 	$(CC) $(CFLAGS) -c -o $@ $< $(INCS)

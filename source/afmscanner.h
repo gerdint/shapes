@@ -4,13 +4,11 @@
 #include "fontmetrics.h"
 #include "characterencoding.h"
 
-#ifndef FLEXINT_H		// Else xmlFlexLexer will be defined twice
 #undef yyFlexLexer
-/// FLEX defined lexer
 #define yyFlexLexer afmFlexLexer
-#include <FlexLexer.h>
+#ifndef FLEXINT_H		// Else *FlexLexer will be defined twice
+#  include <FlexLexer.h>
 #endif
-
 class AfmScanner : public afmFlexLexer
 {
   FontMetrics::BaseFont * fontMetricsDst_;

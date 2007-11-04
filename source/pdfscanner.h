@@ -3,11 +3,10 @@
 
 #include "pdfstructure.h"
 
-#ifndef FLEXINT_H		// Else xmlFlexLexer will be defined twice
 #undef yyFlexLexer
-/// FLEX defined lexer
 #define yyFlexLexer pdfFlexLexer
-#include <FlexLexer.h>
+#ifndef FLEXINT_H		// Else *FlexLexer will be defined twice
+#  include <FlexLexer.h>
 #endif
 
 class PdfScanner : public pdfFlexLexer
