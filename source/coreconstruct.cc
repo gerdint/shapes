@@ -16,6 +16,7 @@
 #include "texlabelmanager.h"
 #include "autoonoff.h"
 #include "timetypes.h"
+#include "config.h"
 
 #include <iostream>
 #include <sstream>
@@ -1355,9 +1356,9 @@ namespace Shapes
 		char * outbuf = buf;
 		size_t inbytesleft = bufSize - 1;
 		size_t outbytesleft = bufSize - 1;
-		// For some reason, my iconv header seems unaware of the const modifier...
+		// The ICONV_CAST macro is defined in config.h.
 		size_t count = iconv( converter,
-				      & inbuf, & inbytesleft,
+				      ICONV_CAST( & inbuf ), & inbytesleft,
 				      & outbuf, & outbytesleft );
 		if( count == (size_t)(-1) )
 		  {
@@ -1403,9 +1404,9 @@ namespace Shapes
 		      char * outbuf = backbuf;
 		      size_t inbytesleft = 1;
 		      size_t outbytesleft = backbufSize;
-		      // For some reason, my iconv header seems unaware of the const modifier...
+		      // The ICONV_CAST macro is defined in config.h.
 		      size_t count = iconv( backconverter,
-					    & inbuf, & inbytesleft,
+					    ICONV_CAST( & inbuf ), & inbytesleft,
 					    & outbuf, & outbytesleft );
 		      if( count == (size_t)(-1) )
 			{

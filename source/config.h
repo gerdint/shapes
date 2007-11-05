@@ -8,9 +8,9 @@
 
 
 #ifdef ICONV_IS_POSIX
-#  define ICONV_CAST( ptr ) ptr
+#  define ICONV_CAST( ptr ) const_cast< char ** >( ptr )
 #else
-#  define ICONV_CAST( ptr ) const_cast< const char ** >( ptr )
+#  define ICONV_CAST( ptr ) ptr
 #endif
 
 
