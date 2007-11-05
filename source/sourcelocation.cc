@@ -4,6 +4,7 @@
 
 #include <cerrno>
 #include <fstream>
+#include <limits>
 
 using namespace Shapes;
 
@@ -81,7 +82,7 @@ size_t
 Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line, size_t byteCol )
 {
   static const char * filenameInCache = "";
-  size_t lineInCache;
+  static size_t lineInCache = 0;
   static std::string cachedLine;
 
   if( byteCol == 0 )
@@ -99,14 +100,15 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 	  std::cerr << "*** Error in error message: Failed to open file pointed to by source location: " << filename << std::endl ;
 	  return 0;
 	}
-      for( lineInCache = 0; lineInCache < line; ++lineInCache )
+      for( lineInCache = 1; lineInCache < line; ++lineInCache )
 	{
-	  getline( iFile, cachedLine );
-	  if( iFile.eof( ) )
-	    {
-	      std::cerr << "*** Error in error message: Source location's line (" << line << ") is beyond end of file: " << filename << std::endl ;
-	      return 0;
-	    }
+	  iFile.ignore( std::numeric_limits< std::streamsize >::max( ), '\n' );
+	}
+      getline( iFile, cachedLine );
+      if( iFile.eof( ) )
+	{
+	  std::cerr << "*** Error in error message: Source location's line (" << line << ") is beyond end of file: " << filename << std::endl ;
+	  return 0;
 	}
     }
 
