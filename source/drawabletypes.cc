@@ -774,8 +774,8 @@ Lang::SoftMasked2D::~SoftMasked2D( )
 void
 Lang::SoftMasked2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const
 {
-  const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_4;
-  if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+  const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_4;
+  if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
     {
       Kernel::Auto_qQ auto_qQ( & pdfState->graphics_, os );
       if( ! tf.isIdentity( ) )
@@ -788,7 +788,7 @@ Lang::SoftMasked2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfS
     }
   else
     {
-      Kernel::the_pdfo->versionMessage( VERSION, "A soft mask was ignored." );
+      Kernel::the_pdfo->versionMessage( MIN_VERSION, "A soft mask was ignored." );
       element_->shipout( os, pdfState, tf );
     }
 }
@@ -1843,27 +1843,27 @@ Computation::GraySingleSidedPolygon3D::polygon_to2D( const Kernel::PassedDyn & d
       return render0( eyez, tf, lights, & lattice );
     case 1:
       {
-	const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_3;
-	if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+	const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_3;
+	if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
 	  {
 	    return render1( eyez, tf, lights, & lattice );
 	  }
 	else
 	  {
-	    Kernel::the_pdfo->versionMessage( VERSION, "Replacing shade order 1 by 0." );
+	    Kernel::the_pdfo->versionMessage( MIN_VERSION, "Replacing shade order 1 by 0." );
 	    return render0( eyez, tf, lights, & lattice );
 	  }
       }
     case 2:
       {
-	const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_3;
-	if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+	const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_3;
+	if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
 	  {
 	    return render2( eyez, tf, lights, & lattice, vertexMem );
 	  }
 	else
 	  {
-	    Kernel::the_pdfo->versionMessage( VERSION, "Replacing shade order 2 by 0." );
+	    Kernel::the_pdfo->versionMessage( MIN_VERSION, "Replacing shade order 2 by 0." );
 	    return render0( eyez, tf, lights, & lattice );
 	  }
       }

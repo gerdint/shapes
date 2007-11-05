@@ -627,15 +627,15 @@ Kernel::GraphicsState::synchStrokingAlpha( std::ostream & os, const GraphicsStat
       strokingAlpha_ = ref->strokingAlpha_;
       alphaIsShape_ = strokingAlpha_->isShape_;
 
-      const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_4;
-      if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+      const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_4;
+      if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
 	{
 	  Lang::Alpha::applyGraphicsState( os, resources, *strokingAlpha_, true );
 	  return true;
 	}
       else
 	{
-	  Kernel::the_pdfo->versionMessage( VERSION, "The graphics state stroking alpha setting was ignored." );
+	  Kernel::the_pdfo->versionMessage( MIN_VERSION, "The graphics state stroking alpha setting was ignored." );
 	}
     }
   return false;
@@ -653,15 +653,15 @@ Kernel::GraphicsState::synchNonStrokingAlpha( std::ostream & os, const GraphicsS
       nonStrokingAlpha_ = ref->nonStrokingAlpha_;
       alphaIsShape_ = nonStrokingAlpha_->isShape_;
 
-      const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_4;
-      if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+      const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_4;
+      if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
 	{
 	  Lang::Alpha::applyGraphicsState( os, resources, *nonStrokingAlpha_, false );
 	  return true;
 	}
       else
 	{
-	  Kernel::the_pdfo->versionMessage( VERSION, "The graphics state non-stroking alpha setting was ignored." );
+	  Kernel::the_pdfo->versionMessage( MIN_VERSION, "The graphics state non-stroking alpha setting was ignored." );
 	}
     }
   return false;
@@ -759,15 +759,15 @@ Kernel::GraphicsState::synchBlend( std::ostream & os, const GraphicsState * ref,
 	  return false;
 	}
       blend_ = ref->blend_;
-      const SimplePDF::PDF_out::Version VERSION = SimplePDF::PDF_out::PDF_1_4;
-      if( Kernel::the_pdfo->versionGreaterOrEqual( VERSION ) )
+      const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_4;
+      if( Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
 	{
 	  Lang::BlendMode::applyGraphicsState( os, resources, blend_ );
 	  return true;
 	}
       else
 	{
-	  Kernel::the_pdfo->versionMessage( VERSION, "The graphics state blend mode setting was ignored." );
+	  Kernel::the_pdfo->versionMessage( MIN_VERSION, "The graphics state blend mode setting was ignored." );
 	}
     }
   return false;
