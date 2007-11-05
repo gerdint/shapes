@@ -3,10 +3,10 @@
 
 
 #include "refcount.h"     // Why?!  (You get strange compiler errors if you dont include refcount.h here.)
-#include "iconvselect.h"
 
 #include "FontMetrics_decls.h"
 
+#include <iconv.h>
 
 namespace Shapes
 {

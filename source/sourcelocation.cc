@@ -1,6 +1,7 @@
 #include "sourcelocation.h"
 #include "charconverters.h"
 #include "globals.h"
+#include "config.h"
 
 #include <cerrno>
 #include <fstream>
@@ -140,9 +141,9 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
   size_t inbytesleft = byteCol;
   char * outbuf = buf;
   size_t outbytesleft = bufSize;
-  // For some reason, my iconv header seems unaware of the const modifier...
+  // The ICONV_CAST macro is defined in config.h.
   size_t count = iconv( converter,
-			& inbuf, & inbytesleft,
+			ICONV_CAST( & inbuf ), & inbytesleft,
 			& outbuf, & outbytesleft );
   if( count == (size_t)(-1) )
     {

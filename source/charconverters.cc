@@ -4,9 +4,9 @@
 #include "glyphlist.h"
 #include "characterencoding.h"
 #include "texttypes.h"
-#include "iconvselect.h"
 
 
+#include <iconv.h>
 #include <string>
 #include <fstream>
 #include <sstream>

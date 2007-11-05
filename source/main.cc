@@ -25,7 +25,7 @@
 #include <time.h>
 #include <errno.h>
 #include <limits>
-#include "iconvselect.h"
+#include <iconv.h>
 
 int shapesparse( );
 extern int shapesdebug;

@@ -11,6 +11,7 @@
 #include "charconverters.h"
 #include "constructorrepresentation.h"
 #include "pagecontentstates.h"
+#include "config.h"
 
 #include <fstream>
 #include <sys/types.h>
@@ -322,9 +323,9 @@ Lang::KernedText::makeList( ) const
 	  char * outbuf = buf;
 	  size_t inbytesleft = strlen( inbuf );
 	  size_t outbytesleft = bufSize - 1;
-	  // For some reason, my iconv header seems unaware of the const modifier...
+	  // The ICONV_CAST macro is defined in config.h.
 	  size_t count = iconv( converter,
-				& inbuf, & inbytesleft,
+				ICONV_CAST( & inbuf ), & inbytesleft,
 				& outbuf, & outbytesleft );
 	  if( count == (size_t)(-1) )
 	    {
@@ -432,9 +433,9 @@ Lang::KernedText::oneMacRomanToUTF8( const char c )
   const char * inbuf = charbuf;
   size_t inbytesleft = 1;
   size_t outbytesleft = BUF_SIZE - 1;
-  // For some reason, my iconv header seems unaware of the const modifier...
+  // The ICONV_CAST macro is defined in config.h.
   size_t count = iconv( converter,
-			& inbuf, & inbytesleft,
+			ICONV_CAST( & inbuf ), & inbytesleft,
 			& outbuf, & outbytesleft );
   if( count == (size_t)(-1) )
     {
@@ -542,9 +543,9 @@ Lang::KernedText::shipout( std::ostream & os, Kernel::PageContentStates * pdfSta
 	  char * outbuf = buf;
 	  size_t inbytesleft = strlen( inbuf );
 	  size_t outbytesleft = bufSize - 1;
-	  // For some reason, my iconv header seems unaware of the const modifier...
+	  // The ICONV_CAST macro is defined in config.h.
 	  size_t count = iconv( converter,
-				& inbuf, & inbytesleft,
+				ICONV_CAST( & inbuf ), & inbytesleft,
 				& outbuf, & outbytesleft );
 	  if( count == (size_t)(-1) )
 	    {
@@ -644,9 +645,9 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 	      char * outbuf = buf;
 	      size_t inbytesleft = strlen( inbuf );
 	      size_t outbytesleft = bufSize - 1;
-	      // For some reason, my iconv header seems unaware of the const modifier...
+	      // The ICONV_CAST macro is defined in config.h.
 	      size_t count = iconv( converter,
-				    & inbuf, & inbytesleft,
+				    ICONV_CAST( & inbuf ), & inbytesleft,
 				    & outbuf, & outbytesleft );
 	      if( count == (size_t)(-1) )
 		{
@@ -746,9 +747,9 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 	      char * outbuf = buf;
 	      size_t inbytesleft = strlen( inbuf );
 	      size_t outbytesleft = bufSize - 1;
-	      // For some reason, my iconv header seems unaware of the const modifier...
+	      // The ICONV_CAST macro is defined in config.h.
 	      size_t count = iconv( converter,
-				    & inbuf, & inbytesleft,
+				    ICONV_CAST( & inbuf ), & inbytesleft,
 				    & outbuf, & outbytesleft );
 	      if( count == (size_t)(-1) )
 		{

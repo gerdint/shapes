@@ -1,8 +1,0 @@
-#!/bin/bash
- 
-if test -e /usr/lib/liblapack.so
-then
-    echo -llapack
-else
-    echo -framework Accelerate
-fi

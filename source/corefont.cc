@@ -4,6 +4,7 @@
 #include "autoonoff.h"
 #include "ast.h"
 #include "glyphlist.h"
+#include "config.h"
 
 using namespace Shapes;
 
@@ -149,9 +150,9 @@ namespace Shapes
 	    char * outbuf = buf;
 	    size_t inbytesleft = bufSize;
 	    size_t outbytesleft = bufSize;
-	    // For some reason, my iconv header seems unaware of the const modifier...
+	    // The ICONV_CAST macro is defined in config.h.
 	    size_t count = iconv( converter,
-				  & inbuf, & inbytesleft,
+				  ICONV_CAST( & inbuf ), & inbytesleft,
 				  & outbuf, & outbytesleft );
 	    if( count == (size_t)(-1) )
 	      {

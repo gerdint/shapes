@@ -1,8 +1,0 @@
-#!/bin/bash
- 
-if test -e /System/Library/Frameworks
-then
-    echo -I/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers
-else
-    echo 
-fi

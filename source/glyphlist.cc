@@ -3,6 +3,7 @@
 #include "autoonoff.h"
 #include "shapesexceptions.h"
 #include "charconverters.h"
+#include "config.h"
 
 #include <cstring>
 #include <sstream>
@@ -78,9 +79,9 @@ glyphlist_strtol( char * src, char ** end, iconv_t converterUTF16BEToUCS4 )
   char * outbuf = reinterpret_cast< char * >( & res );;
   size_t outbytesleft = sizeof( FontMetrics::GlyphList::UnicodeType );
 
-  // For some reason, my iconv header seems unaware of the const modifier...
+  // The ICONV_CAST macro is defined in config.h.
   size_t count = iconv( converterUTF16BEToUCS4,
-			& inbuf, & inbytesleft,
+			ICONV_CAST( & inbuf ), & inbytesleft,
 			& outbuf, & outbytesleft );
   if( count == (size_t)(-1) )
     {
@@ -175,9 +176,9 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
       size_t inbytesleft = inbytesGuess;
       outbuf = buf;
       size_t outbytesleft = BUF_SIZE;
-      // For some reason, my iconv header seems unaware of the const modifier...
+      // The ICONV_CAST macro is defined in config.h.
       size_t count = iconv( converter,
-			    & inbuf, & inbytesleft,
+			    ICONV_CAST( & inbuf ), & inbytesleft,
 			    & outbuf, & outbytesleft );
       if( count == (size_t)(-1) )
 	{
