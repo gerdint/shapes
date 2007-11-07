@@ -14,7 +14,7 @@
 #   make
 
 ALLTEST := $(patsubst %.shape,%.test, $(wildcard *.shape) )
-SHAPES = ../../bin/shapes
+SHAPES = ../../source/shapes
 
 ALL: report
 
