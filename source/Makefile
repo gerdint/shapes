@@ -41,7 +41,6 @@ BUTshapesvalue := $(filter-out shapesvalue.o, $(OBJECTS) )
 
 
 # When building a release version, the CHECK macro may be turned off by -DNOCHECK
-#  pagescanner.o pageyylex.o
 CFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE $(DICONV) -g
 
 # The -d flag tells lex to set up for debugging. Can turn on/off by

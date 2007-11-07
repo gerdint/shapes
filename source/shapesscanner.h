@@ -12,9 +12,9 @@
 #include <list>
 #include <string>
 
-#undef yyFlexLexer
-#define yyFlexLexer shapesFlexLexer
 #ifndef FLEXINT_H		// Else *FlexLexer will be defined twice
+#  undef yyFlexLexer
+#  define yyFlexLexer shapesFlexLexer
 #  include <FlexLexer.h>
 #endif
 

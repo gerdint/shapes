@@ -3,9 +3,9 @@
 
 #include "pdfstructure.h"
 
-#undef yyFlexLexer
-#define yyFlexLexer pdfFlexLexer
 #ifndef FLEXINT_H		// Else *FlexLexer will be defined twice
+#  undef yyFlexLexer
+#  define yyFlexLexer pdfFlexLexer
 #  include <FlexLexer.h>
 #endif
 

@@ -4,9 +4,9 @@
 #include "fontmetrics.h"
 #include "characterencoding.h"
 
-#undef yyFlexLexer
-#define yyFlexLexer afmFlexLexer
 #ifndef FLEXINT_H		// Else *FlexLexer will be defined twice
+#  undef yyFlexLexer
+#  define yyFlexLexer afmFlexLexer
 #  include <FlexLexer.h>
 #endif
 class AfmScanner : public afmFlexLexer
