@@ -28,8 +28,9 @@ report: $(ALLTEST)
 	-cmp $< $*.correct >& cmptmp
 	echo $(CURDIR)/$* `cat cmptmp` > $@
 
-%.correct: %.out
-	mv $< $@
+# This is just to document how to generate a file containing correct output:
+#%.correct: %.out
+#	mv $< $@
 
 %.out: %.shape $(SHAPES)
 	-$(SHAPES) $*. > $@
