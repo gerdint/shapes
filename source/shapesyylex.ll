@@ -26,7 +26,7 @@
 
 using namespace Shapes;
 #include "yyltype.h"
-#include "shapesparser.tab.h"
+#include "shapesparser.h"
 
 #include <string>
 #include <cstdlib>

@@ -7,7 +7,7 @@
 #include "astclass.h"
 
 using namespace Shapes;
-#include "shapesparser.tab.h"
+#include "shapesparser.h"
 
 #include <iostream>
 

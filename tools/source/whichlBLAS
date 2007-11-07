@@ -1,8 +1,0 @@
-#!/bin/bash
- 
-if test -e /System/Library/Frameworks
-then
-    echo -framework Accelerate
-else
-    echo -L/home/rt/tidefelt/sw/lib -lgslcblas
-fi

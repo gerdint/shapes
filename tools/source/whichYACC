@@ -1,8 +1,0 @@
-#!/bin/bash
- 
-if test -e /usr/local/bin/bison
-then
-    echo /usr/local/bin/bison
-else
-    echo bison
-fi
