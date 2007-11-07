@@ -1,0 +1,26 @@
+.TH shapes 1 20071107 Tiddes "The Shapes language compiler"
+.SH NAME
+shapes \- Compile a Shapes source to pdf.
+.SH SYNOPSIS
+.B shapes [options]
+.I source
+.SH DESCRIPTION
+.B shapes
+compiles a source file written in the Shapes language (with file name extension \eshape).  On success, this results in a pdf file containing a viewable representation of the graphics described by the source.
+.SH EXAMPLES
+To use the xpdf program for preview, and with a source called 
+.I hi.shape
+, run the program as:
+
+.br
+  shapes --xpdf hi.shape
+
+or just to the point your shell completion will take you:
+
+.br
+  shapes --xpdf hi.
+
+.SH "AUTHOR"
+Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.
+.SH "SEE ALSO"
+.BR xpdf (1)
