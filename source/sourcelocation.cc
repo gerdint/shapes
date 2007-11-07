@@ -105,12 +105,20 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 	{
 	  iFile.ignore( std::numeric_limits< std::streamsize >::max( ), '\n' );
 	}
-      getline( iFile, cachedLine );
       if( iFile.eof( ) )
 	{
-	  std::cerr << "*** Error in error message: Source location's line (" << line << ") is beyond end of file: " << filename << std::endl ;
+	  std::cerr << "*** Error in error message: Source location's line (" << line << ") is way beyond end of file: " << filename << std::endl ;
 	  return 0;
 	}
+      getline( iFile, cachedLine );
+      /* iFile.eod( ) is acceptable here, since it "just" means that there was no newline
+       * terminating the last line in the file.
+       */
+//       if( iFile.eof( ) )
+// 	{
+// 	  std::cerr << "*** Error in error message: Source location's line (" << line << ") is one beyond end of file: " << filename << std::endl ;
+// 	  return 0;
+// 	}
     }
 
   return byteColumnToUTF8Column( cachedLine, byteCol );  

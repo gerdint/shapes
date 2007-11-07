@@ -582,7 +582,13 @@ Escape "¢"|"¤"
 }
 <Comment>. { }
 <Comment>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
-<Comment><<EOF>> { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment" ) ); }
+<Comment><<EOF>> {
+  /* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
+   * however ignornig yyleng (which has the value 1).
+   */
+  shapeslloc.firstColumn = shapeslloc.lastColumn;
+  throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment" ) );
+ }
 
 <INITIAL>[`][\n]? {
   if( yyleng > 1 )
@@ -679,7 +685,13 @@ Escape "¢"|"¤"
   more( );
 }
 <String>. { more( ); }
-<String><<EOF>> { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) ); }
+<String><<EOF>> {
+  /* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
+   * however ignornig yyleng (which has the value 1).
+   */
+  shapeslloc.firstColumn = shapeslloc.lastColumn;
+  throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) );
+ }
 
 <Incl>[^ \t\n]+ {
   currentNeedFile = yytext;
@@ -738,6 +750,11 @@ Escape "¢"|"¤"
 
 
 <<EOF>> {
+  /* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
+   * however ignornig yyleng (which has the value 1).
+   */
+  shapeslloc.firstColumn = shapeslloc.lastColumn;
+
   if( stateStack.size( ) == 0 )
   {
     if( appendStream_ != 0 )
