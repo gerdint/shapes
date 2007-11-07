@@ -24,20 +24,20 @@ report: $(ALLTEST)
 	cat ../expretty | ex -sC $@
 
 # When using cmp, also capture stderr, since cmp will complain there if a file is empty.
-%.test: %.png # the correct output is not added here, since it should never be made in request to this rule.
-	-cmp $< $*.correct >& cmptmp
+%.test: %.png %.correct.png
+	-cmp $^ >& cmptmp
 	echo $(CURDIR)/$* `cat cmptmp` > $@
 
-# One rule is used to make the %.png frm the %.shape, so that errors can be handled within the rule.
-%.png: %.shape $(SHAPES)
-	-$(SHAPES) $*.
-	-convert -density 150 -resize 150x $*.pdf $@
+# One rule is used to make the %.png frm the %.pdf, so that errors can be handled within the rule.
+%.png: %.pdf
+	-convert -density 150 -resize 150x $< $@
 	touch $@
 
-# Make a copy when the output is what you want:
-%.correct: %.png
-	mv $< $@
+# One rule is used to make the %.shape frm the %.pdf, so that errors can be handled within the rule.
+%.pdf: %.shape $(SHAPES)
+	-$(SHAPES) $<
+	touch $@
 
 .PHONY: clean
 clean:
-	-rm *.labels* *.pdf *.png *.test cmptmp *~
+	-rm *.labels* $(filter-out $(wildcard *.correct.pdf), $(wildcard *.pdf) ) *.png *.test cmptmp *~ report

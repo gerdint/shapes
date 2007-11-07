@@ -1,0 +1,76 @@
+%PDF-1.5
+%ÅÇÉÑ Treat as binary
+1 0 obj
+<< /PageLabels 8 0 R
+/Pages 4 0 R
+/Type /Catalog
+>>
+endobj
+2 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+3 0 obj
+<< /SMask /None
+/Type /ExtGState
+>>
+endobj
+4 0 obj
+<< /Count 1
+/Kids [ 5 0 R ]
+/Type /Pages
+>>
+endobj
+5 0 obj
+<< /Contents 6 0 R
+/MediaBox [ -4.693610 -14.508081 33.040066 42.854537 ]
+/Parent 4 0 R
+/Resources 7 0 R
+/Type /Page
+>>
+endobj
+6 0 obj
+<< /Length 124
+>>
+stream
+0.00 0.00 m 0.00 0.00 32.54 14.34 28.35 28.35 c 24.15 42.35 4.19 42.35 0.00 28.35 c -4.19 14.34 32.54 14.01 28.35 0.00 c  S
+
+endstream 
+endobj
+7 0 obj
+<< /ProcSet [ /PDF ]
+>>
+endobj
+8 0 obj
+<< /Nums [ 0 << /S /D
+>> ]
+/Type /PageLabels
+>>
+endobj
+9 0 obj
+<< /CreationDate (D:20071107151215+0000)
+/Producer (Shapes)
+/Title (tmp.shape)
+>>
+endobj
+xref
+0 10
+0000000031 65535 n 
+0000000031 00000 n 
+0000000098 00000 n 
+0000000149 00000 n 
+0000000200 00000 n 
+0000000259 00000 n 
+0000000394 00000 n 
+0000000570 00000 n 
+0000000609 00000 n 
+0000000672 00000 n 
+trailer
+<< /Info 9 0 R
+/Root 1 0 R
+/Size 10
+>>
+startxref
+769
+%%EOF

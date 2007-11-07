@@ -36,4 +36,4 @@ report: $(ALLTEST)
 
 .PHONY: clean
 clean:
-	-rm *.labels* *.pdf *.out *.test *~
+	-rm *.labels* *.pdf *.out *.test *~ report
