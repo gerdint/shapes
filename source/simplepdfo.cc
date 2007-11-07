@@ -383,7 +383,7 @@ SimplePDF::PDF_out::importBtexEtexThings( RefCountPtr< PDF_in > pdfi, Shapes::Ke
       Concrete::Length depth( pdfNameToDouble( (*original)[ "TeXdp" ] ) );
       Concrete::Length width( pdfNameToDouble( (*original)[ "TeXwd" ] ) );
 
-      const Concrete::Length bboxAddY = 0.04 * ( depth + height );
+      const Concrete::Length bboxAddY = 0.08 * ( depth + height );
       const Concrete::Length xmin = Concrete::ZERO_LENGTH;
       const Concrete::Length xmax = width;
       const Concrete::Length ymin = -depth - bboxAddY;
