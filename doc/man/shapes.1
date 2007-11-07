@@ -20,6 +20,14 @@ or just to the point your shell completion will take you:
 .br
   shapes --xpdf hi.
 
+.SH "ENVIRONMENT VARIABLES"
+.B SHAPESINPUTS
+contains a search path used for requested source files.  It usually consists of directories with language extension files (with the
+.I .shext
+extension), and in particular the directory with extensions shipped with the compiler.
+
+.B SHAPESFONTMETRICS
+tells where to search for font metrics files.  Font metrics for the standard fonts in pdf are distributed with the compiler.
 .SH "AUTHOR"
 Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.
 .SH "SEE ALSO"
