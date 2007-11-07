@@ -56,8 +56,8 @@ YACCFLAGS = -dvt
 ARFLAGS = -r
 
 # The order here is important in order for clapack.h to be taken from the framework in case it exists there,
-# and only otherwise from ../tools/include.
-INCS = -I../tools/include -I$(SVNCO)/include
+# and only otherwise from ../tools/include.  In ../tools/include there are copies of relevant files from $(SVNCO)/include.
+INCS = -I../tools/include
 
 LIBS = -lm -lc -ll -lz -lgsl $(LBLAS) $(LICONV)
 

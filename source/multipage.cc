@@ -274,10 +274,10 @@ Kernel::WarmCatalog::gcMark( Kernel::GCMarkedSet & marked )
 void
 Kernel::WarmCatalog::setLabel( RefCountPtr< const char > prefix, PageLabelEntry::Style style, size_t start )
 {
-  const SimplePDF::PDF_out::Version MIN_VERSION = SimplePDF::PDF_out::PDF_1_3;
-  if( ! Kernel::the_pdfo->versionGreaterOrEqual( MIN_VERSION ) )
+  const SimplePDF::PDF_out::Version PAGELABEL_VERSION = SimplePDF::PDF_out::PDF_1_3;
+  if( ! Kernel::the_pdfo->versionGreaterOrEqual( PAGELABEL_VERSION ) )
     {
-      Kernel::the_pdfo->versionMessage( MIN_VERSION, "The page label setting was ignored." );
+      Kernel::the_pdfo->versionMessage( PAGELABEL_VERSION, "The page label setting was ignored." );
       return;
     }
 
