@@ -52,5 +52,7 @@ shapes_SOURCES = shapesyylex.ll \
 		debuglog.cc globals.cc main.cc
 
 
-version.o : version.cc
+version.o : version.cc FORCE
 	${COMPILE} ${DVERSION} -c $< -o $@
+
+FORCE :
