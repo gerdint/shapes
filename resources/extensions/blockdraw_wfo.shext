@@ -26,6 +26,8 @@ dynamic @blockspaceveryfar identity 15mm
 
 dynamic @textscaling identity [scale 1]
 
+dynamic @connectpainter identity [stroke head:MetaPostArrow ...]
+
 centerlabel: \ obj .> [centerx [centeryX obj]]
 
 putlabelAbove: \ lbl z x .> [[shift z + (0cm,@abovelabelmargin)] [centerxat lbl x]]
@@ -115,26 +117,26 @@ hhconnect: \ •dst pa pb mediation slide .>
  {
    mid: [mediate mediation pa.x pb.x] + [if pb.x > pa.x 1 ~1] * slide
    respath: pa--( mid, pa.y )--( mid, pb.y )--pb
-   •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
+   •dst << @width:@connectionlw | [@connectpainter respath]
    respath
   }
 vvconnect: \ •dst pa pb mediation slide .>
   { 
     mid: [mediate mediation pa.y pb.y] + [if pb.y > pa.y 1 ~1 ] * slide
     respath: pa--( pa.x, mid )--( pb.x, mid )--pb
-    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
+    •dst << @width:@connectionlw | [@connectpainter respath]
     respath
   }
 hvconnect: \ •dst pa pb .>
   { 
     respath: pa--( pb.x, pa.y )--pb
-    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
+    •dst << @width:@connectionlw | [@connectpainter respath]
     respath
   }
 vhconnect: \ •dst pa pb .>
   { 
     respath: pa--( pa.x, pb.y )--pb
-    •dst << @width:@connectionlw | [stroke respath head:metaPostArrow]
+    •dst << @width:@connectionlw | [@connectpainter respath]
     respath
   }
 
