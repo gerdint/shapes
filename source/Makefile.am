@@ -8,8 +8,7 @@ AM_LDFLAGS = -lz -lm -lc
 LIBS = ${LIBICONV} ${GSL_LIBS} ${ZLIB_LIBS}
 AM_LFLAGS = -olex.yy.c -d
 AM_YFLAGS = -dvt -pshapes
-CLEANFILES = shapesparser.h shapesparser.cc  shapesparser.output \
-             afmyylex.cc shapesyylex.cc pdfyylex.cc
+CLEANFILES = shapesparser.output
 shapes_LDADD = version.o
 
 
