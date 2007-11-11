@@ -206,6 +206,8 @@ void shapeserror( char * msg )
 
 %start Program
 
+%name-prefix="shapes"
+
 %%
 /*
  * All productions and actions should be placed between the start and stop

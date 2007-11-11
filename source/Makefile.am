@@ -7,7 +7,7 @@ AM_CPPFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE \
 AM_LDFLAGS = -lz -lm -lc
 LIBS = ${LIBICONV} ${GSL_LIBS} ${ZLIB_LIBS}
 AM_LFLAGS = -olex.yy.c -d
-AM_YFLAGS = -dvt -pshapes
+AM_YFLAGS = -dvt
 CLEANFILES = shapesparser.output
 shapes_LDADD = version.o
 
