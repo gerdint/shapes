@@ -36,7 +36,7 @@ Lang::Font::searchGlyphList( )
 
   if( theFontMetricsSearchPath_.size( ) == 0 )
     {
-      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up (needed for the glyph list).  Consider defining the environment variable DROOLFONTMETRICS." ) );
+      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up (needed for the glyph list).  Consider defining the environment variable SHAPESFONTMETRICS." ) );
     }
 
   typedef typeof theFontMetricsSearchPath_ ListType;
@@ -49,7 +49,7 @@ Lang::Font::searchGlyphList( )
 	  return res;
 	}
     }
-  throw Exceptions::MiscellaneousRequirement( "A font operation required the glyph list, but it was not found.  It should be named \"glyphlist.txt\" and reside in a directory on the font metrics path.  Please refer to your environment variable DROOLFONTMETRICS." );
+  throw Exceptions::MiscellaneousRequirement( "A font operation required the glyph list, but it was not found.  It should be named \"glyphlist.txt\" and reside in a directory on the font metrics path.  Please refer to your environment variable SHAPESFONTMETRICS." );
 }
 
 std::string
@@ -69,7 +69,7 @@ Lang::Font::searchFontMetrics( RefCountPtr< const char > fontName )
   
   if( theFontMetricsSearchPath_.size( ) == 0 )
     {
-      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.  Consider defining the environment variable DROOLFONTMETRICS." ) );
+      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.  Consider defining the environment variable SHAPESFONTMETRICS." ) );
     }
 
   typedef typeof theFontMetricsSearchPath_ ListType;
@@ -92,7 +92,7 @@ Lang::Font::searchCharacterEncoding( const char * encodingName )
 
   if( theFontMetricsSearchPath_.size( ) == 0 )
     {
-      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.  Consider defining the environment variable DROOLFONTMETRICS." ) );
+      throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.  Consider defining the environment variable SHAPESFONTMETRICS." ) );
     }
 
   typedef typeof theFontMetricsSearchPath_ ListType;
@@ -106,7 +106,7 @@ Lang::Font::searchCharacterEncoding( const char * encodingName )
 	}
     }
   std::ostringstream msg;
-  msg << "A font operation required a character encoding file for " << encodingName << ", but it was not found.  It should be named \"" << encodingName << ".enc\" and reside in a directory on the font metrics path.  Please refer to your environment variable DROOLFONTMETRICS." ;
+  msg << "A font operation required a character encoding file for " << encodingName << ", but it was not found.  It should be named \"" << encodingName << ".enc\" and reside in a directory on the font metrics path.  Please refer to your environment variable SHAPESFONTMETRICS." ;
   throw Exceptions::MiscellaneousRequirement( strrefdup( msg ) );
 }
 
