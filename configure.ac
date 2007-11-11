@@ -57,5 +57,5 @@ AC_FUNC_STRFTIME
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([floor memchr memset pow rint sqrt strchr strdup strrchr strtol])
 
-AC_CONFIG_FILES([Makefile source/Makefile tools/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile source/Makefile doc/Makefile])
 AC_OUTPUT
