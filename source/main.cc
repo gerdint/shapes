@@ -744,6 +744,10 @@ main( int argc, char ** argv )
   addDefaultNeedPath( );
   addDefaultFontMetricsPath( );
 
+#ifdef RESOURCES_DIR
+  Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
+#endif
+
   if( filenameRequestList.size( ) > 0 )
     {
       list< const char * >::const_iterator resource = resourceRequestList.begin( );

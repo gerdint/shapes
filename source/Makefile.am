@@ -3,6 +3,7 @@ DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
 -D'VERSION_NUMBER="$(shell cat ${srcdir}/VERSION | sed -e '2,$$ d')"'
 
 AM_CPPFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE \
+              -D'RESOURCE_DIR="${pgkdatadir}"' \
               ${GSL_CFLAGS} ${ZLIB_CFLAGS} -I${top_srcdir}/tools/include
 AM_LDFLAGS = -lz -lm -lc
 LIBS = ${LIBICONV} ${GSL_LIBS} ${ZLIB_LIBS}
