@@ -746,6 +746,7 @@ main( int argc, char ** argv )
 
 #ifdef RESOURCES_DIR
   Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
+  Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
 #endif
 
   if( filenameRequestList.size( ) > 0 )
