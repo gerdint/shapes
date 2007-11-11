@@ -12,8 +12,9 @@ AM_CONFIG_HEADER([config.h])
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
-AM_PROG_LEX
+AC_PROG_FLEX
 AC_PROG_YACC
+#Write code here to check for BISON 2.0+
 
 # Set compiler options
 AC_DEBUG
