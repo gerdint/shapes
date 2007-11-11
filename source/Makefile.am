@@ -1,5 +1,6 @@
 DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
--D'VERSION_REVISION="$(shell svn info ${top_srcdir} | sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //')"' \
+-D'VERSION_REVISION="$(shell cd ${top_srcdir}; svn info  | \
+                             sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //')"' \
 -D'VERSION_NUMBER="$(shell cat ${srcdir}/VERSION | sed -e '2,$$ d')"'
 
 AM_CPPFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE \
