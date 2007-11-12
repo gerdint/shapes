@@ -209,7 +209,7 @@ Lang::PDF_Function::call( Kernel::EvalState * evalState, Kernel::Arguments & arg
       break;
     default:
       {
-	std::vector< Kernel::ValueRef > * tmpRes;
+	std::vector< Kernel::ValueRef > * tmpRes = new typeof *tmpRes;
 	tmpRes->reserve( resVector->size( ) );
 	typedef typeof *resVector VectorType;
 	for( VectorType::const_iterator i = resVector->begin( ); i != resVector->end( ); ++i )

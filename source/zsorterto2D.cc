@@ -322,7 +322,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	      // Resolve cyclic overlap the hard way...
 	      std::cerr << "A cyclic overlap situation in a z sorter required a small triangle to be drawn too deep." << std::endl ;
 	      Concrete::Area bestArea = HUGE_VAL;
-	      size_t besti;
+	      size_t besti = 0;
 	      // This search is a somewhat expensive since we must search the whole list.
 	      typedef typeof triangleMem ListType;
 	      ListType::iterator ti = triangleMem.begin( );

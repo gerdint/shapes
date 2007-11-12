@@ -779,7 +779,7 @@ Computation::ZBufTriangle::intersectionLinePoints( const Computation::ZBufTriang
       return false;
     }
 
-  size_t bestCol;
+  size_t bestCol = 4;
   {
     double * src = a0;
     double bestAbs = 0;
@@ -791,9 +791,10 @@ Computation::ZBufTriangle::intersectionLinePoints( const Computation::ZBufTriang
 	    bestAbs = tmp;
 	    bestCol = col_i;
 	  }
-    }
+      }
   }
   // Here, one could check that bestCol has really been assigned.
+  // To test if it is unassigned, test for bestCol == 4.
   
   {
     const double f = a1[bestCol] / a0[bestCol];

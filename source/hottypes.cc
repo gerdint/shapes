@@ -997,20 +997,20 @@ Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCount
 	  try
 	    {
 	      typedef const Lang::Integer ValType;
-	      RefCountPtr< ValType > val = Helpers::try_cast_CoreArgument< ValType >( val );
+	      RefCountPtr< ValType > casted_val = Helpers::try_cast_CoreArgument< ValType >( val );
 	      if( metrics_->weightNumber_ > 0 )
 		{
 		  throw Exceptions::MiscellaneousRequirement( "Multiply specified value." );
 		}
-	      if( val->val_ % 100 != 0 )
+	      if( casted_val->val_ % 100 != 0 )
 		{
 		  throw Exceptions::OutOfRange( callLoc, "The 'Weight number must be divisible by 100." );
 		}
-	      if( val->val_ < 100 ||val->val_ > 900 )
+	      if( casted_val->val_ < 100 || casted_val->val_ > 900 )
 		{
 		  throw Exceptions::OutOfRange( callLoc, "The 'Weight number must be in the range [ 100, 900 ]." );
 		}
-	      metrics_->weightNumber_ = val->val_;
+	      metrics_->weightNumber_ = casted_val->val_;
 	      goto OK;
 	    }
 	  catch( const NonLocalExit::NotThisType & ball )
@@ -1165,10 +1165,10 @@ Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCount
 	      throw Exceptions::OutOfRange( callLoc, "Please provide a value for 'size first." );
 	    }
 	  typedef const Lang::ElementaryPath2D ValType;
-	  RefCountPtr< ValType > val = Helpers::elementaryPathTry2D( val );
+	  RefCountPtr< ValType > casted_val = Helpers::elementaryPathTry2D( val );
 	  Concrete::Coords2D llcorner( 0, 0 );
 	  Concrete::Coords2D urcorner( 0, 0 );
-	  if( ! val->boundingRectangle( & llcorner, & urcorner ) )
+	  if( ! casted_val->boundingRectangle( & llcorner, & urcorner ) )
 	    {
 	      throw Exceptions::OutOfRange( callLoc, "The path was empty." );
 	    }
