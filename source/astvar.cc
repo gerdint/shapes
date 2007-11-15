@@ -136,6 +136,9 @@ Ast::CodeBracket::eval( Kernel::EvalState * evalState ) const
 {
   if( nodes_->begin( ) == nodes_->end( ) )
     {
+      Kernel::ContRef cont = evalState->cont_;
+      cont->takeValue( Lang::THE_VOID,
+		       evalState );
       return;
     }
 

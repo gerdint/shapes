@@ -1,0 +1,2 @@
+golden: ( [sqrt 5] + 1 ) / 2
+Golden: 1 / golden

@@ -5,9 +5,11 @@ ymin: \ p .> [continuous_maximizer p (0,~1)].p.y
 centerat: \ obj z .>
  {
   thebb: [bbox obj]
-  [[shift (0.5*([xmin thebb]*(z.x-1) - [xmax thebb]*(z.x+1)),
-    	   0.5*([ymin thebb]*(z.y-1) - [ymax thebb]*(z.y+1)) )]
-   obj]
+  [if thebb.null?
+      obj
+      [[shift (0.5*([xmin thebb]*(z.x-1) - [xmax thebb]*(z.x+1)),
+        	   0.5*([ymin thebb]*(z.y-1) - [ymax thebb]*(z.y+1)) )]
+      obj]]
  }
 
 centerxat: \ obj x .>
