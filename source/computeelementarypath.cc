@@ -199,9 +199,9 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 	    pth->push_back( newPoint );
 	  }
 	  break;
-	SINGLELOOP1( CLASSTREE1_SubPath2D, QUICKTYPECASE )
+	SINGLELOOP1( CLASSTREE1_Path2D, QUICKTYPECASE )
 	  {
-	    const Lang::SubPath2D * subPath = reinterpret_cast< const Lang::SubPath2D * >( node );
+	    const Lang::Path2D * subPath = reinterpret_cast< const Lang::Path2D * >( node );
 	    subPath->elementaryJob( & nodeStack, pth );
 	  }
 	  break;

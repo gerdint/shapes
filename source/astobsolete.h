@@ -2,7 +2,7 @@
   {
     Ast::Expression * expr;
   protected:
-    const Lang::Path2D * path( );
+    const Lang::MultiPath2D * path( );
   public:
     PathStatement( Ast::Expression * _expr );
     virtual ~PathStatement( );

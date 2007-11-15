@@ -58,14 +58,14 @@ namespace Shapes
   public:
     CycleExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr ) : UnaryPostfixExpr( _opLoc, _expr ) { }
     UNARYCALLIMPL( CLASSTREE1_PathPoint2D );
-    UNARYCALLIMPL( CLASSTREE1_SubPath2D );
+    UNARYCALLIMPL( CLASSTREE1_Path2D );
     UNARYCALLIMPL( CLASSTREE1_PathPoint3D );
-    UNARYCALLIMPL( CLASSTREE1_SubPath3D );
+    UNARYCALLIMPL( CLASSTREE1_Path3D );
   private:
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint2D ) arg, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg, const Kernel::PassedDyn & dyn ) const;
   };
 
   class MinusMinusExpr : public BinaryInfixExpr
@@ -77,21 +77,21 @@ namespace Shapes
     CALLIMPL( CLASSTREE1_Coords2D, CLASSTREE2_Coords2D );
     CALLIMPL( CLASSTREE1_Coords2D, CLASSTREE2_PathPoint2D );
     CALLIMPL( CLASSTREE1_PathPoint2D, CLASSTREE2_Coords2D );
-    CALLIMPL( CLASSTREE1_Coords2D, CLASSTREE2_SubPath2D );
-    CALLIMPL( CLASSTREE1_SubPath2D, CLASSTREE2_Coords2D );
+    CALLIMPL( CLASSTREE1_Coords2D, CLASSTREE2_Path2D );
+    CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_Coords2D );
     CALLIMPL( CLASSTREE1_PathPoint2D, CLASSTREE2_PathPoint2D );
-    CALLIMPL( CLASSTREE1_PathPoint2D, CLASSTREE2_SubPath2D );
-    CALLIMPL( CLASSTREE1_SubPath2D, CLASSTREE2_PathPoint2D );
-    CALLIMPL( CLASSTREE1_SubPath2D, CLASSTREE2_SubPath2D );
+    CALLIMPL( CLASSTREE1_PathPoint2D, CLASSTREE2_Path2D );
+    CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_PathPoint2D );
+    CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_Path2D );
     CALLIMPL( CLASSTREE1_Coords3D, CLASSTREE2_Coords3D );
     CALLIMPL( CLASSTREE1_Coords3D, CLASSTREE2_PathPoint3D );
     CALLIMPL( CLASSTREE1_PathPoint3D, CLASSTREE2_Coords3D );
-    CALLIMPL( CLASSTREE1_Coords3D, CLASSTREE2_SubPath3D );
-    CALLIMPL( CLASSTREE1_SubPath3D, CLASSTREE2_Coords3D );
+    CALLIMPL( CLASSTREE1_Coords3D, CLASSTREE2_Path3D );
+    CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_Coords3D );
     CALLIMPL( CLASSTREE1_PathPoint3D, CLASSTREE2_PathPoint3D );
-    CALLIMPL( CLASSTREE1_PathPoint3D, CLASSTREE2_SubPath3D );
-    CALLIMPL( CLASSTREE1_SubPath3D, CLASSTREE2_PathPoint3D );
-    CALLIMPL( CLASSTREE1_SubPath3D, CLASSTREE2_SubPath3D );
+    CALLIMPL( CLASSTREE1_PathPoint3D, CLASSTREE2_Path3D );
+    CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_PathPoint3D );
+    CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_Path3D );
     CALLIMPL( CLASSTREE1_PathSlider2D, CLASSTREE2_PathSlider2D );
     CALLIMPL( CLASSTREE1_PathSlider3D, CLASSTREE2_PathSlider3D );
   private:
@@ -100,21 +100,21 @@ namespace Shapes
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::PathSlider2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::PathSlider3D ) arg2, const Kernel::PassedDyn & dyn ) const;
   };
@@ -134,26 +134,26 @@ namespace Shapes
   {
   public:
     AmpersandExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr1, Ast::Expression * _expr2 ) : BinaryInfixExpr( _opLoc, _expr1, _expr2 ) { }
-    CALLIMPL( CLASSTREE1_SubPath2D, CLASSTREE2_SubPath2D );
-    CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_SubPath2D );
-    CALLIMPL( CLASSTREE1_SubPath2D, CLASSTREE2_Path2D );
     CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_Path2D );
-    CALLIMPL( CLASSTREE1_SubPath3D, CLASSTREE2_SubPath3D );
-    CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_SubPath3D );
-    CALLIMPL( CLASSTREE1_SubPath3D, CLASSTREE2_Path3D );
+    CALLIMPL( CLASSTREE1_MultiPath2D, CLASSTREE2_Path2D );
+    CALLIMPL( CLASSTREE1_Path2D, CLASSTREE2_MultiPath2D );
+    CALLIMPL( CLASSTREE1_MultiPath2D, CLASSTREE2_MultiPath2D );
     CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_Path3D );
+    CALLIMPL( CLASSTREE1_MultiPath3D, CLASSTREE2_Path3D );
+    CALLIMPL( CLASSTREE1_Path3D, CLASSTREE2_MultiPath3D );
+    CALLIMPL( CLASSTREE1_MultiPath3D, CLASSTREE2_MultiPath3D );
     CALLIMPL( CLASSTREE1_DynamicBindings, CLASSTREE2_DynamicBindings );
     CALLIMPL( CLASSTREE1_Drawable2D, CLASSTREE2_Drawable2D );
     CALLIMPL( CLASSTREE1_Drawable3D, CLASSTREE2_Drawable3D );
   private:
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
-    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::MultiPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::MultiPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::MultiPath2D ) arg1, DUMMYANDREF( const Lang::MultiPath2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::MultiPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::MultiPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
+    RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::MultiPath3D ) arg1, DUMMYANDREF( const Lang::MultiPath3D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Drawable2D ) arg1, DUMMYANDREF( const Lang::Drawable2D ) arg2, const Kernel::PassedDyn & dyn ) const;
     RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Group2D ) arg1, DUMMYANDREF( const Lang::Drawable2D ) arg2, const Kernel::PassedDyn & dyn ) const;

@@ -16,10 +16,10 @@
   CLASSTREE1_PolarHandleBase( Ma, S, Mb )				\
   CLASSTREE1_PathPoint2D( Ma, S, Mb )				\
   CLASSTREE1_PathPoint3D( Ma, S, Mb )				\
-  CLASSTREE1_SubPath2D( Ma, S, Mb )				\
-  CLASSTREE1_SubPath3D( Ma, S, Mb )				\
   CLASSTREE1_Path2D( Ma, S, Mb )				\
   CLASSTREE1_Path3D( Ma, S, Mb )				\
+  CLASSTREE1_MultiPath2D( Ma, S, Mb )				\
+  CLASSTREE1_MultiPath3D( Ma, S, Mb )				\
   CLASSTREE1_PathSlider2D( Ma, S, Mb )				\
   CLASSTREE1_PathSlider3D( Ma, S, Mb )				\
   CLASSTREE1_Color( Ma, S, Mb )				\
@@ -56,10 +56,10 @@
 #define CLASSTREE1_PolarHandle2DFree_ra( Ma, S, Mb ) Ma( S, Mb, PolarHandle2DFree_ra )
 #define CLASSTREE1_PathPoint2D( Ma, S, Mb ) Ma( S, Mb, PathPoint2D )
 #define CLASSTREE1_PathPoint3D( Ma, S, Mb ) Ma( S, Mb, PathPoint3D )
-#define CLASSTREE1_SubPath2D( Ma, S, Mb ) Ma( S, Mb, SubPath2D )
-#define CLASSTREE1_SubPath3D( Ma, S, Mb ) Ma( S, Mb, SubPath3D )
 #define CLASSTREE1_Path2D( Ma, S, Mb ) Ma( S, Mb, Path2D )
 #define CLASSTREE1_Path3D( Ma, S, Mb ) Ma( S, Mb, Path3D )
+#define CLASSTREE1_MultiPath2D( Ma, S, Mb ) Ma( S, Mb, MultiPath2D )
+#define CLASSTREE1_MultiPath3D( Ma, S, Mb ) Ma( S, Mb, MultiPath3D )
 #define CLASSTREE1_PathSlider2D( Ma, S, Mb ) Ma( S, Mb, PathSlider2D )
 #define CLASSTREE1_PathSlider3D( Ma, S, Mb ) Ma( S, Mb, PathSlider3D )
 #define CLASSTREE1_Color( Ma, S, Mb ) Ma( S, Mb, Color )	\

@@ -633,7 +633,7 @@ namespace Shapes
 		   RefCountPtr< const Lang::ElementaryPath2D > path,
 		   const char * paintCmd );
     PaintedPath2D( const RefCountPtr< const Kernel::GraphicsState > & metaState,
-		   RefCountPtr< const Lang::Path2D > paths,
+		   RefCountPtr< const Lang::MultiPath2D > paths,
 		   const char * paintCmd );
     virtual ~PaintedPath2D( );
     TYPEINFODECL;
@@ -811,7 +811,7 @@ namespace Shapes
 		   const char * paintCmd,
 		   Concrete::Length tiebreaker = Concrete::ZERO_LENGTH );
     PaintedPath3D( RefCountPtr< const Kernel::GraphicsState > metaState,
-		   RefCountPtr< const Lang::Path3D > paths,
+		   RefCountPtr< const Lang::MultiPath3D > paths,
 		   const char * paintCmd,
 		   Concrete::Length tiebreaker = Concrete::ZERO_LENGTH );
     virtual ~PaintedPath3D( );

@@ -406,11 +406,11 @@ Lang::PaintedPath2D::PaintedPath2D( const RefCountPtr< const Kernel::GraphicsSta
 }
 
 Lang::PaintedPath2D::PaintedPath2D( const RefCountPtr< const Kernel::GraphicsState > & metaState,
-				    RefCountPtr< const Lang::Path2D > paths,
+				    RefCountPtr< const Lang::MultiPath2D > paths,
 				    const char * paintCmd )
   : metaState_( metaState ), paintCmd_( paintCmd )
 {
-  for( Lang::Path2D::const_iterator i = paths->begin( ); i != paths->end( ); ++i )
+  for( Lang::MultiPath2D::const_iterator i = paths->begin( ); i != paths->end( ); ++i )
     {
       {
 	typedef const Lang::ElementaryPath2D ArgType;
@@ -2331,11 +2331,11 @@ Lang::PaintedPath3D::PaintedPath3D( RefCountPtr< const Kernel::GraphicsState > m
 }
 
 Lang::PaintedPath3D::PaintedPath3D( RefCountPtr< const Kernel::GraphicsState > metaState,
-				       RefCountPtr< const Lang::Path3D > paths,
+				       RefCountPtr< const Lang::MultiPath3D > paths,
 				       const char * paintCmd, Concrete::Length tiebreaker )
   : metaState_( metaState ), paintCmd_( paintCmd ), tiebreaker_( tiebreaker )
 {
-  for( Lang::Path3D::const_iterator i = paths->begin( ); i != paths->end( ); ++i )
+  for( Lang::MultiPath3D::const_iterator i = paths->begin( ); i != paths->end( ); ++i )
     {
       {
 	typedef const Lang::ElementaryPath3D ArgType;

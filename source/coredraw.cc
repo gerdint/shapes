@@ -82,7 +82,7 @@ namespace Shapes
   
 	try
 	  {
-	    typedef const Lang::Path2D ArgType;
+	    typedef const Lang::MultiPath2D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 	    RefCountPtr< const Lang::Function > arrowHead = Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 1, callLoc );
 	    RefCountPtr< const Lang::Function > arrowTail = Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 2, callLoc );
@@ -104,7 +104,7 @@ namespace Shapes
 
 	try
 	  {
-	    typedef const Lang::Path3D ArgType;
+	    typedef const Lang::MultiPath3D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 	    RefCountPtr< const Lang::Function > arrowHead = Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 1, callLoc );
 	    RefCountPtr< const Lang::Function > arrowTail = Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 2, callLoc );
@@ -186,7 +186,7 @@ namespace Shapes
   
 	try
 	  {
-	    typedef const Lang::Path2D ArgType;
+	    typedef const Lang::MultiPath2D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 	    if( tiebreaker != NullPtr< const Lang::Length >( ) )
 	      {
@@ -205,7 +205,7 @@ namespace Shapes
 
 	try
 	  {
-	    typedef const Lang::Path3D ArgType;
+	    typedef const Lang::MultiPath3D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 	    Concrete::Length tiebreakerVal = Concrete::ZERO_LENGTH;
 	    if( tiebreaker != NullPtr< const Lang::Length >( ) )
@@ -224,7 +224,7 @@ namespace Shapes
 	  }
 
 	std::cerr << "Throwing in fill." << std::endl ;
-	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Path2D::staticTypeName( ), Lang::Path3D::staticTypeName( ) ) );
+	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::MultiPath2D::staticTypeName( ), Lang::MultiPath3D::staticTypeName( ) ) );
       }
     };
 
@@ -255,7 +255,7 @@ namespace Shapes
 
 	try
 	  {
-	    typedef const Lang::Path2D ArgType;
+	    typedef const Lang::MultiPath2D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 	    Kernel::ContRef cont = evalState->cont_;
 	    cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D( evalState->dyn_->getGraphicsState( ), path, "f*" ) ),
@@ -268,7 +268,7 @@ namespace Shapes
 	     */
 	  }
 
-	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::Path2D::staticTypeName( ) ) );
+	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::MultiPath2D::staticTypeName( ) ) );
       }
     };
 
@@ -721,9 +721,9 @@ namespace Shapes
   
 	try
 	  {
-	    typedef const Lang::Path2D ArgType;
+	    typedef const Lang::MultiPath2D ArgType;
 	    RefCountPtr< ArgType > path = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( argsi ) );
-	    for( Lang::Path2D::const_iterator i = path->begin( ); i != path->end( ); ++i )
+	    for( Lang::MultiPath2D::const_iterator i = path->begin( ); i != path->end( ); ++i )
 	      {
 		{
 		  typedef const Lang::ElementaryPath2D ArgType;
@@ -754,7 +754,7 @@ namespace Shapes
 	     */
 	  }
 
-	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::Path2D::staticTypeName( ) ) );
+	throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::MultiPath2D::staticTypeName( ) ) );
 
       done:
 	Kernel::ContRef cont = evalState->cont_;

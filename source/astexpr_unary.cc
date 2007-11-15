@@ -85,7 +85,7 @@ Ast::CycleExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg, const Kernel::
 }
 
 RefCountPtr< const Lang::Value >
-Ast::CycleExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg, const Kernel::PassedDyn & dyn ) const
+Ast::CycleExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::ClosedPath2D( arg ) );
 }
@@ -98,7 +98,7 @@ Ast::CycleExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg, const Kernel::
 }
 
 RefCountPtr< const Lang::Value >
-Ast::CycleExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg, const Kernel::PassedDyn & dyn ) const
+Ast::CycleExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg, const Kernel::PassedDyn & dyn ) const
 {
   return RefCountPtr< const Lang::Value >( new Lang::ClosedPath3D( arg ) );
 }

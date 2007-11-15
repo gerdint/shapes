@@ -97,7 +97,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -107,7 +107,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Coords2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -123,7 +123,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
@@ -133,7 +133,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint2D ) arg1, DUMMYAND
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::PathPoint2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -143,7 +143,7 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDRE
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -159,73 +159,73 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDRE
 RefCountPtr< const Lang::Value >
 Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
-						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ),
+						       RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
 Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
-						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ),
+						       RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
 Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
-						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ),
+						       RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
       throw Exceptions::OutOfRange( this->loc( ), strrefdup( "Closed subpaths cannot be connected with." ) );
     }
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ), arg2 ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ), arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
       throw Exceptions::OutOfRange( this->loc( ), strrefdup( "Closed subpaths cannot be connected with." ) );
     }
-  return Kernel::ValueRef( new Lang::Connection3D( arg1, RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( arg1, RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
 Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ),
-						       RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ),
+						       RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg2->isClosed( ) )
     {
       throw Exceptions::OutOfRange( this->loc( ), strrefdup( "Closed subpaths cannot be connected with." ) );
     }
-  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg1 ) ), arg2 ) );
+  return Kernel::ValueRef( new Lang::Connection3D( RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg1 ) ), arg2 ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
       throw Exceptions::OutOfRange( this->loc( ), strrefdup( "Closed subpaths cannot be connected with." ) );
     }
-  return Kernel::ValueRef( new Lang::Connection3D( arg1, RefCountPtr< Lang::SubPath3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
+  return Kernel::ValueRef( new Lang::Connection3D( arg1, RefCountPtr< Lang::Path3D >( new Lang::SinglePointPath3D( arg2 ) ) ) );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
   if( arg1->isClosed( ) )
     {
@@ -295,34 +295,34 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYAN
 
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path2D * res = new Lang::Path2D;
+  Lang::MultiPath2D * res = new Lang::MultiPath2D;
   res->push_back( arg1 );
   res->push_back( arg2 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::SubPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::MultiPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path2D * res = arg1->clone( );
+  Lang::MultiPath2D * res = arg1->clone( );
   res->push_back( arg2 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::MultiPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path2D * res = arg2->clone( );
+  Lang::MultiPath2D * res = arg2->clone( );
   res->push_front( arg1 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( const Lang::Path2D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::MultiPath2D ) arg1, DUMMYANDREF( const Lang::MultiPath2D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path2D * res = arg1->clone( );
+  Lang::MultiPath2D * res = arg1->clone( );
   typedef typeof( *arg2 ) ListType;
   for( ListType::const_iterator i = arg2->begin( ); i != arg2->end( ); ++i )
     {
@@ -332,34 +332,34 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path2D ) arg1, DUMMYANDREF( c
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path3D * res = new Lang::Path3D;
+  Lang::MultiPath3D * res = new Lang::MultiPath3D;
   res->push_back( arg1 );
   res->push_back( arg2 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::SubPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::MultiPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path3D * res = arg1->clone( );
+  Lang::MultiPath3D * res = arg1->clone( );
   res->push_back( arg2 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::SubPath3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::MultiPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path3D * res = arg2->clone( );
+  Lang::MultiPath3D * res = arg2->clone( );
   res->push_front( arg1 );
   return RefCountPtr< Lang::Value >( res );
 }
 
 RefCountPtr< const Lang::Value >
-Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Path3D ) arg1, DUMMYANDREF( const Lang::Path3D ) arg2, const Kernel::PassedDyn & dyn ) const
+Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::MultiPath3D ) arg1, DUMMYANDREF( const Lang::MultiPath3D ) arg2, const Kernel::PassedDyn & dyn ) const
 {
-  Lang::Path3D * res = arg1->clone( );
+  Lang::MultiPath3D * res = arg1->clone( );
   typedef typeof( *arg2 ) ListType;
   for( ListType::const_iterator i = arg2->begin( ); i != arg2->end( ); ++i )
     {

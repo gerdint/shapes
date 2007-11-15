@@ -190,7 +190,7 @@ Lang::ElementaryPath2D::elementaryTransformed( const Lang::Transform3D & tf ) co
   return RefCountPtr< const Lang::ElementaryPath3D >( res );
 }
 
-RefCountPtr< const Lang::SubPath2D >
+RefCountPtr< const Lang::Path2D >
 Lang::ElementaryPath2D::typed_transformed( const Lang::Transform2D & tf ) const
 {
   return elementaryTransformed( tf );
@@ -3999,8 +3999,8 @@ void
 Lang::ElementaryPath2D::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
-RefCountPtr< const Lang::SubPath3D >
-Lang::ElementaryPath2D::typed_to3D( const RefCountPtr< const Lang::SubPath2D > & self ) const
+RefCountPtr< const Lang::Path3D >
+Lang::ElementaryPath2D::typed_to3D( const RefCountPtr< const Lang::Path2D > & self ) const
 {
   typedef const Lang::ElementaryPath2D ArgType;
   RefCountPtr< ArgType > selfTyped = self.down_cast< ArgType >( );
@@ -4009,7 +4009,7 @@ Lang::ElementaryPath2D::typed_to3D( const RefCountPtr< const Lang::SubPath2D > &
       throw Exceptions::InternalError( "ElementaryPath2D::typed_to3D: self was of unexpected type." );
     }
   
-  return RefCountPtr< const Lang::SubPath3D >( new Lang::SubPath2Din3D( selfTyped ) );
+  return RefCountPtr< const Lang::Path3D >( new Lang::Path2Din3D( selfTyped ) );
 }
 
 
@@ -4023,5 +4023,5 @@ Lang::ElementaryPath2D::to3D( const RefCountPtr< const Lang::Geometric2D > & sel
       throw Exceptions::InternalError( "ElementaryPath2D::to3D: self was of unexpected type." );
     }
   
-  return RefCountPtr< const Lang::Geometric3D >( new Lang::SubPath2Din3D( selfTyped ) );  
+  return RefCountPtr< const Lang::Geometric3D >( new Lang::Path2Din3D( selfTyped ) );  
 }

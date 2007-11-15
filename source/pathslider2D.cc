@@ -50,19 +50,19 @@ Lang::PathSlider2D::getField( const char * fieldID, const RefCountPtr< const Lan
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_speed( ) ) );
     }
-  if( strcmp( fieldID, "t" ) == 0 )
+  if( strcmp( fieldID, "T" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( direction( ) ) );
     }
-  if( strcmp( fieldID, "rt" ) == 0 )
+  if( strcmp( fieldID, "rT" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_direction( ) ) );
     }
-  if( strcmp( fieldID, "n" ) == 0 )
+  if( strcmp( fieldID, "N" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( normal( ) ) );
     }
-  if( strcmp( fieldID, "rn" ) == 0 )
+  if( strcmp( fieldID, "rN" ) == 0 )
     {
       return Kernel::VariableHandle( new Kernel::Variable( reverse_normal( ) ) );
     }

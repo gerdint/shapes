@@ -94,14 +94,14 @@ Lang::ElementaryPath3D::elementaryTransformed( const Lang::Transform3D & tf ) co
   return RefCountPtr< const Lang::ElementaryPath3D >( res );
 }
 
-RefCountPtr< const Lang::SubPath3D >
+RefCountPtr< const Lang::Path3D >
 Lang::ElementaryPath3D::typed_transformed( const Lang::Transform3D & tf ) const
 {
   return elementaryTransformed( tf );
 }
 
 void
-Lang::ElementaryPath3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::ElementaryPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   for( const_iterator i = begin( ); i != end( ); ++i )
     {

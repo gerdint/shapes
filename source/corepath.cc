@@ -67,7 +67,7 @@ namespace Shapes
 	    {
 	      goto nextType1;
 	    }
-	  Lang::Path2D * res = new Lang::Path2D( );
+	  Lang::MultiPath2D * res = new Lang::MultiPath2D( );
 
 	  typedef typeof *path ListType;
 	  typedef ListType::const_iterator I;
@@ -109,7 +109,7 @@ namespace Shapes
 	    {
 	      goto nextType2;
 	    }
-	  Lang::Path3D * res = new Lang::Path3D( );
+	  Lang::MultiPath3D * res = new Lang::MultiPath3D( );
 
 	  typedef typeof *path ListType;
 	  typedef ListType::const_iterator I;

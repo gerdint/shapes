@@ -5,10 +5,10 @@ Shapes::PathStatement::PathStatement( Ast::Expression * _expr )
 Shapes::PathStatement::~PathStatement( )
 { }
 
-const Lang::Path2D *
+const Lang::MultiPath2D *
 Shapes::PathStatement::path( )
 {
-  const Lang::Path2D * res = dynamic_cast< const Lang::Path2D * >( expr->value( ).getPtr( ) );
+  const Lang::MultiPath2D * res = dynamic_cast< const Lang::MultiPath2D * >( expr->value( ).getPtr( ) );
   if( res == 0 )
     {
       throw( "Path-statement expected value of type path." );

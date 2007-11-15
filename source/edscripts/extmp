@@ -1,3 +1,4 @@
-:%s!FooFooFoo!Shapes!g
+:%s!\([^a-zA-Z]\)SubPath2D!\1Path2D!g
+:%s!\([^a-zA-Z]\)SubPath3D!\1Path3D!g
 "
 :wq

@@ -288,6 +288,25 @@ Concrete::PathPoint2D::~PathPoint2D( )
     }
 }
 
+Kernel::VariableHandle
+Concrete::PathPoint2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+{
+  if( strcmp( fieldID, "mid" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords2D( *mid_ ) );
+    }
+  if( strcmp( fieldID, "rear" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords2D( *rear_ ) );
+    }
+  if( strcmp( fieldID, "front" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords2D( *front_ ) );
+    }
+  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
 Concrete::PathPoint2D *
 Concrete::PathPoint2D::transformed( const Lang::Transform2D & tf ) const
 {
@@ -382,6 +401,26 @@ Concrete::PathPoint3D::~PathPoint3D( )
     {
       delete front_;
     }
+}
+
+
+Kernel::VariableHandle
+Concrete::PathPoint3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+{
+  if( strcmp( fieldID, "mid" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords3D( *mid_ ) );
+    }
+  if( strcmp( fieldID, "rear" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords3D( *rear_ ) );
+    }
+  if( strcmp( fieldID, "front" ) == 0 )
+    {
+      return Helpers::newValHandle( new Lang::Coords3D( *front_ ) );
+    }
+  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
 Concrete::PathPoint3D *
@@ -556,54 +595,54 @@ RefCountPtr< const Lang::Class > Lang::PathPoint3D::TypeID( new Lang::SystemFina
 TYPEINFOIMPL( PathPoint3D );
 
 
-Lang::SubPath2D::SubPath2D( )
+Lang::Path2D::Path2D( )
   : closed_( false )
 { }
 
-DISPATCHIMPL( SubPath2D );
+DISPATCHIMPL( Path2D );
 
-Lang::SubPath2D::~SubPath2D( )
+Lang::Path2D::~Path2D( )
 { }
 
 void
-Lang::SubPath2D::close( )
+Lang::Path2D::close( )
 {
   closed_ = true;
 }
 bool
-Lang::SubPath2D::isClosed( ) const
+Lang::Path2D::isClosed( ) const
 {
   return closed_;
 }
 
 RefCountPtr< const Lang::Geometric2D >
-Lang::SubPath2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const
+Lang::Path2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const
 {
-  typedef const Lang::SubPath2D ArgType;
+  typedef const Lang::Path2D ArgType;
   RefCountPtr< ArgType > selfTyped = self.down_cast< ArgType >( );
   if( selfTyped == NullPtr< ArgType >( ) )
     {
-      throw Exceptions::InternalError( strrefdup( "SubPath2D::to3D: self was of unexpected type." ) );
+      throw Exceptions::InternalError( strrefdup( "Path2D::to3D: self was of unexpected type." ) );
     }
   
   return selfTyped->typed_transformed( tf );
 }
 
 RefCountPtr< const Lang::Geometric3D >
-Lang::SubPath2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
+Lang::Path2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
 {
-  typedef const Lang::SubPath2D ArgType;
+  typedef const Lang::Path2D ArgType;
   RefCountPtr< ArgType > selfTyped = self.down_cast< ArgType >( );
   if( selfTyped == NullPtr< ArgType >( ) )
     {
-      throw Exceptions::InternalError( strrefdup( "SubPath2D::to3D: self was of unexpected type." ) );
+      throw Exceptions::InternalError( strrefdup( "Path2D::to3D: self was of unexpected type." ) );
     }
   
   return selfTyped->typed_to3D( selfTyped );
 }
 
-RefCountPtr< const Lang::Class > Lang::SubPath2D::TypeID( new Lang::SystemFinalClass( strrefdup( "SubPath" ) ) );
-TYPEINFOIMPL( SubPath2D );
+RefCountPtr< const Lang::Class > Lang::Path2D::TypeID( new Lang::SystemFinalClass( strrefdup( "SubPath" ) ) );
+TYPEINFOIMPL( Path2D );
 
 
 Lang::CompositePath2D::CompositePath2D( )
@@ -622,18 +661,18 @@ Lang::CompositePath2D::getField( const char * fieldID, const RefCountPtr< const 
   return elementaryPath_->getField( fieldID, elementaryPath_ );
 }
 
-RefCountPtr< const Lang::SubPath2D >
+RefCountPtr< const Lang::Path2D >
 Lang::CompositePath2D::typed_transformed( const Lang::Transform2D & tf ) const
 {
   computeElementaryPath( );
   return elementaryPath_->typed_transformed( tf );
 }
 
-RefCountPtr< const Lang::SubPath3D >
-Lang::CompositePath2D::typed_to3D( const RefCountPtr< const Lang::SubPath2D > & self ) const
+RefCountPtr< const Lang::Path3D >
+Lang::CompositePath2D::typed_to3D( const RefCountPtr< const Lang::Path2D > & self ) const
 {
   computeElementaryPath( );
-  return RefCountPtr< const Lang::SubPath3D >( new Lang::SubPath2Din3D( elementaryPath_ ) );
+  return RefCountPtr< const Lang::Path3D >( new Lang::Path2Din3D( elementaryPath_ ) );
 }
 
 void
@@ -657,7 +696,7 @@ Lang::CompositePath2D::show( std::ostream & os ) const
 }
 
 
-Lang::ClosedPath2D::ClosedPath2D( RefCountPtr< const Lang::SubPath2D > openPath )
+Lang::ClosedPath2D::ClosedPath2D( RefCountPtr< const Lang::Path2D > openPath )
   : openPath_( openPath )
 {
   close( );
@@ -677,7 +716,7 @@ Lang::ClosedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack
 void
 Lang::ClosedPath2D::gcMark( Kernel::GCMarkedSet & marked )
 {
-  const_cast< Lang::SubPath2D * >( openPath_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Path2D * >( openPath_.getPtr( ) )->gcMark( marked );
 }
 
 
@@ -839,18 +878,18 @@ Lang::HeadedPath2D_helper::gcMark( Kernel::GCMarkedSet & marked )
 
 
 
-Lang::Path2D::Path2D( )
+Lang::MultiPath2D::MultiPath2D( )
 { }
 
-DISPATCHIMPL( Path2D );
+DISPATCHIMPL( MultiPath2D );
 
-Lang::Path2D::~Path2D( )
+Lang::MultiPath2D::~MultiPath2D( )
 { }
 
-Lang::Path2D *
-Lang::Path2D::clone( ) const
+Lang::MultiPath2D *
+Lang::MultiPath2D::clone( ) const
 {
-  Lang::Path2D * res = new Lang::Path2D( );
+  Lang::MultiPath2D * res = new Lang::MultiPath2D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( *i );
@@ -858,19 +897,19 @@ Lang::Path2D::clone( ) const
   return res;
 }
 
-RefCountPtr< const Lang::Class > Lang::Path2D::TypeID( new Lang::SystemFinalClass( strrefdup( "Path" ) ) );
-TYPEINFOIMPL( Path2D );
+RefCountPtr< const Lang::Class > Lang::MultiPath2D::TypeID( new Lang::SystemFinalClass( strrefdup( "Path" ) ) );
+TYPEINFOIMPL( MultiPath2D );
 
 void
-Lang::Path2D::show( std::ostream & os ) const
+Lang::MultiPath2D::show( std::ostream & os ) const
 {
   os << "Path with " << size( ) << " subpaths" ;
 }
 
 RefCountPtr< const Lang::Geometric2D >
-Lang::Path2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const
+Lang::MultiPath2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const
 {
-  Lang::Path2D * res = new Lang::Path2D( );
+  Lang::MultiPath2D * res = new Lang::MultiPath2D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( (*i)->typed_transformed( tf ) );
@@ -879,9 +918,9 @@ Lang::Path2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< cons
 }
 
 RefCountPtr< const Lang::Geometric3D >
-Lang::Path2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
+Lang::MultiPath2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
 {
-  Lang::Path3D * res = new Lang::Path3D( );
+  Lang::MultiPath3D * res = new Lang::MultiPath3D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( (*i)->typed_to3D( *i ) );
@@ -890,7 +929,7 @@ Lang::Path2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
 }
 
 void
-Lang::Path2D::writePath( ostream & os ) const
+Lang::MultiPath2D::writePath( ostream & os ) const
 {
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
@@ -899,27 +938,27 @@ Lang::Path2D::writePath( ostream & os ) const
 }
 
 void
-Lang::Path2D::gcMark( Kernel::GCMarkedSet & marked )
+Lang::MultiPath2D::gcMark( Kernel::GCMarkedSet & marked )
 {
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
-      const_cast< SubPath2D * >( i->getPtr( ) )->gcMark( marked );
+      const_cast< Path2D * >( i->getPtr( ) )->gcMark( marked );
     }
 }
 
 
-Lang::Path3D::Path3D( )
+Lang::MultiPath3D::MultiPath3D( )
 { }
 
-DISPATCHIMPL( Path3D );
+DISPATCHIMPL( MultiPath3D );
 
-Lang::Path3D::~Path3D( )
+Lang::MultiPath3D::~MultiPath3D( )
 { }
 
-Lang::Path3D *
-Lang::Path3D::clone( ) const
+Lang::MultiPath3D *
+Lang::MultiPath3D::clone( ) const
 {
-  Lang::Path3D * res = new Lang::Path3D( );
+  Lang::MultiPath3D * res = new Lang::MultiPath3D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( *i );
@@ -927,19 +966,19 @@ Lang::Path3D::clone( ) const
   return res;
 }
 
-RefCountPtr< const Lang::Class > Lang::Path3D::TypeID( new Lang::SystemFinalClass( strrefdup( "path3D" ) ) );
-TYPEINFOIMPL( Path3D );
+RefCountPtr< const Lang::Class > Lang::MultiPath3D::TypeID( new Lang::SystemFinalClass( strrefdup( "path3D" ) ) );
+TYPEINFOIMPL( MultiPath3D );
 
 void
-Lang::Path3D::show( std::ostream & os ) const
+Lang::MultiPath3D::show( std::ostream & os ) const
 {
   os << "3D path with " << size( ) << " subpaths" ;
 }
 
 RefCountPtr< const Lang::Geometric3D >
-Lang::Path3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const
+Lang::MultiPath3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
-  Lang::Path3D * res = new Lang::Path3D( );
+  Lang::MultiPath3D * res = new Lang::MultiPath3D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( (*i)->typed_transformed( tf ) );
@@ -948,10 +987,10 @@ Lang::Path3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< cons
 }
 
 RefCountPtr< const Lang::Geometric2D >
-Lang::Path3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const
+Lang::MultiPath3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
   Concrete::Length eyez = dyn->getEyeZ( );
-  Lang::Path2D * res = new Lang::Path2D( );
+  Lang::MultiPath2D * res = new Lang::MultiPath2D( );
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
       res->push_back( (*i)->make2D( eyez ) );
@@ -960,60 +999,60 @@ Lang::Path3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang
 }
 
 void
-Lang::Path3D::gcMark( Kernel::GCMarkedSet & marked )
+Lang::MultiPath3D::gcMark( Kernel::GCMarkedSet & marked )
 {
   for( const_iterator i = begin( ); i != end( ); ++i )
     {
-      const_cast< SubPath3D * >( i->getPtr( ) )->gcMark( marked );
+      const_cast< Path3D * >( i->getPtr( ) )->gcMark( marked );
     }
 }
 
 
-Lang::SubPath3D::SubPath3D( )
+Lang::Path3D::Path3D( )
   : closed_( false )
 { }
 
-DISPATCHIMPL( SubPath3D );
+DISPATCHIMPL( Path3D );
 
-Lang::SubPath3D::~SubPath3D( )
+Lang::Path3D::~Path3D( )
 { }
 
 void
-Lang::SubPath3D::close( )
+Lang::Path3D::close( )
 {
   closed_ = true;
 }
 bool
-Lang::SubPath3D::isClosed( ) const
+Lang::Path3D::isClosed( ) const
 {
   return closed_;
 }
 
 RefCountPtr< const Lang::Geometric3D >
-Lang::SubPath3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const
+Lang::Path3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
-  typedef const Lang::SubPath3D ArgType;
+  typedef const Lang::Path3D ArgType;
   RefCountPtr< ArgType > selfTyped = self.down_cast< ArgType >( );
   if( selfTyped == NullPtr< ArgType >( ) )
     {
-      throw Exceptions::InternalError( strrefdup( "SubPath3D::to3D: self was of unexpected type." ) );
+      throw Exceptions::InternalError( strrefdup( "Path3D::to3D: self was of unexpected type." ) );
     }
   
   return selfTyped->typed_transformed( tf );
 }
 
 RefCountPtr< const Lang::Geometric2D >
-Lang::SubPath3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const
+Lang::Path3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
   Concrete::Length eyez = dyn->getEyeZ( );
   return this->make2D( eyez );
 }
 
-RefCountPtr< const Lang::Class > Lang::SubPath3D::TypeID( new Lang::SystemFinalClass( strrefdup( "SubPath3D" ) ) );
-TYPEINFOIMPL( SubPath3D );
+RefCountPtr< const Lang::Class > Lang::Path3D::TypeID( new Lang::SystemFinalClass( strrefdup( "Path3D" ) ) );
+TYPEINFOIMPL( Path3D );
 
 
-Lang::SubPath2Din3D::SubPath2Din3D( const RefCountPtr< const Lang::ElementaryPath2D > & elementaryPath2D )
+Lang::Path2Din3D::Path2Din3D( const RefCountPtr< const Lang::ElementaryPath2D > & elementaryPath2D )
   : elementaryPath2D_( elementaryPath2D )
 {
   if( elementaryPath2D_->isClosed( ) )
@@ -1022,25 +1061,25 @@ Lang::SubPath2Din3D::SubPath2Din3D( const RefCountPtr< const Lang::ElementaryPat
     }
 }
 
-Lang::SubPath2Din3D::~SubPath2Din3D( )
+Lang::Path2Din3D::~Path2Din3D( )
 { }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::SubPath2Din3D::make2D( Concrete::Length eyez ) const
+Lang::Path2Din3D::make2D( Concrete::Length eyez ) const
 {
   // Since this path has not been transformed, it's "already" in 2D.
 
   return elementaryPath2D_;
 }
 
-RefCountPtr< const Lang::SubPath3D >
-Lang::SubPath2Din3D::typed_transformed( const Lang::Transform3D & tf ) const
+RefCountPtr< const Lang::Path3D >
+Lang::Path2Din3D::typed_transformed( const Lang::Transform3D & tf ) const
 {
   return elementaryPath2D_->elementaryTransformed( tf );
 }
 
 void
-Lang::SubPath2Din3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::Path2Din3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   for( Lang::ElementaryPath2D::const_iterator i = elementaryPath2D_->begin( ); i != elementaryPath2D_->end( ); ++i )
     {
@@ -1049,14 +1088,14 @@ Lang::SubPath2Din3D::elementaryJob( std::stack< const Lang::SubPath3D * > * node
 }
 
 void
-Lang::SubPath2Din3D::gcMark( Kernel::GCMarkedSet & marked )
+Lang::Path2Din3D::gcMark( Kernel::GCMarkedSet & marked )
 {
   const_cast< Lang::ElementaryPath2D * >( elementaryPath2D_.getPtr( ) )->gcMark( marked );
 }
 
 
 
-Lang::ClosedPath3D::ClosedPath3D( RefCountPtr< const Lang::SubPath3D > openPath )
+Lang::ClosedPath3D::ClosedPath3D( RefCountPtr< const Lang::Path3D > openPath )
   : openPath_( openPath )
 {
   close( );
@@ -1068,7 +1107,7 @@ Lang::ClosedPath3D::~ClosedPath3D( )
 DISPATCHIMPL( ClosedPath3D );
 
 void
-Lang::ClosedPath3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::ClosedPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   openPath_->elementaryJob( nodeStack, pth, basePoint );
 }
@@ -1076,11 +1115,11 @@ Lang::ClosedPath3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeS
 void
 Lang::ClosedPath3D::gcMark( Kernel::GCMarkedSet & marked )
 {
-  const_cast< Lang::SubPath3D * >( openPath_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Path3D * >( openPath_.getPtr( ) )->gcMark( marked );
 }
 
 
-Lang::Connection3D::Connection3D( const RefCountPtr< const Lang::SubPath3D > & rear, const RefCountPtr< const Lang::SubPath3D > & front )
+Lang::Connection3D::Connection3D( const RefCountPtr< const Lang::Path3D > & rear, const RefCountPtr< const Lang::Path3D > & front )
   : rear_( rear ), front_( front )
 { }
 
@@ -1088,7 +1127,7 @@ Lang::Connection3D::~Connection3D( )
 { }
 
 void
-Lang::Connection3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::Connection3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   nodeStack->push( front_.getPtr( ) );
   nodeStack->push( rear_.getPtr( ) );
@@ -1097,8 +1136,8 @@ Lang::Connection3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeS
 void
 Lang::Connection3D::gcMark( Kernel::GCMarkedSet & marked )
 {
-  const_cast< Lang::SubPath3D * >( rear_.getPtr( ) )->gcMark( marked );
-  const_cast< Lang::SubPath3D * >( front_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Path3D * >( rear_.getPtr( ) )->gcMark( marked );
+  const_cast< Lang::Path3D * >( front_.getPtr( ) )->gcMark( marked );
 }
 
 DISPATCHIMPL( Connection3D );
@@ -1118,7 +1157,7 @@ Lang::SinglePointPath3D::~SinglePointPath3D( )
 { }
 
 void
-Lang::SinglePointPath3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::SinglePointPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   thePoint_->elementaryJob( pth, basePoint );
 }
@@ -1146,7 +1185,7 @@ Lang::CompositePath3D::getField( const char * fieldID, const RefCountPtr< const 
   return elementaryPath_->getField( fieldID, elementaryPath_ );
 }
 
-RefCountPtr< const Lang::SubPath3D >
+RefCountPtr< const Lang::Path3D >
 Lang::CompositePath3D::typed_transformed( const Lang::Transform3D & tf ) const
 {
   computeElementaryPath( );
@@ -1185,11 +1224,11 @@ Lang::CompositePath3D::computeElementaryPath( ) const
 
   Concrete::Coords3D basePoint( 0, 0, 0 );
 
-  std::stack< const Lang::SubPath3D * > nodeStack;
+  std::stack< const Lang::Path3D * > nodeStack;
   nodeStack.push( this );
   while( nodeStack.size( ) > 0 )
     {
-      const Lang::SubPath3D * node = nodeStack.top( );
+      const Lang::Path3D * node = nodeStack.top( );
       nodeStack.pop( );
       node->elementaryJob( & nodeStack, pth, & basePoint );
     }
@@ -1258,7 +1297,7 @@ Lang::HeadedPath3D::~HeadedPath3D( )
 { }
 
 void
-Lang::HeadedPath3D::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::HeadedPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   if( frontPathPoint_ == NullPtr< const Lang::SinglePointPath3D >( ) )
     {
@@ -1292,7 +1331,7 @@ Lang::HeadedPath3D_helper::~HeadedPath3D_helper( )
 { }
 
 void
-Lang::HeadedPath3D_helper::elementaryJob( std::stack< const Lang::SubPath3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
+Lang::HeadedPath3D_helper::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
   if( bodyPath_->size( ) <= 1 )
     {
