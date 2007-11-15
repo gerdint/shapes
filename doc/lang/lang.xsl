@@ -76,6 +76,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:element>
 </xsl:template>
 
+<xsl:template match="note">
+  <table class="note">
+    <tr><td><xsl:apply-templates/></td></tr>
+  </table>
+</xsl:template>
+
+
 <xsl:template match="inline">
   <inline><xsl:apply-templates/></inline>
 </xsl:template>
@@ -236,6 +243,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </xsl:element>
 </xsl:template>
 
+<xsl:template match="type-field-table">
+  <table cellspacing="5">
+    <tr><td colspan="3"><hr class="thick"/></td></tr>
+    <tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
+    <tr><td colspan="3"><hr /></td></tr>
+    <xsl:apply-templates select="field"/>
+    <tr><td colspan="3"><hr class="thick"/></td></tr>
+  </table>
+</xsl:template>
+<xsl:template match="type-field-table/field">
+  <tr>
+    <td><varname><xsl:value-of select="@name" /></varname></td>
+    <td><xsl:apply-templates select="type"/></td>
+    <td><xsl:apply-templates select="description"/></td>
+  </tr>
+</xsl:template>
+
 <xsl:template match="img[@*]">
   <xsl:element name="img">
     <xsl:attribute name="src"><xsl:value-of select="@src" /></xsl:attribute>
@@ -295,6 +319,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <td><xsl:apply-templates select="description" /></td>
   </tr>
 </xsl:template>
+
+
+<xsl:template match="str-PDF">PDF</xsl:template>
+<xsl:template match="str-Shapes">Shapes</xsl:template>
 
 </xsl:stylesheet>
 

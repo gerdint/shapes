@@ -1,16 +1,18 @@
+<!-- ÅÄÖåäö : utf-8 hint -->
 <section id="chap-kerntypes">
 <title>Built-in types</title>
 <top>
 <p>There is a large number of built-in types.  In order to use them efficiently, one needs to know things as how to construct values, what fields these values have, and important functions that operate on them.</p>
 </top>
 
+
 <section id="kerntypes-simple">
 <title>Simple types</title>
 <top>
-<p>By <em>simple types</em> it is referred to types of values that can be constructed using a single input token.  For this reason, their construction is also mentioned in the syntax chapter.</p>
+<p>By <em>simple types</em> it is referred to types of values that can be constructed using a single input token.  For this reason, their construction is also mentioned in the syntax chapter.  They also have in common that they don't have any fields.</p>
 </top>
 
-<section id="kerntypes-simple-floats">
+<section id="kerntypes-Float">
 <title>Float</title>
 <body>
 <p>How floats are entered literally is described in <secref-title id="syntax-floats" />.</p>
@@ -22,14 +24,466 @@
 </body>
 </section>
 
+<section id="kerntypes-Length">
+<title>Length</title>
+<body>
+<p>How lengths are entered literally is described in <secref-title id="syntax-lengths" />.</p>
+
+<p>Lengths have no fields.</p>
+
+<operator-table type="Length" />
+</body>
+</section>
+
+<section id="kerntypes-Integer">
+<title>Integer</title>
+<body>
+<p>How integers are entered literally is described in <secref-title id="syntax-integers" />.</p>
+
+<p>Integers have no fields.</p>
+
+<operator-table type="Integer" />
+</body>
+</section>
+
+<section id="kerntypes-Symbol">
+<title>Symbol</title>
+<body>
+<p>How symbols are entered literally is described in <secref-title id="syntax-symbols" />.</p>
+
+<p>Symbols have no fields.</p>
+
+<operator-table type="Symbol" />
+</body>
+</section>
+
+<section id="kerntypes-Boolean">
+<title>Boolean</title>
+<body>
+<p>How booleans are entered literally is described in <secref-title id="syntax-booleans" />.</p>
+
+<p>Booleans have no fields.</p>
+
+<operator-table type="Boolean" />
+</body>
+</section>
+
+<section id="kerntypes-String">
+<title>String</title>
+<body>
+<p>How strings are entered literally is described in <secref-title id="syntax-strings" />.</p>
+
+<p>Strings have no fields.</p>
+
+<operator-table type="String" />
+</body>
+</section>
+
 </section>  <!-- end of kerntypes-simple -->
 
-<section id="kerntypes-pointspaths">
-<title>Points and paths</title>
+
+<section id="kerntypes-tuples">
+<title>Tuples</title>
 <top>
 <p>Not much needs to be known about most of these intuitive types.</p>
 </top>
-</section>  <!-- end of kerntypes-pointspaths -->
+
+<section id="kerntypes-FloatPair">
+<title>FloatPair</title>
+<body>
+<p>How a float pair is constructed is described in <secref-title id="syntax-floatpair" />.</p>
+
+<p>The following fields can be referenced:</p>
+<type-field-table>
+<field name="x">
+  <type><typename>Float</typename></type>
+  <description>First component.</description>
+</field>
+<field name="y">
+  <type><typename>Float</typename></type>
+  <description>Second component.</description>
+</field>
+</type-field-table>
+
+<operator-table type="FloatPair" />
+</body>
+</section>
+
+<section id="kerntypes-FloatTriple">
+<title>FloatTriple</title>
+<body>
+<p>How a float triple is constructed is described in <secref-title id="syntax-floattriple" />.</p>
+
+<p>The following fields can be referenced:</p>
+<type-field-table>
+<field name="x">
+  <type><typename>Float</typename></type>
+  <description>First component.</description>
+</field>
+<field name="y">
+  <type><typename>Float</typename></type>
+  <description>Second component.</description>
+</field>
+<field name="z">
+  <type><typename>Float</typename></type>
+  <description>Third component.</description>
+</field>
+</type-field-table>
+
+<operator-table type="FloatTriple" />
+</body>
+</section>
+
+<section id="kerntypes-Coords2D">
+<title>Coords2D</title>
+<body>
+<p>How coordinates in 2D are constructed is described in <secref-title id="syntax-coords2D" />.</p>
+
+<p>There is a subtype of <typename>Coords2D</typename>, called <typename>CornerCoords2D</typename>.  Objects of this type behave as <typename>Coords2D</typename> in every situation except when being the center point of a path point with one or more undetermined handle angles.</p>
+
+<p>The following fields can be referenced:</p>
+<type-field-table>
+<field name="x">
+  <type><typename>Length</typename></type>
+  <description>First component.</description>
+</field>
+<field name="y">
+  <type><typename>Length</typename></type>
+  <description>Second component.</description>
+</field>
+<field name="a">
+  <type><typename>Float</typename></type>
+  <description>Angle of <typename>CornerCoords2D</typename> object.</description>
+</field>
+</type-field-table>
+
+<operator-table type="Coords2D" />
+</body>
+</section>
+
+<section id="kerntypes-Coords3D">
+<title>Coords3D</title>
+<body>
+<p>How coordinates in 3D are constructed is described in <secref-title id="syntax-coords3D" />.</p>
+
+<p>The following fields can be referenced:</p>
+<type-field-table>
+<field name="x">
+  <type><typename>Length</typename></type>
+  <description>First component.</description>
+</field>
+<field name="y">
+  <type><typename>Length</typename></type>
+  <description>Second component.</description>
+</field>
+<field name="z">
+  <type><typename>Length</typename></type>
+  <description>Third component.</description>
+</field>
+</type-field-table>
+
+<operator-table type="Coords3D" />
+</body>
+</section>
+
+</section>  <!-- end of kerntypes-tuples -->
+
+<section id="kerntypes-paths">
+<title>Paths and path points</title>
+<top>
+<p>Not much needs to be known about most of these intuitive types.</p>
+</top>
+
+<section id="kerntypes-PathPoint2D">
+<title>PathPoint2D</title>
+<body>
+<p>Path point values are constructed using operators.</p>
+
+<p>The following fields are possible to reference:</p>
+<type-field-table>
+<field name="rear">
+  <type><typename>Coords2D</typename></type>
+  <description>Control point in backwards direction.</description>
+</field>
+<field name="mid">
+  <type><typename>Coords2D</typename></type>
+  <description>Center point.</description>
+</field>
+<field name="front">
+  <type><typename>Coords2D</typename></type>
+  <description>Control point in forward direction.</description>
+</field>
+</type-field-table>
+
+<operator-table type="PathPoint2D" />
+</body>
+</section>
+
+<section id="kerntypes-PathSlider2D">
+<title>PathSlider2D</title>
+<body>
+<p>A path slider is a position on a particular path.  Hence, it is a combination of a path and a path time.</p>
+
+<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.  The following fields are possible to reference:</p>
+<type-field-table>
+<field name="p">
+  <type><typename>Coords2D</typename></type>
+  <description>The coordinates of the point.</description>
+</field>
+<field name="v">
+  <type><typename>Length</typename></type>
+  <description>The speed at the point.  Note that this does not make sense from a geometric point of view, since it is not a property of the shape of the path but its representation.</description>
+</field>
+<field name="rv">
+  <type><typename>Length</typename></type>
+  <description>The speed in the reverse direction.</description>
+</field>
+<field name="T">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the tangent direction.</description>
+</field>
+<field name="rT">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the reverse tangent direction.</description>
+</field>
+<field name="N">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the normal direction (always pointing couter-clockwise from the tangent).</description>
+</field>
+<field name="rN">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the reverse normal direction.</description>
+</field>
+<field name="ik">
+  <type><typename>Length</typename></type>
+  <description>Radius of curvature (that is, the inverse of the curvature).</description>
+</field>
+<field name="rik">
+  <type><typename>Length</typename></type>
+  <description>Rverse radius of curvature.</description>
+</field>
+<field name="time">
+  <type><typename>Float</typename></type>
+  <description>Path time at the slider.</description>
+</field>
+<field name="length">
+  <type><typename>Length</typename></type>
+  <description>Distance from beginning of path to slider.</description>
+</field>
+<field name="past">
+  <type><typename>Boolean</typename></type>
+  <description>Slider is beyond the end of the path.</description>
+</field>
+<field name="looped">
+  <type><typename>Boolean</typename></type>
+  <description>Slider was reached by looping on a closed path.</description>
+</field>
+<field name="mod">
+  <type><typename>PathSlider2D</typename></type>
+  <description>Slider obtained by computing the path time modulo the duration of the path.</description>
+</field>
+</type-field-table>
+
+<operator-table type="PathSlider2D" />
+</body>
+</section>
+
+<section id="kerntypes-Path2D">
+<title>Path2D</title>
+<body>
+<p>Paths are usually constructed by connecting objects of various kinds using the connection operator.</p>
+
+<note>
+  <p><typename>Path2D</typename> does not correspond directly to the path type in <str-PDF />.  In <str-PDF />, a <em>path</em> can consist of several subpaths.  In <str-Shapes />, such a subpath is of type <typename>Path2D</typename>, and the list of subpaths is of type <typename>MultiPath2D</typename>.</p>
+</note>
+
+<p>The following fields are possible to reference:</p>
+<type-field-table>
+<field name="begin">
+  <type><typename>PathSlider2D</typename></type>
+  <description>Beginning of path.</description>
+</field>
+<field name="end">
+  <type><typename>PathSlider2D</typename></type>
+  <description>End of path.</description>
+</field>
+<field name="closed?">
+  <type><typename>Boolean</typename></type>
+  <description>True for closed paths.</description>
+</field>
+<field name="null?">
+  <type><typename>Boolean</typename></type>
+  <description>True if there are no path points on the path.</description>
+</field>
+</type-field-table>
+
+<operator-table type="Path2D" />
+</body>
+</section>
+
+
+<section id="kerntypes-MultiPath2D">
+<title>MultiPath2D</title>
+<body>
+<p>This type in <str-Shapes /> corresponds to the generic path type in <str-PDF />, that is, a list of continuous cubic splines.  This can function as a way of grouping several splines into one object, but the real purpose is to define complex regions to fill with paint.  Please refer to the <str-PDF /> documentation for the semantics of filling complex paths.</p>
+
+<p>A <typename>MultiPath2D</typename> has not fields.</p>
+
+<operator-table type="MultiPath2D" />
+</body>
+</section>
+
+
+<section id="kerntypes-PathPoint3D">
+<title>PathPoint3D</title>
+<body>
+<p>Compare with <typename>PathPoint3D</typename>.</p>
+
+<note>
+  <p>A major difference between path points in 2D and 3D is that the machinery for deducing values of undertermined handle angles and radii is not generalized to 3D.</p>
+</note>
+
+<p>The following fields are possible to reference:</p>
+<type-field-table>
+<field name="rear">
+  <type><typename>Coords3D</typename></type>
+  <description>Control point in backwards direction.</description>
+</field>
+<field name="mid">
+  <type><typename>Coords3D</typename></type>
+  <description>Center point.</description>
+</field>
+<field name="front">
+  <type><typename>Coords3D</typename></type>
+  <description>Control point in forward direction.</description>
+</field>
+</type-field-table>
+
+<operator-table type="PathPoint3D" />
+</body>
+</section>
+
+<section id="kerntypes-PathSlider3D">
+<title>PathSlider3D</title>
+<body>
+<p>Compare with <typename>PathSlider2D</typename>.</p>
+
+<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.  The following fields are possible to reference:</p>
+<type-field-table>
+<field name="p">
+  <type><typename>Coords3D</typename></type>
+  <description>The coordinates of the point.</description>
+</field>
+<field name="v">
+  <type><typename>Length</typename></type>
+  <description>The speed at the point.  Note that this does not make sense from a geometric point of view, since it is not a property of the shape of the path but its representation.</description>
+</field>
+<field name="rv">
+  <type><typename>Length</typename></type>
+  <description>The speed in the reverse direction.</description>
+</field>
+<field name="T">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the tangent direction.</description>
+</field>
+<field name="rT">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the reverse tangent direction.</description>
+</field>
+<field name="N">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the normal direction (this direction is normal to the tangent).</description>
+</field>
+<field name="rN">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the reverse normal direction.</description>
+</field>
+<field name="B">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the bi-normal direction (pointing such that the tangent, the normal, and the bi-normal forms a system with positive orientation).</description>
+</field>
+<field name="rV">
+  <type><typename>FloatPair</typename></type>
+  <description>Unit vector in the reverse bi-normal direction.</description>
+</field>
+<field name="ik">
+  <type><typename>Length</typename></type>
+  <description>Radius of curvature (that is, the inverse of the curvature).</description>
+</field>
+<field name="rik">
+  <type><typename>Length</typename></type>
+  <description>Rverse radius of curvature.</description>
+</field>
+<field name="time">
+  <type><typename>Float</typename></type>
+  <description>Path time at the slider.</description>
+</field>
+<field name="length">
+  <type><typename>Length</typename></type>
+  <description>Distance from beginning of path to slider.</description>
+</field>
+<field name="past">
+  <type><typename>Boolean</typename></type>
+  <description>Slider is beyond the end of the path.</description>
+</field>
+<field name="looped">
+  <type><typename>Boolean</typename></type>
+  <description>Slider was reached by looping on a closed path.</description>
+</field>
+<field name="mod">
+  <type><typename>PathSlider3D</typename></type>
+  <description>Slider obtained by computing the path time modulo the duration of the path.</description>
+</field>
+</type-field-table>
+
+<operator-table type="PathSlider3D" />
+</body>
+</section>
+
+<section id="kerntypes-Path3D">
+<title>Path3D</title>
+<body>
+<p>Compare with <typename>Path2D</typename>.</p>
+
+<p>The following fields are possible to reference:</p>
+<type-field-table>
+<field name="begin">
+  <type><typename>PathSlider3D</typename></type>
+  <description>Beginning of path.</description>
+</field>
+<field name="end">
+  <type><typename>PathSlider3D</typename></type>
+  <description>End of path.</description>
+</field>
+<field name="closed?">
+  <type><typename>Boolean</typename></type>
+  <description>True for closed paths.</description>
+</field>
+<field name="null?">
+  <type><typename>Boolean</typename></type>
+  <description>True if there are no path points on the path.</description>
+</field>
+</type-field-table>
+
+<operator-table type="Path3D" />
+</body>
+</section>
+
+
+<section id="kerntypes-MultiPath3D">
+<title>MultiPath3D</title>
+<body>
+<p>Compare with <typename>MultiPath2D</typename>.</p>
+
+<p>A <typename>MultiPath3D</typename> has not fields.</p>
+
+<operator-table type="MultiPath3D" />
+</body>
+</section>
+
+
+</section>  <!-- end of kerntypes-paths -->
+
 
 <section id="kerntypes-graphics">
 <title>Graphics</title>

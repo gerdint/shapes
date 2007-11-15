@@ -1,13 +1,13 @@
 <section id="chap-kernbind">
 <title>System bindings</title>
 <top>
-<p>The language Shapes comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
+<p>The language <str-Shapes /> comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
 </top>
 
 <section id="kernbind-graphics">
 <title>Graphics functions</title>
 <top>
-<p>After all, Shapes is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
+<p>After all, <str-Shapes /> is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
 
 <p>Remember <varname>immerse</varname> and <varname>facing</varname>, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <varname>facing</varname>.  The following is quite nice:
 </p>
@@ -34,7 +34,7 @@ facing: [../facing scale:true distort:true ...]
 <section id="kernbind-latex">
 <title>LaTeX</title>
 <top>
-<p>The Shapes language was designed to be used with LaTeX for typesetting labels in the graphics.</p>
+<p>The <str-Shapes /> language was designed to be used with LaTeX for typesetting labels in the graphics.</p>
 </top>
 <body>
 <p>The interpreter goes to some lengths to avoid calling LaTeX too many times, but the problems this can cause is more of a tool matter than a language issue.  Here, we shall just describe the laguage constructs that relate to producing labels with LaTeX.</p>

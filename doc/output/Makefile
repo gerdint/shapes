@@ -5,11 +5,11 @@ stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdou
 
 .PRECIOUS: %.pdf
 
-%.pdf %.stdout: ../../examples/features/%.drool
-	drool --in $< --out $*.pdf > $*.stdout
+%.pdf %.stdout: ../../examples/features/%.shape
+	shapes --in $< --out $*.pdf > $*.stdout
 
-%_3.pdf: ../../examples/features/%.drool
-	drool --v s1.3 --in $< --out $*_3.pdf > $*.stdout
+%_3.pdf: ../../examples/features/%.shape
+	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
 
 %_y_big.jpg: %_3.pdf
 	convert -density 150 -resize x150 $< $@
@@ -25,4 +25,4 @@ stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdou
 
 .PHONY: clean
 clean:
-	-rm \#drool.*
+	-rm \#shapes.*

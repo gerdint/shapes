@@ -194,7 +194,7 @@
 <section id="syntax-atoms-strings">
 <title>Strings</title>
 <body>
-<p>The string syntax in Shapes is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
+<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
 
 <p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
 
@@ -792,7 +792,7 @@ dynamic @tex_bbox_grow_rel identity 1.01
 <section id="syntax-binding">
 <title>Bindings and scoping</title>
 <top>
-<p>Shapes supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a binding can never be changed.</p>
+<p><str-Shapes /> supports both lexical and dynamic bindings.  This section describe how to create such bindings, what their scopes are, and how to access the values of a binding.  Note that a binding can never be changed.</p>
 </top>
 
 <section id="syntax-binding-lexical">
@@ -943,7 +943,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <section id="syntax-continuations">
 <title>Continuations</title>
 <top>
-<p>Shapes is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
+<p><str-Shapes /> is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
 
 <p>The reader is referred to the WWW for details on continuations and continuation passing style evaluation.  One place to start would be the documentation for <varname>call-with-current-continuation</varname> found in <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/doc/r5rs-9.html#Standard-procedures">R5RS</a>.  Here, we only describe the related syntax briefely.</p>
 <syntax-table>
@@ -974,7 +974,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <section id="syntax-types">
 <title>Classes and type information</title>
 <body>
-<p>Since Shapes is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
+<p>Since <str-Shapes /> is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
 </body>
 </section><!-- end of syntax-types -->
 

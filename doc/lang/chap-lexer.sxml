@@ -6,7 +6,7 @@
 ##echo <varname class="replacable">text-to-end-of-line-will-be-echoed</varname>
 </pre>
 
-<p>You can put your name in the PDF file using the following directive:</p>
+<p>You can put your name in the <str-PDF /> file using the following directive:</p>
 <pre>
 ##author <varname class="replacable">your name</varname>
 </pre>
