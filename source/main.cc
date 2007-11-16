@@ -619,7 +619,7 @@ main( int argc, char ** argv )
 	      exit( 1 );
 	    }
 	  tmpDir = *( argv + 1 );
-	  if( tmpDir[ outDir.length( ) - 1 ] != '/' )
+	  if( tmpDir[ tmpDir.length( ) - 1 ] != '/' )
 	    {
 	      tmpDir += '/';
 	    }
@@ -738,7 +738,17 @@ main( int argc, char ** argv )
 		}
 	    }
 
-	  baseName = inputName.substr( 0, inputName.length( ) - 6 );
+	  const char * slash = strrchr( inputName.c_str( ), '/' );
+	  if( slash == 0 )
+	    {
+	      slash = inputName.c_str( );
+	    }
+	  else
+	    {
+	      ++slash;
+	    }
+	  size_t skipCount = slash - inputName.c_str( );
+	  baseName = inputName.substr( skipCount, inputName.length( ) - skipCount - 6 );
 
 	  argv += 1;
 	  argc -= 1;
