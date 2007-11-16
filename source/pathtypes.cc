@@ -288,25 +288,6 @@ Concrete::PathPoint2D::~PathPoint2D( )
     }
 }
 
-Kernel::VariableHandle
-Concrete::PathPoint2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
-{
-{
-  if( strcmp( fieldID, "mid" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords2D( *mid_ ) );
-    }
-  if( strcmp( fieldID, "rear" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords2D( *rear_ ) );
-    }
-  if( strcmp( fieldID, "front" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords2D( *front_ ) );
-    }
-  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
-}
-
 Concrete::PathPoint2D *
 Concrete::PathPoint2D::transformed( const Lang::Transform2D & tf ) const
 {
@@ -403,26 +384,6 @@ Concrete::PathPoint3D::~PathPoint3D( )
     }
 }
 
-
-Kernel::VariableHandle
-Concrete::PathPoint3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
-{
-{
-  if( strcmp( fieldID, "mid" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords3D( *mid_ ) );
-    }
-  if( strcmp( fieldID, "rear" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords3D( *rear_ ) );
-    }
-  if( strcmp( fieldID, "front" ) == 0 )
-    {
-      return Helpers::newValHandle( new Lang::Coords3D( *front_ ) );
-    }
-  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
-}
-
 Concrete::PathPoint3D *
 Concrete::PathPoint3D::transformed( const Lang::Transform3D & tf ) const
 {
@@ -462,6 +423,24 @@ DISPATCHIMPL( PathPoint2D );
 Lang::PathPoint2D::PathPoint2D( RefCountPtr< const Lang::Coords2D > mid )
   : rear_( NullPtr< Lang::Value >( ) ), mid_( mid ), front_( NullPtr< Lang::Value >( ) )
 { }
+
+Kernel::VariableHandle
+Lang::PathPoint2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+  if( strcmp( fieldID, "mid" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( mid_ ) );
+    }
+  if( strcmp( fieldID, "rear" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( rear_ ) );
+    }
+  if( strcmp( fieldID, "front" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( front_ ) );
+    }
+  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
 
 RefCountPtr< const Lang::Geometric2D >
 Lang::PathPoint2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const
@@ -511,6 +490,24 @@ DISPATCHIMPL( PathPoint3D );
 Lang::PathPoint3D::PathPoint3D( const RefCountPtr< const Lang::Coords3D > & mid )
   : rear_( NullPtr< Lang::Coords3D >( ) ), mid_( mid ), front_( NullPtr< Lang::Coords3D >( ) )
 { }
+
+Kernel::VariableHandle
+Lang::PathPoint3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+  if( strcmp( fieldID, "mid" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( mid_ ) );
+    }
+  if( strcmp( fieldID, "rear" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( rear_ ) );
+    }
+  if( strcmp( fieldID, "front" ) == 0 )
+    {
+      return Kernel::VariableHandle( new Kernel::Variable( front_ ) );
+    }
+  throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
 
 void
 Lang::PathPoint3D::elementaryJob( Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
