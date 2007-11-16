@@ -1,11 +1,11 @@
-lbl: [immerse (teX `$\int_{\alpha}^{\beta}$\LaTeX2e´)]
+lbl: [immerse (TeX `$\int_{\alpha}^{\beta}$\LaTeX2e´)]
 
 @eyez:∞
 |
 {
-@<< [[shift (0cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:0°] lbl]]]
-@<< [[shift (3cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:20°] lbl]]]
-@<< [[shift (6cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:40°] lbl]]]
-@<< [[shift (9cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:60°] lbl]]]
-@<< [[shift (12cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:80°] lbl]]]
+•page << [[shift (0cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:0°] lbl]]]
+•page << [[shift (3cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:20°] lbl]]]
+•page << [[shift (6cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:40°] lbl]]]
+•page << [[shift (9cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:60°] lbl]]]
+•page << [[shift (12cm,0cm)] [view [[rotate3D dir:(1,0,0) angle:80°] lbl]]]
 }

@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <ctype.h>
 #include <iomanip>
 
@@ -140,7 +142,7 @@ Kernel::TeXLabelManager::iterativeStartup( RefCountPtr< std::istream > labelsFil
 
 
 void
-Kernel::TeXLabelManager::iterativeFinish( )
+Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 {
   if( ! anyLabelMiss )
     {
@@ -153,26 +155,28 @@ Kernel::TeXLabelManager::iterativeFinish( )
 	  // We have only used old labels.
 	  return;
 	}
-      string lastJobFilename = stringWithJobNumber( texJobName ) + ".pdf";
-      jobNumber = -1;
-      string labelsFilename = stringWithJobNumber( texJobName ) + ".pdf";
+      // Otherwise, the only generated pdf file with labels is a good database.
 
-      ostringstream mvCommand;
+      string lastJobFilename = stringWithJobNumber( texJobName ) + ".pdf";
+
       {
-	// Avoid invoking the mv command if the file does not exist.
-	ifstream tmpFile( lastJobFilename.c_str( ) );
-	if( ! tmpFile.good( ) )
+	ostringstream mvCommand;
+	{
+	  // Avoid invoking the mv command if the file does not exist.
+	  struct stat theStat;
+	  if( stat( lastJobFilename.c_str( ), & theStat ) != 0 )
+	    {
+	      return;
+	    }
+	}
+	
+	mvCommand << "mv '" << lastJobFilename << "' '" << labelDBFilename << "'";
+	Interaction::systemDebugMessage( mvCommand.str( ) );
+	if( system( mvCommand.str( ).c_str( ) ) != 0 )
 	  {
-	    return;
+	    // Never mind
 	  }
       }
-
-      mvCommand << "mv '" << lastJobFilename << "' '" << labelsFilename << "'";
-      Interaction::systemDebugMessage( mvCommand.str( ) );
-      if( system( mvCommand.str( ).c_str( ) ) != 0 )
-	{
-	  // Never mind
-	}
       return;
     }
   
@@ -184,6 +188,26 @@ Kernel::TeXLabelManager::iterativeFinish( )
     }
   jobNumber = -1;
   processRequests( );
+
+  {
+    string finalJobFilename = stringWithJobNumber( texJobName ) + ".pdf";
+    ostringstream mvCommand;
+    {
+      // Avoid invoking the mv command if the file does not exist.
+      struct stat theStat;
+      if( stat( finalJobFilename.c_str( ), & theStat ) != 0 )
+	{
+	  return;
+	}
+    }
+    
+    mvCommand << "mv '" << finalJobFilename << "' '" << labelDBFilename << "'";
+    Interaction::systemDebugMessage( mvCommand.str( ) );
+    if( system( mvCommand.str( ).c_str( ) ) != 0 )
+      {
+	// Never mind
+      }
+  }
 }
 
 
@@ -295,7 +319,7 @@ Kernel::TeXLabelManager::processRequests( )
 	  if( WEXITSTATUS( status ) != 0 )
 	    {
 	      ostringstream oss;
-	      oss << "pdfLaTeX returned with error code " << WEXITSTATUS( status ) << ".  Try running the pdfLaTeX job (available via the --whichtexjob option) separately to find out more about the error." ;
+	      oss << "pdfLaTeX returned with error code " << WEXITSTATUS( status ) << ".  Try running the pdfLaTeX job (available via the --which-texjob option) separately to find out more about the error." ;
 	      throw Exceptions::TeXLabelError( strrefdup( oss ) );
 	    }
 	  break;

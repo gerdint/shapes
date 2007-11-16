@@ -36,7 +36,7 @@ using namespace SimplePDF;
 using namespace std;
 
 void argcAssertion( const char * optionSpecifier, int argc, int argcMin );
-void performIterativeStartup( const std::string & texJobName );
+RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
 void abortProcedure( ofstream * oFile, const std::string & outputName );
 void setupGlobals( );
 enum XpdfAction{ XPDF_DEFAULT, XPDF_RAISE, XPDF_RELOAD, XPDF_QUIT, XPDF_NOSERVER };
@@ -69,13 +69,16 @@ main( int argc, char ** argv )
 
   bool iterativeMode = true;
 
+  string outDir;
+  string tmpDir;
   string baseName;
   string inputName;
   string outputName;
   string texJobName;
+  string labelDBName;
   string fontmetricsOutputName;
 
-  enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_AFM };
+  enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM };
 
   list< int > filenameRequestList;
   list< const char * > resourceRequestList;
@@ -501,7 +504,7 @@ main( int argc, char ** argv )
 	  argv += 2;
 	  argc -= 2;
 	}
-      else if( strcmp( *argv, "--whichin" ) == 0 )
+      else if( strcmp( *argv, "--which-in" ) == 0 )
 	{
 	  filenameRequestList.push_back( FILENAME_IN );
 	  argv += 1;
@@ -519,7 +522,7 @@ main( int argc, char ** argv )
 	  argv += 2;
 	  argc -= 2;
 	}
-      else if( strcmp( *argv, "--whichout" ) == 0 )
+      else if( strcmp( *argv, "--which-out" ) == 0 )
 	{
 	  filenameRequestList.push_back( FILENAME_OUT );
 	  argv += 1;
@@ -537,7 +540,7 @@ main( int argc, char ** argv )
 	  argv += 2;
 	  argc -= 2;
 	}
-      else if( strcmp( *argv, "--whichtexjob" ) == 0 )
+      else if( strcmp( *argv, "--which-texjob" ) == 0 )
 	{
 	  filenameRequestList.push_back( FILENAME_TEXJOB );
 	  argv += 1;
@@ -555,7 +558,25 @@ main( int argc, char ** argv )
 	  argv += 2;
 	  argc -= 2;
 	}
-      else if( strcmp( *argv, "--whichafmout" ) == 0 )
+      else if( strcmp( *argv, "--which-labeldb" ) == 0 )
+	{
+	  filenameRequestList.push_back( FILENAME_LABELDB );
+	  argv += 1;
+	  argc -= 1;
+	}
+      else if( strcmp( *argv, "--labeldb" ) == 0 )
+	{
+	  argcAssertion( *argv, argc, 2 );
+	  if( labelDBName != "" )
+	    {
+	      cerr << "The label database file is multiply specified." << endl ;
+	      exit( 1 );
+	    }
+	  labelDBName = *( argv + 1 );
+	  argv += 2;
+	  argc -= 2;
+	}
+      else if( strcmp( *argv, "--which-afmout" ) == 0 )
 	{
 	  filenameRequestList.push_back( FILENAME_AFM );
 	  argv += 1;
@@ -570,6 +591,38 @@ main( int argc, char ** argv )
 	      exit( 1 );
 	    }
 	  fontmetricsOutputName = *( argv + 1 );
+	  argv += 2;
+	  argc -= 2;
+	}
+      else if( strcmp( *argv, "--outdir" ) == 0 )
+	{
+	  argcAssertion( *argv, argc, 2 );
+	  if( outDir != "" )
+	    {
+	      cerr << "The output directory is multiply specified." << endl ;
+	      exit( 1 );
+	    }
+	  outDir = *( argv + 1 );
+	  if( outDir[ outDir.length( ) - 1 ] != '/' )
+	    {
+	      outDir += '/';
+	    }
+	  argv += 2;
+	  argc -= 2;
+	}
+      else if( strcmp( *argv, "--tmpdir" ) == 0 )
+	{
+	  argcAssertion( *argv, argc, 2 );
+	  if( tmpDir != "" )
+	    {
+	      cerr << "The temporaries directory is multiply specified." << endl ;
+	      exit( 1 );
+	    }
+	  tmpDir = *( argv + 1 );
+	  if( tmpDir[ outDir.length( ) - 1 ] != '/' )
+	    {
+	      tmpDir += '/';
+	    }
 	  argv += 2;
 	  argc -= 2;
 	}
@@ -657,7 +710,7 @@ main( int argc, char ** argv )
 	      char * ext = *argv + strlen( *argv ) - 6;
 	      if( ext <= *argv )
 		{
-		  std::cerr << "The file name \"" << *argv << "\" is unexpectedly short." << std::endl ;
+		  std::cerr << "The file name \"" << *argv << "\" is unexpectedly short (it should include the \".shape\" suffix)." << std::endl ;
 		  exit( 1 );
 		}
 	      if( strcmp( ext, ".shape" ) != 0 )
@@ -665,17 +718,28 @@ main( int argc, char ** argv )
 		  cerr << "Expected \".shape\" suffix in the file name \"" << *argv << "\"." << endl ;
 		  exit( 1 );
 		}
-	      *(ext+1) = '\0';
-	      baseName = *argv;
-	    }
-	  else if( (*argv)[ strlen( *argv ) - 1 ] == '.' )
-	    {
-	      baseName = *argv;
 	    }
 	  else
 	    {
-	      baseName = std::string( *argv ) + '.' ;
+	      if( (*argv)[ strlen( *argv ) - 1 ] == '.' )
+		{
+		  inputName = std::string( *argv ) + "shape";
+		}
+	      else
+		{
+		  inputName = std::string( *argv ) + ".shape";
+		}
+	      if( ! stat( inputName.c_str( ), & theStat ) == 0 )
+		{
+		  /* It may not be obvious that this is a good error message here.
+		   */
+		  std::cerr << "Failed to locate input file: " << inputName << std::endl ;
+		  exit( 1 );
+		}
 	    }
+
+	  baseName = inputName.substr( 0, inputName.length( ) - 6 );
+
 	  argv += 1;
 	  argc -= 1;
 	}
@@ -683,6 +747,32 @@ main( int argc, char ** argv )
 	{
 	  cerr << "Illegal command line option: " << *argv << endl ;
 	  exit( 1 );
+	}
+    }
+
+  if( outDir == "" )
+    {
+      outDir = "./";
+    }
+  if( tmpDir == "" )
+    {
+      char * start = getenv( "SHAPESTMPDIR" );
+      if( start != 0 )
+	{
+	  tmpDir = start;
+	  if( tmpDir.length( ) == 0 )
+	    {
+	      std::cerr << "An empty string in ENV(SHAPESTMPDIR) is not a valid path." << std::endl ;
+	      exit( 1 );
+	    }
+	  if( tmpDir[ tmpDir.length( ) - 1 ] != '/' )
+	    {
+	      tmpDir += '/';
+	    }
+	}
+      else
+	{
+	  tmpDir = "./";
 	}
     }
 
@@ -697,19 +787,23 @@ main( int argc, char ** argv )
     {
       if( inputName == "" )
 	{
-	  inputName = baseName + "shape";
+	  inputName = baseName + ".shape";
 	}
       if( outputName == "" )
 	{
-	  outputName = baseName + "pdf";
+	  outputName = outDir + baseName + ".pdf";
 	}
       if( texJobName == "" )
 	{
-	  texJobName = baseName + "labels";
+	  texJobName = tmpDir + baseName + ".labels";
+	}
+      if( labelDBName == "" )
+	{
+	  labelDBName = outDir + baseName + ".labels.pdf";
 	}
       if( fontmetricsOutputName == "" )
 	{
-	  fontmetricsOutputName = baseName + "afm";
+	  fontmetricsOutputName = outDir + baseName + ".afm";
 	}
     }
 
@@ -721,7 +815,7 @@ main( int argc, char ** argv )
 	}
       else
 	{
-	  Kernel::theDebugLog.setFilename( baseName + "log" );
+	  Kernel::theDebugLog.setFilename( outDir + baseName + ".log" );
 	}
     }
 
@@ -784,6 +878,9 @@ main( int argc, char ** argv )
 	      break;
 	    case FILENAME_TEXJOB:
 	      cout << texJobName ;
+	      break;
+	    case FILENAME_LABELDB:
+	      cout << labelDBName ;
 	      break;
 	    case FILENAME_AFM:
 	      cout << fontmetricsOutputName ;
@@ -876,6 +973,8 @@ main( int argc, char ** argv )
       Kernel::the_pdfo->setOutputStream( & oFile );
     }
 
+  RefCountPtr< std::ifstream > labelDBFile = RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
+
   try
     {
       shapesparse( );
@@ -924,7 +1023,7 @@ main( int argc, char ** argv )
 	  std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
 	  abortProcedure( & oFile, outputName );
 	}
-      performIterativeStartup( texJobName );
+      labelDBFile = performIterativeStartup( labelDBName );
       Kernel::theTeXLabelManager.settexJobName( texJobName );
       RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
       Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );
@@ -1069,12 +1168,25 @@ main( int argc, char ** argv )
 	   << "  (" << 100 * static_cast< double >( Kernel::Environment::liveCount ) / static_cast< double >( Kernel::Environment::createdCount ) << "%)" << endl ;
     }
 
-  if( iterativeMode )
-    {
-      Kernel::theTeXLabelManager.iterativeFinish( );
-    }
+  /* The iterativeFinish must be allowed to write to the labels database file, so the file must be closed.
+   * To make sure it is not in use when we close it, we do the_pdfo->writeData( ) first.
+   */
 
   Kernel::the_pdfo->writeData( );
+
+  if( labelDBFile != NullPtr< std::ifstream >( ) )
+    {
+      if( labelDBFile->is_open( ) )
+	{
+	  labelDBFile->close( );
+	}
+      labelDBFile = NullPtr< std::ifstream >( ); // Free the reference.
+    }
+  
+  if( iterativeMode )
+    {
+      Kernel::theTeXLabelManager.iterativeFinish( labelDBName );
+    }
  
   if( launch_xpdf )
     {
@@ -1103,37 +1215,34 @@ argcAssertion( const char * optionSpecifier, int argc, int argcMin )
 }
 
 
-void
-performIterativeStartup( const std::string & texJobName )
+RefCountPtr< std::ifstream >
+performIterativeStartup( const std::string & labelDBName )
 {
-  ostringstream oldFilename;
-  ostringstream labelsFilename;
-  oldFilename    << texJobName << ".pdf" ;
-  labelsFilename << texJobName << ".0pdf" ;
   {
-    ifstream tmpFile( oldFilename.str( ).c_str( ) );
-    if( ! tmpFile.good( ) )
+    struct stat theStat;
+    if( stat( labelDBName.c_str( ), & theStat ) != 0 )
       {
-	return;
+	return RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
       }
   }
-  {
-    ostringstream mvCommand;
-    mvCommand << "cp '" << oldFilename.str( ) << "' '" << labelsFilename.str( ) << "'" ;
-    Interaction::systemDebugMessage( mvCommand.str( ) );
-    if( system( mvCommand.str( ).c_str( ) ) != 0 )
-      {
-	return;
-      }
-  }
-  RefCountPtr< ifstream > labelsFile( new std::ifstream( labelsFilename.str( ).c_str( ) ) );
+//   {
+//     ostringstream mvCommand;
+//     mvCommand << "cp '" << oldFilename.str( ) << "' '" << labelDBName.str( ) << "'" ;
+//     Interaction::systemDebugMessage( mvCommand.str( ) );
+//     if( system( mvCommand.str( ).c_str( ) ) != 0 )
+//       {
+// 	return RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
+//       }
+//   }
+  RefCountPtr< ifstream > labelsFile( new std::ifstream( labelDBName.c_str( ) ) );
   if( ! labelsFile->good( ) )
     {
-      return;
+      return RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
     }
   try
     {
       Kernel::theTeXLabelManager.iterativeStartup( labelsFile );
+      return labelsFile;
     }
   catch( const char * ball )
     {
@@ -1355,6 +1464,10 @@ void
 addDefaultNeedPath( )
 {
   char * start = getenv( "SHAPESINPUTS" );
+  if( start == 0 )
+    {
+      return;
+    }
   char * tok = strsep( & start, ":" );
   while( tok != 0 )
     {
@@ -1367,6 +1480,10 @@ void
 addDefaultFontMetricsPath( )
 {
   char * start = getenv( "SHAPESFONTMETRICS" );
+  if( start == 0 )
+    {
+      return;
+    }
   char * tok = strsep( & start, ":" );
   while( tok != 0 )
     {

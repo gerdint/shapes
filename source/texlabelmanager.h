@@ -56,7 +56,7 @@ namespace Shapes
     RefCountPtr< const Lang::Value > request( const std::string & str, Kernel::PassedDyn dyn );
     
     void iterativeStartup( RefCountPtr< std::istream > labelsFile );
-    void iterativeFinish( );
+    void iterativeFinish( const std::string & labelDBFilename );
 
     void setDocumentClass( const Ast::SourceLocation & loc, const char * str );
     void addDocumentOption( const Ast::SourceLocation & loc, const char * str );
