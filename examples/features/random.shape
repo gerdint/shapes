@@ -15,13 +15,13 @@ seed: [newRandom (•time)]
 
 •page << [stroke
            [foldsl \ pth i •st .> pth--(i*1cm,[random1D •st]*1cm)
-	           emptypath2D
+	           emptypath
 		   •rand3
 		   [consify [range '0 '12]]]]
 
 |** Nowadays, we don't need conssupport for this, since foldsl is also in the kernel:
 •page << [stroke
            [[range '0 '12].foldsl \ pth i •st .> pth--(i*1cm,(2+[random1D •st])*1cm)
-                 	           emptypath2D
+                 	           emptypath
 				   •rand3]]
                  

@@ -45,7 +45,7 @@ randPath: \ n •state .>
  [scale 5] []
   [[range '1 n].foldsl
    \ pile e •st .>  pile--( ^ )<(1cm*[random2D •st])>( 2mm * (1+[random1D •st]) ^ 180°*[random1D •st] )
-   emptypath2D •state]
+   emptypath •state]
 
 {
   •rand: [newRandom (•time)]
