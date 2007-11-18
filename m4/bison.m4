@@ -4,7 +4,7 @@ AC_DEFUN([AC_PROG_BISON],
   min_bison_version=ifelse([$1], ,2.0,$1)
   AC_MSG_CHECKING(for bison - version >= $min_bison_version)
   if test `echo ${YACC} | sed -e 's/\(bison\).*/\1/'` != bison ; then
-    BISON="$SHELL $missing_dir/missing bison"
+     YACC="$am_aux_dir/oldtool bison ${min_bison_version}"
 #    echo "WARNING: `bison'' is missing on your system.  You should only need it if"
 #    echo "         you modified a `.yy' file.  You may need the `Bison'' package"
 #    echo "         in order for those modifications to take effect.  You can get"
@@ -67,8 +67,8 @@ int main (void)
   else
     {
 /*
-	printf("WARNING: \`bison' on your system reports version %d.%d.%d, but version.\n"
-	       "         %d.%d.%d are required.  You should only need it if you\n"
+	printf("WARNING: \`bison' on your system reports version %d.%d.%d, but version\n"
+	       "         %d.%d.%d is required.  You should only need it if you\n"
                "         modified a .yy file.  You may need the \`Bison' package\n"
                "         in order for those modifications to take effect.  You can get\n"
                "         \`Bison' from any GNU archive site.",
@@ -78,7 +78,7 @@ int main (void)
     }
 }
     ], AC_MSG_RESULT(yes), [
-      YACC="$SHELL $missing_dir/missing bison"
+      YACC="$am_aux_dir/oldtool bison ${min_bison_version}"
       AC_MSG_RESULT(no)
     ],)
   fi

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+if test $# -eq 0; then
+  echo 1>&2 "Try \`$0 --help' for more information"
+  exit 1
+fi
+
+case "$1" in
+  bison)
+    echo "\
+WARNING: \`bison' on your system reports an old version, but version
+         $2 is required.  You should only need it if you
+         modified an .yy file.  You may need the \`Bison' package
+         in order for those modifications to take effect.  You can get
+         \`Bison' from any GNU archive site."
+    ;;
+
+  flex)
+    echo "\
+WARNING: \`flex' on your system reports an old version, but version
+         $2 is required.  You should only need it if you
+         modified a .ll file.  You may need the \`Flex' package
+         in order for those modifications to take effect.  You can get
+         directions for how to obtain a recent \`Flex' from any GNU
+         archive site."
+    ;;
+
+  -h|--help)
+    echo "\
+$0 [--help] PROGRAM [VERSION]
+
+Print warning when \`PROGRAM' for when PROGRAM is too old and return an
+error status.
+
+Options:
+  -h, --help      display this help and exit
+
+Supported PROGRAM values:
+  bison
+  flex"
+  exit 0
+  ;;
+esac
+
+exit -1

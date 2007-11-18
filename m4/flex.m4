@@ -4,13 +4,14 @@ AC_DEFUN([AC_PROG_FLEX],
   min_flex_version=ifelse([$1], ,2.5.30,$1)
   AC_MSG_CHECKING(for flex - version >= $min_flex_version)
   if test "$LEX" != flex; then
-    LEX="$SHELL $missing_dir/missing flex"
+    LEX="$am_aux_dir/oldtool flex ${min_flex_version}"
     AC_SUBST([LEX_OUTPUT_ROOT], [lex.yy])
     AC_SUBST([LEXLIB], [''])
 #    echo "WARNING: `flex'' is missing on your system.  You should only need it if"
 #    echo "         you modified a `.ll' file.  You may need the `Flex'' package"
 #    echo "         in order for those modifications to take effect.  You can get"
-#    echo "         `Flex'' from any GNU archive site."
+#    echo "         direction for how to obtaion a recent `Flex'' from any GNU"
+#    echo "         archive site."
     AC_MSG_RESULT(no)
   else
     flex_version=`$LEX --version | sed -e 's/^flex //' -e 's/version //'`
@@ -70,18 +71,19 @@ int main (void)
   else
     {
 /*
-	printf("WARNING: \`flex' on your system reports version %d.%d.%d, but version.\n"
-	       "         %d.%d.%d are required.  You should only need it if you\n"
+	printf("WARNING: \`flex' on your system reports version %d.%d.%d, but version\n"
+	       "         %d.%d.%d is required.  You should only need it if you\n"
                "         modified a .ll file.  You may need the \`Flex' package\n"
                "         in order for those modifications to take effect.  You can get\n"
-               "         \`Flex' from any GNU archive site.",
+               "         directions for how to obtain a recent \`Flex' from any GNU\n"
+	       "         archive site.",
 	       major, minor, micro, min_major, min_minor, min_micro);
 */
       exit(1);
     }
 }
     ], AC_MSG_RESULT(yes), [
-      LEX="$SHELL $missing_dir/missing flex"
+      LEX="$am_aux_dir/oldtool flex ${min_flex_version}"
       AC_SUBST([LEX_OUTPUT_ROOT], [lex.yy])
       AC_SUBST([LEXLIB], [''])
       AC_MSG_RESULT(no)
