@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS			= source doc resources
+SUBDIRS			= source doc resources test
 CLEANFILES		= configure-stamp build-stamp
 
 dist_noinst_DATA        = m4/lib-ld.m4 m4/lib-prefix.m4 m4/lib-link.m4 \
