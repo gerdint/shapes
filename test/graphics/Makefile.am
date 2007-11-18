@@ -14,11 +14,11 @@ test_% :
 
 
 %.png: %.pdf
-	-convert -density 150 -resize 150x $< $@
+	@CONVERT@ $< $@
 	touch $@
 
 %.png: ${srcdir}/%.pdf
-	-convert -density 150 -resize 150x $< $@
+	@CONVERT@ $< $@
 	touch $@
 
 # %.correct.pdf : %.shape ${SHAPES}

@@ -19,6 +19,7 @@ AC_PROG_BISON(2.3)
 AC_DEBUG
 AC_PROFILE
 AC_OPTIMIZATION
+AC_CHECK_PROG([CONVERT], [convert], [convert -density 150 -resize 150x], [cp])
 
 # Checks for libraries.
 AM_ICONV()
@@ -60,3 +61,10 @@ AC_CHECK_FUNCS([floor memchr memset pow rint sqrt strchr strdup strrchr strtol])
 AC_CONFIG_FILES([Makefile source/Makefile doc/Makefile resources/Makefile
                  test/Makefile test/text/Makefile test/graphics/Makefile])
 AC_OUTPUT
+
+if test "$CONVERT" = "cp"
+then
+  echo "\
+WARNING: The program \`convert' was not found, without it installed, and
+         able to convert .pdf to .png the test will likely fail."
+fi
