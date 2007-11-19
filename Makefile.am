@@ -7,5 +7,6 @@ dist_noinst_DATA        = m4/lib-ld.m4 m4/lib-prefix.m4 m4/lib-link.m4 \
                           m4/iconv.m4 m4/zlib.m4 \
                           m4/bison.m4 m4/flex.m4 \
                           m4/gsl.m4 m4/opt.m4 \
-                          config/config.rpath
+                          config/config.rpath \
+                          VERSION
 dist_noinst_SCRIPTS     = config/oldtool

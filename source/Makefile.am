@@ -1,8 +1,3 @@
-DVERSION := -D'VERSION_DATE="$(shell date '+%Y-%m-%d %H:%M')"' \
--D'VERSION_REVISION="$(shell cd ${top_srcdir}; svn info  | \
-                             sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //')"' \
--D'VERSION_NUMBER="$(shell cat ${srcdir}/VERSION | sed -e '2,$$ d')"'
-
 AM_CPPFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE \
               -D'RESOURCE_DIR="${pkgdatadir}"' \
               ${GSL_CFLAGS} ${ZLIB_CFLAGS} -I${top_srcdir}/tools/include
@@ -10,15 +5,18 @@ AM_LDFLAGS = -lz -lm -lc
 LIBS = ${LIBICONV} ${GSL_LIBS} ${ZLIB_LIBS}
 AM_LFLAGS = -olex.yy.c -d
 AM_YFLAGS = -dvt
-CLEANFILES = shapesparser.output
+CLEANFILES = shapesparser.output SHAPES-VERSION-FILE
 shapes_LDADD = version.o
 
+FORCE :
+SHAPES-VERSION-FILE : FORCE
+	@${srcdir}/SHAPES-VERSION-GEN ${top_srcdir}
+-include SHAPES-VERSION-FILE
 
 bin_PROGRAMS = shapes
+dist_noinst_SCRIPTS = SHAPES-VERSION-GEN
 
 BUILT_SOURCES = shapesparser.h
-
-dist_noinst_DATA = VERSION version.cc
 
 noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  astclass.h astexpr.h astexprs.h astflow.h \
@@ -90,7 +88,7 @@ shapesparser.h : shapesparser.cc shapesparser.yy
 classtree2.h : classtree1.h
 	cat $< | sed -e 's/CLASSTREE1/CLASSTREE2/' > $@
 
-version.o : version.cc FORCE
-	${COMPILE} ${DVERSION} -c $< -o $@
-
-FORCE :
+version.o : ${srcdir}/version.cc SHAPES-VERSION-FILE
+	${COMPILE} -D'VERSION_DATE="${VERSION_DATE}"' \
+	           -D'VERSION_REVISION="${VERSION_REVISION}"' \
+	           -D'VERSION_NUMBER="${VERSION_NUMBER}"' -c $< -o $@

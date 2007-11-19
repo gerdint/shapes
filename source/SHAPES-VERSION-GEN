@@ -1,0 +1,65 @@
+#!/bin/sh
+
+VF=SHAPES-VERSION-FILE
+VF_DEF=$1/VERSION
+VN=$(sed -e '2,$ d' < $VF_DEF)
+
+if test -d $1/.svn && SVN_INFO=$(cd $1 && svn info 2> /dev/null)
+then
+	if VR=$(echo "$SVN_INFO" | \
+			sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //') &&
+			case "$VR" in
+					[0-9]*) : ;;
+					*) (exit 1) ;;
+			esac
+	then
+		:
+	else
+		VR='-'
+	fi
+
+	dirty=$(cd $1 && svn status) || dirty=
+	case "$dirty" in
+	'')
+		;;
+	*)
+		VR="$VR-DIRTY" ;;
+  esac
+
+	if VD=$(echo "$SVN_INFO" | \
+			sed -e '/Last Changed Date/! d' -e 's/Last Changed Date: //') &&
+			case "$VD" in
+					[12]*) : ;;
+					*) (exit 1) ;;
+			esac
+	then
+		:
+	else
+		VD='-'
+	fi
+else
+	VR='-'
+	VD='-'
+fi
+
+if test -r $VF
+then
+	FVN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $VF)
+	FVR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //'  < $VF)
+	FVD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $VF)
+else
+	FVN=undef
+	FVR=undef
+	FVD=undef
+fi
+
+test "$VR" = "$FVR"  -a "$VD" = "$FVD" -a "$VN" = "$FVN" || {
+	echo >&2 "\
+VERSION_NUMBER := ${VN}
+VERSION_REVISION := ${VR}
+VERSION_DATE := ${VD}"
+	echo "\
+VERSION_NUMBER := ${VN}
+VERSION_REVISION := ${VR}
+VERSION_DATE := ${VD}" > $VF
+}
