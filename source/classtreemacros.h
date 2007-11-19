@@ -51,10 +51,10 @@
 #define DECLARECLASS_( T ) class T;
 namespace Shapes
 {
-  namespace Lang
-  {
-    FORALLCLASSESM( DECLARECLASS_ )
-  }
+	namespace Lang
+	{
+		FORALLCLASSESM( DECLARECLASS_ )
+	}
 }
 
 #define QUICKTYPECASE( T ) case Kernel::TYPEID_ ## T :

@@ -3,14 +3,14 @@
 
 namespace FontMetrics
 {
-  
-  class CharacterMetrics;
+	
+	class CharacterMetrics;
 
-  class AFM;
-  class BaseFont;
+	class AFM;
+	class BaseFont;
 
-  class GlyphList;
-  class CharacterEncoding;
+	class GlyphList;
+	class CharacterEncoding;
 
 }
 

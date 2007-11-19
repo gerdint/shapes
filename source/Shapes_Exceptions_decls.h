@@ -4,10 +4,10 @@
 
 namespace Shapes
 {
-  namespace Exceptions
-  {
-    class Exception;
-  }
+	namespace Exceptions
+	{
+		class Exception;
+	}
 }
 
 

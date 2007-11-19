@@ -8,20 +8,20 @@
 
 namespace Shapes
 {
-  namespace Kernel
-  {
+	namespace Kernel
+	{
 
-    class PageContentStates
-    {
-    public:
-      Kernel::GraphicsState graphics_;
-      Kernel::TextState text_;
-      RefCountPtr< SimplePDF::PDF_Resources > resources_;
+		class PageContentStates
+		{
+		public:
+			Kernel::GraphicsState graphics_;
+			Kernel::TextState text_;
+			RefCountPtr< SimplePDF::PDF_Resources > resources_;
 
-      PageContentStates( RefCountPtr< SimplePDF::PDF_Resources > & resources );
-      PageContentStates( RefCountPtr< SimplePDF::PDF_Resources > & resources, bool setDefaults );
-      ~PageContentStates( );
-    };
+			PageContentStates( RefCountPtr< SimplePDF::PDF_Resources > & resources );
+			PageContentStates( RefCountPtr< SimplePDF::PDF_Resources > & resources, bool setDefaults );
+			~PageContentStates( );
+		};
  
  }
 }

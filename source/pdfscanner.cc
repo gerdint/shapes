@@ -3,5 +3,5 @@
 using namespace std;
 
 PdfScanner::PdfScanner( istream * yyin, ostream * yyout )
-  : yyFlexLexer( yyin, yyout )
+	: yyFlexLexer( yyin, yyout )
 { }

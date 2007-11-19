@@ -4,7 +4,7 @@ using namespace Shapes;
 
 
 Lang::ErrorHandler::ErrorHandler( )
-  : Lang::Function( new Kernel::EvaluatedFormals( "<error handler>", false ) )
+	: Lang::Function( new Kernel::EvaluatedFormals( "<error handler>", false ) )
 { }
 
 Lang::ErrorHandler::~ErrorHandler( )
@@ -13,6 +13,6 @@ Lang::ErrorHandler::~ErrorHandler( )
 bool
 Lang::ErrorHandler::isTransforming( ) const
 {
-  return false;
+	return false;
 }
 

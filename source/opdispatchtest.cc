@@ -19,15 +19,15 @@ class C;
 #define CLASSTREE_B_1( Ma, S, Mb ) Ma( S, Mb, B ) CLASSTREE_C_1( Ma, S, Mb )
 #define CLASSTREE_C_1( Ma, S, Mb ) Ma( S, Mb, C )
 #define FORALLCLASSES1( Ma, S, Mb ) \
-  CLASSTREE_A_1( Ma, S, Mb )\
-  CLASSTREE_B_1( Ma, S, Mb )
+	CLASSTREE_A_1( Ma, S, Mb )\
+	CLASSTREE_B_1( Ma, S, Mb )
 
 #define CLASSTREE_A_2( Ma, S, Mb ) Ma( S, Mb, A )
 #define CLASSTREE_B_2( Ma, S, Mb ) Ma( S, Mb, B ) CLASSTREE_C_2( Ma, S, Mb )
 #define CLASSTREE_C_2( Ma, S, Mb ) Ma( S, Mb, C )
 #define FORALLCLASSES2( Ma, S, Mb ) \
-  CLASSTREE_A_2( Ma, S, Mb )\
-  CLASSTREE_B_2( Ma, S, Mb )
+	CLASSTREE_A_2( Ma, S, Mb )\
+	CLASSTREE_B_2( Ma, S, Mb )
 
 
 /* Define convenient macros for looping.
@@ -63,19 +63,19 @@ class C;
 
 /* Define a macro for hiding the default method for a set of classes:
  */
-#define HIDEDEFAULT_( Ta, Tb )  virtual int op( Ta * v1, Tb * v2 ) const { return 0; }
+#define HIDEDEFAULT_( Ta, Tb )	virtual int op( Ta * v1, Tb * v2 ) const { return 0; }
 #define HIDEDEFAULT( Sa, Sb ) DOUBLELOOP2( Sa, Sb, HIDEDEFAULT_ )
 
 /* Define a macro for hiding the default method for a set of classes:
  */
-#define CALLIMPL_( Ta, Tb )  virtual int op( RefCountPtr< const Ta > x1, RefCountPtr< const Tb > x2 ) const { return impl( x1.getPtr( ), x1, x2.getPtr( ), x2 ); }
+#define CALLIMPL_( Ta, Tb )	virtual int op( RefCountPtr< const Ta > x1, RefCountPtr< const Tb > x2 ) const { return impl( x1.getPtr( ), x1, x2.getPtr( ), x2 ); }
 #define CALLIMPL( Sa, Sb ) DOUBLELOOP2( Sa, Sb, CALLIMPL_ )
 
 class BinOp
 {
 public:
-  int call( RefCountPtr< const Value > v1, RefCountPtr< const Value > v2 ) const;
-  DEFAULTOP;
+	int call( RefCountPtr< const Value > v1, RefCountPtr< const Value > v2 ) const;
+	DEFAULTOP;
 };
 
 #define DISPATCH1NULLDECL_ virtual int dispatch1( RefCountPtr< const Value > self, RefCountPtr< const Value > other, const BinOp * op ) const = 0;
@@ -86,38 +86,38 @@ public:
 class Value
 {
 public:
-  DISPATCHNULLDECL;
+	DISPATCHNULLDECL;
 };
 
 int
 BinOp::call( RefCountPtr< const Value > v1, RefCountPtr< const Value > v2 ) const
 {
-  return v1->dispatch1( v1, v2, this );
+	return v1->dispatch1( v1, v2, this );
 }
 
 #define DISPATCH1DECL_ virtual int dispatch1( RefCountPtr< const Value > self, RefCountPtr< const Value > other, const BinOp * op ) const;
 #define DISPATCH1IMPL_( Ts ) \
-int Ts::dispatch1( RefCountPtr< const Value > self, RefCountPtr< const Value > other, const BinOp * op ) const	\
-  {\
-    RefCountPtr< const Ts > typedSelf = self.down_cast< const Ts >( );	\
-    if( typedSelf == NullPtr< const Ts >( ) )				\
-      {\
-	cerr << "Downcast in dispatch1 failed" << endl ;\
-      }\
-    return other->dispatch2( typedSelf, other, op );\
-  }\
+int Ts::dispatch1( RefCountPtr< const Value > self, RefCountPtr< const Value > other, const BinOp * op ) const				\
+	{\
+		RefCountPtr< const Ts > typedSelf = self.down_cast< const Ts >( );				\
+		if( typedSelf == NullPtr< const Ts >( ) )																\
+			{\
+				cerr << "Downcast in dispatch1 failed" << endl ;\
+			}\
+		return other->dispatch2( typedSelf, other, op );\
+	}\
 
 #define DISPATCH2DECL_( Ts, To ) virtual int dispatch2( RefCountPtr< const To > other, RefCountPtr< const Value > self, const BinOp * op ) const;
 #define DISPATCH2IMPL_( Ts, To ) \
 int Ts::dispatch2( RefCountPtr< const To > other, RefCountPtr< const Value > self, const BinOp * op ) const\
-  {\
-    RefCountPtr< const Ts > typedSelf = self.down_cast< const Ts >( );	\
-    if( typedSelf == NullPtr< const Ts >( ) )				\
-      {\
-	cerr << "Downcast in dispatch1 failed" << endl ;\
-      }\
-    return op->op( other, typedSelf );\
-  }
+	{\
+		RefCountPtr< const Ts > typedSelf = self.down_cast< const Ts >( );				\
+		if( typedSelf == NullPtr< const Ts >( ) )																\
+			{\
+				cerr << "Downcast in dispatch1 failed" << endl ;\
+			}\
+		return op->op( other, typedSelf );\
+	}
 
 #define DISPATCHDECL DISPATCH1DECL_ FORALLCLASSESMT( DISPATCH2DECL_, )
 #define DISPATCHIMPL( Ts ) DISPATCH1IMPL_( Ts ) FORALLCLASSESMT( DISPATCH2IMPL_, Ts )
@@ -125,19 +125,19 @@ int Ts::dispatch2( RefCountPtr< const To > other, RefCountPtr< const Value > sel
 class A : public Value
 {
 public:
-  DISPATCHDECL;
+	DISPATCHDECL;
 };
 
 class B : public Value
 {
 public:
-  DISPATCHDECL;
+	DISPATCHDECL;
 };
 
 class C : public B
 {
 public:
-  DISPATCHDECL;
+	DISPATCHDECL;
 };
 
 DISPATCHIMPL( A );
@@ -149,19 +149,19 @@ DISPATCHIMPL( C );
 class Plus : public BinOp
 {
 public:
-  CALLIMPL( CLASSTREE_B_1, CLASSTREE_A_2 )
+	CALLIMPL( CLASSTREE_B_1, CLASSTREE_A_2 )
 private:
-  int impl( DUMMYANDREF( const B ) v1, DUMMYANDREF( const A ) v2 ) const { return 1; }
-  int impl( DUMMYANDREF( const C ) v1, DUMMYANDREF( const A ) v2 ) const { return 2; }
+	int impl( DUMMYANDREF( const B ) v1, DUMMYANDREF( const A ) v2 ) const { return 1; }
+	int impl( DUMMYANDREF( const C ) v1, DUMMYANDREF( const A ) v2 ) const { return 2; }
 };
 
 class Star : public BinOp
 {
 public:
-  CALLIMPL( CLASSTREE_B_1, CLASSTREE_B_2 )
+	CALLIMPL( CLASSTREE_B_1, CLASSTREE_B_2 )
 private:
-  int impl( DUMMYANDREF( const B ) v1, DUMMYANDREF( const B ) v2 ) const { return 1; }
-  int impl( DUMMYANDREF( const A ) v1, DUMMYANDREF( const B ) v2 ) const { return 7; }
+	int impl( DUMMYANDREF( const B ) v1, DUMMYANDREF( const B ) v2 ) const { return 1; }
+	int impl( DUMMYANDREF( const A ) v1, DUMMYANDREF( const B ) v2 ) const { return 7; }
 };
 
 
@@ -169,42 +169,42 @@ private:
 int
 dispatch( Value * v1, Value * v2, const BinOp * op )
 {
-  
+	
 }
 */
 
 int
 main( )
 {
-  RefCountPtr< A > a;
-  RefCountPtr< B > b;
-  RefCountPtr< C > c;
-  {
-    Plus op;
-    const char opstr[] = "+";
-    cout << "A" << opstr << "A => " << op.call( a, a ) << endl ;
-    cout << "A" << opstr << "B => " << op.call( a, b ) << endl ;
-    cout << "A" << opstr << "C => " << op.call( a, c ) << endl ;
-    cout << "B" << opstr << "A => " << op.call( b, a ) << endl ;
-    cout << "B" << opstr << "B => " << op.call( b, b ) << endl ;
-    cout << "B" << opstr << "C => " << op.call( b, c ) << endl ;
-    cout << "C" << opstr << "A => " << op.call( c, a ) << endl ;
-    cout << "C" << opstr << "B => " << op.call( c, b ) << endl ;
-    cout << "C" << opstr << "C => " << op.call( c, c ) << endl ;
-  }
-  cout << endl ;
-  {
-    Star op;
-    const char opstr[] = "*";
-    cout << "A" << opstr << "A => " << op.call( a, a ) << endl ;
-    cout << "A" << opstr << "B => " << op.call( a, b ) << endl ;
-    cout << "A" << opstr << "C => " << op.call( a, c ) << endl ;
-    cout << "B" << opstr << "A => " << op.call( b, a ) << endl ;
-    cout << "B" << opstr << "B => " << op.call( b, b ) << endl ;
-    cout << "B" << opstr << "C => " << op.call( b, c ) << endl ;
-    cout << "C" << opstr << "A => " << op.call( c, a ) << endl ;
-    cout << "C" << opstr << "B => " << op.call( c, b ) << endl ;
-    cout << "C" << opstr << "C => " << op.call( c, c ) << endl ;
-  }
-  return 0;
+	RefCountPtr< A > a;
+	RefCountPtr< B > b;
+	RefCountPtr< C > c;
+	{
+		Plus op;
+		const char opstr[] = "+";
+		cout << "A" << opstr << "A => " << op.call( a, a ) << endl ;
+		cout << "A" << opstr << "B => " << op.call( a, b ) << endl ;
+		cout << "A" << opstr << "C => " << op.call( a, c ) << endl ;
+		cout << "B" << opstr << "A => " << op.call( b, a ) << endl ;
+		cout << "B" << opstr << "B => " << op.call( b, b ) << endl ;
+		cout << "B" << opstr << "C => " << op.call( b, c ) << endl ;
+		cout << "C" << opstr << "A => " << op.call( c, a ) << endl ;
+		cout << "C" << opstr << "B => " << op.call( c, b ) << endl ;
+		cout << "C" << opstr << "C => " << op.call( c, c ) << endl ;
+	}
+	cout << endl ;
+	{
+		Star op;
+		const char opstr[] = "*";
+		cout << "A" << opstr << "A => " << op.call( a, a ) << endl ;
+		cout << "A" << opstr << "B => " << op.call( a, b ) << endl ;
+		cout << "A" << opstr << "C => " << op.call( a, c ) << endl ;
+		cout << "B" << opstr << "A => " << op.call( b, a ) << endl ;
+		cout << "B" << opstr << "B => " << op.call( b, b ) << endl ;
+		cout << "B" << opstr << "C => " << op.call( b, c ) << endl ;
+		cout << "C" << opstr << "A => " << op.call( c, a ) << endl ;
+		cout << "C" << opstr << "B => " << op.call( c, b ) << endl ;
+		cout << "C" << opstr << "C => " << op.call( c, c ) << endl ;
+	}
+	return 0;
 }

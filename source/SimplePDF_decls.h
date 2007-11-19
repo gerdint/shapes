@@ -3,12 +3,12 @@
 
 namespace SimplePDF
 {
-  
-  class PDF_Dictionary;
-  class PDF_in;
-  class PDF_Indirect_out;
-  class PDF_out;
-  
+	
+	class PDF_Dictionary;
+	class PDF_in;
+	class PDF_Indirect_out;
+	class PDF_out;
+	
 }
 
 #endif

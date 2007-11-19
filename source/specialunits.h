@@ -4,14 +4,14 @@
 
 namespace Shapes
 {
-  namespace Computation
-  {
+	namespace Computation
+	{
 
-    double specialUnitCircleHandle( double a0 );
-    double specialUnitCorrection( double a0, double a1 );
-    double specialUnitNoInflexion( double a0, double a1 );
+		double specialUnitCircleHandle( double a0 );
+		double specialUnitCorrection( double a0, double a1 );
+		double specialUnitNoInflexion( double a0, double a1 );
 
-  }
+	}
 }
 
 

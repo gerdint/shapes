@@ -6,7 +6,7 @@
 void
 printVersion( )
 {
-  printf( "Version:    " VERSION_NUMBER "\n" );
-  printf( "Revision:   " VERSION_REVISION "\n" );
-  printf( "Build date: " VERSION_DATE "\n" );
+	printf( "Version:		" VERSION_NUMBER "\n" );
+	printf( "Revision:	 " VERSION_REVISION "\n" );
+	printf( "Build date: " VERSION_DATE "\n" );
 }

@@ -10,74 +10,74 @@
 
 namespace Shapes
 {
-  namespace Kernel
-  {
+	namespace Kernel
+	{
 
-    typedef RefCountPtr< const Lang::Value > ValueRef;
-    
-    class Variable;
-    typedef RefCountPtr< Variable > VariableHandle;
+		typedef RefCountPtr< const Lang::Value > ValueRef;
+		
+		class Variable;
+		typedef RefCountPtr< Variable > VariableHandle;
 
-    class State;
-    typedef State * StateHandle;
+		class State;
+		typedef State * StateHandle;
 
-    class Continuation;
-    typedef RefCountPtr< Continuation > ContRef;
+		class Continuation;
+		typedef RefCountPtr< Continuation > ContRef;
 
-    class Environment;
-    typedef Environment * PassedEnv;
-    typedef std::set< Environment * > GCMarkedSet;
+		class Environment;
+		typedef Environment * PassedEnv;
+		typedef std::set< Environment * > GCMarkedSet;
 
-    class DynamicEnvironment;
-    typedef RefCountPtr< DynamicEnvironment > PassedDyn;
+		class DynamicEnvironment;
+		typedef RefCountPtr< DynamicEnvironment > PassedDyn;
 
-    class SystemDynamicVariables;
-    typedef size_t DynamicEnvironmentKeyType;
+		class SystemDynamicVariables;
+		typedef size_t DynamicEnvironmentKeyType;
 
-    class EvalState;
-    class PageContentStates;
-    class GraphicsState;
-    class FacetState;
-    class TextState;
+		class EvalState;
+		class PageContentStates;
+		class GraphicsState;
+		class FacetState;
+		class TextState;
 
-    class Formals;
-    class EvaluatedFormals;
+		class Formals;
+		class EvaluatedFormals;
 
-    class StoreVariableContinuation;
-    class StmtStoreVariableContinuation;
+		class StoreVariableContinuation;
+		class StmtStoreVariableContinuation;
 
-    class Arguments;
+		class Arguments;
 
-    class CallContInfo;
-    class CodeBracketContInfo;
+		class CallContInfo;
+		class CodeBracketContInfo;
 
-    class Thunk;
+		class Thunk;
 
-    class Warm;
-    class WarmGroup2D;
-    class WarmRandomDevice;
+		class Warm;
+		class WarmGroup2D;
+		class WarmRandomDevice;
 
-    class PolarHandlePromise;
+		class PolarHandlePromise;
 
-    class TeXLabelManager;
+		class TeXLabelManager;
 
-    class DebugLog;
+		class DebugLog;
 
-    void registerGlobals( Kernel::Environment * env );
-    void registerDynamic( Kernel::Environment * env );
-    void registerHot( Kernel::Environment * env );
-    void registerClasses( Kernel::Environment * env );
+		void registerGlobals( Kernel::Environment * env );
+		void registerDynamic( Kernel::Environment * env );
+		void registerHot( Kernel::Environment * env );
+		void registerClasses( Kernel::Environment * env );
 
-    void registerCore_elem( Kernel::Environment * env );
-    void registerCore_point( Kernel::Environment * env );
-    void registerCore_path( Kernel::Environment * env );
-    void registerCore_draw( Kernel::Environment * env );
-    void registerCore_construct( Kernel::Environment * env );
-    void registerCore_font( Kernel::Environment * env );
-    void registerCore_misc( Kernel::Environment * env );
-    void registerCore_state( Kernel::Environment * env );
-    void registerCore_annotation( Kernel::Environment * env );
-  }
+		void registerCore_elem( Kernel::Environment * env );
+		void registerCore_point( Kernel::Environment * env );
+		void registerCore_path( Kernel::Environment * env );
+		void registerCore_draw( Kernel::Environment * env );
+		void registerCore_construct( Kernel::Environment * env );
+		void registerCore_font( Kernel::Environment * env );
+		void registerCore_misc( Kernel::Environment * env );
+		void registerCore_state( Kernel::Environment * env );
+		void registerCore_annotation( Kernel::Environment * env );
+	}
 }
 
 #endif

@@ -5,24 +5,24 @@
 
 namespace Shapes
 {
-  namespace Computation
-  {
+	namespace Computation
+	{
 
-    class IntersectionSegmentSections2D;
+		class IntersectionSegmentSections2D;
 
-    class PaintedPolygon3D;
-    class SplicingLine;
-    class StrokedLine3D;
-  
-    typedef char FacetShadeOrder;
+		class PaintedPolygon3D;
+		class SplicingLine;
+		class StrokedLine3D;
+	
+		typedef char FacetShadeOrder;
 
-    class FacetInterpolatorGray;
+		class FacetInterpolatorGray;
 
-    class BasicSimplex;
+		class BasicSimplex;
 
-    class Upsampler2D;
-    class Upsampler3D;
-  }
+		class Upsampler2D;
+		class Upsampler3D;
+	}
 }
 
 #endif
