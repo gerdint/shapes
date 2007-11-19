@@ -197,7 +197,7 @@ Lang::Instance::getMethod( Kernel::MethodId fieldID ) const
 RefCountPtr< const Lang::Function >
 Lang::Instance::getLocalMethod( Kernel::MethodId fieldID ) const
 {
-	
+
 	if( fieldID.getClass( ) == myClass )
 		{
 			Kernel::VariableHandle untypedFun = getLocalField( fieldID.getIdentifier( ) );
@@ -253,7 +253,7 @@ Lang::Instance::shipout( std::ostream & os, Kernel::PageContentStates * pdfState
 		}
 
 	/*
-	RefCountPtr< const Lang::Value > val = getMethod( Kernel::MethodId( Lang::Drawable2D::TypeID, Shapes::MESSAGE_DRAWABLE_DRAW_ID ) )->call( dstgroup, my_pdfo, & stateCopy, Kernel::EMPTY_ARGLIST );	
+	RefCountPtr< const Lang::Value > val = getMethod( Kernel::MethodId( Lang::Drawable2D::TypeID, Shapes::MESSAGE_DRAWABLE_DRAW_ID ) )->call( dstgroup, my_pdfo, & stateCopy, Kernel::EMPTY_ARGLIST );
 	if( dynamic_cast< const Lang::Void * >( val.getPtr( ) ) == 0 )
 		{
 			throw Exceptions::TypeMismatch( val->getTypeName( ), Lang::Void::staticTypeName( ) );
@@ -594,7 +594,7 @@ Lang::Object::method_new( Kernel::EvalState * evalState, Kernel::Arguments & arg
 {
 	const size_t ARITY = 0;
 	CHECK_ARITY( args, ARITY, Kernel::MethodId( Lang::Class::TypeID, "new" ).prettyName( ) );
-	
+
 	return RefCountPtr< const Lang::Geometric2D >( new Lang::Instance( dummyEnv, dummyEnv, selfRef, false, evalState->dyn_ ) );
 }
 
@@ -848,7 +848,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 				}
 			immediateParents.insert( j, i->first );
 		}
-	
+
 	findParents( & allParents, & multiParents );
 
 	for( std::set< RefCountPtr< const Lang::Class > >::const_iterator i = multiParents.begin( ); i != multiParents.end( ); ++i )
@@ -874,7 +874,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 					messageSet = res;
 				}
 		}
-	
+
 	{
 		typedef typeof *overrides MapType;
 		for( MapType::const_iterator i = overrides->begin( ); i != overrides->end( ); ++i )
@@ -899,7 +899,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 				}
 			}
 	}
-	
+
 
 	{
 		/*
@@ -970,7 +970,7 @@ Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & 
 
 //	 RefCountPtr< std::map< RefCountPtr< const Lang::Class >, RefCountPtr< Lang::Instance > > > createdObjects( new std::map< RefCountPtr< const Lang::Class >, RefCountPtr< Lang::Instance > > );
 //	 instanceSelf->parents = createdObjects;
-	
+
 //	 for( std::set< RefCountPtr< const Lang::Class > >::const_iterator i = multiParents.begin( ); i != multiParents.end( ); ++i )
 //		 {
 //			 (*i)->superNew( instanceSelf, createdObjects, EMPTY_ARGLIST, evalState );
@@ -994,7 +994,7 @@ Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & 
 //	 addOverrides( instanceSelf, privateEnv, dstgroup, pdfo, metaState );
 
 //	 instanceSelf->prepare( dstgroup, pdfo, metaState );
-	
+
 //	 return RefCountPtr< const Lang::Geometric2D >( instanceSelf );
 }
 
@@ -1043,7 +1043,7 @@ Lang::UserClass::superNew( RefCountPtr< Lang::Instance > instanceSelf,
 		}
 
 	throw Exceptions::NotImplemented( "UserClass::superNew" );
-	
+
 //	 Kernel::PassedEnv instanceEnv( new Kernel::Environment( env ) );
 //	 Kernel::PassedEnv privateEnv( new Kernel::Environment( instanceEnv ) );
 
@@ -1063,7 +1063,7 @@ Lang::UserClass::superNew( RefCountPtr< Lang::Instance > instanceSelf,
 //	 }
 
 //	 classExpr->setupInstance( instanceEnv, privateEnv, dstgroup, pdfo, metaState, initEnv );
-	
+
 //	 Lang::Instance * newObj = new Lang::Instance( instanceEnv, privateEnv, selfRef, true, evalState->dyn_ );
 //	 newObj->parents = createdObjects;
 //	 createdObjects->insert( i, pair< RefCountPtr< const Lang::Class >, RefCountPtr< Lang::Instance > >( selfRef, RefCountPtr< Lang::Instance >( newObj ) ) );

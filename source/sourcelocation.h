@@ -16,7 +16,7 @@ namespace Shapes
 			size_t firstColumn; // In bytes, shall be converted to utf-8 position when displaying.
 			size_t lastLine;
 			size_t lastColumn; // In bytes, shall be converted to utf-8 position when displaying.
-			
+
 			SourceLocation( );
 			SourceLocation( const char * _filename );
 			SourceLocation( const SourceLocation & orig );
@@ -27,7 +27,7 @@ namespace Shapes
 			static size_t byteColumnToUTF8Column( const char * filename, size_t line, size_t byteCol );
 			static size_t byteColumnToUTF8Column( const std::string & line, size_t byteCol );
 		};
-		
+
 		extern SourceLocation THE_UNKNOWN_LOCATION;
 	}
 }

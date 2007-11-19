@@ -185,7 +185,7 @@ void
 Ast::BinaryInfixExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
 	parent_ = parent;
-	
+
 	expr1_->analyze( this, env );
 	expr2_->analyze( this, env );
 

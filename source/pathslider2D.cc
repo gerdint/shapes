@@ -238,7 +238,7 @@ Lang::PathSlider2D::show( std::ostream & os ) const
 	if( this->getFront( ) != NullPtr< const Lang::Value >( ) )
 		{
 			os << "(with front) " ;
-		}	
+		}
 	os << "at " << t_.t( ).offtype< 0, 1 >( ) ;
 	if( t_.isPast( ) )
 		{

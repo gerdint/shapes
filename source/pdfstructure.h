@@ -15,7 +15,7 @@ namespace SimplePDF
 {
 
 	typedef std::map< class PDF_Indirect, RefCountPtr< class PDF_Indirect_out > > IndirectRemapType;
-	
+
 	class PDF_Object
 	{
 	public:
@@ -28,7 +28,7 @@ namespace SimplePDF
 
 	template< class S >
 		RefCountPtr< S > down_cast_follow( RefCountPtr< PDF_Object > maybeIndirect );
-	
+
 	class PDF_Null : public PDF_Object
 	{
 	public:
@@ -36,7 +36,7 @@ namespace SimplePDF
 		virtual ~PDF_Null( );
 		virtual void writeTo( std::ostream & os ) const;
 	};
-	
+
 	class PDF_Boolean : public PDF_Object
 	{
 	public:
@@ -49,7 +49,7 @@ namespace SimplePDF
 		ValueType value( ) const;
 		virtual void writeTo( std::ostream & os ) const;
 	};
-	
+
 	class PDF_Int : public PDF_Object
 	{
 	public:
@@ -63,7 +63,7 @@ namespace SimplePDF
 		ValueType value( ) const;
 		virtual void writeTo( std::ostream & os ) const;
 	};
-	
+
 	class PDF_Float : public PDF_Object
 	{
 	public:
@@ -77,7 +77,7 @@ namespace SimplePDF
 		ValueType value( ) const;
 		virtual void writeTo( std::ostream & os ) const;
 	};
-	
+
 	class PDF_String : public PDF_Object
 	{
 	public:
@@ -107,7 +107,7 @@ namespace SimplePDF
 		const std::string & hexstr( ) const;
 		virtual void writeTo( std::ostream & os ) const;
 	};
-	
+
 	class PDF_Name : public PDF_Object
 	{
 		std::string my_name;
@@ -118,7 +118,7 @@ namespace SimplePDF
 		virtual void writeTo( std::ostream & os ) const;
 		friend std::ostream & operator << ( std::ostream & os, const PDF_Name & self );
 	};
-	
+
 	class PDF_Vector : public PDF_Object
 	{
 	public:
@@ -147,17 +147,17 @@ namespace SimplePDF
 		PDF_Dictionary( );
 		PDF_Dictionary( const PDF_Dictionary & orig );
 		virtual ~PDF_Dictionary( );
-		
+
 		typedef std::map< std::string, RefCountPtr<PDF_Object> > DicType;
 		DicType dic;
 		virtual void writeTo( std::ostream & os ) const;
 		virtual void writeToWithLength( std::ostream & os, size_t len ) const;
-		
+
 		PDF_Int::ValueType getLength( ) const;
 		PDF_Int::ValueType getCount( ) const;
 		bool isPages( ) const;
 		RefCountPtr< PDF_Object > getInheritable( const char * name ) const;
-		
+
 		RefCountPtr< PDF_Object > & operator [] ( const char * key );
 		bool hasKey( const char * key ) const;
 		virtual RefCountPtr< PDF_Object > deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap );
@@ -169,17 +169,17 @@ namespace SimplePDF
 		PDF_Stream( );
 		PDF_Stream( const PDF_Dictionary & dic );
 		virtual ~PDF_Stream( );
-		
+
 		virtual void writeTo( std::ostream & os ) const;
 		virtual RefCountPtr< PDF_Object > deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap );
 	};
-	
+
 	class PDF_Stream_out : public PDF_Stream
 	{
 	public:
 		PDF_Stream_out( );
 		virtual ~PDF_Stream_out( );
-		
+
 		std::ostringstream data;
 		virtual void writeTo( std::ostream & os ) const;
 	};
@@ -189,17 +189,17 @@ namespace SimplePDF
 	public:
 		std::istream * is;
 		std::streamoff dataStart;
-		
+
 		PDF_Stream_in( PDF_Dictionary * dic, std::istream * _is, std::streamoff _dataStart );
 		PDF_Stream_in( std::istream * _is, std::streamoff _dataStart );
 		virtual ~PDF_Stream_in( );
-		
+
 		virtual void writeTo( std::ostream & os ) const;
 		void writeDataTo( std::ostream & os ) const;
 		void writeDataDefilteredTo( std::ostream & os ) const;
 		virtual RefCountPtr< PDF_Object > deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap );
 	};
-	
+
 	class PDF_Indirect : public PDF_Object
 	{
 	public:

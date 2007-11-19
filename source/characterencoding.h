@@ -34,7 +34,7 @@ namespace FontMetrics
 	public:
 		CharacterEncoding( std::istream & iFile );
 		~CharacterEncoding( );
-		
+
 		// Returns true on success.
 		bool position_to_name( PositionType code, const char ** dst ) const;
 

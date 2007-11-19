@@ -49,7 +49,7 @@ Computation::BasicSimplex::minimize( double * xdst,
 																		 bool changeSign ) const
 {
 	// Setup extended formulation with equality constraints and slack variables:
-	
+
 	bool infeasibleStart = false;
 
 	{
@@ -88,7 +88,7 @@ Computation::BasicSimplex::minimize( double * xdst,
 				{
 					*dst = 0;
 				}
-		}		
+		}
 
 		const double * srcb = b;
 		double * dstb = b_;
@@ -248,7 +248,7 @@ Computation::BasicSimplex::phaseTwo( double * xdst, double objGoal ) const
 						std::cerr << "-" ;
 					}
 				std::cerr << std::endl ;
-				
+
 				const double * srca = a_;
 				for( size_t row = 0; row < nEqns_; ++row )
 					{
@@ -266,7 +266,7 @@ Computation::BasicSimplex::phaseTwo( double * xdst, double objGoal ) const
 					{
 						std::cerr << "=" ;
 					}
-				std::cerr << std::endl ;				
+				std::cerr << std::endl ;
 				std::cerr << std::endl ;
 			}
 
@@ -379,7 +379,7 @@ Computation::BasicSimplex::phaseTwo( double * xdst, double objGoal ) const
 				}
 			}
 
-				
+
 			{
 				// Update the sets
 				*nonBasicCol = *( basicBegin_ + row );

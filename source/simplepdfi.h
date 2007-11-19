@@ -10,18 +10,18 @@
 
 namespace SimplePDF
 {
-	
+
 	class PDF_in
 	{
 		std::streamoff xref;
 		size_t xrefSize;
-		
+
 		RefCountPtr< std::istream > is;
 		std::istream * isPtr;
-		
+
 		RefCountPtr< PDF_Dictionary > resources;
 		RefCountPtr< PDF_Vector > pages;
-		
+
 		RefCountPtr< PDF_Object > readObjectAt( std::streamoff pos );
 		std::streamoff xreflookup( size_t i, size_t v );
 		RefCountPtr< PDF_Object > parse( );
@@ -47,7 +47,7 @@ namespace SimplePDF
 
 		PDF_in( RefCountPtr< std::istream > _is );
 		~PDF_in( );
-		
+
 		RefCountPtr< PDF_Object > readObjectNumbered( size_t i, size_t v );
 		template< class S >
 			RefCountPtr< S > follow( RefCountPtr< PDF_Object > maybeIndirect );
@@ -57,8 +57,8 @@ namespace SimplePDF
 		PageIterator endPages( );
 		RefCountPtr< PDF_Dictionary > getPage( size_t pageNo );
 	};
-	
-	
+
+
 	template< class S >
 		RefCountPtr< S > PDF_in::follow( RefCountPtr< PDF_Object > maybeIndirect )
 		{

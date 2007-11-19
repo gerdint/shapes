@@ -56,10 +56,10 @@ Computation::ZBufLine::ZMap::intersection( const Computation::ZBufTriangle::ZMap
 	// Inserting our point gives
 	//	 < n, p0_ + k ( p1_ - p0_ ) > == b
 	//	 k < n, p1_ - p0_ > == b - < n, p0_ >
-	
+
 	double a = Concrete::inner( plane.getNormal( ), d_ );
 	Concrete::Length b = plane.getM( ) - Concrete::inner( plane.getNormal( ), p0_ );
-	
+
 	if( a == 0 )
 		{
 			throw "No intersection";
@@ -90,20 +90,20 @@ Computation::ZBufLine::intersectionTime( Concrete::Coords2D p0, Concrete::Coords
 	//	 ( d_ -d ) ( t s ) == p0 - p0_
 
 	Concrete::Coords2D rhs = p0 - p0_;
-	
+
 	// Borrowing an idea from ZBufTriangle, we don't test for singularity using the determinant since
 	// I have no good geometric interpretation of tolerance tests on its value.
 	{
 		double n_n1 = Concrete::innerScalar( d_, d );
 		double n_n_ = Concrete::innerScalar( d_, d_ );
 		double n2n2 = Concrete::innerScalar( d, d );
-		
+
 		if( n_n1 * n_n1 > ( 1 - 1e-8 ) * ( n_n_ * n2n2 ) ) // This corresponds to an angle of approximately 0.01 degree.
 			{
 				return -1;	// Any negative value means no intersection.
 			}
 	}
-	
+
 	Physical< -2, 0 > invDet = 1. / ( d_.x_ * d.y_ - d_.y_ * d.x_ );
 	double t =	 invDet * (	 d.y_ * rhs.x_ - d.x_ * rhs.y_ );
 	double s = - invDet * ( - d_.y_ * rhs.x_ + d_.x_ * rhs.y_ );
@@ -140,7 +140,7 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
 						return false;
 					}
 			}
-		
+
 		if( l0 > m + Computation::theTrixelizeOverlapTol )
 			{
 				if( Concrete::inner( other.points_[ 1 ], normal ) > m + Computation::theTrixelizeOverlapTol &&
@@ -170,10 +170,10 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
 					{
 						i2 = poly1.begin( );
 					}
-				
+
 				const Concrete::Coords2D & p0( *i0 );
 				const Concrete::Coords2D & p1( *i1 );
-				
+
 				const Concrete::Length txUnnormed = p1.x_ - p0.x_;
 				const Concrete::Length tyUnnormed = p1.y_ - p0.y_;
 				const Physical< -1, 0 > invNorm = 1. / hypotPhysical( txUnnormed, tyUnnormed );
@@ -190,7 +190,7 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
 							iny = -iny;
 						}
 				}
-				
+
 				bool allOutside = true;
 				{
 					const Concrete::Coords2D & p = p0_;
@@ -268,7 +268,7 @@ void
 Computation::ZBufLine::splice( const ZBufLine * line1, const ZBufLine * line2 , std::list< const Computation::ZBufLine * > * line1Container, std::list< const Computation::ZBufLine * > * line2Container )
 {
 	// When this function is called, we know that the line segments intersect.
-	
+
 	// First we compute where they intersect and determine which line is in front.
 
 	Concrete::Coords2D p01 = line1->p0_;
@@ -280,14 +280,14 @@ Computation::ZBufLine::splice( const ZBufLine * line1, const ZBufLine * line2 , 
 	// What follows is similar to ZBufLine::intersectionTime.
 
 	Concrete::Coords2D rhs = p02 - p01;
-	
+
 	// This time, perhaps more important than ever, the angle is computed to determine if the intersection is well-conditioned.
 	// Shall the angle be used to determine how much to cut away?
 	{
 		double n_n1 = Concrete::innerScalar( d1, d2 );
 		double n_n_ = Concrete::innerScalar( d1, d1 );
 		double n2n2 = Concrete::innerScalar( d2, d2 );
-		
+
 		if( n_n1 * n_n1 > ( 1 - 1e-8 ) * ( n_n_ * n2n2 ) ) // This corresponds to an angle of approximately 0.01 degree.
 			{
 				// If the lines are very parallel I don't know what to do, so I just discard one of the lines!...
@@ -298,7 +298,7 @@ Computation::ZBufLine::splice( const ZBufLine * line1, const ZBufLine * line2 , 
 				return;
 			}
 	}
-	
+
 	Physical< -2, 0 > invDet = 1. / ( d1.x_ * d2.y_ - d1.y_ * d2.x_ );
 	double t1 =	 invDet * (	 d2.y_ * rhs.x_ - d2.x_ * rhs.y_ );
 	//	double t2 = - invDet * ( - d1.y_ * rhs.x_ + d1.x_ * rhs.y_ );
@@ -383,7 +383,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 				{
 					i1 = triangle.points_.begin( );
 				}
-			
+
 			double tmp = intersectionTime( *i0, *i1 );	// the return value is non-positive if there is no intersection
 			if( tmp > 0 )
 				{
@@ -434,7 +434,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 			}
 	}
 
-	{	
+	{
 		// We now have the times in increasing order, and it is time to identify visible segments.
 
 		Concrete::Length halfWidth = painter_->getMetaState( )->width_;

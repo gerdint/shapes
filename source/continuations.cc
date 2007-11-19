@@ -439,7 +439,7 @@ void
 Kernel::PathApplication2DCont::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
 	Concrete::SplineTime t = Helpers::pathTimeCast( path_.getPtr( ), val.getPtr( ), this );
-	
+
 	evalState->cont_ = cont_;
 	cont_->takeValue( Kernel::ValueRef( new Lang::PathSlider2D( path_, t.t( ) ) ),
 									 evalState );
@@ -472,7 +472,7 @@ void
 Kernel::PathApplication3DCont::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
 	Concrete::SplineTime t = Helpers::pathTimeCast( path_.getPtr( ), val.getPtr( ), this );
-	
+
 	evalState->cont_ = cont_;
 	cont_->takeValue( Kernel::ValueRef( new Lang::PathSlider3D( path_, t.t( ) ) ),
 										evalState );

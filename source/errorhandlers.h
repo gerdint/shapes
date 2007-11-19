@@ -5,7 +5,7 @@
 #include "shapesexceptions.h"
 
 namespace Shapes
-{	
+{
 	namespace Lang
 	{
 

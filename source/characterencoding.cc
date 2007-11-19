@@ -33,7 +33,7 @@ CharacterEncoding::CharacterEncoding( std::istream & iFile )
 
 CharacterEncoding::~CharacterEncoding( )
 { }
-		
+
 // Returns true on success.
 bool
 CharacterEncoding::position_to_name( PositionType code, const char ** dst ) const
@@ -71,7 +71,7 @@ CharacterEncoding::readfile( std::istream & iFile )
 	// This is a bracket.	Skip it.
 
 	getToken( iFile, & token );
-	
+
 	for( unsigned char pos = 0; token[ 0 ] != ']'; ++pos, getToken( iFile, & token ) )
 		{
 			if( token[ 1 ] != '.' )

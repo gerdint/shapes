@@ -207,7 +207,7 @@ Lang::ElementaryPath3D::point( Concrete::Time globalTime ) const
 		{
 			return RefCountPtr< const Lang::Coords3D >( new Lang::Coords3D( * p2->mid_ ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -229,7 +229,7 @@ Lang::ElementaryPath3D::point( Concrete::Time globalTime ) const
 	Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
 	Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
 	Concrete::Length z = z0 * k0 + z1 * k1 + z2 * k2 + z3 * k3;
-	
+
 	return RefCountPtr< const Lang::Coords3D >( new Lang::Coords3D( x, y, z ) );
 }
 
@@ -267,7 +267,7 @@ Lang::ElementaryPath3D::speed( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in speed calculation" );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -331,7 +331,7 @@ Lang::ElementaryPath3D::reverse_speed( Concrete::Time globalTime ) const
 			Concrete::Speed vz = ( z3 - z2 ).offtype< 0, -2 >( );
 			return RefCountPtr< const Lang::Length >( new Lang::Length( hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( ) ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -519,7 +519,7 @@ Lang::ElementaryPath3D::normal( Concrete::Time globalTime ) const
 					tmpy -= vy * f;
 					tmpz -= vz * f;
 				}
-			
+
 			Concrete::Acceleration tmpNorm = hypotPhysical( tmpx, tmpy, tmpz );
 			if( tmpNorm == 0 )
 				{
@@ -531,7 +531,7 @@ Lang::ElementaryPath3D::normal( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in normal calculation" );
 		}
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -636,7 +636,7 @@ Lang::ElementaryPath3D::reverse_normal( Concrete::Time globalTime ) const
 					tmpy -= vy * f;
 					tmpz -= vz * f;
 				}
-			
+
 			Concrete::Acceleration tmpNorm = hypotPhysical( tmpx, tmpy, tmpz );
 			if( tmpNorm == 0 )
 				{
@@ -648,7 +648,7 @@ Lang::ElementaryPath3D::reverse_normal( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 0 in reverse normal calculation" );
 		}
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -729,7 +729,7 @@ Lang::ElementaryPath3D::radiusOfCurvature( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in curvature calculation" );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -742,7 +742,7 @@ Lang::ElementaryPath3D::radiusOfCurvature( Concrete::Time globalTime ) const
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -797,7 +797,7 @@ Lang::ElementaryPath3D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 			Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-			
+
 			Concrete::Speed vx = ( x2 * (-3) + x3 * 3 ).offtype< 0, -2 >( );
 			Concrete::Speed vy = ( y2 * (-3) + y3 * 3 ).offtype< 0, -2 >( );
 			Concrete::Speed vz = ( z2 * (-3) + z3 * 3 ).offtype< 0, -2 >( );
@@ -813,7 +813,7 @@ Lang::ElementaryPath3D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 			Physical< 2, -2 > tmp = squareSum( vx, vy, vz );
 			return RefCountPtr< const Lang::Length >( new Lang::Length( tmp * sqrtPhysical( tmp ) / denom ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -826,7 +826,7 @@ Lang::ElementaryPath3D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -903,7 +903,7 @@ Lang::ElementaryPath3D::radiusOfTorsion( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in torsion calculation" );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -916,7 +916,7 @@ Lang::ElementaryPath3D::radiusOfTorsion( Concrete::Time globalTime ) const
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -981,7 +981,7 @@ Lang::ElementaryPath3D::reverse_radiusOfTorsion( Concrete::Time globalTime ) con
 			Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-			
+
 			Concrete::Speed vx = ( x2 * (-3) + x3 * 3 ).offtype< 0, -2 >( );
 			Concrete::Speed vy = ( y2 * (-3) + y3 * 3 ).offtype< 0, -2 >( );
 			Concrete::Speed vz = ( z2 * (-3) + z3 * 3 ).offtype< 0, -2 >( );
@@ -1000,7 +1000,7 @@ Lang::ElementaryPath3D::reverse_radiusOfTorsion( Concrete::Time globalTime ) con
 			Physical< 4, -6 > tmp = squareSum( vy * az - vz * ay, vz * ax - vx * az, vx * ay - vy * ax );
 			return RefCountPtr< const Lang::Length >( new Lang::Length( tmp / denom ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z0 = p1->mid_->z_.offtype< 0, 3 >( );
@@ -1013,7 +1013,7 @@ Lang::ElementaryPath3D::reverse_radiusOfTorsion( Concrete::Time globalTime ) con
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -1428,11 +1428,11 @@ namespace Shapes
 		Concrete::Time t0_;
 		Concrete::Time t1_;
 	public:
-		
+
 		ApproximationSegmentSection3D( const Shapes::ApproximationPoly3D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
 		ApproximationSegmentSection3D * cutAfter( Concrete::Time t ) const;
 		ApproximationSegmentSection3D * cutBefore( Concrete::Time t ) const;
-		
+
 		Concrete::Length convexHullDistance( ) const;
 		Concrete::Time splitTime( const Concrete::Time t_tol ) const;
 		Concrete::Time globalTime( Concrete::Time t ) const;
@@ -1595,7 +1595,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 								else
 									{
 										work.push_back( WorkItem( part, lowerBound ) );
-									}						
+									}
 							}
 						}
 				}
@@ -1665,7 +1665,7 @@ Shapes::ApproximationPoly3D::splitTime( const Concrete::Time t_low, const Concre
 	}
 	Concrete::Time last_t = -1;
 	bool lastOffBounds = false;
-			
+
 	while( t < last_t - t_tol || t > last_t + t_tol )
 		{
 			last_t = t;
@@ -1743,7 +1743,7 @@ Shapes::ApproximationPoly3D::splitTime( const Concrete::Time t_low, const Concre
 							step = step * 0.5;
 							f = squaredDistanceAt( t + step );
 						}
-				}				
+				}
 			t += step;
 			last_f = f;
 
@@ -1881,14 +1881,14 @@ Shapes::ApproximationSegmentSection3D::convexHullDistance( ) const
 {
 	Concrete::Coords3D p( baseSeg_->getPoint( ) );
 	std::list< const Concrete::Coords3D * > hullPoints;
-	
+
 	std::vector< const Concrete::Coords3D * > pointSet( 0 );
 	pointSet.reserve( 4 );
 	pointSet.push_back( & controls_.p0_ );
 	pointSet.push_back( & controls_.p1_ );
 	pointSet.push_back( & controls_.p2_ );
 	pointSet.push_back( & controls_.p3_ );
-	
+
 	Concrete::Length res = HUGE_VAL;
 
 	for( std::vector< const Concrete::Coords3D * >::iterator i = pointSet.begin( );
@@ -1939,7 +1939,7 @@ Shapes::ApproximationSegmentSection3D::triangleDistance( std::vector< const Conc
 	Concrete::Length res = HUGE_VAL;
 
 	const Concrete::Coords3D pProj = p - tn * n;
-	
+
 	std::vector< const Concrete::Coords3D * >::iterator i0 = points.begin( );
 	++i0;
 	std::vector< const Concrete::Coords3D * >::iterator begin = i0;
@@ -1975,7 +1975,7 @@ Shapes::ApproximationSegmentSection3D::triangleDistance( std::vector< const Conc
 				double sInside = Concrete::innerScalar( dInside, d1 ) / d1Norm2;
 				const Concrete::Coords3D nOut = d1 * sInside - dInside;
 				const Concrete::Coords3D dpProj = pProj - p0;
-				
+
 				if( Concrete::innerScalar( nOut, nOut ) > 0 &&
 						Concrete::innerScalar( nOut, dpProj ) < 0 )
 					{
@@ -1983,7 +1983,7 @@ Shapes::ApproximationSegmentSection3D::triangleDistance( std::vector< const Conc
 						 */
 						goto next;
 					}
-				
+
 				res = min( res, ( dp - d1 * ( Concrete::innerScalar( dpProj, d1 ) / d1Norm2 ) ).norm( ) );
 			}
 		next:
@@ -2106,7 +2106,7 @@ Lang::ElementaryPath3D::arcLength( ) const
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 							Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2227,7 +2227,7 @@ Lang::ElementaryPath3D::arcLength( Concrete::Time tRemaining ) const
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 							Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2356,7 +2356,7 @@ Lang::ElementaryPath3D::negative_arcLength( Concrete::Time tRemaining ) const
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 							Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2456,9 +2456,9 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 				Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 				Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
 				Concrete::Bezier z3 = (*i2)->mid_->z_.offtype< 0, 3 >( );
-				
+
 				const Concrete::Length segLengthBound = ( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
-				
+
 				if( segLengthBound < arcdelta )
 					{
 						remainingLength -= segLengthBound;
@@ -2471,7 +2471,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 				else
 					{
 						Concrete::Time dt = Shapes::computeDt( segLengthBound );
-						
+
 						const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 						Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 						for( Concrete::Time t = t0; t < 1; t += dt )
@@ -2484,7 +2484,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 								Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-								
+
 								Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= remainingDiv_dt )
@@ -2496,7 +2496,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 						remainingLength -= tmpSum_l * dt.offtype< 0, 1 >( );
 					}
 			}
-			
+
 		beginLoop:
 			splineTime = Concrete::Time( ceil( splineTime.offtype< 0, 1 >( ) ) );
 			++i1;
@@ -2567,7 +2567,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 			else
 				{
 					Concrete::Time dt = Shapes::computeDt( segLengthBound );
-					
+
 					const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 					Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 					for( Concrete::Time t = 0; t < 1; t += dt )
@@ -2580,7 +2580,7 @@ Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 							Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 							if( tmpSum_l >= remainingDiv_dt )
@@ -2708,9 +2708,9 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 				Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 				Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
 				Concrete::Bezier z3 = (*i2)->mid_->z_.offtype< 0, 3 >( );
-				
+
 				const Concrete::Length segLengthBound = ( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
-				
+
 				if( segLengthBound < arcdelta )
 					{
 						remainingLength -= segLengthBound;
@@ -2723,7 +2723,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 				else
 					{
 						Concrete::Time dt = Shapes::computeDt( segLengthBound );
-						
+
 						const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 						Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 						for( Concrete::Time t = t0; t < 1; t += dt )
@@ -2736,7 +2736,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 								Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-								
+
 								Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= remainingDiv_dt )
@@ -2748,7 +2748,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 						remainingLength -= tmpSum_l * dt.offtype< 0, 1 >( );
 					}
 			}
-			
+
 		beginLoop:
 			splineTime = Concrete::Time( floor( splineTime.offtype< 0, 1 >( ) ) );
 			++i1;
@@ -2791,7 +2791,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 					splineTime -= Shapes::straightLineArcTime( remainingLength / segLength );
 					goto done;
 				}
-			
+
 			Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier z0 = (*i1)->mid_->z_.offtype< 0, 3 >( );
@@ -2806,7 +2806,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 			Concrete::Bezier z3 = (*i2)->mid_->z_.offtype< 0, 3 >( );
 
 			const Concrete::Length segLengthBound = ( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
-			
+
 			if( segLengthBound < arcdelta )
 				{
 					remainingLength -= segLengthBound;
@@ -2819,7 +2819,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 			else
 				{
 					Concrete::Time dt = Shapes::computeDt( segLengthBound );
-					
+
 					const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 					Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 					for( Concrete::Time t = 0; t < 1; t += dt )
@@ -2832,7 +2832,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 							Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 							if( tmpSum_l >= remainingDiv_dt )
@@ -2899,7 +2899,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier z3 = p2->mid_->z_.offtype< 0, 3 >( );
-	
+
 			Concrete::Time tc = t1 - Concrete::UNIT_TIME;	/* Note the sign here! */
 			Concrete::Time td = t1 - t2;
 
@@ -2915,26 +2915,26 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Length x1new = k0x + k1x / 3;
 			Concrete::Length x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Length x3new = k0x + k1x + k2x + k3x;
-			
+
 			/* Same thing for y */
-			
+
 			Concrete::Length k0y = - tc * tc * tc * y0 + t1 * ( 3 * tc * tc * y1 + t1 * ( 3 * Concrete::UNIT_TIME * y2 - 3 * t1 * y2 + t1 * y3 ) );
 			Concrete::Length k1y = 3 * td * ( tc * tc * y0 + ( -Concrete::UNIT_TIME*Concrete::UNIT_TIME + 4 * Concrete::UNIT_TIME * t1 - 3 * t1 * t1 ) * y1 + t1 * ( -2 * Concrete::UNIT_TIME * y2 + 3 * t1 * y2 - t1 * y3 ) );
 			Concrete::Length k2y = -3 * td * td * ( tc * y0 + 2 * Concrete::UNIT_TIME * y1 - 3 * t1 * y1 - Concrete::UNIT_TIME * y2 + 3 * t1 * y2 - t1 * y3 );
 			Concrete::Length k3y = td * td * td * ( y0 - 3 * y1 + 3 * y2 - y3 );
-			
+
 			Concrete::Length y0new = k0y;
 			Concrete::Length y1new = k0y + k1y / 3;
 			Concrete::Length y2new = k0y + ( 2 * k1y + k2y ) / 3;
 			Concrete::Length y3new = k0y + k1y + k2y + k3y;
 
 			/* Same thing for z */
-			
+
 			Concrete::Length k0z = - tc * tc * tc * z0 + t1 * ( 3 * tc * tc * z1 + t1 * ( 3 * Concrete::UNIT_TIME * z2 - 3 * t1 * z2 + t1 * z3 ) );
 			Concrete::Length k1z = 3 * td * ( tc * tc * z0 + ( -Concrete::UNIT_TIME*Concrete::UNIT_TIME + 4 * Concrete::UNIT_TIME * t1 - 3 * t1 * t1 ) * z1 + t1 * ( -2 * Concrete::UNIT_TIME * z2 + 3 * t1 * z2 - t1 * z3 ) );
 			Concrete::Length k2z = -3 * td * td * ( tc * z0 + 2 * Concrete::UNIT_TIME * z1 - 3 * t1 * z1 - Concrete::UNIT_TIME * z2 + 3 * t1 * z2 - t1 * z3 );
 			Concrete::Length k3z = td * td * td * ( z0 - 3 * z1 + 3 * z2 - z3 );
-			
+
 			Concrete::Length z0new = k0z;
 			Concrete::Length z1new = k0z + k1z / 3;
 			Concrete::Length z2new = k0z + ( 2 * k1z + k2z ) / 3;
@@ -3017,7 +3017,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier x1new = k0x + k1x / 3;
 			Concrete::Bezier x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Bezier x3new = k0x + k1x + k2x + k3x;
-			
+
 			Concrete::Bezier k0y = y0;
 			Concrete::Bezier k1y = 3 * t1 * ( y1 - y0 ).offtype< 0, 1 >( );
 			Concrete::Bezier k2y = 3 * t1 * t1 * ( y0 - 2 * y1 + y2 ).offtype< 0, 2 >( );
@@ -3061,11 +3061,11 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 					p2->front_ = new Concrete::Coords3D( *(*i2)->front_ );
 				}
 	}
-	
+
 	/* At this point we know that the rest of this segment shall be included, since the cuts are not on the
 	 * same segment.
 	 */
-	
+
 	for( ; t + 1 < gt2; t += Concrete::UNIT_TIME )
 		{
 			res->push_back( p1 );
@@ -3076,7 +3076,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 				{
 					i2 = begin( );
 				}
-			p2 = new Concrete::PathPoint3D( **i2 );			
+			p2 = new Concrete::PathPoint3D( **i2 );
 		}
 
 	/* Remember to delete p1 and p2 if unused! */
@@ -3122,7 +3122,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier x1new = k0x + k1x / 3;
 			Concrete::Bezier x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Bezier x3new = k0x + k1x + k2x + k3x;
-			
+
 			Concrete::Bezier k0y = y0;
 			Concrete::Bezier k1y = 3 * t2 * ( y1 - y0 ).offtype< 0, 1 >( );
 			Concrete::Bezier k2y = 3 * t2 * t2 * ( y0 - 2 * y1 + y2 ).offtype< 0, 2 >( );
@@ -3132,7 +3132,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier y1new = k0y + k1y / 3;
 			Concrete::Bezier y2new = k0y + ( 2 * k1y + k2y ) / 3;
 			Concrete::Bezier y3new = k0y + k1y + k2y + k3y;
-			
+
 			Concrete::Bezier k0z = z0;
 			Concrete::Bezier k1z = 3 * t2 * ( z1 - z0 ).offtype< 0, 1 >( );
 			Concrete::Bezier k2z = 3 * t2 * t2 * ( z0 - 2 * z1 + z2 ).offtype< 0, 2 >( );
@@ -3142,7 +3142,7 @@ Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier z1new = k0z + k1z / 3;
 			Concrete::Bezier z2new = k0z + ( 2 * k1z + k2z ) / 3;
 			Concrete::Bezier z3new = k0z + k1z + k2z + k3z;
-			
+
 			p1 = new Concrete::PathPoint3D( x0new.offtype< 0, -3 >( ), y0new.offtype< 0, -3 >( ), z0new.offtype< 0, -3 >( ) );
 			if( doInHandles )
 				{
@@ -3239,7 +3239,7 @@ Lang::ElementaryPath3D::getRepresentativePoints( const Lang::Transform3D & tf, C
 	// We do this by selecting three points that spans a large triangle
 	// This procedure may be overly expensive...
 	// ... perhaps because it is hard to make it smart.
-	
+
 	Concrete::Area bestArea( 0 );
 
 	for( const_iterator i0 = begin( ); ; )
@@ -3358,7 +3358,7 @@ Lang::ElementaryPath3D::make2D( Concrete::Length eyez ) const
 				}
 		}
 
-	return RefCountPtr< const Lang::ElementaryPath2D >( res );	
+	return RefCountPtr< const Lang::ElementaryPath2D >( res );
 }
 
 void
@@ -3372,7 +3372,7 @@ Lang::ElementaryPath3D::makeSegment2D( Lang::ElementaryPath2D * dst, Concrete::C
 					newPoint->rear_ = *passedRear_;
 					*passedRear_ = 0;
 				}
-			dst->push_back( newPoint );			
+			dst->push_back( newPoint );
 			return;
 		}
 
@@ -3390,7 +3390,7 @@ Lang::ElementaryPath3D::makeSegment2D( Lang::ElementaryPath2D * dst, Concrete::C
 			pointStack.pop( );
 			Concrete::Coords3D p3 = pointStack.top( );
 			// Note that p3 is not popped!
-			
+
 			if( viewDistortionTooBig( p0, p1, p2, p3, eyez, 0.003 ) )
 				{
 					Bezier::PolyCoeffs< Concrete::Coords3D > poly( Bezier::ControlPoints< Concrete::Coords3D >( p0, p1, p2, p3 ) );
@@ -3411,7 +3411,7 @@ Lang::ElementaryPath3D::makeSegment2D( Lang::ElementaryPath2D * dst, Concrete::C
 						}
 					newPoint->front_ = p1.make2D( eyez );
 					dst->push_back( newPoint );
-					
+
 					*passedRear_ = p2.make2D( eyez );
 					p0 = p3;
 					pointStack.pop( );
@@ -3467,7 +3467,7 @@ Lang::ElementaryPath3D::dashifyIn2D( RefCountPtr< const Lang::Group2D > * res, C
 	RefCountPtr< const Kernel::GraphicsState > solidState( new Kernel::GraphicsState( solidValue, *metaState ) );
 
 	Lang::Dash::Iterator dashi = metaState->dash_->begin( );
-	
+
 	Lang::ElementaryPath3D newPath;
 
 	Concrete::Length remainingLength = dashi.getLength( );
@@ -3505,7 +3505,7 @@ Lang::ElementaryPath3D::dashifyIn2D( RefCountPtr< const Lang::Group2D > * res, C
 											solidState,
 											dashi );
 		}
-	
+
 	if( dashi.isOn( ) )
 		{
 			Concrete::PathPoint3D * newPoint = new Concrete::PathPoint3D( lastMid_ );
@@ -3562,7 +3562,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 					newPath.push_back( newPoint );
 					// Note that on a straight segment, we don't set **passedRear_ to *p2
 				}
-			
+
 			const Concrete::Length segLength = hypotPhysical( p0->x_ - p3->x_, p0->y_ - p3->y_, p0->z_ - p3->z_ );
 			if( segLength < remainingLength )
 				{
@@ -3587,7 +3587,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 						newPath.clear( );
 					}
 			}
-			
+
 			while( l <= segLength )
 				{
 					++dashi;
@@ -3602,11 +3602,11 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 																																																																											newPath.make2D( eyez ),
 																																																																											"S" ) ),
 																																											*res,
-																																											
+
 																																											solidState ) );
 							newPath.clear( );
 						}
-					
+
 					if( dashi.isOn( ) )
 						{
 							Concrete::PathPoint3D * newPoint = new Concrete::PathPoint3D( new Concrete::Coords3D( p0->x_ + ( p3->x_ - p0->x_ ) * l / segLength,
@@ -3615,14 +3615,14 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 							// there can be no passedRear_ here
 							newPath.push_back( newPoint );
 						}
-					
+
 					l += dashi.getLength( );
 				}
-			
+
 			remainingLength = l - segLength;
 			return;
 		}
-	
+
 	Bezier::ControlPoints< Concrete::Coords3D > controls( *p0, *p1, *p2, *p3 );
 	Bezier::PolyCoeffs< Concrete::Coords3D > poly( controls );
 
@@ -3638,10 +3638,10 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 	Concrete::Bezier x3 = p3->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p3->y_.offtype< 0, 3 >( );
 	Concrete::Bezier z3 = p3->z_.offtype< 0, 3 >( );
-	
+
 	const Concrete::Length segLengthBound = ( hypotPhysical( x1-x0, y1-y0, z1-z0 ) + hypotPhysical( x2-x1, y2-y1, z2-z1 ) + hypotPhysical( x3-x2, y3-y2, z3-z2 ) ).offtype< 0, -3 >( );
 	const Concrete::Time dt = Shapes::computeDt( segLengthBound );
-	
+
 	Concrete::Time t1 = 0;
 	laterArcTime( x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3, & t1, & remainingLength, dt );
 	if( t1 > 1 )
@@ -3686,7 +3686,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 																																							solidState ) );
 			newPath.clear( );
 		}
-	
+
 	while( true )
 		{
 			++dashi;
@@ -3702,7 +3702,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 							newPoint->front_ = new Concrete::Coords3D( stroke.p1_ );
 							newPath.push_back( newPoint );
 							*passedRear_ = new Concrete::Coords3D( stroke.p2_ );
-						}	
+						}
 					return;
 				}
 
@@ -3744,7 +3744,7 @@ Lang::ElementaryPath3D::laterArcTime( const Concrete::Bezier & x0, const Concret
 			Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 			Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 			Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-			
+
 			Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 			tmpSum_l -= dl.offtype< 0, 1 >( );
 			if( tmpSum_l < 0 )

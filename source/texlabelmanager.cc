@@ -169,7 +169,7 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 							return;
 						}
 				}
-				
+
 				mvCommand << "mv '" << lastJobFilename << "' '" << labelDBFilename << "'";
 				Interaction::systemDebugMessage( mvCommand.str( ) );
 				if( system( mvCommand.str( ).c_str( ) ) != 0 )
@@ -179,7 +179,7 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 			}
 			return;
 		}
-	
+
 	for( std::set< std::string >::const_iterator i = allRequests.begin( );
 			 i != allRequests.end( );
 			 ++i )
@@ -200,7 +200,7 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 					return;
 				}
 		}
-		
+
 		mvCommand << "mv '" << finalJobFilename << "' '" << labelDBFilename << "'";
 		Interaction::systemDebugMessage( mvCommand.str( ) );
 		if( system( mvCommand.str( ).c_str( ) ) != 0 )
@@ -220,14 +220,14 @@ Kernel::TeXLabelManager::processRequests( )
 		{
 			throw Exceptions::InternalError( strrefdup( "Failed to open the TeX source file for write." ) );
 		}
-	
+
 	if( ! setupFinalized )
 		{
 			compileSetupCode( );
 		}
 
 	texFile << setupCode ;
-	texFile << "\\btexetexthing{" << "Shapes setup info" << "}{" << safeSourceHash( setupCode ) << "}" << endl ;	
+	texFile << "\\btexetexthing{" << "Shapes setup info" << "}{" << safeSourceHash( setupCode ) << "}" << endl ;
 
 	for( std::set< std::string >::const_iterator i = currentRequests.begin( );
 			 i != currentRequests.end( );
@@ -236,7 +236,7 @@ Kernel::TeXLabelManager::processRequests( )
 			texFile << "\\btexetexthing{" << *i << "}{" << safeSourceHash( *i ) << "}" << endl ;
 		}
 	currentRequests.clear( );
-	
+
 	texFile << "\\end{document}" << endl ;
 
 	pid_t latexProcess = fork( );
@@ -244,7 +244,7 @@ Kernel::TeXLabelManager::processRequests( )
 		{
 			throw Exceptions::InternalError( strrefdup( "Failed to fork a process for running LaTeX." ) );
 		}
-	
+
 	if( latexProcess == 0 ) /* This is the child */
 		{
 			/* The exec call below never returns, so the child process never leaves this if clause.
@@ -427,7 +427,7 @@ Kernel::TeXLabelManager::safeSourceHash( const std::string & str )
 			if( *src == 'E' )
 				{
 					oss << "EE" ;
-					continue;	
+					continue;
 				}
 			if( isalnum( *src ) )
 				{
@@ -455,7 +455,7 @@ Kernel::TeXLabelManager::compileSetupCode( )
 			res << *i ;
 			for( ++i; i != documentoptions.end( ); ++i )
 				{
-					res << "," << *i ;					
+					res << "," << *i ;
 				}
 			res << "]" ;
 		}

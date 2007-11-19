@@ -29,7 +29,7 @@ Helpers::elementaryPathCast2D( const char * title, Kernel::Arguments & args, siz
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath2D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -49,7 +49,7 @@ Helpers::elementaryPathCast2D( const RefCountPtr< const Lang::Value > & ptr, con
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath2D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -69,7 +69,7 @@ Helpers::elementaryPathTry2D( const RefCountPtr< const Lang::Value > & ptr )
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath2D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -92,7 +92,7 @@ Helpers::pathTimeCast( const char * title, const RefCountPtr< const Lang::Elemen
 		{
 			return Concrete::Time( res->val_ );
 		}
-	
+
 	typedef const Lang::Length ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( tPtr );
 	if( res2 == 0 )
@@ -112,7 +112,7 @@ Helpers::pathTimeCast( const Lang::ElementaryPath2D * p, const Lang::Value * tPt
 		{
 			return Concrete::Time( res->val_ );
 		}
-	
+
 	typedef const Lang::Length ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( tPtr );
 	if( res2 == 0 )
@@ -134,7 +134,7 @@ Helpers::elementaryPathCast3D( const char * title, Kernel::Arguments & args, siz
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath3D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -154,7 +154,7 @@ Helpers::elementaryPathCast3D( const RefCountPtr< const Lang::Value > & ptr, con
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath3D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -174,7 +174,7 @@ Helpers::elementaryPathTry3D( const RefCountPtr< const Lang::Value > & ptr )
 		{
 			return res;
 		}
-	
+
 	typedef const Lang::CompositePath3D ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( ptr.getPtr( ) );
 	if( res2 == 0 )
@@ -197,7 +197,7 @@ Helpers::pathTimeCast( const char * title, const RefCountPtr< const Lang::Elemen
 		{
 			return Concrete::Time( res->val_ );
 		}
-	
+
 	typedef const Lang::Length ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( tPtr );
 	if( res2 == 0 )
@@ -217,7 +217,7 @@ Helpers::pathTimeCast( const Lang::ElementaryPath3D * p, const Lang::Value * tPt
 		{
 			return Concrete::Time( res->val_ );
 		}
-	
+
 	typedef const Lang::Length ArgType2;
 	ArgType2 * res2 = dynamic_cast< ArgType2 * >( tPtr );
 	if( res2 == 0 )

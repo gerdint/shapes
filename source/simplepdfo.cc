@@ -64,7 +64,7 @@ PDF_Resources::nameof( const RefCountPtr< PDF_Object > & obj, ReverseMap * rever
 			ostringstream reference;
 			reference << prefix << *counter ;
 			++*counter;
-			
+
 			(*dic)->dic[ reference.str( ) ] = obj;
 			reverseMap->insert( ReverseMap::value_type( obj.getPtr( ), PDF_Name( reference.str( ) ) ) );
 			i = reverseMap->find( obj.getPtr( ) );
@@ -132,7 +132,7 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 			procSets.insert( procSets.begin( ), procSet );
 		}
 }
-		
+
 
 
 SimplePDF::PDF_out::PDF_out( ostream * _os )
@@ -237,7 +237,7 @@ SimplePDF::PDF_out::writeData( )
 			cerr << "Caught (...) ball at top level." << endl ;
 			exit( 1 );
 		}
-	
+
 	while( importSources.size( ) > 0 )
 		{
 			importSources.pop_back( );
@@ -269,7 +269,7 @@ RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > >
 SimplePDF::PDF_out::addPagesAsXObjects( RefCountPtr< PDF_in > pdfi )
 {
 	using namespace Shapes;
-	
+
 	importSources.push_back( pdfi ); // Keep the source alive so that it can be used when finally producing output
 	IndirectRemapType indirectRemap;
 	vector< RefCountPtr< const Lang::XObject > > * res = new vector< RefCountPtr< const Lang::XObject > >;
@@ -493,7 +493,7 @@ void
 SimplePDF::PDF_out::versionMessage( Version required, const char * message )
 {
 	using namespace Shapes;
-	
+
 	switch( versionAction_ )
 		{
 		case ERROR:
@@ -617,7 +617,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 			else
 				{
 					doc->versionMessage( FANCY_OUTLINE_VERSION, "The outline item font flags were ignored." );
-				}			
+				}
 		}
 	if( color_.mean( ) > 0 )
 		{
@@ -661,7 +661,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 			dstDic->dic[ "First"	] = i_first;
 			dstDic->dic[ "Last"	] = i_newKid;
 
-		}	
+		}
 
 	if( openCount > 0 )
 		{
@@ -674,7 +674,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 					dstDic->dic[ "Count"	] = doc->newInt( -openCount );
 				}
 		}
-	
+
 	if( isOpen_ )
 		{
 			return openCount + 1;

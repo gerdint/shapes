@@ -164,7 +164,7 @@ Ast::CodeBracket::eval( Kernel::EvalState * evalState ) const
 		}
 
 	RefCountPtr< const Kernel::CodeBracketContInfo > info( new Kernel::CodeBracketContInfo( this, *evalState ) );
-	
+
 	evalAt( info, nodes_->begin( ), evalState );
 }
 
@@ -266,7 +266,7 @@ void
 Ast::LexiographicVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
 	parent_ = parent;
-	
+
 	if( *idKey_ == 0 )
 		{
 			*idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalVariableKey( loc_, id_ ) );
@@ -367,9 +367,9 @@ Ast::SpecialLength::eval( Kernel::EvalState * evalState ) const
 	Concrete::Length d;
 	double a0;
 	double a1;
-	
+
 	evalState->dyn_->specialUnitService( & d, & a0, & a1 );
-	
+
 	if( sort_ == Computation::SPECIALU_NOINFLEX )
 		{
 			Kernel::ContRef cont = evalState->cont_;
@@ -429,7 +429,7 @@ Ast::DynamicVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironmen
 		{
 			*idKey_ = new Kernel::Environment::LexicalKey( env->findLexicalDynamicKey( loc_, id_ ) );
 		}
-	
+
 	imperative_ = false;
 }
 
@@ -437,9 +437,9 @@ void
 Ast::DynamicVariable::eval( Kernel::EvalState * evalState ) const
 {
 	const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
-	
+
 	Kernel::VariableHandle res = dynProps.fetch( evalState->dyn_ );
-	
+
 	/* Now, we know that if the value was bound to a dynamic expression, a value was bound, and that value has
 	 * a certain type.
 	 */
@@ -531,7 +531,7 @@ void
 Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
 	const Kernel::DynamicVariableProperties & dynProps = evalState->env_->lookupDynamicVariable( **idKey_ );
-	
+
 	if( dynProps.forceValue( ) || expr_->immediate_ )
 		{
 			evalState->expr_ = expr_;
@@ -569,7 +569,7 @@ Ast::DynamicStateBindingExpression::analyze( Ast::Node * parent, const Ast::Anal
 		{
 			*dstIdKey_ = new Kernel::Environment::LexicalKey( env->findLexicalDynamicKey( dstLoc_, dstId_ ) );
 		}
-	
+
 	imperative_ = false;
 }
 
@@ -577,7 +577,7 @@ void
 Ast::DynamicStateBindingExpression::eval( Kernel::EvalState * evalState ) const
 {
 	const Kernel::DynamicStateProperties & dstDynProps = evalState->env_->lookupDynamicState( **dstIdKey_ );
-	
+
 	dstDynProps.makeBinding( src_->getHandle( evalState->env_, evalState->dyn_ ), dstLoc_, evalState );
 }
 
@@ -714,7 +714,7 @@ Ast::DynamicVariableDeclFunction::call( Kernel::EvalState * evalState, Kernel::A
 																	**idPos_,
 																	Helpers::down_cast_CoreArgument< FilterType >( title, args, 0, callLoc ),
 																	args.getHandle( 1 ) );
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
 										evalState );
@@ -782,7 +782,7 @@ Ast::DynamicStateDecl::eval( Kernel::EvalState * evalState ) const
 																			 **idPos_,
 																			 evalState,
 																			 defaultState_ );
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
 										evalState );
@@ -861,7 +861,7 @@ Ast::DefineVariable::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment
 		{
 			*idPos_ = new size_t( env->findLocalVariablePosition( idLoc_, id_ ) );
 		}
-	
+
 	imperative_ = expr_->imperative_;
 }
 
@@ -971,7 +971,7 @@ Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 	Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
 	typedef const Lang::Structure StructType;
 	RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	if( fieldId_ != 0 )
 		{
@@ -1007,7 +1007,7 @@ Ast::StructSplitReference::eval( Kernel::EvalState * evalState ) const
 					// Never mind, we use the default instead.	See below.
 				}
 		}
-	
+
 	if( defaultExpr_ == 0 )
 		{
 			throw Exceptions::InternalError( "Just about to use null pointer defaultExpr_ in StructSplitReference::eval." );
@@ -1044,7 +1044,7 @@ Ast::StructSplitSink::eval( Kernel::EvalState * evalState ) const
 	Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
 	typedef const Lang::Structure StructType;
 	RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( structVal->getSink( consumedArguments_ ),
 									 evalState );
@@ -1072,7 +1072,7 @@ Ast::AssertNoSinkNeeded::eval( Kernel::EvalState * evalState ) const
 	Kernel::VariableHandle structHandle = evalState->env_->getVarHandle( **structPos_ );
 	typedef const Lang::Structure StructType;
 	RefCountPtr< StructType > structVal = structHandle->getVal< StructType >( "Type-checked value in StructSplitReference::eval." );
-	
+
 	if( structVal->argList_->orderedExprs_->size( ) > orderedCount_ )
 		{
 			throw Exceptions::SinkRequired( loc_, orderedCount_, structVal->argList_->orderedExprs_->size( ) );
@@ -1206,7 +1206,7 @@ Ast::IntroduceState::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment
 		{
 			*idPos_ = new size_t( env->findLocalStatePosition( idLoc_, id_ ) );
 		}
-	
+
 	imperative_ = expr_->imperative_;
 }
 

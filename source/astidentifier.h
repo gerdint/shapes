@@ -19,7 +19,7 @@ namespace Shapes
 			virtual void analyze( );
 			virtual RefCountPtr< const char > identifier( Kernel::GraphicsState * metaState, Kernel::PassedEnv env ) const;
 		};
-		
+
 		class SameIdentifier : public Ast::IdentifierNode
 		{
 			const Ast::IdentifierNode * orig_;

@@ -231,7 +231,7 @@ namespace Shapes
 			UnitFloatTriple direction( ) const;
 			Concrete::UnitFloatTriple direction( Concrete::Length precomputedNorm ) const;
 		};
-	
+
 		/* The Bezier template classes requires the interface to a vector space.
 		 */
 		Concrete::Coords3D operator * ( double scalar, const Concrete::Coords3D & coords );

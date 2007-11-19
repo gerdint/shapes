@@ -43,7 +43,7 @@ namespace Shapes
 											 const Concrete::Gray autoIntensity );
 			virtual ~FacetNormalGray( );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
-			
+
 			Concrete::Gray compute( const Concrete::Coords3D & point, const Concrete::UnitFloatTriple normal, const Lang::Transform3D & tf, const Concrete::Length eyez, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 			Concrete::Gray compute( const Concrete::Coords3D & point, const Lang::Transform3D & tf, const Concrete::Length eyez, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 			const Concrete::Coords3D & position( ) const { return position_; }
@@ -52,7 +52,7 @@ namespace Shapes
 			RefCountPtr< const Lang::FacetNormalGray > transformed( const Lang::Transform3D & tf ) const;
 			TYPEINFODECL;
 		};
-		
+
 		class FacetNormalRGB : public NoOperatorOverloadValue
 		{
 			Concrete::Coords3D position_;
@@ -70,7 +70,7 @@ namespace Shapes
 											const RefCountPtr< const Lang::RGB > & autoIntensity );
 			virtual ~FacetNormalRGB( );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
-			
+
 			Concrete::RGB compute( const Concrete::Coords3D & point, const Concrete::UnitFloatTriple normal, const Lang::Transform3D & tf, const Concrete::Length eyez, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 			Concrete::RGB compute( const Concrete::Coords3D & point, const Lang::Transform3D & tf, const Concrete::Length eyez, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 			const Concrete::Coords3D & position( ) const { return position_; }
@@ -79,7 +79,7 @@ namespace Shapes
 			RefCountPtr< const Lang::FacetNormalRGB > transformed( const Lang::Transform3D & tf ) const;
 			TYPEINFODECL;
 		};
-		
+
 	}
 
 	namespace Computation
@@ -90,7 +90,7 @@ namespace Shapes
 			class ZMap
 			{
 				Concrete::UnitFloatTriple normal_;
-				
+
 				// The first group of members are used to compute the depth
 				double k_x_;
 				double k_y_;
@@ -100,7 +100,7 @@ namespace Shapes
 
 				// To break ties, one shall consult this member:
 				Concrete::Length tiebreaker_;
-				
+
 				// The next group of members are used to find plane intersections
 				Concrete::Length eyez_;
 			public:
@@ -108,22 +108,22 @@ namespace Shapes
 							Concrete::Length m,
 							Concrete::Length tiebreaker,
 							Concrete::Length eyez );
-				
+
 				Concrete::Length operator () ( const Concrete::Coords2D & p ) const;
-				
+
 				void writeToMatrices( double a[3], Concrete::Length * b ) const;
 				Concrete::Length eyez( ) const { return eyez_; }
 				const Concrete::UnitFloatTriple & getNormal( ) const { return normal_; }
 				Concrete::Length getM( ) const { return m_; }
 				Concrete::Length getTiebreaker( ) const { return tiebreaker_; }
 			};
-			
+
 			const Computation::PaintedPolygon3D * painter_;
 			std::vector< Concrete::Coords2D > points_;
 			RefCountPtr< const ZMap > zMap_;
-			
+
 			std::list< RefCountPtr< const Lang::LightSource > > shadowLights_;
-			
+
 			ZBufTriangle( const Computation::PaintedPolygon3D * painter, const RefCountPtr< const Computation::ZBufTriangle::ZMap > & zMap, const Concrete::Coords2D & p1, const Concrete::Coords2D & p2, const Concrete::Coords2D & p3 );
 			Concrete::Length zAt( const Concrete::Coords2D & p ) const;
 			bool isOnTopOfAt( const Computation::ZBufTriangle & other, const Concrete::Coords2D & p ) const;
@@ -139,7 +139,7 @@ namespace Shapes
 			RefCountPtr< const Lang::Drawable2D > debugFrame( ) const;
 			void pushLines( std::vector< Computation::SplicingLine > * dst ) const;
 			void pushIntersection( std::vector< Computation::SplicingLine > * dst, const Computation::ZBufTriangle & other ) const;
-			
+
 			void addTriangleConstraints( Concrete::Coords2D llCorner, double * a, double * b ) const; // To be used by overlaps.
 
 			Concrete::Area area( ) const;
@@ -158,32 +158,32 @@ namespace Shapes
 			{
 				Concrete::Coords3D p0_;
 				Concrete::UnitFloatTriple d_;
-				
+
 				// The first group of members are used to compute the depth
 				double k_x_;
 				double k_y_;
 				double k_z_;
 				//				Physical< -1, 0 > eyezInv_;
-				
+
 				// The next group of members are used to find plane intersections
 				Concrete::Length eyez_;
 			public:
 				ZMap( Concrete::Coords3D p0, const Concrete::UnitFloatTriple & d,
 							Concrete::Length eyez );
-				
+
 				// It is assumed that this funciton is only called with points that actually are on the line.
 				Concrete::Length operator () ( const Concrete::Coords2D & p ) const;
 				Concrete::Coords3D intersection( const Computation::ZBufTriangle::ZMap & plane ) const;
 
 				Concrete::Length eyez( ) const { return eyez_; }
 			};
-			
+
 			const Computation::StrokedLine3D * painter_;
 			Concrete::Coords2D p0_;
 			Concrete::Coords2D p1_;
 			Concrete::Coords2D d_; // this is just p1_ - p0_
 			RefCountPtr< const ZMap > zMap_;
-			
+
 			ZBufLine( const Computation::StrokedLine3D * painter, const RefCountPtr< const Computation::ZBufLine::ZMap > & zMap, const Concrete::Coords2D & p0, const Concrete::Coords2D & p1 );
 			Concrete::Length zAt( const Concrete::Coords2D & p ) const;
 			bool overlaps( const ZBufTriangle & other ) const;
@@ -202,7 +202,7 @@ namespace Shapes
 			Concrete::Coords3D p3D_;
 			Concrete::Coords2D p2D_;
 			size_t i_;
-			
+
 			FacetLatticeVertex( const Concrete::Coords3D & p3D, const Concrete::Length eyez, const size_t i );
 			~FacetLatticeVertex( ){ }
 
@@ -223,7 +223,7 @@ namespace Shapes
 			FacetLatticeEdge( const Computation::FacetLatticeVertex * p0, const Computation::FacetLatticeVertex * p1 )
 				: child1_( 0 ), child2_( 0 ), p0_( p0 ), p1_( p1 )
 			{ }
-			
+
 			void split( const Concrete::Length eyez,
 									PtrOwner_back_Access< std::list< const Computation::FacetLatticeEdge * > > * edgeMem,
 									PtrOwner_back_Access< std::list< const Computation::FacetLatticeVertex * > > * vertexMem,
@@ -260,7 +260,7 @@ namespace Shapes
 			{ };
 			~FacetLatticeTriangle( )
 			{ };
-			
+
 			const FacetLatticeEdge * getOther( const Computation::FacetLatticeEdge * ea, const Computation::FacetLatticeEdge * eb ) const;
 			bool fitsResolution( const Concrete::Length resolution, const Concrete::Length eyez,
 													 PtrOwner_back_Access< std::list< const Computation::FacetLatticeEdge * > > * edgeMem,
@@ -516,7 +516,7 @@ namespace Shapes
 		}
 	};
 	bool operator < ( const Computation::UndirectedEdge & p1, const Computation::UndirectedEdge & p2 );
-	
+
 	template< class T >
 		class UndirectedEdgeMatrix
 		{
@@ -821,7 +821,7 @@ namespace Shapes
 		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
-	
+
 	class SingleSided3DGray : public Lang::Drawable3D
 	{
 		// This is a historical note worth to remember.

@@ -66,7 +66,7 @@ Lang::Font::searchFontMetrics( RefCountPtr< const char > fontName )
 		{
 			throw Exceptions::InternalError( "The font name cannot begin with \"/\", as if is was an absolute path to something." );
 		}
-	
+
 	if( theFontMetricsSearchPath_.size( ) == 0 )
 		{
 			throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.	Consider defining the environment variable SHAPESFONTMETRICS." ) );
@@ -203,7 +203,7 @@ Lang::Font::metrics( ) const
 			oss << "File has been located but couldn't be opened: " << filename ;
 			throw Exceptions::ExternalError( strrefdup( oss ) );
 		}
-	
+
 	// I fiddle a little with the consts here...
 	FontMetrics::BaseFont * newMetrics = new FontMetrics::BaseFont;
 	metrics_ = RefCountPtr< const FontMetrics::BaseFont >( newMetrics );
@@ -285,11 +285,11 @@ Lang::KernedText::makeList( ) const
 {
 	/* The list is first computed in a bidirectional list, and then we construct the stateless cons list.
 	 */
-	
+
 	/* I'm lazy today, so i use a cons pair to group the horizontal step with the glyph.	The better solution
 	 * would be to use a structure with nicely named fields...
 	 */
-	
+
 	std::list< RefCountPtr< const Lang::Value > > revlist;
 
 	iconv_t converter = Helpers::requireUTF8ToMacRomanConverter( );
@@ -406,7 +406,7 @@ Lang::KernedText::makeList( ) const
 		{
 			throw Exceptions::InternalError( "Too many kerning values in KernedText::writePDFVectorTo." );
 		}
-	
+
 	RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
 	while( revlist.size( ) > 0 )
 		{
@@ -603,7 +603,7 @@ Lang::KernedText::shipout( std::ostream & os, Kernel::PageContentStates * pdfSta
 		{
 			throw Exceptions::InternalError( "Too many kerning values in KernedText::writePDFVectorTo." );
 		}
-	
+
 	os << "] TJ " << std::endl ;
 }
 
@@ -729,7 +729,7 @@ Lang::KernedText::measure( Lang::Transform2D * textMatrix, Lang::Transform2D * t
 				{
 					throw Exceptions::InternalError( "Too many kerning values in KernedText::writePDFVectorTo." );
 				}
-			
+
 			textLineMatrix->prependXShift( xpos );
 		}
 	else
@@ -872,8 +872,8 @@ Lang::KernedText::push( Lang::KernedText * dst ) const
 				}
 		}
 }
-	
-			
+
+
 void
 Lang::KernedText::gcMark( Kernel::GCMarkedSet & marked )
 {
@@ -1019,15 +1019,15 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->characterSpacing_ = spacing_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( ! IS_NAN( newState->characterSpacing_ ) )
@@ -1036,13 +1036,13 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 		}
 
 	newState->characterSpacing_ = spacing_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
 Lang::CharacterSpacingBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
-		
+
 
 Lang::WordSpacingBinding::WordSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing )
 	: loc_( loc ), spacing_( spacing )
@@ -1062,15 +1062,15 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->wordSpacing_ = spacing_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( ! IS_NAN( newState->wordSpacing_ ) )
@@ -1079,7 +1079,7 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 		}
 
 	newState->wordSpacing_ = spacing_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1105,15 +1105,15 @@ Lang::HorizontalScalingBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->horizontalScaling_ = scaling_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( ! IS_NAN( newState->horizontalScaling_ ) )
@@ -1122,7 +1122,7 @@ Lang::HorizontalScalingBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 		}
 
 	newState->horizontalScaling_ = scaling_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1159,7 +1159,7 @@ Lang::LeadingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables *
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
@@ -1171,17 +1171,17 @@ Lang::LeadingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables *
 				{
 					newState->setLeading( ty_ );
 				}
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( newState->hasLeading( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< text state leading >", loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
-	
+
 	if( isRelative_ )
 		{
 			newState->setLeading( Concrete::Length::offtype( ty_ ) );
@@ -1190,7 +1190,7 @@ Lang::LeadingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables *
 		{
 			newState->setLeading( ty_ );
 		}
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1216,15 +1216,15 @@ Lang::FontBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->font_ = font_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( newState->font_ != NullPtr< const Lang::Font >( ) )
@@ -1233,7 +1233,7 @@ Lang::FontBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 		}
 
 	newState->font_ = font_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1261,15 +1261,15 @@ Lang::TextSizeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->size_ = size_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( ! IS_NAN( newState->size_ ) )
@@ -1278,7 +1278,7 @@ Lang::TextSizeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 		}
 
 	newState->size_ = size_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1304,15 +1304,15 @@ Lang::TextRenderingModeBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->mode_ = mode_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( newState->mode_ != Lang::TextRenderingMode::UNDEFINED )
@@ -1321,7 +1321,7 @@ Lang::TextRenderingModeBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 		}
 
 	newState->mode_ = mode_;
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1358,7 +1358,7 @@ Lang::TextRiseBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
@@ -1370,17 +1370,17 @@ Lang::TextRiseBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 				{
 					newState->setRise( ty_ );
 				}
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( newState->hasRise( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< text state rise >", loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
-	
+
 	if( isRelative_ )
 		{
 			newState->setRise( Concrete::Length::offtype( ty_ ) );
@@ -1389,7 +1389,7 @@ Lang::TextRiseBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 		{
 			newState->setRise( ty_ );
 		}
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1415,15 +1415,15 @@ Lang::TextKnockoutBinding::bind( MapType & bindings, Kernel::SystemDynamicVariab
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
 			newState->knockout_ = knockout_;
-			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
-	
+
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
 	if( ( newState->knockout_ & Kernel::TextState::KNOCKOUT_UNDEFINED_BIT ) != 0 )
@@ -1432,7 +1432,7 @@ Lang::TextKnockoutBinding::bind( MapType & bindings, Kernel::SystemDynamicVariab
 		}
 
 	newState->knockout_ = ( knockout_ ? Kernel::TextState::KNOCKOUT_FLAG_BIT : 0 );
-	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );			
+	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
 void
@@ -1922,7 +1922,7 @@ Kernel::TextState::synchCharacterSpacing( std::ostream & os, const Kernel::TextS
 			os << Concrete::Length::offtype( characterSpacing_ ) << " Tc " ;
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -1938,7 +1938,7 @@ Kernel::TextState::synchWordSpacing( std::ostream & os, const Kernel::TextState 
 			os << Concrete::Length::offtype( wordSpacing_ ) << " Tw " ;
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -1954,7 +1954,7 @@ Kernel::TextState::synchHorizontalScaling( std::ostream & os, const Kernel::Text
 			os << 100 * horizontalScaling_ << " Tz " ;
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -1980,7 +1980,7 @@ Kernel::TextState::synchLeading( std::ostream & os, const Kernel::TextState * re
 				}
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -2005,7 +2005,7 @@ Kernel::TextState::synchFontAndSize( std::ostream & os, const Kernel::TextState 
 			os << resources->nameofFont( font_->resource( ) ) << " " << Concrete::Length::offtype( size_ ) << " Tf " ;
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -2021,7 +2021,7 @@ Kernel::TextState::synchMode( std::ostream & os, const Kernel::TextState * ref, 
 			os << mode_ << " Tr " ;
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -2047,7 +2047,7 @@ Kernel::TextState::synchRise( std::ostream & os, const Kernel::TextState * ref, 
 				}
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool
@@ -2084,7 +2084,7 @@ Kernel::TextState::synchKnockout( std::ostream & os, const Kernel::TextState * r
 				}
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 void

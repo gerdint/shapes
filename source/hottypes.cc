@@ -259,7 +259,7 @@ Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 {
 	typedef const Lang::Drawable2D ArgType;
 	RefCountPtr< ArgType > arg = Helpers::down_cast< ArgType >( piece, callLoc );
-	
+
 	{
 		/* For objects of user-defined type, we also check that the class inherits from Drawable.
 		 */
@@ -273,7 +273,7 @@ Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 					}
 			}
 	}
-	
+
 	pile_ = RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( arg,
 																																		 pile_,
 																																		 dyn->getGraphicsState( ) ) );
@@ -454,7 +454,7 @@ Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< 
 		{
 			typedef const Lang::LightGroup ArgType;
 			RefCountPtr< ArgType > lights = Helpers::try_cast_CoreArgument< ArgType >( piece );
-			
+
 			while( ! lights->isNull( ) )
 				{
 					typedef const Lang::LightPair PairType;
@@ -573,7 +573,7 @@ Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 		{
 			typedef const Lang::LightGroup ArgType;
 			RefCountPtr< ArgType > lights = Helpers::try_cast_CoreArgument< ArgType >( piece );
-			
+
 			while( ! lights->isNull( ) )
 				{
 					typedef const Lang::LightPair PairType;
@@ -1247,7 +1247,7 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 		}
 	if( strlen( metrics_->fontName_.getPtr( ) ) == 0 )
 		{
-			throw Exceptions::OutOfRange( callLoc, "Missing 'FontName." );			
+			throw Exceptions::OutOfRange( callLoc, "Missing 'FontName." );
 		}
 	if( metrics_->weightNumber_ == 0 )
 		{
@@ -1383,7 +1383,7 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 		}
 
 	Concrete::Length the1bp( 1 );
-	
+
 	RefCountPtr< SimplePDF::PDF_Dictionary > dic;
 	RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( dic );
 	(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "Font" );
@@ -1407,7 +1407,7 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 //			 }
 //	 }
 	//	(*dic)[ "ToUnicode" ] = toUnicode;
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( Kernel::ValueRef( new Lang::Font( metrics_->fontName_,
 																										 indirection,
@@ -1521,7 +1521,7 @@ Kernel::WarmRandomDevice::peekImpl( Kernel::EvalState * evalState, const Ast::So
 	idev_.read( reinterpret_cast< char * >( & tmp ), 1 );
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Integer( tmp ) ),
-									 evalState );	
+									 evalState );
 }
 
 void
@@ -1556,7 +1556,7 @@ Kernel::WarmTime::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLoca
 	time_t t = time( 0 );
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ChronologicalTime( t ) ),
-									 evalState );	
+									 evalState );
 }
 
 void

@@ -306,7 +306,7 @@ Lang::ElementaryPath2D::point( Concrete::Time globalTime ) const
 		{
 			return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( * p2->mid_ ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
@@ -323,7 +323,7 @@ Lang::ElementaryPath2D::point( Concrete::Time globalTime ) const
 	Physical< 0, 3 > k3 =		 t	* t	* t;
 	Concrete::Length x = x0 * k0 + x1 * k1 + x2 * k2 + x3 * k3;
 	Concrete::Length y = y0 * k0 + y1 * k1 + y2 * k2 + y3 * k3;
-	
+
 	return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( x, y ) );
 }
 
@@ -357,7 +357,7 @@ Lang::ElementaryPath2D::speed( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in speed calculation" );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
@@ -366,7 +366,7 @@ Lang::ElementaryPath2D::speed( Concrete::Time globalTime ) const
 	Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -412,7 +412,7 @@ Lang::ElementaryPath2D::reverse_speed( Concrete::Time globalTime ) const
 			//			Concrete::Speed vy = y3 - y2;
 			return RefCountPtr< const Lang::Length >( new Lang::Length( hypotPhysical( vx, vy ).offtype< 0, -1 >( ) ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
@@ -421,7 +421,7 @@ Lang::ElementaryPath2D::reverse_speed( Concrete::Time globalTime ) const
 	Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -564,7 +564,7 @@ Lang::ElementaryPath2D::radiusOfCurvature( Concrete::Time globalTime ) const
 		{
 			throw Exceptions::InternalError( "t1 == 1 in curvature calculation" );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
@@ -573,7 +573,7 @@ Lang::ElementaryPath2D::radiusOfCurvature( Concrete::Time globalTime ) const
 	Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -637,7 +637,7 @@ Lang::ElementaryPath2D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 			Concrete::Speed tmp = hypotPhysical( vx, vy );
 			return RefCountPtr< const Lang::Length >( new Lang::Length( tmp * tmp * tmp / denom ) );
 		}
-	
+
 	Concrete::Bezier x0 = p1->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y0 = p1->mid_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x1 = p1->front_->x_.offtype< 0, 3 >( );
@@ -646,7 +646,7 @@ Lang::ElementaryPath2D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 	Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
 	Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 	Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-	
+
 	Concrete::Time tc = Concrete::UNIT_TIME - t; /* complement to t */
 	Physical< 0, 2 > kv0 = -3 * tc * tc;
 	Physical< 0, 2 > kv1 = 3 * tc * tc - 6 * tc * t;
@@ -991,7 +991,7 @@ Lang::ElementaryPath2D::continuousMean( ) const
 			Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-			
+
 			Concrete::Time dt = Shapes::computeDt( hypotPhysical( (x1-x0), (y1-y0) ).offtype< 0, -3 >( ) +
 																											 hypotPhysical( (x2-x1), (y2-y1) ).offtype< 0, -3 >( ) +
 																											 hypotPhysical( (x3-x2), (y3-y2) ).offtype< 0, -3 >( ) );
@@ -1035,7 +1035,7 @@ Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & dNonUnit ) 
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
-	
+
 	Concrete::UnitFloatPair d( dNonUnit.x_, dNonUnit.y_ );
 	Concrete::Coords2D dBezier( d.x_, d.y_ ); // The Bezier functions requires the direction to be given with the same type as the spline space.
 
@@ -1156,11 +1156,11 @@ namespace Shapes
 		Concrete::Time t0_;
 		Concrete::Time t1_;
 	public:
-		
+
 		ApproximationSegmentSection2D( const Shapes::ApproximationPoly2D * baseSeg, Concrete::Time steps, Concrete::Time t0, Concrete::Time t1 );
 		ApproximationSegmentSection2D * cutAfter( Concrete::Time t ) const;
 		ApproximationSegmentSection2D * cutBefore( Concrete::Time t ) const;
-		
+
 		Concrete::Length convexHullDistance( ) const;
 		Concrete::Time splitTime( const Concrete::Time t_tol ) const;
 		Concrete::Time globalTime( Concrete::Time t ) const;
@@ -1316,7 +1316,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 								else
 									{
 										work.push_back( WorkItem( part, lowerBound ) );
-									}						
+									}
 							}
 						}
 				}
@@ -1378,7 +1378,7 @@ Shapes::ApproximationPoly2D::splitTime( const Concrete::Time t_low, const Concre
 	}
 	Concrete::Time last_t = - Concrete::UNIT_TIME;
 	bool lastOffBounds = false;
-			
+
 	while( t < last_t - t_tol || t > last_t + t_tol )
 		{
 			last_t = t;
@@ -1447,7 +1447,7 @@ Shapes::ApproximationPoly2D::splitTime( const Concrete::Time t_low, const Concre
 							step = step * 0.5;
 							f = squaredDistanceAt( t + step );
 						}
-				}				
+				}
 			t += step;
 			last_f = f;
 
@@ -1634,7 +1634,7 @@ Shapes::ApproximationSegmentSection2D::convexHullDistance( ) const
 					}
 				}
 		}
-	
+
 	if( res == Concrete::HUGE_LENGTH )
 		{
 			/* This means that p was on the inside of each line, meaning it
@@ -1721,7 +1721,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 	/* Compute convex hull using Graham scan algorithm.
 	 * The stack of points in the hull is split into the last point and the rest.
 	 */
-	
+
 	std::vector< const Concrete::Coords2D * > sortedPoints( 0 );
 	sortedPoints.reserve( size( ) - 1 );
 
@@ -1774,7 +1774,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 	 */
 	const Concrete::Coords2D * last;
 	const Concrete::Coords2D * start;
-	{	
+	{
 		std::vector< const Concrete::Coords2D * >::iterator i = sortedPoints.begin( );
 		std::vector< const Concrete::Coords2D * >::iterator start_i = i;
 		start = *start_i;
@@ -1803,11 +1803,11 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 		*start_i = *sortedPoints.rbegin( );
 		sortedPoints.pop_back( );
 	}
-	
+
 	/* Step 2: Sort remaining points.
 	 */
 	std::sort( sortedPoints.begin( ), sortedPoints.end( ), Shapes::HullSorter2D( *start ) );
-	
+
 	/* Step 3: Construct hull.	The pointers are first placed in a list, and only copied to the new path once we know
 	 * what points belong to the hull.
 	 */
@@ -1843,7 +1843,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 				last = *i;
 			}
 		hullPoints.push_back( last );
-		
+
 		for( std::list< const Concrete::Coords2D * >::const_iterator i = hullPoints.begin( );
 				 i != hullPoints.end( );
 				 ++i )
@@ -1942,7 +1942,7 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 		{
 			rearHandle = *(*i1)->rear_;
 		}
-	
+
 	for( ; i1 != end( ); ++i1, ++i2 )
 		{
 			if( i2 == end( ) )
@@ -1991,7 +1991,7 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 							rearHandle = seg.p2_;
 						}
 				}
-			
+
 		}
 
 	return RefCountPtr< const Lang::ElementaryPath2D >( res );
@@ -2165,7 +2165,7 @@ Lang::ElementaryPath2D::arcLength( ) const
 							Physical< 0, 2 > kv3 = 3 * t * t;
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2282,7 +2282,7 @@ Lang::ElementaryPath2D::arcLength( Concrete::Time tRemaining ) const
 							Physical< 0, 2 > kv3 = 3 * t * t;
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2407,7 +2407,7 @@ Lang::ElementaryPath2D::negative_arcLength( Concrete::Time tRemaining ) const
 							Physical< 0, 2 > kv3 = 3 * t * t;
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 						}
@@ -2437,7 +2437,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 		{
 			return negative_arcTime( - t, t0 );
 		}
-	
+
 	Concrete::Time splineTime = t0;
 	t0 = modPhysical( t0, Concrete::Time( duration( ) ) );
 	if( t0 < Concrete::ZERO_TIME )
@@ -2503,10 +2503,10 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 				Concrete::Bezier y2 = (*i2)->rear_->y_.offtype< 0, 3 >( );
 				Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 				Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-				
+
 				const Concrete::Length segLengthBound =
 					( hypotPhysical( (x1-x0), (y1-y0) ) + hypotPhysical( (x2-x1), (y2-y1) ) + hypotPhysical( (x3-x2), (y3-y2) ) ).offtype< 0, -3 >( );
-				
+
 				if( segLengthBound < arcdelta )
 					{
 						remainingLength -= segLengthBound;
@@ -2519,7 +2519,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 				else
 					{
 						Concrete::Time dt = Shapes::computeDt( segLengthBound );
-						
+
 						const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 						Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 						for( Concrete::Time t = t0; t < Concrete::UNIT_TIME; t += dt )
@@ -2531,7 +2531,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 								Physical< 0, 2 > kv3 = 3 * t * t;
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-								
+
 								Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= remainingDiv_dt )
@@ -2543,7 +2543,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 						remainingLength -= tmpSum_l * dt.offtype< 0, 1 >( );
 					}
 			}
-			
+
 		beginLoop:
 			splineTime = Concrete::Time( ceil( splineTime.offtype< 0, 1 >( ) ) );
 			++i1;
@@ -2611,7 +2611,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 			else
 				{
 					Concrete::Time dt = Shapes::computeDt( segLengthBound );
-					
+
 					const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 					Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 					for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
@@ -2623,7 +2623,7 @@ Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 )
 							Physical< 0, 2 > kv3 = 3 * t * t;
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 							if( tmpSum_l >= remainingDiv_dt )
@@ -2747,10 +2747,10 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 				Concrete::Bezier y2 = (*i2)->front_->y_.offtype< 0, 3 >( );
 				Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 				Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-				
+
 				const Concrete::Length segLengthBound =
 					( hypotPhysical( (x1-x0), (y1-y0) ) + hypotPhysical( (x2-x1), (y2-y1) ) + hypotPhysical( (x3-x2), (y3-y2) ) ).offtype< 0, -3 >( );
-				
+
 				if( segLengthBound < arcdelta )
 					{
 						remainingLength -= segLengthBound;
@@ -2763,7 +2763,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 				else
 					{
 						Concrete::Time dt = Shapes::computeDt( segLengthBound );
-						
+
 						const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 						Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 						for( Concrete::Time t = t0; t < Concrete::UNIT_TIME; t += dt )
@@ -2775,7 +2775,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 								Physical< 0, 2 > kv3 = 3 * t * t;
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-								
+
 								Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= remainingDiv_dt )
@@ -2787,7 +2787,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 						remainingLength -= tmpSum_l * dt.offtype< 0, 1 >( );
 					}
 			}
-			
+
 		beginLoop:
 			splineTime = Concrete::Time( floor( splineTime.offtype< 0, 1 >( ) ) );
 			++i1;
@@ -2830,7 +2830,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 					splineTime -= Shapes::straightLineArcTime( remainingLength / segLength );
 					goto done;
 				}
-			
+
 			Concrete::Bezier x0 = (*i1)->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y0 = (*i1)->mid_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier x1 = (*i1)->rear_->x_.offtype< 0, 3 >( );
@@ -2839,10 +2839,10 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 			Concrete::Bezier y2 = (*i2)->front_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier x3 = (*i2)->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = (*i2)->mid_->y_.offtype< 0, 3 >( );
-			
+
 			const Concrete::Length segLengthBound =
 				( hypotPhysical( (x1-x0), (y1-y0) ) + hypotPhysical( (x2-x1), (y2-y1) ) + hypotPhysical( (x3-x2), (y3-y2) ) ).offtype< 0, -3 >( );
-				
+
 			if( segLengthBound < arcdelta )
 				{
 					remainingLength -= segLengthBound;
@@ -2855,7 +2855,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 			else
 				{
 					Concrete::Time dt = Shapes::computeDt( segLengthBound );
-					
+
 					const Concrete::Length remainingDiv_dt = remainingLength / dt.offtype< 0, 1 >( );
 					Concrete::Length tmpSum_l = Concrete::ZERO_LENGTH;
 					for( Concrete::Time t = Concrete::ZERO_TIME; t < Concrete::UNIT_TIME; t += dt )
@@ -2867,7 +2867,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 							Physical< 0, 2 > kv3 = 3 * t * t;
 							Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 							Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-							
+
 							Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 							tmpSum_l += dl;
 							if( tmpSum_l >= remainingDiv_dt )
@@ -2964,7 +2964,7 @@ namespace Shapes
 		IntersectionSegmentSections2D * cutAfterBefore( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const;
 		IntersectionSegmentSections2D * cutBeforeAfter( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const;
 		IntersectionSegmentSections2D * cutBeforeBefore( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const;
-		
+
 		void splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_tol_a, const Concrete::Time t_tol_b ) const;
 		Concrete::Time globalTime_a( Concrete::Time t ) const;
 		Concrete::Length distanceAt( Concrete::Time ta, Concrete::Time tb ) const;
@@ -3094,7 +3094,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 								}
 						}
 				}
-			
+
 			/* The remaining segments are pushed onto a queue
 			 */
 			std::list< IntersectionSegmentSections2D * > work;
@@ -3102,7 +3102,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 			/* Keep track of the memory we use:
 			 */
 			PtrOwner_back_Access< std::list< const IntersectionPolys2D * > > baseSegsMemory;
-			
+
 			{
 				typedef typeof curvedSegments ListType;
 				for( ListType::const_iterator seg_b = curvedSegments.begin( ); seg_b != curvedSegments.end( ); ++seg_b )
@@ -3122,7 +3122,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 						pushOverlappingDeleteOther( work, workItem );
 					}
 			}
-									
+
 			/* Then we do the work...
 			 */
 			while( work.size( ) > 0 )
@@ -3165,7 +3165,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 					return steps + t;
 				}
 		}
-	
+
 	throw Exceptions::OutOfRange( "Failed to find intersection.	Probably because there was no intersection." );
 }
 
@@ -3208,7 +3208,7 @@ Computation::IntersectionPolys2D::IntersectionPolys2D( const Bezier::ControlPoin
 	kyaD1_2 = 3 * kyaD0_3;
 
 	kyaD2_0 = kyaD1_1;
-	kyaD2_1 = 2 * kyaD1_2;	
+	kyaD2_1 = 2 * kyaD1_2;
 
 	kxbD0_0 = polyCoeffs_b.z0_.x_;
 	kxbD0_1 = polyCoeffs_b.z1_.x_.offtype< 0, 1 >( );
@@ -3295,7 +3295,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 				Physical< 1, -1 > fbD1 = kxbD1_0 + tb * ( kxbD1_1 + tb * kxbD1_2 );
 				Physical< 1, -2 > faD2 = kxaD2_0 + ta * kxaD2_1;
 				Physical< 1, -2 > fbD2 = kxbD2_0 + tb * kxbD2_1;
-				
+
 				Physical< 1, 0 > deltaD0 = faD0 - fbD0;
 
 				objectiveD1a += deltaD0 * faD1;
@@ -3313,7 +3313,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 				Physical< 1, -1 > fbD1 = kybD1_0 + tb * ( kybD1_1 + tb * kybD1_2 );
 				Physical< 1, -2 > faD2 = kyaD2_0 + ta * kyaD2_1;
 				Physical< 1, -2 > fbD2 = kybD2_0 + tb * kybD2_1;
-				
+
 				Physical< 1, 0 > deltaD0 = faD0 - fbD0;
 
 				objectiveD1a += deltaD0 * faD1;
@@ -3331,7 +3331,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 					/* The minimization problem is not convex, locally.
 					 * Knowing that we have examined a grid of candidate points, we stop the minimization here.
 					 */
-					
+
 					break;
 
 					//					double D1norm = hypotPhysical( objecitveD1a, objectiveD1b );
@@ -3361,7 +3361,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 						alpha = ( t_ahigh - ta ) / step_a;
 						onBound = true;
 					}
-				
+
 				if( tb + alpha * step_b < t_blow )
 					{
 						alpha = ( t_blow - tb ) / step_b;
@@ -3372,7 +3372,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 						alpha = ( t_bhigh - tb ) / step_b;
 						onBound = true;
 					}
-				
+
 				step_a *= alpha;
 				step_b *= alpha;
 			}
@@ -3749,7 +3749,7 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier y2 = p2->rear_->y_.offtype< 0, 3 >( );
 			Concrete::Bezier x3 = p2->mid_->x_.offtype< 0, 3 >( );
 			Concrete::Bezier y3 = p2->mid_->y_.offtype< 0, 3 >( );
-			
+
 			Concrete::Time tc = t1 - 1;	/* Note the sign here! */
 			Concrete::Time td = t1 - t2;
 
@@ -3764,14 +3764,14 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Length x1new = k0x + k1x / 3;
 			Concrete::Length x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Length x3new = k0x + k1x + k2x + k3x;
-			
+
 			/* Same thing for y */
-			
+
 			Concrete::Length k0y = - tc * tc * tc * y0 + t1 * ( 3 * tc * tc * y1 + t1 * ( 3 * Concrete::UNIT_TIME * y2 - 3 * t1 * y2 + t1 * y3 ) );
 			Concrete::Length k1y = 3 * td * ( tc * tc * y0 + ( -Concrete::UNIT_TIME*Concrete::UNIT_TIME + 4 * Concrete::UNIT_TIME * t1 - 3 * t1 * t1 ) * y1 + t1 * ( -2 * Concrete::UNIT_TIME * y2 + 3 * t1 * y2 - t1 * y3 ) );
 			Concrete::Length k2y = -3 * td * td * ( tc * y0 + 2 * Concrete::UNIT_TIME * y1 - 3 * t1 * y1 - Concrete::UNIT_TIME * y2 + 3 * t1 * y2 - t1 * y3 );
 			Concrete::Length k3y = td * td * td * ( y0 - 3 * y1 + 3 * y2 - y3 );
-			
+
 			Concrete::Length y0new = k0y;
 			Concrete::Length y1new = k0y + k1y / 3;
 			Concrete::Length y2new = k0y + ( 2 * k1y + k2y ) / 3;
@@ -3837,7 +3837,7 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier x1new = k0x + k1x / 3;
 			Concrete::Bezier x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Bezier x3new = k0x + k1x + k2x + k3x;
-			
+
 			Concrete::Bezier k0y = y0;
 			Concrete::Bezier k1y = 3 * t1 * ( y1 - y0 ).offtype< 0, 1 >( );
 			Concrete::Bezier k2y = 3 * t1 * t1 * ( y0 - 2 * y1 + y2 ).offtype< 0, 2 >( );
@@ -3856,11 +3856,11 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 			p2->rear_ = new Concrete::Coords2D( x1new.offtype< 0, -3 >( ), y1new.offtype< 0, -3 >( ) );
 			p2->front_ = new Concrete::Coords2D( *(*i2)->front_ );
 	}
-	
+
 	/* At this point we know that the rest of this segment shall be included, since the cuts are not on the
 	 * same segment.
 	 */
-	
+
 	for( ; t + 1 < gt2; t += Concrete::UNIT_TIME )
 		{
 			res->push_back( p1 );
@@ -3871,7 +3871,7 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 				{
 					i2 = begin( );
 				}
-			p2 = new Concrete::PathPoint2D( **i2 );			
+			p2 = new Concrete::PathPoint2D( **i2 );
 		}
 
 	/* Remember to delete p1 and p2 if unused! */
@@ -3910,7 +3910,7 @@ Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concret
 			Concrete::Bezier x1new = k0x + k1x / 3;
 			Concrete::Bezier x2new = k0x + ( 2 * k1x + k2x ) / 3;
 			Concrete::Bezier x3new = k0x + k1x + k2x + k3x;
-			
+
 			Concrete::Bezier k0y = y0;
 			Concrete::Bezier k1y = 3 * t2 * ( y1 - y0 ).offtype< 0, 1 >( );
 			Concrete::Bezier k2y = 3 * t2 * t2 * ( y0 - 2 * y1 + y2 ).offtype< 0, 2 >( );
@@ -4008,7 +4008,7 @@ Lang::ElementaryPath2D::typed_to3D( const RefCountPtr< const Lang::Path2D > & se
 		{
 			throw Exceptions::InternalError( "ElementaryPath2D::typed_to3D: self was of unexpected type." );
 		}
-	
+
 	return RefCountPtr< const Lang::Path3D >( new Lang::Path2Din3D( selfTyped ) );
 }
 
@@ -4022,6 +4022,6 @@ Lang::ElementaryPath2D::to3D( const RefCountPtr< const Lang::Geometric2D > & sel
 		{
 			throw Exceptions::InternalError( "ElementaryPath2D::to3D: self was of unexpected type." );
 		}
-	
-	return RefCountPtr< const Lang::Geometric3D >( new Lang::Path2Din3D( selfTyped ) );	
+
+	return RefCountPtr< const Lang::Geometric3D >( new Lang::Path2Din3D( selfTyped ) );
 }

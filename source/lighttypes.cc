@@ -308,7 +308,7 @@ Lang::SpecularLightGray::illuminateGray( const Concrete::Coords3D & point, const
 		{
 			return Concrete::Gray( 0 );
 		}
-	
+
 	// Further, I want something that becomes ambient when refl.exponent == 0.
 
 	double cAmb = 1;

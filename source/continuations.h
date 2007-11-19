@@ -23,7 +23,7 @@ namespace Shapes
 				}
 			return res;
 		}
-		
+
 	}
 
 	namespace Kernel

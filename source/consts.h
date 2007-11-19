@@ -77,7 +77,7 @@ namespace Shapes
 		extern const MemberMode MEMBER_ABSTRACT;
 		extern const MemberMode MEMBER_FINAL;
 		extern const MemberMode MEMBER_TRANSFORMING;
-		
+
 		typedef unsigned short int ClassMode;
 		extern const ClassMode CLASS_MODE_ABSTRACT;
 		extern const ClassMode CLASS_MODE_FINAL;
@@ -94,9 +94,9 @@ namespace Shapes
 		const Length HUGE_LENGTH( HUGE_VAL );
 		const Length ZERO_LENGTH( 0 );
 		const Length SOME_LENGTH( 1 );
-		
+
 		const Speed ZERO_SPEED( 0 );
-		
+
 		const Time ZERO_TIME( 0 );
 		const Time UNIT_TIME( 1 );
 		const Time HUGE_TIME( HUGE_VAL );

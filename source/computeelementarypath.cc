@@ -19,7 +19,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 			return;
 		}
 	Lang::ElementaryPath2D * pth = new Lang::ElementaryPath2D;
-	
+
 	const double GAMMA_ANGLE = 0.5;
 
 	Concrete::Coords2D basePoint( 0, 0 );
@@ -225,8 +225,8 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		--the_rend;
 		Lang::ElementaryPath2D::iterator the_rbegin = pth->end( );
 		--the_rbegin;
-	
-		
+
+
 		pth->allComplete_ = true;
 		for( Lang::ElementaryPath2D::iterator i = pth->begin( );
 				 i != pth->end( );
@@ -458,12 +458,12 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 		--the_rend;
 		Lang::ElementaryPath2D::iterator the_rbegin = pth->end( );
 		--the_rbegin;
-		
+
 		pth->allComplete_ = true;
 		for( Lang::ElementaryPath2D::iterator i = pth->begin( );
 				 i != pth->end( );
 				 ++i )
-			{				
+			{
 				if( (*i)->rear_ == (*i)->mid_ &&
 						(*i)->front_ == (*i)->mid_ )
 					{
@@ -484,7 +484,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 					{
 						next = pth->begin( );
 					}
-				
+
 				if( (*i)->front_ == (*i)->mid_ )
 					{
 						/* There is only a rear handle at this point */
@@ -545,13 +545,13 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 								(*i)->frontState_ = Concrete::PathPoint2D::COMPLETE;
 							}
 					}
-				
+
 				if( (*i)->rearState_ == Concrete::PathPoint2D::COMPLETE &&
 						(*i)->frontState_ == Concrete::PathPoint2D::COMPLETE )
 					{
 						continue;
 					}
-				
+
 				/* The only reason why a handle is not complete at this point is that it's modulus
 				 * has not been determined.
 				 */
@@ -591,19 +591,19 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 				(*i)->front_->y_ = (*i)->mid_->y_ + (*i)->frontModulus_ * sin( (*i)->frontAngle_ );
 				(*i)->rear_->x_ = (*i)->mid_->x_ + (*i)->rearModulus_ * cos( (*i)->rearAngle_ );
 				(*i)->rear_->y_ = (*i)->mid_->y_ + (*i)->rearModulus_ * sin( (*i)->rearAngle_ );
-		
+
 			}
 
 	} // Closing scope of the_rend and the_rbegin
 
 
  allComplete:
-	
+
 	if( closed_ )
 		{
 			pth->close( );
 		}
-	
+
 	elementaryPath_ = RefCountPtr< const Lang::ElementaryPath2D >( pth );
 
 }

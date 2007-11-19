@@ -121,14 +121,14 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 //				 }
 		}
 
-	return byteColumnToUTF8Column( cachedLine, byteCol );	
+	return byteColumnToUTF8Column( cachedLine, byteCol );
 }
 
 size_t
 Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t byteCol )
 {
 	iconv_t converter = Helpers::requireUTF8ToUCS4Converter( );
-	
+
 	static size_t bufSize = 0;
 	static char * buf = 0;
 	{
@@ -143,7 +143,7 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
 				bufSize = neededSize;
 			}
 	}
-	
+
 
 	const char * inbuf = line.c_str( );
 	size_t inbytesleft = byteCol;
@@ -176,6 +176,6 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
 					return 0;
 				}
 		}
-	
+
 	return ( bufSize - outbytesleft ) / 4;
 }

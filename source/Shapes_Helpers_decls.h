@@ -24,7 +24,7 @@ namespace Shapes
 		pathTimeCast( const char * title, const RefCountPtr< const Lang::ElementaryPath2D > & pRef, Kernel::Arguments & args, size_t argNo, const Ast::SourceLocation & callLoc );
 		Concrete::SplineTime
 		pathTimeCast( const Lang::ElementaryPath2D * p, const Lang::Value * tPtr, const Kernel::Continuation * loc );
-		
+
 		RefCountPtr< const Lang::ElementaryPath3D >
 		elementaryPathCast3D( const char * title, Kernel::Arguments & args, size_t argNo, const Ast::SourceLocation & callLoc );
 		RefCountPtr< const Lang::ElementaryPath3D >
@@ -35,7 +35,7 @@ namespace Shapes
 		pathTimeCast( const char * title, const RefCountPtr< const Lang::ElementaryPath3D > & pRef, Kernel::Arguments & args, size_t argNo, const Ast::SourceLocation & callLoc );
 		Concrete::SplineTime
 		pathTimeCast( const Lang::ElementaryPath3D * p, const Lang::Value * tPtr, const Kernel::Continuation * loc );
-		
+
 		RefCountPtr< const char > typeSetString( RefCountPtr< const char > type1, RefCountPtr< const char > type2 );
 		RefCountPtr< const char > typeSetString( RefCountPtr< const char > type1, RefCountPtr< const char > type2, RefCountPtr< const char > type3 );
 		RefCountPtr< const char > typeSetString( RefCountPtr< const char > type1, RefCountPtr< const char > type2, RefCountPtr< const char > type3, RefCountPtr< const char > type4 );

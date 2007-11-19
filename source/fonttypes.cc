@@ -42,7 +42,7 @@ Lang::Type3Glyph::setupMetric( FontMetrics::CharacterMetrics * metric, Physical<
 		size_t dummy = code_;
 		if( dummy < 256 )
 			{
-				metric->characterCode_ = code_;			
+				metric->characterCode_ = code_;
 			}
 	}
 	metric->horizontalCharWidthX_ = widthX_ * invSize;
@@ -65,9 +65,9 @@ Lang::Type3Glyph::shipout( std::ostream & os, RefCountPtr< SimplePDF::PDF_Resour
 				 << Concrete::Length::offtype( xmin_ ) << " " << Concrete::Length::offtype( ymin_ )
 				 << " " << Concrete::Length::offtype( xmax_ ) << " " << Concrete::Length::offtype( ymax_ ) << " d1" << std::endl ;
 		}
-	
+
 	Concrete::Length the1bp( 1 );
-	
+
 	Kernel::PageContentStates pdfState( resources );
 	glyph_->shipout( os, & pdfState, Lang::THE_2D_IDENTITY );
 }

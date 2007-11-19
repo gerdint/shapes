@@ -887,7 +887,7 @@ ExprExceptConstStrings
 | '(' Expr T_llthan InsertionSequence ')'
 {
 	std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
-	
+
 	size_t ** pos = new size_t * ( 0 );
 	Ast::StateReference * dst = new Ast::LexiographicState( @2, strdup( Kernel::SEQUENTIAL_EXPR_VAR_ID ), new Kernel::Environment::LexicalKey * ( 0 ) );
 
@@ -974,7 +974,7 @@ ExprExceptConstStrings
 }
 | T_unionLeft ArgList T_unionRight
 {
-	$$ = new Ast::UnionExpr( @$, $2 );	
+	$$ = new Ast::UnionExpr( @$, $2 );
 }
 | NamedLetExpr
 | Expr T_minusminus T_cycle
@@ -1003,19 +1003,19 @@ ExprExceptConstStrings
 }
 | Expr T_angle Expr
 {
-	$$ = new Ast::AngleExpr( @2, $1, $3 );	
+	$$ = new Ast::AngleExpr( @2, $1, $3 );
 }
 | Expr '*' Expr
 {
-	$$ = new Ast::StarExpr( @2, $1, $3 );	
+	$$ = new Ast::StarExpr( @2, $1, $3 );
 }
 | Expr T_projection Expr
 {
-	$$ = new Ast::ProjectionExpr( @2, $1, $3 );	
+	$$ = new Ast::ProjectionExpr( @2, $1, $3 );
 }
 | Expr '/' Expr
 {
-	$$ = new Ast::SlashExpr( @2, $1, $3 );	
+	$$ = new Ast::SlashExpr( @2, $1, $3 );
 }
 | '~' Expr
 {
@@ -1023,7 +1023,7 @@ ExprExceptConstStrings
 }
 | Expr T_compose Expr
 {
-	$$ = new Ast::ComposeExpr( @2, $1, $3 );	
+	$$ = new Ast::ComposeExpr( @2, $1, $3 );
 }
 | Expr '<' Expr
 {
@@ -1117,7 +1117,7 @@ NamedLetExpr
 
 	std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
 
-	{	
+	{
 		Ast::ArgListExprs * args = new Ast::ArgListExprs( false );
 		Ast::FunctionFunction * res = new Ast::FunctionFunction( @5, $5, $7, 0 );
 		res->push_exprs( args );

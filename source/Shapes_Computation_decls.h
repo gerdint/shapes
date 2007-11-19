@@ -13,7 +13,7 @@ namespace Shapes
 		class PaintedPolygon3D;
 		class SplicingLine;
 		class StrokedLine3D;
-	
+
 		typedef char FacetShadeOrder;
 
 		class FacetInterpolatorGray;

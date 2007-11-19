@@ -44,32 +44,32 @@ namespace Shapes
 				formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_TRUE_VARIABLE );	// this argument means "transform if applicable"
 				formals_->appendEvaluatedCoreFormal( "draw", Kernel::THE_TRUE_VARIABLE );	// this argument means "draw if applicable"
 			}
-			
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Symbol KeyType;
 				RefCountPtr< KeyType > key = Helpers::down_cast_CoreArgument< KeyType >( title_, args, 0, callLoc );
 				bool tryTransform = Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 2, callLoc )->val_;
 				bool tryDraw = Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 3, callLoc )->val_;
-				
+
 				if( tryDraw && ! tryTransform )
 					{
 						throw Exceptions::CoreOutOfRange( title_, args, 3, "A tagged object which does not transform cannot be drawn." );
 					}
-				
+
 				size_t argsi = 1;
-				
+
 				if( tryDraw )
 					{
 						try
 							{
 								typedef const Lang::Drawable2D ArgType;
-					
+
 								RefCountPtr< ArgType > obj = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( argsi ) );
-					
+
 								Kernel::ContRef cont = evalState->cont_;
 								cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::TaggedDrawable2D( key, obj ) ),
 																 evalState );
@@ -83,9 +83,9 @@ namespace Shapes
 						try
 							{
 								typedef const Lang::Drawable3D ArgType;
-					
+
 								RefCountPtr< ArgType > obj = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( argsi ) );
-					
+
 								Kernel::ContRef cont = evalState->cont_;
 								cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::TaggedDrawable3D( key, obj ) ),
 																 evalState );
@@ -102,9 +102,9 @@ namespace Shapes
 						try
 							{
 								typedef const Lang::Geometric2D ArgType;
-					
+
 								RefCountPtr< ArgType > obj = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( argsi ) );
-					
+
 								Kernel::ContRef cont = evalState->cont_;
 								cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::TaggedGeometric2D( key, obj ) ),
 																 evalState );
@@ -118,9 +118,9 @@ namespace Shapes
 						try
 							{
 								typedef const Lang::Geometric3D ArgType;
-					
+
 								RefCountPtr< ArgType > obj = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( argsi ) );
-					
+
 								Kernel::ContRef cont = evalState->cont_;
 								cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::TaggedGeometric3D( key, obj ) ),
 																 evalState );
@@ -141,7 +141,7 @@ namespace Shapes
 				}
 			}
 		};
-		
+
 		// This function is in this file just because it i so related to Core_tag.
 		class Core_find : public Lang::CoreFunction
 		{
@@ -152,23 +152,23 @@ namespace Shapes
 				formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
 			}
-			
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Symbol KeyType;
 				RefCountPtr< KeyType > key = Helpers::down_cast_CoreArgument< KeyType >( title_, args, 1, callLoc );
-				
+
 				size_t argsi = 0;
-				
+
 				try
 					{
 						typedef const Lang::Drawable2D ContainerType;
-			
+
 						RefCountPtr< ContainerType > container = Helpers::try_cast_CoreArgument< ContainerType >( args.getValue( argsi ) );
-			
+
 						if( ! container->findOneTag( evalState, key->getKey( ), Lang::THE_2D_IDENTITY ) )
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, 1, "Label not found." );
@@ -179,13 +179,13 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				try
 					{
 						typedef const Lang::Drawable3D ContainerType;
-			
+
 						RefCountPtr< ContainerType > container = Helpers::try_cast_CoreArgument< ContainerType >( args.getValue( argsi ) );
-			
+
 						if( ! container->findOneTag( evalState, key->getKey( ), Lang::THE_3D_IDENTITY ) )
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, 1, "Label not found." );
@@ -196,11 +196,11 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Drawable2D::staticTypeName( ), Lang::Drawable3D::staticTypeName( ) ) );
 			}
 		};
-		
+
 		// This function is in this file just because it i so related to Core_tag.
 		class Core_findall : public Lang::CoreFunction
 		{
@@ -211,23 +211,23 @@ namespace Shapes
 				formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
 			}
-			
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Symbol KeyType;
 				RefCountPtr< KeyType > key = Helpers::down_cast_CoreArgument< KeyType >( title_, args, 1, callLoc );
-				
+
 				size_t argsi = 0;
-				
+
 				try
 					{
 						typedef const Lang::Drawable2D ContainerType;
-			
+
 						RefCountPtr< ContainerType > container = Helpers::try_cast_CoreArgument< ContainerType >( args.getValue( argsi ) );
-			
+
 						std::vector< Kernel::ValueRef > * dst = new std::vector< Kernel::ValueRef >;
 						container->findTags( dst, evalState->dyn_, key->getKey( ), Lang::THE_2D_IDENTITY );
 
@@ -240,13 +240,13 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				try
 					{
 						typedef const Lang::Drawable3D ContainerType;
-			
+
 						RefCountPtr< ContainerType > container = Helpers::try_cast_CoreArgument< ContainerType >( args.getValue( argsi ) );
-			
+
 						std::vector< Kernel::ValueRef > * dst = new std::vector< Kernel::ValueRef >;
 						container->findTags( dst, evalState->dyn_, key->getKey( ), Lang::THE_3D_IDENTITY );
 
@@ -259,7 +259,7 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Drawable2D::staticTypeName( ), Lang::Drawable3D::staticTypeName( ) ) );
 			}
 		};
@@ -375,7 +375,7 @@ namespace Shapes
 						ArgType::ValueType begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->val_;
 						ArgType::ValueType end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->val_;
 						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
-		
+
 						ArgType::ValueType step = 1;
 						if( stepPtr != NullPtr< ArgType >( ) )
 							{
@@ -410,7 +410,7 @@ namespace Shapes
 																																											 res ) );
 								tmp.pop_back( );
 							}
-		
+
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( res,
 														 evalState );
@@ -428,7 +428,7 @@ namespace Shapes
 						double begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->val_;
 						double end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->val_;
 						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
-		
+
 						double step = 1;
 						if( stepPtr != NullPtr< ArgType >( ) )
 							{
@@ -463,7 +463,7 @@ namespace Shapes
 																																											 res ) );
 								tmp.pop_back( );
 							}
-				
+
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( res,
 														 evalState );
@@ -491,11 +491,11 @@ namespace Shapes
 				typedef const Lang::FloatPair ArgType0;
 				typedef const Lang::FloatPair ArgType1;
 				typedef const Lang::Coords2D ArgType2;
-	
+
 				RefCountPtr< ArgType0 > argx = Helpers::down_cast_CoreArgument< ArgType0 >( title_, args, 0, callLoc );
 				RefCountPtr< ArgType1 > argy = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, 1, callLoc );
 				RefCountPtr< ArgType2 > arg1 = Helpers::down_cast_CoreArgument< ArgType2 >( title_, args, 2, callLoc );
-		
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Transform2D( argx->x_, argx->y_, argy->x_, argy->y_, arg1->x_.get( ), arg1->y_.get( ) ) ),
 												 evalState );
@@ -516,12 +516,12 @@ namespace Shapes
 				typedef const Lang::FloatTriple ArgType1;
 				typedef const Lang::FloatTriple ArgType2;
 				typedef const Lang::Coords3D ArgType3;
-	
+
 				RefCountPtr< ArgType0 > argx = Helpers::down_cast_CoreArgument< ArgType0 >( title_, args, 0, callLoc );
 				RefCountPtr< ArgType1 > argy = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, 1, callLoc );
 				RefCountPtr< ArgType2 > argz = Helpers::down_cast_CoreArgument< ArgType2 >( title_, args, 2, callLoc );
 				RefCountPtr< ArgType3 > arg1 = Helpers::down_cast_CoreArgument< ArgType3 >( title_, args, 3, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Transform3D( argx->x_, argx->y_, argx->z_,
 																																	argy->x_, argy->y_, argy->z_,
@@ -588,10 +588,10 @@ namespace Shapes
 				args.applyDefaults( );
 
 				size_t i = 0;
-				
+
 				typedef const Lang::Float ArgType1;
 				RefCountPtr< ArgType1 > arg1 = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, i, callLoc );
-	
+
 				double c = cos( arg1->val_ );
 				double s = sin( arg1->val_ );
 				Kernel::ContRef cont = evalState->cont_;
@@ -615,19 +615,19 @@ namespace Shapes
 				args.applyDefaults( );
 
 				size_t i = 0;
-				
+
 				typedef const Lang::FloatTriple ArgType1;
 				RefCountPtr< ArgType1 > dir = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, i, callLoc );
 				if( dir->x_ == 0 && dir->y_ == 0 && dir->z_ == 0 )
 					{
 						throw Exceptions::CoreOutOfRange( title_, args, i, "The rotation direction is degenerate, that is (0,0,0)." );
 					}
-	
+
 				++i;
 
 				typedef const Lang::Float ArgType2;
 				RefCountPtr< ArgType2 > angle = Helpers::down_cast_CoreArgument< ArgType2 >( title_, args, i, callLoc );
-	
+
 				double r = sqrt( dir->x_ * dir->x_ + dir->y_ * dir->y_ + dir->z_ * dir->z_ );
 				double x = dir->x_ / r;
 				double y = dir->y_ / r;
@@ -662,12 +662,12 @@ namespace Shapes
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-	
+
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > argr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 				RefCountPtr< ArgType > argx = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
 				RefCountPtr< ArgType > argy = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Transform2D( argr->val_ * argx->val_, 0,
 																																	0, argr->val_ * argy->val_,
@@ -699,7 +699,7 @@ namespace Shapes
 				RefCountPtr< ArgType > argx = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
 				RefCountPtr< ArgType > argy = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc );
 				RefCountPtr< ArgType > argz = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 3, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Transform3D( argr->val_ * argx->val_, 0, 0,
 																																	0, argr->val_ * argy->val_, 0,
@@ -791,7 +791,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Drawable2D ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -804,7 +804,7 @@ namespace Shapes
 						throw Exceptions::InternalError( strrefdup( strTitle + ": The object has no bounding box!" ) );
 					}
 
-	
+
 				RefCountPtr< SimplePDF::PDF_Stream_out > form;
 				RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( form );
 
@@ -824,7 +824,7 @@ namespace Shapes
 				Kernel::PageContentStates pdfState( resources );
 				arg->shipout( form->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
 
-	
+
 				Lang::XObject * res = new Lang::XObject( indirection,
 																								 theBBox );
 				res->setDebugStr( "user form" );
@@ -848,7 +848,7 @@ namespace Shapes
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-	
+
 				typedef const Lang::Group2D ArgType0;
 				typedef const Lang::Boolean ArgType1;
 				typedef const Lang::Boolean ArgType2;
@@ -916,7 +916,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::String ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -968,7 +968,7 @@ namespace Shapes
 				size_t i = 0;
 				typedef const Lang::String Arg1Type;
 				RefCountPtr< Arg1Type > arg1 = Helpers::down_cast_CoreArgument< Arg1Type >( title_, args, i, callLoc );
-	
+
 				/* snprintf( 0, 0, ... ) does not seem to work properly on some systems.
 				 * Therefore, I resort to the use of a dummy string, and "n = 1".
 				 */
@@ -994,7 +994,7 @@ namespace Shapes
 									{
 										size_t sz = snprintf( dummy, 1, arg1->val_.getPtr( ), arg2->val_.getPtr( ) );
 										res = new char[ sz + 1 ];
-										status = sprintf( res, arg1->val_.getPtr( ), arg2->val_.getPtr( ) );		
+										status = sprintf( res, arg1->val_.getPtr( ), arg2->val_.getPtr( ) );
 										break;
 									}
 							}
@@ -1226,7 +1226,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
 			}
 		};
@@ -1302,7 +1302,7 @@ namespace Shapes
 							{
 								// Never mind, see below
 							}
-			
+
 						throw Exceptions::CoreTypeMismatch( callLoc, title_, args, i, Helpers::typeSetString( Lang::String::staticTypeName( ), Lang::Float::staticTypeName( ), Lang::KernedText::staticTypeName( ) ) );
 					}
 
@@ -1397,7 +1397,7 @@ namespace Shapes
 													}
 												res->pushKerning( currentKerning );
 											}
-							
+
 										// Copy the current (multibyte) character to the character queue
 										{
 											const char * inbuf = src;
@@ -1450,7 +1450,7 @@ namespace Shapes
 							{
 								// Never mind, see below
 							}
-			
+
 						throw Exceptions::CoreTypeMismatch( callLoc, title_, args, i, Helpers::typeSetString( Lang::String::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 					}
 
@@ -1459,7 +1459,7 @@ namespace Shapes
 						res->pushString( RefCountPtr< const Lang::String >( new Lang::String( strrefdup( pendingChars ) ) ) );
 						pendingChars.str( "" );
 					}
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( res,
 												 evalState );
@@ -1496,7 +1496,7 @@ namespace Shapes
 				try
 					{
 						typedef const Lang::ChronologicalTime SeedType;
-			
+
 						RefCountPtr< SeedType > seed = Helpers::try_cast_CoreArgument< SeedType >( args.getValue( argsi ) );
 
 						Kernel::ContRef cont = evalState->cont_;
@@ -1508,11 +1508,11 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				try
 					{
 						typedef const Lang::Integer SeedType;
-			
+
 						RefCountPtr< SeedType > seed = Helpers::try_cast_CoreArgument< SeedType >( args.getValue( argsi ) );
 
 						Kernel::ContRef cont = evalState->cont_;
@@ -1524,7 +1524,7 @@ namespace Shapes
 					{
 						// Never mind, see below
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::ChronologicalTime::staticTypeName( ) ) );
 			}
 		};
@@ -1617,7 +1617,7 @@ namespace Shapes
 								throw Exceptions::CoreOutOfRange( title_, args, remove_i, "The destination cannot be remote if no name is given." );
 							}
 					}
-	
+
 				++argsi;
 				const size_t outlineLevel_i = argsi;
 				typedef const Lang::Integer OutlineLevelType;
@@ -1628,7 +1628,7 @@ namespace Shapes
 						outlineLevel = levelVal->val_;
 						if( outlineLevel < 0 )
 							{
-								throw Exceptions::CoreOutOfRange( title_, args, argsi, "The outline level must be non-negative." );					
+								throw Exceptions::CoreOutOfRange( title_, args, argsi, "The outline level must be non-negative." );
 							}
 					}
 
@@ -1749,7 +1749,7 @@ namespace Shapes
 					{
 						if( remote || sides != Lang::DocumentDestination::TOPLEFT )
 							{
-								throw Exceptions::CoreOutOfRange( title_, args, argsi, "The zoom can only be specified when using the top-left sides." );										
+								throw Exceptions::CoreOutOfRange( title_, args, argsi, "The zoom can only be specified when using the top-left sides." );
 							}
 						zoom = zoomVal->val_;
 						if( zoom <= 0 )

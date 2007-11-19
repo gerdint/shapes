@@ -31,13 +31,13 @@ namespace Shapes
 			RefCountPtr< const Lang::Dash > borderDash_; // May be null.
 			double borderCloudy_; // Use negative value to avoid the border effect alltogether.	Suggested values are in the range 0--2.
 			Concrete::RGB color_;
-			
+
 			/* At the moment, appearance states are not supported.
 			 */
 			RefCountPtr< const Lang::XObject > appearanceNormal_; // May be null.
 			RefCountPtr< const Lang::XObject > appearanceRollover_; // May be null.
 			RefCountPtr< const Lang::XObject > appearanceDown_; // May be null.
-			
+
 		public:
 			AnnotationSite( const RefCountPtr< const Lang::Drawable2D > & target, const RefCountPtr< const char > & contentText, const RefCountPtr< const char > & identifier, size_t flags,
 											char borderStyle, const Concrete::Length & borderWidth, const RefCountPtr< const Lang::Dash > & borderDash, double borderCloudy, const Concrete::RGB & color,
@@ -49,7 +49,7 @@ namespace Shapes
 			virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
 
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
-			
+
 			RefCountPtr< SimplePDF::PDF_Dictionary > getDictionary( const char * subtype, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc ) const;
 
 			TYPEINFODECL;

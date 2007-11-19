@@ -14,7 +14,7 @@ namespace Shapes
 	{
 
 		extern const char * theUCS4EncodingName;
-		
+
 		iconv_t requireUTF8ToMacRomanConverter( bool cleanup = false );
 		iconv_t requireMacRomanToUTF8Converter( bool cleanup = false );
 

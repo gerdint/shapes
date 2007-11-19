@@ -138,7 +138,7 @@ namespace Shapes
 	protected:
 		void computeElementaryPath( ) const;
 	};
-	
+
 	class ClosedPath2D : public Lang::CompositePath2D
 	{
 	public:
@@ -394,7 +394,7 @@ namespace Shapes
 		virtual void elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
-	
+
 	class ClosedPath3D : public Lang::CompositePath3D
 	{
 	public:
@@ -585,7 +585,7 @@ namespace Shapes
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 		DISPATCHDECL;
 	};
-	
+
 	}
 
 
@@ -608,7 +608,7 @@ namespace Shapes
 			virtual double force( const Concrete::PathPoint2D * specialUnitP0, const Concrete::PathPoint2D * specialUnitP1, bool reverse ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ) const;
 		};
-		
+
 		class PolarHandleTruePromise : public PolarHandlePromise
 		{
 			Kernel::Thunk * thunk_;	/* this thunk always waits to be forced, since it will be evaluated in different dynamic contexts each time */
@@ -627,7 +627,7 @@ namespace Shapes
 		{
 		public:
 			enum HandleState { COMPLETE = 0x0000, FREE_ANGLE = 0x0001, FREE_MODULUS = 0x0002, FREE = 0x0003, UNFORCED_M = 0x0004, UNFORCED_A = 0x0008 };
-			
+
 			int rearState_;
 			double rearAngle_;
 			Concrete::Length rearModulus_;
@@ -637,13 +637,13 @@ namespace Shapes
 			double frontAngle_;
 			Concrete::Length frontModulus_;
 			RefCountPtr< const Kernel::PolarHandlePromise > frontModulusPromise_;
-			
+
 			double defaultAngle_;
-			
+
 			Concrete::Coords2D * rear_;
 			Concrete::Coords2D * mid_;
 			Concrete::Coords2D * front_;
-			
+
 			PathPoint2D( const Concrete::PathPoint2D & orig );
 			PathPoint2D( Concrete::Coords2D * _mid );
 			PathPoint2D( Concrete::Length midx, Concrete::Length midy );
@@ -652,14 +652,14 @@ namespace Shapes
 			Concrete::PathPoint3D * transformed( const Lang::Transform3D & tf ) const; // treat as z = 0
 			Concrete::PathPoint3D * typed_to3D( ) const; // treat as z = 0
 		};
-		
+
 		class PathPoint3D
 			{
 			public:
 				Concrete::Coords3D * rear_;
 				Concrete::Coords3D * mid_;
 				Concrete::Coords3D * front_;
-				
+
 				PathPoint3D( const Concrete::PathPoint3D & orig );
 				PathPoint3D( Concrete::Coords3D * mid );
 				PathPoint3D( const Concrete::Coords2D & mid );	// treat as z = 0
@@ -670,7 +670,7 @@ namespace Shapes
 			};
 
 	}
-	
+
 }
 
 #endif

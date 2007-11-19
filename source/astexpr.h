@@ -16,7 +16,7 @@ namespace Shapes
 			virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg ) const = 0;
 			DEFAULTUNARYOPDECL;
 		};
-		
+
 		class UnaryPrefixExpr : public UnaryExpr
 		{
 		protected:
@@ -29,7 +29,7 @@ namespace Shapes
 			virtual void eval( Kernel::EvalState * evalState ) const;
 			virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg ) const;
 		};
-		
+
 		class UnaryPostfixExpr : public UnaryExpr
 		{
 		protected:
@@ -42,7 +42,7 @@ namespace Shapes
 			virtual void eval( Kernel::EvalState * evalState ) const;
 			virtual RefCountPtr< const Lang::Value > throwNotApplicable( const Lang::Value * arg ) const;
 		};
-		
+
 		class BinaryInfixExpr : public Expression
 		{
 		protected:
@@ -76,7 +76,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class BinaryInfixCont_2 : public Kernel::Continuation
 		{
 			const Ast::BinaryInfixExpr * op_;
@@ -90,7 +90,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class BinaryInfixCont_1 : public Kernel::Continuation
 		{
 			const Ast::BinaryInfixExpr * op_;
@@ -104,7 +104,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 }
 

@@ -26,9 +26,9 @@ namespace Shapes
 			const char * getTitle( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 	}
-	
+
 }
 
 #endif

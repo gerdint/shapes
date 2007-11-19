@@ -46,7 +46,7 @@ namespace SimplePDF
 		void requireProcedureSet( ProcSet procSet );
 
 		virtual void writeTo( std::ostream & os ) const;
-		
+
 	private:
 		static const PDF_Name & nameof( const RefCountPtr< PDF_Object > & obj, ReverseMap * reverseMap, RefCountPtr< PDF_Dictionary > * dic, const char * prefix, size_t * counter );
 	};
@@ -62,7 +62,7 @@ namespace SimplePDF
 
 		std::ostream * os;
 		std::streamoff os_start;
-		
+
 	public:
 		RefCountPtr< PDF_Dictionary > root_;
 		RefCountPtr< PDF_Dictionary > info_;
@@ -78,7 +78,7 @@ namespace SimplePDF
 		PDF_out( std::ostream * _os );
 		~PDF_out( );
 		void writeData( );
-		
+
 		void setOutputStream( std::ostream * _os );
 		void abort( );
 
@@ -89,7 +89,7 @@ namespace SimplePDF
 		void versionMessage( Version required, const char * message );
 
 		RefCountPtr< PDF_Indirect_out > indirect( RefCountPtr< PDF_Object > obj, size_t v = 0 );
-		
+
 		RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > > addPagesAsXObjects( RefCountPtr< PDF_in > pdfi );
 		void importBtexEtexThings( RefCountPtr< PDF_in > pdfi, std::map< std::string, RefCountPtr< const Shapes::Lang::XObject > > * dstMap, const std::string & setupCodeHash );
 

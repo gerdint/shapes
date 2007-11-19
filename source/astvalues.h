@@ -19,7 +19,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class PolarHandle2DExpr : public Expression
 		{
 			Ast::Expression * rExpr_;
@@ -30,7 +30,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class PolarHandle2DExprFree_a : public Expression
 		{
 			Ast::Expression * rExpr_;
@@ -40,7 +40,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		/* This class really doesn't fit in any file, but here it is!
 		 */
 		class EmptyExpression : public Expression
@@ -51,7 +51,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-	
+
 	}
 
 	namespace Kernel
@@ -70,7 +70,7 @@ namespace Shapes
 		};
 
 	}
-	
+
 }
 
 #endif

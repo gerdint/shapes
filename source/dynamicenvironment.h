@@ -18,15 +18,15 @@ namespace Shapes
 {
 	namespace Kernel
 	{
-		
+
 		class SystemDynamicVariables
 		{
 		public:
 			SystemDynamicVariables( );
 			SystemDynamicVariables( const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
-			
+
 			void merge( const SystemDynamicVariables & other );
-			
+
 			RefCountPtr< const Kernel::GraphicsState > graphicsState_;
 			RefCountPtr< const Kernel::FacetState > facetState_;
 			RefCountPtr< const Kernel::TextState > textState_;
@@ -34,17 +34,17 @@ namespace Shapes
 			RefCountPtr< const Kernel::PolarHandlePromise > defaultUnit_;
 			RefCountPtr< const Lang::ColorSpace > blendSpace_;
 		};
-		
+
 		class SpecialUnitVariables
 		{
 		public:
 			bool reverseDirection_;
 			const Concrete::PathPoint2D * p0_;
 			const Concrete::PathPoint2D * p1_;
-			
-			void specialUnitService( Concrete::Length * d, double * a0, double * a1 );		
+
+			void specialUnitService( Concrete::Length * d, double * a0, double * a1 );
 		};
-		
+
 		class DynamicEnvironment
 		{
 			RefCountPtr< Kernel::DynamicEnvironment > parent_;
@@ -65,15 +65,15 @@ namespace Shapes
 			DynamicEnvironment( RefCountPtr< Kernel::DynamicEnvironment > parent, Kernel::SpecialUnitVariables * specialBindings );
 			DynamicEnvironment( RefCountPtr< Kernel::DynamicEnvironment > parent, const char * contId, const Kernel::ContRef & contVal );
 			~DynamicEnvironment( );
-			
+
 			void tackOn( const KeyType & key, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			void lookup( const KeyType & key, Kernel::EvalState * evalState ) const;
 			Kernel::VariableHandle getVarHandle( const KeyType & key ) const;
-			
+
 			RefCountPtr< Kernel::DynamicEnvironment > selectParent( RefCountPtr< Kernel::DynamicEnvironment > & self, const MapType & newBindings );
-			
+
 			void gcMark( Kernel::GCMarkedSet & marked );
-			
+
 			RefCountPtr< const Kernel::GraphicsState > getGraphicsState( ) const;
 			RefCountPtr< const Kernel::FacetState > getFacetState( ) const;
 			RefCountPtr< const Kernel::TextState > getTextState( ) const;
@@ -81,11 +81,11 @@ namespace Shapes
 			RefCountPtr< const Kernel::PolarHandlePromise > getDefaultUnit( ) const;
 			Kernel::ContRef getEscapeContinuation( const char * id, const Ast::SourceLocation & loc ) const;
 			RefCountPtr< const Lang::ColorSpace > getBlendSpace( ) const;
-			
+
 			void specialUnitService( Concrete::Length * d, double * a0, double * a1 );
-			
+
 			bool isBaseEnvironment( ) const;
-			
+
 		private:
 			static KeyType nextKey;
 		public:
@@ -108,7 +108,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 
 
 //		 class DefaultDestinationBinding : public Lang::DynamicBindings
@@ -121,7 +121,7 @@ namespace Shapes
 //			 virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 //			 virtual void gcMark( Kernel::GCMarkedSet & marked );
 //		 };
-		
+
 		class EyeZBinding : public Lang::DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -132,7 +132,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class DefaultUnitBinding : public Lang::DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -143,7 +143,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class BlendSpaceBinding : public Lang::DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -154,7 +154,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 
 	namespace Kernel

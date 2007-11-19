@@ -45,8 +45,8 @@ namespace Shapes
 			virtual Kernel::State * newState( ) const = 0;
 			TYPEINFODECL;
 		};
-		
-		
+
+
 		class HotTriple : public Lang::Hot
 		{
 			RefCountPtr< const Lang::Value > init_;
@@ -58,7 +58,7 @@ namespace Shapes
 			virtual Kernel::State * newState( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		/* This template can be used to create hot types such as 2D and 3D, where the warm value can be created using a default constructor
 		 */
 		template< class S >
@@ -82,7 +82,7 @@ namespace Shapes
 			virtual Kernel::State * newState( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 	}
 
 	namespace Kernel
@@ -102,7 +102,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmIgnore : public Kernel::State
 		{
 		public:
@@ -114,7 +114,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmOstream : public Kernel::State
 		{
 			std::ostream & os_;
@@ -127,7 +127,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class Warm_ostringstream : public Kernel::State
 		{
 			std::ostringstream os_;
@@ -140,7 +140,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmGroup2D : public Kernel::State
 		{
 			RefCountPtr< const Lang::Group2D > pile_;
@@ -155,7 +155,7 @@ namespace Shapes
 			void erase( );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmGroup3D : public Kernel::State
 		{
 			RefCountPtr< const Lang::Group3D > pile_;
@@ -169,7 +169,7 @@ namespace Shapes
 			RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
 			TYPEINFODECL;
 		};
-		
+
 		class WarmGroupLights : public Kernel::State
 		{
 			RefCountPtr< const Lang::LightGroup > pile_;
@@ -183,7 +183,7 @@ namespace Shapes
 			RefCountPtr< const Lang::LightGroup > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
 			TYPEINFODECL;
 		};
-		
+
 		class WarmZBuf : public Kernel::State
 		{
 			RefCountPtr< std::list< RefCountPtr< Computation::PaintedPolygon3D > > > pile_;
@@ -198,7 +198,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmZSorter : public Kernel::State
 		{
 			RefCountPtr< std::list< RefCountPtr< Computation::PaintedPolygon3D > > > pile_;
@@ -213,7 +213,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmTimer : public Kernel::State
 		{
 			timeval start_;
@@ -229,7 +229,7 @@ namespace Shapes
 
 		class WarmText : public Kernel::State
 		{
-			RefCountPtr< std::list< RefCountPtr< const Lang::TextOperation > > > pile_;			
+			RefCountPtr< std::list< RefCountPtr< const Lang::TextOperation > > > pile_;
 		public:
 			WarmText( );
 			virtual ~WarmText( );
@@ -270,7 +270,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmRandomDevice : public Kernel::State
 		{
 			const char * deviceName_;
@@ -286,7 +286,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 		class WarmRandomState : public Kernel::State
 		{
 			char * state_;
@@ -300,7 +300,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
-		
+
 	}
 
 }

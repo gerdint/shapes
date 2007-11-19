@@ -8,7 +8,7 @@
 
 namespace Shapes
 {
-	
+
 	namespace Lang
 	{
 

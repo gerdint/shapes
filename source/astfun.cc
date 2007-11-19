@@ -107,7 +107,7 @@ Kernel::Formals::newArgListForcePos( const Ast::ArgListExprs * argList ) const
 	std::vector< bool > * res = new std::vector< bool >;
 	res->resize( argList->orderedExprs_->size( ) );
 	res->reserve( argList->orderedExprs_->size( ) + argList->namedExprs_->size( ) );
-	
+
 		if( argList->orderedExprs_->size( ) > 0 )
 			{
 				typedef typeof forcePos_ SrcType;
@@ -143,7 +143,7 @@ Kernel::Formals::newArgListForcePos( const Ast::ArgListExprs * argList, const Ke
 	std::vector< bool > * res = new std::vector< bool >;
 	res->resize( argList->orderedExprs_->size( ) );
 	res->reserve( argList->orderedExprs_->size( ) + argList->namedExprs_->size( ) );
-	
+
 	if( argList->orderedExprs_->size( ) > 0 )
 		{
 			typedef typeof forcePos_ SrcType;
@@ -282,7 +282,7 @@ void
 Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const Ast::ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const
 {
 	std::list< Ast::Expression * >::const_reverse_iterator i1end = orderedExprs_->rend( );
-	
+
 	if( pos.i1_ == i1end &&
 			pos.i2_ == namedExprs_->end( ) )
 		{
@@ -290,7 +290,7 @@ Ast::ArgListExprs::evaluate( const RefCountPtr< const Kernel::CallContInfo > & i
 			info->cont_->takeValue( vals, evalState );
 			return;
 		}
-	
+
 	if( pos.i1_ != i1end )
 		{
 			if( info->force( pos.index_ ) || (*(pos.i1_))->immediate_ )
@@ -364,7 +364,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 
 	/* Note that the arguments are bound in backwards-order, since that is how the values are accessed.
 	 */
-	
+
 	{
 		Ast::SourceLocation dummy;
 		typedef std::map< const char *, Ast::Expression *, charPtrLess >::const_reverse_iterator I;
@@ -376,7 +376,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 				if( lst == NullPtr< ConsType >( ) )
 					{
 						throw Exceptions::InternalError( strrefdup( "Out of argument values when binding application." ) );
-					}				
+					}
 				dst->addNamedArgument( i->first, lst->car_, i->second );
 				vals = lst->cdr_;
 			}
@@ -392,7 +392,7 @@ Ast::ArgListExprs::bind( Kernel::Arguments * dst, RefCountPtr< const Lang::Singl
 				if( lst == NullPtr< ConsType >( ) )
 					{
 						throw Exceptions::InternalError( strrefdup( "Out of argument values when binding application." ) );
-					}				
+					}
 				dst->addOrderedArgument( lst->car_, *i );
 				vals = lst->cdr_;
 			}
@@ -439,7 +439,7 @@ Ast::ArgListExprs::findNamed( RefCountPtr< const Lang::SingleList > vals, const 
 
 	/* Note that the arguments are bound in backwards-order, since that is how the values are accessed.
 	 */
-	
+
 	Ast::SourceLocation dummy;
 	typedef std::map< const char *, Ast::Expression *, charPtrLess >::const_reverse_iterator I;
 	I i = namedExprs_->rbegin( );
@@ -482,7 +482,7 @@ Ast::ArgListExprs::getOrdered( RefCountPtr< const Lang::SingleList > vals, size_
 				if( lst == NullPtr< ConsType >( ) )
 					{
 						break;
-					}				
+					}
 				if( i == pos )
 					{
 						return lst->car_;
@@ -530,7 +530,7 @@ Ast::ArgListExprs::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment *
 				i->second->analyze( parent_, env );
 			}
 	}
-	
+
 	/* Analyze this node given that the children have been analyzed.
 	 */
 	imperative_ = orderedStates_->size( ) > 0 || namedStates_->size( ) > 0;
@@ -606,7 +606,7 @@ Kernel::CallCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsU
 {
 	typedef const Lang::SingleList ArgType;
 	RefCountPtr< ArgType > vals = Helpers::down_cast< ArgType >( valsUntyped, "< Internal error situation in CallCont_last >" );
-	
+
 	Kernel::Arguments args = fun_->newCurriedArguments( );
 	argList_->bind( & args, vals, env_, dyn_ );
 
@@ -823,7 +823,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 			{
 				throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
 			}
-		
+
 		evalState->expr_ = argList_->orderedExprs_->front( );
 		evalState->env_ = env_;
 		evalState->dyn_ = dyn_;
@@ -845,7 +845,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 			{
 				goto nextType2;
 			}
-		
+
 		if( curry_ )
 			{
 				throw Exceptions::MiscellaneousRequirement( strrefdup( "Don't Curry path point selection.	It's useless anyway!" ) );
@@ -858,7 +858,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 			{
 				throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
 			}
-		
+
 		evalState->expr_ = argList_->orderedExprs_->front( );
 		evalState->env_ = env_;
 		evalState->dyn_ = dyn_;
@@ -967,7 +967,7 @@ Kernel::UnionCont_last::takeValue( const RefCountPtr< const Lang::Value > & vals
 {
 	typedef const Lang::SingleList ArgType;
 	RefCountPtr< ArgType > vals = Helpers::down_cast< ArgType >( valsUntyped, "< Internal error situation in UnionCont_last >" );
-	
+
 	evalState->cont_ = cont_;
 	cont_->takeValue( Kernel::ValueRef( new Lang::Structure( argList_, vals ) ),
 										evalState );
@@ -1001,7 +1001,7 @@ void
 Ast::UnionExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
 {
 	parent_ = parent;
-	
+
 	argList_->analyze( this, env );
 
 	imperative_ = argList_->imperative_;
@@ -1011,7 +1011,7 @@ void
 Ast::UnionExpr::eval( Kernel::EvalState * evalState ) const
 {
 	evalState->cont_ = Kernel::ContRef( new Kernel::UnionCont_last( argList_, evalState->cont_, loc_ ) );
-	
+
 	argList_->evaluate( RefCountPtr< Kernel::CallContInfo >( new Kernel::CallContInfo( argList_, *evalState, false ) ),
 											argList_->begin( ), Lang::THE_CONS_NULL,
 											evalState );
@@ -1030,7 +1030,7 @@ Kernel::SplitCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUnty
 {
 	typedef const Lang::Function ArgType;
 	RefCountPtr< ArgType > fun = Helpers::down_cast< ArgType >( funUntyped, "Split's function" );
-	
+
 	if( procedural_ != fun->isProcedural( ) )
 		{
 			if( procedural_ )

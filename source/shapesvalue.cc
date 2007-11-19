@@ -36,13 +36,13 @@ Lang::Value::show( std::ostream & os ) const
 RefCountPtr< const Lang::Value >
 Lang::Value::transformed( const Shapes::Transform & transform, Kernel::ValueRef self ) const
 {
-	throw Exceptions::CoreTypeMismatch( strrefdup( "<transform>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );	
+	throw Exceptions::CoreTypeMismatch( strrefdup( "<transform>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );
 }
 
 RefCountPtr< const Lang::Value >
 Lang::Value::transformed( const Lang::Transform3D & transform, Kernel::ValueRef self ) const
 {
-	throw Exceptions::CoreTypeMismatch( strrefdup( "<transform3D>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );	
+	throw Exceptions::CoreTypeMismatch( strrefdup( "<transform3D>" ), 1, this->getTypeName( ), Shapes::SEVERAL_TYPES );
 }
 */
 

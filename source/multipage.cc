@@ -50,7 +50,7 @@ Lang::DocumentDestination::transformed( const Lang::Transform2D & transform, con
 		{
 			return self;
 		}
-	
+
 	if( target_ == NullPtr< const Lang::Drawable2D >( ) )
 		{
 			return self;
@@ -233,7 +233,7 @@ Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 
 Kernel::WarmCatalog::WarmCatalog( )
 {
-	labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, strrefdup( "" ), PageLabelEntry::DECIMAL, 1 ) );	
+	labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, strrefdup( "" ), PageLabelEntry::DECIMAL, 1 ) );
 }
 
 Kernel::WarmCatalog::~WarmCatalog( )
@@ -541,12 +541,12 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 	RefCountPtr< SimplePDF::PDF_Stream_out > contents( new SimplePDF::PDF_Stream_out );
 
 	resources->requireProcedureSet( SimplePDF::PDF_Resources::PROC_SET_PDF );
-	
+
 	// Forcing to synch is a bad thing, due to PDF version differences.	Instead, refer to the PDF documentation
 	// on the graphics state dictionary (page 180 in the PDF-1.6 reference) to find out the correct default values,
 	// and make sure that these are the initial values of the pdfState.
 	Kernel::PageContentStates pdfState( resources, true );
-	
+
 	pageContents->shipout( contents->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
 
 	RefCountPtr< const Lang::ElementaryPath2D > theBBox = pageContents->bbox( );
@@ -615,7 +615,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 
 	RefCountPtr< SimplePDF::PDF_Object > i_pages( doc->indirect( pages ) );
 	doc->root_->dic[ "Pages" ] = i_pages;
-	
+
 	std::list< std::pair< const Page *, std::pair< RefCountPtr< SimplePDF::PDF_Dictionary >, RefCountPtr< SimplePDF::PDF_Indirect_out > > > > annotations;
 
 	pages->dic[ "Type"	] = SimplePDF::PDF_out::newName( "Pages" );
@@ -652,20 +652,20 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 									}
 								namedDestinations.insert( MapType::value_type( name, dest->getDirectDestination( i_newPage ) ) );
 							}
-						
+
 						if( dest->isOutlineEntry( ) )
 							{
 								/* This is the index in the stack at which the item belongs.
 									 In other words, this shall be the size of outlineStack just before the new item is pushed.
 								 */
 								const size_t stackLevel = dest->outlineLevel( ) + 1;
-								
+
 								if( outlineStack.size( ) < stackLevel )
 									{
 										RefCountPtr< const char > missingText = strrefdup( " " );
 										while( outlineStack.size( ) < stackLevel )
 											{
-												RefCountPtr< SimplePDF::OutlineItem > missingItem = dest->getOutlineItem( i_newPage, missingText );								
+												RefCountPtr< SimplePDF::OutlineItem > missingItem = dest->getOutlineItem( i_newPage, missingText );
 												outlineStack.back( )->addKid( missingItem );
 												outlineStack.push_back( missingItem );
 											}
@@ -674,7 +674,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 									{
 										outlineStack.pop_back( );
 									}
-								RefCountPtr< SimplePDF::OutlineItem > item = dest->getOutlineItem( i_newPage );								
+								RefCountPtr< SimplePDF::OutlineItem > item = dest->getOutlineItem( i_newPage );
 								outlineStack.back( )->addKid( item );
 								outlineStack.push_back( item );
 							}
@@ -701,7 +701,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 				RefCountPtr< SimplePDF::PDF_Vector > annots( new SimplePDF::PDF_Vector );
 				newPage->dic[ "Annots" ] = doc->indirect( annots );
 				annots->vec.reserve( i->annotations_.size( ) );
-				
+
 				typedef typeof i->annotations_ AnnotListType;
 				for( AnnotListType::const_iterator j = i->annotations_.begin( ); j != i->annotations_.end( ); ++j )
 					{
@@ -726,7 +726,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 					RefCountPtr< SimplePDF::PDF_Dictionary > newEntry( new SimplePDF::PDF_Dictionary );
 					nums->vec.push_back( SimplePDF::PDF_out::newInt( (*i)->pageIndex_ ) );
 					nums->vec.push_back( newEntry );
-					
+
 					switch( (*i)->style_ )
 						{
 						case Kernel::WarmCatalog::PageLabelEntry::NONE:
@@ -760,12 +760,12 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 						default:
 							throw Exceptions::InternalError( "Page label style out of range during shipout." );
 						}
-					
+
 					if( strlen( (*i)->prefix_.getPtr( ) ) > 0 )
 						{
 							newEntry->dic[ "P" ] = SimplePDF::PDF_out::newString( (*i)->prefix_.getPtr( ) );
 						}
-					
+
 					if( (*i)->startNumber_ != 1 )
 						{
 							newEntry->dic[ "St" ] = SimplePDF::PDF_out::newInt( (*i)->startNumber_ );

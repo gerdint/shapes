@@ -42,7 +42,7 @@ namespace Shapes
 						typedef const Lang::Integer ArgType;
 						RefCountPtr< ArgType > num = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 						RefCountPtr< ArgType > den = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
-			
+
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( Kernel::ValueRef( new Lang::Integer( num->val_ % den->val_ ) ),
 														 evalState );
@@ -59,7 +59,7 @@ namespace Shapes
 						typedef const Lang::Float ArgType;
 						RefCountPtr< ArgType > num = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
 						RefCountPtr< ArgType > den = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
-			
+
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( Kernel::ValueRef( new Lang::Float( fmod( num->val_, den->val_ ) ) ),
 														 evalState );
@@ -87,7 +87,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Integer( static_cast< Lang::Integer::ValueType >( floor( arg->val_ ) ) ) ),
 												 evalState );
@@ -106,7 +106,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Integer( static_cast< Lang::Integer::ValueType >( ceil( arg->val_ ) ) ) ),
 												 evalState );
@@ -125,7 +125,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Integer( static_cast< Lang::Integer::ValueType >( rint( arg->val_ ) ) ) ),
 												 evalState );
@@ -144,7 +144,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( cos( arg->val_ ) ) ),
 												 evalState );
@@ -163,7 +163,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( sin( arg->val_ ) ) ),
 												 evalState );
@@ -182,7 +182,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( tan( arg->val_ ) ) ),
 												 evalState );
@@ -201,7 +201,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( 1 / tan( arg->val_ ) ) ),
 												 evalState );
@@ -220,7 +220,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( acos( arg->val_ ) ) ),
 												 evalState );
@@ -239,7 +239,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( asin( arg->val_ ) ) ),
 												 evalState );
@@ -258,7 +258,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( atan( arg->val_ ) ) ),
 												 evalState );
@@ -300,7 +300,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Length ArgType;
 					size_t i = 0;
@@ -321,7 +321,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Integer ArgType;
 					size_t i = 0;
@@ -342,7 +342,7 @@ namespace Shapes
 							return;
 						}
 				}
-		
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Float::staticTypeName( ), Lang::Integer::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
@@ -382,7 +382,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Length ArgType;
 					size_t i = 0;
@@ -403,8 +403,8 @@ namespace Shapes
 							return;
 						}
 				}
-	
-	
+
+
 				{
 					typedef const Lang::Integer ArgType;
 					size_t i = 0;
@@ -426,7 +426,7 @@ namespace Shapes
 							return;
 						}
 				}
-		
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Float::staticTypeName( ), Lang::Integer::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
@@ -443,7 +443,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( sqrt( arg->val_ ) ) ),
 												 evalState );
@@ -491,7 +491,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Interaction::SEVERAL_TYPES );
 			}
 		};
@@ -508,7 +508,7 @@ namespace Shapes
 
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::FloatPair( cos( arg->val_ ), sin( arg->val_ ) ) ),
 												 evalState );
@@ -538,7 +538,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Length ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -550,7 +550,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::FloatPair ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -562,7 +562,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Coords2D ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -574,7 +574,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::FloatTriple ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -586,7 +586,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Coords3D ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -598,7 +598,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType;
 					try
@@ -642,7 +642,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				{
 					typedef const Lang::Dash ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( untypedArg );
@@ -654,7 +654,7 @@ namespace Shapes
 							return;
 						}
 				}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Interaction::SEVERAL_TYPES );
 			}
 		};
@@ -668,7 +668,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-		
+
 				{
 					typedef const Lang::FloatPair ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( args.getValue( 0 ).getPtr( ) );
@@ -806,7 +806,7 @@ namespace Shapes
 						}
 				}
 
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Interaction::SEVERAL_TYPES );
 			}
 		};
@@ -828,7 +828,7 @@ namespace Shapes
 				double y2;
 				double z2;
 				bool isLength = false;
-		
+
 				{
 					typedef const Lang::FloatTriple ArgType;
 					ArgType * arg = dynamic_cast< ArgType * >( args.getValue( 0 ).getPtr( ) );
@@ -853,7 +853,7 @@ namespace Shapes
 							goto secondArgument;
 						}
 				}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::FloatTriple::staticTypeName( ), Lang::Coords3D::staticTypeName( ) ) );
 
 			secondArgument:
@@ -885,7 +885,7 @@ namespace Shapes
 							goto multiplyArguments;
 						}
 				}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 1, Helpers::typeSetString( Lang::FloatTriple::staticTypeName( ), Lang::Coords3D::staticTypeName( ) ) );
 
 			multiplyArguments:
@@ -974,7 +974,7 @@ namespace Shapes
 
 				typedef Kernel::WarmRandomState StateType;
 				StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-	
+
 				st->setState( );
 
 				Kernel::ContRef cont = evalState->cont_;
@@ -998,9 +998,9 @@ namespace Shapes
 
 				typedef Kernel::WarmRandomState StateType;
 				StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-	
+
 				st->setState( );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Float( TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1 ) ),
 												 evalState );
@@ -1022,7 +1022,7 @@ namespace Shapes
 
 				typedef Kernel::WarmRandomState StateType;
 				StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-	
+
 				st->setState( );
  
 				double x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
@@ -1054,9 +1054,9 @@ namespace Shapes
 
 				typedef Kernel::WarmRandomState StateType;
 				StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-	
+
 				st->setState( );
-	
+
 				double x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
 				double x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
 				double x3 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
@@ -1081,7 +1081,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 0;
 				CHECK_ARITY( args, ARITY, title_ );
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Symbol( ) ),
 												 evalState );

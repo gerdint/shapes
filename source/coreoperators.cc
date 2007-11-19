@@ -29,13 +29,13 @@ namespace Shapes
 													 evalState );
 					return;
 				}
-			
+
 			std::vector< Kernel::VariableHandle >::const_iterator nextNext = next_;
 			++nextNext;
 			if( nextNext == arguments_->end( ) )
 				{
 					cont_->takeHandle( *next_, evalState );
-					return;					
+					return;
 				}
 
 			Kernel::ContRef newCont = Kernel::ContRef( new Kernel::AndContinuation( arguments_, nextNext, cont_, traceLoc_ ) );
@@ -76,13 +76,13 @@ namespace Shapes
 													 evalState );
 					return;
 				}
-			
+
 			std::vector< Kernel::VariableHandle >::const_iterator nextNext = next_;
 			++nextNext;
 			if( nextNext == arguments_->end( ) )
 				{
 					cont_->takeHandle( *next_, evalState );
-					return;					
+					return;
 				}
 
 			Kernel::ContRef newCont = Kernel::ContRef( new Kernel::OrContinuation( arguments_, nextNext, cont_, traceLoc_ ) );
@@ -129,7 +129,7 @@ namespace Shapes
 						cont->takeValue( THE_TRUE, evalState );
 						return;
 					}
-				
+
 				if( args.size( ) == 1 )
 					{
 						Kernel::ContRef cont = evalState->cont_;
@@ -161,7 +161,7 @@ namespace Shapes
 						cont->takeValue( Lang::THE_FALSE, evalState );
 						return;
 					}
-				
+
 				if( args.size( ) == 1 )
 					{
 						Kernel::ContRef cont = evalState->cont_;
@@ -169,7 +169,7 @@ namespace Shapes
 															evalState );
 						return;
 					}
-				
+
 				typedef typeof *(args.getVariables( )) ListType;
 				ListType::const_iterator next = args.getVariables( )->begin( );
 				++next;

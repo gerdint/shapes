@@ -82,7 +82,7 @@ AfmScanner::synchWritingDirection( )
 		default:
 			throwError( "activateDirectionID_ out of range." );
 		}
-	
+
 	currentDirectionID_ = activateDirectionID_;
 }
 

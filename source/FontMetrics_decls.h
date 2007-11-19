@@ -3,7 +3,7 @@
 
 namespace FontMetrics
 {
-	
+
 	class CharacterMetrics;
 
 	class AFM;

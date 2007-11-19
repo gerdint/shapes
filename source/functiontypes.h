@@ -35,7 +35,7 @@ namespace Shapes
 
 	namespace Kernel
 	{
-		
+
 		class Arguments
 		{
 			const Kernel::EvaluatedFormals * formals_;
@@ -53,35 +53,35 @@ namespace Shapes
 			Environment::StateVector states_;	 // This type must match that used in Environment
 			std::vector< const Ast::Node * > stateLocations_;
 			size_t stateDst_;
-			
+
 		public:
 			Arguments( const Kernel::EvaluatedFormals * formals );
 			~Arguments( );
-			
+
 			Kernel::Arguments clone( ) const;
-			
+
 			void addOrderedArgument( const Kernel::VariableHandle & arg, Ast::Expression * loc );
 			void addNamedArgument( const char * id, const Kernel::VariableHandle & arg, Ast::Expression * loc );
 
 			void addOrderedState( const Kernel::StateHandle & state, Ast::Node * loc );
 			void addNamedState( const char * id, const Kernel::StateHandle & state, Ast::Node * loc );
-			
+
 			void applyDefaults( );
-			
+
 			Kernel::VariableHandle & getHandle( size_t i );
 			RefCountPtr< const Lang::Value > & getValue( size_t i );
 			const Ast::SourceLocation & getLoc( size_t i ) const;
 			const Ast::Node * getNode( size_t i ) const;
 			Kernel::Thunk * getThunk( size_t i );												//	This funciton returns a newly created copy!
 			bool isSlot( size_t i ) const;
-			
+
 			size_t size( ) const;
 
 			Kernel::StateHandle getState( size_t i );
 			const Ast::SourceLocation & getStateLoc( size_t i ) const;
-			
+
 			void gcMark( Kernel::GCMarkedSet & marked );
-			
+
 			Environment::ValueVector getVariables( ); // This function should only be called when setting up a new environment
 			Environment::StateVector getStates( ); // This function should only be called when setting up a new environment
 		};
@@ -95,22 +95,22 @@ namespace Shapes
 			std::vector< Kernel::VariableHandle > defaults_;
 			std::vector< const Ast::Node * > locations_;
 			bool isSink_;
-			
+
 			EvaluatedFormals( Kernel::Formals * _formals );
 			EvaluatedFormals( const char * _locationString );
 			EvaluatedFormals( const char * _locationString, bool _forceAll );
 			~EvaluatedFormals( );
-			
+
 			void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc, bool force );
 			void appendEvaluatedFormal( const char * id, const Kernel::VariableHandle & defaultVal, const Ast::Node * loc );
 			void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal, bool force );
 			void appendEvaluatedCoreFormal( const char * id, const Kernel::VariableHandle & defaultVal );
 			void appendCoreStateFormal( const char * id );
-			
+
 			RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState ) const;
 			RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, const Kernel::Arguments & curryArgs ) const;
-			
-			void gcMark( Kernel::GCMarkedSet & marked );		
+
+			void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
 	}
@@ -160,7 +160,7 @@ namespace Shapes
 					}
 				return res;
 			}
-		
+
 		template< class T >
 		RefCountPtr< T >
 		try_cast_CoreArgument( const RefCountPtr< const Lang::Value > & val, bool voidIsNull = false )
@@ -177,7 +177,7 @@ namespace Shapes
 			return res;
 		}
 
-	}		
+	}
 
 
 	namespace Lang
@@ -206,7 +206,7 @@ namespace Shapes
 			virtual void show( std::ostream & os ) const;
 			DISPATCHDECL;
 		};
-		
+
 		class Transform3D : public Lang::Value
 		{
 			static const int N = 3;
@@ -263,7 +263,7 @@ namespace Shapes
 			static Ast::ArgListExprs * oneExprArgList;
 			static Ast::ArgListExprs * twoExprsArgList;
 		};
-	
+
 		class CuteFunction : public Lang::Function
 		{
 			RefCountPtr< const Lang::Function > callee_;

@@ -18,7 +18,7 @@ namespace Shapes
 		class SplitDefineVariables;
 		class StateReference;
 		class UnaryExpr;
-		class LexiographicState;		
+		class LexiographicState;
 	}
 }
 

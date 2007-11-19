@@ -31,7 +31,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				try
 					{
 						typedef const Lang::ElementaryPath2D ArgType;
@@ -61,7 +61,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
 			}
 		};
@@ -75,7 +75,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType0;
 					RefCountPtr< ArgType0 > p = NullPtr< ArgType0 >( );
@@ -90,10 +90,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatPair ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( p->controllingMaximizer( *d ),
 													 evalState );
@@ -116,10 +116,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatTriple ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( p->controllingMaximizer( *d ),
 													 evalState );
@@ -140,7 +140,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				try
@@ -172,7 +172,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
 			}
 		};
@@ -186,7 +186,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType0;
 					RefCountPtr< ArgType0 > p = NullPtr< ArgType0 >( );
@@ -201,10 +201,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatPair ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider2D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->discreteMaximizer( *d ) ) ),
@@ -228,10 +228,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatTriple ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider3D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->discreteMaximizer( *d ) ) ),
@@ -253,7 +253,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType0;
 					RefCountPtr< ArgType0 > p = NullPtr< ArgType0 >( );
@@ -268,10 +268,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::Coords2D ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider2D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->discreteApproximator( *d ) ) ),
@@ -295,10 +295,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::Coords3D ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider3D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->discreteApproximator( *d ) ) ),
@@ -320,7 +320,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				try
@@ -352,7 +352,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::ElementaryPath2D::staticTypeName( ), Lang::ElementaryPath3D::staticTypeName( ) ) );
 			}
 		};
@@ -366,7 +366,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType0;
 					RefCountPtr< ArgType0 > p = NullPtr< ArgType0 >( );
@@ -381,10 +381,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatPair ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider2D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->continuousMaximizer( *d ) ) ),
@@ -408,10 +408,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::FloatTriple ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider3D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->continuousMaximizer( *d ) ) ),
@@ -433,7 +433,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType0;
 					RefCountPtr< ArgType0 > p = NullPtr< ArgType0 >( );
@@ -448,10 +448,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::Coords2D ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider2D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->continuousApproximator( *d ) ) ),
@@ -475,10 +475,10 @@ namespace Shapes
 						}
 
 					++argsi;
-	
+
 					typedef const Lang::Coords3D ArgType1;
 					RefCountPtr< ArgType1 > d = Helpers::down_cast_CoreArgument< ArgType1 >( title_, args, argsi, callLoc );
-	
+
 					Kernel::ContRef cont = evalState->cont_;
 					typedef const Lang::PathSlider3D ResultType;
 					cont->takeValue( RefCountPtr< ResultType >( new ResultType( p, p->continuousApproximator( *d ) ) ),
@@ -503,16 +503,16 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::ElementaryPath2D ArgType1;
 				size_t argsi = 0;
 				RefCountPtr< ArgType1 > p = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
-	
+
 				++argsi;
-	
+
 				typedef const Lang::ElementaryPath2D ArgType2;
 				RefCountPtr< ArgType2 > p2 = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				try
 					{
@@ -528,7 +528,7 @@ namespace Shapes
 							}
 
 						const Kernel::DynamicVariableProperties & dynProps = Kernel::theGlobalEnvironment->lookupDynamicVariable( *idKey );
-			
+
 						Kernel::VariableHandle handler = dynProps.fetch( evalState->dyn_ );
 
 						typedef const Lang::Function HandlerType;

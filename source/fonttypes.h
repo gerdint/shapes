@@ -28,7 +28,7 @@ namespace Shapes
 			Concrete::Length ymin_;
 			Concrete::Length xmax_;
 			Concrete::Length ymax_;
-			
+
 		public:
 			Type3Glyph( Kind kind, CodeType code, const RefCountPtr< const char > & name, const RefCountPtr< const Lang::Drawable2D > & glyph, Concrete::Length widthX, Concrete::Length xmin, Concrete::Length ymin, Concrete::Length xmax, Concrete::Length ymax );
 			virtual ~Type3Glyph( );
@@ -40,7 +40,7 @@ namespace Shapes
 			void setupMetric( FontMetrics::CharacterMetrics * metric, Concrete::ReciprocalLength invSize ) const;
 			void shipout( std::ostream & os, RefCountPtr< SimplePDF::PDF_Resources > resources ) const;
 
-			virtual void gcMark( Kernel::GCMarkedSet & marked );			
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			TYPEINFODECL;
 		};
 

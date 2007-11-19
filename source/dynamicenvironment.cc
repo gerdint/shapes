@@ -51,14 +51,14 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 	Concrete::Length dy = y3 - y0;
 
 	*d = hypotPhysical( dx, dy );
-	
+
 	double aRef = atan2( dy.offtype< 1, 0 >( ), dx.offtype< 1, 0 >( ) );	/* Angles will be relative to the angle pointing to the other mid point */
 
 	if( p0_->frontState_ & Concrete::PathPoint2D::FREE_ANGLE )
 		{
 			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
 		}
-		
+
 	if( p0_->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
 		{
 			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
@@ -103,9 +103,9 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 			ar0 = - ar0;
 			ar1 = - ar1;
 		}
-	
+
 	ar1 -= ar0;
-	
+
 	if( ar1 < - M_PI )
 		{
 			ar1 += 2 * M_PI;
@@ -456,7 +456,7 @@ Kernel::DynamicEnvironment::isBaseEnvironment( ) const
 //			 (*sysBindings)->defaultDestination_ = val_;
 //			 return;
 //		 }
-	
+
 //	 if( (*sysBindings)->defaultDestination_ != NullPtr< Kernel::Variable >( ) )
 //		 {
 //			 throw Exceptions::MultipleDynamicBind( "@<<", loc_, Ast::THE_UNKNOWN_LOCATION );
@@ -516,7 +516,7 @@ Lang::EyeZBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 			(*sysBindings)->eyez_ = val_;
 			return;
 		}
-	
+
 	if( ! IS_NAN( (*sysBindings)->eyez_ ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< eye's z-coordinate >", loc_, Ast::THE_UNKNOWN_LOCATION );
@@ -597,7 +597,7 @@ Lang::DefaultUnitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 			(*sysBindings)->defaultUnit_ = val_;
 			return;
 		}
-	
+
 	if( (*sysBindings)->defaultUnit_ != NullPtr< const Kernel::PolarHandlePromise >( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< default unit >", loc_, Ast::THE_UNKNOWN_LOCATION );
@@ -657,7 +657,7 @@ Lang::BlendSpaceBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 			(*sysBindings)->blendSpace_ = space_;
 			return;
 		}
-	
+
 	if( (*sysBindings)->blendSpace_ != NullPtr< const Lang::ColorSpace >( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< blend space >", loc_, Ast::THE_UNKNOWN_LOCATION );
@@ -693,7 +693,7 @@ Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 		{
 			throw Exceptions::OutOfRange( loc, strrefdup( "This color space cannot be used in blending." ) );
 		}
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( loc, space ) ),
 									 evalState );

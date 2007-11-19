@@ -87,7 +87,7 @@ double
 Kernel::PolarHandleTruePromise::force( const Concrete::PathPoint2D * specialUnitP0, const Concrete::PathPoint2D * specialUnitP1, bool reverse ) const
 {
 	Kernel::ValueRef valUntyped = NullPtr< const Lang::Value >( );
-	
+
 	/* Note that the use of a StoreValueContinuation relies on valUntyped being alive at the time the continuation is invoked.
 	 */
 	bool done = false;
@@ -411,7 +411,7 @@ Concrete::PathPoint3D::make2D( Concrete::Length eyez ) const
 		{
 			res->front_ = front_->make2D( eyez );
 		}
-	return res;	
+	return res;
 }
 
 Lang::PathPoint2D::PathPoint2D( const Lang::PathPoint2D & orig )
@@ -466,7 +466,7 @@ Lang::PathPoint2D::gcMark( Kernel::GCMarkedSet & marked )
 	}
 
 	const_cast< Lang::Coords2D * >( mid_.getPtr( ) )->gcMark( marked );
-	
+
 	{
 		Lang::Value * tmp = const_cast< Lang::Value * >( front_.getPtr( ) );
 		if( tmp != 0 )
@@ -520,12 +520,12 @@ Lang::PathPoint3D::elementaryJob( Lang::ElementaryPath3D * pth, Concrete::Coords
 		{
 			newPoint->rear_ = new Concrete::Coords3D( *basePoint, *rear_ );
 		}
-	
+
 	if( front_ != NullPtr< const Lang::Coords3D >( ) )
 		{
 			newPoint->front_ = new Concrete::Coords3D( *basePoint, *front_ );
 		}
-	
+
 	pth->push_back( newPoint );
 }
 
@@ -538,7 +538,7 @@ Lang::PathPoint3D::transformed( const Lang::Transform3D & tf, const RefCountPtr<
 		{
 			res->rear_ = RefCountPtr< const Lang::Coords3D >( rear_->transformedPtr( tf ) );
 		}
-	
+
 	if( front_ != NullPtr< const Lang::Coords3D >( ) )
 		{
 			res->front_ = RefCountPtr< const Lang::Coords3D >( front_->transformedPtr( tf ) );
@@ -557,12 +557,12 @@ Lang::PathPoint3D::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const
 		{
 			res->rear_ = rear_->make2D( eyez );
 		}
-	
+
 	if( front_ != NullPtr< const Lang::Coords3D >( ) )
 		{
 			res->front_ = front_->make2D( eyez );
 		}
-	
+
 	return RefCountPtr< const Lang::Geometric2D >( res );
 }
 
@@ -578,7 +578,7 @@ Lang::PathPoint3D::gcMark( Kernel::GCMarkedSet & marked )
 	}
 
 	const_cast< Lang::Coords3D * >( mid_.getPtr( ) )->gcMark( marked );
-	
+
 	{
 		Lang::Coords3D * tmp = const_cast< Lang::Coords3D * >( front_.getPtr( ) );
 		if( tmp != 0 )
@@ -621,7 +621,7 @@ Lang::Path2D::transformed( const Lang::Transform2D & tf, const RefCountPtr< cons
 		{
 			throw Exceptions::InternalError( strrefdup( "Path2D::to3D: self was of unexpected type." ) );
 		}
-	
+
 	return selfTyped->typed_transformed( tf );
 }
 
@@ -634,7 +634,7 @@ Lang::Path2D::to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const
 		{
 			throw Exceptions::InternalError( strrefdup( "Path2D::to3D: self was of unexpected type." ) );
 		}
-	
+
 	return selfTyped->typed_to3D( selfTyped );
 }
 
@@ -826,7 +826,7 @@ Lang::HeadedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack
 			return;
 		}
 	else
-		{		
+		{
 			nodeStack->push( frontPathPoint_.getPtr( ) );
 			nodeStack->push( bodyPath_.getPtr( ) );
 			nodeStack->push( rearPathPoint_.getPtr( ) );
@@ -854,9 +854,9 @@ Lang::HeadedPath2D_helper::elementaryJob( std::stack< const Lang::Value * > * no
 {
 	if( bodyPath_->size( ) <= 1 )
 		{
-			throw Exceptions::InternalError( strrefdup( "HeadedPath2D_helper::elementaryJob was unexpectedly called with a short path." ) );					
+			throw Exceptions::InternalError( strrefdup( "HeadedPath2D_helper::elementaryJob was unexpectedly called with a short path." ) );
 		}
-	
+
 	Lang::ElementaryPath2D::const_iterator i = bodyPath_->begin( );
 	++i;
 	Lang::ElementaryPath2D::const_iterator end = bodyPath_->end( );
@@ -1034,7 +1034,7 @@ Lang::Path3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< cons
 		{
 			throw Exceptions::InternalError( strrefdup( "Path3D::to3D: self was of unexpected type." ) );
 		}
-	
+
 	return selfTyped->typed_transformed( tf );
 }
 
@@ -1234,7 +1234,7 @@ Lang::CompositePath3D::computeElementaryPath( ) const
 		{
 			pth->close( );
 		}
-	
+
 	elementaryPath_ = RefCountPtr< const Lang::ElementaryPath3D >( pth );
 }
 
@@ -1259,12 +1259,12 @@ Lang::HeadedPath3D::HeadedPath3D( Kernel::ValueRef rear, const RefCountPtr< cons
 			newPoint->rear_ = rear;
 			newPoint->front_ = front;
 			rearPathPoint_ = RefCountPtr< const Lang::SinglePointPath3D >( new Lang::SinglePointPath3D( RefCountPtr< const Lang::PathPoint3D >( newPoint ) ) );
-			
+
 			return;
 		}
-	
+
 	// We reach here if there's more than one point in the body.
-			
+
 	{
 		Lang::ElementaryPath3D::const_reverse_iterator i = bodyPath->rbegin( );
 		Lang::PathPoint3D * newPoint = new Lang::PathPoint3D( RefCountPtr< const Lang::Coords3D >( new Lang::Coords3D( *( (*i)->mid_ ) ) ) );
@@ -1285,7 +1285,7 @@ Lang::HeadedPath3D::HeadedPath3D( Kernel::ValueRef rear, const RefCountPtr< cons
 		newPoint->rear_ = rear;
 		rearPathPoint_ = RefCountPtr< const Lang::SinglePointPath3D >( new Lang::SinglePointPath3D( RefCountPtr< const Lang::PathPoint3D >( newPoint ) ) );
 	}
-			
+
 }
 
 DISPATCHIMPL( HeadedPath3D );
@@ -1304,13 +1304,13 @@ Lang::HeadedPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStac
 			return;
 		}
 	else
-		{		
+		{
 			nodeStack->push( frontPathPoint_.getPtr( ) );
 			nodeStack->push( bodyPath_.getPtr( ) );
 			nodeStack->push( rearPathPoint_.getPtr( ) );
 		}
 }
-			
+
 void
 Lang::HeadedPath3D::gcMark( Kernel::GCMarkedSet & marked )
 {
@@ -1332,9 +1332,9 @@ Lang::HeadedPath3D_helper::elementaryJob( std::stack< const Lang::Path3D * > * n
 {
 	if( bodyPath_->size( ) <= 1 )
 		{
-			throw Exceptions::InternalError( strrefdup( "HeadedPath3D_helper::elementaryJob was unexpectedly called with a short path." ) );					
+			throw Exceptions::InternalError( strrefdup( "HeadedPath3D_helper::elementaryJob was unexpectedly called with a short path." ) );
 		}
-	
+
 	Lang::ElementaryPath3D::const_iterator i = bodyPath_->begin( );
 	++i;
 	Lang::ElementaryPath3D::const_iterator end = bodyPath_->end( );

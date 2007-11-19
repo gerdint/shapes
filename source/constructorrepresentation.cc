@@ -26,7 +26,7 @@ Helpers::shapesFormat( Concrete::Length length )
 	std::ostringstream oss;
 
 	double val = Concrete::Length::offtype( length );
-	
+
 	if( val < 0 )
 		{
 			oss << "~" ;

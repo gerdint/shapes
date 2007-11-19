@@ -249,11 +249,11 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYAN
 
 	if( arg1->getFront( ) != NullPtr< const Lang::Value >( ) )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "When connecting sliders, the rear slider cannot have a front handle." ) );			
+			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "When connecting sliders, the rear slider cannot have a front handle." ) );
 		}
 	if( arg2->getRear( ) != NullPtr< const Lang::Value >( ) )
 		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "When connecting sliders, the front slider cannot have a rear handle." ) );			
+			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "When connecting sliders, the front slider cannot have a rear handle." ) );
 		}
 
 	if( arg1->getRear( ) == NullPtr< const Lang::Value >( ) &&
@@ -276,11 +276,11 @@ Ast::MinusMinusExpr::impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYAN
 
 	if( arg1->getFront( ) != NullPtr< const Lang::Value >( ) )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "When connecting sliders, the rear slider cannot have a front handle." ) );			
+			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "When connecting sliders, the rear slider cannot have a front handle." ) );
 		}
 	if( arg2->getRear( ) != NullPtr< const Lang::Value >( ) )
 		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "When connecting sliders, the front slider cannot have a rear handle." ) );			
+			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "When connecting sliders, the front slider cannot have a rear handle." ) );
 		}
 
 	if( arg1->getRear( ) == NullPtr< const Lang::Value >( ) &&
@@ -601,7 +601,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const 
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI ) );
 		}
-	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );			
+	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -616,7 +616,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const 
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI ) );
 		}
-	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );			
+	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -631,7 +631,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI ) );
 		}
-	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );			
+	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -646,7 +646,7 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI ) );
 		}
-	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );			
+	return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 }
 
 RefCountPtr< const Lang::Value >

@@ -74,10 +74,10 @@ namespace Shapes
 
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const = 0;
 			virtual void measure( Lang::Transform2D * textMatrix, Lang::Transform2D * textLineMatrix, Concrete::Length * xmin, Concrete::Length * ymin, Concrete::Length * xmax, Concrete::Length * ymax ) const = 0;
-			
+
 			TYPEINFODECL;
 		};
-		
+
 		class KernedText : public Lang::TextOperation
 		{
 			RefCountPtr< const Kernel::TextState > textState_;
@@ -96,20 +96,20 @@ namespace Shapes
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			void pushString( const RefCountPtr< const Lang::String > & str );
 			void pushKerning( double kerning );
-			
+
 			virtual void show( std::ostream & os ) const;
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
 			virtual void measure( Lang::Transform2D * textMatrix, Lang::Transform2D * textLineMatrix, Concrete::Length * xmin, Concrete::Length * ymin, Concrete::Length * xmax, Concrete::Length * ymax ) const;
-			
+
 			void push( Lang::KernedText * dst ) const;
-			
+
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 
 		private:
 			RefCountPtr< const Lang::SingleList > makeList( ) const;
 			static RefCountPtr< const Lang::String > oneMacRomanToUTF8( const char c );
 		};
-		
+
 		class TextNewline : public Lang::TextOperation
 		{
 			Concrete::Coords2D t_;
@@ -120,7 +120,7 @@ namespace Shapes
 			virtual void show( std::ostream & os ) const;
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
 			virtual void measure( Lang::Transform2D * textMatrix, Lang::Transform2D * textLineMatrix, Concrete::Length * xmin, Concrete::Length * ymin, Concrete::Length * xmax, Concrete::Length * ymax ) const;
-			
+
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -134,7 +134,7 @@ namespace Shapes
 			virtual void show( std::ostream & os ) const;
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
 			virtual void measure( Lang::Transform2D * textMatrix, Lang::Transform2D * textLineMatrix, Concrete::Length * xmin, Concrete::Length * ymin, Concrete::Length * xmax, Concrete::Length * ymax ) const;
-			
+
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -153,7 +153,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class WordSpacingBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -164,7 +164,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 		class HorizontalScalingBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -175,7 +175,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 		class LeadingBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -188,7 +188,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 		class FontBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -199,7 +199,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 		class TextSizeBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -234,7 +234,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 		class TextKnockoutBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -245,7 +245,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-				
+
 	}
 
 	namespace Kernel
@@ -259,7 +259,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class WordSpacingDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -268,7 +268,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class HorizontalScalingDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -277,7 +277,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class LeadingDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -286,7 +286,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class FontDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -295,7 +295,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class TextSizeDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -304,7 +304,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class TextRenderingModeDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -313,7 +313,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class TextRiseDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -322,7 +322,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class TextKnockoutDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -331,7 +331,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class TextState
 		{
 		public:
@@ -355,7 +355,7 @@ namespace Shapes
 			TextState( );
 			explicit TextState( const Kernel::TextState & orig );	 // explicit, since reference counting shall be used in most cases
 			TextState( const Kernel::TextState & newValues, const Kernel::TextState & oldValues );
-			TextState( bool setDefaults );		
+			TextState( bool setDefaults );
 			~TextState( );
 
 			void setLeading( const Concrete::Length leading );
@@ -387,7 +387,7 @@ namespace Shapes
 			void assertKnockout( const Kernel::TextState * ref );
 
 			bool synchButKnockout( std::ostream & os, const Kernel::TextState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
-			
+
 		};
 
 	}

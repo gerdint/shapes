@@ -109,7 +109,7 @@ namespace Shapes
 						evalState->cont_ = Kernel::ContRef( new Kernel::ForcedStructureContinuationHelper( cont_, contMem_, structure_, p->cdr_, traceLoc_ ) );
 						p->car_->force( const_cast< Kernel::VariableHandle & >( p->car_ ), evalState );
 					}
-				
+
 			}
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
 			{
@@ -140,7 +140,7 @@ Kernel::ForcedStructureContinuation::takeValue( const RefCountPtr< const Lang::V
 {
 	typedef const Lang::Structure ArgType;
 	RefCountPtr< ArgType > structure = Helpers::down_cast< ArgType >( val, continuationName_ );
-	
+
 	RefCountPtr< const Lang::SingleList > firstUnforced = findUnforced( structure->values_ );
 	if( firstUnforced->isNull( ) )
 		{

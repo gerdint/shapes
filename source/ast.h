@@ -26,7 +26,7 @@ namespace Shapes
 			Kernel::PassedEnv env_;
 			Kernel::PassedDyn dyn_;
 			Kernel::ContRef cont_;
-			
+
 			EvalState( Ast::Expression * expr, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont )
 				: expr_( expr ), env_( env ), dyn_( dyn ), cont_( cont )
 			{ }
@@ -59,7 +59,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const = 0; // outer continuation before ourselves in the list, that is first push_front ourselves, then recurse.
 			void backTrace( std::ostream & os );
 		};
-		
+
 		std::ostream & operator << ( std::ostream & os, const Kernel::Continuation::BackTraceElem & elem );
 
 		class ForcedStructureContinuation : public Continuation
@@ -71,10 +71,10 @@ namespace Shapes
 			virtual ~ForcedStructureContinuation( );
 			virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
 			virtual void takeStructure( const RefCountPtr< const Lang::Structure > & structure, Kernel::EvalState * evalState ) const = 0;
-			
+
 			static RefCountPtr< const Lang::SingleList > findUnforced( RefCountPtr< const Lang::SingleList > lst );
 		};
-				
+
 	}
 
 	namespace Ast
@@ -97,7 +97,7 @@ namespace Shapes
 			virtual void eval( Kernel::EvalState * evalState ) const = 0;
 			const Ast::SourceLocation & loc( ) const;
 		};
-		
+
 		class Expression : public Node
 		{
 		public:
@@ -108,7 +108,7 @@ namespace Shapes
 			Expression( const Ast::SourceLocation & loc );
 			virtual ~Expression( );
 		};
-		
+
 		class BindNode : public Node
 		{
 		protected:
@@ -120,7 +120,7 @@ namespace Shapes
 			const char * id( ) const;
 			const Ast::SourceLocation & idLoc( ) const;
 		};
-		
+
 		class IdentifierNode
 		{
 		public:

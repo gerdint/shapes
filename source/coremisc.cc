@@ -35,7 +35,7 @@ namespace Shapes
 												 evalState );
 			}
 		};
-		
+
 		class Core_identity : public Lang::CoreFunction
 		{
 		public:
@@ -44,7 +44,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-					
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeHandle( args.getHandle( 0 ),
 													evalState );
@@ -59,7 +59,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-					
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( args.getValue( 0 )->getClass( ),
 												 evalState );
@@ -74,11 +74,11 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-					
+
 				throw Exceptions::UserError( Helpers::down_cast_CoreArgument< const Lang::String >( title_, args, 0, callLoc )->val_ );
 			}
 		};
-			
+
 		class Core_show : public Lang::CoreFunction
 		{
 		public:
@@ -97,7 +97,7 @@ namespace Shapes
 													evalState );
 			}
 		};
-			
+
 		class Core_debuglog_before : public Lang::CoreFunction
 		{
 		public:
@@ -120,7 +120,7 @@ namespace Shapes
 													evalState );
 			}
 		};
-		
+
 		class Core_debuglog_after : public Lang::CoreFunction
 		{
 		public:
@@ -143,7 +143,7 @@ namespace Shapes
 													evalState );
 			}
 		};
-		
+
 		class Core_if : public Lang::CoreFunction
 		{
 		public:
@@ -154,19 +154,19 @@ namespace Shapes
 				formals_->appendEvaluatedCoreFormal( "consequence", Kernel::THE_SLOT_VARIABLE, false );
 				formals_->appendEvaluatedCoreFormal( "alternative", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_VOID ) ), false );
 			}
-				
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-					
+
 				evalState->cont_ = Kernel::ContRef( new Kernel::IfContinuation( args.getHandle( 1 ), args.getHandle( 2 ), evalState->cont_, callLoc ) );
-					
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeHandle( args.getHandle( 0 ), evalState );
 			}
 		};
-		
+
 		class Core_memoryinfo : public Lang::CoreFunction
 		{
 		public:
@@ -193,28 +193,28 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-				
+
 				typedef typeof args ListType;
-				
+
 				typedef const Lang::Coords2D ArgType;
-				
+
 				RefCountPtr< ArgType > arg1 = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 				RefCountPtr< ArgType > arg2 = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
-				
+
 				Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D;
-				
+
 				res->push_back( new Concrete::PathPoint2D( arg1->x_.get( ), arg1->y_.get( ) ) );
 				res->push_back( new Concrete::PathPoint2D( arg2->x_.get( ), arg1->y_.get( ) ) );
 				res->push_back( new Concrete::PathPoint2D( arg2->x_.get( ), arg2->y_.get( ) ) );
 				res->push_back( new Concrete::PathPoint2D( arg1->x_.get( ), arg2->y_.get( ) ) );
 				res->close( );
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( res ),
 												 evalState );
 			}
 		};
-		
+
 		class Core_hot : public Lang::CoreFunction
 		{
 		public:
@@ -225,12 +225,12 @@ namespace Shapes
 				formals_->appendEvaluatedCoreFormal( "tackon", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "freeze", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_IDENTITY ) ) );
 			}
-			
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::HotTriple
 																					 ( args.getValue( 0 ),
@@ -239,7 +239,7 @@ namespace Shapes
 												 evalState );
 			}
 		};
-		
+
 		class Core_nextpagenumber : public Lang::CoreFunction
 		{
 		public:
@@ -248,21 +248,21 @@ namespace Shapes
 			{
 				formals_->appendCoreStateFormal( "catalog" );
 			}
-			
+
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				typedef Kernel::WarmCatalog StateType;
 				StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::Integer( state->getNextPageNumber( ) ) ),
 												 evalState );
 			}
 		};
-		
+
 		class Core_nextpagelabel : public Lang::CoreFunction
 		{
 		public:
@@ -271,21 +271,21 @@ namespace Shapes
 			{
 				formals_->appendCoreStateFormal( "catalog" );
 			}
-			
+
 			void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				typedef Kernel::WarmCatalog StateType;
 				StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::String( state->getNextPageLabel( ) ) ),
 												 evalState );
 			}
 		};
-		
+
 		class Core_setpagelabel : public Lang::CoreFunction
 		{
 		public:
@@ -372,7 +372,7 @@ namespace Shapes
 								throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( oss ) );
 							}
 					}
-	
+
 				++argsi;
 				typedef const Lang::Integer NumberType;
 				RefCountPtr< NumberType > numberVal = Helpers::down_cast_CoreArgument< NumberType >( title_, args, argsi, callLoc, true );

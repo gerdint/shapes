@@ -129,7 +129,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 				}
 			throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ) );
 		}
-	
+
 	if( needSearchPath.size( ) == 0 )
 		{
 			throw Exceptions::ScannerError( shapeslloc, strrefdup( "Relative file inclusion impossible since search path is empty." ) );

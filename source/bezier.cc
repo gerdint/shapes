@@ -6,7 +6,7 @@ void
 Bezier::bezierRootsOfPolynomial( double t[2], double k0, double k1 )
 {
 	double * dst = & t[0];
-		
+
 	if( k1 != 0 )
 		{
 			double tmp = - k0 / k1;
@@ -23,7 +23,7 @@ void
 Bezier::bezierRootsOfPolynomial( double t[3], double k0, double k1, double k2 )
 {
 	double * dst = & t[0];
-		
+
 	if( k2 == 0 )
 		{
 			if( k1 != 0 )
@@ -124,7 +124,7 @@ Bezier::bezierRootsOfPolynomial( double t[4], double k0, double k1, double k2, d
 			*dst = HUGE_VAL;
 			return;
 		}
-			
+
 	k2 /= k3;
 	k1 /= k3;
 	k0 /= k3;
@@ -144,7 +144,7 @@ Bezier::bezierRootsOfPolynomial( double t[4], double k0, double k1, double k2, d
 	Complex w1 = pow( wCube, 1./3 );
 	Complex w2 = w1 * exp( Complex( 0, 2 * M_PI / 3 ) );
 	Complex w3 = w1 * exp( Complex( 0, -2 * M_PI / 3 ) );
-			
+
 	Complex t1 = w1 - Q / w1 - k2 / 3;
 	Complex t2 = w2 - Q / w2 - k2 / 3;
 	Complex t3 = w3 - Q / w3 - k2 / 3;

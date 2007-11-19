@@ -121,7 +121,7 @@ Escape "¢"|"¤"
 	shapeslloc.lastColumn = 0;
 	BEGIN( INITIAL );
 }
-	
+
 <LaTeXClass>.+ { Kernel::theTeXLabelManager.setDocumentClass( shapeslloc, yytext ); }
 <LaTeXClass>[\n] {
 	shapeslloc.firstLine = shapeslloc.lastLine + 1;
@@ -129,7 +129,7 @@ Escape "¢"|"¤"
 	shapeslloc.lastColumn = 0;
 	BEGIN( INITIAL );
 }
-	
+
 <LaTeXPreamble>.* { Kernel::theTeXLabelManager.addPreambleLine( shapeslloc, yytext ); }
 <LaTeXPreamble>[\n] {
 	shapeslloc.firstLine = shapeslloc.lastLine + 1;
@@ -288,7 +288,7 @@ Escape "¢"|"¤"
 	else
 		{
 			double newUnitValue = val * i->second;
-			
+
 			i = unitTable.find( newUnitName );
 			if( i != unitTable.end( ) )
 				{

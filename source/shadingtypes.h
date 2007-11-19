@@ -21,7 +21,7 @@ namespace Shapes
 			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 }
 

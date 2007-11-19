@@ -26,7 +26,7 @@ Computation::specialUnitCorrection( double a0, double a1 )
 	const double k2 = -2.0729490168751576;
 	const double k3 = -1.381966011250105;
 	const double wInv = 0.7821424388422419;
-	
+
 	if( a0 == a1 )
 		{
 			return 1;
@@ -45,7 +45,7 @@ Computation::specialUnitCorrection( double a0, double a1 )
 					x = -1;
 				}
 		}
-			
+
 	double xSquare = x * x;
 	if( aRel < 0 )
 		{
@@ -65,7 +65,7 @@ Computation::specialUnitNoInflexion( double a0, double a1 )
 		if( tmp < 0 ||
 				tmp > M_PI - a0 )
 			{
-				return HUGE_VAL;				
+				return HUGE_VAL;
 			}
 	}
 	return sin( a0 + a1 ) / sin( a0 + a0 + a1 );

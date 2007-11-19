@@ -19,13 +19,13 @@ namespace Shapes
 		public:
 			CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes );
 			virtual ~CodeBracket( );
-			
+
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
-			
+
 			void evalAt( const RefCountPtr< const Kernel::CodeBracketContInfo > & info, const std::list< Ast::Node * >::const_iterator & i, Kernel::EvalState * evalState ) const;
 		};
-		
+
 	}
 
 	namespace Kernel
@@ -37,10 +37,10 @@ namespace Shapes
 			Kernel::PassedEnv env_;
 			Kernel::PassedDyn dyn_;
 			Kernel::ContRef cont_;
-			
+
 			CodeBracketContInfo( const Ast::CodeBracket * bracketExpr, const Kernel::EvalState & evalState );
 			~CodeBracketContInfo( );
-			
+
 			void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -56,7 +56,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		
+
 		class DynamicBindingContinuation : public Kernel::Continuation
 		{
 			Kernel::PassedEnv env_;
@@ -70,7 +70,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class WithDynamicContinuation : public Kernel::Continuation
 		{
 			Ast::Expression * expr_;
@@ -84,7 +84,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class DynamicVariableDeclContinuation : public Kernel::Continuation
 		{
 			const Ast::DynamicVariableDecl * declExpr_;
@@ -124,7 +124,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class EvalOutsideExpr : public Expression 
 		{
 			Ast::Expression * expr_;
@@ -134,7 +134,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DefineVariable : public BindNode
 		{
 			Ast::Expression * expr_;
@@ -145,7 +145,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class StructSplitReference : public Expression
 		{
 			Ast::SourceLocation structLoc_;
@@ -163,7 +163,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class StructSplitSink : public Expression
 		{
 			Ast::SourceLocation structLoc_;
@@ -176,7 +176,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class AssertNoSinkNeeded : public Expression
 		{
 			size_t orderedCount_;
@@ -188,7 +188,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class SplitDefineVariables
 		{
 			static size_t splitVarCount;
@@ -203,7 +203,7 @@ namespace Shapes
 			SplitDefineVariables( );
 			const char * newSplitVarId( ) const;
 		};
-		
+
 		class StateReference : public Node
 		{
 		public:
@@ -223,7 +223,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
 		};
-		
+
 		class DynamicState : public Ast::StateReference
 		{
 			const char * id_;
@@ -234,7 +234,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			Kernel::StateHandle getHandle( Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
 		};
-		
+
 		class IntroduceState : public BindNode
 		{
 			Ast::Expression * expr_;
@@ -245,7 +245,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class Insertion : public Node
 		{
 			Ast::StateReference * stateRef_;
@@ -256,7 +256,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class Freeze : public Expression
 		{
 			const char * id_;
@@ -267,7 +267,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class Peek : public Expression
 		{
 			Ast::StateReference * stateRef_;
@@ -277,7 +277,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class EvalSymbolFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -292,7 +292,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
-		
+
 		class MemberReferenceFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -308,7 +308,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
-		
+
 		class SpecialLength : public Expression
 		{
 			Ast::SourceLocation loc_;
@@ -320,7 +320,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DynamicVariable : public Ast::Expression
 		{
 			Ast::SourceLocation loc_;
@@ -332,7 +332,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DynamicBindingExpression : public Ast::Expression
 		{
 			Ast::SourceLocation idLoc_;
@@ -345,7 +345,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DynamicStateBindingExpression : public Ast::Expression
 		{
 			Ast::SourceLocation loc_;
@@ -359,7 +359,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class WithDynamicExpr : public Ast::Expression
 		{
 			Ast::Expression * bindings_;
@@ -419,7 +419,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class LexiographicType : public Expression 
 		{
 			const char * id_;
@@ -430,7 +430,7 @@ namespace Shapes
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 
 	}
 }

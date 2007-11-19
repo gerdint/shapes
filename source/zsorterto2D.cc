@@ -24,7 +24,7 @@ namespace Shapes
 {
 	namespace Computation
 	{
-		
+
 		struct SplitJob
 		{
 			// This is not the most natural place to define CompoundObject, but since we need it...
@@ -33,7 +33,7 @@ namespace Shapes
 			CompoundObject::iterator splitted_;
 			std::vector< CompoundObject * >::iterator splittingObject_;
 			CompoundObject::iterator splitting_;
-			
+
 			SplitJob( const CompoundObject::iterator & splitted, const std::vector< CompoundObject * >::iterator & splittingObject, const CompoundObject::iterator & splitting )
 				: splitted_( splitted ), splittingObject_( splittingObject ), splitting_( splitting )
 			{ }
@@ -121,7 +121,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 							{
 								throw Exceptions::InternalError( "These triangles were known to intsersect, and now they're parallel!" );
 							}
-						
+
 						// New triangles are added to the end of tmpList, and the iterator to the first new triangle is returned.
 						CompoundObject::iterator i = currentJob.splitted_->spliceAlong( spliceLine, tmpList );
 
@@ -197,7 +197,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			waitCounters.resize( triangleCount, 0 );
 			std::vector< std::list< size_t > > waitingObjects;
 			waitingObjects.resize( triangleCount );
-			
+
 			// We begin by setting up waitingObjects and waitCounters.
 			// This involves testing each object against all other objects.
 			for( size_t i0 = 0; i0 < triangleCount - 1; ++i0 )	// Ugly bug if triangleCount == 0
@@ -227,7 +227,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 								}
 						}
 				}
-			
+
 			// Then the queue of objects to be "drawn" is initialized.
 			std::list< size_t > drawQueue;
 			std::map< const Computation::PaintedPolygon3D *, size_t > trianglesInPolygon;
@@ -242,7 +242,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 							}
 					}
 			}
-			
+
 			// Now, when the triangles are "drawn", that is, placed in drawOrder, they shall be placed so
 			// in such a way that triangles that belong to the same polygon appear in sequence as often as possible.
 			// While there is probably accurate ways to treat this problem, I resort to some simple heuristics here.
@@ -275,7 +275,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 								painter = best_j->first;
 								trianglesInPolygon.erase( best_j ); // If we need this again it will be re-created.
 							}
-							
+
 							// Soon, bestCount triangles will have been drawn, but the value of bestCount will then be destroyed.
 							drawnCount += bestCount;
 
@@ -297,7 +297,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 
 									drawOrder.push_back( triangleMem[ i ] );
 									triangleMem[ i ] = 0;
-									
+
 									const std::list< size_t > & waitList = waitingObjects[ i ];
 									for( std::list< size_t >::const_iterator j = waitList.begin( ); j != waitList.end( ); ++j )
 										{
@@ -313,9 +313,9 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 													++trianglesInPolygon[ triangleMem[ *j ]->painter_ ];
 												}
 										}
-									
+
 								}
-							
+
 						}
 					if( drawnCount < triangleCount )
 						{
@@ -345,8 +345,8 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 						}
 				}
 		}
-	
-	
+
+
 	// It is now time to take care of the lines.
 	// The first thing we shall do is to remove what is occluded by triangles.
 	// Note that triangles will be drawn before the lines, and that is the only way lines
@@ -366,13 +366,13 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	std::list< const Computation::ZBufLine * > disjointLines;
 	while( lineQueue.size( ) > 0 )
 		{
-		
+
 			std::list< const Computation::ZBufLine * > queue1;
 			std::list< const Computation::ZBufLine * > queue2;
 
 			std::list< const Computation::ZBufLine * > * currentQueue = & queue1;
 			std::list< const Computation::ZBufLine * > * otherQueue = & queue2;
-			
+
 			currentQueue->push_back( lineQueue.front( ) );
 			lineQueue.pop_front( );
 
@@ -393,7 +393,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 									otherQueue->push_back( currentLine );
 								}
 						}
-					
+
 					{
 						// swap the queues
 						std::list< const Computation::ZBufLine * > * tmp = currentQueue;
@@ -442,7 +442,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	if( SHOW_TRIXELS )
 		{
 			// This is a debug mode
-			
+
 			typedef typeof drawOrder ListType;
 			for( ListType::const_iterator i = drawOrder.begin( ); i != drawOrder.end( ); ++i )
 				{
@@ -463,7 +463,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 					std::list< Computation::ZBufTriangle > regions;
 					// This is a hideous copy!
 					regions.push_back( **i );
-					
+
 					// Now we'll simply join the triangle **i with the immediately following triangles sharing the same painter.
 					// The job of joining triangles thus consists in placing them in a good order in drawOrder.
 
@@ -486,9 +486,9 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 				}
 		}
 
-	
+
 	// Memory cleanup of the triangles should be taken care of by compoundMem.
-	
+
 
 	// Finally we draw the lines.
 	while( disjointLines.size( ) > 0 )

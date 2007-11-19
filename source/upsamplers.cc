@@ -109,7 +109,7 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 		d1 = tmp.direction( );
 		a1 = atan2( d1.y_, d1.x_ );
 	}
-	
+
 	double a2;
 	double t2;
 	Concrete::UnitFloatPair d2( 1, 0, bool( ) );
@@ -174,7 +174,7 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 					 */
 					Concrete::UnitFloatPair da( cos( a ), sin( a ), bool( ) );
 					Concrete::Coords2D an( cos( a + M_PI_2 ), sin( a + M_PI_2 ) );
-					
+
 					double optTimes[3];
 					coeffs.stationaryPoints( optTimes, an ); // A HUGE_VAL is used as terminator in the result.
 					double best_t = t2;
@@ -204,7 +204,7 @@ Computation::UpsampleBends::operator () ( std::vector< double > * dst, const Bez
 					//					std::cerr << "	final t2: " << t2 << std::endl ;
 				}
 		}
-		
+
 }
 
 void
@@ -253,7 +253,7 @@ Computation::UpsampleEvery2D::operator () ( std::vector< double > * dst, const B
 					Physical< 0, 2 > kv3 = 3 * t * t;
 					Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 					Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-					
+
 					Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 					tmpSum_l += dl;
 				}
@@ -277,7 +277,7 @@ Computation::UpsampleEvery2D::operator () ( std::vector< double > * dst, const B
 								Physical< 0, 2 > kv3 = 3 * t * t;
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
-								
+
 								Concrete::Length dl = hypotPhysical( vx, vy ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= breakDiv_dt )
@@ -342,7 +342,7 @@ Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const B
 					Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 					Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 					Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-					
+
 					Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 					tmpSum_l += dl;
 				}
@@ -367,7 +367,7 @@ Computation::UpsampleEvery3D::operator () ( std::vector< double > * dst, const B
 								Concrete::Speed vx = x0 * kv0 + x1 * kv1 + x2 * kv2 + x3 * kv3;
 								Concrete::Speed vy = y0 * kv0 + y1 * kv1 + y2 * kv2 + y3 * kv3;
 								Concrete::Speed vz = z0 * kv0 + z1 * kv1 + z2 * kv2 + z3 * kv3;
-					
+
 								Concrete::Length dl = hypotPhysical( vx, vy, vz ).offtype< 0, -1 >( );
 								tmpSum_l += dl;
 								if( tmpSum_l >= breakDiv_dt )

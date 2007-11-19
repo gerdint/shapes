@@ -200,7 +200,7 @@ Ast::ClassFunction::ClassFunction( const Ast::SourceLocation & loc, Ast::Express
 						throw Exceptions::MemberAlreadyDeclared( (*i)->loc_, (*i)->id_, j->second->loc_ );
 					}
 				seen[ (*i)->id_ ] = *i;
-				
+
 				if( ( (*i)->mode_ & Ast::MEMBER_ACCESS_PUBLIC_GET ) != 0 )
 					{
 						if( ( (*i)->mode_ & Ast::MEMBER_METHOD ) == 0 && ! isFinal_ )
@@ -235,7 +235,7 @@ Ast::ClassFunction::ClassFunction( const Ast::SourceLocation & loc, Ast::Express
 							{
 								throw Exceptions::TransformingMemberInNonfinalClass( (*i)->loc_, (*i)->id_ );
 							}
-						transformingSet_.insert( (*i)->id_ );						
+						transformingSet_.insert( (*i)->id_ );
 					}
 			}
 	}
@@ -246,7 +246,7 @@ Ast::ClassFunction::~ClassFunction( )
 	delete name_;
 
 	delete constructorFormals_;
-	
+
 	for( std::list< const Ast::CallExpr * >::iterator i = parentsWithInitArgs_->begin( );
 			 i != parentsWithInitArgs_->end( );
 			 ++i )
@@ -286,7 +286,7 @@ Ast::ClassFunction::push_exprs( Ast::ArgListExprs * args ) const
 				args->orderedExprs_->push_back( (*i)->super_ );
 			}
 	}
-	
+
 }
 
 void
@@ -469,7 +469,7 @@ Ast::ClassFunction::setupInstance( Kernel::PassedEnv instanceEnv, Kernel::Passed
 //			 if( ( decl.mode & Ast::MEMBER_METHOD ) != 0 )
 //				 {
 //					 evalEnv = privateEnv;
-//				 }			
+//				 }
 
 //			 (*defineEnv)->define( decl.loc, decl.id, decl.init->value( dstgroup, pdfo, metaState, evalEnv ), ( decl.mode & ( Ast::MEMBER_METHOD | Ast::MEMBER_CONST ) ) != 0 );
 //		 }
@@ -479,7 +479,7 @@ void
 Ast::ClassFunction::prepareInstance( Kernel::EvalState * evalState, Kernel::PassedEnv privateEnv ) const
 {
 	throw Exceptions::NotImplemented( "ClassFunction::prepareInstance" );
-	
+
 	//	Ast::CodeBracket::evalSequence( preparations.begin( ), preparations.end( ), metaState, privateEnv, false );
 }
 
@@ -605,7 +605,7 @@ Ast::ProtectedMethodReferenceFunction::call( Kernel::EvalState * evalState, Kern
 		}
 
 	Kernel::MethodId methodId( args.getHandle( 0 )->getVal< const Lang::Class >( methodClass_->loc( ) ), methodName_ );
-	
+
 	if( parent_ != 0 )
 		{
 			RefCountPtr< const Lang::Class > typedParent = args.getHandle( 1 )->getVal< const Lang::Class >( parent_->loc( ) );

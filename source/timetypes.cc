@@ -54,7 +54,7 @@ Lang::ChronologicalTime::getField( const char * fieldID, const RefCountPtr< cons
 		{
 			return Helpers::newValHandle( new Lang::Integer( tmp->tm_wday ) );
 		}
-	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );	
+	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
 void

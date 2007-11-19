@@ -78,13 +78,13 @@ namespace Shapes
 				if( codeStringUTF8 != NullPtr< CodeType >( ) )
 					{
 						iconv_t converter = Helpers::requireUTF8ToMacRomanConverter( );
-			
+
 						const char * inbuf = codeStringUTF8->val_.getPtr( );
-			
+
 						size_t bufSize = strlen( inbuf );
 						char * buf = new char[ bufSize + 1 ];
 						DeleteOnExit< char > bufDeleter( buf );
-			
+
 						char * outbuf = buf;
 						size_t inbytesleft = bufSize;
 						size_t outbytesleft = bufSize;
@@ -140,13 +140,13 @@ namespace Shapes
 					{
 						// Ensure that the glyph name is legal
 						iconv_t converter = Helpers::requireUTF8ToASCIIConverter( );
-			
+
 						const char * inbuf = nameUTF8->name( ).getPtr( );
-			
+
 						size_t bufSize = strlen( inbuf );
 						char * buf = new char[ bufSize + 1 ];
 						name = RefCountPtr< const char >( buf );	// this will delete the buffer if it becomes unused.
-			
+
 						char * outbuf = buf;
 						size_t inbytesleft = bufSize;
 						size_t outbytesleft = bufSize;

@@ -15,7 +15,7 @@ namespace Shapes
 {
 	namespace Lang
 	{
-		
+
 		class Core_TeX : public Lang::CoreFunction
 		{
 		public:
@@ -27,16 +27,16 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::String ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::theTeXLabelManager.request( std::string( arg->val_.getPtr( ) ), evalState->dyn_ ),
 												 evalState );
 			}
 		};
-		
+
 		class Core_coords2D : public Lang::CoreFunction
 		{
 		public:
@@ -48,7 +48,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				RefCountPtr< const Lang::Value > xUntyped = args.getValue( 0 );
 				RefCountPtr< const Lang::Value > yUntyped = args.getValue( 1 );
 
@@ -119,7 +119,7 @@ namespace Shapes
 				throw Exceptions::CoreTypeMismatch( callLoc, "( x ,<>)", args, 0, Helpers::typeSetString( Lang::Float::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
-		
+
 		class Core_cornercoords2D : public Lang::CoreFunction
 		{
 		public:
@@ -139,7 +139,7 @@ namespace Shapes
 												 evalState );
 			}
 		};
-		
+
 		class Core_coords3D : public Lang::CoreFunction
 		{
 		public:
@@ -187,7 +187,7 @@ namespace Shapes
 				throw Exceptions::CoreTypeMismatch( callLoc, "( x ,<>,<>)", args, 0, Helpers::typeSetString( Lang::Float::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
-		
+
 		class Core_polarHandle2DFree_r : public Lang::CoreFunction
 		{
 		public:
@@ -206,7 +206,7 @@ namespace Shapes
 												 evalState );
 			}
 		};
-		
+
 		class Core_polarHandle2DFree_ra : public Lang::CoreFunction
 		{
 		public:

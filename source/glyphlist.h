@@ -34,7 +34,7 @@ namespace FontMetrics
 	public:
 		GlyphList( std::istream & iFile );
 		~GlyphList( );
-		
+
 		// Returns true on success.
 		bool UCS4_to_name( UnicodeType code, const char ** dst ) const;
 		bool UTF8_to_name( const char * code, const char ** dst ) const;

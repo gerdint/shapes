@@ -161,7 +161,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );							
+							exit( 1 );
 						}
 					argv += 2;
 					argc -= 2;
@@ -175,7 +175,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );							
+							exit( 1 );
 						}
 					argv += 1;
 					argc -= 1;
@@ -189,7 +189,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );							
+							exit( 1 );
 						}
 					argv += 1;
 					argc -= 1;
@@ -846,7 +846,7 @@ main( int argc, char ** argv )
 		{
 			xpdfServer = outputName;
 		}
-	
+
 	if( xpdfAction == XPDF_DEFAULT )
 		{
 			xpdfAction = XPDF_RAISE;
@@ -862,7 +862,7 @@ main( int argc, char ** argv )
 			Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
 		}
 #endif
-	
+
 	if( filenameRequestList.size( ) > 0 )
 		{
 			list< const char * >::const_iterator resource = resourceRequestList.begin( );
@@ -932,7 +932,7 @@ main( int argc, char ** argv )
 		{
 			pdfVersion = SimplePDF::PDF_out::PDF_1_5;
 		}
-	
+
 	Kernel::the_pdfo->setVersion( pdfVersion );
 	Kernel::the_pdfo->setVersionAction( pdfVersionAction );
 
@@ -981,7 +981,7 @@ main( int argc, char ** argv )
 		}
 
 	ofstream oFile;
-	
+
 	if( outputName != "" )
 		{
 			oFile.open( outputName.c_str( ) );
@@ -1103,7 +1103,7 @@ main( int argc, char ** argv )
 				{
 					Kernel::theGlobalEnvironment->clear( );
 				}
-			
+
 			delete Kernel::theGlobalEnvironment;
 			delete Ast::theProgram;
 		}
@@ -1202,7 +1202,7 @@ main( int argc, char ** argv )
 				}
 			labelDBFile = NullPtr< std::ifstream >( ); // Free the reference.
 		}
-	
+
 	if( iterativeMode )
 		{
 			Kernel::theTeXLabelManager.iterativeFinish( labelDBName );
@@ -1403,7 +1403,7 @@ xpdfHelper( const std::string & filename, const std::string & server, const Xpdf
 		{
 			throw Exceptions::InternalError( strrefdup( "Failed to fork a process for running xpdf." ) );
 		}
-	
+
 	if( xpdfProcess == 0 ) /* This is the child */
 		{
 			/* The exec call below never returns, so the child process never leaves this if clause.
@@ -1446,7 +1446,7 @@ openHelper( const std::string & filename, const char * application )
 		{
 			throw Exceptions::InternalError( strrefdup( "Failed to fork a process for running open." ) );
 		}
-	
+
 	if( openProcess == 0 ) /* This is the child */
 		{
 			/* The exec call below never returns, so the child process never leaves this if clause.

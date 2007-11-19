@@ -24,14 +24,14 @@ namespace Shapes
 			void addModeBits( const Ast::MemberMode & bits );
 			void checkModeConsistency( );
 		};
-		
+
 		class ClassSection
 		{
 		public:
 			ClassSection( );
 			virtual ~ClassSection( );
 		};
-		
+
 		class MemberSection : public ClassSection, public std::list< Ast::MemberDeclaration * >
 		{
 		public:
@@ -39,7 +39,7 @@ namespace Shapes
 			virtual ~MemberSection( );
 			void addModeBits( const Ast::MemberMode & bits );
 		};
-		
+
 		class PrepareSection : public ClassSection
 		{
 			Ast::SourceLocation loc_;
@@ -48,7 +48,7 @@ namespace Shapes
 			PrepareSection( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes );
 			virtual ~PrepareSection( );
 		};
-		
+
 		class AbstractSection : public ClassSection
 		{
 		public:
@@ -57,7 +57,7 @@ namespace Shapes
 			AbstractSection( const Ast::SourceLocation & loc, const std::list< RefCountPtr< const char > > * methods );
 			virtual ~AbstractSection( );
 		};
-		
+
 		class OverridesSection : public ClassSection
 		{
 		public:
@@ -66,7 +66,7 @@ namespace Shapes
 			OverridesSection( Ast::Expression * super, Ast::MemberSection * members );
 			virtual ~OverridesSection( );
 		};
-		
+
 		class ClassFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -89,11 +89,11 @@ namespace Shapes
 		public:
 			ClassFunction( const Ast::SourceLocation & loc, Ast::Expression * name, const Kernel::Formals * constructorFormals, std::list< const Ast::CallExpr * > * parentsWithInitArgs, Ast::MemberMode classMode, std::list< Ast::ClassSection * > * sections );
 			virtual ~ClassFunction( );
-			
+
 			void push_exprs( Ast::ArgListExprs * args ) const;
-			
+
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
-			
+
 			bool isInPublicGetSet( const char * field ) const;
 			bool isInPublicSetSet( const char * field ) const;
 			bool isInProtectedGetSet( const char * field ) const;
@@ -101,16 +101,16 @@ namespace Shapes
 			bool isInAbstractSet( const char * field ) const;
 			bool isInFinalSet( const char * field ) const;
 			bool isInTransformingSet( const char * field ) const;
-			
+
 			Lang::Class::MessageMapType getLocalMessageMap( RefCountPtr< const Lang::Class > _myClass ) const;
-			
+
 			bool isRepeatableBase( ) const;
 			//		void bindInitializationArguments( RefCountPtr< const Lang::Class > theClass, Kernel::PassedEnv initEnv, Kernel::Arguments & args ) const;
 			void setupInstance( Kernel::PassedEnv instanceEnv, Kernel::PassedEnv privateEnv, Kernel::EvalState * evalState, Kernel::PassedEnv initEnv ) const;
 			void prepareInstance( Kernel::EvalState * evalState, Kernel::PassedEnv privateEnv ) const;
-			
+
 			const Ast::SourceLocation & loc( ) const;
-			
+
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
@@ -139,7 +139,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
-		
+
 		class ProtectedMethodReferenceFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -157,7 +157,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
-		
+
 		class ProtectedMemberReferenceFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -175,7 +175,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
-		
+
 		class ProtectedMemberInsertionFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;

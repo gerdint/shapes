@@ -209,7 +209,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 //		 {
 //			 // Then we ask LAPACK how much workspace it wants, and then we assume that this number will not change
 //			 // as we call DGESVD with other arguments.
-	
+
 //			 double tmpwork;
 //			 lwork = -1;
 //			 dgesvd_( & jobuvt, & jobuvt,
@@ -274,7 +274,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 //								reinterpret_cast< __CLPK_doublereal * >( & vt ), & ldauvt,
 //								reinterpret_cast< __CLPK_doublereal * >( work ), & lwork,
 //								& info );
-	
+
 //			 if( info != 0 )
 //				 {
 //					 std::cerr << "LAPACK routine DGESVD failed." << std::endl ;
@@ -285,7 +285,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 				{
 					throw Exceptions::AffineTransformKillsPlane( gsl_vector_get( s, 1 ) );
 				}
-			
+
 //			 std::cerr << "Here's s:" << std::endl ;
 //			 gsl_vector_fprintf( stderr, s, "%f" );
 
@@ -356,13 +356,13 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 
 	// Now that the linear, not too singular, transform has been computed, we just apply it and normalize the result.
 	// The normalization is made by the UnitFloatTriple constructor.
-	
+
 	static gsl_vector * _n = gsl_vector_alloc( N );
 	static gsl_vector * res = gsl_vector_alloc( N );
 
 	//	static double _n[ N ];
 	//	static double res[ N ];
-	
+
 	gsl_vector_set( _n, 0, n.x_ );
 	gsl_vector_set( _n, 1, n.y_ );
 	gsl_vector_set( _n, 2, n.z_ );
@@ -370,7 +370,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 //	 _n[ 0 ] = n.x_;
 //	 _n[ 1 ] = n.y_;
 //	 _n[ 2 ] = n.z_;
-	
+
 //	 std::cerr << "Input vector: " << std::endl ;
 //	 gsl_vector_fprintf( stderr, _n, "%f" );
 //	 std::cerr << std::endl ;
@@ -392,7 +392,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 //								planeNormalTransformData_, N,
 //								reinterpret_cast< double * >( & _n ), 1,
 //								0., reinterpret_cast< double * >( & res ), 1 );
-	
+
 	return Concrete::UnitFloatTriple( gsl_vector_get( res, 0 ),
 																		gsl_vector_get( res, 1 ),
 																		gsl_vector_get( res, 2 ) );
@@ -401,7 +401,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 	/*
 			{
 				// First we compute a unit vector in the plane
-				static const Concrete::UnitFloatTriple xHat( 1, 0, 0 );				
+				static const Concrete::UnitFloatTriple xHat( 1, 0, 0 );
 				static const Concrete::UnitFloatTriple yHat( 0, 1, 0 );
 				Concrete::UnitFloatTriple r1 = Shapes::cross( unitNormal_, xHat );
 				Concrete::UnitFloatTriple r2 = Shapes::cross( unitNormal_, yHat );
@@ -414,12 +414,12 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 					{
 						r = r2.normalized( );
 					}
-				
+
 				// Then we find one point that is in the plane
 				double ax = fabs( unitNormal_.x_ );
 				double ay = fabs( unitNormal_.y_ );
 				double az = fabs( unitNormal_.z_ );
-				
+
 				Concrete::Coords3D x0( 0, 0, 0 );
 				if( ax >= ay && ax >= az )
 					{
@@ -607,7 +607,7 @@ Kernel::Arguments::addNamedArgument( const char * id, const Kernel::VariableHand
 		{
 			throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::VARIABLE );
 		}
-	
+
 	if( pos >= variables_->size( ) )
 		{
 			while( variables_->size( ) < pos )
@@ -665,7 +665,7 @@ Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandle & s
 		{
 			throw Exceptions::CoreNoNamedFormals( "???" );
 		}
-	
+
 	typedef typeof *(formals_->formals_->stateOrder_) FormalsMapType;
 	FormalsMapType & formalsMap = *(formals_->formals_->stateOrder_);
 
@@ -680,7 +680,7 @@ Kernel::Arguments::addNamedState( const char * id, const Kernel::StateHandle & s
 		{
 			throw Exceptions::NamedFormalAlreadySpecified( formals_->formals_->loc( ), strrefdup( id ), pos, Exceptions::NamedFormalAlreadySpecified::STATE );
 		}
-	
+
 	if( pos >= states_->size( ) )
 		{
 			while( states_->size( ) < pos )
@@ -782,12 +782,12 @@ Kernel::Arguments::applyDefaults( )
 					{
 						++i;
 					}
-					
+
 				for( ; i != formalsMap.end( ); ++i, ++pos)
 					{
 						missingStates->insert( missingStates->begin( ), std::pair< size_t, RefCountPtr< const char > >( pos, strrefdup( i->first ) ) );
 					}
-				
+
 			}
 	}
 
@@ -836,14 +836,14 @@ Kernel::Arguments::applyDefaults( )
 										}
 								}
 						}
-					
+
 					/* Normal case.
 					 */
 					*dst = *src;
 					locations_[ pos ] = *srcLoc;
 				}
 		}
-	
+
 	if( missingArgs != 0 || missingStates != 0 )
 		{
 			throw Exceptions::MissingArguments( formals_->formals_->loc( ), missingArgs, missingStates );
@@ -960,7 +960,7 @@ namespace Shapes
 			/* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
 			 * However, this continuation takes handles anyway, since handles is what goes into the argument list.
 			 */
-			
+
 			if( val->isThunk( ) )
 				{
 					val->force( val, evalState );
@@ -1003,7 +1003,7 @@ namespace Shapes
 			/* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
 			 * However, this continuation takes handles anyway, since handles is what goes into the argument list.
 			 */
-			
+
 			if( arg2->isThunk( ) )
 				{
 					arg2->force( arg2, evalState );
@@ -1047,7 +1047,7 @@ namespace Shapes
 			/* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
 			 * However, this continuation takes handles anyway, since handles is what goes into the argument list.
 			 */
-			
+
 			if( arg1->isThunk( ) )
 				{
 					arg1->force( arg1, evalState );
@@ -1101,7 +1101,7 @@ namespace Shapes
 			/* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
 			 * However, this continuation takes handles anyway, since handles is what goes into the argument list.
 			 */
-			
+
 			if( arg2->isThunk( ) )
 				{
 					arg2->force( arg2, evalState );
@@ -1148,7 +1148,7 @@ namespace Shapes
 			/* This continuation really seeks forced arguments, for otherwise a thunk would have been generated directly.
 			 * However, this continuation takes handles anyway, since handles is what goes into the argument list.
 			 */
-			
+
 			if( arg1->isThunk( ) )
 				{
 					arg1->force( arg1, evalState );
@@ -1222,7 +1222,7 @@ void
 Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Ast::SourceLocation & callLoc ) const
 {
 	Kernel::Arguments args = this->newCurriedArguments( );
-	
+
 	args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
 
 	this->call( evalState, args, callLoc );
@@ -1238,7 +1238,7 @@ void
 Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Kernel::ValueRef & arg2, const Ast::SourceLocation & callLoc ) const
 {
 	Kernel::Arguments args = this->newCurriedArguments( );
-	
+
 	args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg1 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
 	args.addOrderedArgument( Kernel::VariableHandle( new Kernel::Variable( arg2 ) ), & Ast::THE_INTERNAL_VALUE_EXPRESSION );
 
@@ -1252,7 +1252,7 @@ void
 Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kernel::EvalState * evalState, const Kernel::VariableHandle & arg1, const Ast::SourceLocation & callLoc ) const
 {
 	const RefCountPtr< const Kernel::CallContInfo > info = this->newCallContInfo( Lang::Function::oneExprArgList, *evalState );
-	
+
 	if( info->force( 0 ) )
 		{
 			Kernel::ContRef cont = Kernel::ContRef( new Kernel::FunctionOneHandleCont( selfRef, evalState->dyn_, evalState->cont_, callLoc ) );
@@ -1275,7 +1275,7 @@ Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kerne
 
 	/* Remember that arguments are ordered backwards!
 	 */
-	
+
 	if( info->force( 1 ) )
 		{
 			Kernel::ContRef cont = Kernel::ContRef( new Kernel::FunctionTwoHandlesCont_1( selfRef, arg2, info->force( 0 ), evalState->dyn_, evalState->cont_, callLoc ) );
@@ -1309,7 +1309,7 @@ Lang::Function::call( const RefCountPtr< const Lang::Function > & selfRef, Kerne
 
 	/* Remember that arguments are ordered backwards!
 	 */
-	
+
 	if( info->force( 1 ) )
 		{
 			Kernel::ContRef cont = Kernel::ContRef( new Kernel::FunctionTwoHandlesOneStateCont_1( selfRef, arg2, info->force( 0 ), state, evalState->dyn_, evalState->cont_, callLoc ) );
@@ -1492,7 +1492,7 @@ Lang::CuteFunction::newCallContInfo( const Ast::ArgListExprs * argList, const Ke
 Kernel::Arguments
 Lang::CuteFunction::newCurriedArguments( ) const
 {
-	return someArgs_.clone( );	
+	return someArgs_.clone( );
 }
 
 void
@@ -1784,7 +1784,7 @@ Lang::UnaryOperatorFunction::call( Kernel::EvalState * evalState, Kernel::Argume
 {
 	const size_t ARITY = 1;
 	CHECK_ARITY( args, ARITY, title_ );
-	
+
 	RefCountPtr< const Lang::Value > arg = args.getValue( 0 );
 
 	try

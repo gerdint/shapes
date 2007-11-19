@@ -34,7 +34,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const = 0;
 			DISPATCHDECL;
 		};
-		
+
 		class DynamicBindingsPair : public DynamicBindings
 		{
 			RefCountPtr< const Lang::DynamicBindings > car_;
@@ -45,7 +45,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class UserDynamicBinding : public DynamicBindings
 		{
 			Kernel::DynamicEnvironmentKeyType key_;
@@ -58,7 +58,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class WidthBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -69,7 +69,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class MiterLimitBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -94,7 +94,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class Gray : public Color
 		{
 			Concrete::Gray components_;
@@ -108,7 +108,7 @@ namespace Shapes
 			const Concrete::Gray & components( ) const { return components_; };
 			DISPATCHDECL;
 		};
-		
+
 		class RGB : public Color
 		{
 			Concrete::RGB components_;
@@ -122,7 +122,7 @@ namespace Shapes
 			const Concrete::RGB & components( ) const { return components_; };
 			DISPATCHDECL;
 		};
-		
+
 		class CMYK : public Color
 		{
 			Concrete::CMYK components_;
@@ -136,7 +136,7 @@ namespace Shapes
 			const Concrete::CMYK & components( ) const { return components_; };
 			DISPATCHDECL;
 		};
-		
+
 		class StrokingBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -158,7 +158,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class Alpha : public Lang::NoOperatorOverloadValue
 		{
 		public:
@@ -169,14 +169,14 @@ namespace Shapes
 			static void applyGraphicsState( std::ostream & os, SimplePDF::PDF_Resources * resources, const Lang::Alpha & self, bool isStroking );
 			TYPEINFODECL;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
-			
+
 		private:
 			static std::map< double, RefCountPtr< SimplePDF::PDF_Object > > strokingShapeResourcemap;
 			static std::map< double, RefCountPtr< SimplePDF::PDF_Object > > strokingOpacityResourcemap;
 			static std::map< double, RefCountPtr< SimplePDF::PDF_Object > > nonStrokingShapeResourcemap;
 			static std::map< double, RefCountPtr< SimplePDF::PDF_Object > > nonStrokingOpacityResourcemap;
 		};
-		
+
 		class AlphaBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -194,14 +194,14 @@ namespace Shapes
 		public:
 			typedef enum { ALPHA, LUMINOSITY } SubType;
 			RefCountPtr< SimplePDF::PDF_Object > graphicsStateResource_;
-			
+
 			SoftMask( );	// this yields the None soft mask
 			SoftMask( SubType subType, const RefCountPtr< const Lang::TransparencyGroup > & tpGroup, const RefCountPtr< const Lang::Color > & background, const RefCountPtr< const Lang::PDF_Function > & transfer );
 			virtual ~SoftMask( );
 			TYPEINFODECL;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		class Dash : public Lang::Value
 		{
 		public:
@@ -262,7 +262,7 @@ namespace Shapes
 			TYPEINFODECL;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		class CapStyleBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -273,7 +273,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class JoinStyle : public Lang::NoOperatorOverloadValue
 		{
 		public:
@@ -283,7 +283,7 @@ namespace Shapes
 			TYPEINFODECL;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		class JoinStyleBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -309,7 +309,7 @@ namespace Shapes
 		private:
 			static std::map< ValueType, RefCountPtr< SimplePDF::PDF_Object > > resourceMap;
 		};
-		
+
 		class BlendModeBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -337,7 +337,7 @@ namespace Shapes
 			virtual size_t numberOfComponents( ) const = 0;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		class InheritedColorSpace : public Lang::ColorSpace
 		{
 		public:
@@ -350,7 +350,7 @@ namespace Shapes
 			virtual size_t numberOfComponents( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		template< class C >
 		class DeviceColorSpace : public Lang::ColorSpace
 		{
@@ -365,38 +365,38 @@ namespace Shapes
 			virtual size_t numberOfComponents( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 		};
-		
+
 		template< class C >
 		DeviceColorSpace< C >::DeviceColorSpace( const char * spaceName, size_t numOfComponents )
 			: space_( RefCountPtr< SimplePDF::PDF_Name >( new SimplePDF::PDF_Name( spaceName ) ) ),
 				numberOfComponents_( numOfComponents )
 		{ }
-		
+
 		template< class C >
 			DeviceColorSpace< C >::~DeviceColorSpace< C >( )
 			{ }
-		
+
 		template< class C >
 			RefCountPtr< SimplePDF::PDF_Name >
 			DeviceColorSpace< C >::name( ) const
 			{
 				return space_.unconst_cast< SimplePDF::PDF_Name >( );
 			}
-		
+
 		template< class C >
 		size_t
 		DeviceColorSpace< C >::numberOfComponents( ) const
 		{
 			return numberOfComponents_;
 		}
-		
+
 		template< class C >
 		bool
 		DeviceColorSpace< C >::containsColor( const Lang::Color * col ) const
 		{
 			return dynamic_cast< const C * >( col ) != 0;
 		}
-		
+
 	}
 
 	namespace Kernel
@@ -410,11 +410,11 @@ namespace Shapes
 		public:
 			UserDynamicVariableProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const RefCountPtr< const Lang::Function > & filter, const Kernel::VariableHandle & defaultVal );
 			virtual ~UserDynamicVariableProperties( );
-			
+
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class UserDynamicStateProperties : public Kernel::DynamicStateProperties
 		{
 			Kernel::DynamicEnvironmentKeyType key_;
@@ -424,11 +424,11 @@ namespace Shapes
 		public:
 			UserDynamicStateProperties( const char * name, const Kernel::DynamicEnvironmentKeyType & key, const Kernel::PassedEnv & defaultStateEnv, Kernel::PassedDyn defaultStateDyn, Ast::StateReference * defaultState );
 			virtual ~UserDynamicStateProperties( );
-			
+
 			virtual Kernel::StateHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::StateHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class WidthDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -445,7 +445,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class StrokingDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -471,7 +471,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DashDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -504,7 +504,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class GraphicsState
 		{
 		public:
@@ -523,9 +523,9 @@ namespace Shapes
 			GraphicsState( );
 			explicit GraphicsState( const Kernel::GraphicsState & orig );	 // explicit, since reference counting shall be used in most cases
 			GraphicsState( const Kernel::GraphicsState & newValues, const Kernel::GraphicsState & oldValues );
-			GraphicsState( bool setDefaults );		
+			GraphicsState( bool setDefaults );
 			~GraphicsState( );
-			
+
 			bool synchStrokingColor( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchNonStrokingColor( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchStrokingAlpha( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
@@ -536,13 +536,13 @@ namespace Shapes
 			bool synchMiterLimit( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchDash( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchBlend( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
-			
+
 			bool synchForStroke( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchForNonStroke( std::ostream & os, const GraphicsState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 
 			bool synchStrokingColorWithNonStrokingColor( std::ostream & os, SimplePDF::PDF_Resources * resources, Concrete::Length width = Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) );
 		};
-		
+
 		class Auto_qQ
 		{
 			Kernel::GraphicsState * state_;

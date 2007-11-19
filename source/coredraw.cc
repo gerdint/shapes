@@ -28,7 +28,7 @@ namespace Shapes
 		newSolidTransparencyGroup( const RefCountPtr< const Lang::Drawable2D > & obj2, const RefCountPtr< const Lang::Drawable2D > & obj1 );
 		RefCountPtr< const Lang::TransparencyGroup >
 		newSolidTransparencyGroup( const RefCountPtr< const Lang::Drawable2D > & obj3, const RefCountPtr< const Lang::Drawable2D > & obj2, const RefCountPtr< const Lang::Drawable2D > & obj1 );
-		
+
 		void stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath2D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc );
 		void stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath3D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc );
 	}
@@ -79,7 +79,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				try
 					{
 						typedef const Lang::MultiPath2D ArgType;
@@ -183,7 +183,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				try
 					{
 						typedef const Lang::MultiPath2D ArgType;
@@ -237,7 +237,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				try
 					{
 						typedef const Lang::ElementaryPath2D ArgType;
@@ -319,7 +319,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				try
 					{
 						typedef const Lang::RGB ColorType;
@@ -341,7 +341,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING,
 																									 nonStroking->getTypeName( ),
 																									 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
@@ -515,7 +515,7 @@ namespace Shapes
 													lightMultiply->components( ),
 													facetState->autoScattering_,
 													Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY, facetState->autoIntensity_, callLoc )->components( ) ) ) ) );
-					
+
 								goto done;
 							}
 						catch( const NonLocalExit::NotThisType & ball )
@@ -523,7 +523,7 @@ namespace Shapes
 								/* Wrong type; never mind!.. but see below!
 								 */
 							}
-			
+
 						throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING,
 																											 nonStroking->getTypeName( ),
 																											 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
@@ -570,7 +570,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Geometric3D ArgType;
 				RefCountPtr< ArgType > obj = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -589,7 +589,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Geometric2D ArgType;
 				RefCountPtr< ArgType > obj = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -655,7 +655,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				typedef const Lang::Drawable2D ArgType1;
@@ -682,7 +682,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				typedef const Lang::Drawable2D ArgType1;
@@ -703,7 +703,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				try
 					{
 						typedef const Lang::SoftMask ArgType;
@@ -718,7 +718,7 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-	
+
 				try
 					{
 						typedef const Lang::MultiPath2D ArgType;
@@ -734,7 +734,7 @@ namespace Shapes
 											continue;
 										}
 								}
-						
+
 								{
 									typedef const Lang::Connection2D ArgType;
 									ArgType * subpath = dynamic_cast< ArgType * >( (*i).getPtr( ) );
@@ -784,7 +784,7 @@ namespace Shapes
 		};
 
 		ArrowheadReceiverFormals2D theArrowheadReceiverFormals2D;
-		
+
 		class Stroke2DCont_tail : public Kernel::ForcedStructureContinuation
 		{
 			RefCountPtr< const Kernel::GraphicsState > graphicsState_;
@@ -806,13 +806,13 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals2D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable2D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
-				
+
 				if( cutTail->get( ) < 0 )
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
@@ -839,7 +839,7 @@ namespace Shapes
 								cont_->takeValue( picture,
 																	evalState );
 							}
-						
+
 					}
 			}
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
@@ -874,10 +874,10 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals2D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable2D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
@@ -944,10 +944,10 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals2D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable2D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
@@ -955,7 +955,7 @@ namespace Shapes
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Aarrow head cut length was negative." ) );
 					}
-				
+
 				if( cutTail_.get( ) == 0 && cutHead->get( ) == 0 )
 					{
 						cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
@@ -970,15 +970,15 @@ namespace Shapes
 							{
 								t1 = path_->arcTime( cutTail_.get( ) );
 							}
-						
+
 						Concrete::SplineTime t2( HUGE_VAL );
 						if( cutHead->get( ) > 0 )
 							{
 								t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
 							}
-						
+
 						RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
-						
+
 						if( subpath->size( ) > 0 )
 							{
 								cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
@@ -1029,18 +1029,18 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals2D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable2D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
-				
+
 				if( cutTail->get( ) < 0 )
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
 					}
-				
+
 				evalState->env_ = env_;
 				evalState->dyn_ = dyn_;
 				evalState->cont_ = Kernel::ContRef( new Kernel::Stroke2DCont_both2( graphicsState_, path_, picture, *cutTail, env_, dyn_, cont_, traceLoc_ ) );
@@ -1058,7 +1058,7 @@ namespace Shapes
 				cont_->gcMark( marked );
 			}
 		};
-		
+
 	}
 }
 
@@ -1124,7 +1124,7 @@ namespace Shapes
 		};
 
 		ArrowheadReceiverFormals3D theArrowheadReceiverFormals3D;
-		
+
 		class Stroke3DCont_tail : public Kernel::ForcedStructureContinuation
 		{
 			RefCountPtr< const Kernel::GraphicsState > graphicsState_;
@@ -1146,13 +1146,13 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals3D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable3D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
-				
+
 				if( cutTail->get( ) < 0 )
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
@@ -1181,7 +1181,7 @@ namespace Shapes
 								cont_->takeValue( picture,
 																	evalState );
 							}
-						
+
 					}
 			}
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
@@ -1216,10 +1216,10 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals3D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable3D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
@@ -1288,10 +1288,10 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals3D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable3D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutHead = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
 
@@ -1299,7 +1299,7 @@ namespace Shapes
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Aarrow head cut length was negative." ) );
 					}
-				
+
 				if( cutTail_.get( ) == 0 && cutHead->get( ) == 0 )
 					{
 						cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
@@ -1315,15 +1315,15 @@ namespace Shapes
 							{
 								t1 = path_->arcTime( cutTail_.get( ) );
 							}
-						
+
 						Concrete::SplineTime t2( HUGE_VAL );
 						if( cutHead->get( ) > 0 )
 							{
 								t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
 							}
-						
+
 						RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
-						
+
 						if( subpath->size( ) > 0 )
 							{
 								cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
@@ -1376,18 +1376,18 @@ namespace Shapes
 				Kernel::Arguments args( & theArrowheadReceiverFormals3D );
 				structure->argList_->bind( & args, structure->values_, env_, dyn_ );
 				args.applyDefaults( );
-				
+
 				typedef const Lang::Drawable3D ArgType0;
 				RefCountPtr< ArgType0 > picture = Helpers::down_cast_CoreArgument< ArgType0 >( continuationName_, args, 0, traceLoc_ );
-				
+
 				typedef const Lang::Length ArgType1;
 				RefCountPtr< ArgType1 > cutTail = Helpers::down_cast_CoreArgument< ArgType1 >( continuationName_, args, 1, traceLoc_ );
-				
+
 				if( cutTail->get( ) < 0 )
 					{
 						throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrow tail cut length was negative." ) );
 					}
-				
+
 				evalState->env_ = env_;
 				evalState->dyn_ = dyn_;
 				evalState->cont_ = Kernel::ContRef( new Kernel::Stroke3DCont_both2( graphicsState_, path_, picture, *cutTail, env_, dyn_, cont_, traceLoc_ ) );
@@ -1405,7 +1405,7 @@ namespace Shapes
 				cont_->gcMark( marked );
 			}
 		};
-		
+
 	}
 }
 
@@ -1437,7 +1437,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 					arrowHead->call( evalState, path->reverse( ), callLoc );
 					return;
 				}
-			
+
 			if( arrowHead == Lang::THE_NO_ARROW )
 				{
 					/* There's only an arrow at the tail.

@@ -49,12 +49,12 @@ namespace Shapes
 	public:
 		TeXLabelManager( );
 		~TeXLabelManager( );
-		
+
 		void settexJobName( const std::string & _texJobName );
-		
+
 		void announce( const std::string & str );
 		RefCountPtr< const Lang::Value > request( const std::string & str, Kernel::PassedDyn dyn );
-		
+
 		void iterativeStartup( RefCountPtr< std::istream > labelsFile );
 		void iterativeFinish( const std::string & labelDBFilename );
 

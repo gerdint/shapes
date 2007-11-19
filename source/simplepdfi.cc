@@ -324,7 +324,7 @@ PDF_in::parse( )
 						tokenStack.pop_back( );
 						PDF_Indirect * objRef( reinterpret_cast< PDF_Indirect * >( objectStack.back( ).pdfObj ) );
 						objectStack.pop_back( );
-						
+
 						delete objRef;
 						return res;
 					}
@@ -378,7 +378,7 @@ PDF_in::parse( )
 									}
 								tokenStack.pop_back( );
 								objectStack.pop_back( );
-								
+
 								popToken = tokenStack.back( );
 
 							}
@@ -391,7 +391,7 @@ PDF_in::parse( )
 							{
 								newVec->vec.push_back( RefCountPtr< PDF_Object >( *i ) );
 							}
-						
+
 						tokenStack.push_back( T_Constant );
 						objectStack.push_back( PdfScanner::UnionType( ) );
 						objectStack.back( ).pdfObj = newVec;
@@ -479,7 +479,7 @@ SimplePDF::PDF_in::getPageCount( )
 					++count;
 				}
 		}
-	
+
 	return count;
 }
 

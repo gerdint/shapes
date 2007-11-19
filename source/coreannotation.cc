@@ -26,7 +26,7 @@ namespace Shapes
 			typedef const Lang::Symbol T;
 			RefCountPtr< const Lang::Value > untyped = args.getValue( i );
 			RefCountPtr< T > val = untyped.down_cast< T >( );
-			
+
 			char highlight = 'I'; // This is the default.
 			if( val == NullPtr< T >( ) )
 				{
@@ -134,7 +134,7 @@ namespace Shapes
 					{
 						contentText = contentTextVal->val_;
 					}
-	
+
 				++argsi;
 				typedef const Lang::RGB ColorType;
 				Concrete::RGB color = Helpers::down_cast_CoreArgument< ColorType >( title_, args, argsi, callLoc )->components( );
@@ -204,7 +204,7 @@ namespace Shapes
 				++argsi;
 				typedef const Lang::Dash DashType;
 				RefCountPtr< DashType > dash = Helpers::down_cast_CoreArgument< DashType >( title_, args, argsi, callLoc, true );
-	
+
 				++argsi;
 				typedef const Lang::Float CloudyType;
 				RefCountPtr< CloudyType > cloudyVal = Helpers::down_cast_CoreArgument< CloudyType >( title_, args, argsi, callLoc, true );

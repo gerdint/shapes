@@ -25,19 +25,19 @@ namespace Shapes
 			Formals( size_t numberOfDummyDefaultExprs );
 			~Formals( );
 			void setLoc( Ast::SourceLocation loc );
-			
+
 			void push_exprs( Ast::ArgListExprs * args ) const;
 			Kernel::EvaluatedFormals * newEvaluatedFormals( Kernel::Arguments & args ) const;
 			Kernel::EvaluatedFormals * newEvaluatedFormals( Kernel::Arguments & args, size_t * pos ) const;	// values are taken at *pos, and *pos is incremented accordingly
-			
+
 			std::vector< bool > * newArgListForcePos( const Ast::ArgListExprs * argList ) const;
 			std::vector< bool > * newArgListForcePos( const Ast::ArgListExprs * argList, const Kernel::Arguments & curryArgs ) const;
-			
+
 			bool hasSink( ) const { return sink_ != 0; }
 
 			const Ast::SourceLocation & loc( ) const;
 		};
-		
+
 		class CallContInfo
 		{
 			std::vector< bool > * forcePos_;
@@ -47,16 +47,16 @@ namespace Shapes
 			Kernel::PassedEnv env_;
 			Kernel::PassedDyn dyn_;
 			Kernel::ContRef cont_;
-			
+
 			CallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, std::vector< bool > * forcePos );
 			CallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, bool forceAll );
 			~CallContInfo( );
-			
+
 			bool force( const size_t & pos ) const;
 			bool isSelective( ) const;
 			void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 
 	namespace Ast
@@ -72,18 +72,18 @@ namespace Shapes
 			std::list< Ast::StateReference * > * orderedStates_;
 			std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates_;
 			bool imperative_;
-			
+
 			class ConstIterator
 			{
 			public:
 				std::list< Ast::Expression * >::const_reverse_iterator i1_;
 				std::map< const char *, Ast::Expression *, charPtrLess >::const_iterator i2_;
 				size_t index_;
-				
+
 				ConstIterator( const ConstIterator & orig );
 				ConstIterator( std::list< Ast::Expression * >::const_reverse_iterator i1, std::map< const char *, Ast::Expression *, charPtrLess >::const_iterator i2, const size_t & index	);
 			};
-			
+
 			ArgListExprs( bool exprOwner );
 			ArgListExprs( std::list< Ast::Expression * > * orderedExprs, std::map< const char *, Ast::Expression *, charPtrLess > * namedExprs,
 										std::list< Ast::StateReference * > * orderedStates, std::map< const char *, Ast::StateReference *, charPtrLess > * namedStates );
@@ -92,14 +92,14 @@ namespace Shapes
 			void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 
 			ConstIterator begin( ) const;
-			
+
 			void evaluate( const RefCountPtr< const Kernel::CallContInfo > & info, const ArgListExprs::ConstIterator & pos, const RefCountPtr< const Lang::SingleList > & vals, Kernel::EvalState * evalState ) const;
 			void bind( Kernel::Arguments * dst, RefCountPtr< const Lang::SingleList > vals, Kernel::PassedEnv env, Kernel::PassedDyn dyn ) const;
 
 			Kernel::VariableHandle findNamed( RefCountPtr< const Lang::SingleList > vals, const char * name ) const;
 			Kernel::VariableHandle getOrdered( RefCountPtr< const Lang::SingleList > vals, size_t pos ) const;
 		};
-		
+
 		class FunctionFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
@@ -109,12 +109,12 @@ namespace Shapes
 		public:
 			FunctionFunction( const Ast::SourceLocation & loc, const Kernel::Formals * formals, Ast::Expression * body, const Ast::FunctionMode & functionMode );
 			virtual ~FunctionFunction( );
-			
+
 			void push_exprs( Ast::ArgListExprs * args ) const;
-			
-			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );			
+
+			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
-			
+
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
 		};
@@ -140,7 +140,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class CallCont_last : public Kernel::Continuation
 		{
 			RefCountPtr< const Lang::Function > fun_;
@@ -156,7 +156,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class CallCont_n : public Kernel::Continuation
 		{
 			RefCountPtr< const Kernel::CallContInfo > info_;
@@ -198,7 +198,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class SplitCont_2 : public Kernel::Continuation
 		{
 			RefCountPtr< const Lang::Function > fun_;
@@ -213,7 +213,7 @@ namespace Shapes
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 
 	namespace Ast
@@ -227,25 +227,25 @@ namespace Shapes
 		public:
 			Ast::Expression * funExpr_;
 			Ast::ArgListExprs * argList_;
-			
+
 			CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
 			CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
 			virtual ~CallExpr( );
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class UnionExpr : public Expression
 		{
 		public:
 			Ast::ArgListExprs * argList_;
-			
+
 			UnionExpr( const Ast::SourceLocation & loc, Ast::ArgListExprs * argList );
 			virtual ~UnionExpr( );
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class CallSplitExpr : public Expression
 		{
 			bool curry_;
@@ -253,13 +253,13 @@ namespace Shapes
 			Ast::Expression * funExpr_;
 			Ast::Expression * argList_;
 
-		public:			
+		public:
 			CallSplitExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::Expression * argList, bool curry = false, bool procedural = false );
 			virtual ~CallSplitExpr( );
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class DummyExpression : public Expression
 		{
 		public:

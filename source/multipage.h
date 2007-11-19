@@ -79,7 +79,7 @@ namespace Shapes
 				RefCountPtr< SimplePDF::PDF_Vector > mediabox_;
 				std::vector< RefCountPtr< const Lang::DocumentDestination > > destinations_;
 				std::vector< RefCountPtr< const Lang::AnnotationBase > > annotations_;
-				
+
 				Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox );
 				~Page( );
 			};
@@ -116,13 +116,13 @@ namespace Shapes
 			bool isEmpty( ) const;
 			void tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc );
 			void shipout( SimplePDF::PDF_out * doc );
-			
+
 			TYPEINFODECL;
 
 		private:
 			RefCountPtr< const char > getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * entry, size_t index ) const;
 		};
-		
+
 	}
 }
 

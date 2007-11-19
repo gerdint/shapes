@@ -85,7 +85,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 					SPLICEDEBUG( std::cerr << "====( Debug step number " << debugCounter << " )====" << std::endl );
 					Computation::ZBufTriangle current = triangleQueue->front( );
 					triangleQueue->pop_front( );
-					
+
 					typedef typeof disjointTriangles ListType;
 					bool foundOverlap = false;
 					ListType::iterator iOccluded = occludedTriangles.begin( ); 
@@ -131,7 +131,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 					//					break;
 				}
 		}
-	
+
 	{
 		size_t sum = 0;
 		typedef typeof disjointTriangles ListType;
@@ -160,13 +160,13 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 	std::list< const Computation::ZBufLine * > disjointLines;
 	while( lineQueue.size( ) > 0 )
 		{
-		
+
 			std::list< const Computation::ZBufLine * > queue1;
 			std::list< const Computation::ZBufLine * > queue2;
 
 			std::list< const Computation::ZBufLine * > * currentQueue = & queue1;
 			std::list< const Computation::ZBufLine * > * otherQueue = & queue2;
-			
+
 			currentQueue->push_back( lineQueue.front( ) );
 			lineQueue.pop_front( );
 
@@ -240,7 +240,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 	if( SHOW_TRIXELS )
 		{
 			// This is a debug mode
-			
+
 			typedef typeof disjointTriangles ListType;
 			for( ListType::const_iterator i = disjointTriangles.begin( ); i != disjointTriangles.end( ); ++i )
 				{
@@ -258,7 +258,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 			// This is the standard mode
 
 			size_t commonLightCount = commonLights.size( );
-			
+
 			typedef typeof disjointTriangles ListType;
 			for( ListType::iterator i = disjointTriangles.begin( ); i != disjointTriangles.end( ); ++i )
 				{

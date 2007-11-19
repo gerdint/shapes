@@ -188,7 +188,7 @@ Lang::GroupPair2D::bbox( ) const
 		}
 
 	return RefCountPtr< const Lang::ElementaryPath2D >( res );
-	
+
 }
 
 void
@@ -341,7 +341,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 		}
 
 	using namespace Shapes;
-	
+
 	RefCountPtr< SimplePDF::PDF_Stream_out > form;
 
 	(*form)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Form" );
@@ -388,7 +388,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 	res->setDebugStr( "transparency group" );
 	return RefCountPtr< const Lang::TransparencyGroup >( res );
 }
-	
+
 
 
 
@@ -421,7 +421,7 @@ Lang::PaintedPath2D::PaintedPath2D( const RefCountPtr< const Kernel::GraphicsSta
 						continue;
 					}
 			}
-			
+
 			{
 				typedef const Lang::CompositePath2D ArgType;
 				ArgType * subpath = dynamic_cast< ArgType * >( (*i).getPtr( ) );
@@ -503,7 +503,7 @@ Lang::PaintedPath2D::bbox( ) const
 	Concrete::Length xmax = -Concrete::HUGE_LENGTH;
 	Concrete::Length ymin = Concrete::HUGE_LENGTH;
 	Concrete::Length ymax = -Concrete::HUGE_LENGTH;
-	
+
 	Concrete::Coords2D llcorner( 0, 0 ); /* Temporary variables to be used in the loop below. */
 	Concrete::Coords2D urcorner( 0, 0 );
 
@@ -676,7 +676,7 @@ Lang::Clipped2D::bbox( ) const
 	Concrete::Length xmax = -Concrete::HUGE_LENGTH;
 	Concrete::Length ymin = Concrete::HUGE_LENGTH;
 	Concrete::Length ymax = -Concrete::HUGE_LENGTH;
-	
+
 	Concrete::Coords2D llcorner( 0, 0 ); /* Temporary variables to be used in the loop below. */
 	Concrete::Coords2D urcorner( 0, 0 );
 
@@ -744,7 +744,7 @@ Lang::Clipped2D::debugPolys( ) const
 		{
 			res->addSubPath( *i );
 		}
-	
+
 	return RefCountPtr< const Lang::Drawable2D >( res );
 }
 
@@ -1011,7 +1011,7 @@ Lang::Drawable2Din3D::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Tra
 			msg << "An object of type " << element_->getTypeName( ) << " in 3D cannot go back to 2D viewed from a finite distance.	Consider using facing rather than immerse." ;
 			throw Exceptions::MiscellaneousRequirement( strrefdup( msg.str( ).c_str( ) ) );
 		}
-	
+
 	// The transform in 2D is obtained by setting z = 0 in the source 3D coordinates, and omitting the z-coordinate in the new coordinates
 
 	return RefCountPtr< const Lang::Drawable2D >( new Lang::Transformed2D( element_, Lang::Transform2D( tf.xx_, tf.yx_, tf.xy_, tf.yy_, tf.xt_, tf.yt_ ) ) );
@@ -1033,7 +1033,7 @@ Lang::Drawable2Din3D::findTags( std::vector< Kernel::ValueRef > * dst, const Ker
 			msg << "Tags in an immersed object are not accessible from a finite viewing distance.	Consider using facing rather than immerse." ;
 			throw Exceptions::MiscellaneousRequirement( strrefdup( msg.str( ).c_str( ) ) );
 		}
-	
+
 	// The transform in 2D is obtained by setting z = 0 in the source 3D coordinates, and omitting the z-coordinate in the new coordinates
 
 	element_->findTags( dst, dyn, key, Lang::Transform2D( tf.xx_, tf.yx_, tf.xy_, tf.yy_, tf.xt_, tf.yt_ ) );
@@ -1049,7 +1049,7 @@ Lang::Drawable2Din3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::K
 			msg << "Tags in an immersed object are not accessible from a finite viewing distance.	Consider using facing rather than immerse." ;
 			throw Exceptions::MiscellaneousRequirement( strrefdup( msg.str( ).c_str( ) ) );
 		}
-	
+
 	// The transform in 2D is obtained by setting z = 0 in the source 3D coordinates, and omitting the z-coordinate in the new coordinates
 
 	return
@@ -1080,7 +1080,7 @@ Lang::Facing2Din3D::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Trans
 		{
 			s = eyez / ( eyez - tf.zt_ );
 		}
-	
+
 	Concrete::Length x;
 	Concrete::Length y;
 	if( eyez < Concrete::HUGE_LENGTH )
@@ -1119,7 +1119,7 @@ Lang::Facing2Din3D::findTags( std::vector< Kernel::ValueRef > * dst, const Kerne
 		{
 			s = eyez / ( eyez - tf.zt_ );
 		}
-	
+
 	Concrete::Length x;
 	Concrete::Length y;
 	if( eyez < Concrete::HUGE_LENGTH )
@@ -1152,7 +1152,7 @@ Lang::Facing2Din3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::Key
 		{
 			s = eyez / ( eyez - tf.zt_ );
 		}
-	
+
 	Concrete::Length x;
 	Concrete::Length y;
 	if( eyez < Concrete::HUGE_LENGTH )
@@ -1367,7 +1367,7 @@ Computation::FacetLatticeEdge::split( const Concrete::Length eyez,
 		{
 			// We compute the midpoint _in_view_, and then find where this is along the 3D line.
 			Concrete::Coords2D mid2D = 0.5 * ( p0_->p2D_ + p1_->p2D_ );
-			
+
 			// If we write the point we seek in 3D as
 			//	 p0_ + lambda * ( p1_ - p0_ )
 			// then <lambda> must solve the overdetermined system
@@ -1380,7 +1380,7 @@ Computation::FacetLatticeEdge::split( const Concrete::Length eyez,
 			Concrete::Coords2D b( p0_->p3D_.x_ + mid2D.x_ * rb,
 														p0_->p3D_.y_ + mid2D.y_ * rb );
 			const double lambda = - Concrete::innerScalar( a, b ) / Concrete::innerScalar( a, a );
-			
+
 			FacetLatticeVertex * pNew = new FacetLatticeVertex( ( 1 - lambda ) * p0_->p3D_ + lambda * p1_->p3D_, eyez, vertexMem->size( ) );
 			vertexMem->push_back( pNew );
 			child1_ = new Computation::FacetLatticeEdge( p0_, pNew );
@@ -1388,7 +1388,7 @@ Computation::FacetLatticeEdge::split( const Concrete::Length eyez,
 			child2_ = new Computation::FacetLatticeEdge( pNew, p1_ );
 			edgeMem->push_back( child2_ );
 		}
-	
+
 	*child1 = child1_;
 	*child2 = child2_;
 }
@@ -1407,7 +1407,7 @@ Computation::FacetLatticeTriangle::getOther( const Computation::FacetLatticeEdge
 				{
 					return e2_;
 				}
-			return e1_;			
+			return e1_;
 		}
 	else if( ea == e1_ )
 		{
@@ -1415,7 +1415,7 @@ Computation::FacetLatticeTriangle::getOther( const Computation::FacetLatticeEdge
 				{
 					return e2_;
 				}
-			return e0_;		
+			return e0_;
 		}
 	else if( ea == e2_ )
 		{
@@ -1437,7 +1437,7 @@ Computation::FacetLatticeTriangle::fitsResolution( const Concrete::Length resolu
 {
 	const Computation::FacetLatticeEdge * ec1;
 	const Computation::FacetLatticeEdge * ec2;
-	
+
 	Concrete::Length l0 = e0_->length2D( );
 	Concrete::Length l1 = e1_->length2D( );
 	Concrete::Length l2 = e2_->length2D( );
@@ -1478,7 +1478,7 @@ Computation::FacetLatticeTriangle::fitsResolution( const Concrete::Length resolu
 			*child1 = new Computation::FacetLatticeTriangle( ec1, eb, newEdge );
 			*child2 = new Computation::FacetLatticeTriangle( newEdge, ec, ec2 );
 		}
-	
+
 	return false;
 }
 
@@ -1543,7 +1543,7 @@ Computation::FacetLatticeTriangle::extendLattice( const Computation::FacetLattic
 						}
 					return 1;
 				}
-			
+
 			// Then, we try to extend va--vc (corresponding to flag=2)
 			if( v0_ == *va || v1_ == *va || v2_ == *va )
 				{
@@ -1636,7 +1636,7 @@ Computation::PaintedPolygon3D::makeLattice( PtrOwner_back_Access< std::list< con
 			++i;
 			Computation::FacetLatticeVertex * p2 = new Computation::FacetLatticeVertex( i->transformed( tf ), eyez, vertexMem->size( ) );
 			vertexMem->push_back( p2 );
-			
+
 			Computation::FacetLatticeEdge * e0 = new Computation::FacetLatticeEdge( p0, p1 );
 			edgeMem->push_back( e0 );
 			Computation::FacetLatticeEdge * e1 = new Computation::FacetLatticeEdge( p1, p2 );
@@ -1739,7 +1739,7 @@ RefCountPtr< const Lang::PaintedPolygon2D >
 Computation::FilledPolygon3D::polygon_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const
 {
 	// A FilledPolygon3D is characterized by that it doesn't take notice about the lights or orientation.
-	
+
 	Concrete::Length eyez = dyn->getEyeZ( );
 
 	RefCountPtr< Lang::ElementaryPath2D > path = RefCountPtr< Lang::ElementaryPath2D >( new Lang::ElementaryPath2D( ) );
@@ -1822,7 +1822,7 @@ Computation::GraySingleSidedPolygon3D::polygon_to2D( const Kernel::PassedDyn & d
 {
 	// In the current implementation, the color is only computed at one point.	Later, this
 	// shall be extended to nice shadings.
-	
+
 	Concrete::Length eyez = dyn->getEyeZ( );
 
 	if( viewResolution_ == Concrete::HUGE_LENGTH &&
@@ -1830,7 +1830,7 @@ Computation::GraySingleSidedPolygon3D::polygon_to2D( const Kernel::PassedDyn & d
 		{
 			return simple_polygon_to2D( eyez, tf, lights );
 		}
-	
+
 	PtrOwner_back_Access< std::list< const FacetLatticeVertex * > > vertexMem;
 	PtrOwner_back_Access< std::list< const FacetLatticeEdge * > > edgeMem;
 	PtrOwner_back_Access< std::list< const Computation::FacetLatticeTriangle * > > lattice;
@@ -1968,7 +1968,7 @@ Computation::GraySingleSidedPolygon3D::render2( const Concrete::Length eyez, con
 				}
 		}
 
-	
+
 	std::vector< RefCountPtr< const Lang::Gray > > vertexColors;
 	{
 		vertexColors.reserve( vertexMem.size( ) );
@@ -2072,7 +2072,7 @@ Computation::GraySingleSidedPolygon3D::render2( const Concrete::Length eyez, con
 							found = true;
 
 							lattice->erase( i );
-							
+
 							writePacked( form->data,
 													 BITS_PER_COORDINATE, BITS_PER_COMPONENT, BITS_PER_FLAG,
 													 ( vc->p2D_.x_ - x0y0.x_ ) / bboxWidth,
@@ -2091,7 +2091,7 @@ Computation::GraySingleSidedPolygon3D::render2( const Concrete::Length eyez, con
 					lattice->pop_front( );
 					current->getVertexes( & va, & vb, & vc );
 					delete current;
-					
+
 					writePacked( form->data,
 											 BITS_PER_COORDINATE, BITS_PER_COMPONENT, BITS_PER_FLAG,
 											 ( va->p2D_.x_ - x0y0.x_ ) / bboxWidth,
@@ -2182,7 +2182,7 @@ Computation::GraySingleSidedPolygon3D::writePackedValue( std::ostream & os, char
 					char tmp = ( val >> ( bits - 8 ) );
 					os.write( & tmp, 1 );
 					val %= ( 1 << ( bits - 8 ) );
-					
+
 					bits -= 8;
 				}
 		}
@@ -2346,7 +2346,7 @@ Lang::PaintedPath3D::PaintedPath3D( RefCountPtr< const Kernel::GraphicsState > m
 						continue;
 					}
 			}
-			
+
 			{
 				typedef const Lang::CompositePath3D ArgType;
 				ArgType * subpath = dynamic_cast< ArgType * >( (*i).getPtr( ) );
@@ -2431,7 +2431,7 @@ Lang::PaintedPath3D::polygonize( std::list< RefCountPtr< Computation::PaintedPol
 			for( ListType::const_iterator subi = path_.begin( ); subi != path_.end( ); ++subi )
 				{
 					const RefCountPtr< const Lang::ElementaryPath3D > & theSub = *subi;
-					
+
 					if( theSub->size( ) < 2 )
 						{
 							continue;
@@ -2519,7 +2519,7 @@ Lang::PaintedPath3D::polygonize( std::list< RefCountPtr< Computation::PaintedPol
 						continue;
 					}
 			}
-			
+
 			zBufPile->push_back( newPoly );
 
 			for( SubListType::const_iterator i = theSub->begin( ); i != theSub->end( ); ++i )
@@ -2738,7 +2738,7 @@ Lang::Text::shipout( std::ostream & os, Kernel::PageContentStates * pdfState, co
 			tf.shipout( os );
 			os << " Tm" << std::endl ;
 		}
-	
+
 	pdfState->text_.synchKnockout( os, textState_.getPtr( ), pdfState->resources_.getPtr( ) );
 
 	typedef typeof *elements_ ListType;

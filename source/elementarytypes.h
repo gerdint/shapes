@@ -21,7 +21,7 @@
 
 namespace Shapes
 {
-	
+
 	namespace Concrete
 	{
 		class SplineTime
@@ -32,10 +32,10 @@ namespace Shapes
 			SplineTime( const SplineTime & orig ) : t_( orig.t_ ), isPast_( orig.isPast_ ) { };
 			SplineTime( Concrete::Time t ) : t_( t ), isPast_( false ) { }
 			SplineTime( Concrete::Time t, bool isPast ) : t_( t ), isPast_( isPast ) { }
-			
+
 			const Concrete::Time & t( ) const { return t_; }
 			const bool & isPast( ) const { return isPast_; }
-			
+
 			SplineTime & operator ++ ( ) { t_ += UNIT_TIME; return *this; }
 		};
 	}
@@ -52,7 +52,7 @@ namespace Shapes
 			TYPEINFODECL;
 			virtual Kernel::QuickTypeID getTypeID( ) const { return Kernel::TYPEID_NoOperatorOverloadValue; };
 		};
-		
+
 		class Symbol : public Lang::Value
 		{
 		public:
@@ -68,7 +68,7 @@ namespace Shapes
 			Symbol( );
 			Symbol( int key );
 			Symbol( const char * name );
-			
+
 			bool operator == ( const Symbol & other ) const;
 			bool operator != ( const Symbol & other ) const;
 			bool operator < ( const Symbol & other ) const;
@@ -84,7 +84,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class Float : public Lang::Value
 		{
 		public:
@@ -95,7 +95,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class Integer : public Lang::Value
 		{
 		public:
@@ -107,7 +107,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class Length : public Lang::Value
 		{
 			bool isOffset_;
@@ -131,7 +131,7 @@ namespace Shapes
 			friend std::ostream & operator << ( std::ostream & os, const Lang::Length & self );
 			DISPATCHDECL;
 		};
-		
+
 		class Boolean : public Lang::Value
 		{
 		public:
@@ -142,7 +142,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class String : public Lang::Value
 		{
 		public:
@@ -155,7 +155,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class FloatPair : public Lang::Value
 		{
 		public:
@@ -169,7 +169,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		class FloatTriple : public Lang::Value
 		{
 		public:
@@ -184,7 +184,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
 		};
-		
+
 		inline
 		Lang::FloatTriple
 		cross( const Lang::FloatTriple & a, const Lang::FloatTriple & b )
@@ -193,7 +193,7 @@ namespace Shapes
 																a.z_ * b.x_ - a.x_ * b.z_,
 																a.x_ * b.y_ - a.y_ * b.x_ );
 		}
-		
+
 		class Coords2D : public Lang::Geometric2D
 		{
 		public:
@@ -212,7 +212,7 @@ namespace Shapes
 			friend std::ostream & operator << ( std::ostream & os, const Lang::Coords2D & self );
 			DISPATCHDECL;
 		};
-		
+
 		class CornerCoords2D : public Lang::Coords2D
 		{
 		public:
@@ -226,7 +226,7 @@ namespace Shapes
 			TYPEINFODECL;
 			DISPATCHDECL;
 		};
-		
+
 		class Coords3D : public Lang::Geometric3D
 		{
 		public:
@@ -247,7 +247,7 @@ namespace Shapes
 			friend std::ostream & operator << ( std::ostream & os, const Lang::Coords3D & self );
 			DISPATCHDECL;
 		};
-		
+
 	}
 }
 

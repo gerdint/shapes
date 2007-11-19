@@ -14,7 +14,7 @@ namespace Shapes
 			size_t nVars_;
 			size_t nEqns_;
 			size_t nExt_;
-			
+
 			mutable double * a_;
 			mutable double * b_;
 			mutable double * c_;
@@ -24,11 +24,11 @@ namespace Shapes
 			mutable size_t * nonBasicEnd_;
 			mutable size_t * basicBegin_;
 			mutable size_t * basicEnd_;
-			
+
 		public:
 			BasicSimplex( size_t nVars, size_t nEqns );
 			~BasicSimplex( );
-			
+
 			bool minimize( double * xdst,
 										 double * objdst, double objGoal,
 										 const double * c, const double * a, const double * b,

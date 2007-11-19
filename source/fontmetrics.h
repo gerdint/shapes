@@ -27,14 +27,14 @@ namespace FontMetrics
 		double ymax_;
 		double vX_;
 		double vY_;
-		
+
 	private:
 		// The following fields are mutable since they cannot be synchronized at an early stage, yet the object is not really
 		// ready for access until synchronized.	Hence, it should be safe to store const pointers to objects of this type
 		// in WritingDirectionMetrics, which are then synchronized once all characters are known by name.
 		mutable std::map< size_t, size_t > ligatures_;
 		mutable std::map< RefCountPtr< const char >, RefCountPtr< const char >, charRefPtrLess > * ligatureSetupMap_;
-		
+
 	public:
 		CharacterMetrics( size_t internalPosition )
 			: internalPosition_( internalPosition ),
@@ -59,7 +59,7 @@ namespace FontMetrics
 
 		void display( std::ostream & os ) const;
 	};
-	
+
 	class WritingDirectionMetrics
 	{
 	public:
@@ -69,24 +69,24 @@ namespace FontMetrics
 		double charWidthX_;
 		double charWidthY_;
 		bool isFixedPitch_;
-		
+
 		PtrOwner_back_Access< std::vector< const CharacterMetrics * > > charData_;
-		
+
 		// The size_t is an index into charData_;
 		std::map< RefCountPtr< const char >, size_t, charRefPtrLess > nameMap_;
 		std::vector< size_t > codeMap_;
-		
+
 		WritingDirectionMetrics( );
 		~WritingDirectionMetrics( );
-		
+
 		void setupLigatures( );
 		const CharacterMetrics * charByName( const char * name ) const;
 		const CharacterMetrics * charByCode( unsigned char code ) const;
 		const CharacterMetrics * charByCode( char code ) const;	// shall not be used; generates an error
-		
+
 		void display( std::ostream & os ) const;
 	};
-	
+
 	class TrackKerning
 	{
 		double sizeLow_;
@@ -123,7 +123,7 @@ namespace FontMetrics
 		double leading_;
 		double stdHW_;
 		double stdVW_;
-		
+
 		double vVectorX_;
 		double vVectorY_;
 		bool isFixedV_;
@@ -164,14 +164,14 @@ namespace FontMetrics
 		double getHorizontalKernPairXByCode( unsigned char code1, unsigned char code2 ) const;
 		double getHorizontalKernPairXByCode( char code1, char code2 ) const;	// generates error
 	};
-	
+
 	class BaseFont : public AFM
 	{
 	public:
 		BaseFont( )
 		{ }
 		~BaseFont( );
-		
+
 		virtual bool isBaseFont( ) const { return true; }
 	};
 

@@ -44,7 +44,7 @@ void
 Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 {
 	(*dst)[ "FunctionType" ] = Kernel::the_pdfo->newInt( subType_ );
-	
+
 	if( domain_.size( ) != inputDimension_ )
 		{
 			throw Exceptions::InternalError( strrefdup( "The size of domain_ does not match inputDimension_." ) );
@@ -61,7 +61,7 @@ Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 			}
 		(*dst)[ "Domain" ] = tmpVector;
 	}
-	
+
 	if( rangeIsActive_ )
 		{
 			if( range_.size( ) != inputDimension_ )

@@ -29,7 +29,7 @@ namespace Shapes
 	protected:
 		mutable Kernel::PassedEnv env;
 		Kernel::PassedEnv privateEnv;
-		
+
 		Kernel::WarmGroup2D * warm2D;
 		Kernel::WarmGroup3D * warm3D;
 		Kernel::PassedDyn my_dyn;
@@ -54,7 +54,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Function > getMethod( Kernel::MethodId fieldID ) const;
 		RefCountPtr< const Lang::Function > getLocalMethod( Kernel::MethodId fieldID ) const;
 		RefCountPtr< const Lang::Instance > superReference( RefCountPtr< const Lang::Class > parent ) const;
-		
+
 		virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
 
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
@@ -130,7 +130,7 @@ namespace Shapes
 		bool getFinal( ) const;
 		const MessageMapType & getMessageMap( ) const;
 		const RefCountPtr< const Lang::Class > & getMethodDefinitionClass( const Kernel::MethodId & method ) const;
-		
+
 		void showAbstractSet( std::ostream & os ) const;
 
 		TYPEINFODECL;

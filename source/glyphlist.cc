@@ -22,7 +22,7 @@ glyphlist_strtol( char * src, char ** end, iconv_t converterUTF16BEToUCS4 )
 {
 	const size_t BUF_SIZE = 16;
 	static char bufUTF16BE[ BUF_SIZE ];
-	
+
 	char * start = src;
 
 //	 std::cerr << "src: " ;
@@ -74,7 +74,7 @@ glyphlist_strtol( char * src, char ** end, iconv_t converterUTF16BEToUCS4 )
 //	 std::cerr << ")" ;
 
 	const char * inbuf = bufUTF16BE;
-	
+
 	FontMetrics::GlyphList::UnicodeType res;
 	char * outbuf = reinterpret_cast< char * >( & res );;
 	size_t outbytesleft = sizeof( FontMetrics::GlyphList::UnicodeType );
@@ -164,7 +164,7 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
 		{
 			throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:	This many bytes definitely represents more than one UTF-8 character." );
 		}
-	
+
 	char * outbuf;
 	bool success = false;
 	// This is an awkward check that there is not more than one character in <code>.
@@ -272,7 +272,7 @@ GlyphList::readfile( std::istream & iFile )
 							// This is a glyph name that is mapped to a sequence of characters.
 							// It is not what we want.
 							iFile.getline( buf, BUF_SIZE );
-							continue;			
+							continue;
 						}
 				}
 			catch( const char * ball )
@@ -298,7 +298,7 @@ GlyphList::readfile( std::istream & iFile )
 					oss << "An error in the glyphlist file was found near the character \"" << name << "\"." ;
 					throw oss.str( );
 				}
-			
+
 //			 if( code != 0 && code < 50 )
 //				 {
 //					 std::cerr << "Found small character: " << code << " --> " << name << std::endl ;

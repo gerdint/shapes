@@ -33,7 +33,7 @@ namespace Shapes
 		size_t i0;
 		size_t i1;
 		size_t i2;
-		
+
 		IndexRepresentation( );
 		void push_back( size_t i );
 		Lang::ZBuf::PolyIndices toPolyIndices( const std::vector< Concrete::Coords2D > & cornerMem ) const;
@@ -93,7 +93,7 @@ Lang::ZBuf::IndexRepresentation::toPolyIndices( const std::vector< Concrete::Coo
 		{
 			res.push_back( i0 );
 			res.push_back( i2 );
-			res.push_back( i1 );			
+			res.push_back( i1 );
 		}
 	return res;
 }
@@ -188,7 +188,7 @@ Lang::ZBuf::IndexRepresentation::pushTriangle( std::list< Computation::ZBufTrian
 			return;
 		}
 	pushed_ = true;
-	
+
 	triangles->push_back( Computation::ZBufTriangle( painter,
 																							 zMap,
 																							 cornerMem[ i0 ], cornerMem[ i1 ], cornerMem[ i2 ] ) );
@@ -243,7 +243,7 @@ Lang::ZBuf::IndexRepresentation::getEdge( char pos ) const
 {
 	switch( pos )
 		{
-		case 0:	
+		case 0:
 			return Computation::UndirectedEdge( i0, i1 );
 		case 1:
 			return Computation::UndirectedEdge( i1, i2 );
@@ -259,7 +259,7 @@ Lang::ZBuf::IndexRepresentation::getDifferent( char pos ) const
 {
 	switch( pos )
 		{
-		case 0:	
+		case 0:
 			return i2;
 		case 1:
 			return i0;
@@ -416,7 +416,7 @@ Lang::ZBuf::mergeTriangles( std::list< Computation::ZBufTriangle > * triangles )
 					aligned = true;
 					keepPoint = edge.low( );
 				}
-			
+
 			if( aligned )
 				{
 					triangle1->removeEdges( & edgeMatrix );
@@ -429,7 +429,7 @@ Lang::ZBuf::mergeTriangles( std::list< Computation::ZBufTriangle > * triangles )
 					current.addEdges( & edgeMatrix, & jobQueue, cornerMem );
 				}
 		}
-	
+
 	for( Computation::UndirectedEdge edge = Computation::UndirectedEdge::begin( ); edge != Computation::UndirectedEdge::end( ); edge.increment( pointCount ) )
 		{
 			std::list< Lang::ZBuf::IndexRepresentation * > & lst = edgeMatrix[ edge ].second;
@@ -449,7 +449,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 		{
 			return;
 		}
-	
+
 	const Computation::PaintedPolygon3D * painter = mergedTriangles->front( ).painter_;
 	const RefCountPtr< const Computation::ZBufTriangle::ZMap > zMap = mergedTriangles->front( ).zMap_;
 
@@ -554,7 +554,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 									i2 = poly.begin( );
 								}
 							Concrete::Coords2D p2 = cornerMem[ *i2 ];
-							
+
 							// We do the usual inscribed circle test to test alignment
 							while( Computation::triangleArea( p0, p1, p2 ) < Computation::theTrixelizeOverlapTol * Computation::triangleSemiPerimeter( p0, p1, p2 ) )
 								{
@@ -581,7 +581,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 							continue;
 						}
 				}
-			
+
 
 			PolyIndices::const_iterator src = poly.begin( );
 			size_t i0 = *src;
@@ -617,14 +617,14 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 				const std::vector< Concrete::Coords2D > & points = triangles->front( ).points_;
 
 				Lang::ElementaryPath2D * newPath = new Lang::ElementaryPath2D;
-				
+
 				for( std::vector< Concrete::Coords2D >::const_iterator src = points.begin( ); src != points.end( ); ++src )
 				{
 					newPath->push_back( new Concrete::PathPoint2D( new Concrete::Coords2D( *src ) ) );
 				}
 				newPath->close( );
 				dst->addSubPath( RefCountPtr< const Lang::ElementaryPath2D >( newPath ) );
-				
+
 				triangles->pop_front( );
 			}
 		return;
@@ -675,7 +675,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 		while( indexRepQueue.size( ) > 0 )
 			{
 				Lang::ZBuf::IndexRepresentation & current = indexRepQueue.front( );
-				
+
 				bool wasSplit = false;
 				for( char e = 0; e < 3 && ! wasSplit; ++e )
 					{
@@ -730,7 +730,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 									}
 							}
 					}
-				
+
 				if( ! wasSplit )
 					{
 						indexRepMem.push_back( current );
@@ -839,7 +839,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 									i2 = poly.begin( );
 								}
 							Concrete::Coords2D p2 = cornerMem[ *i2 ];
-							
+
 							// We do the usual inscribed circle test to test alignment
 							while( Computation::triangleArea( p0, p1, p2 ) < Computation::theTrixelizeOverlapTol * Computation::triangleSemiPerimeter( p0, p1, p2 ) )
 								{
@@ -866,11 +866,11 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 							continue;
 						}
 				}
-			
+
 
 			{
 				Lang::ElementaryPath2D * newPath = new Lang::ElementaryPath2D;
-				
+
 				for( PolyIndices::const_iterator src = poly.begin( ); src != poly.end( ); ++src )
 				{
 					newPath->push_back( new Concrete::PathPoint2D( new Concrete::Coords2D( cornerMem[ *src ] ) ) );
@@ -900,7 +900,7 @@ Lang::ZBuf::addEdge( Computation::UndirectedEdgeMatrix< std::pair< bool, std::li
 			// that all three are on the same side.	Then we may even drop two of them.
 
 			alreadyInQueue = true;
-			
+
 			Concrete::UnitFloatPair edgeNormalNotNormalized = cornerMem[ edge.low( ) ].unNormalizedOrthogonal( cornerMem[ edge.high( ) ] );
 			double m = Concrete::innerScalar( cornerMem[ edge.low( ) ], edgeNormalNotNormalized );
 
@@ -983,7 +983,7 @@ void
 Lang::ZBuf::removeEdge( Computation::UndirectedEdgeMatrix< std::pair< bool, std::list< Lang::ZBuf::IndexRepresentation * > > > * edgeMatrix, const Computation::UndirectedEdge & edge, Lang::ZBuf::IndexRepresentation * indRep )
 {
 	std::pair< bool, std::list< Lang::ZBuf::IndexRepresentation * > > & p = (*edgeMatrix)[ edge ];
-		
+
 	// An edge can have at most two triangles, so when one is removed, the edge cannot be queued for work.
 	// If this was the only triangle at the edge, this will be a no-op.
 	p.first = false;
@@ -1012,7 +1012,7 @@ Lang::ZBuf::areAlignedAndOrdered( const Concrete::Coords2D p0, const Concrete::C
 		{
 			return false;
 		}
-	
+
 	// We then test that p1 is between p0 and p2 by computing a projection onto an unnormalized vector...
 	// With dHat = d.normalized( ) = d * ( 1 / d.norm( ) ), the condition
 	//	 dHat.inner( p1 - p0 ) < d.norm( )
@@ -1118,7 +1118,7 @@ Lang::ZBuf::extendPoly( PolyIndices * poly, const Computation::UndirectedEdge & 
 						return false;
 					}
 			}
-			
+
 			PolyIndices::iterator srcForward = src2;
 			++srcForward;
 			if( srcForward == poly->end( ) )

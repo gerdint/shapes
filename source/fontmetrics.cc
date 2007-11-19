@@ -47,7 +47,7 @@ FontMetrics::CharacterMetrics::setupLigatures( const std::map< RefCountPtr< cons
 		{
 			return;
 		}
-	
+
 	typedef typeof( *ligatureSetupMap_ ) MapType;
 	typedef typeof( nameMap ) NameMapType;
 	for( MapType::const_iterator i = ligatureSetupMap_->begin( ); i != ligatureSetupMap_->end( ); ++i )
@@ -60,7 +60,7 @@ FontMetrics::CharacterMetrics::setupLigatures( const std::map< RefCountPtr< cons
 				}
 			ligatures_[ iFirst->second ] = iSecond->second;
 		}
-	
+
 	delete ligatureSetupMap_;
 	ligatureSetupMap_ = 0;
 }

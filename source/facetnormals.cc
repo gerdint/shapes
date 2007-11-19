@@ -31,7 +31,7 @@ Concrete::Gray
 Lang::FacetNormalGray::compute( const Concrete::Coords3D & point, const Concrete::UnitFloatTriple normal, const Lang::Transform3D & tf, const Concrete::Length eyez, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const
 {
 	// Here, we must remember that the lights, but only the lights, are already transformed!
-	
+
 	Concrete::UnitFloatTriple tf_normal = tf.transformPlaneUnitNormal( reflectionUnitNormal_ );
 	//	Concrete::Coords3D tf_position( position_.transformed( tf ) );
 	double grayVal = autoScattering_->illuminate( point, eyez, tf_normal, autoIntensity_ ).gr_;
@@ -68,7 +68,7 @@ Lang::FacetNormalGray::compute( const Concrete::Coords3D & point, const Concrete
 					break;
 				}
 		}
-	
+
 	return Concrete::Gray( grayVal );
 }
 
@@ -207,7 +207,7 @@ Computation::FacetInterpolatorGray2::FacetInterpolatorGray2( const RefCountPtr< 
 	d_ = r.norm( );
 	t_ = r.direction( d_ );
 	m_ = Concrete::inner( t_, n1_->position( ) );
-	
+
 	angle_ = acos( Concrete::inner( n1_->normal( ), n2_->normal( ) ) );
 	try
 		{
@@ -340,8 +340,8 @@ Computation::FacetInterpolatorGray3::compute( const Lang::Transform3D & tf, cons
 	double w2 = std::max( 0., 1 - static_cast< double >( Concrete::inner( d2_, point - p2_ ) / l2_ ) );
 	double w3 = std::max( 0., 1 - static_cast< double >( Concrete::inner( d3_, point - p3_ ) / l3_ ) );
 #endif
-	
-	
+
+
 	double sumInv = 1 / ( w1 + w2 + w3 );
 	w1 *= sumInv;
 	w2 *= sumInv;

@@ -783,7 +783,7 @@ String [^\r\n]*
 	{
 		std::cerr << yytext << std::endl ;
 	}
-	BEGIN( FinishGlobalLine );	
+	BEGIN( FinishGlobalLine );
 }
 
 <*>. { throwError( "Unrecognized token." ); }
@@ -804,7 +804,7 @@ strtoname( char * begin, char ** endp, const char * delim )
 	char * end = begin;
 	for( ; strchr( delim, *end ) == 0; ++end )
 		;
-	
+
 	*end = '\0';
 	*endp = end + 1;
 	return begin;
@@ -819,7 +819,7 @@ strtoname( char * begin, char ** endp, const char * delim, size_t delimSize )
 	char * end = begin;
 	for( ; memchr( delim, *end, delimSize ) == 0; ++end )
 		;
-	
+
 	*end = '\0';
 	*endp = end + 1;
 	return begin;

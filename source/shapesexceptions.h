@@ -31,7 +31,7 @@ namespace Shapes
 			virtual ~Exception( );
 			virtual void display( std::ostream & os ) const = 0;
 		};
-		
+
 		class NotImplemented : public Exception
 		{
 			const char * functionality;
@@ -547,7 +547,7 @@ namespace Shapes
 		public:
 			enum Type{ VARIABLE, STATE };
 		private:
-			const Ast::SourceLocation formalsLoc;		
+			const Ast::SourceLocation formalsLoc;
 			const size_t functionArity;
 			const size_t callArity;
 			const Type type_;
@@ -560,7 +560,7 @@ namespace Shapes
 		class SinkRequired : public RuntimeError
 		{
 		private:
-			const Ast::SourceLocation loc_;		
+			const Ast::SourceLocation loc_;
 			const size_t formalsArity_;
 			const size_t callArity_;
 		public:
@@ -574,7 +574,7 @@ namespace Shapes
 		public:
 			enum Type{ VARIABLE, STATE };
 		private:
-			const Ast::SourceLocation formalsLoc;		
+			const Ast::SourceLocation formalsLoc;
 			RefCountPtr< const char > name;
 			Type type_;
 		public:
@@ -588,7 +588,7 @@ namespace Shapes
 		public:
 			enum Type{ VARIABLE, STATE };
 		private:
-			const Ast::SourceLocation formalsLoc;		
+			const Ast::SourceLocation formalsLoc;
 			RefCountPtr< const char > name;
 			size_t pos;
 			Type type_;
@@ -667,7 +667,7 @@ namespace Shapes
 			virtual ~CoreTypeMismatch( );
 			virtual void display( std::ostream & os ) const;
 		};
-	
+
 		class CoreDynamicTypeMismatch : public RuntimeError
 		{
 			const char * title_;
@@ -717,7 +717,7 @@ namespace Shapes
 			virtual ~CoreStateTypeMismatch( );
 			virtual void display( std::ostream & os ) const;
 		};
-	
+
 
 		class ContinuationTypeMismatch : public RuntimeError
 		{
@@ -1032,13 +1032,13 @@ namespace Shapes
 		public:
 			DynamicBindingNotFound( ){ }
 		};
-		
+
 		class CrossDirectionOfParallel : public NonLocalExitBase
 		{
 		public:
 			CrossDirectionOfParallel( ){ }
 		};
-		
+
 		class NotThisType : public NonLocalExitBase
 		{
 		public:

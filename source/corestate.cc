@@ -34,9 +34,9 @@ namespace Shapes
 				if( args.size( ) > 0 )
 					{
 						Concrete::Length totalLength = 0;
-			
+
 						typedef const Lang::Length ArgType;
-			
+
 						for( size_t i = 0;
 								 i < args.size( );
 								 ++i )
@@ -49,7 +49,7 @@ namespace Shapes
 								totalLength += arg->get( );
 								pat->push_back( arg->get( ) );
 							}
-			
+
 						if( totalLength == 0 )
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, args.size( ) - 1, "The total length of the dashpattern is 0." );
@@ -71,7 +71,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				// We don't even check the type here, even though we could have done so...
 
 				Kernel::ContRef cont = evalState->cont_;
@@ -89,7 +89,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -117,7 +117,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 3;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				double parts[ ARITY ];
 
 				typedef const Lang::Float ArgType;
@@ -153,7 +153,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 4;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				double parts[ ARITY ];
 
 				typedef const Lang::Float ArgType;
@@ -189,7 +189,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -217,7 +217,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Float ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
@@ -251,7 +251,7 @@ namespace Shapes
 				args.applyDefaults( );
 
 				size_t i = 0;
-	
+
 				typedef const Lang::TransparencyGroup ArgType0;
 				RefCountPtr< ArgType0 > group = Helpers::down_cast_CoreArgument< ArgType0 >( title_, args, i, callLoc );
 
@@ -263,7 +263,7 @@ namespace Shapes
 					{
 						throw Exceptions::CoreOutOfRange( title_, args, i, "The transform function must have dimensions ( 1, 1 )." );
 					}
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::SoftMask( Lang::SoftMask::ALPHA,
 																															 group,
@@ -289,7 +289,7 @@ namespace Shapes
 				args.applyDefaults( );
 
 				size_t i = 0;
-	
+
 				typedef const Lang::TransparencyGroup ArgType0;
 				RefCountPtr< ArgType0 > group = Helpers::down_cast_CoreArgument< ArgType0 >( title_, args, i, callLoc );
 				if( group->colorSpace( )->isInherent( ) )
@@ -309,7 +309,7 @@ namespace Shapes
 					{
 						throw Exceptions::CoreOutOfRange( title_, args, i, "The transform function must have dimensions ( 1, 1 )." );
 					}
-	
+
 				Kernel::ContRef cont = evalState->cont_;
 				cont->takeValue( Kernel::ValueRef( new Lang::SoftMask( Lang::SoftMask::LUMINOSITY,
 																															 group,

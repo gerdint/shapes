@@ -34,7 +34,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class AutoIntensityBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -56,7 +56,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class ViewResolutionBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -67,7 +67,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 		class ShadeOrderBinding : public DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -78,7 +78,7 @@ namespace Shapes
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
-		
+
 	}
 
 	namespace Kernel
@@ -92,7 +92,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class AutoIntensityDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -101,7 +101,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class AutoScatteringDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -110,7 +110,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class ViewResolutionDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -119,7 +119,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class ShadeOrderDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
 		public:
@@ -128,7 +128,7 @@ namespace Shapes
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
 		};
-		
+
 		class FacetState
 		{
 		public:
@@ -141,7 +141,7 @@ namespace Shapes
 			FacetState( );
 			explicit FacetState( const Kernel::FacetState & orig );	 // explicit, since reference counting shall be used in most cases
 			FacetState( const Kernel::FacetState & newValues, const Kernel::FacetState & oldValues );
-			FacetState( bool setDefaults );		
+			FacetState( bool setDefaults );
 			~FacetState( );
 		};
 

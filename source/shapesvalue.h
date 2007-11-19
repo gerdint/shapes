@@ -26,7 +26,7 @@ namespace Shapes
 #define TYPEINFODECL																												\
 	static RefCountPtr< const ::Shapes::Lang::Class > TypeID;								\
 	virtual const RefCountPtr< const ::Shapes::Lang::Class > & getClass( ) const; \
-	static RefCountPtr< const char > staticTypeName( );												
+	static RefCountPtr< const char > staticTypeName( );
 
 
 #define TYPEINFOIMPL( T )												\
@@ -62,7 +62,7 @@ namespace Shapes
 
 			DISPATCHBASEDECL;
 		};
-	
+
 	class NoOperatorOverloadValue : public Lang::Value
 			{
 			public:

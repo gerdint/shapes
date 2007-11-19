@@ -147,7 +147,7 @@ Kernel::UserDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 											 evalState );
 			return;
 		}
-	
+
 	evalState->cont_ = Kernel::ContRef( new Kernel::UserDynamicBindingContinuation( loc, key_, name_, evalState->cont_ ) );
 
 	filter_->call( filter_, evalState, val, loc );
@@ -202,15 +202,15 @@ Lang::WidthBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->width_ = val_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( ! IS_NAN( newState->width_ ) )
@@ -219,7 +219,7 @@ Lang::WidthBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 		}
 
 	newState->width_ = val_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -297,15 +297,15 @@ Lang::MiterLimitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->miterLimit_ = val_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( ! IS_NAN( newState->miterLimit_ ) )
@@ -314,7 +314,7 @@ Lang::MiterLimitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 		}
 
 	newState->miterLimit_ = val_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -929,7 +929,7 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
@@ -942,10 +942,10 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 					newState->nonStrokingAlpha_ = alpha_;
 				}
 			newState->alphaIsShape_ = alpha_->isShape_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( isStroking_ )
@@ -965,7 +965,7 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 			newState->nonStrokingAlpha_ = alpha_;
 		}
 	newState->alphaIsShape_ = alpha_->isShape_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1055,7 +1055,7 @@ Lang::SoftMask::SoftMask( SubType subType, const RefCountPtr< const Lang::Transp
 	(*gsDic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
 	(*gsDic)[ "SMask" ] = smDic;
 	(*smDic)[ "G" ] = tpGroup->getPDF_Object( );
-	
+
 	switch( subType )
 	{
 	case ALPHA:
@@ -1190,7 +1190,7 @@ Lang::Dash::getDashArray( ) const
 		{
 			res->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( *i ) * scale_ ) );
 		}
-	
+
 	return res;
 }
 
@@ -1365,15 +1365,15 @@ Lang::StrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->strokingColor_ = color_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->strokingColor_ != NullPtr< const Lang::Color >( ) )
@@ -1382,7 +1382,7 @@ Lang::StrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 		}
 
 	newState->strokingColor_ = color_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1458,15 +1458,15 @@ Lang::NonStrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->nonStrokingColor_ = color_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->nonStrokingColor_ != NullPtr< const Lang::Color >( ) )
@@ -1475,7 +1475,7 @@ Lang::NonStrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 		}
 
 	newState->nonStrokingColor_ = color_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1551,15 +1551,15 @@ Lang::DashBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->dash_ = dash_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->dash_ != NullPtr< const Lang::Dash >( ) )
@@ -1568,7 +1568,7 @@ Lang::DashBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 		}
 
 	newState->dash_ = dash_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1644,15 +1644,15 @@ Lang::CapStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->cap_ = cap_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->cap_ != Lang::CapStyle::CAP_UNDEFINED )
@@ -1661,7 +1661,7 @@ Lang::CapStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 		}
 
 	newState->cap_ = cap_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1734,15 +1734,15 @@ Lang::JoinStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->join_ = join_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->join_ != Lang::JoinStyle::JOIN_UNDEFINED )
@@ -1751,7 +1751,7 @@ Lang::JoinStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 		}
 
 	newState->join_ = join_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void
@@ -1824,15 +1824,15 @@ Lang::BlendModeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
 		{
 			Kernel::GraphicsState * newState = new Kernel::GraphicsState( );
 			newState->blend_ = blend_;
-			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+			(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 			return;
 		}
-	
+
 	Kernel::GraphicsState * newState = new Kernel::GraphicsState( *((*sysBindings)->graphicsState_) );
 
 	if( newState->blend_ != Lang::BlendMode::BLEND_UNDEFINED )
@@ -1841,7 +1841,7 @@ Lang::BlendModeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 		}
 
 	newState->blend_ = blend_;
-	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );			
+	(*sysBindings)->graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( newState );
 }
 
 void

@@ -32,7 +32,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				typedef const Lang::Drawable2D ArgType;
 				RefCountPtr< ArgType > arg = args.getValue( 0 ).down_cast< ArgType >( );
 				if( arg == NullPtr< ArgType >( ) )
@@ -45,7 +45,7 @@ namespace Shapes
 												 evalState );
 			}
 		};
-	
+
 		class Core_controlling : public Lang::CoreFunction
 		{
 		public:
@@ -90,7 +90,7 @@ namespace Shapes
 									res->push_back( RefCountPtr< const Lang::ElementaryPath2D >( handlePath ) );
 								}
 						}
-		
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( Kernel::ValueRef( res ),
 													 evalState );
@@ -132,7 +132,7 @@ namespace Shapes
 									res->push_back( RefCountPtr< const Lang::ElementaryPath3D >( handlePath ) );
 								}
 						}
-		
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( Kernel::ValueRef( res ),
 													 evalState );
@@ -195,7 +195,7 @@ namespace Shapes
 													 evalState );
 					return;
 				}
-	
+
 			nextType1:
 				{
 					typedef const Lang::ElementaryPath3D ArgType;
@@ -234,7 +234,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				try
@@ -280,7 +280,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 2;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				{
 					typedef const Lang::ElementaryPath2D ArgType;
 					RefCountPtr< ArgType > path1 = NullPtr< ArgType >( );
@@ -297,7 +297,7 @@ namespace Shapes
 					RefCountPtr< ArgType > path2 = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
 
 					Lang::ElementaryPath2D * res = new Lang::ElementaryPath2D( );
-		
+
 					Concrete::PathPoint2D * meetPoint;
 
 					{
@@ -356,13 +356,13 @@ namespace Shapes
 									}
 							}
 					}
-		
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( Kernel::ValueRef( res ),
 													 evalState );
 					return;
 				}
-	
+
 			nextType1:
 				{
 					typedef const Lang::ElementaryPath3D ArgType;
@@ -380,7 +380,7 @@ namespace Shapes
 					RefCountPtr< ArgType > path2 = Helpers::elementaryPathCast3D( title_, args, argsi, callLoc );
 
 					Lang::ElementaryPath3D * res = new Lang::ElementaryPath3D( );
-		
+
 					Concrete::PathPoint3D * meetPoint;
 
 					{
@@ -439,7 +439,7 @@ namespace Shapes
 									}
 							}
 					}
-		
+
 					Kernel::ContRef cont = evalState->cont_;
 					cont->takeValue( Kernel::ValueRef( res ),
 													 evalState );
@@ -460,7 +460,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				typedef const Lang::ElementaryPath2D ArgType;
@@ -480,7 +480,7 @@ namespace Shapes
 			{
 				const size_t ARITY = 1;
 				CHECK_ARITY( args, ARITY, title_ );
-	
+
 				size_t argsi = 0;
 
 				try
@@ -530,7 +530,7 @@ namespace Shapes
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				size_t argsi = 0;
 
 				typedef const Lang::Length PeriodType;
@@ -541,7 +541,7 @@ namespace Shapes
 					}
 
 				++argsi;
-				
+
 				try
 					{
 						typedef const Lang::ElementaryPath2D ArgType;
@@ -589,7 +589,7 @@ namespace Shapes
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				args.applyDefaults( );
-				
+
 				size_t argsi = 0;
 
 				typedef const Lang::Float AngleType;

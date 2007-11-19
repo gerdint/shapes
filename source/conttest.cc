@@ -106,7 +106,7 @@ class PlusContinuation2 : public Continuation
 	int t1;
 	Kernel::ContRef cont;
 public:
-	
+
 	PlusContinuation2( int _t1, const Kernel::ContRef & _cont ) : t1( _t1 ), cont( _cont ) { }
 	virtual ~PlusContinuation2( ) { }
 	virtual void operator () ( int val, Expression ** evalExpr, EnvRef * evalEnv, Kernel::ContRef * evalCont ) const
@@ -121,7 +121,7 @@ public:
 	Expression * t2;
 	Kernel::ContRef cont;
 	EnvRef env;
-	
+
 	PlusContinuation1( Expression * _t2, const Kernel::ContRef & _cont, EnvRef _env ) : t2( _t2 ), cont( _cont ), env( _env ) { }
 	virtual ~PlusContinuation1( ) { }
 	virtual void operator () ( int val, Expression ** evalExpr, EnvRef * evalEnv, Kernel::ContRef * evalCont ) const
@@ -189,7 +189,7 @@ public:
 		*evalExpr = predicate;
 		*evalCont = Kernel::ContRef( new IfContinuation( consequence, alternative, *evalCont, *evalEnv ) );
 		/* not changing evalEnv */
-	}	
+	}
 };
 
 
@@ -212,12 +212,12 @@ main( )
 
 	Expression * evalExpr = program;
 	EnvRef evalEnv = globalEnv;
-	
+
 	{
 		bool exitFlag = false;
 		int res;
 		Kernel::ContRef evalCont = Kernel::ContRef( new Return( & exitFlag, & res ) );
-		
+
 		while( ! exitFlag )
 			{
 				evalExpr->eval( & evalExpr, & evalEnv, & evalCont );

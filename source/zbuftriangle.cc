@@ -29,7 +29,7 @@ using namespace Shapes;
 void
 assertNotOverlapping( const std::list< Computation::ZBufTriangle > & disjointTriangles )
 {
-	
+
 	typedef typeof disjointTriangles ListType;
 	ListType::const_iterator last = disjointTriangles.end( );
 	--last;
@@ -124,25 +124,25 @@ Computation::SplicingLine::intersection( const Computation::SplicingLine & other
 {
 	Concrete::Length x;
 	Concrete::Length y;
-	
+
 	const Concrete::UnitFloatPair & n2 = other.n_;
 	const Concrete::Length & r2 = other.r_;
-	
+
 	{
 		double n_n1 = Concrete::inner( n_, n2 );
 		double n_n_ = Concrete::inner( n_, n_ );
 		double n2n2 = Concrete::inner( n2, n2 );
-		
+
 		if( n_n1 * n_n1 > ( 1 - 1e-8 ) * ( n_n_ * n2n2 ) ) // This corresponds to an angle of approximately 0.01 degree.
 			{
 				throw "no intersection";
 			}
 	}
-	
+
 	double invDet = static_cast< double >( 1 ) / ( n_.x_ * n2.y_ - n_.y_ * n2.x_ );
 	x = invDet * (	 n2.y_ * r_ - n_.y_ * r2 );
 	y = invDet * ( - n2.x_ * r_ + n_.x_ * r2 );
-	
+
 	Concrete::Coords2D res( x, y );
 	{
 		Concrete::Length c1 = Concrete::inner( d_, res - p0_ );
@@ -153,7 +153,7 @@ Computation::SplicingLine::intersection( const Computation::SplicingLine & other
 				throw "no intersection";
 			}
 	}
-	
+
 	return res;
 }
 
@@ -163,11 +163,11 @@ Computation::SplicingLine::nextLine( const Concrete::Coords2D * p, const Concret
 	// This algorithm is formulated without its own tolerances.	It relies on the pointers to the intersection points;
 	// "nearby points" should be represented by the same pointer.	If two points are represented by different memory
 	// locations, they are treated as positively separated in geometry as well.
-	
+
 	SPLICEDEBUG( std::cerr << "nextLine at " << Lang::Coords2D( *p ) << " -> " << "( " << n.x_ << ", " << n.y_ << " )" << " : " );
 	// Note that n will be unit, so it can be used to compute lengths.
 	const Concrete::Coords2D & my_p = *p;
-	
+
 	// back is parallel to this line, but not in the same halfspace as n.
 	// nOut is parallel to n_ but is turned so that it points out from the enclosed area.
 	// They will both be used to select among lines that intersect at the same point.
@@ -177,7 +177,7 @@ Computation::SplicingLine::nextLine( const Concrete::Coords2D * p, const Concret
 			back = back.reverse( );
 		}
 	Concrete::UnitFloatPair nIn( back.y_, -back.x_ );
-	
+
 	size_t res = 0;
 	Concrete::Length bestRes( HUGE_VAL );
 	const Concrete::Coords2D * bestPoint = 0;
@@ -256,14 +256,14 @@ Computation::ZBufTriangle::isOnTopOfAt( const Computation::ZBufTriangle & other,
 {
 	Concrete::Length zThis = zAt( p );
 	Concrete::Length zOther = other.zAt( p );
-	
+
 	Concrete::Length tThis = zMap_->getTiebreaker( );
 	Concrete::Length tOther = other.zMap_->getTiebreaker( );
 	if( ( zThis - zOther ).abs( ) < std::max( tThis, tOther ) )
 		{
 			return zThis + tThis > zOther + tOther;
 		}
-	
+
 	return zThis > zOther;
 }
 
@@ -312,7 +312,7 @@ Computation::ZBufTriangle::overlaps( const Computation::ZBufTriangle & other ) c
 			{
 				rb = std::max( rb, hypotPhysical( cb.x_ - i->x_, cb.y_ - i->y_ ) );
 			}
-		
+
 		Concrete::Length rSum = ra + rb;
 		if( rSum <= Computation::theTrixelizeOverlapTol )
 			{
@@ -465,7 +465,7 @@ Computation::ZBufTriangle::overlaps( const ZBufTriangle & other, Concrete::Coord
 	bool res = Computation::theTwoTriangleSimplex.maximize( & x[0],
 																													& optRes, static_cast< double >( Concrete::Length::offtype( tol ) ) + bShift,
 																													& c[0], & a[0], & b[0] );
-	
+
 	if( optRes < bShift )
 		{
 			std::cerr << "Simplex couldn't find a truly feasible point: " << optRes << " < " << bShift << std::endl ;
@@ -585,7 +585,7 @@ Computation::ZBufTriangle::addTriangleConstraints( Concrete::Coords2D llCorner, 
 	++i1;
 	ListType::const_iterator i2 = i1;
 	++i2;
-	
+
 	// Note that a is increased by 3 since one position holds a constant 1.
 	for( ; i0 != points_.end( ); i1 = i2, i2 = i0, ++i0, a += 3, ++b )
 		{
@@ -795,7 +795,7 @@ Computation::ZBufTriangle::intersectionLinePoints( const Computation::ZBufTriang
 	}
 	// Here, one could check that bestCol has really been assigned.
 	// To test if it is unassigned, test for bestCol == 4.
-	
+
 	{
 		const double f = a1[bestCol] / a0[bestCol];
 		double * src = a0;
@@ -806,7 +806,7 @@ Computation::ZBufTriangle::intersectionLinePoints( const Computation::ZBufTriang
 			}
 		b1 -= f * b0;
 	}
-	
+
 	// The remaining two columns of the second row can now be used to determine the other two components.
 	// Let secondCol point out the biggest remaining element in a1, and zeroCol point out the column containing the smallest
 	// (non-zero) element.
@@ -846,10 +846,10 @@ Computation::ZBufTriangle::intersectionLinePoints( const Computation::ZBufTriang
 	// and then the final component follows by back-substitution:
 	b0 -= a0[secondCol] * res[secondCol];
 	res[bestCol] = b0 / a0[bestCol];
-	
+
 	*p0 = Concrete::Coords3D( res[0], res[1], res[2] );
 	*p1 = *p0 + Concrete::SOME_LENGTH * ray.direction( );
-	
+
 	return true;
 }
 
@@ -995,9 +995,9 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 							 << "bb: [bbox res]" << std::endl
 							 << "@<< [scale 19cm/[max [xmax bb]-[xmin bb] [ymax bb]-[ymin bb]]] [] res" << std::endl
 							 << "}" << std::endl );
-	
+
 	std::set< VisitType > visited;
-	
+
 	for( size_t start_a = 0; start_a < numberOfLines; ++start_a )
 		{
 			if( ! lines[ start_a ].isTriangleSide_ )
@@ -1073,7 +1073,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 							p2 = lines[ currentLine ].intersections_[ nextLine ];
 							visited.insert( VisitType( p1, p2 ) );
 							visitedLines[ currentLine ] = true;
-								
+
 							// Here, we choose a way to compute a point well inside the *p0--*p1--*p2 triangle.
 							// Using the mean is quick, but the incenter should be more robust.
 							Concrete::Coords2D mean = (1./3) * ( *p0 + *p1 + *p2 );
@@ -1094,7 +1094,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 //								 {
 //									 std::cerr << "tNew contains mean but not all corners!" << std::endl ;
 //								 }
-										
+
 
 
 							const Computation::ZBufTriangle * topTriangle = 0;
@@ -1166,7 +1166,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 										}
 								}
 							p1 = p2;
-							
+
 							{
 								Concrete::UnitFloatPair oldn = n;
 								n = lines[ currentLine ].n_;
@@ -1175,7 +1175,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 										n = n.reverse( );
 									}
 							}
-							
+
 							bool insertTriangles = true;
 
 							while( ! visitedLines[ nextLine ] )
@@ -1195,7 +1195,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 									p2 = lines[ currentLine ].intersections_[ nextLine ];
 									visited.insert( VisitType( p1, p2 ) );
 									visitedLines[ currentLine ] = true;
-									
+
 									if( Computation::triangleArea( *p0, *p1, *p2 ) > Computation::theTrixelizeOverlapTol * Computation::triangleSemiPerimeter( *p0, *p1, *p2 ) )
 										{
 											if( reQueue )
@@ -1212,7 +1212,7 @@ Computation::ZBufTriangle::splice( const ZBufTriangle & tOld, const ZBufTriangle
 												}
 										}
 									p1 = p2;
-									
+
 									{
 										Concrete::UnitFloatPair oldn = n;
 										n = lines[ currentLine ].n_;
@@ -1282,7 +1282,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 					{
 						// Here p0 coincides either of pa or pb, and here it is *i.
 						// Let pa denote the intersection with the opposide triangle side.
-						
+
 						// Let p1 be *i1:
 						std::vector< Concrete::Coords2D >::const_iterator i1 = i;
 						++i1;
@@ -1290,7 +1290,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 							{
 								i1 = points_.begin( );
 							}
-						
+
 						// Let p2 be *i2:
 						std::vector< Concrete::Coords2D >::const_iterator i2 = i1;
 						++i2;
@@ -1298,7 +1298,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 							{
 								i2 = points_.begin( );
 							}
-						
+
 						// Parameterize the line segment from p1 to p2 as ( p1 + t * d )
 						Concrete::Coords2D d = *i2 - *i1;
 						// Then t can be computed easily using the equation of the line.
@@ -1309,7 +1309,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 																											 *i1, *i, pa) );
 						std::list< Computation::ZBufTriangle >::iterator res = dst->end( );
 						--res;
-						
+
 						dst->push_back( Computation::ZBufTriangle( painter_,
 																											 zMap_,
 																											 *i2, *i, pa) );
@@ -1342,7 +1342,7 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 							{
 								i1 = points_.begin( );
 							}
-						
+
 						// Let p2 be *i1:
 						std::vector< Concrete::Coords2D >::const_iterator i2 = i1;
 						++i2;
@@ -1366,14 +1366,14 @@ Computation::ZBufTriangle::spliceAlong( const Computation::SplicingLine & line, 
 																											 *i, pa, pb) );
 						std::list< Computation::ZBufTriangle >::iterator res = dst->end( );
 						--res;
-						
+
 						dst->push_back( Computation::ZBufTriangle( painter_,
 																											 zMap_,
 																											 *i1, pa, pb) );
 						dst->push_back( Computation::ZBufTriangle( painter_,
 																											 zMap_,
 																											 *i1, *i2, pb) );
-						
+
 						return res;
 					}
 			}

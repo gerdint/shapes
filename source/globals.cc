@@ -38,7 +38,7 @@ Concrete::Length Computation::theTrixelizeSplicingTol( 1e-5 );
 Concrete::Length Computation::theTrixelizeOverlapTol( 1e-3 );
 RefCountPtr< const Computation::PaintedPolygon3D > Computation::THE_NULL_POLYGON3D( new Computation::NullPolygon3D( ) );
 bool Computation::fontMetricGuessIsError = false;
-Computation::BasicSimplex Computation::theTwoTriangleSimplex( 3, 6 ); // 3 variables ( x, y, r ), 6 equations.	
+Computation::BasicSimplex Computation::theTwoTriangleSimplex( 3, 6 ); // 3 variables ( x, y, r ), 6 equations.
 
 Ast::Expression * Ast::theProgram;
 PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > Ast::theAnalysisEnvironmentList;

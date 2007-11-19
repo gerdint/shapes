@@ -121,7 +121,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 				char buf[2];
 				buf[0] = borderStyle_;
 				buf[1] = '\0';
-				bs->dic[ "S" ] = SimplePDF::PDF_out::newName( buf );				
+				bs->dic[ "S" ] = SimplePDF::PDF_out::newName( buf );
 			}
 		if( borderDash_ != NullPtr< const Lang::Dash >( ) )
 			{
@@ -176,7 +176,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 					}
 			}
 	}
-	
+
 	if( color_.mean( ) > 0 )
 		{
 			if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
@@ -189,7 +189,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 				}
 		}
 
-	
+
 	return res;
 }
 

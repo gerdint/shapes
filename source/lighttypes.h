@@ -13,7 +13,7 @@ namespace Shapes
 {
 	namespace Lang
 	{
-	
+
 	class SpecularReflection : public Lang::Value
 	{
 	public:

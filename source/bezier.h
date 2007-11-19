@@ -17,7 +17,7 @@ namespace Bezier
 			T p1_;
 			T p2_;
 			T p3_;
-			
+
 			ControlPoints( const T & p0, const T & p1, const T & p2, const T & p3 );
 			ControlPoints( const PolyCoeffs< T > & polyCoeffs );
 
@@ -56,7 +56,7 @@ namespace Bezier
 		ControlPoints< T >::ControlPoints( const T & p0, const T & p1, const T & p2, const T & p3 )
 		: p0_( p0 ), p1_( p1 ), p2_( p2 ), p3_( p3 )
 		{ }
-	
+
 	template< class T >
 		ControlPoints< T >::ControlPoints( const PolyCoeffs< T > & pc )
 		: p0_( pc.z0_ ),
@@ -64,7 +64,7 @@ namespace Bezier
 			p2_( pc.z0_ + (1.0/3) * ( 2 * pc.z1_ + pc.z2_ ) ),
 			p3_( pc.z0_ + pc.z1_ + pc.z2_ + pc.z3_ )
 		{ }
-	
+
 	template< class T >
 		T
 		ControlPoints< T >::point( double t ) const
@@ -89,7 +89,7 @@ namespace Bezier
 		PolyCoeffs< T >::PolyCoeffs( const T & z0, const T & z1, const T & z2, const T & z3 )
 		: z0_( z0 ), z1_( z1 ), z2_( z2 ), z3_( z3 )
 		{ }
-	
+
 	template< class T >
 		PolyCoeffs< T >::PolyCoeffs( const ControlPoints< T > & cp )
 		: z0_( cp.p0_ ),
@@ -97,7 +97,7 @@ namespace Bezier
 			z2_( 3 * ( cp.p0_ - 2 * cp.p1_ + cp.p2_) ),
 			z3_( 3 * cp.p1_ - 3 * cp.p2_ + cp.p3_ - cp.p0_ ) // put cp_.0 last since we don't rely un unary negation
 			{ }
-		
+
 	template< class T >
 		T
 		PolyCoeffs< T >::point( double t ) const

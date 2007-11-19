@@ -47,7 +47,7 @@ namespace Shapes
 {
 	namespace Kernel
 	{
-	
+
 	class SingleFoldLCont : public Kernel::Continuation
 	{
 		RefCountPtr< const Lang::SingleList > cdr_;
@@ -461,7 +461,7 @@ Lang::Structure::getSink( size_t consumedArguments ) const
 		{
 			return Lang::THE_EMPTY_STRUCT;
 		}
-	
+
 	static std::vector< const Ast::ArgListExprs * > argLists;
 	size_t resSize = argList_->orderedExprs_->size( ) - consumedArguments;
 	if( resSize >= argLists.size( ) )

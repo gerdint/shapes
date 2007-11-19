@@ -49,7 +49,7 @@ namespace Shapes
 			Ast::Expression * getExpr( );
 			void printEnv( std::ostream & os ) const;
 		};
-		
+
 		/* Although there are several kinds of variables, I don't use c++ polymorphism for efficiency reasons.
 		 */
 		class Variable
@@ -241,7 +241,7 @@ namespace Shapes
 			const Kernel::Environment * getParent( ) const;
 			void clear( );
 			Ast::AnalysisEnvironment * newAnalysisEnvironment( ) const;
-			
+
 			void clear_gcMarked( ) { gcMarked_ = false; }
 			bool gcMarked( ) const { return gcMarked_; }
 			void gcMark( Kernel::GCMarkedSet & marked );
@@ -267,13 +267,13 @@ namespace Shapes
 			const DynamicVariableProperties & lookupDynamicVariable( size_t pos ) const;
 
 			void defineDynamicState( const char * debugName, size_t pos, Kernel::EvalState * evalState, Ast::StateReference * defaultState );
-			
+
 			const DynamicStateProperties & lookupDynamicState( const LexicalKey & lexKey ) const;
 			const DynamicStateProperties & lookupDynamicState( size_t pos ) const;
 
 
 			size_t size( ) const;
-		
+
 			static size_t createdCount;
 			static size_t liveCount;
 
@@ -300,7 +300,7 @@ namespace Shapes
 			const char * reverseMapState( size_t pos ) const;
 			const char * reverseMapDynamicState( size_t pos ) const;
 		};
-		
+
 	}
 
 	namespace Ast
@@ -342,7 +342,7 @@ namespace Shapes
 
 			size_t findLocalDynamicStatePosition( const Ast::SourceLocation & loc, const char * id ) const;
 			LexicalKey findLexicalDynamicStateKey( const Ast::SourceLocation & loc, const char * id ) const;
-		
+
 			bool isBaseEnvironment( ) const { return parent_ == 0; };
 
 		};

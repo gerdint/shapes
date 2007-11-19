@@ -14,7 +14,7 @@ namespace Shapes
 	{
 
 		typedef RefCountPtr< const Lang::Value > ValueRef;
-		
+
 		class Variable;
 		typedef RefCountPtr< Variable > VariableHandle;
 

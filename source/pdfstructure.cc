@@ -50,7 +50,7 @@ SimplePDF::down_cast_follow( RefCountPtr< PDF_Object > maybeIndirect )
 				return SimplePDF::down_cast_follow< S >( theIndirect->obj );
 			}
 	}
-	
+
 	return maybeIndirect.down_cast< S >( );
 }
 
@@ -663,7 +663,7 @@ SimplePDF::PDF_Stream_in::writeDataDefilteredTo( std::ostream & os ) const
 			throw( "The Filter entry was not a name (nor null) in the stream dictionary" );
 		}
 	const string & filter( filterNameObj->name( ) );
-	
+
 	if( filter == "FlateDecode" )
 		{
 			size_t inBufSize( PDF_Dictionary::getLength( ) );

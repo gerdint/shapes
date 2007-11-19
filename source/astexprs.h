@@ -30,7 +30,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::FloatTriple ) arg, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class RelativeExpr : public UnaryPrefixExpr
 	{
 	public:
@@ -43,7 +43,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords2D ) arg, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class NotExpr : public UnaryPrefixExpr
 	{
 	public:
@@ -52,7 +52,7 @@ namespace Shapes
 	private:
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Boolean ) arg, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class CycleExpr : public UnaryPostfixExpr
 	{
 	public:
@@ -118,7 +118,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider2D ) arg1, DUMMYANDREF( const Lang::PathSlider2D ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::PathSlider3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class PlusPlusExpr : public BinaryInfixExpr
 	{
 	public:
@@ -129,7 +129,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class AmpersandExpr : public BinaryInfixExpr
 	{
 	public:
@@ -160,7 +160,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Drawable3D ) arg1, DUMMYANDREF( const Lang::Drawable3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Group3D ) arg1, DUMMYANDREF( const Lang::Drawable3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class PlusExpr : public BinaryInfixExpr
 	{
 	public:
@@ -201,7 +201,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Gray ) arg1, DUMMYANDREF( const Lang::Gray ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::SpecularReflection ) arg1, DUMMYANDREF( const Lang::SpecularReflection ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class MinusExpr : public BinaryInfixExpr
 	{
 	public:
@@ -230,7 +230,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class AngleExpr : public BinaryInfixExpr
 	{
 	public:
@@ -261,7 +261,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class StarExpr : public BinaryInfixExpr
 	{
 	public:
@@ -340,7 +340,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class SlashExpr : public BinaryInfixExpr
 	{
 	public:
@@ -371,7 +371,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class ProjectionExpr : public BinaryInfixExpr
 	{
 	public:
@@ -394,7 +394,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::FloatTriple ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class ComposeExpr : public BinaryInfixExpr
 	{
 	public:
@@ -407,7 +407,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Transform3D ) arg1, DUMMYANDREF( const Lang::Transform3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Function ) arg1, DUMMYANDREF( const Lang::Function ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class LessExpr : public BinaryInfixExpr
 	{
 	public:
@@ -442,7 +442,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathPoint3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::PathSlider3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class GreaterExpr : public BinaryInfixExpr
 	{
 	public:
@@ -477,7 +477,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathPoint3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::PathSlider3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class EqualExpr : public BinaryInfixExpr
 	{
 	public:
@@ -494,7 +494,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Class ) arg1, DUMMYANDREF( const Lang::Class ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class NotEqualExpr : public BinaryInfixExpr
 	{
 	public:
@@ -511,7 +511,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Class ) arg1, DUMMYANDREF( const Lang::Class ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class LessEqualExpr : public BinaryInfixExpr
 	{
 	public:
@@ -526,7 +526,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class GreaterEqualExpr : public BinaryInfixExpr
 	{
 	public:
@@ -541,7 +541,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Integer ) arg1, DUMMYANDREF( const Lang::Integer ) arg2, const Kernel::PassedDyn & dyn ) const;
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Length ) arg1, DUMMYANDREF( const Lang::Length ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class AndExpr : public BinaryInfixExpr
 	{
 	public:
@@ -550,7 +550,7 @@ namespace Shapes
 	private:
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Boolean ) arg1, DUMMYANDREF( const Lang::Boolean ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class OrExpr : public BinaryInfixExpr
 	{
 	public:
@@ -559,7 +559,7 @@ namespace Shapes
 	private:
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Boolean ) arg1, DUMMYANDREF( const Lang::Boolean ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
-	
+
 	class XorExpr : public BinaryInfixExpr
 	{
 	public:

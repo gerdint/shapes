@@ -130,7 +130,7 @@ Kernel::State::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const L
 {
 	if( ! alive_ )
 		{
-			throw Exceptions::DeadStateAccess( );			
+			throw Exceptions::DeadStateAccess( );
 		}
 	this->tackOnImpl( evalState, piece, dyn, callLoc );
 }
@@ -140,7 +140,7 @@ Kernel::State::peek( Kernel::EvalState * evalState, const Ast::SourceLocation & 
 {
 	if( ! alive_ )
 		{
-			throw Exceptions::DeadStateAccess( );			
+			throw Exceptions::DeadStateAccess( );
 		}
 	this->peekImpl( evalState, callLoc );
 }
@@ -150,7 +150,7 @@ Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation 
 {
 	if( ! alive_ )
 		{
-			throw Exceptions::DeadStateAccess( );			
+			throw Exceptions::DeadStateAccess( );
 		}
 	/* It would make sense to have an intermediate state here.
 	 */
@@ -315,9 +315,9 @@ Kernel::Environment::initDefineDynamic( DynamicVariableProperties * dynProps )
 		{
 			throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< System dynamic variable initialization >" ), dynProps->getName( ) );
 		}
-	
+
 	(*dynamicKeyBindings_)[ dynProps->getName( ) ] = dynamicKeyValues_->size( );
-	
+
 	dynamicKeyValues_->push_back( dynProps );
 }
 
@@ -328,10 +328,10 @@ Kernel::Environment::initDefineDynamic( const char * id, const RefCountPtr< cons
 		{
 			throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< System dynamic variable initialization >" ), id );
 		}
-	
+
 	Kernel::DynamicEnvironmentKeyType key = dynamicKeyValues_->size( );
 	(*dynamicKeyBindings_)[ id ] = key;
-	
+
 	dynamicKeyValues_->push_back( new Kernel::UserDynamicVariableProperties( id, key, filter, defaultVal ) );
 }
 
@@ -530,7 +530,7 @@ Kernel::Environment::gcMark( Kernel::GCMarkedSet & marked )
 		}
 	gcMarked_ = true;
 	marked.insert( marked.begin( ), this );
-	
+
 	values_->clear( );
 }
 
@@ -622,7 +622,7 @@ Kernel::Environment::define( size_t pos, const Kernel::VariableHandle & val )
 		{
 			throw Exceptions::RedefiningLexical( reverseMapVariable( pos ) );
 		}
-	
+
 	(*values_)[ pos ] = val;
 }
 
@@ -639,7 +639,7 @@ Ast::AnalysisEnvironment::findLexicalVariableKey( const Ast::SourceLocation & lo
 				}
 			return parent_->findLexicalVariableKey( loc, id ).oneAbove( );
 		}
-	
+
 	return LexicalKey( 0, i->second );
 }
 
@@ -651,7 +651,7 @@ Kernel::Environment::lookup( const Kernel::Environment::LexicalKey & lexKey, Ker
 		{
 			env = env->getParent( );
 		}
-	
+
 	env->lookup( lexKey.pos_, evalState );
 }
 
@@ -663,7 +663,7 @@ Kernel::Environment::lookup( size_t pos, Kernel::EvalState * evalState ) const
 		{
 			throw Exceptions::UninitializedAccess( );
 		}
-	
+
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeHandle( res, evalState );
 }
@@ -676,7 +676,7 @@ Kernel::Environment::getVarHandle( const Kernel::Environment::LexicalKey & lexKe
 		{
 			env = env->getParent( );
 		}
-	
+
 	return env->getVarHandle( lexKey.pos_ );
 }
 
@@ -699,7 +699,7 @@ Ast::AnalysisEnvironment::findLexicalTypeKey( const Ast::SourceLocation & loc, c
 				}
 			return parent_->findLexicalTypeKey( loc, id ).oneAbove( );
 		}
-	
+
 	return LexicalKey( 0, i->second );
 }
 
@@ -736,7 +736,7 @@ Ast::AnalysisEnvironment::findLexicalStateKey( const Ast::SourceLocation & loc, 
 				}
 			return parent_->findLexicalStateKey( loc, id ).oneAbove( );
 		}
-	
+
 	return LexicalKey( 0, i->second );
 }
 
@@ -748,7 +748,7 @@ Kernel::Environment::introduceState( size_t pos, Kernel::State * state )
 			throw Exceptions::InternalError( "Better error message needed when a state is introduced more than once." );
 			//			throw Exceptions::RedefiningLexical( reverseMap( pos ) );
 		}
-	
+
 	(*states_)[ pos ] = state;
 }
 
@@ -760,7 +760,7 @@ Kernel::Environment::freeze( size_t pos, Kernel::EvalState * evalState, const As
 			// This is a static inconsistency, so it should be detected before we reach here...
 			throw Exceptions::FreezingUndefined( loc, reverseMapState( pos ) );
 		}
-	
+
 	Kernel::StateHandle & state = (*states_)[ pos ];
 
 	state->freeze( evalState, loc );
@@ -786,7 +786,7 @@ Kernel::Environment::getStateHandle( const LexicalKey & lexKey )
 		{
 			env = env->getParent( );
 		}
-	
+
 	return env->getStateHandle( lexKey.pos_ );
 }
 
@@ -833,7 +833,7 @@ Kernel::Environment::defineDynamic( const char * debugName, size_t pos, const Re
 		{
 			throw Exceptions::RedefiningDynamic( reverseMapDynamic( pos ) );
 		}
-	
+
 	(*dynamicKeyValues_)[ pos ] = new Kernel::UserDynamicVariableProperties( debugName,
 																																					 Kernel::DynamicEnvironment::getFreshKey( ),
 																																					 filter,
@@ -861,10 +861,10 @@ Ast::AnalysisEnvironment::findLexicalDynamicKey( const Ast::SourceLocation & loc
 					}
 				return parent_->findLexicalDynamicKey( loc, id ).oneAbove( );
 			}
-		
+
 		return LexicalKey( 0, i->second );
 	}
-	
+
  error:
 	char * msg = new char[ strlen( id ) + 2 ];
 	strcpy( msg, "@" );
@@ -882,8 +882,8 @@ Kernel::Environment::lookupDynamicVariable( const LexicalKey & lexKey ) const
 		{
 			env = env->getParent( );
 		}
-	
-	return env->lookupDynamicVariable( lexKey.pos_ );	
+
+	return env->lookupDynamicVariable( lexKey.pos_ );
 }
 
 const Kernel::DynamicVariableProperties &
@@ -927,7 +927,7 @@ Kernel::Environment::defineDynamicState( const char * debugName, size_t pos, Ker
 		{
 			throw Exceptions::RedefiningDynamic( reverseMapDynamicState( pos ) );
 		}
-	
+
 	(*dynamicStateKeyValues_)[ pos ] = new Kernel::UserDynamicStateProperties( debugName,
 																																						 Kernel::DynamicEnvironment::getFreshKey( ),
 																																						 evalState->env_,
@@ -957,7 +957,7 @@ Ast::AnalysisEnvironment::findLexicalDynamicStateKey( const Ast::SourceLocation 
 				}
 			return parent_->findLexicalDynamicStateKey( loc, id ).oneAbove( );
 		}
-	
+
 	return LexicalKey( 0, i->second );
 }
 
@@ -969,8 +969,8 @@ Kernel::Environment::lookupDynamicState( const LexicalKey & lexKey ) const
 		{
 			env = env->getParent( );
 		}
-	
-	return env->lookupDynamicState( lexKey.pos_ );	
+
+	return env->lookupDynamicState( lexKey.pos_ );
 }
 
 const Kernel::DynamicStateProperties &
@@ -1065,7 +1065,7 @@ Kernel::Environment::recursivePrint( std::ostream & os, std::set< MapType::key_t
 				}
 			depth = parent_->recursivePrint( os, shadowed ) + 1;
 		}
-	
+
 	std::string indentation = string( depth, ' ' );
 
 	os << indentation << "--------------------" << endl ;

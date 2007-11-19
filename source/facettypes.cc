@@ -25,15 +25,15 @@ Lang::ReflectionsBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->facetState_ == NullPtr< const Kernel::FacetState >( ) )
 		{
 			Kernel::FacetState * newState = new Kernel::FacetState( );
 			newState->reflections_ = reflections_;
-			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	Kernel::FacetState * newState = new Kernel::FacetState( *((*sysBindings)->facetState_) );
 
 	if( newState->reflections_ != NullPtr< const Lang::SpecularReflection >( ) )
@@ -42,7 +42,7 @@ Lang::ReflectionsBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 		}
 
 	newState->reflections_ = reflections_;
-	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 }
 
 void
@@ -71,15 +71,15 @@ Lang::AutoIntensityBinding::bind( MapType & bindings, Kernel::SystemDynamicVaria
 			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->facetState_ == NullPtr< const Kernel::FacetState >( ) )
 		{
 			Kernel::FacetState * newState = new Kernel::FacetState( );
 			newState->autoIntensity_ = color_;
-			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	Kernel::FacetState * newState = new Kernel::FacetState( *((*sysBindings)->facetState_) );
 
 	if( newState->autoIntensity_ != NullPtr< const Lang::Color >( ) )
@@ -88,7 +88,7 @@ Lang::AutoIntensityBinding::bind( MapType & bindings, Kernel::SystemDynamicVaria
 		}
 
 	newState->autoIntensity_ = color_;
-	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 }
 
 void
@@ -117,15 +117,15 @@ Lang::AutoScatteringBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->facetState_ == NullPtr< const Kernel::FacetState >( ) )
 		{
 			Kernel::FacetState * newState = new Kernel::FacetState( );
 			newState->autoScattering_ = reflections_;
-			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	Kernel::FacetState * newState = new Kernel::FacetState( *((*sysBindings)->facetState_) );
 
 	if( newState->autoScattering_ != NullPtr< const Lang::SpecularReflection >( ) )
@@ -134,7 +134,7 @@ Lang::AutoScatteringBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 		}
 
 	newState->autoScattering_ = reflections_;
-	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 }
 
 void
@@ -162,15 +162,15 @@ Lang::ViewResolutionBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->facetState_ == NullPtr< const Kernel::FacetState >( ) )
 		{
 			Kernel::FacetState * newState = new Kernel::FacetState( );
 			newState->viewResolution_ = resolution_;
-			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	Kernel::FacetState * newState = new Kernel::FacetState( *((*sysBindings)->facetState_) );
 
 	if( ! IS_NAN( newState->viewResolution_ ) )
@@ -179,7 +179,7 @@ Lang::ViewResolutionBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 		}
 
 	newState->viewResolution_ = resolution_;
-	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 }
 
 void
@@ -205,15 +205,15 @@ Lang::ShadeOrderBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	if( (*sysBindings)->facetState_ == NullPtr< const Kernel::FacetState >( ) )
 		{
 			Kernel::FacetState * newState = new Kernel::FacetState( );
 			newState->shadeOrder_ = order_;
-			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+			(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 			return;
 		}
-	
+
 	Kernel::FacetState * newState = new Kernel::FacetState( *((*sysBindings)->facetState_) );
 
 	if( newState->shadeOrder_ != -1 )
@@ -222,7 +222,7 @@ Lang::ShadeOrderBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 		}
 
 	newState->shadeOrder_ = order_;
-	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );			
+	(*sysBindings)->facetState_ = RefCountPtr< const Kernel::FacetState >( newState );
 }
 
 void
