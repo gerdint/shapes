@@ -68,6 +68,7 @@ main( int argc, char ** argv )
   setupGlobals( );
 
   bool iterativeMode = true;
+  bool useResources = true;
 
   string outDir;
   string tmpDir;
@@ -193,7 +194,7 @@ main( int argc, char ** argv )
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--nodtminerror" ) == 0 )
+      else if( strcmp( *argv, "--no-dtminerror" ) == 0 )
 	{
 	  Computation::dtMinIsError = false;
 	  argv += 1;
@@ -205,7 +206,7 @@ main( int argc, char ** argv )
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--nofmguesserror" ) == 0 )
+      else if( strcmp( *argv, "--no-fmguesserror" ) == 0 )
 	{
 	  Computation::fontMetricGuessIsError = false;
 	  argv += 1;
@@ -230,15 +231,21 @@ main( int argc, char ** argv )
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--nobacktrace" ) == 0 )
+      else if( strcmp( *argv, "--no-backtrace" ) == 0 )
 	{
 	  Interaction::debugBacktrace = false;
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--noiteration" ) == 0 )
+      else if( strcmp( *argv, "--no-iteration" ) == 0 )
 	{
 	  iterativeMode = false;
+	  argv += 1;
+	  argc -= 1;
+	}
+      else if( strcmp( *argv, "--no-resources" ) == 0 )
+	{
+	  useResources = false;
 	  argv += 1;
 	  argc -= 1;
 	}
@@ -248,13 +255,13 @@ main( int argc, char ** argv )
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--nostats" ) == 0 )
+      else if( strcmp( *argv, "--no-stats" ) == 0 )
 	{
 	  memoryStats = false;
 	  argv += 1;
 	  argc -= 1;
 	}
-      else if( strcmp( *argv, "--nomemclean" ) == 0 )
+      else if( strcmp( *argv, "--no-memclean" ) == 0 )
 	{
 	  cleanupMemory = false;
 	  argv += 1;
@@ -849,8 +856,11 @@ main( int argc, char ** argv )
   addDefaultFontMetricsPath( );
 
 #ifdef RESOURCES_DIR
-  Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
-  Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
+	if( useResources )
+		{
+			Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
+			Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
+		}
 #endif
 
   if( filenameRequestList.size( ) > 0 )
