@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `ls ../../examples/features/*.shape ../../examples/showcase/*.shape ../../examples/problems/*.shape ../../examples/misc/*.shape ../../examples/applications/*.shape ../../resources/extensions/*.shext`; do
+for i in `ls ../../examples/features/*.shape ../../examples/showcase/*.shape ../../examples/problems/*.shape ../../examples/misc/*.shape ../../examples/applications/*.shape ../../test/text/*.shape ../../test/graphics/*.shape ../../resources/extensions/*.shext`; do
   echo Fixing $i
   cat ./exshapessource | ex -sC $i
 done

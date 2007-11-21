@@ -1,8 +1,9 @@
 ":%s/\(\(::\)\{0,1\}Shapes::\)\{0,1\}Lang::Length/Lang::Length/g
-:%s!^#unit!##unit!g
-:%s!^#needs!##needs!g
-:%s!^#include!##include!g
-:%s!^#echo!##echo!g
-:%s!^#author!##author!g
+:%s!rgb_!RGB_!g
+:%s!gray_!GRAY_!g
+:%s!cap_!CAP_!g
+:%s!join_!JOIN_!g
+:%s!blend_!BLEND_!g
+:%s!device_!DEVICE_!g
 "
 :wq
