@@ -5,7 +5,11 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.3.2 )====
-FILL IN DATE WHEN TAGGING
+2007-11-21
+
+New ways to specify files, both on the command line and through environment variables.
+
+Further improved build process, and minor additions to the documentation.
 
 
 ====( 0.3.1 )====

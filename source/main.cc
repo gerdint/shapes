@@ -738,9 +738,11 @@ main( int argc, char ** argv )
 								}
 							if( ! stat( inputName.c_str( ), & theStat ) == 0 )
 								{
-									/* It may not be obvious that this is a good error message here.
+									/* It is not entirely clear what is the best error message here,
+									 * as the source file may be specified in several different ways.
+									 * This should cause the least confusion.
 									 */
-									std::cerr << "Failed to locate input file: " << inputName << std::endl ;
+									std::cerr << "Failed to locate input file: " << *argv << std::endl ;
 									exit( 1 );
 								}
 						}
