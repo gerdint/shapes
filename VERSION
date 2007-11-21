@@ -11,7 +11,7 @@ FILL IN DATE WHEN TAGGING
 ====( 0.3.3 )====
 2007-11-21
 
-Simple constants in the global environment was named back to their names before variables had to begin with lowercase letters.  For instance, rgb_RED changed back to RGB_RED.
+Simple constants in the global environment were named back to their names before variables had to begin with lowercase letters.  For instance, rgb_RED changed back to RGB_RED.
 
 
 ====( 0.3.2 )====
