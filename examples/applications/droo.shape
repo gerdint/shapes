@@ -26,12 +26,12 @@ fillColor: @nonstroking:[rgb 205/255 49/255 0/255]
 
 •page << fillColor | [fill d_curve--[reverse r_curve]--cycle]
 
-•page << @width:t3 & @cap:cap_BUTT | [stroke (0cm,2*y2)--(0mm,0mm)]
-•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke (x1,2*y2)--d_curve--(x1,0mm)]
-•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke r_curve]
+•page << @width:t3 & @cap:CAP_BUTT | [stroke (0cm,2*y2)--(0mm,0mm)]
+•page << @width:t2 & @cap:CAP_ROUND & @defaultunit:1%c | [stroke (x1,2*y2)--d_curve--(x1,0mm)]
+•page << @width:t2 & @cap:CAP_ROUND & @defaultunit:1%c | [stroke r_curve]
 r_point: (7mm,~2mm)
 r_ray: r_point--(r_curve.end - 3mm).p
-•page << @width:t2 & @cap:cap_ROUND & @defaultunit:1%c | [stroke r_ray]
+•page << @width:t2 & @cap:CAP_ROUND & @defaultunit:1%c | [stroke r_ray]
 
 o_radius: 1.2mm
 @width:t1 |

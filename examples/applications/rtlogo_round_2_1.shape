@@ -11,8 +11,8 @@
 ##needs rtlogo_elements
 ##needs circle
 
-  @stroking:gray_BLACK
-& @nonstroking:gray_BLACK
+  @stroking:GRAY_BLACK
+& @nonstroking:GRAY_BLACK
 |
 {
   /** Recall where this places the regulator...
@@ -43,7 +43,7 @@ ballSpace: 0.2
   text: smallFont | [kerning `•´ ~ballSpace [kern `REGLERTEKNIK´] ~ballSpace `•´ ~ballSpace [kern `AUTOM´] 0.08 `A´ 0.13 [kern `TIC CONTROL´] ~ballSpace `•´]
   baseline: [shift circleCenter] [] [rotate 90° + 0.5*[xmax [bbox (newText << text)]]/innerRadius] [] reverse [] [circle innerRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+|**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1r,[baseline 0].p.y)--(1r,(+0r))]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the

@@ -323,7 +323,7 @@ namespace Shapes
 }
 
 
-RefCountPtr< const Lang::CoreFunction > Lang::THE_NO_ARROW( new Lang::Core_noArrow( "no_arrow" ) );
+RefCountPtr< const Lang::CoreFunction > Lang::THE_NO_ARROW( new Lang::Core_noArrow( "NO_ARROW" ) );
 
 void
 Kernel::registerCore_state( Kernel::Environment * env )

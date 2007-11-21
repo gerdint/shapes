@@ -49,7 +49,7 @@ randPath: \ n •randstate .>
   sh: [shift (3cm,0cm,0cm)]
   pth: sh [] [randPath '10 •rand]
   •page << view [] [stroke pth]
-  •page << @stroking:rgb_RED | ( view [] [stroke controlling [] pth] )
+  •page << @stroking:RGB_RED | ( view [] [stroke controlling [] pth] )
 
   •timer: newTimer
   •page <<

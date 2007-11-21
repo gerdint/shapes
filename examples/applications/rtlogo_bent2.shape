@@ -11,8 +11,8 @@
 ##needs rtlogo_elements
 ##needs circle
 
-  @stroking:gray_BLACK
-& @nonstroking:gray_BLACK
+  @stroking:GRAY_BLACK
+& @nonstroking:GRAY_BLACK
 |
 {
   /** Recall where this places the regulator...
@@ -38,7 +38,7 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
   textLength: [xmax [bbox (newText << text)]]
   baseline: [shift (0,1r-(textRadius-1r)+extraSep)] [] [rotate 90° + 0.5*textLength/textRadius] [] reverse [] [circle textRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+|**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1r,[baseline 0].p.y)--(1r,(+0r))]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
@@ -67,7 +67,7 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
   textLength: [xmax [bbox (newText << text)]]
   baseline: [shift (0,1r-1.2*charHeight+(textRadius-1r))] [] [rotate ~90° - 0.5*textLength/textRadius] [] [circle textRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+|**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.

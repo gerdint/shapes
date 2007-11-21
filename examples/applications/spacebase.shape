@@ -22,9 +22,9 @@ markCount: '5
       len: 2.5cm
       p &
       ( newGroup3D
-        << @stroking:rgb_RED   | [stroke sl.p--(+(len*sl.t))]
-        << @stroking:rgb_GREEN | [stroke sl.p--(+(len*sl.n))]
-        << @stroking:rgb_BLUE  | [stroke sl.p--(+([if i == '0 ~1 1]*len*sl.b))]
+        << @stroking:RGB_RED   | [stroke sl.p--(+(len*sl.t))]
+        << @stroking:RGB_GREEN | [stroke sl.p--(+(len*sl.n))]
+        << @stroking:RGB_BLUE  | [stroke sl.p--(+([if i == '0 ~1 1]*len*sl.b))]
         << [shift sl.p+(~2mm,3mm,0mm)] [] [facing [centerx [teX [sprintf `\textbf{%d}´ i+'1]]]] )
     }
     null3D]

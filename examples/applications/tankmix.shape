@@ -41,7 +41,7 @@ inflow: \ •dst x1 x2 idx .>
  •page << [stroke p head:metaPostArrow]
  •page << [shift [p 0.5].p+(1mm,0mm)] [] [teX `$h$´]
 }
-•page << @nonstroking:gray_WHITE | [[shift (tank_W/2, tank_L/2)] [centerlabel [teX `Tank´]]]
+•page << @nonstroking:GRAY_WHITE | [[shift (tank_W/2, tank_L/2)] [centerlabel [teX `Tank´]]]
 •page << [stroke (tank_W/2,0cm)--(tank_W/2,~1.5cm)]
 •page << [stroke (tank_W/2+@pipe_width,0cm)--(tank_W/2+@pipe_width,~1.5cm)]
 {

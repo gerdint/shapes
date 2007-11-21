@@ -1,6 +1,6 @@
 ##needs arrowheads
 
-@blend: blend_MULTIPLY
+@blend: BLEND_MULTIPLY
 &
 @stroking: [gray 0.7] & @width:3mm
 &

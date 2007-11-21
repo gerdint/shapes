@@ -14,8 +14,8 @@
 ##unit t = 9bp
 ##unit rR = 16mm |** This is the size given to makeRegulator function.
 
-  @stroking:gray_BLACK
-& @nonstroking:gray_BLACK
+  @stroking:GRAY_BLACK
+& @nonstroking:GRAY_BLACK
 |
 {
   /** Recall where this places the regulator...
@@ -41,7 +41,7 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
   textLength: [xmax [bbox (newText << text)]]
   baseline: [shift (0,1rR-(textRadius-1rR)+extraSep)] [] [rotate 90° + 0.5*textLength/textRadius] [] reverse [] [circle textRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+|**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1rR,[baseline 0].p.y)--(1rR,(+0r))]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
@@ -70,7 +70,7 @@ charHeight: [ymax [bbox smallFont | ( newText << `X´ )]]
   textLength: [xmax [bbox (newText << text)]]
   baseline: [shift (0,1rR-1.2*charHeight+(textRadius-1rR))] [] [rotate ~90° - 0.5*textLength/textRadius] [] [circle textRadius]
 
-|**  •page << @width:0bp & @stroking:rgb_RED | [stroke baseline]
+|**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
   
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.

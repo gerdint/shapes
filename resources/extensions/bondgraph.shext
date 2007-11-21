@@ -71,7 +71,7 @@ bgconnect: \ pica picb .>
 dynamic @bgArrowWidth identity 4bp
 
 bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true .>
- (@blend:blend_NORMAL
+ (@blend:BLEND_NORMAL
   |
   { theLength: @bgArrowWidth / [sin ahAngle]
     hook:

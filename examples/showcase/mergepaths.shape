@@ -72,5 +72,5 @@ mergepaths: \ p1 p2 .>
                   pths]
 
   scaleAroundCenter: \ factor pth .> { c: [continuous_mean pth]  [shift c][][scale factor][][shift ~c][]pth }
-  •page << @stroking: rgb_RED | [stroke [scaleAroundCenter 1.3 ...][] [buildchain pths]--cycle]
+  •page << @stroking: RGB_RED | [stroke [scaleAroundCenter 1.3 ...][] [buildchain pths]--cycle]
 }

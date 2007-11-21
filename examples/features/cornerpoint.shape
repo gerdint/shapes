@@ -3,14 +3,14 @@
 {
   pth: @defaultunit:5mm | (0cm,0cm)>(^)--(^)<(1cm,0cm^45°)>(^)--(^)<(2cm,0cm)
   sl: [pth 1]
-  •page << @stroking:rgb_RED | [stroke sl.p--(+ ~4mm*sl.rt)]
+  •page << @stroking:RGB_RED | [stroke sl.p--(+ ~4mm*sl.rt)]
         << [stroke pth head:metaPostArrow]
 }
 
 {
   pth: @defaultunit:1%C | (0cm,~1cm)>(^)--(^)<(1cm,~1cm^~45°)>(^)--(^)<(2cm,~1cm)
   sl: [pth 1]
-  •page << @stroking:rgb_RED | [stroke sl.p--(+ ~4mm*sl.rt)]
+  •page << @stroking:RGB_RED | [stroke sl.p--(+ ~4mm*sl.rt)]
         << [stroke pth head:metaPostArrow]
 
 }

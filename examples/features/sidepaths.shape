@@ -9,14 +9,14 @@ pathpoints:
 
 
 sstroke: \ pth .>
-( (@stroking:rgb_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.n*6*@width)--(sl.n*~5*@width) )] )  null  [pathpoints pth]])
+( (@stroking:RGB_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.n*6*@width)--(sl.n*~5*@width) )] )  null  [pathpoints pth]])
    &
    [stroke pth]
 )
 
 cstroke: \ pth .>
 (
-  (@stroking:rgb_GREEN & @width:(2*@width) | [stroke [controlling pth]] )
+  (@stroking:RGB_GREEN & @width:(2*@width) | [stroke [controlling pth]] )
   &
   [sstroke pth]
 )
@@ -28,27 +28,27 @@ test: \ •dst pth method .>
 @width: 0.5bp
 |
 {
-  •dst << @stroking:rgb_RED | [cstroke pth]
+  •dst << @stroking:RGB_RED | [cstroke pth]
   •dst << [debuglog_after `1´ ...][][stroke [method pth 2mm]]
   •dst << [debuglog_after `1´ ...][][stroke [method pth ~2mm]]
 
   {
     pth: [shift (0,~5cm)][][upsample_inflections ../pth]
-    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << @stroking:RGB_RED | [cstroke pth]
     •dst << [debuglog_after `2´ ...][][stroke [method pth 2mm]]
     •dst << [debuglog_after `2´ ...][][stroke [method pth ~2mm]]
   }
 
   {
     pth: [shift (0,~10cm)] [] upsample_balance [] upsample_inflections [] ../pth
-    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << @stroking:RGB_RED | [cstroke pth]
     •dst << [debuglog_after `3´ ...][][stroke [method pth 2mm]]
     •dst << [debuglog_after `3´ ...][][stroke [method pth ~2mm]]
   }
 
   {
     pth: [shift (0,~15cm)][][upsample_bends 20° ../pth]
-    •dst << @stroking:rgb_RED | [cstroke pth]
+    •dst << @stroking:RGB_RED | [cstroke pth]
     •dst << [debuglog_after `4´ ...][][stroke [method pth 2mm]]
     •dst << [debuglog_after `4´ ...][][stroke [method pth ~2mm]]
   }

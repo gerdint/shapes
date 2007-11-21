@@ -4,8 +4,8 @@ arm1Frame: baseFrame * [shift (0m,0m,0.5m)] * [rotate3D angle:90° dir:(1,0,0)] 
 arm2Frame: arm1Frame * [shift (0.5m,0m,0m)] * [rotate3D angle:~30° dir:(0,0,1)]
 toolFrame: arm2Frame * [shift (0.5m,0m,0m)] * [rotate3D angle:15° dir:(0,0,1)]
 
-tool: ( newGroup3D << @nonstroking:rgb_BLUE | [fill (0cm,0cm,0cm)--(15cm,15cm,5cm)--(15cm,15cm,~5cm)--cycle]
-                   << @nonstroking:rgb_RED  | [fill (0cm,0cm,0cm)--(15cm,~15cm,5cm)--(15cm,~15cm,~5cm)--cycle] )
+tool: ( newGroup3D << @nonstroking:RGB_BLUE | [fill (0cm,0cm,0cm)--(15cm,15cm,5cm)--(15cm,15cm,~5cm)--cycle]
+                   << @nonstroking:RGB_RED  | [fill (0cm,0cm,0cm)--(15cm,~15cm,5cm)--(15cm,~15cm,~5cm)--cycle] )
 
 |** fillTwoTriangles: \ p0 p1 p2 p3 .> ( Hot3D << [fill p0--p1--p2--cycle] << [fill p0--p2--p3--cycle] )
 

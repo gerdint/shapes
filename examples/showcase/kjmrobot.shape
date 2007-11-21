@@ -122,8 +122,8 @@ frameArrows:
        << [tag 'y y]
        << [tag 'z z]
 
-  @stroking:rgb_BLUE
-  & @nonstroking:rgb_BLUE
+  @stroking:RGB_BLUE
+  & @nonstroking:RGB_BLUE
   |
   {
     •res << [stroke (0m,0m,0m)--x head:[myArrowHead (0,~1,0) ...]]
@@ -201,23 +201,23 @@ axis1: tf1d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 
 
-•zbuf << @stroking:rgb_RED | [stroke axis0]
+•zbuf << @stroking:RGB_RED | [stroke axis0]
 •zbuf << frame0
-•zbuf << @stroking:rgb_RED | [stroke axis1]
+•zbuf << @stroking:RGB_RED | [stroke axis1]
 •zbuf << frame1
-•zbuf << @stroking:rgb_RED | [stroke axis2]
+•zbuf << @stroking:RGB_RED | [stroke axis2]
 
-•pbuf << @stroking:rgb_RED | [stroke axis0]
+•pbuf << @stroking:RGB_RED | [stroke axis0]
 •pbuf << frame0
 •pbuf << [shift [find frame0 'x]] [] [facing [centeratwlm (TeX `$x_{i-1}$´) (0,~1)]]
 •pbuf << [shift [find frame0 'y]] [] [facing [centeratwlm (TeX `$y_{i-1}$´) (0,~1)]]
 •pbuf << [shift [find frame0 'z]] [] [facing [centeratwlm (TeX `$z_{i-1}$´) (1,0)]]
-•pbuf << @stroking:rgb_RED | [stroke axis1]
+•pbuf << @stroking:RGB_RED | [stroke axis1]
 •pbuf << frame1
 •pbuf << [shift [find frame1 'x]] [] [facing [centeratwlm (TeX `$x_{i}$´) (0,~1)]]
 •pbuf << [shift [find frame1 'y]] [] [facing [centeratwlm (TeX `$y_{i}$´) (1,0)]]
 •pbuf << [shift [find frame1 'z]] [] [facing [centeratwlm (TeX `$z_{i}$´) (1,0)]]
-•pbuf << @stroking:rgb_RED | [stroke axis2]
+•pbuf << @stroking:RGB_RED | [stroke axis2]
 @width: 0.5bp
 |
 {

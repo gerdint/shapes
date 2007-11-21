@@ -34,7 +34,7 @@ box: \ x0y0 x1y1 .> x0y0--(x0y0.x,x1y1.y)--x1y1--(x1y1.x,x0y0.y)--cycle
 stdBox: \ .>
 {
   tmp: [box (~5mm,~3mm) (5mm,3mm)]
-  ( newGroup2D << @nonstroking:gray_WHITE|[fill tmp] << [stroke tmp] )
+  ( newGroup2D << @nonstroking:GRAY_WHITE|[fill tmp] << [stroke tmp] )
 }
 
 rPlus: 2mm
@@ -42,7 +42,7 @@ plusCircle: \ .>
 {
   c: [circle rPlus]
   •res: newGroup2D
-  •res << @nonstroking:gray_WHITE|[fill c] << [stroke c]
+  •res << @nonstroking:GRAY_WHITE|[fill c] << [stroke c]
   •res << [centerat [teX `$+$´] (0,0)]
   •res;
 }
@@ -58,7 +58,7 @@ sigmoidPic:
 
 templ: \ uLabel symbs:false .>
 {
-  theColor:[if symbs gray_BLACK [gray 0.7]]
+  theColor:[if symbs GRAY_BLACK [gray 0.7]]
   box1: @stroking:theColor|[stdBox]
   sum: [[shift (11.5mm,0)] @stroking:theColor|[plusCircle]]
   box2: [[shift (23mm,0)] box1]
@@ -103,14 +103,14 @@ dpshift: \ len .> [shift len * dHat]
 
 
 plusBar:
-@nonstroking:gray_WHITE
+@nonstroking:GRAY_WHITE
 & @defaultunit:1%C
 |
 {
   f: rPlus*[normalized [[rotate 90°] d]]
   a: [angle d]
   cyl: (-f)--(d-f)>(^a)--(^)<(d+rPlus*[normalized d])>(^)--(^a)<(f+d)--f--cycle
-  ( newGroup2D << [fill cyl] << [stroke cyl] << @nonstroking:gray_BLACK|[plusCircle] )
+  ( newGroup2D << [fill cyl] << [stroke cyl] << @nonstroking:GRAY_BLACK|[plusCircle] )
 }
 
 lastSum: [[shift (5cm+10mm,~15mm)+dHat*dStep*(nDup*(1/2))] [plusCircle]]

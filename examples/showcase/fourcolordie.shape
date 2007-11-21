@@ -5,10 +5,10 @@ z3: [immerse r*[dir ~120°]]
 z4: (0cm,0cm,(1.5++0.5)*r)
 
 die: ( newGroup3D
-       << @nonstroking:rgb_RED    | [fill z1--z2--z3--cycle]
-       << @nonstroking:rgb_GREEN  | [fill z1--z2--z4--cycle]
-       << @nonstroking:rgb_BLUE   | [fill z1--z3--z4--cycle]
-       << @nonstroking:rgb_YELLOW | [fill z2--z3--z4--cycle] )
+       << @nonstroking:RGB_RED    | [fill z1--z2--z3--cycle]
+       << @nonstroking:RGB_GREEN  | [fill z1--z2--z4--cycle]
+       << @nonstroking:RGB_BLUE   | [fill z1--z3--z4--cycle]
+       << @nonstroking:RGB_YELLOW | [fill z2--z3--z4--cycle] )
 
 •rand: [newRandom (•time)]
 

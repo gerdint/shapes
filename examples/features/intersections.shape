@@ -2,7 +2,7 @@
 ##needs arrowheads
 
 intersectionCircle: \ pth1 pth2 .>
-  ( @stroking:rgb_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
+  ( @stroking:RGB_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
 
 •page << [shift (0cm,4cm)] [] (TeX `\parbox{4cm}{Lines start at black circles, and at their first intersection there's a red circle.}´)
 
@@ -51,7 +51,7 @@ randPath: \ n •state .>
   •rand: [newRandom (•time)]
   sh: [shift (5cm,0cm)]
   pth: sh [] [randPath '10 •rand]
-  •page << @stroking:rgb_RED | [stroke pth head: metaPostArrow]
+  •page << @stroking:RGB_RED | [stroke pth head: metaPostArrow]
 |**  •page << @stroking:[gray 0.7] | [stroke controlling [] pth]
 
   •page <<

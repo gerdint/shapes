@@ -9,8 +9,8 @@
 
 •page << [bboxed null [rectangle (~1r,0cm) (1r,2r)]]
 
-  @stroking:gray_BLACK
-& @nonstroking:gray_BLACK
+  @stroking:GRAY_BLACK
+& @nonstroking:GRAY_BLACK
 |
 {
   [makeRegulator •page]

@@ -41,7 +41,7 @@ koch: \ pth depth .>
            end: '5
            [accumulateGraphics2D
              [range '0 end]
-             \ i .> ( @stroking:[mediate i*(1/end) 0.9*gray_WHITE gray_BLACK]
+             \ i .> ( @stroking:[mediate i*(1/end) 0.9*GRAY_WHITE GRAY_BLACK]
                       |
                       [stroke [koch c i]] ) ]
          }

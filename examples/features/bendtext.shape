@@ -5,7 +5,7 @@ message: @text_size:5mm | [kern `Hi, Dro´ 0.3 `oler!´]
 •page << ( newText << message )
 
 baseline: @defaultunit:1%f | (0cm,~1cm)>(^45°)--(1.5cm^180°)<(3cm,~2cm)
-•page << @stroking:rgb_RED | [stroke baseline]
+•page << @stroking:RGB_RED | [stroke baseline]
 
 •page <<
  [message.list.foldl

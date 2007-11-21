@@ -1,6 +1,6 @@
 resistance: \ .>
 (
-@width:@connectionlw & @cap:cap_SQUARE
+@width:@connectionlw & @cap:CAP_SQUARE
 |
 {
  lambda: @longblockrx / 3
@@ -12,7 +12,7 @@ resistance: \ .>
 
 inductance: \ .>
 (
-@width:@connectionlw & @cap:cap_SQUARE & @defaultunit:1%c
+@width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
 |
 {
  lambda: @longblockrx / 3
@@ -25,7 +25,7 @@ inductance: \ .>
 
 capacitance: \ .>
 (
-@width:@connectionlw & @cap:cap_SQUARE & @defaultunit:1%c
+@width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
 |
 {
   rh: @longblockry
