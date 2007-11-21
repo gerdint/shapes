@@ -16,6 +16,9 @@ SHAPES-VERSION-FILE : FORCE
 bin_PROGRAMS = shapes
 dist_noinst_SCRIPTS = SHAPES-VERSION-GEN
 
+dist-hook : SHAPES-VERSION-FILE
+	cp ${srcdir}/SHAPES-VERSION-FILE ${distdir}/version
+
 BUILT_SOURCES = shapesparser.h
 
 noinst_HEADERS = afmscanner.h angleselect.h annotations.h \

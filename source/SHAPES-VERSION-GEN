@@ -1,10 +1,24 @@
 #!/bin/sh
 
-VF=SHAPES-VERSION-FILE
-VF_DEF=$1/VERSION
-VN=$(sed -e '2,$ d' < $VF_DEF)
+if test $# -lt 1
+then
+	DIR='..'
+else
+	DIR=$1
+fi
 
-if test -d $1/.svn && SVN_INFO=$(cd $1 && svn info 2> /dev/null)
+SVF=SHAPES-VERSION-FILE
+SVF_DEF=$DIR/VERSION
+SVF_DIST=version
+VN=$(sed -e '2,$ d' < $SVF_DEF)
+
+if test -f $SVF_DIST
+then
+	VN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF_DIST)
+	VR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //' < $SVF_DIST)
+	VD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF_DIST)
+elif test -d $1/.svn &&
+     SVN_INFO=$(cd $DIR && svn info 2> /dev/null)
 then
 	if VR=$(echo "$SVN_INFO" | \
 			sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //') &&
@@ -15,16 +29,8 @@ then
 	then
 		:
 	else
-		VR='-'
+		VR='---'
 	fi
-
-	dirty=$(cd $1 && svn status) || dirty=
-	case "$dirty" in
-	'')
-		;;
-	*)
-		VR="$VR-DIRTY" ;;
-  esac
 
 	if VD=$(echo "$SVN_INFO" | \
 			sed -e '/Last Changed Date/! d' -e 's/Last Changed Date: //') &&
@@ -35,18 +41,26 @@ then
 	then
 		:
 	else
-		VD='-'
+		VD='---'
 	fi
+
+	dirty=$(cd $DIR && svn status>2/dev/null) || dirty=
+	case "$dirty" in
+  '')
+		;;
+	*)
+		VR="$VR-DIRTY" ;;
+	esac
 else
-	VR='-'
-	VD='-'
+	VR='---'
+	VD='---'
 fi
 
-if test -r $VF
+if test -r $SVF
 then
-	FVN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $VF)
-	FVR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //'  < $VF)
-	FVD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $VF)
+	FVN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF)
+	FVR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //'  < $SVF)
+	FVD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF)
 else
 	FVN=undef
 	FVR=undef
@@ -61,5 +75,5 @@ VERSION_DATE := ${VD}"
 	echo "\
 VERSION_NUMBER := ${VN}
 VERSION_REVISION := ${VR}
-VERSION_DATE := ${VD}" > $VF
+VERSION_DATE := ${VD}" > $SVF
 }
