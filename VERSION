@@ -5,7 +5,9 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.3.3 )====
-FILL IN DATE WHEN TAGGING
+2007-11-21
+
+Simple constants in the global environment was named back to their names before variables had to begin with lowercase letters.  For instance, rgb_RED changed back to RGB_RED.
 
 
 ====( 0.3.2 )====
