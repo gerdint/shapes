@@ -1,0 +1,84 @@
+<man>
+	<manhead>
+		<prog-name>shapes</prog-name>
+		<man-section>1</man-section>
+		<modification-date>2007-11-19</modification-date>
+		<left-footer>Tiddes</left-footer>
+		<center-header>The Shapes language compiler</center-header>
+	</manhead>
+
+	<section>
+		<title>Name</title>
+		<body>
+			<p>
+				shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.
+			</p>
+		</body>
+	</section>
+
+	<section>
+		<title>Synopsis</title>
+		<body>
+			<synopsis-table>
+				<synopsis-case>
+					<prog-name>shapes</prog-name> <stx>[options]</stx> <replacable>source</replacable>
+				</synopsis-case>
+			</synopsis-table>
+		</body>
+	</section>
+
+	<section>
+		<title>Description</title>
+		<body>
+			<p><prog-name>shapes</prog-name> compiles a source file written in the <str-Shapes /> language (with file name extension <filename>shape</filename>).  On success, this results in a <str-PDF /> file containing a viewable representation of the graphics described by the source.</p>
+		</body>
+	</section>
+
+	<section>
+		<title>Environment variables</title>
+		<body>
+			<env-variable-description>
+				<name>SHAPESINPUTS</name>
+				<description>
+					<p>contains a search path used for requested source files.  It usually consists of directories with language extension files (with the <filename>.shext</filename> extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.</p>
+				</description>
+			</env-variable-description>
+			<env-variable-description>
+				<name>SHAPESFONTMETRICS</name>
+				<description>
+					<p>tells where to search for font metrics files.  Font metrics for the standard fonts in <str-PDF /> are distributed with the compiler, and on typical installations these are found using another mechanism.</p>
+				</description>
+			</env-variable-description>
+		</body>
+	</section>
+
+	<section>
+		<title>Examples</title>
+		<body>
+			<p>To use the <prog-name class="other">xpdf</prog-name> program for preview, and with a source called <filename>hi.shape</filename>, run the program as:</p>
+			<pre>
+  shapes --xpdf hi.shape
+			</pre>
+			<p>or just to the point your shell completion will take you:</p>
+<pre>
+  shapes --xpdf hi.
+</pre>
+		</body>
+	</section>
+
+	<section>
+		<title>Author</title>
+		<body>
+			<p>Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.</p>
+		</body>
+	</section>
+
+	<section>
+		<title>See also</title>
+		<body>
+			<see-also-items>
+				<see-also>xpdf (1)</see-also>
+			</see-also-items>
+		</body>
+	</section>
+</man>
