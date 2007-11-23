@@ -44,7 +44,7 @@ then
 		VD='---'
 	fi
 
-	dirty=$(cd $DIR && svn status>2/dev/null) || dirty=
+	dirty=$(cd $DIR && svn status 2> /dev/null) || dirty=
 	case "$dirty" in
   '')
 		;;
