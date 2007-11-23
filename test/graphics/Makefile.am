@@ -1,29 +1,30 @@
 SHAPES = ${top_builddir}/source/shapes
+
+TEST_BASE = bad hello approximate2d
+
 XFAIL_TESTS = test_bad
-TESTS = test_bad test_hello test_approximate2d
-CLEANFILES = test_bad bad.correct.png bad.png \
-             test_hello hello.correct.png hello.png \
-             test_approximate2d approximate2d.correct.png approximate2d.png
-check_DATA = bad.png bad.correct.png \
-             hello.png hello.correct.png \
-             approximate2d.png approximate2d.correct.png
+TESTS = ${addprefix test_, ${TEST_BASE}}
+check_DATA = ${addsuffix .png, ${TEST_BASE}} \
+             ${addsuffix .correct.png, ${TEST_BASE}}
 dist_check_DATA = testTEMPLATE \
-                  bad.shape bad.correct.pdf \
-                  hello.shape hello.correct.pdf \
-                  approximate2d.shape approximate2d.correct.pdf
+                  ${addsuffix .shape, ${TEST_BASE}} \
+                  ${addsuffix .correct.pdf, ${TEST_BASE}}
+CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
+             ${addsuffix .png, ${TEST_BASE}} \
+             ${addsuffix .correct.png, ${TEST_BASE}}
 
 test_% : testTEMPLATE
 	@sed -e 's/FNAME/$*/g' < $< > $@ && \
   chmod a+x $@
 
 %.png: %.pdf
-	-@CONVERT@ $< $@ || touch $@
+	@CONVERT@ $< $@ > /dev/null 2>&1 || touch $@
 
 %.png: ${srcdir}/%.pdf
-	-@CONVERT@ $< $@ || touch $@
+	@CONVERT@ $< $@ > /dev/null 2>&1 || touch $@
 
 # %.correct.pdf : %.shape ${SHAPES}
 # 	-$(SHAPES) $< && touch $@
 
 %.pdf: ${srcdir}/%.shape $(SHAPES)
-	-$(SHAPES) $< || touch $@
+	-@$(SHAPES) $< > /dev/null 2>&1 || touch $@
