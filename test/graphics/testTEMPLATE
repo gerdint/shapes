@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cmp -s FNAME.png FNAME.correct.png 2> /dev/null
+exit $?

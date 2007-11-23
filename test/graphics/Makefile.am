@@ -7,14 +7,14 @@ CLEANFILES = test_bad bad.correct.png bad.png \
 check_DATA = bad.png bad.correct.png \
              hello.png hello.correct.png \
              approximate2d.png approximate2d.correct.png
-dist_check_DATA = bad.shape bad.correct.pdf \
+dist_check_DATA = testTEMPLATE \
+                  bad.shape bad.correct.pdf \
                   hello.shape hello.correct.pdf \
                   approximate2d.shape approximate2d.correct.pdf
 
-test_% :
-	@echo -e "#/bin/sh\n\ncmp -s $*.png $*.correct.png\nexit "'$$?' > $@
-	@chmod a+x $@
-
+test_% : testTEMPLATE
+	@sed -e 's/FNAME/$*/g' < $< > $@ && \
+  chmod a+x $@
 
 %.png: %.pdf
 	-@CONVERT@ $< $@ || touch $@

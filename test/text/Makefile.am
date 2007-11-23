@@ -2,15 +2,15 @@ SHAPES = ${top_builddir}/source/shapes
 XFAIL_TESTS = test_bad
 TESTS = test_bad test_scopes
 check_DATA = bad.out scopes.out
-dist_check_DATA = bad.shape bad.correct \
+dist_check_DATA = testTEMPLATE \
+            bad.shape bad.correct \
             scopes.shape scopes.correct
 CLEANFILES = test_bad bad.out bad.pdf \
              test_scopes scopes.out scopes.pdf
 
-
-test_% :
-	@echo -e "#/bin/sh\n\ncmp -s $*.out ${srcdir}/$*.correct\nexit "'$$?' > $@
-	@chmod a+x $@
+test_% : testTEMPLATE
+	@sed -e 's/FNAME/$*/g' < $< > $@ && \
+  chmod a+rx $@
 
 # %.correct : %.out
 # 	mv $< $@

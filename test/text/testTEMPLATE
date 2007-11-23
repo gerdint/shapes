@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cmp -s FNAME.out ${srcdir}/FNAME.correct 2> /dev/null
+exit $?
