@@ -19,7 +19,7 @@ AC_PROG_BISON(2.3)
 AC_DEBUG
 AC_PROFILE
 AC_OPTIMIZATION
-AC_CHECK_PROG([CONVERT], [convert], [convert -density 150 -resize 150x], [cp])
+AC_CHECK_PROG([COMPARE], [compare], [yes], [no])
 
 # Checks for libraries.
 AM_ICONV()
@@ -62,9 +62,9 @@ AC_CONFIG_FILES([Makefile source/Makefile doc/Makefile resources/Makefile
                  test/Makefile test/text/Makefile test/graphics/Makefile])
 AC_OUTPUT
 
-if test "$CONVERT" = "cp"
+if test "X$COMPARE" != "Xyes"
 then
   echo "\
-WARNING: The program \`convert' was not found, without it installed, and
-         able to convert .pdf to .png the test will likely fail."
+WARNING: The program \`compare' was not found, without it installed
+         the tests are likely to fail."
 fi

@@ -1,4 +1,55 @@
 #!/bin/sh
 
-cmp -s FNAME.png FNAME.correct.png 2> /dev/null
-exit $?
+if test "X${srcdir}" == "X"
+then
+	srcdir="."
+fi
+
+OUTPUT=FNAME.pdf
+LOG=FNAME.log
+CORRECT=${srcdir}/FNAME.correct.pdf
+
+case "$COMPARE" in
+yes|'')
+	compare -verbose -density 150 \
+	        ${CORRECT} ${OUTPUT} /dev/null > /dev/null 2>&1
+	result=$?
+	;;
+*)
+	cmp -s ${CORRECT} ${OUTPUT} > /dev/null 2>&1
+	result=$?
+	;;
+esac
+
+cat  > ${LOG} <<EOF
+*** $0 ***
+
+Expected output :  ${CORRECT}
+Output          :  ${OUTPUT}
+EOF
+
+if test $result -ne 0
+then
+	cat >> $LOG <<EOF
+Result          :  FAIL
+---
+EOF
+	case "$COMPARE" in
+	yes|'')
+		compare -verbose -density 150 \
+		        ${CORRECT} ${OUTPUT} /dev/null >> $LOG 2>&1
+		result=$?
+		;;
+	esac
+else
+	cat >> $LOG <<EOF
+Result          :  PASS
+EOF
+fi
+
+if test $# -gt 0 && test "$1" -gt 0
+then
+	cat $LOG
+fi
+
+exit $result

@@ -12,7 +12,8 @@ dist_check_DATA = testTEMPLATE \
                   ${addsuffix .correct, ${TEST_BASE}}
 CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
              ${addsuffix .out, ${TEST_BASE}} \
-             ${addsuffix .pdf, ${TEST_BASE}}
+             ${addsuffix .pdf, ${TEST_BASE}} \
+             ${addsuffix .log, ${TEST_BASE}}
 
 test_% : testTEMPLATE
 	@sed -e 's/FNAME/$*/g' < $< > $@ && \
