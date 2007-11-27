@@ -60,20 +60,60 @@ Ast::operator << ( std::ostream & os, const Ast::SourceLocation & self )
 		{
 			if( self.firstLine == self.lastLine )
 				{
-					os << self.filename << ":" << self.firstLine << "("
-						 << Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.firstLine, self.firstColumn )
-						 << "-"
-						 << Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.lastLine, self.lastColumn )
-						 << ")" ;
+					os << self.filename << ":" << self.firstLine << "(" ;
+					{
+						size_t col = Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.firstLine, self.firstColumn );
+						if( col != std::numeric_limits< size_t >::max( ) )
+							{
+								os << col ;
+							}
+						else
+							{
+								os << "?" ;
+							}
+					}
+					os << "-" ;
+					{
+						size_t col = Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.lastLine, self.lastColumn );
+						if( col != std::numeric_limits< size_t >::max( ) )
+							{
+								os << col ;
+							}
+						else
+							{
+								os << "?" ;
+							}
+					}
+					os << ")" ;
 				}
 			else
 				{
-					os << self.filename << ":" << self.firstLine << "("
-						 << Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.firstLine, self.firstColumn )
-						 << ")-"
-						 << self.lastLine << "("
-						 << Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.lastLine, self.lastColumn )
-						 << ")" ;
+					os << self.filename << ":" << self.firstLine << "(" ;
+					{
+						size_t col = Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.firstLine, self.firstColumn );
+						if( col != std::numeric_limits< size_t >::max( ) )
+							{
+								os << col ;
+							}
+						else
+							{
+								os << "?" ;
+							}
+					}
+					os << ")-" 
+						 << self.lastLine << "(" ;
+					{
+						size_t col = Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.lastLine, self.lastColumn );
+						if( col != std::numeric_limits< size_t >::max( ) )
+							{
+								os << col ;
+							}
+						else
+							{
+								os << "?" ;
+							}
+					}
+					os << ")" ;
 				}
 		}
 
@@ -141,7 +181,7 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
 					failingConverter = true;
 					Kernel::thePostCheckErrorsList.push_back( ball.clone( ) );
 				}
-			return 0;
+			return std::numeric_limits< size_t >::max( );
 		}
 
 	static size_t bufSize = 0;
