@@ -1163,23 +1163,6 @@ main( int argc, char ** argv )
 
 	if( Kernel::thePostCheckErrorsList.size( ) > 0 )
 		{
-			std::cout.flush( );
-			typedef typeof Kernel::thePostCheckErrorsList ListType;
-			for( ListType::const_iterator i = Kernel::thePostCheckErrorsList.begin( ); i != Kernel::thePostCheckErrorsList.end( ); ++i )
-				{
-					{
-						typedef const Exceptions::PostCondition ErrorType;
-						ErrorType * err = dynamic_cast< ErrorType * >( *i );
-						if( err != 0 )
-							{
-								std::cerr << err->loc( ) << ": " ;
-								err->display( std::cerr );
-								continue;
-							}
-					}
-					std::cerr << "(Bad exception type)" << ": " ;
-					(*i)->display( std::cerr );
-				}
 			abortProcedure( & oFile, outputName );
 		}
 
@@ -1294,6 +1277,37 @@ performIterativeStartup( const std::string & labelDBName )
 void
 abortProcedure( ofstream * oFile, const std::string & outputName )
 {
+	if( Kernel::thePostCheckErrorsList.size( ) > 0 )
+		{
+			std::cout.flush( );
+			while( Kernel::thePostCheckErrorsList.size( ) > 0 )
+				{
+					Exceptions::Exception * e = Kernel::thePostCheckErrorsList.front( );
+					Kernel::thePostCheckErrorsList.pop_front( );
+					{
+						typedef const Exceptions::PostCondition ErrorType;
+						ErrorType * err = dynamic_cast< ErrorType * >( e );
+						if( err != 0 )
+							{
+								std::cerr << err->loc( ) << ": " ;
+								err->display( std::cerr );
+								continue;
+							}
+					}
+					{
+						typedef const Exceptions::RuntimeError ErrorType;
+						ErrorType * err = dynamic_cast< ErrorType * >( e );
+						if( err != 0 )
+							{
+								std::cerr << err->getLoc( ) << " (runtime): " ;
+								err->display( std::cerr );
+								continue;
+							}
+					}
+					std::cerr << "(Bad post-exception type)" << ": " ;
+					e->display( std::cerr );
+				}
+		}
 	cerr << "Aborting job.	Deleting output file." << endl ;
 	if( outputName != "" )
 		{
