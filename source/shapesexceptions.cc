@@ -803,6 +803,11 @@ Exceptions::ExternalError::display( ostream & os ) const
 	os << "External error: " << msg_ << std::endl ;
 }
 
+Exceptions::ExternalError *
+Exceptions::ExternalError::clone( ) const
+{
+	return new Exceptions::ExternalError( msgMem_ );
+}
 
 Exceptions::UserArityMismatch::UserArityMismatch( const Ast::SourceLocation _formalsLoc, size_t _functionArity, size_t _callArity, Type type )
 	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), formalsLoc( _formalsLoc ), functionArity( _functionArity ), callArity( _callArity ), type_( type )

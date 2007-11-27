@@ -18,7 +18,7 @@ AC_DEFUN([AC_DEBUG],
     *)    CFLAGS="$CFLAGS -gdwarf-2" ;;
     esac
   else
-    enable_debug=dwarf-2
+    test -z $enable_debug && enable_debug=dwarf-2
     CFLAGS=`echo   $CFLAGS   | sed "s,-g[[:graph:]]*,-g$enable_debug,g"`
     CXXFLAGS=`echo $CXXFLAGS | sed "s,-g[[:graph:]]*,-g$enable_debug,g"`
   fi
@@ -46,7 +46,7 @@ AC_DEFUN([AC_PROFILE],
     *)    CFLAGS="$CFLAGS -pg" ;;
     esac
   else
-    enable_profile=g
+    test -z $enable_profile && enable_profile=g
     CFLAGS=`echo   $CFLAGS   | sed "s,-p[[:graph:]]*,-p$enable_profile,g"`
     CXXFLAGS=`echo $CXXFLAGS | sed "s,-p[[:graph:]]*,-p$enable_profile,g"`
   fi
@@ -80,7 +80,7 @@ AC_DEFUN([AC_OPTIMIZATION],
     *)    CFLAGS="$CXXFLAGS -O3" ;;
     esac
   else
-    enable_optimization=3
+    test -z $enable_optimization || enable_optimization=3
     CFLAGS=`echo   "$CFLAGS"   | sed "s,-O[[:graph:]]*,-O$enable_optimization,g"`
     CXXFLAGS=`echo "$CXXFLAGS" | sed "s,-O[[:graph:]]*,-O$enable_optimization,g"`
   fi

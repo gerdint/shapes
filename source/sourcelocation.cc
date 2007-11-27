@@ -1,5 +1,6 @@
 #include "sourcelocation.h"
 #include "charconverters.h"
+#include "shapesexceptions.h"
 #include "globals.h"
 #include "config.h"
 
@@ -127,7 +128,21 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 size_t
 Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t byteCol )
 {
-	iconv_t converter = Helpers::requireUTF8ToUCS4Converter( );
+	iconv_t converter;
+	static bool failingConverter = false;
+	try
+		{
+			converter = Helpers::requireUTF8ToUCS4Converter( );
+		}
+	catch( const Exceptions::ExternalError & ball )
+		{
+			if( ! failingConverter )
+				{
+					failingConverter = true;
+					Kernel::thePostCheckErrorsList.push_back( ball.clone( ) );
+				}
+			return 0;
+		}
 
 	static size_t bufSize = 0;
 	static char * buf = 0;

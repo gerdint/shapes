@@ -252,6 +252,7 @@ namespace Shapes
 			ExternalError( const char * msg );
 			virtual ~ExternalError( );
 			virtual void display( std::ostream & os ) const;
+			ExternalError * clone( ) const;
 		};
 
 		class TeXSetupHasChanged : public InternalError
