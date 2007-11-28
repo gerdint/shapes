@@ -1,3 +1,14 @@
+# === How to setup a new test ===
+# It is actually very simple:
+# Just add your .shape file, and a corresponding .correct.pdf file.  If the test is expected to fail,
+# simply add a .correct.pdf file such that a failing test will not be able to create it, for instance
+# by copying the .correct.pdf file from another test.  See below for how to indicate that a test
+# is expected to fail.
+
+# The following variable must be edited by hand to include every test that is expected to fail.
+XFAIL_TESTS = test_bad
+
+
 SHAPES = ${top_builddir}/source/shapes
 SHAPESFLAGS = --no-resources \
               --fontmetricspath ${top_srcdir}/resourses/fontmetrics \
@@ -5,10 +16,7 @@ SHAPESFLAGS = --no-resources \
               --tmpdir ./tmp \
               --outdir ./out
 
-#TEST_BASE = bad hello approximate2d texlabel
 TEST_BASE = $(patsubst %.shape,%,$(wildcard *.shape))
-
-XFAIL_TESTS = test_bad
 TESTS = ${addprefix test_, ${TEST_BASE}}
 check_DATA = $(patsubst %,out/%.pdf,${TEST_BASE})
 dist_check_DATA = testTEMPLATE \
@@ -24,9 +32,6 @@ TESTS_ENVIRONMENT = COMPARE="${COMPARE}"
 test_% : testTEMPLATE
 	@sed -e 's/FNAME/$*/g' < $< > $@ && \
   chmod a+x $@
-
-# %.correct.pdf : %.shape ${SHAPES}
-# 	-$(SHAPES) $< && touch $@
 
 out/%.pdf: ${srcdir}/%.shape $(SHAPES)
 	-@$(SHAPES) $(SHAPESFLAGS) $< > /dev/null 2>&1 || touch $@

@@ -5,5 +5,5 @@
 
 for i in `ls *.h *.cc *.l *.y`; do
   echo Fixing $i
-  cat edscripts/exnamespaces | ex -sC $i
+  cat exscripts/exnamespaces | ex -sC $i
 done

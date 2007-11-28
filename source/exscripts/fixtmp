@@ -2,5 +2,5 @@
 
 for i in `ls *.h *.cc *.ll *.yy`; do
   echo Fixing $i
-  cat edscripts/extmp | ex -sC $i
+  cat exscripts/extmp | ex -sC $i
 done

@@ -1,0 +1,3 @@
+:%s!AC_INIT(\([^,]*\),[^,]*,!AC_INIT(\1, VERSION,!g
+"
+:wq
