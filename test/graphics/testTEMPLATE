@@ -5,7 +5,7 @@ then
 	srcdir="."
 fi
 
-OUTPUT=FNAME.pdf
+OUTPUT=out/FNAME.pdf
 LOG=FNAME.log
 CORRECT=${srcdir}/FNAME.correct.pdf
 

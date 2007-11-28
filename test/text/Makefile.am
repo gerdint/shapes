@@ -1,6 +1,7 @@
 SHAPES = ${top_builddir}/source/shapes
 SHAPESFLAGS = --no-resources \
-              --fontmetricspath  ${top_srcdir}/resourses/fontmetrics
+              --fontmetricspath ${top_srcdir}/resourses/fontmetrics \
+              --needpath ${top_srcdir}/resourses/extensions
 
 TEST_BASE = bad scopes
 

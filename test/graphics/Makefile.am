@@ -1,17 +1,23 @@
 SHAPES = ${top_builddir}/source/shapes
+SHAPESFLAGS = --no-resources \
+              --fontmetricspath ${top_srcdir}/resourses/fontmetrics \
+              --needpath ${top_srcdir}/resourses/extensions \
+              --tmpdir ./tmp \
+              --outdir ./out
 
-TEST_BASE = bad hello approximate2d texlabel
+#TEST_BASE = bad hello approximate2d texlabel
+TEST_BASE = $(patsubst %.shape,%,$(wildcard *.shape))
 
 XFAIL_TESTS = test_bad
 TESTS = ${addprefix test_, ${TEST_BASE}}
-check_DATA = ${addsuffix .pdf, ${TEST_BASE}}
+check_DATA = $(patsubst %,out/%.pdf,${TEST_BASE})
 dist_check_DATA = testTEMPLATE \
                   ${addsuffix .shape, ${TEST_BASE}} \
                   ${addsuffix .correct.pdf, ${TEST_BASE}}
 CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
-             ${addsuffix .pdf, ${TEST_BASE}} \
              ${addsuffix .log, ${TEST_BASE}} \
-             tmp/*.*
+             tmp/*.* \
+             out/*.*
 
 TESTS_ENVIRONMENT = COMPARE="${COMPARE}"
 
@@ -22,5 +28,5 @@ test_% : testTEMPLATE
 # %.correct.pdf : %.shape ${SHAPES}
 # 	-$(SHAPES) $< && touch $@
 
-%.pdf: ${srcdir}/%.shape $(SHAPES)
-	-@$(SHAPES) --tmpdir ./tmp $< > /dev/null 2>&1 || touch $@
+out/%.pdf: ${srcdir}/%.shape $(SHAPES)
+	-@$(SHAPES) $(SHAPESFLAGS) $< > /dev/null 2>&1 || touch $@
