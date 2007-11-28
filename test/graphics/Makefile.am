@@ -1,6 +1,6 @@
 SHAPES = ${top_builddir}/source/shapes
 
-TEST_BASE = bad hello approximate2d
+TEST_BASE = bad hello approximate2d texlabel
 
 XFAIL_TESTS = test_bad
 TESTS = ${addprefix test_, ${TEST_BASE}}
@@ -10,7 +10,8 @@ dist_check_DATA = testTEMPLATE \
                   ${addsuffix .correct.pdf, ${TEST_BASE}}
 CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
              ${addsuffix .pdf, ${TEST_BASE}} \
-             ${addsuffix .log, ${TEST_BASE}}
+             ${addsuffix .log, ${TEST_BASE}} \
+             tmp/*.*
 
 TESTS_ENVIRONMENT = COMPARE="${COMPARE}"
 
@@ -22,4 +23,4 @@ test_% : testTEMPLATE
 # 	-$(SHAPES) $< && touch $@
 
 %.pdf: ${srcdir}/%.shape $(SHAPES)
-	-@$(SHAPES) $< > /dev/null 2>&1 || touch $@
+	-@$(SHAPES) --tmpdir ./tmp $< > /dev/null 2>&1 || touch $@
