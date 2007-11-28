@@ -11,11 +11,11 @@ AC_DEFUN([AC_DEBUG],
   elif test "x$enable_debug" = "xyes" ; then
     case $CXXFLAGS in
     *-g*) ;;
-    *)    CXXFLAGS="$CXXFLAGS -gdwarf-2" ;;
+    *)    CXXFLAGS="$CXXFLAGS -g" ;;
     esac
     case $CFLAGS in
     *-g*) ;;
-    *)    CFLAGS="$CFLAGS -gdwarf-2" ;;
+    *)    CFLAGS="$CFLAGS -g" ;;
     esac
   else
     test -z $enable_debug && enable_debug=dwarf-2

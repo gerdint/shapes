@@ -59,7 +59,7 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
 		}
 
-	if( p0_->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
+	if( p1_->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
 		{
 			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
 		}
