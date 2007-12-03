@@ -249,7 +249,7 @@ SimplePDF::PDF_out::setOutputStream( ostream * _os )
 {
 	if( static_cast< streamoff >( os->tellp( ) ) != os_start )
 		{
-			cerr << "Switching output file when contents has already been written in another file." << endl ;
+			cerr << "Switching output file when " << static_cast< streamoff >( os->tellp( ) ) - os_start << " bytes have already been written in another file." << endl ;
 			exit( 1 );
 		}
 	os = _os;

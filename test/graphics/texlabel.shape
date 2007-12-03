@@ -1,10 +1,11 @@
 ##preamble \usepackage{amsmath}
 ##preamble \usepackage{fancybox}
+##preamble \usepackage{mypackage}
 
 •page << (TeX `
 \fbox{\begin{Beqnarray*}
 &\begin{aligned}
-  x &= 1 \\
+  \firstunknown &= 1 \\
   y &= 2      % This is a comment!
 \end{aligned}
 \end{Beqnarray*}}

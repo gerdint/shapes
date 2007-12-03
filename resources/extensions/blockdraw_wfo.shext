@@ -21,6 +21,7 @@ dynamic @signmarginoffset identity 2mm
 
 dynamic @blockspaceverynear identity 3mm
 dynamic @blockspacenear identity 6mm
+dynamic @blockspacelabelspace identity 8mm
 dynamic @blockspacefar identity 10mm
 dynamic @blockspaceveryfar identity 15mm
 
@@ -53,6 +54,8 @@ putblockNearLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock ol
 putblockFarLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspacefar]
 putblockVeryNearLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspaceverynear]
 putblockVeryFarLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspaceveryfar]
+putblockLabelSpaceLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @blockspacelabelspace]
+putblockLabelMarginLeft: \ •dst newBlock oldBlock .> [putblockLeft •dst newBlock oldBlock @leftrightlabelmargin]
 
 putblockRight: \ •dst newBlock oldBlock dist .> {
   res: [[shift [rightpoint oldBlock 1 1]+(dist,0)] [centerxat newBlock ~1]]
@@ -63,6 +66,8 @@ putblockNearRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock 
 putblockFarRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspacefar]
 putblockVeryNearRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspaceverynear]
 putblockVeryFarRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspaceveryfar]
+putblockLabelSpaceRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @blockspacelabelspace]
+putblockLabelMarginRight: \ •dst newBlock oldBlock .> [putblockRight •dst newBlock oldBlock @leftrightlabelmargin]
 
 putblockBelow: \ •dst newBlock oldBlock dist .> {
   res: [[shift [bottompoint oldBlock 1 1]+(0,~dist)] [centeryat newBlock 1]]
@@ -73,6 +78,8 @@ putblockNearBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock 
 putblockFarBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspacefar]
 putblockVeryNearBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspaceverynear]
 putblockVeryFarBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspaceveryfar]
+putblockLabelSpaceBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @blockspacelabelspace]
+putblockLabelMarginBelow: \ •dst newBlock oldBlock .> [putblockBelow •dst newBlock oldBlock @belowlabelmargin]
 
 putblockAbove: \ •dst newBlock oldBlock dist .> {
   res: [[shift [toppoint oldBlock 1 1]+(0,dist)] [centeryat newBlock ~1]]
@@ -83,6 +90,8 @@ putblockNearAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock 
 putblockFarAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspacefar]
 putblockVeryNearAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspaceverynear]
 putblockVeryFarAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspaceveryfar]
+putblockLabelSpaceAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspacelabelspace]
+putblockLabelMarginAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @abovelabelmargin]
 
 sizedblock: \ txt rx ry .>
  (

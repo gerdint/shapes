@@ -44,6 +44,7 @@ void xpdfHelper( const std::string & filename, const std::string & server, const
 void openHelper( const std::string & filename, const char * application );
 void addDefaultNeedPath( );
 void addDefaultFontMetricsPath( );
+void setupTEXINPUTS( const std::string & inDir );
 void destroyGlobals( );
 
 namespace Shapes
@@ -838,6 +839,35 @@ main( int argc, char ** argv )
 				}
 		}
 
+	{
+		string inDir;
+		std::string inPath = inputName;
+		char * slash = strrchr( inPath.c_str( ), '/' );
+		if( slash == 0 )
+			{
+				inPath = "";
+			}
+		else
+			{
+				*slash = '\0';
+			}
+		if( inPath[0] == '/' )
+			{
+				inDir = inPath;
+			}
+		else
+			{
+				char * cwd = getwd( 0 );
+				getwd( cwd );
+				inDir = cwd + ( "/" + inPath );
+				delete( cwd );
+			}
+		if( tmpDir != "./" )
+			{
+				setupTEXINPUTS( inDir );
+			}
+	}
+
 	if( Computation::theTrixelizeSplicingTol >= Computation::theTrixelizeOverlapTol )
 		{
 			std::cerr << "The splicing tolerance (" << Concrete::Length::offtype( Computation::theTrixelizeSplicingTol ) << "bp) must be less than the overlap tolerance (" << Concrete::Length::offtype( Computation::theTrixelizeOverlapTol ) << "bp)." << std::endl ;
@@ -1526,6 +1556,46 @@ addDefaultFontMetricsPath( )
 			Lang::Font::push_backFontMetricsPath( tok );
 			tok = strsep( & start, ":" );
 		}
+}
+
+void
+setupTEXINPUTS( const std::string & inDir )
+{
+	const char * NAME = "TEXINPUTS";
+	char * start = getenv( NAME );
+	if( start == 0 )
+		{
+			setenv( NAME, ( inDir + ":" ).c_str( ), 1 );
+			return;
+		}
+
+	{
+		std::ostringstream newPath;
+		char * tok = strsep( & start, ":" );
+		bool foundCurrent = false;
+		while( tok != 0 )
+			{
+				if( strcmp( tok, "." ) == 0 )
+					{
+						newPath << inDir ;
+						foundCurrent = true;
+					}
+				else
+					{
+						newPath << tok ;
+					}
+				tok = strsep( & start, ":" );
+				if( tok != 0 )
+					{
+						newPath << ":" ;
+					}
+			}
+		if( ! foundCurrent )
+			{
+				newPath << ":" << inDir ;
+			}
+		setenv( NAME, newPath.str( ).c_str( ), 1 );
+	}
 }
 
 void
