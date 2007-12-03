@@ -5,7 +5,11 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.3.4 )====
-FILL IN DATE WHEN TAGGING
+2007-12-13
+
+Bugfixes, including one in the computation of elementary paths.  There also used to be a problem (since 0.3.2) with running pdfLaTeX in a different directory than where the Shapes source is located, since the meaning of relative file locations must be changed when source code is moved.
+
+This is the first version planned for (very limited) distribution using the new build process.
 
 
 ====( 0.3.3 )====
