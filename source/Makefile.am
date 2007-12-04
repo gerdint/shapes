@@ -85,13 +85,14 @@ shapes_SOURCES = shapesyylex.ll \
 		characterencoding.cc \
 		debuglog.cc globals.cc main.cc
 
+dist_noinst_DATA = version.cc
 
 shapesparser.h : shapesparser.cc shapesparser.yy
 
 classtree2.h : classtree1.h
 	cat $< | sed -e 's/CLASSTREE1/CLASSTREE2/' > $@
 
-version.o : ${srcdir}/version.cc SHAPES-VERSION-FILE
+version.o : version.cc SHAPES-VERSION-FILE
 	${COMPILE} -D'VERSION_DATE="${VERSION_DATE}"' \
 	           -D'VERSION_REVISION="${VERSION_REVISION}"' \
 	           -D'VERSION_NUMBER="${VERSION_NUMBER}"' -c $< -o $@
