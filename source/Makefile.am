@@ -1,5 +1,5 @@
 AM_CPPFLAGS = -Wall -Wsynth -DDISPATCHSTYLE=DISPATCHSTYLE_CASE \
-              -D'RESOURCE_DIR="${pkgdatadir}"' \
+              -D'RESOURCES_DIR="${pkgdatadir}"' \
               ${GSL_CFLAGS} ${ZLIB_CFLAGS} -I${top_srcdir}/tools/include
 AM_LDFLAGS = -lz -lm -lc
 LIBS = ${LIBICONV} ${GSL_LIBS} ${ZLIB_LIBS}
