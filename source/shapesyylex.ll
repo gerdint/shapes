@@ -871,7 +871,7 @@ ShapesScanner::doInclusion( )
 			struct stat theStat;
 			if( stat( path.c_str( ), & theStat ) != 0 )
 				{
-					throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), Exceptions::FileOpenError::STAT );
+					throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0, Exceptions::FileOpenError::STAT );
 				}
 			FileID fileID( theStat );
 			if( neededFiles.find( fileID ) != neededFiles.end( ) )
@@ -888,7 +888,7 @@ ShapesScanner::doInclusion( )
 	std::ifstream * iFile = new std::ifstream( path.c_str( ) );
 	if( ! iFile->good( ) )
 		{
-			throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ) );
+			throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0 );
 		}
 
 	shapeslloc.firstLine = shapeslloc.lastLine + 1;

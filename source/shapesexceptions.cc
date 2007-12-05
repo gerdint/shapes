@@ -232,8 +232,8 @@ Exceptions::FreezingUndefined::display( std::ostream & os ) const
 }
 
 
-Exceptions::FileOpenError::FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, Type _type )
-	: loc( _loc ), filename( _filename ), type( _type )
+Exceptions::FileOpenError::FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::list< std::string > * searchPath, Type _type )
+	: loc( _loc ), filename( _filename ), type( _type ), searchPath_( searchPath )
 { }
 
 Exceptions::FileOpenError::~FileOpenError( )
@@ -245,14 +245,29 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 	switch( type )
 		{
 		case OPEN:
-			os << loc << "Could not open file: " << filename << std::endl ;
+			os << loc << "Could not open file: " << filename ;
 			break;
 		case STAT:
-			os << loc << "Could not stat() file: " << filename << std::endl ;
+			os << loc << "Could not stat() file: " << filename ;
 			break;
 		default:
-			os << loc << "Internal error when displaying FileOpenError on file: " << filename << std::endl ;
+			os << loc << "Internal error when displaying FileOpenError on file: " << filename ;
 		}
+	if( searchPath_ != 0 )
+		{
+			os << " searching \"" ;
+			typedef typeof *searchPath_ ListType;
+			for( ListType::const_iterator i = searchPath_->begin( ); i != searchPath_->end( ); ++i )
+				{
+					if( i != searchPath_->begin( ) )
+						{
+							os << ":" ;
+						}
+					os << *i ;
+				}
+			os << "\"" ;
+		}
+	os << std::endl ;
 }
 
 

@@ -127,7 +127,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 				{
 					goto foundFile;
 				}
-			throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ) );
+			throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ), 0 );
 		}
 
 	if( needSearchPath.size( ) == 0 )
@@ -146,7 +146,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 					goto foundFile;
 				}
 		}
-	throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ) );
+	throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ), & needSearchPath );
 
  foundFile:
 	if( showFiles )
