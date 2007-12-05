@@ -170,6 +170,12 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 						}
 				}
 
+				if( lastJobFilename == labelDBFilename )
+					{
+						// Move would yield a warning since we're not really moving anything.
+						return;
+					}
+
 				mvCommand << "mv '" << lastJobFilename << "' '" << labelDBFilename << "'";
 				Interaction::systemDebugMessage( mvCommand.str( ) );
 				if( system( mvCommand.str( ).c_str( ) ) != 0 )
@@ -200,6 +206,12 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 					return;
 				}
 		}
+
+		if( finalJobFilename == labelDBFilename )
+			{
+				// Move would yield a warning since we're not really moving anything.
+				return;
+			}
 
 		mvCommand << "mv '" << finalJobFilename << "' '" << labelDBFilename << "'";
 		Interaction::systemDebugMessage( mvCommand.str( ) );
