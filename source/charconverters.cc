@@ -15,7 +15,7 @@
 
 using namespace Shapes;
 
-const char * Helpers::theUCS4EncodingName = "UCS-4-INTERNAL";
+const char * Helpers::theUCS4EncodingName = "UCS-4";
 
 iconv_t
 Helpers::requireUTF8ToMacRomanConverter( bool cleanup )
