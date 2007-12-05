@@ -857,10 +857,9 @@ main( int argc, char ** argv )
 			}
 		else
 			{
-				char * cwd = getwd( 0 );
-				getwd( cwd );
+				char * cwd = getcwd( 0, 0 );
 				inDir = cwd + ( "/" + inPath );
-				delete( cwd );
+				free( cwd );
 			}
 		if( tmpDir != "./" )
 			{
@@ -1532,6 +1531,7 @@ addDefaultNeedPath( )
 	char * start = getenv( "SHAPESINPUTS" );
 	if( start == 0 )
 		{
+			Ast::theShapesScanner.push_backNeedPath( "." );
 			return;
 		}
 	char * tok = strsep( & start, ":" );
