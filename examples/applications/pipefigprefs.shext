@@ -9,7 +9,7 @@ valve: \ .>
   z22: (u,u)
   c: 0.5*(z11+z22)
   v: c+(4*u,0cm)
-  •res << @nonstroking:gray_WHITE | [fill z11--z12--z22--z21--cycle]
+  •res << @nonstroking:GRAY_WHITE | [fill z11--z12--z22--z21--cycle]
   @defaultunit:1%c |
   {
     •res << [stroke z11--z22--z12--z21--cycle] << [stroke c--v] << [stroke (v+(0cm,u))>(^~20°)--(^20°)<(v-(0cm,u))--cycle]
