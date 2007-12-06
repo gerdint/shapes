@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!ELEMENT man ( manhead , section* )>
+
+<!-- <!ELEMENT taggedtext ( typename* , syntaxname* , syntaxlines* , PCDATA* )> -->
+<!ELEMENT manhead ( prog-name , man-section , modification-date , left-footer , center-header )>
+
+<!ELEMENT prog-name CDATA>
+<!ELEMENT man-section CDATA>
+<!ELEMENT modification-date CDATA>
+<!ELEMENT left-footer CDATA>
+<!ELEMENT center-header CDATA>
+
+<!ELEMENT section ( title , top? , body? )>
+  <!ATTLIST section id CDATA>
+<!ELEMENT title CDATA>
+<!ELEMENT top paragraph-like*>
+<!ELEMENT body paragraph-like*>
+
+<!ELEMENT paragraph-like ( p )>
+
+<!ELEMENT p PCDATA>

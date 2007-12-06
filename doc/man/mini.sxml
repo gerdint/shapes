@@ -1,0 +1,25 @@
+<man>
+	<manhead>
+		<prog-name>shapes</prog-name>
+		<man-section>1</man-section>
+		<modification-date>2007-11-19</modification-date>
+		<left-footer>Tiddes</left-footer>
+		<center-header>The Shapes language compiler</center-header>
+	</manhead>
+
+	<section>
+		<title>Name</title>
+		<body>
+			<p>
+				shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.
+			</p>
+		</body>
+	</section>
+
+	<section>
+		<title>Description</title>
+		<body>
+			<p><prog-name>shapes</prog-name> compiles a source file written in the <str-Shapes /> language (with file name extension <filename>shape</filename>).  On success, this results in a <str-PDF /> file containing a viewable representation of the graphics described by the source.</p>
+		</body>
+	</section>
+</man>

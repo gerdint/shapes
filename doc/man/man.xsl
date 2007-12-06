@@ -5,7 +5,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/man">
   <xsl:apply-templates select="manhead" />
   <xsl:for-each select="section">
-    .SH <xsl:value-of select="fs::upper-case(title)" />
+<!--    .SH <xsl:value-of select="fn::upper-case(title)" /> -->
+    .SH <xsl:value-of select="title" />
     <xsl:apply-templates select="top" />
     <xsl:apply-templates select="body" />
     <xsl:for-each select="section">
@@ -49,7 +50,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="env-variable-description">
-.B <xsl:value-of select="name" >
+.B <xsl:value-of select="name" />
 <xsl:apply-templates select="description"/>
 </xsl:template>
 
