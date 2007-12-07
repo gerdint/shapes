@@ -21,13 +21,18 @@ TESTS = ${addprefix test_, ${TEST_BASE}}
 check_DATA = $(patsubst %,out/%.pdf,${TEST_BASE})
 dist_check_DATA = testTEMPLATE \
                   ${addsuffix .shape, ${TEST_BASE}} \
-                  ${addsuffix .correct.pdf, ${TEST_BASE}}
+                  ${addsuffix .correct.pdf, ${TEST_BASE}} \
+                  mypackage.sty
 CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
              ${addsuffix .log, ${TEST_BASE}} \
              tmp/*.* \
              out/*.*
 
 TESTS_ENVIRONMENT = COMPARE="${COMPARE}"
+
+dist-hook :
+	mkdir ${distdir}/tmp
+	mkdir ${distdir}/out
 
 test_% : testTEMPLATE
 	@sed -e 's/FNAME/$*/g' < $< > $@ && \
