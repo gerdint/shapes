@@ -10,9 +10,7 @@
 	<section>
 		<title>Name</title>
 		<body>
-			<p>
-				shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.
-			</p>
+			<p>shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.</p>
 		</body>
 	</section>
 

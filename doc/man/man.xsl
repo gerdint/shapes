@@ -3,30 +3,21 @@
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="/man">
-  <xsl:apply-templates select="manhead" />
-  <xsl:for-each select="section">
-<!--    .SH <xsl:value-of select="fn::upper-case(title)" /> -->
-    .SH <xsl:value-of select="title" />
-    <xsl:apply-templates select="top" />
-    <xsl:apply-templates select="body" />
-    <xsl:for-each select="section">
-      .SS <xsl:value-of select="title" />
-      <xsl:apply-templates select="top" />
-      <xsl:apply-templates select="body" />
-    </xsl:for-each>
-  </xsl:for-each>
+<xsl:apply-templates select="manhead" />
+<xsl:for-each select="section"><!--    .SH <xsl:value-of select="fn::upper-case(title)" /> -->.SH <xsl:value-of select="title" />
+<xsl:apply-templates select="top" />
+<xsl:apply-templates select="body/*" />
+<xsl:for-each select="section">.SS <xsl:value-of select="title" />
+<xsl:apply-templates select="top" />
+<xsl:apply-templates select="body" />
+</xsl:for-each>
+</xsl:for-each>
 </xsl:template>
 
-<xsl:template match="manhead">
-  <xsl:value-of select="prog-name" />
-  <xsl:value-of select="man-section" />
-  &quot;<xsl:value-of select="modification-date" />&quot;
-  &quot;<xsl:value-of select="left-footer" />&quot;
-  &quot;<xsl:value-of select="center-header" />&quot;
+<xsl:template match="manhead">.TH <xsl:value-of select="prog-name" /> <xsl:value-of select="man-section" /> &quot;<xsl:value-of select="modification-date" />&quot; &quot;<xsl:value-of select="left-footer" />&quot; &quot;<xsl:value-of select="center-header" />&quot;
 </xsl:template>
 
-<xsl:template match="p">
-  <xsl:apply-templates/>
+<xsl:template match="p"><xsl:apply-templates/>&#13;
 </xsl:template>
 <xsl:template match="pre">
 .br
