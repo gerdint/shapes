@@ -19,7 +19,9 @@
 		<title>Synopsis</title>
 		<body>
 			<synopsis-table>
-				<synopsis-case><prog-name>shapes</prog-name><post-blank /><stx>[options]</stx><post-blank /><replacable>source</replacable><post-tight /></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name><post-blank /><stx>option*</stx><post-blank /><replacable>source</replacable><post-tight /></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name><post-blank /><stx>option*</stx><post-tight /></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name><post-blank /><stx>( options | file-request )*</stx><post-blank /><post-tight /></synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>
@@ -32,6 +34,47 @@
 	</section>
 
 	<section>
+		<title>Command line options</title>
+		<top>
+			<p>Command line options fall into two cathegories, most of which were referred to as <stx>option</stx><post-blank />above.  The other are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <stx>file-request</stx><post-blank />above.</p>
+		</top>
+ 		<section>
+			<title>Options</title>
+			<body>
+				<command-line-option-description>
+					<form>--tmpdir <replacable>dir</replacable><post-tight /></form>
+					<description>
+						<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>File requests</title>
+			<body>
+ 				<command-line-option-description>
+					<form>--which-in</form>
+					<description>
+						<p>Request the input source.</p>
+					</description>
+				</command-line-option-description>
+ 				<command-line-option-description>
+					<form>--which-out</form>
+					<description>
+						<p>Request the input source.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<form>--which <replacable>source</replacable><post-tight /></form>
+					<description>
+						<p>Request a particular file.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+	</section>
+
+	<section>
 		<title>Environment variables</title>
 		<body>
 			<env-variable-description>
@@ -41,9 +84,21 @@
 				</description>
 			</env-variable-description>
 			<env-variable-description>
+				<name>SHAPESTMPDIR</name>
+				<description>
+					<p>tells, when present, where to create temporary files.  In particular this concerns files related to label creation.  Note, however, that the label database file (with the <filename>.labels.pdf</filename><post-blank />extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.</p>
+				</description>
+			</env-variable-description>
+			<env-variable-description>
 				<name>SHAPESFONTMETRICS</name>
 				<description>
 					<p>tells where to search for font metrics files.  Font metrics for the standard fonts in <str-PDF /> are distributed with the compiler, and on typical installations these are found using another mechanism.</p>
+				</description>
+			</env-variable-description>
+			<env-variable-description>
+				<name>TEXINPUTS</name>
+				<description>
+					<p>is manipulated locally to enable TeX to find files located relative to the <str-Shapes /> source, although the LaTeX source used for label creation may be placed in a different directory.</p>
 				</description>
 			</env-variable-description>
 		</body>

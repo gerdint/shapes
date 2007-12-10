@@ -52,6 +52,15 @@ xsl:apply-templates/>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
+<xsl:template match="command-line-option-description">
+<xsl:text>
+
+</xsl:text><xsl:apply-templates select="form" /><xsl:text>
+
+</xsl:text>
+<xsl:apply-templates select="description/*"/>
+</xsl:template>
+
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><xsl:text>
 .B </xsl:text><xsl:value-of select="." /></xsl:template>
@@ -59,8 +68,14 @@ xsl:apply-templates/>
 .I </xsl:text><xsl:value-of select="." />
 </xsl:template>
 
-<xsl:template match="synopsis-case/stx"><xsl:text>.B </xsl:text><xsl:value-of select="." /></xsl:template>
-<xsl:template match="synopsis-case/replacable"><xsl:text>.I </xsl:text><xsl:value-of select="." /></xsl:template>
+<xsl:template match="synopsis-case/stx"><xsl:text>
+.B </xsl:text><xsl:value-of select="." /></xsl:template>
+<xsl:template match="p/stx"><xsl:text>
+.B </xsl:text><xsl:value-of select="." /></xsl:template>
+<xsl:template match="synopsis-case/replacable"><xsl:text>
+.I </xsl:text><xsl:value-of select="." /></xsl:template>
+<xsl:template match="form/replacable"><xsl:text>
+.I </xsl:text><xsl:value-of select="." /></xsl:template>
 
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
