@@ -1,4 +1,7 @@
-all: mini.proc
+all: man1/shapes.1
 
-mini.proc: man.dtd mini.sxml man.xsl
-	xmlto --skip-validation -x man.xsl html mini.sxml
+# This is how I used to apply the transform before I needed XPATH 2 functions:
+#	@xsltproc man.xsl mini.sxml | sed '1,1d' > $@
+
+man1/shapes.1: tool-interface.sxml man.xsl
+	java -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< man.xsl | sed '1,1d' > $@

@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <man>
 	<manhead>
 		<prog-name>shapes</prog-name>
 		<man-section>1</man-section>
-		<modification-date>2007-11-19</modification-date>
+		<modification-date>2007-12-10</modification-date>
 		<left-footer>Tiddes</left-footer>
 		<center-header>The Shapes language compiler</center-header>
 	</manhead>
@@ -10,9 +11,7 @@
 	<section>
 		<title>Name</title>
 		<body>
-			<p>
-				shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.
-			</p>
+			<p>shapes <em-dash /> Compile a <str-Shapes /> source to <str-PDF />.</p>
 		</body>
 	</section>
 
@@ -20,9 +19,7 @@
 		<title>Synopsis</title>
 		<body>
 			<synopsis-table>
-				<synopsis-case>
-					<prog-name>shapes</prog-name> <stx>[options]</stx> <replacable>source</replacable>
-				</synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name><post-blank /><stx>[options]</stx><post-blank /><replacable>source</replacable><post-tight /></synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>
@@ -30,7 +27,7 @@
 	<section>
 		<title>Description</title>
 		<body>
-			<p><prog-name>shapes</prog-name> compiles a source file written in the <str-Shapes /> language (with file name extension <filename>shape</filename>).  On success, this results in a <str-PDF /> file containing a viewable representation of the graphics described by the source.</p>
+			<p><prog-name>shapes</prog-name><post-blank />compiles a source file written in the <str-Shapes /> language (with file name extension <filename>shape</filename><post-tight />).  On success, this results in a <str-PDF /> file containing a viewable representation of the graphics described by the source.</p>
 		</body>
 	</section>
 
@@ -40,7 +37,7 @@
 			<env-variable-description>
 				<name>SHAPESINPUTS</name>
 				<description>
-					<p>contains a search path used for requested source files.  It usually consists of directories with language extension files (with the <filename>.shext</filename> extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.</p>
+					<p>contains a search path used for requested source files.  It usually consists of directories with language extension files (with the <filename>.shext</filename><post-blank />extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.</p>
 				</description>
 			</env-variable-description>
 			<env-variable-description>
@@ -55,7 +52,7 @@
 	<section>
 		<title>Examples</title>
 		<body>
-			<p>To use the <prog-name class="other">xpdf</prog-name> program for preview, and with a source called <filename>hi.shape</filename>, run the program as:</p>
+			<p>To use the <prog-name class="other">xpdf</prog-name> program for preview, and with a source called <filename>hi.shape</filename><post-tight />, run the program as:</p>
 			<pre>
   shapes --xpdf hi.shape
 			</pre>
@@ -65,6 +62,7 @@
 </pre>
 		</body>
 	</section>
+
 
 	<section>
 		<title>Author</title>
@@ -81,4 +79,5 @@
 			</see-also-items>
 		</body>
 	</section>
+
 </man>
