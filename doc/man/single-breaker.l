@@ -1,7 +1,6 @@
 %%
 
-^".ensure-line-break"([\n]".ensure-line-break")*[\n]? { printf( "\n" ); }
-
+([\n]".ensure-line-break"[ ]*)+ { printf( "\n" ); }
 %%
 
 int

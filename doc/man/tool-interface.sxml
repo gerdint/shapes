@@ -42,7 +42,7 @@
 			<title>Options</title>
 			<body>
 				<command-line-option-description>
-					<form>--tmpdir <replacable>dir</replacable></form>
+					<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 					<description>
 						<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
 					</description>
@@ -53,19 +53,19 @@
 			<title>File requests</title>
 			<body>
  				<command-line-option-description>
-					<form>--which-in</form>
+					<parameters flag="--which-in"/>
 					<description>
 						<p>Request the input source.</p>
 					</description>
 				</command-line-option-description>
  				<command-line-option-description>
-					<form>--which-out</form>
+					<parameters flag="--which-out"/>
 					<description>
 						<p>Request the input source.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
-					<form>--which <replacable>source</replacable></form>
+					<parameters flag="--which"><replacable>source</replacable></parameters>
 					<description>
 						<p>Request a particular file.</p>
 					</description>

@@ -8,14 +8,12 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 </xsl:text>
 <xsl:apply-templates select="manhead" />
 <xsl:for-each select="section"><xsl:text>
-.ensure-line-break
-.SH </xsl:text><xsl:value-of select="upper-case(title)" /><xsl:text>
+.ensure-line-break.SH </xsl:text><xsl:value-of select="upper-case(title)" /><xsl:text>
 .ensure-line-break</xsl:text>
 <xsl:apply-templates select="top/*" />
 <xsl:apply-templates select="body/*" />
 <xsl:for-each select="section"><xsl:text>
-.ensure-line-break
-.SS </xsl:text><xsl:value-of select="title" /><xsl:text>
+.ensure-line-break.SS </xsl:text><xsl:value-of select="title" /><xsl:text>
 .ensure-line-break</xsl:text>
 <xsl:apply-templates select="top/*" />
 <xsl:apply-templates select="body/*" />
@@ -36,12 +34,10 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 
 <xsl:template match="synopsis-table">
 <xsl:for-each select="synopsis-case"><xsl:apply-templates/><xsl:text>
-.ensure-line-break</xsl:text></xsl:for-each>
+</xsl:text></xsl:for-each>
 </xsl:template>
 
-<xsl:template match="synopsis-case">
-xsl:apply-templates/>
-</xsl:template>
+<xsl:template match="synopsis-case"><xsl:apply-templates/></xsl:template>
 
 <xsl:template match="see-also-items">
   <xsl:for-each select="see-also"><xsl:text>.BR </xsl:text><xsl:apply-templates/><xsl:text>
@@ -59,37 +55,36 @@ xsl:apply-templates/>
 <xsl:template match="command-line-option-description">
 <xsl:text>
 
-</xsl:text><xsl:apply-templates select="form" /><xsl:text>
-
-</xsl:text>
+</xsl:text><xsl:apply-templates select="parameters" /><xsl:text>
+.ensure-line-break.br
+.ensure-line-break</xsl:text>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
+<xsl:template match="command-line-option-description/parameters[@flag]"><xsl:text>
+
+.BR </xsl:text><xsl:value-of select="@flag" /><xsl:text>
+.ensure-line-break</xsl:text><xsl:apply-templates /></xsl:template>
+
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><xsl:text>
-.ensure-line-break
-.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="filename"><xsl:text>
-.ensure-line-break
-.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="synopsis-case/stx"><xsl:text>
-.ensure-line-break
-.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="p/stx"><xsl:text>
-.ensure-line-break
-.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="synopsis-case/replacable"><xsl:text>
-.ensure-line-break
-.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
-<xsl:template match="form/replacable"><xsl:text>
-.ensure-line-break
-.I </xsl:text><xsl:value-of select="." /><xsl:text>
+<xsl:template match="parameters/replacable"><xsl:text>
+.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="str-PDF">PDF</xsl:template>
