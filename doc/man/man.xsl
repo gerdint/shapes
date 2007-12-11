@@ -55,16 +55,15 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="command-line-option-description">
 <xsl:text>
 
-</xsl:text><xsl:apply-templates select="parameters" /><xsl:text>
-.ensure-line-break.br
-.ensure-line-break</xsl:text>
+</xsl:text><xsl:apply-templates select="parameters" />
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
 <xsl:template match="command-line-option-description/parameters[@flag]"><xsl:text>
-
-.BR </xsl:text><xsl:value-of select="@flag" /><xsl:text>
-.ensure-line-break</xsl:text><xsl:apply-templates /></xsl:template>
+.ensure-line-break.BR </xsl:text><xsl:value-of select="@flag" /><xsl:text>
+.ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>
+.ensure-line-break.br
+.ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><xsl:text>

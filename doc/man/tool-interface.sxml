@@ -36,15 +36,299 @@
 	<section>
 		<title>Command line options</title>
 		<top>
-			<p>Command line options fall into two cathegories, most of which were referred to as <stx>option</stx> above.  The other are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <stx>file-request</stx> above.</p>
+			<p>Command line options fall into two cathegories, most of which were referred to as <stx>option</stx> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <stx>file-request</stx> above.</p>
 		</top>
  		<section>
-			<title>Options</title>
+			<title>Files</title>
 			<body>
+				<command-line-option-description>
+					<parameters flag="source"></parameters>
+					<description>
+						<p>When the source is specified as the last command line argument, it may have either of the forms <filename>indir/basename</filename>, <filename>indir/basename.</filename>, or <filename>indir/basename.shape</filename>; they all mean the same (here <filename>indir/</filename> just indicates that the file may be located in another directory).  This also specifies a filename base (excluding <filename>indir/</filename> and the <filename>.shape</filename> suffix), which in turn provides names for all other files involved.</p>
+					</description>
+				</command-line-option-description>
 				<command-line-option-description>
 					<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 					<description>
 						<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--outdir"> <replacable>dir</replacable></parameters>
+					<description>
+						<p>Specify directory for products.  Defaults to current working directory.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
+					<parameters flag="-Ndir"></parameters>
+					<description>
+						<p>Add <replacable>dir</replacable> to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--base"> <replacable>filenamebase</replacable></parameters>
+					<description>
+						<p>Specify the filename base to derive other filenames from.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--in"> <replacable>file</replacable></parameters>
+					<description>
+						<p>Specify the input source.  Defaults to the basename with the suffix ".shape" in the current directory.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--prepend"> <replacable>str</replacable></parameters>
+					<description>
+						<p>Prepend the given string to the input source.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--out"> <replacable>file</replacable></parameters>
+					<description>
+						<p>Specify the destination file.  Defaults to the basename with the suffix ".pdf" in the output directory.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--labeldb"> <replacable>file</replacable></parameters>
+					<description>
+						<p>Specify the file where to store labels between iterations.  Defaults to the basename with the suffix ".labels.pdf" in the output directory.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--afmout"> <replacable>file</replacable></parameters>
+					<description>
+						<p>Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix ".afm" in the output directory.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--fontmetricspath"> <replacable>dir</replacable></parameters>
+					<parameters flag="-Mdir"></parameters>
+					<description>
+						<p>Add <replacable>dir</replacable> to the end of the search path for font metrics.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--no-resources"></parameters>
+					<description>
+						<p>Inhibit use of files installed with the <str-Shapes /> program.  This applies both to language extensions and font metric files.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--no-iteration"></parameters>
+					<description>
+						<p>Inhibit creation of the file with labels saved from one program run to another.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--debuglog"> <replacable>file</replacable></parameters>
+					<parameters flag="--debuglog-stderr"></parameters>
+					<parameters flag="--debuglog-stdout"></parameters>
+					<description>
+						<p>Specify file for the user's debug log messages.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>Tolerances and other parameters</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--seed"> <replacable>s</replacable></parameters>
+					<description>
+						<p>Initializes the global random number generator by calling the srand function..</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--arcdelta"> <replacable>length</replacable></parameters>
+					<description>
+						<p>Set maximum integration step length to use when integrating along paths.  Defaults to 0.1bp.  See also --dtmin.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--dtmin"> <replacable>low</replacable></parameters>
+					<description>
+						<p>Set minimum integration step to use when integrating along paths.  Defaults to 1e-4.  See also --arcdelta.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--dtminerror"></parameters>
+					<parameters flag="--no-dtminerror"></parameters>
+					<description>
+						<p>Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--splicingtol"> <replacable>tol</replacable></parameters>
+					<description>
+						<p>Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--overlaptol"> <replacable>tol</replacable></parameters>
+					<description>
+						<p>Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--fmguesserror"></parameters>
+					<parameters flag="--no-fmguesserror"></parameters>
+					<description>
+						<p>Control whether guessing font metrics for (more or less) strange characters shall be considered an error.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>Verbosity</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--bytecolumn"></parameters>
+					<description>
+						<p>Report source file columns in bytes rather than complete UTF-8 characters.  By default, column indicates the character count from the beginning of the line.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--unit"> <replacable>unit-name</replacable></parameters>
+					<description>
+						<p>Set the unit to use for textual representation of lengths.  Defaults to "cm".</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--showfiles"></parameters>
+					<description>
+						<p>Print the chain of used sources.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--stats"></parameters>
+					<parameters flag="--no-stats"></parameters>
+					<description>
+						<p>Control printing of execution statistics, such as memory and time usage.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>Tolerances and other parameters</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--v"><replacable>mode-ver</replacable></parameters>
+					<description>
+						<p>Set the highest PDF version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--version"></parameters>
+					<description>
+						<p>Print version information about the compiler, and exit.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>Preview</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--open"></parameters>
+					<description>
+						<p>Use the open program to open the result using a system default viewer for <str-PDF /> files.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--open-a"> <replacable>program</replacable></parameters>
+					<description>
+						<p>Like --open, but here the application to use is specified by the user.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--xpdf"></parameters>
+					<description>
+						<p>Use the xpdf program to preview the result.  The program is run in remote server mode.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--xpdf-remote"> <replacable>name</replacable></parameters>
+					<description>
+						<p>Set the name to use when running the xpdf program in remote mode.  Defaults to the output filename.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--xpdf-no-server"> <replacable>name</replacable></parameters>
+					<description>
+						<p>Inhibit use of the remote server mode.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--xpdf-reload"></parameters>
+					<parameters flag="--xpdf-quit"></parameters>
+					<description>
+						<p>Send commands to the xpdf remote server.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>User level debugging</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--no-backtrace"></parameters>
+					<description>
+						<p>Turn off the backtrace printed when the program reports a runtime error.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--evaltrace"></parameters>
+					<description>
+						<p>Print information about each expression about to be evaluated.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--evalbacktrace"></parameters>
+					<description>
+						<p>As --evaltrace, but with a backtrace printed along with each expression.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+ 		</section>
+ 		<section>
+			<title>Compiler developer debugging</title>
+			<body>
+				<command-line-option-description>
+					<parameters flag="--shapesdebug"></parameters>
+					<description>
+						<p>Turn on debug prints in the <str-Shapes /> lexer.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--yydebug"></parameters>
+					<description>
+						<p>Same as --shapesdebug.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--systemdebug"></parameters>
+					<description>
+						<p>Turn on system debug messages.  The messages are written to stderr.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--afmdebug"></parameters>
+					<description>
+						<p>Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--afmmessages"></parameters>
+					<description>
+						<p>Turn on font metrics debug messages.  The messages are written to stderr.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--debugstep"> <replacable>step</replacable></parameters>
+					<description>
+						<p>Set the debug step counter.  For compiler development only.</p>
 					</description>
 				</command-line-option-description>
 			</body>
@@ -64,8 +348,26 @@
 						<p>Request the input source.</p>
 					</description>
 				</command-line-option-description>
+ 				<command-line-option-description>
+					<parameters flag="--which-texjob"/>
+					<description>
+						<p>Request the TeX job basename.</p>
+					</description>
+				</command-line-option-description>
+ 				<command-line-option-description>
+					<parameters flag="--which-labeldb"/>
+					<description>
+						<p>Request the label database to keep generated labels between iterations.</p>
+					</description>
+				</command-line-option-description>
+ 				<command-line-option-description>
+					<parameters flag="--which-afmout"/>
+					<description>
+						<p>Request the file where generated font metrics will be stored.</p>
+					</description>
+				</command-line-option-description>
 				<command-line-option-description>
-					<parameters flag="--which"><replacable>source</replacable></parameters>
+					<parameters flag="--which"> <replacable>source</replacable></parameters>
 					<description>
 						<p>Request a particular file.</p>
 					</description>

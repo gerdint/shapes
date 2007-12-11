@@ -23,11 +23,28 @@ compiles a source file written in the Shapes language (with file name extension
 .SH COMMAND LINE OPTIONS
 Command line options fall into two cathegories, most of which were referred to as 
 .B option
-above.  The other are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as 
+above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as 
 .B file-request
 above.
-.SS Options
+.SS Files
 
+
+
+.BR source
+.br
+When the source is specified as the last command line argument, it may have either of the forms 
+.I indir/basename
+, 
+.I indir/basename.
+, or 
+.I indir/basename.shape
+; they all mean the same (here 
+.I indir/
+just indicates that the file may be located in another directory).  This also specifies a filename base (excluding 
+.I indir/
+and the 
+.I .shape
+suffix), which in turn provides names for all other files involved.
 
 
 
@@ -35,8 +52,290 @@ above.
 .I dir
 .br
 Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.
-.SS File requests
 
+
+
+.BR --outdir
+.I dir
+.br
+Specify directory for products.  Defaults to current working directory.
+
+
+
+.BR --needpath
+.I dir
+.br
+.BR -Ndir
+.br
+Add dir to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.
+
+
+
+.BR --base
+.I filenamebase
+.br
+Specify the filename base to derive other filenames from.
+
+
+
+.BR --in
+.I file
+.br
+Specify the input source.  Defaults to the basename with the suffix ".shape" in the current directory.
+
+
+
+.BR --prepend
+.I str
+.br
+Prepend the given string to the input source.
+
+
+
+.BR --out
+.I file
+.br
+Specify the destination file.  Defaults to the basename with the suffix ".pdf" in the output directory.
+
+
+
+.BR --labeldb
+.I file
+.br
+Specify the file where to store labels between iterations.  Defaults to the basename with the suffix ".labels.pdf" in the output directory.
+
+
+
+.BR --afmout
+.I file
+.br
+Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix ".afm" in the output directory.
+
+
+
+.BR --fontmetricspath
+.I dir
+.br
+.BR -Mdir
+.br
+Add dir to the end of the search path for font metrics.
+
+
+
+.BR --no-resources
+.br
+Inhibit use of files installed with the Shapes program.  This applies both to language extensions and font metric files.
+
+
+
+.BR --no-iteration
+.br
+Inhibit creation of the file with labels saved from one program run to another.
+
+
+
+.BR --debuglog
+.I file
+.br
+.BR --debuglog-stderr
+.br
+.BR --debuglog-stdout
+.br
+Specify file for the user's debug log messages.
+.SS Tolerances and other parameters
+
+
+
+.BR --seed
+.I s
+.br
+Initializes the global random number generator by calling the srand function..
+
+
+
+.BR --arcdelta
+.I length
+.br
+Set maximum integration step length to use when integrating along paths.  Defaults to 0.1bp.  See also --dtmin.
+
+
+
+.BR --dtmin
+.I low
+.br
+Set minimum integration step to use when integrating along paths.  Defaults to 1e-4.  See also --arcdelta.
+
+
+
+.BR --dtminerror
+.br
+.BR --no-dtminerror
+.br
+Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.
+
+
+
+.BR --splicingtol
+.I tol
+.br
+Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.
+
+
+
+.BR --overlaptol
+.I tol
+.br
+Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
+
+
+
+.BR --fmguesserror
+.br
+.BR --no-fmguesserror
+.br
+Control whether guessing font metrics for (more or less) strange characters shall be considered an error.
+.SS Verbosity
+
+
+
+.BR --bytecolumn
+.br
+Report source file columns in bytes rather than complete UTF-8 characters.  By default, column indicates the character count from the beginning of the line.
+
+
+
+.BR --unit
+.I unit-name
+.br
+Set the unit to use for textual representation of lengths.  Defaults to "cm".
+
+
+
+.BR --showfiles
+.br
+Print the chain of used sources.
+
+
+
+.BR --stats
+.br
+.BR --no-stats
+.br
+Control printing of execution statistics, such as memory and time usage.
+.SS Tolerances and other parameters
+
+
+
+.BR --v
+.I mode-ver
+.br
+Set the highest PDF version to use in output.  The mode-ver parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.
+
+
+
+.BR --version
+.br
+Print version information about the compiler, and exit.
+.SS Preview
+
+
+
+.BR --open
+.br
+Use the open program to open the result using a system default viewer for PDF files.
+
+
+
+.BR --open-a
+.I program
+.br
+Like --open, but here the application to use is specified by the user.
+
+
+
+.BR --xpdf
+.br
+Use the xpdf program to preview the result.  The program is run in remote server mode.
+
+
+
+.BR --xpdf-remote
+.I name
+.br
+Set the name to use when running the xpdf program in remote mode.  Defaults to the output filename.
+
+
+
+.BR --xpdf-no-server
+.I name
+.br
+Inhibit use of the remote server mode.
+
+
+
+.BR --xpdf-reload
+.br
+.BR --xpdf-quit
+.br
+Send commands to the xpdf remote server.
+.SS User level debugging
+
+
+
+.BR --no-backtrace
+.br
+Turn off the backtrace printed when the program reports a runtime error.
+
+
+
+.BR --evaltrace
+.br
+Print information about each expression about to be evaluated.
+
+
+
+.BR --evalbacktrace
+.br
+As --evaltrace, but with a backtrace printed along with each expression.
+.SS Compiler developer debugging
+
+
+
+.BR --shapesdebug
+.br
+Turn on debug prints in the Shapes lexer.
+
+
+
+.BR --yydebug
+.br
+Same as --shapesdebug.
+
+
+
+.BR --systemdebug
+.br
+Turn on system debug messages.  The messages are written to stderr.
+
+
+
+.BR --afmdebug
+.br
+Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.
+
+
+
+.BR --afmmessages
+.br
+Turn on font metrics debug messages.  The messages are written to stderr.
+
+
+
+.BR --debugstep
+.I step
+.br
+Set the debug step counter.  For compiler development only.
+.SS File requests
 
 
 
@@ -46,11 +345,27 @@ Request the input source.
 
 
 
-
 .BR --which-out
 .br
 Request the input source.
 
+
+
+.BR --which-texjob
+.br
+Request the TeX job basename.
+
+
+
+.BR --which-labeldb
+.br
+Request the label database to keep generated labels between iterations.
+
+
+
+.BR --which-afmout
+.br
+Request the file where generated font metrics will be stored.
 
 
 
