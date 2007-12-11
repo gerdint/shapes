@@ -1,0 +1,1 @@
+The reason for putting the generated man pages in this directory is that they can easily be found by adding the parent directory to the MANPATH environment variable.  If that directory is the working directory, adding the path "." to the head of MANPATH will do the job.

@@ -405,7 +405,7 @@ Lang::ZBuf::mergeTriangles( std::list< Computation::ZBufTriangle > * triangles )
 			Lang::ZBuf::IndexRepresentation * triangle2 = *src;
 			Concrete::Coords2D differentPoint2 = cornerMem[ triangle2->getDifferent( edge.low( ), edge.high( ) ) ];
 			bool aligned = false;
-			size_t keepPoint;
+			size_t keepPoint = keepPoint;  /* Initialized with dummy value only because it is hard for the compiler to see that it won't be used uninitialized. */
 			if( areAligned( cornerLow, differentPoint1, differentPoint2 ) )
 				{
 					aligned = true;
