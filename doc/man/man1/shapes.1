@@ -1,45 +1,69 @@
 .TH shapes1 "2007-12-10" "Tiddes" "The Shapes language compiler"
+
 .SH NAME
+
 shapes \- Compile a Shapes source to PDF.
+
 .SH SYNOPSIS
 
 .B shapes
 
+ 
+
 .B option*
+
+ 
 
 .I source
 
-
 .B shapes
+
+ 
 
 .B option*
 
-
 .B shapes
+
+ 
 
 .B ( options | file-request )*
 
+ 
 
 .SH DESCRIPTION
 
 .B shapes
-compiles a source file written in the Shapes language (with file name extension 
+
+ compiles a source file written in the Shapes language (with file name extension 
+
 .I shape
+
 ).  On success, this results in a PDF file containing a viewable representation of the graphics described by the source.
+
 .SH COMMAND LINE OPTIONS
+
 Command line options fall into two cathegories, most of which were referred to as 
+
 .B option
-above.  The other are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as 
+
+ above.  The other are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as 
+
 .B file-request
-above.
+
+ above.
+
 .SS Options
 
+
 --tmpdir 
+
 .I dir
 
 
 Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.
+
 .SS File requests
+
 
 --which-in
 
@@ -52,34 +76,48 @@ Request the input source.
 
 
 --which 
+
 .I source
 
 
 Request a particular file.
+
 .SH ENVIRONMENT VARIABLES
 
 
 .B SHAPESINPUTS
+
 contains a search path used for requested source files.  It usually consists of directories with language extension files (with the 
+
 .I .shext
-extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.
+
+ extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.
 
 
 .B SHAPESTMPDIR
+
 tells, when present, where to create temporary files.  In particular this concerns files related to label creation.  Note, however, that the label database file (with the 
+
 .I .labels.pdf
-extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.
+
+ extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.
 
 
 .B SHAPESFONTMETRICS
+
 tells where to search for font metrics files.  Font metrics for the standard fonts in PDF are distributed with the compiler, and on typical installations these are found using another mechanism.
 
 
 .B TEXINPUTS
+
 is manipulated locally to enable TeX to find files located relative to the Shapes source, although the LaTeX source used for label creation may be placed in a different directory.
+
 .SH EXAMPLES
+
 To use the xpdf program for preview, and with a source called 
+
 .I hi.shape
+
 , run the program as:
 
 .br  
@@ -94,7 +132,13 @@ or just to the point your shell completion will take you:
 
 
 .br
+
+
 .SH AUTHOR
+
 Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.
+
 .SH SEE ALSO
+
 .BR xpdf (1)
+
