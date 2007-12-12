@@ -1,23 +1,26 @@
 <use file="/~tidefelt/macros" />
 
 <myhtml>
-<h1>Command Line Interaction with Drool</h1>
+<h1>Command Line Interaction with Shapes</h1>
 <p>This page is under construction.  My intention is to put the kind of information that belongs in a man page here.</p>
 
 <h2>Notation</h2>
-<p>In the following, let <filename>illustration.drool</filename> be the name of a Drool source.</p>
+<p>In the following, let <filename>illustration.shape</filename> be the name of a Shapes source.</p>
 
 <h2>Basic Use (and the Meaning of the Last Argument) </h2>
-<p>To run a Drool source through the interpreter, and make the output appear in a file named after the source, run<br>
+<p>To run a Shapes source through the interpreter, and make the output appear in a file named after the source, run<br>
 <tt>
-drool illustration.<br>
+shapes illustration.<br>
 </tt>
-Note the period at the end of the filename base.  Also note that it is <em>not</em> OK to write out the full name of the source.</p>
+Note that the period at the end of the filename base is allowed, but not required.  It is also allowed to write out the full file name.</p>
 
 <p>Generally, the last command line argument is interpreted this way.</p>
 
 <h2>Preview</h2>
-<p>Drool can launch xpdf to show the resulting graphics.</p>
+<p>Shapes can launch xpdf or invoke the MacOS <em>open</em> command to show the resulting graphics.  In a future version, it may be possible to specify an arbitrary command to be issued, which could look like this:</p>
+<tt>
+shapes --viewer 'open -a TeXShop %' myfile.shapes
+</tt>
 
 <h3><tt>--xpdf</tt></h3>
 <p>This is all you have to do!  xpdf will be invoked in remote mode.</p>
@@ -34,10 +37,16 @@ Note the period at the end of the filename base.  Also note that it is <em>not</
 <h3><tt>--xpdf-quit</tt></h3>
 <p>This will make the xpdf server quit rather than show your graphics.</p>
 
+<h3><tt>--open</tt></h3>
+<p>This will invoke the <em>open</em> command on the generated graphics.</p>
+
+<h3><tt>--open-a application</tt></h3>
+<p>This is like <tt>--open</tt> but allows specification of which application to be used.</p>
+
 <h2>Alternative Source and Destination</h2>
 <p>Of course, there are alternatives to file naming via the last argument.</p>
 
-<h3><tt>--in illustration.drool</tt></h3>
+<h3><tt>--in illustration.shape</tt></h3>
 <p>This specifies the source file.</p>
 
 <h3><tt>--out illustration.pdf</tt></h3>
@@ -57,7 +66,7 @@ Note the period at the end of the filename base.  Also note that it is <em>not</
 <h3><tt>--base illustration.</tt></h3>
 <p>This specifies all of the above, that have not been specified otherwise, according to</p>
 <ul>
-  <li>Source:  <filename>illustration.drool</filename></li>
+  <li>Source:  <filename>illustration.shape</filename></li>
   <li>Destinaiton:  <filename>illustration.pdf</filename></li>
   <li>TeX job:  <filename>illustration.labels</filename></li>
 </ul>
@@ -69,7 +78,7 @@ Note the period at the end of the filename base.  Also note that it is <em>not</
 <h3>stdin and stdout</h3>
 <p>stdin is used for input if no other input is specified.  stdout is used for output if no other output is specified.  For example, the following can be used to generate a small pdf-label from a LaTeX string:<br>
 <tt>
-echo '@&lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf<br>
+echo '#page &lt;&lt; (TeX `$x^{2}$´)' | shapes > label.pdf<br>
 </tt>
 </p>
 
@@ -83,7 +92,7 @@ echo '@&lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf<br>
 <p>The debugging options are presented in order of usability to the average use, with most imortant first.</p>
 
 <h3><tt>--nobacktrace</tt></h3>
-<p>This turns off the backtrace that is output when an error is encountered.  The option affects both errors that are due to errors in the illustration source file, and exceptions raised due to failing consistency checks in the Drool interpreter.</p>
+<p>This turns off the backtrace that is output when an error is encountered.  The option affects both errors that are due to errors in the illustration source file, and exceptions raised due to failing consistency checks in the Shapes interpreter.</p>
 
 <h3><tt>--evaltrace</tt></h3>
 <p>This turns on evaluation tracing.  This means that the interpreter will output the location of each expression it is about to evaluate together with the trace informaiton in the current continuation.</p>
@@ -114,10 +123,10 @@ echo '@&lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf<br>
 
 <p>Note that it may not be possible to somehow scan the program for all labels without invoking pdfLaTeX along the way, since the content of a label may depend on the dimensions of another label, like this (with the obvious definition of the function <funname>width</funname>):<br>
 <tt>
-foo: (TeX `$\int_{0}^{1}$´)<br>
-bar: (TeX ( newString &lt;&lt; `The label foo has a width of ´ &lt;&lt; [width foo] ) )<br>
+foo: [TeX `$\int_{0}^{1}$´]<br>
+bar: [TeX ( HotString &lt;&lt; `The label foo has a width of ´ &lt;&lt; [width foo] ) ]<br>
 </tt>
-However, the Drool interpreter really makes an effort to avoid running pdfLaTeX excessively.  Most importantly, it <em>does</em> scan the program for all labels that are created by passing a string literal to the function <funname>TeX</funname> <em>when called by that name</em>.  For this reason, <funname>TeX</funname> is a language keyword rather than an ordinary identifier.</p>
+However, the Shapes interpreter really makes an effort to avoid running pdfLaTeX excessively.  Most importantly, it <em>does</em> scan the program for all labels that are created by passing a string literal to the function <funname>TeX</funname> <em>when called by that name</em>.  For this reason, <funname>TeX</funname> is a language keyword rather than an ordinary identifier.</p>
 
 
 </myhtml>
