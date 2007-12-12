@@ -134,6 +134,18 @@ Inhibit creation of the file with labels saved from one program run to another.
 
 
 
+.BR (stdin)
+.br
+.BR (stdout)
+.br
+The special files 
+.I stdin
+and 
+.I stdout
+are used when the input source and output files are not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.
+
+
+
 .BR --debuglog
 .I file
 .br
@@ -194,6 +206,12 @@ Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
 .BR --no-fmguesserror
 .br
 Control whether guessing font metrics for (more or less) strange characters shall be considered an error.
+
+
+
+.BR --no-memclean
+.br
+Inhibit cleaning up memory before terminating the compilation process.
 .SS Verbosity
 
 
@@ -222,7 +240,7 @@ Print the chain of used sources.
 .BR --no-stats
 .br
 Control printing of execution statistics, such as memory and time usage.
-.SS Tolerances and other parameters
+.SS Versions
 
 
 
@@ -395,19 +413,29 @@ tells where to search for font metrics files.  Font metrics for the standard fon
 .B TEXINPUTS
 is manipulated locally to enable TeX to find files located relative to the Shapes source, although the LaTeX source used for label creation may be placed in a different directory.
 .SH EXAMPLES
+.SS Use with xpdf
 To use the xpdf program for preview, and with a source called 
 .I hi.shape
 , run the program as:
 
 .br  
   shapes --xpdf hi.shape
-			
+
 
 .br
 or just to the point your shell completion will take you:
 
 .br  
   shapes --xpdf hi.
+
+
+.br
+
+.SS Use with stdin and stdout
+The following can be used to generate a small PDF-label from a LaTeX string:
+
+.br  
+echo '#page &lt;&lt; [TeX `$x^{2}$´]' | drool &gt; label.pdf
 
 
 .br

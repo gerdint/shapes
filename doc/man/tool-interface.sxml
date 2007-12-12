@@ -122,6 +122,13 @@
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
+					<parameters flag="(stdin)"></parameters>
+					<parameters flag="(stdout)"></parameters>
+					<description>
+						<p>The special files <filename>stdin</filename> and <filename>stdout</filename> are used when the input source and output files are not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
 					<parameters flag="--debuglog"> <replacable>file</replacable></parameters>
 					<parameters flag="--debuglog-stderr"></parameters>
 					<parameters flag="--debuglog-stdout"></parameters>
@@ -178,6 +185,12 @@
 						<p>Control whether guessing font metrics for (more or less) strange characters shall be considered an error.</p>
 					</description>
 				</command-line-option-description>
+				<command-line-option-description>
+					<parameters flag="--no-memclean"></parameters>
+					<description>
+						<p>Inhibit cleaning up memory before terminating the compilation process.</p>
+					</description>
+				</command-line-option-description>
 			</body>
 		</section>
  		<section>
@@ -211,7 +224,7 @@
 			</body>
 		</section>
  		<section>
-			<title>Tolerances and other parameters</title>
+			<title>Versions</title>
 			<body>
 				<command-line-option-description>
 					<parameters flag="--v"><replacable>mode-ver</replacable></parameters>
@@ -408,16 +421,28 @@
 
 	<section>
 		<title>Examples</title>
-		<body>
-			<p>To use the <prog-name class="other">xpdf</prog-name> program for preview, and with a source called <filename>hi.shape</filename>, run the program as:</p>
-			<pre>
+		<section>
+			<title>Use with xpdf</title>
+			<body>
+				<p>To use the <prog-name class="other">xpdf</prog-name> program for preview, and with a source called <filename>hi.shape</filename>, run the program as:</p>
+<pre>
   shapes --xpdf hi.shape
-			</pre>
-			<p>or just to the point your shell completion will take you:</p>
+</pre>
+				<p>or just to the point your shell completion will take you:</p>
 <pre>
   shapes --xpdf hi.
 </pre>
-		</body>
+			</body>
+		</section>
+		<section>
+			<title>Use with stdin and stdout</title>
+			<body>
+				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string:</p>
+<pre>
+echo '#page &lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf
+</pre>
+			</body>
+		</section>
 	</section>
 
 

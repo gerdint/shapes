@@ -114,8 +114,8 @@ echo '@&lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf<br>
 
 <p>Note that it may not be possible to somehow scan the program for all labels without invoking pdfLaTeX along the way, since the content of a label may depend on the dimensions of another label, like this (with the obvious definition of the function <funname>width</funname>):<br>
 <tt>
-foo: [TeX `$\int_{0}^{1}$´]<br>
-bar: [TeX ( HotString &lt;&lt; `The label foo has a width of ´ &lt;&lt; [width foo] ) ]<br>
+foo: (TeX `$\int_{0}^{1}$´)<br>
+bar: (TeX ( newString &lt;&lt; `The label foo has a width of ´ &lt;&lt; [width foo] ) )<br>
 </tt>
 However, the Drool interpreter really makes an effort to avoid running pdfLaTeX excessively.  Most importantly, it <em>does</em> scan the program for all labels that are created by passing a string literal to the function <funname>TeX</funname> <em>when called by that name</em>.  For this reason, <funname>TeX</funname> is a language keyword rather than an ordinary identifier.</p>
 
