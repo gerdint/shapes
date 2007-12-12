@@ -24,7 +24,8 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="manhead">.TH <xsl:value-of select="prog-name" /> <xsl:value-of select="man-section" /> &quot;<xsl:value-of select="modification-date" />&quot; &quot;<xsl:value-of select="left-footer" />&quot; &quot;<xsl:value-of select="center-header" />&quot;</xsl:template>
 
 <xsl:template match="p"><xsl:apply-templates/><xsl:text>
-.ensure-line-break</xsl:text></xsl:template>
+
+</xsl:text></xsl:template>
 
 <xsl:template match="pre"><xsl:text>
 .br  </xsl:text><xsl:apply-templates/><xsl:text>
@@ -40,7 +41,7 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="synopsis-case"><xsl:apply-templates/></xsl:template>
 
 <xsl:template match="see-also-items">
-  <xsl:for-each select="see-also"><xsl:text>.B </xsl:text><xsl:apply-templates/><xsl:text>
+  <xsl:for-each select="see-also"><xsl:text>.BR </xsl:text><xsl:apply-templates/><xsl:text>
 .ensure-line-break</xsl:text></xsl:for-each>
 </xsl:template>
 
@@ -90,6 +91,13 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="parameters/replacable"><xsl:text>
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break</xsl:text></xsl:template>
+
+<xsl:template match="p/em"><xsl:text>
+.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break</xsl:text></xsl:template>
+<xsl:template match="p/b"><xsl:text>
+.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="str-PDF">PDF</xsl:template>

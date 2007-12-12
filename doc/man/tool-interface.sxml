@@ -118,7 +118,7 @@
 				<command-line-option-description>
 					<parameters flag="--no-iteration"></parameters>
 					<description>
-						<p>Inhibit creation of the file with labels saved from one program run to another.</p>
+						<p>Inhibit creation of the file with labels saved from one program run to another.  This behavior is implied if the label database filename is undefined.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
@@ -164,6 +164,7 @@
 					<parameters flag="--no-dtminerror"></parameters>
 					<description>
 						<p>Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.</p>
+						<p><b>Rationale:</b> By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
@@ -183,12 +184,6 @@
 					<parameters flag="--no-fmguesserror"></parameters>
 					<description>
 						<p>Control whether guessing font metrics for (more or less) strange characters shall be considered an error.</p>
-					</description>
-				</command-line-option-description>
-				<command-line-option-description>
-					<parameters flag="--no-memclean"></parameters>
-					<description>
-						<p>Inhibit cleaning up memory before terminating the compilation process.</p>
 					</description>
 				</command-line-option-description>
 			</body>
@@ -244,6 +239,11 @@
  		<section>
 			<title>Preview</title>
 			<body>
+				<p>Shapes can launch xpdf or invoke the MacOS <prog-name>open</prog-name> command to show the resulting graphics.  In a future version, it may be possible to specify an arbitrary command to be issued, which could look like this:</p>
+<pre>
+shapes --viewer 'open -a TeXShop %' myfile.shapes
+</pre>
+
 				<command-line-option-description>
 					<parameters flag="--open"></parameters>
 					<description>
@@ -271,14 +271,19 @@
 				<command-line-option-description>
 					<parameters flag="--xpdf-no-server"> <replacable>name</replacable></parameters>
 					<description>
-						<p>Inhibit use of the remote server mode.</p>
+						<p>Inhibit use of the remote server mode.  A new xpdf window will appear each time.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
 					<parameters flag="--xpdf-reload"></parameters>
+					<description>
+						<p>Make the xpdf server reload rather than raise.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
 					<parameters flag="--xpdf-quit"></parameters>
 					<description>
-						<p>Send commands to the xpdf remote server.</p>
+						<p>Make the xpdf server quit rather than show your graphics.</p>
 					</description>
 				</command-line-option-description>
 			</body>
@@ -343,6 +348,19 @@
 					<parameters flag="--debugstep"> <replacable>step</replacable></parameters>
 					<description>
 						<p>Set the debug step counter.  For compiler development only.</p>
+					</description>
+				</command-line-option-description>
+			</body>
+		</section>
+ 		<section>
+			<title>Garbage collection</title>
+			<body>
+				<p>In the end, when garbage collection is implemented, there will be options for controlling the gc behavior here.  At the moment, there is only a dummy option here.</p>
+				<command-line-option-description>
+					<parameters flag="--no-memclean"></parameters>
+					<description>
+						<p>Inhibit cleaning up memory before terminating the compilation process.</p>
+						<p><b>Rationale:</b> If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.</p>
 					</description>
 				</command-line-option-description>
 			</body>
@@ -438,9 +456,9 @@
 		<section>
 			<title>Use with stdin and stdout</title>
 			<body>
-				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string:</p>
+				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:</p>
 <pre>
-echo '#page &lt;&lt; [TeX `$x^{2}$´]' | shapes > label.pdf
+echo '#page &lt;&lt; (TeX `$x^{2}$´)' | shapes --tmpdir /tmp > label.pdf
 </pre>
 			</body>
 		</section>
@@ -459,6 +477,7 @@ echo '#page &lt;&lt; [TeX `$x^{2}$´]' | shapes > label.pdf
 		<body>
 			<see-also-items>
 				<see-also>xpdf (1)</see-also>
+				<see-also>open (1)</see-also>
 			</see-also-items>
 		</body>
 	</section>

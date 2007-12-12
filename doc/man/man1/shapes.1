@@ -1,6 +1,8 @@
 .TH shapes1 "2007-12-10" "Tiddes" "The Shapes language compiler"
 .SH NAME
 shapes \- Compile a Shapes source to PDF.
+
+
 .SH SYNOPSIS
 .B shapes
 .B option*
@@ -20,12 +22,16 @@ shapes \- Compile a Shapes source to PDF.
 compiles a source file written in the Shapes language (with file name extension 
 .I shape
 ).  On success, this results in a PDF file containing a viewable representation of the graphics described by the source.
+
+
 .SH COMMAND LINE OPTIONS
 Command line options fall into two cathegories, most of which were referred to as 
 .B option
 above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as 
 .B file-request
 above.
+
+
 .SS Files
 
 
@@ -48,6 +54,7 @@ suffix), which in turn provides names for all other files involved.
 
 
 
+
 .B "--tmpdir"
 .I dir
 .br
@@ -55,10 +62,12 @@ Specify directory for temporary files.  See also the environment variable SHAPES
 
 
 
+
 .B "--outdir"
 .I dir
 .br
 Specify directory for products.  Defaults to current working directory.
+
 
 
 
@@ -71,10 +80,12 @@ Add dir to the end of the search path for language extension sources.  See also 
 
 
 
+
 .B "--base"
 .I filenamebase
 .br
 Specify the filename base to derive other filenames from.
+
 
 
 
@@ -85,10 +96,12 @@ Specify the input source.  Defaults to the basename with the suffix ".shape" in 
 
 
 
+
 .B "--prepend"
 .I str
 .br
 Prepend the given string to the input source.
+
 
 
 
@@ -99,6 +112,7 @@ Specify the destination file.  Defaults to the basename with the suffix ".pdf" i
 
 
 
+
 .B "--labeldb"
 .I file
 .br
@@ -106,10 +120,12 @@ Specify the file where to store labels between iterations.  Defaults to the base
 
 
 
+
 .B "--afmout"
 .I file
 .br
 Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix ".afm" in the output directory.
+
 
 
 
@@ -122,15 +138,18 @@ Add dir to the end of the search path for font metrics.
 
 
 
+
 .B "--no-resources"
 .br
 Inhibit use of files installed with the Shapes program.  This applies both to language extensions and font metric files.
 
 
 
+
 .B "--no-iteration"
 .br
-Inhibit creation of the file with labels saved from one program run to another.
+Inhibit creation of the file with labels saved from one program run to another.  This behavior is implied if the label database filename is undefined.
+
 
 
 
@@ -146,6 +165,7 @@ are used when the input source and output files are not determined in any other 
 
 
 
+
 .B "--debuglog"
 .I file
 .br
@@ -154,6 +174,8 @@ are used when the input source and output files are not determined in any other 
 .B "--debuglog-stdout"
 .br
 Specify file for the user's debug log messages.
+
+
 .SS Tolerances and other parameters
 
 
@@ -165,10 +187,12 @@ Initializes the global random number generator by calling the srand function..
 
 
 
+
 .B "--arcdelta"
 .I length
 .br
 Set maximum integration step length to use when integrating along paths.  Defaults to 0.1bp.  See also --dtmin.
+
 
 
 
@@ -179,11 +203,17 @@ Set minimum integration step to use when integrating along paths.  Defaults to 1
 
 
 
+
 .B "--dtminerror"
 .br
 .B "--no-dtminerror"
 .br
 Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.
+
+
+.B Rationale:
+By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.
+
 
 
 
@@ -194,10 +224,12 @@ Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.
 
 
 
+
 .B "--overlaptol"
 .I tol
 .br
 Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
+
 
 
 
@@ -208,10 +240,6 @@ Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
 Control whether guessing font metrics for (more or less) strange characters shall be considered an error.
 
 
-
-.B "--no-memclean"
-.br
-Inhibit cleaning up memory before terminating the compilation process.
 .SS Verbosity
 
 
@@ -222,10 +250,12 @@ Report source file columns in bytes rather than complete UTF-8 characters.  By d
 
 
 
+
 .B "--unit"
 .I unit-name
 .br
 Set the unit to use for textual representation of lengths.  Defaults to "cm".
+
 
 
 
@@ -235,11 +265,14 @@ Print the chain of used sources.
 
 
 
+
 .B "--stats"
 .br
 .B "--no-stats"
 .br
 Control printing of execution statistics, such as memory and time usage.
+
+
 .SS Versions
 
 
@@ -253,16 +286,30 @@ Set the highest PDF version to use in output.  The mode-ver parameter shall begi
 
 
 
+
 .B "--version"
 .br
 Print version information about the compiler, and exit.
+
+
 .SS Preview
+Shapes can launch xpdf or invoke the MacOS 
+.B open
+command to show the resulting graphics.  In a future version, it may be possible to specify an arbitrary command to be issued, which could look like this:
+
+
+.br  
+shapes --viewer 'open -a TeXShop %' myfile.shapes
+
+
+.br
 
 
 
 .B "--open"
 .br
 Use the open program to open the result using a system default viewer for PDF files.
+
 
 
 
@@ -273,9 +320,11 @@ Like --open, but here the application to use is specified by the user.
 
 
 
+
 .B "--xpdf"
 .br
 Use the xpdf program to preview the result.  The program is run in remote server mode.
+
 
 
 
@@ -286,18 +335,27 @@ Set the name to use when running the xpdf program in remote mode.  Defaults to t
 
 
 
+
 .B "--xpdf-no-server"
 .I name
 .br
-Inhibit use of the remote server mode.
+Inhibit use of the remote server mode.  A new xpdf window will appear each time.
+
 
 
 
 .B "--xpdf-reload"
 .br
+Make the xpdf server reload rather than raise.
+
+
+
+
 .B "--xpdf-quit"
 .br
-Send commands to the xpdf remote server.
+Make the xpdf server quit rather than show your graphics.
+
+
 .SS User level debugging
 
 
@@ -308,15 +366,19 @@ Turn off the backtrace printed when the program reports a runtime error.
 
 
 
+
 .B "--evaltrace"
 .br
 Print information about each expression about to be evaluated.
 
 
 
+
 .B "--evalbacktrace"
 .br
 As --evaltrace, but with a backtrace printed along with each expression.
+
+
 .SS Compiler developer debugging
 
 
@@ -327,9 +389,11 @@ Turn on debug prints in the Shapes lexer.
 
 
 
+
 .B "--yydebug"
 .br
 Same as --shapesdebug.
+
 
 
 
@@ -339,9 +403,11 @@ Turn on system debug messages.  The messages are written to stderr.
 
 
 
+
 .B "--afmdebug"
 .br
 Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.
+
 
 
 
@@ -351,10 +417,28 @@ Turn on font metrics debug messages.  The messages are written to stderr.
 
 
 
+
 .B "--debugstep"
 .I step
 .br
 Set the debug step counter.  For compiler development only.
+
+
+.SS Garbage collection
+In the end, when garbage collection is implemented, there will be options for controlling the gc behavior here.  At the moment, there is only a dummy option here.
+
+
+
+
+.B "--no-memclean"
+.br
+Inhibit cleaning up memory before terminating the compilation process.
+
+
+.B Rationale:
+If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.
+
+
 .SS File requests
 
 
@@ -365,9 +449,11 @@ Request the input source.
 
 
 
+
 .B "--which-out"
 .br
 Request the input source.
+
 
 
 
@@ -377,9 +463,11 @@ Request the TeX job basename.
 
 
 
+
 .B "--which-labeldb"
 .br
 Request the label database to keep generated labels between iterations.
+
 
 
 
@@ -389,10 +477,13 @@ Request the file where generated font metrics will be stored.
 
 
 
+
 .B "--which"
 .I source
 .br
 Request a particular file.
+
+
 .SH ENVIRONMENT VARIABLES
 
 
@@ -402,23 +493,29 @@ contains a search path used for requested source files.  It usually consists of 
 extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.
 
 
+
 .B SHAPESTMPDIR
 tells, when present, where to create temporary files.  In particular this concerns files related to label creation.  Note, however, that the label database file (with the 
 .I .labels.pdf
 extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.
 
 
+
 .B SHAPESFONTMETRICS
 tells where to search for font metrics files.  Font metrics for the standard fonts in PDF are distributed with the compiler, and on typical installations these are found using another mechanism.
 
 
+
 .B TEXINPUTS
 is manipulated locally to enable TeX to find files located relative to the Shapes source, although the LaTeX source used for label creation may be placed in a different directory.
+
+
 .SH EXAMPLES
 .SS Use with xpdf
 To use the xpdf program for preview, and with a source called 
 .I hi.shape
 , run the program as:
+
 
 .br  
   shapes --xpdf hi.shape
@@ -427,6 +524,7 @@ To use the xpdf program for preview, and with a source called
 .br
 or just to the point your shell completion will take you:
 
+
 .br  
   shapes --xpdf hi.
 
@@ -434,16 +532,20 @@ or just to the point your shell completion will take you:
 .br
 
 .SS Use with stdin and stdout
-The following can be used to generate a small PDF-label from a LaTeX string:
+The following can be used to generate a small PDF-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:
+
 
 .br  
-echo '#page << [TeX `$x^{2}$´]' | shapes > label.pdf
+echo '#page << (TeX `$x^{2}$´)' | shapes --tmpdir /tmp > label.pdf
 
 
 .br
 
 .SH AUTHOR
 Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.
+
+
 .SH SEE ALSO
-.B xpdf (1)
+.BR xpdf (1)
+.BR open (1)
 
