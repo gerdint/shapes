@@ -274,15 +274,28 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--v" ) == 0 )
+			else if( strcmp( *argv, "--v" ) == 0 ||
+							 strncmp( *argv, "-v", 2 ) == 0 )
 				{
-					argcAssertion( *argv, argc, 2 );
+					bool longForm = strncmp( *argv, "--", 2 ) == 0;
+
+					const char * tmp = 0;
+					if( longForm )
+						{
+							argcAssertion( *argv, argc, 2 );
+							tmp = *( argv + 1 );
+						}
+					else
+						{
+							tmp = (*argv) + 2;
+						}
+
 					if( pdfVersion != SimplePDF::PDF_out::VERSION_UNDEFINED )
 						{
 							std::cerr << "Multiply defined pdf version." << std::endl ;
 							exit( 1 );
 						}
-					const char * tmp = *( argv + 1 );
+
 					switch( *tmp )
 						{
 						case 'e':
@@ -312,8 +325,16 @@ main( int argc, char ** argv )
 							std::cerr << "Unsupported pdf version specification: " << tmp << std::endl ;
 							exit( 1 );
 						}
-					argv += 2;
-					argc -= 2;
+					if( longForm )
+						{
+							argv += 2;
+							argc -= 2;
+						}
+					else
+						{
+							argv += 1;
+							argc -= 1;
+						}
 				}
 			else if( strcmp( *argv, "--unit" ) == 0 )
 				{
@@ -364,69 +385,107 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--needpath" ) == 0 )
+			else if( strcmp( *argv, "--needpath" ) == 0 ||
+							 strncmp( *argv, "-N", 2 ) == 0 )
 				{
-					argcAssertion( *argv, argc, 2 );
+					bool longForm = strncmp( *argv, "--", 2 ) == 0;
 
-					const char * pth = *( argv + 1 );
+					const char * pth = 0;
+					if( longForm )
+						{
+							argcAssertion( *argv, argc, 2 );
+							pth = *( argv + 1 );
+						}
+					else
+						{
+							pth = (*argv) + 2;
+						}
 
 					if( strchr( pth, ':' ) != 0 )
 						{
-							cerr << "The path separator ':' is not allowed in the --needpath argument.	Consider repeating --needpath (or -N)." << std::endl ;
+							const char * flag = 0;
+							const char * shortFlag = "-N";
+							if( longForm )
+								{
+									flag = *argv;
+								}
+							else
+								{
+									flag = shortFlag;
+								}
+
+							std::cerr << "The path separator ':' is not allowed in the " << flag << " argument.	Consider repeating " << flag ;
+							if( longForm )
+								{
+									std::cerr << " (or " << shortFlag << ")" ;
+								}
+							std::cerr <<"." << std::endl ;
 							exit( 1 );
 						}
 
 					Ast::theShapesScanner.push_backNeedPath( pth );
 
-					argv += 2;
-					argc -= 2;
-				}
-			else if( strncmp( *argv, "-N", 2 ) == 0 )
-				{
-					const char * pth = (*argv) + 2;
-
-					if( strchr( pth, ':' ) != 0 )
+					if( longForm )
 						{
-							cerr << "The path separator ':' is not allowed in the -N argument.	Consider repeating -N." << std::endl ;
-							exit( 1 );
+							argv += 2;
+							argc -= 2;
+						}
+					else
+						{
+							argv += 1;
+							argc -= 1;
+						}
+				}
+			else if( strcmp( *argv, "--fontmetricspath" ) == 0 ||
+							 strncmp( *argv, "-M", 2 ) == 0 )
+				{
+					bool longForm = strncmp( *argv, "--", 2 ) == 0;
+
+					const char * pth = 0;
+					if( longForm )
+						{
+							argcAssertion( *argv, argc, 2 );
+							pth = *( argv + 1 );
+						}
+					else
+						{
+							pth = (*argv) + 2;
 						}
 
-					Ast::theShapesScanner.push_backNeedPath( pth );
-
-					argv += 1;
-					argc -= 1;
-				}
-			else if( strcmp( *argv, "--fontmetricspath" ) == 0 )
-				{
-					argcAssertion( *argv, argc, 2 );
-
-					const char * pth = *( argv + 1 );
-
 					if( strchr( pth, ':' ) != 0 )
 						{
-							cerr << "The path separator ':' is not allowed in the --fontmetricspath argument.	Consider repeating --fontmetricspath (or -F)." << std::endl ;
+							const char * flag = 0;
+							const char * shortFlag = "-M";
+							if( longForm )
+								{
+									flag = *argv;
+								}
+							else
+								{
+									flag = shortFlag;
+								}
+
+							std::cerr << "The path separator ':' is not allowed in the " << flag << " argument.	Consider repeating " << flag ;
+							if( longForm )
+								{
+									std::cerr << " (or " << shortFlag << ")" ;
+								}
+							std::cerr <<"." << std::endl ;
 							exit( 1 );
 						}
 
 					Lang::Font::push_backFontMetricsPath( pth );
 
-					argv += 2;
-					argc -= 2;
-				}
-			else if( strncmp( *argv, "-M", 2 ) == 0 )
-				{
-					const char * pth = (*argv) + 2;
-
-					if( strchr( pth, ':' ) != 0 )
+					if( longForm )
 						{
-							cerr << "The path separator ':' is not allowed in the -M argument.	Consider repeating -M." << std::endl ;
-							exit( 1 );
+							argv += 2;
+							argc -= 2;
 						}
-
-					Lang::Font::push_backFontMetricsPath( pth );
-
-					argv += 1;
-					argc -= 1;
+					else
+						{
+							argv += 1;
+							argc -= 1;
+						}
 				}
 			else if( strcmp( *argv, "--seed" ) == 0 )
 				{

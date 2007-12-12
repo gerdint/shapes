@@ -4,7 +4,7 @@ shapes \- Compile a Shapes source to PDF.
 .SH SYNOPSIS
 .B shapes
 .B option*
-.I source
+.I "source"
 
 
 .B shapes
@@ -30,7 +30,7 @@ above.
 
 
 
-.BR source
+.B "source"
 .br
 When the source is specified as the last command line argument, it may have either of the forms 
 .I indir/basename
@@ -48,95 +48,95 @@ suffix), which in turn provides names for all other files involved.
 
 
 
-.BR --tmpdir
+.B "--tmpdir"
 .I dir
 .br
 Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.
 
 
 
-.BR --outdir
+.B "--outdir"
 .I dir
 .br
 Specify directory for products.  Defaults to current working directory.
 
 
 
-.BR --needpath
+.B "--needpath"
 .I dir
 .br
-.BR -Ndir
+.BI "-N" "dir
 .br
 Add dir to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.
 
 
 
-.BR --base
+.B "--base"
 .I filenamebase
 .br
 Specify the filename base to derive other filenames from.
 
 
 
-.BR --in
+.B "--in"
 .I file
 .br
 Specify the input source.  Defaults to the basename with the suffix ".shape" in the current directory.
 
 
 
-.BR --prepend
+.B "--prepend"
 .I str
 .br
 Prepend the given string to the input source.
 
 
 
-.BR --out
+.B "--out"
 .I file
 .br
 Specify the destination file.  Defaults to the basename with the suffix ".pdf" in the output directory.
 
 
 
-.BR --labeldb
+.B "--labeldb"
 .I file
 .br
 Specify the file where to store labels between iterations.  Defaults to the basename with the suffix ".labels.pdf" in the output directory.
 
 
 
-.BR --afmout
+.B "--afmout"
 .I file
 .br
 Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix ".afm" in the output directory.
 
 
 
-.BR --fontmetricspath
+.B "--fontmetricspath"
 .I dir
 .br
-.BR -Mdir
+.BI "-M" "dir
 .br
 Add dir to the end of the search path for font metrics.
 
 
 
-.BR --no-resources
+.B "--no-resources"
 .br
 Inhibit use of files installed with the Shapes program.  This applies both to language extensions and font metric files.
 
 
 
-.BR --no-iteration
+.B "--no-iteration"
 .br
 Inhibit creation of the file with labels saved from one program run to another.
 
 
 
-.BR (stdin)
+.B "<stdin>"
 .br
-.BR (stdout)
+.B "<stdout>"
 .br
 The special files 
 .I stdin
@@ -146,210 +146,212 @@ are used when the input source and output files are not determined in any other 
 
 
 
-.BR --debuglog
+.B "--debuglog"
 .I file
 .br
-.BR --debuglog-stderr
+.B "--debuglog-stderr"
 .br
-.BR --debuglog-stdout
+.B "--debuglog-stdout"
 .br
 Specify file for the user's debug log messages.
 .SS Tolerances and other parameters
 
 
 
-.BR --seed
+.B "--seed"
 .I s
 .br
 Initializes the global random number generator by calling the srand function..
 
 
 
-.BR --arcdelta
+.B "--arcdelta"
 .I length
 .br
 Set maximum integration step length to use when integrating along paths.  Defaults to 0.1bp.  See also --dtmin.
 
 
 
-.BR --dtmin
+.B "--dtmin"
 .I low
 .br
 Set minimum integration step to use when integrating along paths.  Defaults to 1e-4.  See also --arcdelta.
 
 
 
-.BR --dtminerror
+.B "--dtminerror"
 .br
-.BR --no-dtminerror
+.B "--no-dtminerror"
 .br
 Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.
 
 
 
-.BR --splicingtol
+.B "--splicingtol"
 .I tol
 .br
 Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.
 
 
 
-.BR --overlaptol
+.B "--overlaptol"
 .I tol
 .br
 Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
 
 
 
-.BR --fmguesserror
+.B "--fmguesserror"
 .br
-.BR --no-fmguesserror
+.B "--no-fmguesserror"
 .br
 Control whether guessing font metrics for (more or less) strange characters shall be considered an error.
 
 
 
-.BR --no-memclean
+.B "--no-memclean"
 .br
 Inhibit cleaning up memory before terminating the compilation process.
 .SS Verbosity
 
 
 
-.BR --bytecolumn
+.B "--bytecolumn"
 .br
 Report source file columns in bytes rather than complete UTF-8 characters.  By default, column indicates the character count from the beginning of the line.
 
 
 
-.BR --unit
+.B "--unit"
 .I unit-name
 .br
 Set the unit to use for textual representation of lengths.  Defaults to "cm".
 
 
 
-.BR --showfiles
+.B "--showfiles"
 .br
 Print the chain of used sources.
 
 
 
-.BR --stats
+.B "--stats"
 .br
-.BR --no-stats
+.B "--no-stats"
 .br
 Control printing of execution statistics, such as memory and time usage.
 .SS Versions
 
 
 
-.BR --v
+.B "--v"
 .I mode-ver
 .br
-Set the highest PDF version to use in output.  The mode-ver parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.
+.BI "-v" "mode-ver
+.br
+Set the highest PDF version to use in output.  The mode-ver parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a PDF version shall follow.  Valid values are "1.3" and "1.4".  Hence, for instance, "w1.3" is a valid mode-ver value.
 
 
 
-.BR --version
+.B "--version"
 .br
 Print version information about the compiler, and exit.
 .SS Preview
 
 
 
-.BR --open
+.B "--open"
 .br
 Use the open program to open the result using a system default viewer for PDF files.
 
 
 
-.BR --open-a
+.B "--open-a"
 .I program
 .br
 Like --open, but here the application to use is specified by the user.
 
 
 
-.BR --xpdf
+.B "--xpdf"
 .br
 Use the xpdf program to preview the result.  The program is run in remote server mode.
 
 
 
-.BR --xpdf-remote
+.B "--xpdf-remote"
 .I name
 .br
 Set the name to use when running the xpdf program in remote mode.  Defaults to the output filename.
 
 
 
-.BR --xpdf-no-server
+.B "--xpdf-no-server"
 .I name
 .br
 Inhibit use of the remote server mode.
 
 
 
-.BR --xpdf-reload
+.B "--xpdf-reload"
 .br
-.BR --xpdf-quit
+.B "--xpdf-quit"
 .br
 Send commands to the xpdf remote server.
 .SS User level debugging
 
 
 
-.BR --no-backtrace
+.B "--no-backtrace"
 .br
 Turn off the backtrace printed when the program reports a runtime error.
 
 
 
-.BR --evaltrace
+.B "--evaltrace"
 .br
 Print information about each expression about to be evaluated.
 
 
 
-.BR --evalbacktrace
+.B "--evalbacktrace"
 .br
 As --evaltrace, but with a backtrace printed along with each expression.
 .SS Compiler developer debugging
 
 
 
-.BR --shapesdebug
+.B "--shapesdebug"
 .br
 Turn on debug prints in the Shapes lexer.
 
 
 
-.BR --yydebug
+.B "--yydebug"
 .br
 Same as --shapesdebug.
 
 
 
-.BR --systemdebug
+.B "--systemdebug"
 .br
 Turn on system debug messages.  The messages are written to stderr.
 
 
 
-.BR --afmdebug
+.B "--afmdebug"
 .br
 Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.
 
 
 
-.BR --afmmessages
+.B "--afmmessages"
 .br
 Turn on font metrics debug messages.  The messages are written to stderr.
 
 
 
-.BR --debugstep
+.B "--debugstep"
 .I step
 .br
 Set the debug step counter.  For compiler development only.
@@ -357,37 +359,37 @@ Set the debug step counter.  For compiler development only.
 
 
 
-.BR --which-in
+.B "--which-in"
 .br
 Request the input source.
 
 
 
-.BR --which-out
+.B "--which-out"
 .br
 Request the input source.
 
 
 
-.BR --which-texjob
+.B "--which-texjob"
 .br
 Request the TeX job basename.
 
 
 
-.BR --which-labeldb
+.B "--which-labeldb"
 .br
 Request the label database to keep generated labels between iterations.
 
 
 
-.BR --which-afmout
+.B "--which-afmout"
 .br
 Request the file where generated font metrics will be stored.
 
 
 
-.BR --which
+.B "--which"
 .I source
 .br
 Request a particular file.
@@ -435,7 +437,7 @@ or just to the point your shell completion will take you:
 The following can be used to generate a small PDF-label from a LaTeX string:
 
 .br  
-echo '#page &lt;&lt; [TeX `$x^{2}$´]' | drool &gt; label.pdf
+echo '#page << [TeX `$x^{2}$´]' | shapes > label.pdf
 
 
 .br
@@ -443,5 +445,5 @@ echo '#page &lt;&lt; [TeX `$x^{2}$´]' | drool &gt; label.pdf
 .SH AUTHOR
 Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.
 .SH SEE ALSO
-.BR xpdf (1)
+.B xpdf (1)
 

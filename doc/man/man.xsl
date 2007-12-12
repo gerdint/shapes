@@ -40,7 +40,7 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="synopsis-case"><xsl:apply-templates/></xsl:template>
 
 <xsl:template match="see-also-items">
-  <xsl:for-each select="see-also"><xsl:text>.BR </xsl:text><xsl:apply-templates/><xsl:text>
+  <xsl:for-each select="see-also"><xsl:text>.B </xsl:text><xsl:apply-templates/><xsl:text>
 .ensure-line-break</xsl:text></xsl:for-each>
 </xsl:template>
 
@@ -56,12 +56,18 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:text>
 
 </xsl:text><xsl:apply-templates select="parameters" />
+<xsl:apply-templates select="short-parameter" />
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
 <xsl:template match="command-line-option-description/parameters[@flag]"><xsl:text>
-.ensure-line-break.BR </xsl:text><xsl:value-of select="@flag" /><xsl:text>
+.ensure-line-break.B "</xsl:text><xsl:value-of select="@flag" /><xsl:text>"
 .ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>
+.ensure-line-break.br
+.ensure-line-break</xsl:text></xsl:template>
+
+<xsl:template match="command-line-option-description/short-parameter[@flag]"><xsl:text>
+.ensure-line-break.BI &quot;</xsl:text><xsl:value-of select="@flag" /><xsl:text>&quot; &quot;</xsl:text><xsl:value-of select="."/><xsl:text>
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
@@ -80,7 +86,7 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="synopsis-case/replacable"><xsl:text>
-.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.I "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="parameters/replacable"><xsl:text>
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>

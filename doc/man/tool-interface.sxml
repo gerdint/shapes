@@ -61,7 +61,7 @@
 				</command-line-option-description>
 				<command-line-option-description>
 					<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
-					<parameters flag="-Ndir"></parameters>
+					<short-parameter flag="-N">dir</short-parameter>
 					<description>
 						<p>Add <replacable>dir</replacable> to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.</p>
 					</description>
@@ -104,7 +104,7 @@
 				</command-line-option-description>
 				<command-line-option-description>
 					<parameters flag="--fontmetricspath"> <replacable>dir</replacable></parameters>
-					<parameters flag="-Mdir"></parameters>
+					<short-parameter flag="-M">dir</short-parameter>
 					<description>
 						<p>Add <replacable>dir</replacable> to the end of the search path for font metrics.</p>
 					</description>
@@ -122,8 +122,8 @@
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
-					<parameters flag="(stdin)"></parameters>
-					<parameters flag="(stdout)"></parameters>
+					<parameters flag="&lt;stdin&gt;"></parameters>
+					<parameters flag="&lt;stdout&gt;"></parameters>
 					<description>
 						<p>The special files <filename>stdin</filename> and <filename>stdout</filename> are used when the input source and output files are not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.</p>
 					</description>
@@ -228,8 +228,9 @@
 			<body>
 				<command-line-option-description>
 					<parameters flag="--v"><replacable>mode-ver</replacable></parameters>
+					<short-parameter flag="-v">mode-ver</short-parameter>
 					<description>
-						<p>Set the highest PDF version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.</p>
+						<p>Set the highest PDF version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a <str-PDF /> version shall follow.  Valid values are "1.3" and "1.4".  Hence, for instance, "w1.3" is a valid <replacable>mode-ver</replacable> value.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
@@ -439,7 +440,7 @@
 			<body>
 				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string:</p>
 <pre>
-echo '#page &lt;&lt; [TeX `$x^{2}$´]' | drool > label.pdf
+echo '#page &lt;&lt; [TeX `$x^{2}$´]' | shapes > label.pdf
 </pre>
 			</body>
 		</section>
