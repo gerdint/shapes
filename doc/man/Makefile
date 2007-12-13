@@ -17,6 +17,6 @@ man-postproc: man-postproc.l
 	flex --out man-postproc.c man-postproc.l
 	gcc -o man-postproc man-postproc.c -ll
 
-.PHONY clean
+.PHONY: clean
 clean:
 	-rm $(PRODUCTS)
