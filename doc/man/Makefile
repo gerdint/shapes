@@ -9,7 +9,7 @@ man1/shapes.1: tool-interface.sxml man.xsl man-postproc
 	$(JAVA) -jar saxonb9-0-0-2j/saxon9.jar $< man.xsl | ./man-postproc > $@
 
 html/index.html: tool-interface.sxml html.xsl
-	$(JAVA) -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< html.xsl > $@
+	$(JAVA) -jar saxonb9-0-0-2j/saxon9.jar $< html.xsl > $@
 
 man-postproc: man-postproc.l
 	flex --out man-postproc.c man-postproc.l
