@@ -41,8 +41,10 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="synopsis-case"><xsl:apply-templates/></xsl:template>
 
 <xsl:template match="see-also-items">
-  <xsl:for-each select="see-also"><xsl:text>.BR </xsl:text><xsl:apply-templates/><xsl:text>
-.ensure-line-break</xsl:text></xsl:for-each>
+  <xsl:for-each select="see-also"><xsl:apply-templates/></xsl:for-each>
+</xsl:template>
+<xsl:template match="manpage[@tool,@section]"><xsl:text>.BR </xsl:text>&quot;<xsl:value-of select="@tool" />&quot; &quot;(<xsl:value-of select="@section" />)&quot;<xsl:text>
+.ensure-line-break</xsl:text>
 </xsl:template>
 
 <xsl:template match="env-variable-description">
@@ -80,10 +82,13 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 
-<xsl:template match="synopsis-case/stx"><xsl:text>
+<xsl:template match="synopsis-case/syntax-name"><xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
-<xsl:template match="p/stx"><xsl:text>
+<xsl:template match="synopsis-case/bnf"><xsl:text>
+.ensure-line-break </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break</xsl:text></xsl:template>
+<xsl:template match="p/syntax-name"><xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="synopsis-case/replacable"><xsl:text>

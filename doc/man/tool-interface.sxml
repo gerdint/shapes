@@ -19,9 +19,9 @@
 		<title>Synopsis</title>
 		<body>
 			<synopsis-table>
-				<synopsis-case><prog-name>shapes</prog-name> <stx>option*</stx> <replacable>source</replacable></synopsis-case>
-				<synopsis-case><prog-name>shapes</prog-name> <stx>option*</stx></synopsis-case>
-				<synopsis-case><prog-name>shapes</prog-name> <stx>( options | file-request )*</stx> </synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <syntax-name>option</syntax-name><bnf>*</bnf> <replacable>source</replacable></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <syntax-name>option</syntax-name><bnf>*</bnf></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <syntax-name>options</syntax-name> <bnf>|</bnf> <syntax-name>file-request</syntax-name> <bnf>)*</bnf> </synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>
@@ -36,7 +36,7 @@
 	<section>
 		<title>Command line options</title>
 		<top>
-			<p>Command line options fall into two cathegories, most of which were referred to as <stx>option</stx> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <stx>file-request</stx> above.</p>
+			<p>Command line options fall into two cathegories, most of which were referred to as <syntax-name>option</syntax-name> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <syntax-name>file-request</syntax-name> above.</p>
 		</top>
  		<section>
 			<title>Files</title>
@@ -476,8 +476,8 @@ echo '#page &lt;&lt; (TeX `$x^{2}$´)' | shapes --tmpdir /tmp > label.pdf
 		<title>See also</title>
 		<body>
 			<see-also-items>
-				<see-also>xpdf (1)</see-also>
-				<see-also>open (1)</see-also>
+				<see-also><manpage tool="xpdf" section="1" /></see-also>
+				<see-also><manpage tool="open" section="1" /></see-also>
 			</see-also-items>
 		</body>
 	</section>
