@@ -51,7 +51,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:for-each select="see-also"><xsl:apply-templates/></xsl:for-each>
 </xsl:template>
 <xsl:template match="manpage[@tool,@section]">
-	<b><xsl:value-of select="@tool" /></b>(<xsl:value-of select="@section" />)
+	<xsl:element name="a"><xsl:attribute name="href">http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22<xsl:value-of select="@tool" />(<xsl:value-of select="@section" />)%22</xsl:attribute><b><xsl:value-of select="@tool" /></b>(<xsl:value-of select="@section" />)</xsl:element>
 </xsl:template>
 
 <xsl:template match="env-variable-description">

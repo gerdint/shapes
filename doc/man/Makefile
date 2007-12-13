@@ -1,4 +1,11 @@
-JAVA=java -classpath '/Library/Java/Extensions/;/home/rt/tidefelt/sw/Java/Extensions/'
+JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
+JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
+
+ifneq ($(strip $(wildcard $(JAR1))),)
+SAXON=java -jar $(JAR1)
+else
+SAXON=java -jar $(JAR2)
+endif
 
 PRODUCTS = man1/shapes.1 html/index.html
 
@@ -8,10 +15,10 @@ all: $(PRODUCTS)
 #	@xsltproc man.xsl mini.sxml | sed '1,1d' > $@
 
 man1/shapes.1: tool-interface.sxml man.xsl man-postproc
-	$(JAVA) -jar saxonb9-0-0-2j/saxon9.jar $< man.xsl | ./man-postproc > $@
+	$(SAXON) $< man.xsl | ./man-postproc > $@
 
 html/index.html: tool-interface.sxml html.xsl
-	$(JAVA) -jar saxonb9-0-0-2j/saxon9.jar $< html.xsl > $@
+	$(SAXON) $< html.xsl > $@
 
 man-postproc: man-postproc.l
 	flex --out man-postproc.c man-postproc.l
