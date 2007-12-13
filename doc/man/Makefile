@@ -17,12 +17,12 @@ all: $(PRODUCTS)
 man1/shapes.1: tool-interface.sxml man.xsl man-postproc
 	$(SAXON) $< man.xsl | ./man-postproc > $@
 
-html/index.html: tool-interface.sxml html.xsl
-	$(SAXON) $< html.xsl > $@
+html/index.html: tool-interface.sxml html.xsl html-postproc
+	$(SAXON) $< html.xsl | ./html-postproc > $@
 
-man-postproc: man-postproc.l
-	flex --out man-postproc.c man-postproc.l
-	gcc -o man-postproc man-postproc.c -ll
+%-postproc: %-postproc.l
+	flex --out $*-postproc.c $*-postproc.l
+	gcc -o $@ $*-postproc.c -ll
 
 .PHONY: clean
 clean:

@@ -1,4 +1,9 @@
 .TH shapes1 "2007-12-10" "Tiddes" "The Shapes language compiler"
+.ensure-newline.TP
+.B Note:
+Due to limitations in the character encoding used for this page, some characters in the examples have been replaced by legacy substitutions.  These issues are not present in the
+.SM HTML
+version of this page.
 .SH NAME
 shapes \- Compile a Shapes source to PDF.
 
@@ -542,7 +547,7 @@ The following can be used to generate a small PDF-label from a LaTeX string, wit
 
 
 .br  
-echo '#page << (TeX `$x^{2}$´)' | shapes --tmpdir /tmp > label.pdf
+echo '#page << (TeX ("$x^{2}$"))' | shapes --tmpdir /tmp > label.pdf
 
 
 .br

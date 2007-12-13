@@ -6,6 +6,12 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 
 <xsl:template match="/man">
 <xsl:apply-templates select="manhead" />
+<xsl:text>
+.ensure-newline.TP
+.B Note:
+Due to limitations in the character encoding used for this page, some characters in the examples have been replaced by legacy substitutions.  These issues are not present in the
+.SM HTML
+version of this page.</xsl:text>
 <xsl:for-each select="section"><xsl:text>
 .ensure-line-break.SH </xsl:text><xsl:value-of select="upper-case(title)" /><xsl:text>
 .ensure-line-break</xsl:text>
@@ -107,5 +113,9 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="em-dash">\-</xsl:template>
+
+<xsl:template match="char-bullet">#</xsl:template>
+<xsl:template match="char-str-open">("</xsl:template>
+<xsl:template match="char-str-close">")</xsl:template>
 
 </xsl:stylesheet>

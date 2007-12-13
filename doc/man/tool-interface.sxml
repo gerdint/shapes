@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE man [
+<!ENTITY bullet "<char-bullet />">
+<!ENTITY str-open "<char-str-open />">
+<!ENTITY str-close "<char-str-close />">
+]>
 <man>
 	<manhead>
 		<prog-name>shapes</prog-name>
@@ -458,7 +463,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			<body>
 				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:</p>
 <pre>
-echo '#page &lt;&lt; (TeX `$x^{2}$´)' | shapes --tmpdir /tmp > label.pdf
+echo '&bullet;page &lt;&lt; (TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdir /tmp > label.pdf
 </pre>
 			</body>
 		</section>

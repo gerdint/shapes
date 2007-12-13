@@ -5,5 +5,5 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 </pre><p>or just to the point your shell completion will take you:</p><pre>
   shapes --xpdf hi.
 </pre><h3>Use with stdin and stdout</h3><p>The following can be used to generate a small PDF-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:</p><pre>
-echo '#page &lt;&lt; (TeX `$x^{2}$´)' | shapes --tmpdir /tmp &gt; label.pdf
-</pre><h2>Author</h2><p>Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.</p><h2>See also</h2><a href="http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22xpdf(1)%22"><b>xpdf</b>(1)</a><a href="http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22open(1)%22"><b>open</b>(1)</a></body></html>
+echo '•page &lt;&lt; (TeX `$x^{2}$´)' | shapes --tmpdir /tmp &gt; label.pdf
+</pre><h2>Author</h2><p>Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.</p><h2>See also</h2><a href="http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22xpdf(1)%22"><b>xpdf</b>(1)</a> <a href="http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22open(1)%22"><b>open</b>(1)</a> </body></html>

@@ -859,7 +859,7 @@ main( int argc, char ** argv )
 		{
 			if( texJobName == "" )
 				{
-					texJobName = "#shapes.labels";
+					texJobName = tmpDir + "#shapes.labels";
 				}
 		}
 	else
@@ -884,6 +884,11 @@ main( int argc, char ** argv )
 				{
 					fontmetricsOutputName = outDir + baseName + ".afm";
 				}
+		}
+
+	if( labelDBName == "" )
+		{
+			iterativeMode = false;
 		}
 
 	if( ! Kernel::theDebugLog.initialized( ) )
@@ -1280,7 +1285,7 @@ main( int argc, char ** argv )
 		{
 			Kernel::theTeXLabelManager.iterativeFinish( labelDBName );
 		}
- 
+
 	if( launch_xpdf )
 		{
 			xpdfHelper( outputName, xpdfServer, xpdfAction );

@@ -48,7 +48,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="see-also-items">
-  <xsl:for-each select="see-also"><xsl:apply-templates/></xsl:for-each>
+  <xsl:for-each select="see-also"><xsl:apply-templates/><xsl:text> </xsl:text></xsl:for-each>
 </xsl:template>
 <xsl:template match="manpage[@tool,@section]">
 	<xsl:element name="a"><xsl:attribute name="href">http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22<xsl:value-of select="@tool" />(<xsl:value-of select="@section" />)%22</xsl:attribute><b><xsl:value-of select="@tool" /></b>(<xsl:value-of select="@section" />)</xsl:element>
@@ -88,5 +88,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="em-dash">—</xsl:template>
+
+<xsl:template match="char-bullet">•</xsl:template>
+<xsl:template match="char-str-open">`</xsl:template>
+<xsl:template match="char-str-close">´</xsl:template>
 
 </xsl:stylesheet>
