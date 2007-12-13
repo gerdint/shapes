@@ -33,11 +33,10 @@ void printVersion( );
 
 using namespace Shapes;
 using namespace SimplePDF;
-using namespace std;
 
 void argcAssertion( const char * optionSpecifier, int argc, int argcMin );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
-void abortProcedure( ofstream * oFile, const std::string & outputName );
+void abortProcedure( std::ofstream * oFile, const std::string & outputName );
 void setupGlobals( );
 enum XpdfAction{ XPDF_DEFAULT, XPDF_RAISE, XPDF_RELOAD, XPDF_QUIT, XPDF_NOSERVER };
 void xpdfHelper( const std::string & filename, const std::string & server, const XpdfAction & action );
@@ -71,19 +70,19 @@ main( int argc, char ** argv )
 	bool iterativeMode = true;
 	bool useResources = true;
 
-	string outDir;
-	string tmpDir;
-	string baseName;
-	string inputName;
-	string outputName;
-	string texJobName;
-	string labelDBName;
-	string fontmetricsOutputName;
+	std::string outDir;
+	std::string tmpDir;
+	std::string baseName;
+	std::string inputName;
+	std::string outputName;
+	std::string texJobName;
+	std::string labelDBName;
+	std::string fontmetricsOutputName;
 
 	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM };
 
-	list< int > filenameRequestList;
-	list< const char * > resourceRequestList;
+	std::list< int > filenameRequestList;
+	std::list< const char * > resourceRequestList;
 
 	bool evalTrace = false;
 	bool evalBackTrace = false;
@@ -93,7 +92,7 @@ main( int argc, char ** argv )
 	SimplePDF::PDF_out::Version pdfVersion = SimplePDF::PDF_out::VERSION_UNDEFINED;
 	SimplePDF::PDF_out::VersionAction pdfVersionAction = SimplePDF::PDF_out::WARN;
 	XpdfAction xpdfAction = XPDF_DEFAULT;
-	string xpdfServer;
+	std::string xpdfServer;
 	bool do_open = false;
 	const char * do_open_application = 0;
 	std::ostringstream prependStreamOut;
@@ -353,12 +352,12 @@ main( int argc, char ** argv )
 					Computation::theTrixelizeSplicingTol = strtod( *( argv + 1 ), &endp );
 					if( *endp != '\0' )
 						{
-							cerr << "Argument to --splicingtol was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --splicingtol was not a float: " << *( argv + 1 ) << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::theTrixelizeSplicingTol <= 0 )
 						{
-							cerr << "Argument to --splicingtol not positive: " << Computation::theTrixelizeSplicingTol.offtype< 1, 0 >( ) << std::endl ;
+							std::cerr << "Argument to --splicingtol not positive: " << Computation::theTrixelizeSplicingTol.offtype< 1, 0 >( ) << std::endl ;
 							exit( 1 );
 						}
 
@@ -373,12 +372,12 @@ main( int argc, char ** argv )
 					Computation::theTrixelizeOverlapTol = strtod( *( argv + 1 ), &endp );
 					if( *endp != '\0' )
 						{
-							cerr << "Argument to --overlaptol was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --overlaptol was not a float: " << *( argv + 1 ) << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::theTrixelizeOverlapTol <= 0 )
 						{
-							cerr << "Argument to --overlaptol not positive: " << Computation::theTrixelizeOverlapTol.offtype< 1, 0 >( ) << std::endl ;
+							std::cerr << "Argument to --overlaptol not positive: " << Computation::theTrixelizeOverlapTol.offtype< 1, 0 >( ) << std::endl ;
 							exit( 1 );
 						}
 
@@ -495,7 +494,7 @@ main( int argc, char ** argv )
 					long s = strtol( *( argv + 1 ), &endp, 10 );
 					if( *endp != '\0' )
 						{
-							cerr << "Argument to --seed was not an integer: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --seed was not an integer: " << *( argv + 1 ) << std::endl ;
 							exit( 1 );
 						}
 
@@ -512,12 +511,12 @@ main( int argc, char ** argv )
 					Computation::the_arcdelta = strtod( *( argv + 1 ), &endp );
 					if( *endp != '\0' )
 						{
-							cerr << "Argument to --arcdelta was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --arcdelta was not a float: " << *( argv + 1 ) << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::the_arcdelta <= 0 )
 						{
-							cerr << "Argument to --arcdelta not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
+							std::cerr << "Argument to --arcdelta not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
 							exit( 1 );
 						}
 
@@ -532,12 +531,12 @@ main( int argc, char ** argv )
 					Computation::the_dtMin = strtod( *( argv + 1 ), &endp );
 					if( *endp != '\0' )
 						{
-							cerr << "Argument to --dtmin was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --dtmin was not a float: " << *( argv + 1 ) << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::the_dtMin <= 0 )
 						{
-							cerr << "Argument to --dtmin not positive: " << Computation::the_dtMin << std::endl ;
+							std::cerr << "Argument to --dtmin not positive: " << Computation::the_dtMin << std::endl ;
 							exit( 1 );
 						}
 
@@ -556,7 +555,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( baseName != "" )
 						{
-							cerr << "The name base is multiply specified." << endl ;
+							std::cerr << "The name base is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					baseName = *( argv + 1 );
@@ -582,7 +581,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( inputName != "" )
 						{
-							cerr << "The input file is multiply specified." << endl ;
+							std::cerr << "The input file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					inputName = *( argv + 1 );
@@ -600,7 +599,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( outputName != "" )
 						{
-							cerr << "The output file is multiply specified." << endl ;
+							std::cerr << "The output file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					outputName = *( argv + 1 );
@@ -618,7 +617,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( texJobName != "" )
 						{
-							cerr << "The tex job name is multiply specified." << endl ;
+							std::cerr << "The tex job name is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					texJobName = *( argv + 1 );
@@ -636,7 +635,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( labelDBName != "" )
 						{
-							cerr << "The label database file is multiply specified." << endl ;
+							std::cerr << "The label database file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					labelDBName = *( argv + 1 );
@@ -654,7 +653,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( fontmetricsOutputName != "" )
 						{
-							cerr << "The font metrics output name is multiply specified." << endl ;
+							std::cerr << "The font metrics output name is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					fontmetricsOutputName = *( argv + 1 );
@@ -666,7 +665,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( outDir != "" )
 						{
-							cerr << "The output directory is multiply specified." << endl ;
+							std::cerr << "The output directory is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					outDir = *( argv + 1 );
@@ -682,7 +681,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( tmpDir != "" )
 						{
-							cerr << "The temporaries directory is multiply specified." << endl ;
+							std::cerr << "The temporaries directory is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					tmpDir = *( argv + 1 );
@@ -704,7 +703,7 @@ main( int argc, char ** argv )
 					argcAssertion( *argv, argc, 2 );
 					if( texJobName != "" )
 						{
-							cerr << "The xpdf server is multiply specified." << endl ;
+							std::cerr << "The xpdf server is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					xpdfServer = *( argv + 1 );
@@ -715,7 +714,7 @@ main( int argc, char ** argv )
 				{
 					if( xpdfAction != XPDF_DEFAULT )
 						{
-							cerr << "The xpdf action is multiply specified." << endl ;
+							std::cerr << "The xpdf action is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					xpdfAction = XPDF_NOSERVER;
@@ -726,7 +725,7 @@ main( int argc, char ** argv )
 				{
 					if( xpdfAction != XPDF_DEFAULT )
 						{
-							cerr << "The xpdf action is multiply specified." << endl ;
+							std::cerr << "The xpdf action is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					xpdfAction = XPDF_RELOAD;
@@ -737,7 +736,7 @@ main( int argc, char ** argv )
 				{
 					if( xpdfAction != XPDF_DEFAULT )
 						{
-							cerr << "The xpdf action is multiply specified." << endl ;
+							std::cerr << "The xpdf action is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					xpdfAction = XPDF_QUIT;
@@ -767,7 +766,7 @@ main( int argc, char ** argv )
 				{
 					if( baseName != "" )
 						{
-							cerr << "The name base is multiply specified." << endl ;
+							std::cerr << "The name base is multiply specified." << std::endl ;
 							exit( 1 );
 						}
 					struct stat theStat;
@@ -782,7 +781,7 @@ main( int argc, char ** argv )
 								}
 							if( strcmp( ext, ".shape" ) != 0 )
 								{
-									cerr << "Expected \".shape\" suffix in the file name \"" << *argv << "\"." << endl ;
+									std::cerr << "Expected \".shape\" suffix in the file name \"" << *argv << "\"." << std::endl ;
 									exit( 1 );
 								}
 						}
@@ -824,7 +823,7 @@ main( int argc, char ** argv )
 				}
 			else
 				{
-					cerr << "Illegal command line option: " << *argv << endl ;
+					std::cerr << "Illegal command line option: " << *argv << std::endl ;
 					exit( 1 );
 				}
 		}
@@ -886,6 +885,12 @@ main( int argc, char ** argv )
 				}
 		}
 
+	if( outputName == "" )
+		{
+			std::cerr << "The output file is undetermined.  Consider specifying it using \"--out <filename>\"." << std::endl ;
+			exit( 1 );
+		}
+
 	if( labelDBName == "" )
 		{
 			iterativeMode = false;
@@ -904,7 +909,7 @@ main( int argc, char ** argv )
 		}
 
 	{
-		string inDir;
+		std::string inDir;
 		std::string inPath = inputName;
 		char * slash = strrchr( inPath.c_str( ), '/' );
 		if( slash == 0 )
@@ -960,63 +965,63 @@ main( int argc, char ** argv )
 
 	if( filenameRequestList.size( ) > 0 )
 		{
-			list< const char * >::const_iterator resource = resourceRequestList.begin( );
-			for( list< int >::const_iterator i = filenameRequestList.begin( );
+			std::list< const char * >::const_iterator resource = resourceRequestList.begin( );
+			for( std::list< int >::const_iterator i = filenameRequestList.begin( );
 					 i != filenameRequestList.end( );
 					 ++i )
 				{
 					if( i != filenameRequestList.begin( ) )
 						{
-							cout << " " ;
+							std::cout << " " ;
 						}
 					switch( *i )
 						{
 						case FILENAME_IN:
 							if( inputName == "" )
 								{
-									cout << "<stdin>" ;
+									std::cout << "<stdin>" ;
 								}
 							else
 								{
-									cout << inputName ;
+									std::cout << inputName ;
 								}
 							break;
 						case FILENAME_OUT:
 							if( outputName == "" )
 								{
-									cout << "<stdout>" ;
+									std::cout << "<stdout>" ;
 								}
 							else
 								{
-									cout << outputName ;
+									std::cout << outputName ;
 								}
 							break;
 						case FILENAME_TEXJOB:
-							cout << texJobName ;
+							std::cout << texJobName ;
 							break;
 						case FILENAME_LABELDB:
-							cout << labelDBName ;
+							std::cout << labelDBName ;
 							break;
 						case FILENAME_AFM:
-							cout << fontmetricsOutputName ;
+							std::cout << fontmetricsOutputName ;
 							break;
 						case FILENAME_RESOURCE:
 							{
 								try
 									{
-										cout << Ast::theShapesScanner.searchFile( *resource ) ;
+										std::cout << Ast::theShapesScanner.searchFile( *resource ) ;
 									}
 								catch( const Exceptions::Exception & ball )
 									{
 										std::cout.flush( );
-										ball.display( cerr );
+										ball.display( std::cerr );
 										exit( 1 );
 									}
 								++resource;
 							}
 							break;
 						default:
-							cerr << "Internal error:	filename request switch in main out of range." << endl ;
+							std::cerr << "Internal error:	filename request switch in main out of range." << std::endl ;
 							exit( 1 );
 						}
 				}
@@ -1032,7 +1037,7 @@ main( int argc, char ** argv )
 	Kernel::the_pdfo->setVersionAction( pdfVersionAction );
 
 	{
-		ostringstream oss;
+		std::ostringstream oss;
 		time_t tmp;
 		time( &tmp );
 		struct tm * now( gmtime( &tmp ) );
@@ -1048,11 +1053,11 @@ main( int argc, char ** argv )
 		(*Kernel::the_pdfo->info_)[ "CreationDate" ] = SimplePDF::PDF_out::newString( oss.str( ).c_str( ) );
 	}
 
-	ifstream iFile;
+	std::ifstream iFile;
 	if( inputName == "" )
 		{
 			(*Kernel::the_pdfo->info_)[ "Title" ] = SimplePDF::PDF_out::newString( "<stdin>" );
-			Ast::theShapesScanner.switch_streams( & cin, & cerr );
+			Ast::theShapesScanner.switch_streams( & std::cin, & std::cerr );
 			Ast::theShapesScanner.setNameOf_yyin( "stdin" );
 		}
 	else
@@ -1061,10 +1066,10 @@ main( int argc, char ** argv )
 			iFile.open( inputName.c_str( ) );
 			if( ! iFile.good( ) )
 				{
-					cerr << "Failed to open " << inputName << " for input." << endl ;
+					std::cerr << "Failed to open " << inputName << " for input." << std::endl ;
 					exit( 1 );
 				}
-			Ast::theShapesScanner.switch_streams( & iFile, & cerr );
+			Ast::theShapesScanner.switch_streams( & iFile, & std::cerr );
 			Ast::theShapesScanner.setNameOf_yyin( inputName.c_str( ) );
 		}
 
@@ -1075,18 +1080,14 @@ main( int argc, char ** argv )
 			Ast::theShapesScanner.prependStream( & prependStreamIn );
 		}
 
-	ofstream oFile;
-
-	if( outputName != "" )
+	std::ofstream oFile;
+	oFile.open( outputName.c_str( ) );
+	if( ! oFile.good( ) )
 		{
-			oFile.open( outputName.c_str( ) );
-			if( ! oFile.good( ) )
-				{
-					cerr << "Failed to open " << outputName << " for output." << endl ;
-					exit( 1 );
-				}
-			Kernel::the_pdfo->setOutputStream( & oFile );
+			std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
+			exit( 1 );
 		}
+	Kernel::the_pdfo->setOutputStream( & oFile );
 
 	RefCountPtr< std::ifstream > labelDBFile = RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
 
@@ -1177,7 +1178,7 @@ main( int argc, char ** argv )
 						}
 
 					std::cerr << evalState.cont_->traceLoc( ) << ": " ;
-					ball.display( cerr );
+					ball.display( std::cerr );
 					abortProcedure( & oFile, outputName );
 				}
 
@@ -1206,51 +1207,51 @@ main( int argc, char ** argv )
 		{
 			std::cout.flush( );
 			std::cerr << ball.loc( ) << ": " ;
-			ball.display( cerr );
+			ball.display( std::cerr );
 			abortProcedure( & oFile, outputName );
 		}
 	catch( const Exceptions::Exception & ball )
 		{
 			std::cout.flush( );
-			ball.display( cerr );
+			ball.display( std::cerr );
 			abortProcedure( & oFile, outputName );
 		}
 	catch( const NonLocalExit::DynamicBindingNotFound & ball )
 		{
-			cerr << "Caught DynamicBindingNotFound at top level." << endl
-					 << "This should really not be possible; it is an internal error." << endl ;
+			std::cerr << "Caught DynamicBindingNotFound at top level." << std::endl
+					 << "This should really not be possible; it is an internal error." << std::endl ;
 			exit( 1 );
 		}
 	catch( const NonLocalExit::NotThisType & ball )
 		{
-			cerr << "Caught NotThisType at top level." << endl
-					 << "This should really not be possible; it is an internal error." << endl ;
+			std::cerr << "Caught NotThisType at top level." << std::endl
+					 << "This should really not be possible; it is an internal error." << std::endl ;
 			exit( 1 );
 		}
 	catch( const NonLocalExit::NonLocalExitBase & ball )
 		{
-			cerr << "Caught an unknown descendant to NonLocalExitBase at top level." << endl
-					 << "This should really not be possible; it is an internal error." << endl ;
+			std::cerr << "Caught an unknown descendant to NonLocalExitBase at top level." << std::endl
+					 << "This should really not be possible; it is an internal error." << std::endl ;
 			exit( 1 );
 		}
 	catch( const char * ball )
 		{
-			cerr << "Caught (char*) ball at top level:" << endl 
-					 << "	" << ball << endl ;
-			cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << endl ;
+			std::cerr << "Caught (char*) ball at top level:" << std::endl
+					 << "	" << ball << std::endl ;
+			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
 			exit( 1 );
 		}
-	catch( const string & ball )
+	catch( const std::string & ball )
 		{
-			cerr << "Caught (string) ball at top level:" << endl 
-					 << "	" << ball << endl ;
-			cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << endl ;
+			std::cerr << "Caught (string) ball at top level:" << std::endl
+					 << "	" << ball << std::endl ;
+			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
 			exit( 1 );
 		}
 	catch( ... )
 		{
-			cerr << "Caught (...) ball at top level." << endl ;
-			cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << endl ;
+			std::cerr << "Caught (...) ball at top level." << std::endl ;
+			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
 			exit( 1 );
 		}
 
@@ -1261,9 +1262,9 @@ main( int argc, char ** argv )
 
 	if( memoryStats )
 		{
-			cerr << "Summary:" << endl ;
-			cerr << "Environments:	alive: " << Kernel::Environment::liveCount << "	of total: " << Kernel::Environment::createdCount
-					 << "	(" << 100 * static_cast< double >( Kernel::Environment::liveCount ) / static_cast< double >( Kernel::Environment::createdCount ) << "%)" << endl ;
+			std::cerr << "Summary:" << std::endl ;
+			std::cerr << "Environments:	alive: " << Kernel::Environment::liveCount << "	of total: " << Kernel::Environment::createdCount
+					 << "	(" << 100 * static_cast< double >( Kernel::Environment::liveCount ) / static_cast< double >( Kernel::Environment::createdCount ) << "%)" << std::endl ;
 		}
 
 	/* The iterativeFinish must be allowed to write to the labels database file, so the file must be closed.
@@ -1307,7 +1308,7 @@ argcAssertion( const char * optionSpecifier, int argc, int argcMin )
 {
 	if( argc < argcMin )
 		{
-			cerr << "The command line option " << optionSpecifier << " requires " << argcMin - 1 << " parameters." << endl ;
+			std::cerr << "The command line option " << optionSpecifier << " requires " << argcMin - 1 << " parameters." << std::endl ;
 			exit( 1 );
 		}
 }
@@ -1332,7 +1333,7 @@ performIterativeStartup( const std::string & labelDBName )
 //				 return RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
 //			 }
 //	 }
-	RefCountPtr< ifstream > labelsFile( new std::ifstream( labelDBName.c_str( ) ) );
+	RefCountPtr< std::ifstream > labelsFile( new std::ifstream( labelDBName.c_str( ) ) );
 	if( ! labelsFile->good( ) )
 		{
 			return RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
@@ -1344,31 +1345,31 @@ performIterativeStartup( const std::string & labelDBName )
 		}
 	catch( const char * ball )
 		{
-			cerr << "Caught (char*) ball from iterative startup:" << endl 
-					 << "	" << ball << endl ;
+			std::cerr << "Caught (char*) ball from iterative startup:" << std::endl
+					 << "	" << ball << std::endl ;
 			exit( 1 );
 		}
-	catch( const string & ball )
+	catch( const std::string & ball )
 		{
-			cerr << "Caught (string) ball from iterative startup:" << endl 
-					 << "	" << ball << endl ;
+			std::cerr << "Caught (string) ball from iterative startup:" << std::endl
+					 << "	" << ball << std::endl ;
 			exit( 1 );
 		}
 	catch( const Exceptions::Exception & ball )
 		{
-			ball.display( cerr );
+			ball.display( std::cerr );
 			exit( 1 );
 		}
 	catch( ... )
 		{
-			cerr << "Caught (...) ball from iterative startup." << endl ;
+			std::cerr << "Caught (...) ball from iterative startup." << std::endl ;
 			exit( 1 );
 		}
 }
 
 
 void
-abortProcedure( ofstream * oFile, const std::string & outputName )
+abortProcedure( std::ofstream * oFile, const std::string & outputName )
 {
 	if( Kernel::thePostCheckErrorsList.size( ) > 0 )
 		{
@@ -1401,17 +1402,17 @@ abortProcedure( ofstream * oFile, const std::string & outputName )
 					e->display( std::cerr );
 				}
 		}
-	cerr << "Aborting job.	Deleting output file." << endl ;
+	std::cerr << "Aborting job.	Deleting output file." << std::endl ;
 	if( outputName != "" )
 		{
 			oFile->close( );
 		}
 	{
-		ifstream tmpFile( outputName.c_str( ) );
+		std::ifstream tmpFile( outputName.c_str( ) );
 		if( tmpFile.good( ) )
 			{
 				tmpFile.close( );
-				string rmCommand = "rm '" + outputName + "'";
+				std::string rmCommand = "rm '" + outputName + "'";
 				Interaction::systemDebugMessage( rmCommand );
 				if( system( rmCommand.c_str( ) ) != 0 )
 					{
@@ -1533,15 +1534,15 @@ xpdfHelper( const std::string & filename, const std::string & server, const Xpdf
 					execlp( "xpdf", "xpdf", filename.c_str( ), static_cast< const char * >( 0 ) );
 					break;
 				default:
-					cerr << "Internal error: XpdfAction switch out of range." << std::endl ;
+					std::cerr << "Internal error: XpdfAction switch out of range." << std::endl ;
 					exit( 1 );
 				}
 			if( errno != 0 )
 				{
-					cerr << "Recieved errno = " << errno << " from execlp call to xpdf." << std::endl ;
+					std::cerr << "Recieved errno = " << errno << " from execlp call to xpdf." << std::endl ;
 					exit( 1 );
 				}
-			cerr << "execlp call to xpdf returned with errno == 0." << std::endl ;
+			std::cerr << "execlp call to xpdf returned with errno == 0." << std::endl ;
 			exit( 1 );
 		}
 
@@ -1571,10 +1572,10 @@ openHelper( const std::string & filename, const char * application )
 				}
 			if( errno != 0 )
 				{
-					cerr << "Recieved errno = " << errno << " from execlp call to open." << std::endl ;
+					std::cerr << "Recieved errno = " << errno << " from execlp call to open." << std::endl ;
 					exit( 1 );
 				}
-			cerr << "execlp call to open returned with errno == 0." << std::endl ;
+			std::cerr << "execlp call to open returned with errno == 0." << std::endl ;
 			exit( 1 );
 		}
 }

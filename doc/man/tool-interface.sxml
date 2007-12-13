@@ -128,9 +128,14 @@
 				</command-line-option-description>
 				<command-line-option-description>
 					<parameters flag="&lt;stdin&gt;"></parameters>
+					<description>
+						<p>The special file <filename>stdin</filename> is used when the input source is not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.</p>
+					</description>
+				</command-line-option-description>
+				<command-line-option-description>
 					<parameters flag="&lt;stdout&gt;"></parameters>
 					<description>
-						<p>The special files <filename>stdin</filename> and <filename>stdout</filename> are used when the input source and output files are not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.</p>
+						<p>Since the user may write charater data on the special file <filename>stdout</filename>, <filename>stdout</filename> cannot be used for the produced <str-PDF /> file.  This should not be a major inconvenience since the <str-PDF /> format is not suited for stream editing anyway.  Consider using the --out option when the input is taken from <filename>stdin</filename>.</p>
 					</description>
 				</command-line-option-description>
 				<command-line-option-description>
@@ -459,11 +464,11 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			</body>
 		</section>
 		<section>
-			<title>Use with stdin and stdout</title>
+			<title>Use with stdin</title>
 			<body>
 				<p>The following can be used to generate a small <str-PDF />-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:</p>
 <pre>
-echo '&bullet;page &lt;&lt; (TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdir /tmp > label.pdf
+echo '&bullet;page &lt;&lt; (TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdir /tmp --out label.pdf
 </pre>
 			</body>
 		</section>

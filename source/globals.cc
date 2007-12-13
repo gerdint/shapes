@@ -24,7 +24,7 @@ using namespace Shapes;
 ShapesScanner Ast::theShapesScanner;
 Kernel::PassedEnv Kernel::theGlobalEnvironment = 0;
 std::list< Kernel::Environment * > Kernel::theEnvironmentList;
-SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( & cout );
+SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( 0 );
 Kernel::DebugLog Kernel::theDebugLog;
 Kernel::TeXLabelManager Kernel::theTeXLabelManager;
 RefCountPtr< const Kernel::GraphicsState > Kernel::THE_NO_STATE = NullPtr< const Kernel::GraphicsState >( );

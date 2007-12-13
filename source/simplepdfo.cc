@@ -138,12 +138,17 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 SimplePDF::PDF_out::PDF_out( ostream * _os )
 	: version_( SimplePDF::PDF_out::PDF_1_4 ),
 		versionAction_( SimplePDF::PDF_out::WARN ),
-		os( _os ), os_start( static_cast< streamoff >( os->tellp( ) ) ),
+		os( _os ), os_start( static_cast< streamoff >( 0 ) ),
 		root_( new PDF_Dictionary ),
 		info_( new PDF_Dictionary ),
 		i_root( NullPtr< PDF_Object >( ) ),
 		objCount( 0 )
 {
+	if( os != 0 )
+		{
+			os_start = static_cast< streamoff >( os->tellp( ) );
+		}
+
 	indirect( RefCountPtr< PDF_Int >( new PDF_Int( 0 ) ), 65535 );
 	indirectQueue.back( )->inUse = false;
 
@@ -161,6 +166,12 @@ SimplePDF::PDF_out::~PDF_out( )
 void
 SimplePDF::PDF_out::writeData( )
 {
+	if( os == 0 )
+		{
+			std::cerr << "SimplePDF::PDF_out::writeData: The output file has not been assigned." << std::endl ;
+			exit( 1 );
+		}
+
 	RefCountPtr< PDF_Object > i_info;
 	try
 		{
@@ -222,13 +233,13 @@ SimplePDF::PDF_out::writeData( )
 		}
 	catch( const char * ball )
 		{
-			cerr << "Caught (char*) ball at top level:" << endl 
+			cerr << "Caught (char*) ball at top level:" << endl
 					 << "	" << ball << endl ;
 			exit( 1 );
 		}
 	catch( const string & ball )
 		{
-			cerr << "Caught (string) ball at top level:" << endl 
+			cerr << "Caught (string) ball at top level:" << endl
 					 << "	" << ball << endl ;
 			exit( 1 );
 		}
@@ -247,9 +258,9 @@ SimplePDF::PDF_out::writeData( )
 void
 SimplePDF::PDF_out::setOutputStream( ostream * _os )
 {
-	if( static_cast< streamoff >( os->tellp( ) ) != os_start )
+	if( os != 0 )
 		{
-			cerr << "Switching output file when " << static_cast< streamoff >( os->tellp( ) ) - os_start << " bytes have already been written in another file." << endl ;
+			std::cerr << "The output file has already been set." << std::endl ;
 			exit( 1 );
 		}
 	os = _os;
