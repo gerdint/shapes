@@ -45,7 +45,7 @@ double metaPDFstrtod( const char * str, char ** end );
 	* input file. Here is where you set options for the scanner, define lex
 	* states, and can set up definitions to give names to regular expressions
 	* as a simple substitution mechanism that allows for more readable
-	* entries in the Rules section later. 
+	* entries in the Rules section later.
 	*/
 
 WhiteSpace [ \t]
@@ -79,6 +79,7 @@ Escape "¢"|"¤"
 %x InclFrom
 %x InclPath
 %x String
+%x PoorMansString
 %x Comment
 %x LaTeXOption
 %x LaTeXClass
@@ -606,32 +607,7 @@ Escape "¢"|"¤"
 	if( quoteDepth == 0 )
 		{
 			yytext[ yyleng - 2 ] = '\0';
-			shapeslval.str = new char[ yyleng - 1 ];
-			{
-				char * dst = shapeslval.str;
-				char * src = yytext;
-				char * end = yytext + yyleng - 2;		// the "- 1" comes from empirical studies...
-				for( ; src != end; ++src )
-					{
-						if( *src != 0 )
-							{
-								*dst = *src;
-								++dst;
-							}
-					}
-				/* The following condition catches the optional trailing newline at the end of
-				 * the literal.	That this condition is non-trivial indicates that this feature
-				 * must be used with care.	For example, when the string creation is automated, either
-				 * should all newlines be written `¢n´, or should the optional newlines always be there.
-				 * The last of the three conditions ensures that the trailing newline was not generated
-				 * as an escape sequence, in which case it shall be kept.
-				 */
-				if( dst > shapeslval.str && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
-					{
-						--dst;
-					}
-				*dst = '\0';
-			}
+			rinseString( );
 			--shapeslloc.firstColumn;
 			BEGIN( INITIAL );
 			return T_string;
@@ -641,8 +617,8 @@ Escape "¢"|"¤"
 			more( );
 		}
 }
-<String>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; more( ); }
-<String>{Escape}[`nt\n] {
+<String,PoorMansString>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; more( ); }
+<String,PoorMansString>{Escape}[`nt\n\"] {
 	// The escaped characters each occupy 1 byte
 	char * dst = yytext + yyleng - 3; // 3 = 2 + 1
 	switch( yytext[ yyleng - 1 ] )
@@ -668,7 +644,7 @@ Escape "¢"|"¤"
 	yymore( ); // The purpose of this line is only to let flex know that we use yy_more_flag
 	more( );
 }
-<String>{Escape}({Escape}|"´") {
+<String,PoorMansString>{Escape}({Escape}|"´") {
 	char * dst = yytext;
 	char * src = yytext + 2;
 	for( ; *src != '\0'; ++dst, ++src )
@@ -680,18 +656,36 @@ Escape "¢"|"¤"
 	*dst = '\0';
 	more( );
 }
-<String>{Escape} {
-	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´nt\n]." ) ) );
+<String,PoorMansString>{Escape} {
+	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´\"nt\n]." ) ) );
 	more( );
 }
-<String>. { more( ); }
-<String><<EOF>> {
+<String,PoorMansString>. { more( ); }
+<String,PoorMansString><<EOF>> {
 	/* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
 	 * however ignornig yyleng (which has the value 1).
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
 	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) );
  }
+
+<INITIAL>"(\""[\n]? {
+	if( yyleng > 2 )
+		{
+			++shapeslloc.lastLine;
+			shapeslloc.lastColumn = 0;
+		}
+	quoteDepth = 1;
+	BEGIN( PoorMansString );
+}
+<INITIAL>"\")" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing poor man's quote outside string" ) ); }
+<PoorMansString>"\")" {
+	yytext[ yyleng - 2 ] = '\0';
+	rinseString( );
+	--shapeslloc.firstColumn;
+	BEGIN( INITIAL );
+	return T_string;
+}
 
 <Incl>[^ \t\n]+ {
 	currentNeedFile = yytext;

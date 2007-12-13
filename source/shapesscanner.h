@@ -72,6 +72,7 @@ class ShapesScanner : public shapesFlexLexer
 	void push_frontNeedPath( const char * path );
 	void pop_frontNeedPath( );
 	void doInclusion( );
+	void rinseString( );
 };
 
 
