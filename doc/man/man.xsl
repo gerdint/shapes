@@ -2,10 +2,9 @@
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
+<xsl:output method="text" indent="no" />
 
 <xsl:template match="/man">
-<xsl:text>
-</xsl:text>
 <xsl:apply-templates select="manhead" />
 <xsl:for-each select="section"><xsl:text>
 .ensure-line-break.SH </xsl:text><xsl:value-of select="upper-case(title)" /><xsl:text>

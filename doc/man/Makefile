@@ -4,10 +4,10 @@ all: man1/shapes.1 html/index.html
 #	@xsltproc man.xsl mini.sxml | sed '1,1d' > $@
 
 man1/shapes.1: tool-interface.sxml man.xsl man-postproc
-	java -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< man.xsl | sed '1,1d' | ./man-postproc > $@
+	java -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< man.xsl | ./man-postproc > $@
 
 html/index.html: tool-interface.sxml html.xsl
-	java -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< html.xsl | sed '1,1d' | ./man-postproc > $@
+	java -jar /Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar $< html.xsl > $@
 
 man-postproc: man-postproc.l
 	flex --out man-postproc.c man-postproc.l
