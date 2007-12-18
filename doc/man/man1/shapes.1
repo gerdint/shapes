@@ -1,4 +1,4 @@
-.TH shapes1 "2007-12-10" "Tiddes" "The Shapes language compiler"
+.TH shapes1 "2007-12-18" "Tiddes" "The Shapes language compiler"
 .ensure-newline.TP
 .B Note:
 Due to limitations in the character encoding used for this page, some characters in the examples have been replaced by legacy substitutions.  These issues are not present in the
@@ -45,6 +45,7 @@ above.
 
 .SS Files
 
+					
 
 
 .B "source"
@@ -64,6 +65,7 @@ and the
 suffix), which in turn provides names for all other files involved.
 
 
+					
 
 
 .B "--tmpdir"
@@ -72,6 +74,7 @@ suffix), which in turn provides names for all other files involved.
 Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.
 
 
+					
 
 
 .B "--outdir"
@@ -80,6 +83,7 @@ Specify directory for temporary files.  See also the environment variable SHAPES
 Specify directory for products.  Defaults to current working directory.
 
 
+					
 
 
 .B "--needpath"
@@ -90,6 +94,7 @@ Specify directory for products.  Defaults to current working directory.
 Add dir to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.
 
 
+					
 
 
 .B "--base"
@@ -98,14 +103,18 @@ Add dir to the end of the search path for language extension sources.  See also 
 Specify the filename base to derive other filenames from.
 
 
+					
 
 
 .B "--in"
 .I file
 .br
-Specify the input source.  Defaults to the basename with the suffix ".shape" in the current directory.
+Specify the input source.  Defaults to the basename with the suffix 
+.I .shape
+in the current directory.
 
 
+					
 
 
 .B "--prepend"
@@ -114,30 +123,40 @@ Specify the input source.  Defaults to the basename with the suffix ".shape" in 
 Prepend the given string to the input source.
 
 
+					
 
 
 .B "--out"
 .I file
 .br
-Specify the destination file.  Defaults to the basename with the suffix ".pdf" in the output directory.
+Specify the destination file.  Defaults to the basename with the suffix 
+.I .pdf
+in the output directory.
 
 
+					
 
 
 .B "--labeldb"
 .I file
 .br
-Specify the file where to store labels between iterations.  Defaults to the basename with the suffix ".labels.pdf" in the output directory.
+Specify the file where to store labels between iterations.  Defaults to the basename with the suffix 
+.I .labels.pdf
+in the output directory.
 
 
+					
 
 
 .B "--afmout"
 .I file
 .br
-Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix ".afm" in the output directory.
+Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix 
+.I .afm
+in the output directory.
 
 
+					
 
 
 .B "--fontmetricspath"
@@ -148,6 +167,7 @@ Specify the file where to store generated font metrics, would there be any.  Def
 Add dir to the end of the search path for font metrics.
 
 
+					
 
 
 .B "--no-resources"
@@ -155,6 +175,7 @@ Add dir to the end of the search path for font metrics.
 Inhibit use of files installed with the Shapes program.  This applies both to language extensions and font metric files.
 
 
+					
 
 
 .B "--no-iteration"
@@ -162,19 +183,33 @@ Inhibit use of files installed with the Shapes program.  This applies both to la
 Inhibit creation of the file with labels saved from one program run to another.  This behavior is implied if the label database filename is undefined.
 
 
+					
 
 
 .B "<stdin>"
 .br
+The special file 
+.I stdin
+is used when the input source is not determined in any other way.  This means that the filename base must not be defined, so sometimes 
+.I #shapes
+has to be used instead.
+
+
+					
+
+
 .B "<stdout>"
 .br
-The special files 
-.I stdin
-and 
+Since the user may write charater data on the special file 
 .I stdout
-are used when the input source and output files are not determined in any other way.  This means that the filename base must not be defined, so sometimes "#shapes" has to be used instead.
+, 
+.I stdout
+cannot be used for the produced PDF file.  This should not be a major inconvenience since the PDF format is not suited for stream editing anyway.  Consider using the --out option when the input is taken from 
+.I stdin
+.
 
 
+					
 
 
 .B "--debuglog"
@@ -187,8 +222,10 @@ are used when the input source and output files are not determined in any other 
 Specify file for the user's debug log messages.
 
 
+				
 .SS Tolerances and other parameters
 
+					
 
 
 .B "--seed"
@@ -197,6 +234,7 @@ Specify file for the user's debug log messages.
 Initializes the global random number generator by calling the srand function..
 
 
+					
 
 
 .B "--arcdelta"
@@ -205,6 +243,7 @@ Initializes the global random number generator by calling the srand function..
 Set maximum integration step length to use when integrating along paths.  Defaults to 0.1bp.  See also --dtmin.
 
 
+					
 
 
 .B "--dtmin"
@@ -213,6 +252,7 @@ Set maximum integration step length to use when integrating along paths.  Defaul
 Set minimum integration step to use when integrating along paths.  Defaults to 1e-4.  See also --arcdelta.
 
 
+					
 
 
 .B "--dtminerror"
@@ -226,6 +266,7 @@ Control whether bumping up too short steplengths in integration along paths shal
 By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.
 
 
+					
 
 
 .B "--splicingtol"
@@ -234,6 +275,7 @@ By default, it is considered an error if a length-measuring loop over one simple
 Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.
 
 
+					
 
 
 .B "--overlaptol"
@@ -242,6 +284,7 @@ Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-5bp.
 Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
 
 
+					
 
 
 .B "--fmguesserror"
@@ -251,8 +294,10 @@ Tolerance used when a 3D scene is viewed in 2D.  Defaults to 1e-3bp.
 Control whether guessing font metrics for (more or less) strange characters shall be considered an error.
 
 
+				
 .SS Verbosity
 
+					
 
 
 .B "--bytecolumn"
@@ -260,14 +305,16 @@ Control whether guessing font metrics for (more or less) strange characters shal
 Report source file columns in bytes rather than complete UTF-8 characters.  By default, column indicates the character count from the beginning of the line.
 
 
+					
 
 
 .B "--unit"
 .I unit-name
 .br
-Set the unit to use for textual representation of lengths.  Defaults to "cm".
+Set the unit to use for textual representation of lengths.  Defaults to cm.
 
 
+					
 
 
 .B "--showfiles"
@@ -275,6 +322,7 @@ Set the unit to use for textual representation of lengths.  Defaults to "cm".
 Print the chain of used sources.
 
 
+					
 
 
 .B "--stats"
@@ -284,8 +332,10 @@ Print the chain of used sources.
 Control printing of execution statistics, such as memory and time usage.
 
 
+				
 .SS Versions
 
+					
 
 
 .B "--v"
@@ -293,9 +343,10 @@ Control printing of execution statistics, such as memory and time usage.
 .br
 .BI "-v" "mode-ver
 .br
-Set the highest PDF version to use in output.  The mode-ver parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a PDF version shall follow.  Valid values are "1.3" and "1.4".  Hence, for instance, "w1.3" is a valid mode-ver value.
+Set the highest PDF version to use in output.  The mode-ver parameter shall begin with either of the letters "e" (error), "w" (warning), or "s" (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a PDF version shall follow.  Valid values are "1.3" and "1.3".  Hence, for instance, "w1.3" is a valid mode-ver value.
 
 
+					
 
 
 .B "--version"
@@ -303,6 +354,7 @@ Set the highest PDF version to use in output.  The mode-ver parameter shall begi
 Print version information about the compiler, and exit.
 
 
+				
 .SS Preview
 Shapes can launch xpdf or invoke the MacOS 
 .B open
@@ -315,6 +367,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 
 .br
 
+					
 
 
 .B "--open"
@@ -322,6 +375,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 Use the open program to open the result using a system default viewer for PDF files.
 
 
+					
 
 
 .B "--open-a"
@@ -330,6 +384,7 @@ Use the open program to open the result using a system default viewer for PDF fi
 Like --open, but here the application to use is specified by the user.
 
 
+					
 
 
 .B "--xpdf"
@@ -337,6 +392,7 @@ Like --open, but here the application to use is specified by the user.
 Use the xpdf program to preview the result.  The program is run in remote server mode.
 
 
+					
 
 
 .B "--xpdf-remote"
@@ -345,6 +401,7 @@ Use the xpdf program to preview the result.  The program is run in remote server
 Set the name to use when running the xpdf program in remote mode.  Defaults to the output filename.
 
 
+					
 
 
 .B "--xpdf-no-server"
@@ -353,6 +410,7 @@ Set the name to use when running the xpdf program in remote mode.  Defaults to t
 Inhibit use of the remote server mode.  A new xpdf window will appear each time.
 
 
+					
 
 
 .B "--xpdf-reload"
@@ -360,6 +418,7 @@ Inhibit use of the remote server mode.  A new xpdf window will appear each time.
 Make the xpdf server reload rather than raise.
 
 
+					
 
 
 .B "--xpdf-quit"
@@ -367,8 +426,10 @@ Make the xpdf server reload rather than raise.
 Make the xpdf server quit rather than show your graphics.
 
 
+				
 .SS User level debugging
 
+					
 
 
 .B "--no-backtrace"
@@ -376,6 +437,7 @@ Make the xpdf server quit rather than show your graphics.
 Turn off the backtrace printed when the program reports a runtime error.
 
 
+					
 
 
 .B "--evaltrace"
@@ -383,6 +445,7 @@ Turn off the backtrace printed when the program reports a runtime error.
 Print information about each expression about to be evaluated.
 
 
+					
 
 
 .B "--evalbacktrace"
@@ -390,8 +453,10 @@ Print information about each expression about to be evaluated.
 As --evaltrace, but with a backtrace printed along with each expression.
 
 
+				
 .SS Compiler developer debugging
 
+					
 
 
 .B "--shapesdebug"
@@ -399,6 +464,7 @@ As --evaltrace, but with a backtrace printed along with each expression.
 Turn on debug prints in the Shapes lexer.
 
 
+					
 
 
 .B "--yydebug"
@@ -406,6 +472,7 @@ Turn on debug prints in the Shapes lexer.
 Same as --shapesdebug.
 
 
+					
 
 
 .B "--systemdebug"
@@ -413,6 +480,7 @@ Same as --shapesdebug.
 Turn on system debug messages.  The messages are written to stderr.
 
 
+					
 
 
 .B "--afmdebug"
@@ -420,6 +488,7 @@ Turn on system debug messages.  The messages are written to stderr.
 Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.
 
 
+					
 
 
 .B "--afmmessages"
@@ -427,6 +496,7 @@ Turn on debug prints in the font metrics scanner.  Primarily for development use
 Turn on font metrics debug messages.  The messages are written to stderr.
 
 
+					
 
 
 .B "--debugstep"
@@ -435,10 +505,12 @@ Turn on font metrics debug messages.  The messages are written to stderr.
 Set the debug step counter.  For compiler development only.
 
 
+				
 .SS Garbage collection
 In the end, when garbage collection is implemented, there will be options for controlling the gc behavior here.  At the moment, there is only a dummy option here.
 
 
+					
 
 
 .B "--no-memclean"
@@ -450,8 +522,10 @@ Inhibit cleaning up memory before terminating the compilation process.
 If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.
 
 
+				
 .SS File requests
 
+ 					
 
 
 .B "--which-in"
@@ -459,6 +533,7 @@ If the program seems to do stupid things after completing evaluation, it is poss
 Request the input source.
 
 
+ 					
 
 
 .B "--which-out"
@@ -466,6 +541,7 @@ Request the input source.
 Request the input source.
 
 
+ 					
 
 
 .B "--which-texjob"
@@ -473,6 +549,7 @@ Request the input source.
 Request the TeX job basename.
 
 
+ 					
 
 
 .B "--which-labeldb"
@@ -480,6 +557,7 @@ Request the TeX job basename.
 Request the label database to keep generated labels between iterations.
 
 
+ 					
 
 
 .B "--which-afmout"
@@ -487,6 +565,7 @@ Request the label database to keep generated labels between iterations.
 Request the file where generated font metrics will be stored.
 
 
+					
 
 
 .B "--which"
@@ -495,41 +574,17 @@ Request the file where generated font metrics will be stored.
 Request a particular file.
 
 
+				
 .SH ENVIRONMENT VARIABLES
-
-
-.B SHAPESINPUTS
-contains a search path used for requested source files.  It usually consists of directories with language extension files (with the 
-.I .shext
-extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.
-
-
-
-.B SHAPESTMPDIR
-tells, when present, where to create temporary files.  In particular this concerns files related to label creation.  Note, however, that the label database file (with the 
-.I .labels.pdf
-extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.
-
-
-
-.B SHAPESFONTMETRICS
-tells where to search for font metrics files.  Font metrics for the standard fonts in PDF are distributed with the compiler, and on typical installations these are found using another mechanism.
-
-
-
-.B TEXINPUTS
-is manipulated locally to enable TeX to find files located relative to the Shapes source, although the LaTeX source used for label creation may be placed in a different directory.
-
-
 .SH EXAMPLES
-.SS Use with xpdf
-To use the xpdf program for preview, and with a source called 
+.SS Basic use
+Suppose there is a source called 
 .I hi.shape
-, run the program as:
+in the current working directory.  Then there are three ways to specify this file to the compiler.  One may give the full filename:
 
 
 .br  
-  shapes --xpdf hi.shape
+  shapes hi.shape
 
 
 .br
@@ -537,20 +592,52 @@ or just to the point your shell completion will take you:
 
 
 .br  
-  shapes --xpdf hi.
+  shapes hi.
+
+
+.br
+or exclude the suffix altogether:
+
+
+.br  
+  shapes hi
 
 
 .br
 
-.SS Use with stdin and stdout
+.SS Use with xpdf
+To use the xpdf program for preview, the previous example can be extended as:
+
+
+.br  
+  shapes --xpdf hi.shape
+
+
+.br
+
+.SS Use with stdin
 The following can be used to generate a small PDF-label from a LaTeX string, without littering the current working directory with the LaTeX-related files:
 
 
 .br  
-echo '#page << (TeX ("$x^{2}$"))' | shapes --tmpdir /tmp > label.pdf
+echo '#page << (TeX ("$x^{2}$"))' | shapes --tmpdir /tmp --out label.pdf
 
 
 .br
+
+.SS The test suite
+When testing the compiler on the bundled tests, the compiler is invoked something like this:
+
+
+.br  
+shapes --no-resources --needpath ../../resources/extensions/ --fontmetricspath ../../resources/fontmetrics/ \\
+.br
+       --tmpdir tmp/ --outdir out/ hello.shape
+
+
+.br
+The first three options ensure that extension files and font metrics are not used from a previous installation.  This example assumes that environment variables are not used to provide search paths.
+
 
 .SH AUTHOR
 Most of the code was written by Henrik Tidefelt.  Portability and distribution was provided by Gustaf Hendeby.

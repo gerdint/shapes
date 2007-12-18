@@ -35,8 +35,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <p><xsl:apply-templates/></p>
 </xsl:template>
 
-<xsl:template match="pre">
-<pre>
+<xsl:template match="command-line">
+<pre class="terminal">
 <xsl:apply-templates/>
 </pre>
 </xsl:template>
@@ -54,22 +54,32 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:element name="a"><xsl:attribute name="href">http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22<xsl:value-of select="@tool" />(<xsl:value-of select="@section" />)%22</xsl:attribute><b><xsl:value-of select="@tool" /></b>(<xsl:value-of select="@section" />)</xsl:element>
 </xsl:template>
 
-<xsl:template match="env-variable-description">
+<xsl:template match="env-variable-list">
+<ul><xsl:apply-templates /></ul>
+</xsl:template>
+<xsl:template match="env-variable-item">
+<li>
 <b><xsl:value-of select="name" /></b>
 <xsl:apply-templates select="description/*"/>
+</li>
 </xsl:template>
 
-<xsl:template match="command-line-option-description">
+<xsl:template match="command-line-option-list">
+<ul><xsl:apply-templates /></ul>
+</xsl:template>
+<xsl:template match="command-line-item">
+<li>
 <xsl:apply-templates select="parameters" />
 <xsl:apply-templates select="short-parameter" />
 <xsl:apply-templates select="description/*"/>
+</li>
 </xsl:template>
 
-<xsl:template match="command-line-option-description/parameters[@flag]">
+<xsl:template match="command-line-item/parameters[@flag]">
 	<b><xsl:value-of select="@flag" /></b> <xsl:apply-templates /><br />
 </xsl:template>
 
-<xsl:template match="command-line-option-description/short-parameter[@flag]">
+<xsl:template match="command-line-item/short-parameter[@flag]">
 	<b><xsl:value-of select="@flag" /></b><paramname class="replacable"><xsl:value-of select="."/></paramname><br />
 </xsl:template>
 
@@ -85,8 +95,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="p/em"><em><xsl:value-of select="." /></em></xsl:template>
 <xsl:template match="p/b"><b><xsl:value-of select="." /></b></xsl:template>
 
-<xsl:template match="str-PDF">PDF</xsl:template>
+<xsl:template match="physical"><span class="nowrap"><xsl:apply-templates select="scalar" /><span class="xx-small"> </span><xsl:apply-templates select="unit" /></span></xsl:template>
+<xsl:template match="sci-fmt[@mantissa,@exp]"><span class="nowrap"><xsl:value-of select="@mantissa" /><span class="small-caps">e</span><xsl:value-of select="@exp" /></span></xsl:template>
+<xsl:template match="quote">“<xsl:apply-templates />”</xsl:template>
+
+
+<xsl:template match="str-PDF"><span class="medium-caps">pdf</span></xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
+<xsl:template match="str-TeX"><span class="tex"><sub>e</sub>X</span></xsl:template>
+<xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="em-dash">—</xsl:template>
 
 <xsl:template match="char-bullet">•</xsl:template>

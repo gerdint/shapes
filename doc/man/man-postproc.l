@@ -1,6 +1,7 @@
 %%
 
 ([\n]".ensure-line-break"[ ]*)+ { printf( "\n" ); }
+"\\\n" { printf( "\\\\\n.br\n" ); }
 
 "&lt;" { printf( "<" ); }
 "&gt;" { printf( ">" ); }

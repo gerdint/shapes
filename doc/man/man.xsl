@@ -32,7 +32,7 @@ version of this page.</xsl:text>
 
 </xsl:text></xsl:template>
 
-<xsl:template match="pre"><xsl:text>
+<xsl:template match="command-line"><xsl:text>
 .br  </xsl:text><xsl:apply-templates/><xsl:text>
 
 .br
@@ -52,7 +52,10 @@ version of this page.</xsl:text>
 .ensure-line-break</xsl:text>
 </xsl:template>
 
-<xsl:template match="env-variable-description">
+<xsl:template match="env-variable-list">
+<apply-templates />
+</xsl:template>
+<xsl:template match="env-variable-item">
 <xsl:text>
 
 .B </xsl:text><xsl:value-of select="name" /><xsl:text>
@@ -60,7 +63,10 @@ version of this page.</xsl:text>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
-<xsl:template match="command-line-option-description">
+<xsl:template match="command-line-option-list">
+<xsl:apply-templates />
+</xsl:template>
+<xsl:template match="command-line-item">
 <xsl:text>
 
 </xsl:text><xsl:apply-templates select="parameters" />
@@ -68,13 +74,13 @@ version of this page.</xsl:text>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
-<xsl:template match="command-line-option-description/parameters[@flag]"><xsl:text>
+<xsl:template match="command-line-item/parameters[@flag]"><xsl:text>
 .ensure-line-break.B "</xsl:text><xsl:value-of select="@flag" /><xsl:text>"
 .ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
-<xsl:template match="command-line-option-description/short-parameter[@flag]"><xsl:text>
+<xsl:template match="command-line-item/short-parameter[@flag]"><xsl:text>
 .ensure-line-break.BI &quot;</xsl:text><xsl:value-of select="@flag" /><xsl:text>&quot; &quot;</xsl:text><xsl:value-of select="."/><xsl:text>
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
@@ -110,8 +116,14 @@ version of this page.</xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 
+<xsl:template match="physical"><xsl:apply-templates select="scalar" /><xsl:apply-templates select="unit" /></xsl:template>
+<xsl:template match="sci-fmt[@mantissa,@exp]"><xsl:value-of select="@mantissa" />e<xsl:value-of select="@exp" /></xsl:template>
+<xsl:template match="quote">"<xsl:apply-templates />"</xsl:template>
+
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
+<xsl:template match="str-TeX">TeX</xsl:template>
+<xsl:template match="str-LaTeX">LaTeX</xsl:template>
 <xsl:template match="em-dash">\-</xsl:template>
 
 <xsl:template match="char-bullet">#</xsl:template>
