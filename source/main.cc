@@ -701,7 +701,7 @@ main( int argc, char ** argv )
 			else if( strcmp( *argv, "--xpdf-remote" ) == 0 )
 				{
 					argcAssertion( *argv, argc, 2 );
-					if( texJobName != "" )
+					if( xpdfServer != "" )
 						{
 							std::cerr << "The xpdf server is multiply specified." << std::endl ;
 							exit( 1 );
@@ -710,7 +710,7 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--xpdf-noserver" ) == 0 )
+			else if( strcmp( *argv, "--xpdf-no-server" ) == 0 )
 				{
 					if( xpdfAction != XPDF_DEFAULT )
 						{

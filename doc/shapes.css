@@ -33,14 +33,15 @@ h0, h1, h2, h3, h4, h5, h6 {
 	color: 					#006633;
 	font-family: 					"Lucida Grande", sans-serif;
 	font-weight:					bold;
-	margin-top:					0.8em;	
-	margin-bottom:				0.2em;	
+	margin-top:					0.8em;
+	margin-bottom:				0.2em;
 }
 
 h0 {
 	font-size: 					3em;
 	line-height:					normal;
 	margin-top:					0;
+	margin-bottom:				0.5em;
 	text-align: center;
 }
 
@@ -53,7 +54,7 @@ h1 {
 h2 {
      text-decoration: underline;
      font-size: 					1.6em;
-     line-height:					normal;	
+     line-height:					normal;
      margin-top:					1.2em;
 }
 
@@ -87,10 +88,15 @@ h3.puff {
 	margin:					0.1em 0 0 0;
 }
 
+p {
+	margin-top:					0.3em;
+	margin-bottom:				0.7em;
+}
+
 body { font-size: 12pt }
 
 pre, inline, varname, paramname, lengthunit, lexerregexp, syntaxname, typename, bnf
-{ 
+{
   font-family: courier;
   font-size: 10pt
 }
@@ -98,6 +104,7 @@ varname.replacable, paramname.replacable, typename.replacable, constname.replaca
 { color: #CC6600; }
 
 pre { margin-left: 1.5em; }
+pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { }
 varname   { }
@@ -106,7 +113,7 @@ paramname { font-style: italic; }
 typename  { font-style: italic; font-weight: bold; }
 lexerregexp { color: F00; font-weight: bold; }
 constname { font-weight: bold; }
-filename  { font-family: sans-serif; font-style: italic; }
+filename  { font-family: sans-serif; font-style: italic; font-size: 90%; }
 
 syntaxname { font-style: italic; color: #F0F; text-decoration: underline; }
 syntaxname.new { text-decoration: none; }
@@ -122,3 +129,39 @@ table.operator-table { width:100%; background:#FFFFCC; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 
 table.note { width:100%; border-style:solid; border-color:#0C0; }
+
+.tex sub, .latex sub, .latex sup {
+  text-transform: uppercase;
+}
+.tex sub, .latex sub {
+  vertical-align: -0.5ex;
+  margin-left: -0.1667em;
+  margin-right: -0.125em;
+}
+.tex, .latex, .tex sub, .latex sub {
+  font-size: 1em;
+}
+.latex sup {
+  font-size: 0.85em;
+  vertical-align: 0.15em;
+  margin-left: -0.36em;
+  margin-right: -0.15em;
+}
+
+.small-caps
+{
+		font-variant: small-caps;
+}
+.medium-caps
+{
+		font-size: smaller;
+		text-transform: uppercase;
+}
+.xx-small
+{
+		font-size: xx-small;
+}
+.nowrap
+{
+		white-space: nowrap;
+}
