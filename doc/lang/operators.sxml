@@ -122,16 +122,240 @@ Constructs a closed path with only one spline.
 </operator-unary> <!-- end of postfix "- -cycle" (Don't mess with the ugly space in this comment!) -->
 
 
-<operator-binary op="-">
+<operator-binary op="--">
 
 <case first-type="Float" second-type="Float">
 <result><typename>Float</typename></result>
 <description>
-Subtraction.
+Pythagoream subtraction.  Both terms must be non-negative, and second term must not be larger than the first.
 </description>
 </case>
 
-</operator-binary> <!-- end of binary "-" -->
+<case first-type="Length" second-type="Length">
+<result><typename>Length</typename></result>
+<description>
+Pythagoream subtraction.  Both terms must be non-negative, and second term must not be larger than the first.
+</description>
+</case>
+
+<case first-type="Coords2D" second-type="Coords2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Coords2D" second-type="PathPoint2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint2D" second-type="PathPoint2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Coords2D" second-type="Path2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path2D" second-type="Coords2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint2D" second-type="PathPoint2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint2D" second-type="Path2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path2D" second-type="PathPoint2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path2D" second-type="Path2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathSlider2D" second-type="PathSlider2D">
+<result><typename>Path2D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+
+<case first-type="Coords3D" second-type="Coords3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Coords3D" second-type="PathPoint3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint3D" second-type="PathPoint3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Coords3D" second-type="Path3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path3D" second-type="Coords3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint3D" second-type="PathPoint3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathPoint3D" second-type="Path3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path3D" second-type="PathPoint3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="Path3D" second-type="Path3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+<case first-type="PathSlider3D" second-type="PathSlider3D">
+<result><typename>Path3D</typename></result>
+<description>
+Path connection.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "- -" -->
+
+
+<operator-binary op="++">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Pythagoream addition.
+</description>
+</case>
+
+<case first-type="Length" second-type="Length">
+<result><typename>Length</typename></result>
+<description>
+Pythagoream addition.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "++" -->
+
+
+<operator-binary op="&amp;">
+
+<case first-type="Path2D" second-type="Path2D">
+<result><typename>MultiPath2D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="MultiPath2D" second-type="Path2D">
+<result><typename>MultiPath2D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="Path2D" second-type="MultiPath2D">
+<result><typename>MultiPath2D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="MultiPath2D" second-type="MultiPath2D">
+<result><typename>MultiPath2D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+
+<case first-type="Path3D" second-type="Path3D">
+<result><typename>MultiPath3D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="MultiPath3D" second-type="Path3D">
+<result><typename>MultiPath3D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="Path3D" second-type="MultiPath3D">
+<result><typename>MultiPath3D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+<case first-type="MultiPath3D" second-type="MultiPath3D">
+<result><typename>MultiPath3D</typename></result>
+<description>
+Path union.
+</description>
+</case>
+
+<case first-type="DynamicBindings" second-type="DynamicBindings">
+<result><typename>DynamicBindings</typename></result>
+<description>
+Dynamic binding union.
+</description>
+</case>
+
+<case first-type="Drawable2D" second-type="Drawable2D">
+<result><typename>Drawable2D</typename></result>
+<description>
+Graphics composition.  Second argument on top of first.
+</description>
+</case>
+
+<case first-type="Drawable3D" second-type="Drawable3D">
+<result><typename>Drawable3D</typename></result>
+<description>
+Graphics composition.  Second argument on top of first.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "&" -->
 
 
 <operator-binary op="+">
@@ -142,8 +366,181 @@ Subtraction.
 Addition.
 </description>
 </case>
+<case first-type="Integer" second-type="Integer">
+<result><typename>Integer</typename></result>
+<description>
+Addition.
+</description>
+</case>
+<case first-type="Length" second-type="Length">
+<result><typename>Length</typename></result>
+<description>
+Addition.
+</description>
+</case>
+<case first-type="FloatPair" second-type="FloatPair">
+<result><typename>FloatPair</typename></result>
+<description>
+Addition.
+</description>
+</case>
+<case first-type="Coords2D" second-type="Coords2D">
+<result><typename>Coords2D</typename></result>
+<description>
+Addition.
+</description>
+</case>
+<case first-type="FloatTriple" second-type="FloatTriple">
+<result><typename>FloatTriple</typename></result>
+<description>
+Addition.
+</description>
+</case>
+<case first-type="Coords3D" second-type="Coords3D">
+<result><typename>Coords3D</typename></result>
+<description>
+Addition.
+</description>
+</case>
+
+<case first-type="String" second-type="String">
+<result><typename>String</typename></result>
+<description>
+Concatenation.
+</description>
+</case>
+
+<case first-type="Dash" second-type="Length">
+<result><typename>Dash</typename></result>
+<description>
+Shift.
+</description>
+</case>
+<case first-type="Length" second-type="Dash">
+<result><typename>Dash</typename></result>
+<description>
+Shift.
+</description>
+</case>
+
+<case first-type="PathSlider2D" second-type="Float">
+<result><typename>PathSlider2D</typename></result>
+<description>
+Move spline time.
+</description>
+</case>
+<case first-type="PathSlider2D" second-type="Length">
+<result><typename>PathSlider2D</typename></result>
+<description>
+Move distance.
+</description>
+</case>
+<case first-type="PathSlider3D" second-type="Float">
+<result><typename>PathSlider3D</typename></result>
+<description>
+Move spline time.
+</description>
+</case>
+<case first-type="PathSlider3D" second-type="Length">
+<result><typename>PathSlider3D</typename></result>
+<description>
+Move distance.
+</description>
+</case>
+
+<case first-type="RGB" second-type="RGB">
+<result><typename>RGB</typename></result>
+<description>
+Component-wise addition.
+</description>
+</case>
+<case first-type="Gray" second-type="Gray">
+<result><typename>Gray</typename></result>
+<description>
+Component addition.
+</description>
+</case>
+<case first-type="SpecularReflection" second-type="SpecularReflection">
+<result><typename>SpecularReflection</typename></result>
+<description>
+Combine reflections.
+</description>
+</case>
 
 </operator-binary> <!-- end of binary "+" -->
+
+
+<operator-binary op="-">
+
+<case first-type="Float" second-type="Float">
+<result><typename>Float</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="Integer" second-type="Integer">
+<result><typename>Integer</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="Length" second-type="Length">
+<result><typename>Length</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="FloatPair" second-type="FloatPair">
+<result><typename>FloatPair</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="Coords2D" second-type="Coords2D">
+<result><typename>Coords2D</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="FloatTriple" second-type="FloatTriple">
+<result><typename>FloatTriple</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+<case first-type="Coords3D" second-type="Coords3D">
+<result><typename>Coords3D</typename></result>
+<description>
+Subtraction.
+</description>
+</case>
+
+<case first-type="PathSlider2D" second-type="Float">
+<result><typename>PathSlider2D</typename></result>
+<description>
+Reverse move spline time.
+</description>
+</case>
+<case first-type="PathSlider2D" second-type="Length">
+<result><typename>PathSlider2D</typename></result>
+<description>
+Reverse move distance.
+</description>
+</case>
+<case first-type="PathSlider3D" second-type="Float">
+<result><typename>PathSlider3D</typename></result>
+<description>
+Reverse move spline time.
+</description>
+</case>
+<case first-type="PathSlider3D" second-type="Length">
+<result><typename>PathSlider3D</typename></result>
+<description>
+Reverse move distance.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "-" -->
 
 
 <operator-binary op="*">

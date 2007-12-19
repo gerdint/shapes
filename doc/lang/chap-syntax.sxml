@@ -194,18 +194,20 @@
 <section id="syntax-atoms-strings">
 <title>Strings</title>
 <body>
-<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.</p>
+<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
 
-<p>Strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  The escape character is <inline>¢</inline> (the cent sign), and the possible escape sequences are given below:</p>
+<p>The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:</p>
 
 <token-example-table>
 <head>
-<tr> <td>Escape sequence</td> <td>Resulting character</td> </tr>
+<tr> <td>Escape sequence (not showing use of <inline>¤</inline>)</td> <td>Resulting character</td> </tr>
 </head>
 <body>
 <tr> <td><inline>¢¢</inline></td> <td>¢</td> </tr>
+<tr> <td><inline>¢¤</inline></td> <td>¤</td> </tr>
 <tr> <td><inline>¢`</inline></td> <td>`</td> </tr>
 <tr> <td><inline>¢´</inline></td> <td>´</td> </tr>
+<tr> <td><inline>¢"</inline></td> <td>"</td> </tr>
 <tr> <td><inline>¢n</inline></td> <td>(a newline)</td> </tr>
 <tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
 </body>
@@ -240,6 +242,16 @@ Multi-line...´
 </pre></td> <td>Yes, but not recommended</td> </tr>
 </body>
 </token-example-table>
+
+<p>The syntax of a poor man's string differs in several ways from the recommended strings.  First, they are delimited using <inline>("</inline> and <inline>")</inline>.  The delimiters no not nest, and either of the two characters in the closing delimiter must be escaped if a closing delimiter is to be included literally in the string.  At the time of writing, the escape character is the same as in recommended strings.</p>
+
+<note>
+<p>The escape character in poor man's strings has not been finalized yet.  The characters used today are two byte entities, and hence not really serving a poor man's needs.  The problem is that there is no obvious one byte choice.  Hence, one of the options would be to let the user specify the escape character to be used on a per string basis, like this, for example:</p>
+<pre>
+("%On the next line there are two per cent signs:%n%%%%")
+</pre>
+</note>
+
 </body>
 </section>
 
