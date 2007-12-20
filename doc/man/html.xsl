@@ -29,6 +29,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="manhead">
 	<h1><xsl:value-of select="center-header" /></h1>
 	<p>This page corresponds to the man page <b><xsl:value-of select="prog-name" /></b>(<xsl:value-of select="man-section" />), dated <xsl:value-of select="modification-date" />.</p>
+	<p><em><b>Note:</b> The examples here may be presented using characters that may not be available in the man page format.  Hence, the examples may be presented differently in the man page.</em></p>
 </xsl:template>
 
 <xsl:template match="p">
@@ -102,7 +103,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="str-PDF"><span class="medium-caps">pdf</span></xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
-<xsl:template match="str-TeX"><span class="tex"><sub>e</sub>X</span></xsl:template>
+<xsl:template match="str-TeX"><span class="tex">T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="em-dash">—</xsl:template>
 
