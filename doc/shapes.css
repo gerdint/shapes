@@ -126,6 +126,7 @@ todo p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; 
 
 table.codefile { width:100%; background:#FFFFCC; }
 table.operator-table { width:100%; background:#FFFFCC; }
+table.constructor-table { background:#FFFFCC; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 
 table.note { width:100%; border-style:solid; border-color:#0C0; }

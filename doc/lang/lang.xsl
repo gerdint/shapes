@@ -98,6 +98,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="typename[@class='replacable']">
   <typename class="replacable"><xsl:apply-templates/></typename>
 </xsl:template>
+<xsl:template match="varname">
+  <varname><xsl:apply-templates/></varname>
+</xsl:template>
+<xsl:template match="varname[@class='replacable']">
+  <varname class="replacable"><xsl:apply-templates/></varname>
+</xsl:template>
 <xsl:template match="lexerregexp">
   <lexerregexp><xsl:apply-templates/></lexerregexp>
 </xsl:template>
@@ -124,7 +130,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:attribute name="style">display:inline;</xsl:attribute>
     <xsl:attribute name="onclick"><xsl:value-of select="@onclick" /></xsl:attribute>
     <exampleswitch><xsl:apply-templates/></exampleswitch>
-  </xsl:element>    
+  </xsl:element>
 </xsl:template>
 
 <xsl:template match="syntax-table">
@@ -320,9 +326,35 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </tr>
 </xsl:template>
 
+<xsl:template match="constructor-table[@type]">
+  <xsl:variable name="t">
+    <xsl:value-of select="@type" />
+  </xsl:variable>
+  <table class="constructor-table">
+    <tr><td colspan="3"><hr class="thick"/></td></tr>
+    <tr> <th colspan="3">Constructors</th> </tr>
+    <tr> <th>Name</th> <th>Arguments</th> <th>Description</th> </tr>
+    <tr><td colspan="3"><hr /></td></tr>
+    <xsl:apply-templates select="//system-binding/function/case[@constructor-of=$t]" />
+    <tr><td colspan="3"><hr class="thick"/></td></tr>
+  </table>
+</xsl:template>
+<xsl:template match="//system-binding/function/case">
+  <tr>
+    <td align="center"><varname><xsl:value-of select="../../@identifier" /></varname>  </td>
+    <td align="center"><xsl:apply-templates select="arguments/*" /></td>
+    <td><xsl:apply-templates select="description" /></td>
+  </tr>
+</xsl:template>
+
+<xsl:template match="function/case/arguments/arg">(__)<xsl:apply-templates select="default" />::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
+<xsl:template match="function/case/arguments/arg[@identifier]"><varname><xsl:value-of select="@identifier" /><xsl:apply-templates select="default" /></varname>::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
+<xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
 
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
+
+<xsl:template match="char-cdot">*</xsl:template>
 
 </xsl:stylesheet>
 

@@ -1,0 +1,138 @@
+<system-binding identifier="affinetransform">
+	<function>
+		<case constructor-of="Transform2D">
+			<arguments>
+				<arg>
+					<type><typename>FloatPair</typename></type>
+				</arg>
+				<arg>
+					<type><typename>FloatPair</typename></type>
+				</arg>
+				<arg>
+					<type><typename>Coords2D</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct transform from multiplier for x and y coordinates, followed by a shift.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="affinetransform3D">
+	<function>
+		<case constructor-of="Transform3D">
+			<arguments>
+				<arg>
+					<type><typename>FloatTriple</typename></type>
+				</arg>
+				<arg>
+					<type><typename>FloatTriple</typename></type>
+				</arg>
+				<arg>
+					<type><typename>FloatTriple</typename></type>
+				</arg>
+				<arg>
+					<type><typename>Coords3D</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct transform from multiplier for x, y, and z coordinates, followed by a shift.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="shift">
+	<function>
+		<case constructor-of="Transform2D">
+			<arguments>
+				<arg>
+					<type><typename>Coords2D</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct transform.</description>
+		</case>
+		<case constructor-of="Transform3D">
+			<arguments>
+				<arg>
+					<type><typename>Coords3D</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct transform.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="rotate">
+	<function>
+		<case constructor-of="Transform2D">
+			<arguments>
+				<arg identifier="angle">
+					<type><typename>Float</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct transform.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="rotate3D">
+	<function>
+		<case constructor-of="Transform3D">
+			<arguments>
+				<arg identifier="dir">
+					<type><typename>FloatTriple</typename></type>
+				</arg>
+				<arg identifier="angle">
+					<type><typename>Float</typename></type>
+				</arg>
+			</arguments>
+			<description>Construct rotation transform about given direction.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="scale">
+	<function>
+		<case constructor-of="Transform2D">
+			<arguments>
+				<arg identifier="r">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+				<arg identifier="x">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+				<arg identifier="y">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+			</arguments>
+			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and y by <varname>r</varname><char-cdot /><varname>y</varname>.</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="scale3D">
+	<function>
+		<case constructor-of="Transform3D">
+			<arguments>
+				<arg identifier="r">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+				<arg identifier="x">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+				<arg identifier="y">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+				<arg identifier="z">
+					<type><typename>Float</typename></type>
+					<default>1</default>
+				</arg>
+			</arguments>
+			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and similarly with y and z.</description>
+		</case>
+	</function>
+</system-binding>

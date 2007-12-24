@@ -327,7 +327,7 @@
 <body>
 <p>This type in <str-Shapes /> corresponds to the generic path type in <str-PDF />, that is, a list of continuous cubic splines.  This can function as a way of grouping several splines into one object, but the real purpose is to define complex regions to fill with paint.  Please refer to the <str-PDF /> documentation for the semantics of filling complex paths.</p>
 
-<p>A <typename>MultiPath2D</typename> has not fields.</p>
+<p>A <typename>MultiPath2D</typename> has no fields.</p>
 
 <operator-table type="MultiPath2D" />
 </body>
@@ -475,7 +475,7 @@
 <body>
 <p>Compare with <typename>MultiPath2D</typename>.</p>
 
-<p>A <typename>MultiPath3D</typename> has not fields.</p>
+<p>A <typename>MultiPath3D</typename> has no fields.</p>
 
 <operator-table type="MultiPath3D" />
 </body>
@@ -485,12 +485,79 @@
 </section>  <!-- end of kerntypes-paths -->
 
 
-<section id="kerntypes-graphics">
-<title>Graphics</title>
+<section id="kerntypes-graphics-2D">
+<title>Graphics in 2D</title>
 <top>
 <p>Values of the types described here can be drawn (possibly after projection to 2D).</p>
 </top>
-</section>  <!-- end of kerntypes-graphics -->
+
+<section id="kerntypes-Drawable2D">
+<title>Drawable2D</title>
+<body>
+<p>This is the common base type of drawable things in 2D.</p>
+
+<p>A <typename>Drawable2D</typename> has no fields.</p>
+
+<operator-table type="Drawable2D" />
+</body>
+</section>
+
+</section>  <!-- end of kerntypes-graphics-2D -->
+
+
+<section id="kerntypes-graphics-3D">
+<title>Graphics in 3D and lightening</title>
+<top>
+<p>There are two important differences when it comes to graphics in 3D compared to that in 2D.  First, one has to consider the relation between the 3D scene where the objects are defined, and the 2D media they must eventually be incorporated with.  Second, light modeling is a very important tool for obtaining reasonable colors of objects in 3D.</p>
+</top>
+</section>  <!-- end of kerntypes-graphics-3D -->
+
+
+<section id="kerntypes-functions">
+<title>Functions and function-like things</title>
+<top>
+<p>Besides objects of type <typename>Function</typename>, there are other objects that can behave like functions in many ways.  Most importantly, objects of the types in this section can appear at the first position in a composite expression.</p>
+</top>
+
+<section id="kerntypes-Function">
+<title>Function</title>
+<body>
+<p>In <str-Shapes />, the type <typename>Function</typename> serves two purposes; an object of type <typename>Function</typename> may be either a <em>true function</em>, or a <em>procedure</em>.  A true function cannot have side effects, and will always return the same result given the same arguments and dynamic environment.  Note that changing the dynamic environment may change the result of a function.</p>
+
+<p>A <typename>Function</typename> has no fields.</p>
+
+<operator-table type="Function" />
+</body>
+</section>
+
+<section id="kerntypes-Transform2D">
+<title>Transform2D</title>
+<body>
+<p>Transforms are constructed by combining other transforms, or by using construtor functions.</p>
+
+<constructor-table type="Transform2D" />
+
+<p>A <typename>Transform2D</typename> has no fields.</p>
+
+<operator-table type="Transform2D" />
+</body>
+</section>
+
+<section id="kerntypes-Transform3D">
+<title>Transform3D</title>
+<body>
+<p>Compare with <typename>Transform2D</typename>.</p>
+
+<constructor-table type="Transform3D" />
+
+<p>A <typename>Transform3D</typename> has no fields.</p>
+
+<operator-table type="Transform3D" />
+</body>
+</section>
+
+</section>  <!-- end of kerntypes-functions -->
+
 
 <section id="kerntypes-other">
 <title>Other</title>
