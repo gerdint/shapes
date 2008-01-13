@@ -4,6 +4,7 @@
 
 using namespace Shapes;
 
+const double theFloatTol = 0.001;
 
 void
 Concrete::Gray::setStroking( std::ostream & os ) const
@@ -37,7 +38,14 @@ Concrete::Gray::add( const Concrete::Gray & col2, const Ast::SourceLocation & ca
 	double res_gr = gr_ + col2.gr_;
 	if( res_gr > 1 )
 		{
-			throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the gray component." ) );
+			if( res_gr - 1 > theFloatTol )
+				{
+					throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the gray component." ) );
+				}
+			else
+				{
+					res_gr = 1;
+				}
 		}
 	return Concrete::Gray( res_gr );
 }
@@ -96,15 +104,36 @@ Concrete::RGB::add( const Concrete::RGB & col2, const Ast::SourceLocation & call
 	double res_b = b_ + col2.b_;
 	if( res_r > 1 )
 		{
-			throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the red component." ) );
+			if( res_r - 1 > theFloatTol )
+				{
+					throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the red component." ) );
+				}
+			else
+				{
+					res_r = 1;
+				}
 		}
 	if( res_g > 1 )
 		{
-			throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the green component." ) );
+			if( res_g - 1 > theFloatTol )
+				{
+					throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the green component." ) );
+				}
+			else
+				{
+					res_g = 1;
+				}
 		}
 	if( res_b > 1 )
 		{
-			throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the blue component." ) );
+			if( res_b - 1 > theFloatTol )
+				{
+					throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the blue component." ) );
+				}
+			else
+				{
+					res_b = 1;
+				}
 		}
 	return Concrete::RGB( res_r, res_g, res_b );
 }
