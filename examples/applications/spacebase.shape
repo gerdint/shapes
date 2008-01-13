@@ -14,6 +14,8 @@ screw: [scale3D 1.5] [] (1cm,~1cm,0cm)<(1cm,0cm,0cm)>(1cm,1cm,0cm)--screwSeg--[[
 markStart: 0.15
 markCount: '5
 
+paintLeg: \ pth .> ( [stroke pth] & ( @nonstroking:RGB_BLACK | [fill [shift pth.end.p][][immerse [circle 1.5bp]]] ) )
+
 •world <<
   [[range '0 markCount-'1].foldl
     \ p i .>
@@ -22,9 +24,9 @@ markCount: '5
       len: 2.5cm
       p &
       ( newGroup3D
-        << @stroking:RGB_RED   | [stroke sl.p--(+(len*sl.t))]
-        << @stroking:RGB_GREEN | [stroke sl.p--(+(len*sl.n))]
-        << @stroking:RGB_BLUE  | [stroke sl.p--(+([if i == '0 ~1 1]*len*sl.b))]
+        << @stroking:RGB_RED   | [paintLeg sl.p--(+(len*sl.T))]
+        << @stroking:RGB_GREEN | [paintLeg sl.p--(+(len*sl.N))]
+        << @stroking:RGB_BLUE  | [paintLeg sl.p--(+([if i == '0 ~1 1]*len*sl.B))]
         << [shift sl.p+(~2mm,3mm,0mm)] [] [facing [centerx [teX [sprintf `\textbf{%d}´ i+'1]]]] )
     }
     null3D]

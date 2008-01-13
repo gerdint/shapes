@@ -90,7 +90,7 @@ smallFont |
 [shift (0,~0.65r)][]
 {
   hbar: @width:0.010r| [stroke (~1r,0)--(1r,0)]  |** The width used to be 0.02r.
-  ( newGroup2D
+  ( newGroup
     << [shift (0,~0.3*@text_size)] [] hbar
     << [shift (0,1.11*@text_size)] [] hbar
     << [centerx ( newText << [kerning [kern `LINK´] kernKO [kern `ÖPING´]] )] )

@@ -41,7 +41,7 @@ rPlus: 2mm
 plusCircle: \ .>
 {
   c: [circle rPlus]
-  ( newGroup2D
+  ( newGroup
     << @nonstroking:GRAY_WHITE|[fill c] << [stroke c]
     << [centerat [teX `$+$´] (0,0)] )
 }
@@ -52,7 +52,7 @@ sigmoidPic:
 @defaultunit:1%f
 |
 (
-  newGroup2D << [stroke (~4.5mm,0)--(4.5mm,0)] << [stroke (0,~2.5mm)--(0,2.5mm)] << [stroke (~4.5mm,~2.5mm)>(6mm^0°)--(6mm^180°)<(4.5mm,2.5mm)]
+  newGroup << [stroke (~4.5mm,0)--(4.5mm,0)] << [stroke (0,~2.5mm)--(0,2.5mm)] << [stroke (~4.5mm,~2.5mm)>(6mm^0°)--(6mm^180°)<(4.5mm,2.5mm)]
 )
 
 templ: \ symbs:false .>
@@ -65,7 +65,7 @@ templ: \ symbs:false .>
   box4: [[shift (0,~1cm)] box1]
   startPoint: \ n pic .> [leftpoint pic 3 n]+(~1cm,(n-2)*3mm)
   lineLeft: \ n pic .> [startPoint n pic]>(^0°)--(^~180°)<[leftpoint pic 3 n]
-  •res: newGroup2D
+  •res: newGroup
   @stroking:theColor &
   @nonstroking:theColor
   |
@@ -112,7 +112,7 @@ plusBar:
   f: rPlus*[normalized [[rotate 90°] d]]
   a: [angle d]
   cyl: (-f)--(d-f)>(^a)--(^)<(d+rPlus*[normalized d])>(^)--(^a)<(f+d)--f--cycle
-  ( newGroup2D << [fill cyl] << [stroke cyl] << @nonstroking:GRAY_BLACK|[plusCircle] )
+  ( newGroup << [fill cyl] << [stroke cyl] << @nonstroking:GRAY_BLACK|[plusCircle] )
 }
 
 muBox: [[shift (37mm,~1cm)] [stdBox]]

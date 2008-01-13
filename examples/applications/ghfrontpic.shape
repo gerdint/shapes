@@ -1,0 +1,81 @@
+|** This is an attempt to create a very dense 3D plot for the cover of Gustaf's thesis.
+|** The plot combines a plot of a 2D density function (with density on the third axis) with
+|** a cloud of samples from the distribution scattered on the ground below the density function.
+
+##needs centering
+
+##unit u = 1cm
+
+|** For efficiency reasons, we would like the scatter points to be drawn as lines of zero length.
+|** Then, the tiebreaker feature of surfaces cannot be used, and hence we must manually sort the
+|** graphics such that the scatter points appear on top of the table.  This in turn, means that
+|** the density function must be manually placed on top of the scatter points.
+
+|** To use the same lightening on the table and on the surface, the lights are grouped in a single object:
+lights: ( newLights << [shift (0cm,8cm,10cm)] [] [specular_light [gray 0.9]]
+                    << [ambient_light [gray 0.3]] )
+
+|** The table works as a background for the plot.
+•table: newZSorter
+•table << lights
+       <<
+    @nonstroking:[gray 0.8]
+  & @width:0.01u            |** used to fill in object edges
+  & @stroking:[gray 0.8]    |** used to fill in object edges
+  & @reflections:0.3*[phong 25] + 0.7*[phong 0.5]
+  & @facetresolution:0.5u
+  & @shadeorder:'0          |** use '2 when targeting Adobe Reader or other viewers that can deal with gradient fills.
+  | [facet [immerse [rectangle (~2u,~2u) (2u,2u)]]]
+table: •table;
+
+colorScale: \ z .> [rgb 0.3+0.7*z 0 0]
+
+surfacePoly: \ c00 c11 z00 z01 z10 z11 .>
+{
+  p00: [immerse c00*1u]
+  p11: [immerse c11*1u]
+	zHat: (0u,0u,1u)
+  [facet (p00+z00*zHat)--(p00.x,p11.y,z01*1u)--(p11.x,p00.y,z10*1u)--cycle]
+	&
+  [facet (p11+z11*zHat)--(p00.x,p11.y,z01*1u)--(p11.x,p00.y,z10*1u)--cycle]
+}
+•densitysurface: newZSorter
+•densitysurface << lights
+
+    @nonstroking:[gray 0.8]
+  & @width:0.01u            |** used to fill in object edges
+  & @stroking:[gray 0.8]    |** used to fill in object edges
+  & @reflections:0.3*[phong 25] + 0.7*[phong 0.5]
+  & @facetresolution:0.5u
+  & @shadeorder:'0          |** use '2 when targeting Adobe Reader or other viewers that can deal with gradient fills.
+  |
+{
+  •densitysurface
+   << [surfacePoly (0,0) (0.2,0.2) 1 2 2 1.5]
+}
+densitysurface: •densitysurface;
+
+scatterPoint: \ p .> [stroke [immerse p]--[immerse p]]
+•scatterpoints: newGroup3D
+  @stroking: [gray 0.9]
+& @width:0.03u
+& @cap:CAP_ROUND
+|
+{
+  •scatterpoints
+	 << [scatterPoint (0u,0u)]
+	 << [scatterPoint (0.5u,0.7u)]
+	 << [scatterPoint (0.5u,0.9u)]
+	 << [scatterPoint (0.8u,0.7u)]
+	 << [scatterPoint (~0.8u,~0.7u)]
+}
+scatterpoints: •scatterpoints;
+
+
+•world: newGroup3D
+•world
+ << table
+ << scatterpoints
+ << densitysurface
+
+•page << [view [[rotate3D dir:(1,0,0) angle:~70°]*[rotate3D dir:(0,0,1) angle:20°] (•world)]]
