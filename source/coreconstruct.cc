@@ -735,7 +735,7 @@ namespace Shapes
 							double iyx = - idet * tf->yx_;
 							double iyy = idet * tf->xx_;
 							Kernel::ContRef cont = evalState->cont_;
-							cont->takeValue( Kernel::ValueRef( new Lang::Transform2D( ixx, iyx, 
+							cont->takeValue( Kernel::ValueRef( new Lang::Transform2D( ixx, iyx,
 																																				ixy, iyy,
 																																				-( ixx * tf->xt_ + ixy * tf->yt_ ), -( iyx * tf->xt_ + iyy * tf->yt_ ) ) ),
 															 evalState );

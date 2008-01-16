@@ -335,6 +335,21 @@ namespace Shapes
 			RefCountPtr< const std::vector< double > > getNumeric( const Ast::SourceLocation & callLoc ) const;
 		};
 
+		class RGBInterpolator : public Lang::Function
+		{
+			RefCountPtr< const std::map< double, Concrete::RGB > > mem_;
+			RefCountPtr< const Lang::RGB > lowCol_;
+			RefCountPtr< const Lang::RGB > highCol_;
+			static const char * title_;
+		public:
+			RGBInterpolator( const RefCountPtr< const std::map< double, Concrete::RGB > > & mem );
+			virtual ~RGBInterpolator( );
+			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+			virtual bool isTransforming( ) const;
+		};
+
 		class BinaryOperatorFunction : public Lang::Function
 		{
 			Ast::BinaryInfixExpr * opExpr_;

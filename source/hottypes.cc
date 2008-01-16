@@ -859,6 +859,7 @@ Kernel::WarmText::gcMark( Kernel::GCMarkedSet & marked )
 		}
 }
 
+
 Kernel::WarmType3Font::WarmType3Font( )
 	: metrics_( new FontMetrics::BaseFont( ) ), size_( -1 )
 {
@@ -1609,6 +1610,67 @@ Kernel::WarmRandomState::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
+Kernel::WarmRGBInterpolator::WarmRGBInterpolator( )
+	: hasKey_( false )
+{ }
+
+Kernel::WarmRGBInterpolator::~WarmRGBInterpolator( )
+{ }
+
+RefCountPtr< const Lang::Class > Kernel::WarmRGBInterpolator::TypeID( new Lang::SystemFinalClass( strrefdup( "#RGBInterpolator" ) ) );
+TYPEINFOIMPL_STATE( WarmRGBInterpolator );
+
+void
+Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+{
+	if( hasKey_ )
+		{
+			typedef const Lang::RGB ArgType;
+			typedef typeof *pile_ MapType;
+			pile_->insert( MapType::value_type( lastKey_, Helpers::down_cast< ArgType >( piece, callLoc )->components( ) ) );
+		}
+	else
+		{
+			typedef const Lang::Float ArgType;
+			lastKey_ = Helpers::down_cast< ArgType >( piece, callLoc )->val_;
+		}
+
+	hasKey_ = ! hasKey_;
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+										evalState );
+}
+
+void
+Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+	if( pile_->size( ) == 0 )
+		{
+			throw Exceptions::MiscellaneousRequirement( strrefdup( "There are no colors that define the interpolation." ) );
+		}
+	if( hasKey_ )
+		{
+			throw Exceptions::MiscellaneousRequirement( strrefdup( "Missing color for the last key." ) );
+		}
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::RGBInterpolator( pile_ ) ),
+									 evalState );
+}
+
+void
+Kernel::WarmRGBInterpolator::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+{
+	throw Exceptions::MiscellaneousRequirement( strrefdup( "An RGB interpolator cannot be peeked." ) );
+}
+
+void
+Kernel::WarmRGBInterpolator::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
+
 void
 Kernel::registerHot( Kernel::Environment * env )
 {
@@ -1621,7 +1683,7 @@ Kernel::registerHot( Kernel::Environment * env )
 	env->initDefine( "ignore", new Kernel::WarmIgnore );
 
 	env->initDefine( "newIgnore", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmIgnore > ) );
-	env->initDefine( "newGroup2D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
+	env->initDefine( "newGroup", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup2D > ) );
 	env->initDefine( "newGroup3D", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmGroup3D > ) );
 	env->initDefine( "newZBuf", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZBuf > ) );
 	env->initDefine( "newZSorter", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmZSorter > ) );
@@ -1630,5 +1692,6 @@ Kernel::registerHot( Kernel::Environment * env )
 	env->initDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
 	env->initDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
 	env->initDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
+	env->initDefine( "newRGBInterpolator", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmRGBInterpolator > ) );
 }
 

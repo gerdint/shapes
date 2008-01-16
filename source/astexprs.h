@@ -568,8 +568,8 @@ namespace Shapes
 	private:
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Boolean ) arg1, DUMMYANDREF( const Lang::Boolean ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
- 
-	} 
+
+	}
 }
 
 

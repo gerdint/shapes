@@ -658,13 +658,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( co
 	const double y2 = arg2->y_;
 	double norm1 = hypot( x1, y1 );
 	double norm2 = hypot( x2, y2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) ) ) ) );
 }
@@ -678,13 +674,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDREF( co
 	const Concrete::Length y2 = arg2->y_.get( );
 	double norm1 = hypot( x1, y1 );
 	Concrete::Length norm2 = hypotPhysical( x2, y2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) ) ) ) );
 }
@@ -698,13 +690,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( con
 	const double y2 = arg2->y_;
 	Concrete::Length norm1 = hypotPhysical( x1, y1 );
 	double norm2 = hypot( x2, y2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) ) ) ) );
 }
@@ -718,13 +706,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF( con
 	const Concrete::Length y2 = arg2->y_.get( );
 	Concrete::Length norm1 = hypotPhysical( x1, y1 );
 	Concrete::Length norm2 = hypotPhysical( x2, y2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) ) ) ) );
 }
@@ -740,13 +724,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( 
 	const double z2 = arg2->z_;
 	double norm1 = Concrete::Scalar::hypot3( x1, y1, z1 );
 	double norm2 = Concrete::Scalar::hypot3( x2, y2, z2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) + (z1/norm1) * (z2/norm2) ) ) ) );
 }
@@ -762,13 +742,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYANDREF( 
 	const Concrete::Length z2 = arg2->z_.get( );
 	double norm1 = Concrete::Scalar::hypot3( x1, y1, z1 );
 	Concrete::Length norm2 = hypotPhysical( x2, y2, z2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) + (z1/norm1) * (z2/norm2) ) ) ) );
 }
@@ -784,13 +760,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( con
 	const double z2 = arg2->z_;
 	Concrete::Length norm1 = hypotPhysical( x1, y1, z1 );
 	double norm2 = Concrete::Scalar::hypot3( x2, y2, z2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) + (z1/norm1) * (z2/norm2) ) ) ) );
 }
@@ -806,13 +778,9 @@ Ast::AngleExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( con
 	const Concrete::Length z2 = arg2->z_.get( );
 	Concrete::Length norm1 = hypotPhysical( x1, y1, z1 );
 	Concrete::Length norm2 = hypotPhysical( x2, y2, z2 );
-	if( norm1 == 0 )
+	if( norm1 == 0 || norm2 == 0 )
 		{
-			throw Exceptions::OutOfRange( expr1_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
-		}
-	if( norm2 == 0 )
-		{
-			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Argument to angle function has zero length." ) );
+			return RefCountPtr< const Lang::Value >( new Lang::Float( M_PI_2 ) );
 		}
 	return RefCountPtr< const Lang::Value >( new Lang::Float( acos( ( (x1/norm1) * (x2/norm2) + (y1/norm1) * (y2/norm2) + (z1/norm1) * (z2/norm2) ) ) ) );
 }
@@ -1068,7 +1036,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDRE
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	double s = ( x1 * x2 + y1 * y2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::FloatPair( s* x2, s * y2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::FloatPair( s * x2, s * y2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1084,7 +1052,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatPair ) arg1, DUMMYANDRE
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	Physical< -1, 0 > s = ( x1 * x2 + y1 * y2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::FloatPair( s* x2, s * y2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::FloatPair( s * x2, s * y2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1100,7 +1068,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	Concrete::Length s = ( x1 * x2 + y1 * y2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::Coords2D( s* x2, s * y2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::Coords2D( s * x2, s * y2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1116,7 +1084,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords2D ) arg1, DUMMYANDREF
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	double s = ( x1 * x2 + y1 * y2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::Coords2D( s* x2, s * y2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::Coords2D( s * x2, s * y2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1134,7 +1102,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYAND
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	double s = ( x1 * x2 + y1 * y2 + z1 * z2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( s* x2, s * y2, s * z2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( s * x2, s * y2, s * z2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1152,7 +1120,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::FloatTriple ) arg1, DUMMYAND
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	Physical< -1, 0 > s = ( x1 * x2 + y1 * y2 + z1 * z2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( s* x2, s * y2, s * z2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::FloatTriple( s * x2, s * y2, s * z2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1170,7 +1138,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	Concrete::Length s = ( x1 * x2 + y1 * y2 + z1 * z2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::Coords3D( s* x2, s * y2, s * z2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::Coords3D( s * x2, s * y2, s * z2 ) );
 }
 
 RefCountPtr< const Lang::Value >
@@ -1188,7 +1156,7 @@ Ast::ProjectionExpr::impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF
 			throw Exceptions::OutOfRange( expr2_->loc( ), strrefdup( "Projection on zero length vector." ) );
 		}
 	double s = ( x1 * x2 + y1 * y2 + z1 * z2 ) / norm2_2;
-	return RefCountPtr< const Lang::Value >( new Lang::Coords3D( s* x2, s * y2, s * z2 ) );
+	return RefCountPtr< const Lang::Value >( new Lang::Coords3D( s * x2, s * y2, s * z2 ) );
 }
 
 

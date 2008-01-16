@@ -26,8 +26,14 @@ namespace Shapes
 
 			Concrete::Gray add( const Concrete::Gray & col2, const Ast::SourceLocation & callLoc ) const;
 			Concrete::Gray mul( double factor, const Ast::SourceLocation & factorLoc ) const;
-			Concrete::Gray addNoCheck( const Concrete::Gray & col2 ) const;
-			Concrete::Gray mulNoCheck( double factor ) const;
+			Concrete::Gray addNoCheck( const Concrete::Gray & col2 ) const
+			{
+				return Concrete::Gray( gr_ + col2.gr_ );
+			}
+			Concrete::Gray mulNoCheck( double factor ) const
+			{
+				return Concrete::Gray( factor * gr_ );
+			}
 		};
 
 		class RGB
@@ -44,9 +50,16 @@ namespace Shapes
 
 			Concrete::RGB add( const Concrete::RGB & col2, const Ast::SourceLocation & callLoc ) const;
 			Concrete::RGB mul( double factor, const Ast::SourceLocation & factorLoc ) const;
+			Concrete::RGB addNoCheck( const Concrete::RGB & col2 ) const
+			{
+				return Concrete::RGB( r_ + col2.r_, g_ + col2.g_, b_ + col2.b_ );
+			}
+			Concrete::RGB mulNoCheck( double factor ) const
+			{
+				return Concrete::RGB( factor * r_, factor * g_, factor * b_ );
+			}
 
 			double mean( ) const { return (1./3) * ( r_ + g_ + b_ ); }
-			Concrete::RGB addNoCheck( const Concrete::RGB & col2 ) const;
 		};
 
 		class CMYK

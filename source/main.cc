@@ -422,7 +422,16 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 
-					Ast::theShapesScanner.push_backNeedPath( pth );
+ 					try
+						{
+							Ast::theShapesScanner.push_backNeedPath( pth );
+						}
+					catch( const Exceptions::Exception & ball )
+						{
+							std::cout.flush( );
+							ball.display( std::cerr );
+							exit( 1 );
+						}
 
 					if( longForm )
 						{
@@ -958,8 +967,17 @@ main( int argc, char ** argv )
 #ifdef RESOURCES_DIR
 	if( useResources )
 		{
-			Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
-			Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
+			try
+				{
+					Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
+					Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
+				}
+			catch( const Exceptions::Exception & ball )
+				{
+					std::cout.flush( );
+					ball.display( std::cerr );
+					exit( 1 );
+				}
 		}
 #endif
 
@@ -1593,17 +1611,26 @@ Interaction::systemDebugMessage( const std::string & msg )
 void
 addDefaultNeedPath( )
 {
-	char * start = getenv( "SHAPESINPUTS" );
-	if( start == 0 )
+	try
 		{
-			Ast::theShapesScanner.push_backNeedPath( "." );
-			return;
+			char * start = getenv( "SHAPESINPUTS" );
+			if( start == 0 )
+				{
+					Ast::theShapesScanner.push_backNeedPath( "." );
+					return;
+				}
+			char * tok = strsep( & start, ":" );
+			while( tok != 0 )
+				{
+					Ast::theShapesScanner.push_backNeedPath( tok );
+					tok = strsep( & start, ":" );
+				}
 		}
-	char * tok = strsep( & start, ":" );
-	while( tok != 0 )
+	catch( const Exceptions::Exception & ball )
 		{
-			Ast::theShapesScanner.push_backNeedPath( tok );
-			tok = strsep( & start, ":" );
+			std::cout.flush( );
+			ball.display( std::cerr );
+			exit( 1 );
 		}
 }
 

@@ -36,7 +36,7 @@ junctionlbl: \ txt arrowdir lbl doArrow .>
 	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
 
   [symbboxed
-    (newGroup2D
+    (newGroup
        << [if doArrow
 	      [stroke p head: [triangleArrow ahLength:ahLength ahAngle:ahAngle...]]
  	      null]
@@ -93,7 +93,7 @@ bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true
     }
     (>
       picture:
-        ( newGroup2D
+        ( newGroup
 	   << [if doHook
     	          hook
        	          null]

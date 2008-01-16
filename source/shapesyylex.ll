@@ -36,7 +36,7 @@ using namespace Shapes;
 
 #define YY_USER_ACTION doBeforeEachAction( );
 
-double metaPDFstrtod( const char * str, char ** end );
+double shapes_strtod( const char * str, char ** end );
 
 %}
 
@@ -188,7 +188,7 @@ Escape "¢"|"¤"
  }
 <NewUnitValue>{Float}"bp" {
 	char * end;
-	double newUnitValue = metaPDFstrtod( yytext, & end );
+	double newUnitValue = shapes_strtod( yytext, & end );
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( newUnitName );
 	if( i != unitTable.end( ) )
@@ -206,7 +206,7 @@ Escape "¢"|"¤"
 }
 <NewUnitValue>{Float}"mm" {
 	char * end;
-	double newUnitValue = metaPDFstrtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
+	double newUnitValue = shapes_strtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( newUnitName );
 	if( i != unitTable.end( ) )
@@ -224,7 +224,7 @@ Escape "¢"|"¤"
 }
 <NewUnitValue>{Float}"cm" {
 	char * end;
-	double newUnitValue = metaPDFstrtod( yytext, & end ) * ( 72 / 2.54 );
+	double newUnitValue = shapes_strtod( yytext, & end ) * ( 72 / 2.54 );
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( newUnitName );
 	if( i != unitTable.end( ) )
@@ -242,7 +242,7 @@ Escape "¢"|"¤"
 }
 <NewUnitValue>{Float}"m" {
 	char * end;
-	double newUnitValue = metaPDFstrtod( yytext, & end ) * ( 100 * 72 / 2.54 );
+	double newUnitValue = shapes_strtod( yytext, & end ) * ( 100 * 72 / 2.54 );
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( newUnitName );
 	if( i != unitTable.end( ) )
@@ -260,7 +260,7 @@ Escape "¢"|"¤"
 }
 <NewUnitValue>{Float}"in" {
 	char * end;
-	double newUnitValue = metaPDFstrtod( yytext, & end ) * 72;
+	double newUnitValue = shapes_strtod( yytext, & end ) * 72;
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( newUnitName );
 	if( i != unitTable.end( ) )
@@ -278,7 +278,7 @@ Escape "¢"|"¤"
 }
 <NewUnitValue>{Float}{Identifier} {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( end );
@@ -314,49 +314,49 @@ Escape "¢"|"¤"
 
 {Float}"°" {
 	char * end;
-	shapeslval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
+	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
 	return T_float;
 }
 
 {Float}{Escape}"degree" {
 	char * end;
-	shapeslval.floatVal = M_PI / 180 * metaPDFstrtod( yytext, & end );
+	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
 	return T_float;
 }
 
 {Float}"bp" {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end );
+	shapeslval.floatVal = shapes_strtod( yytext, & end );
 	return T_length;
 }
 
 {Float}"mm" {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
+	shapeslval.floatVal = shapes_strtod( yytext, & end ) * ( 0.1 * 72 / 2.54 );
 	return T_length;
 }
 
 {Float}"cm" {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 72 / 2.54 );
+	shapeslval.floatVal = shapes_strtod( yytext, & end ) * ( 72 / 2.54 );
 	return T_length;
 }
 
 {Float}"m" {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * ( 100 * 72 / 2.54 );
+	shapeslval.floatVal = shapes_strtod( yytext, & end ) * ( 100 * 72 / 2.54 );
 	return T_length;
 }
 
 {Float}"in" {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end ) * 72;
+	shapeslval.floatVal = shapes_strtod( yytext, & end ) * 72;
 	return T_length;
 }
 
 {Float}{Identifier} {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 
 	typedef typeof unitTable MapType;
 	MapType::const_iterator i = unitTable.find( end );
@@ -373,63 +373,63 @@ Escape "¢"|"¤"
 
 {Float}[\%][D0] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST );
 	return T_speciallength;
 }
 
 {Float}[\%][C1] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC );
 	return T_speciallength;
 }
 
 {Float}[\%][M2] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR );
 	return T_speciallength;
 }
 
 {Float}[\%][F3] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR );
 	return T_speciallength;
 }
 
 {Float}[\%][d4] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_NOINFLEX );
 	return T_speciallength;
 }
 
 {Float}[\%][c5] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_NOINFLEX	);
 	return T_speciallength;
 }
 
 {Float}[\%][m6] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX	);
 	return T_speciallength;
 }
 
 {Float}[\%][f7] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_DIST | Computation::SPECIALU_CIRC | Computation::SPECIALU_CORR | Computation::SPECIALU_NOINFLEX	);
 	return T_speciallength;
 }
 
 {Float}[\%][i9] {
 	char * end;
-	double val = metaPDFstrtod( yytext, & end );
+	double val = shapes_strtod( yytext, & end );
 	shapeslval.expr = new Ast::SpecialLength( shapeslloc, val, Computation::SPECIALU_NOINFLEX );
 	return T_speciallength;
 }
@@ -437,7 +437,7 @@ Escape "¢"|"¤"
 
 {Float} {
 	char * end;
-	shapeslval.floatVal = metaPDFstrtod( yytext, & end );
+	shapeslval.floatVal = shapes_strtod( yytext, & end );
 	return T_float;
 }
 
@@ -831,7 +831,7 @@ Escape "¢"|"¤"
  * This section is where you put definitions of helper functions.
  */
 
-double metaPDFstrtod( const char * str, char ** end )
+double shapes_strtod( const char * str, char ** end )
 {
 	bool negate = false;
 	if( *str == '~' )

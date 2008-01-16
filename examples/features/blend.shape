@@ -5,7 +5,7 @@ r: 1cm
 @<< [shift (0*4*r,0*4*r)] []
   ( @blend: BLEND_LIGHTEN
     |
-    ( newGroup2D << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+    ( newGroup << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
             << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
             << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
     )
@@ -17,8 +17,8 @@ r: 1cm
     &
     @blendspace: DEVICE_GRAY
     |
-    ( newGroup2D << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-            << [tgroup ( newGroup2D << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+    ( newGroup << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+            << [tgroup ( newGroup << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
                                << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r] )
                        ]
     )

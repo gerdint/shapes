@@ -550,7 +550,7 @@ namespace Shapes
 
 			done:
 				RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
- 
+
 				cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DGray( path, interpolator,
 																																				! isDoubleSided,	// Note that this argument refers to single-sidedness
 																																				normal, Concrete::inner( normal, p0 ),

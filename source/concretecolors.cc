@@ -51,12 +51,6 @@ Concrete::Gray::add( const Concrete::Gray & col2, const Ast::SourceLocation & ca
 }
 
 Concrete::Gray
-Concrete::Gray::addNoCheck( const Concrete::Gray & col2 ) const
-{
-	return Concrete::Gray( gr_ + col2.gr_ );
-}
-
-Concrete::Gray
 Concrete::Gray::mul( double factor, const Ast::SourceLocation & factorLoc ) const
 {
 	if( factor < 0 )
@@ -67,12 +61,6 @@ Concrete::Gray::mul( double factor, const Ast::SourceLocation & factorLoc ) cons
 		{
 			throw Exceptions::OutOfRange( factorLoc, strrefdup( "The scalar is greater than 1." ) );
 		}
-	return Concrete::Gray( factor * gr_ );
-}
-
-Concrete::Gray
-Concrete::Gray::mulNoCheck( double factor ) const
-{
 	return Concrete::Gray( factor * gr_ );
 }
 
@@ -139,12 +127,6 @@ Concrete::RGB::add( const Concrete::RGB & col2, const Ast::SourceLocation & call
 }
 
 Concrete::RGB
-Concrete::RGB::addNoCheck( const Concrete::RGB & col2 ) const
-{
-	return Concrete::RGB( r_ + col2.r_, g_ + col2.g_, b_ + col2.b_ );
-}
-
-Concrete::RGB
 Concrete::RGB::mul( double factor, const Ast::SourceLocation & factorLoc ) const
 {
 	if( factor < 0 )
@@ -157,7 +139,6 @@ Concrete::RGB::mul( double factor, const Ast::SourceLocation & factorLoc ) const
 		}
 	return Concrete::RGB( factor * r_, factor * g_, factor * b_ );
 }
-
 
 
 void
