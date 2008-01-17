@@ -29,8 +29,8 @@ namespace Shapes
 		RefCountPtr< const Lang::TransparencyGroup >
 		newSolidTransparencyGroup( const RefCountPtr< const Lang::Drawable2D > & obj3, const RefCountPtr< const Lang::Drawable2D > & obj2, const RefCountPtr< const Lang::Drawable2D > & obj1 );
 
-		void stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath2D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc );
-		void stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath3D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc );
+		void stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath2D > & path, Kernel::Arguments & args, bool fill, const Ast::SourceLocation & callLoc );
+		void stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath3D > & path, Kernel::Arguments & args, bool fill, const Ast::SourceLocation & callLoc );
 	}
 }
 
@@ -40,9 +40,10 @@ namespace Shapes
 	{
 		class Core_stroke : public Lang::CoreFunction
 		{
+			bool fill_;
 		public:
-			Core_stroke( const char * title )
-				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			Core_stroke( const char * title, bool fill )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) ), fill_( fill )
 			{
 				formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "head", Kernel::VariableHandle( new Kernel::Variable( Lang::THE_NO_ARROW ) ) );
@@ -58,7 +59,7 @@ namespace Shapes
 					{
 						typedef const Lang::ElementaryPath2D ArgType;
 						RefCountPtr< ArgType > arg = Helpers::elementaryPathTry2D( args.getValue( 0 ) );
-						Helpers::stroke_helper_2D( evalState, arg, args, callLoc );
+						Helpers::stroke_helper_2D( evalState, arg, args, fill_, callLoc );
 						return;
 					}
 				catch( const NonLocalExit::NotThisType & ball )
@@ -71,7 +72,7 @@ namespace Shapes
 					{
 						typedef const Lang::ElementaryPath3D ArgType;
 						RefCountPtr< ArgType > arg = Helpers::elementaryPathTry3D( args.getValue( 0 ) );
-						Helpers::stroke_helper_3D( evalState, arg, args, callLoc );
+						Helpers::stroke_helper_3D( evalState, arg, args, fill_, callLoc );
 						return;
 					}
 				catch( const NonLocalExit::NotThisType & ball )
@@ -79,6 +80,8 @@ namespace Shapes
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
+
+				const char * paintCmd = fill_ ? "B" : "S";
 
 				try
 					{
@@ -92,7 +95,7 @@ namespace Shapes
 								throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrowheads/tails are not supported for composite paths." ) );
 							}
 						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D( evalState->dyn_->getGraphicsState( ), path, "S" ) ),
+						cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D( evalState->dyn_->getGraphicsState( ), path, paintCmd ) ),
 														 evalState );
 						return;
 					}
@@ -114,7 +117,7 @@ namespace Shapes
 								throw Exceptions::MiscellaneousRequirement( strrefdup( "Arrowheads/tails are not supported for composite paths." ) );
 							}
 						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath3D( evalState->dyn_->getGraphicsState( ), path, "S" ) ),
+						cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath3D( evalState->dyn_->getGraphicsState( ), path, paintCmd ) ),
 														 evalState );
 						return;
 					}
@@ -1065,7 +1068,7 @@ namespace Shapes
 
 
 void
-Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath2D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc )
+Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath2D > & path, Kernel::Arguments & args, bool fill, const Ast::SourceLocation & callLoc )
 {
 	RefCountPtr< const Lang::Function > arrowHead = args.getHandle( 1 )->getVal< const Lang::Function >( "< core function stroke: head >" );
 	RefCountPtr< const Lang::Function > arrowTail = args.getHandle( 2 )->getVal< const Lang::Function >( "< core function stroke: tail >" );
@@ -1074,7 +1077,7 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 			path->size( ) < 2 )
 		{
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D( evalState->dyn_->getGraphicsState( ), path, "S" ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D( evalState->dyn_->getGraphicsState( ), path, fill ? "B" : "S" ) ),
 											 evalState );
 			return;
 		}
@@ -1082,6 +1085,10 @@ Helpers::stroke_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< con
 		{
 			/* The computation must continue outside here since functions are to be called, and resulting graphics collected.
 			 */
+			if( fill )
+				{
+					throw Exceptions::NotImplemented( "Arrowheads in fill-stroke command." );
+				}
 
 			if( arrowTail == Lang::THE_NO_ARROW )
 				{
@@ -1411,7 +1418,7 @@ namespace Shapes
 
 
 void
-Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath3D > & path, Kernel::Arguments & args, const Ast::SourceLocation & callLoc )
+Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::ElementaryPath3D > & path, Kernel::Arguments & args, bool fill, const Ast::SourceLocation & callLoc )
 {
 	RefCountPtr< const Lang::Function > arrowHead = args.getHandle( 1 )->getVal< const Lang::Function >( "< core function stroke: head >" );
 	RefCountPtr< const Lang::Function > arrowTail = args.getHandle( 2 )->getVal< const Lang::Function >( "< core function stroke: tail >" );
@@ -1420,7 +1427,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 			path->size( ) < 2 )
 		{
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath3D( evalState->dyn_->getGraphicsState( ), path, "S" ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath3D( evalState->dyn_->getGraphicsState( ), path, fill ? "B" : "S" ) ),
 											 evalState );
 			return;
 		}
@@ -1428,6 +1435,10 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 		{
 			/* The computation must continue outside here since functions are to be called, and resulting graphics collected.
 			 */
+			if( fill )
+				{
+					throw Exceptions::NotImplemented( "Arrowheads in fill-stroke command." );
+				}
 
 			if( arrowTail == Lang::THE_NO_ARROW )
 				{
@@ -1462,7 +1473,8 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 void
 Kernel::registerCore_draw( Kernel::Environment * env )
 {
-	env->initDefineCoreFunction( new Lang::Core_stroke( "stroke" ) );
+	env->initDefineCoreFunction( new Lang::Core_stroke( "stroke", false ) );
+	env->initDefineCoreFunction( new Lang::Core_stroke( "fillstroke", true ) );
 	env->initDefineCoreFunction( new Lang::Core_fill( "fill" ) );
 	env->initDefineCoreFunction( new Lang::Core_fillstar( "fillodd" ) );
 	env->initDefineCoreFunction( new Lang::Core_facetnormal( "facetnormal" ) );

@@ -22,7 +22,7 @@ lights: ( newLights << [shift (0cm,8cm,10cm)] [] [specular_light [gray 0.9]]
     @nonstroking:[gray 0.8]
   & @width:0.01u            |** used to fill in object edges
   & @stroking:[gray 0.8]    |** used to fill in object edges
-  & @reflections:0.3*[phong 25] + 0.7*[phong 0.5]
+  & @reflections:0.7*[phong 25] + 0.3*[phong 0.5]
   & @facetresolution:0.5u
   & @shadeorder:'0          |** use '2 when targeting Adobe Reader or other viewers that can deal with gradient fills.
   | [facet [immerse [rectangle (~2u,~2u) (2u,2u)]]]

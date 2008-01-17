@@ -453,6 +453,9 @@ Lang::PaintedPath2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 	/* Transforming the path by tf is not good enough, since that does not transform softmasks etc.
 	 */
 
+	char pdfCmd[4];
+	strcpy( pdfCmd, paintCmd_ );
+
 	Kernel::Auto_qQ auto_qQ( & pdfState->graphics_, os, false );
 	if( ! tf.isIdentity( ) )
 		{
@@ -470,8 +473,19 @@ Lang::PaintedPath2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 			pdfState->graphics_.synchForNonStroke( os, metaState_.getPtr( ), pdfState->resources_.getPtr( ) );
 		}
 	else if( strcmp( paintCmd_, "B" ) == 0 ||
-					 strcmp( paintCmd_, "B*" ) == 0 )
+					 strcmp( paintCmd_, "B*" ) == 0 ||
+					 strcmp( paintCmd_, "b" ) == 0 ||
+					 strcmp( paintCmd_, "b*" ) == 0 )
 		{
+			pdfState->graphics_.synchForNonStroke( os, metaState_.getPtr( ), pdfState->resources_.getPtr( ) );
+			pdfState->graphics_.synchForStroke( os, metaState_.getPtr( ), pdfState->resources_.getPtr( ) );
+		}
+	else if( strcmp( paintCmd_, "E" ) == 0 ||
+					 strcmp( paintCmd_, "E*" ) == 0 ||
+					 strcmp( paintCmd_, "e" ) == 0 ||
+					 strcmp( paintCmd_, "e*" ) == 0 )
+		{
+			pdfCmd[0] += 'B' - 'E';
 			// Note that this is my own interpretation; usually, the stroke is made with the stroking color,
 			// but I use this to make filled regions just a little bit bigger, and then it is the nonstroking
 			// color that shall be applied to the stroke as well.
@@ -488,7 +502,7 @@ Lang::PaintedPath2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 		{
 			(*i)->writePath( os );
 		}
-	os << " " << paintCmd_ << std::endl ;
+	os << " " << pdfCmd << std::endl ;
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
@@ -2228,7 +2242,7 @@ Computation::GraySingleSidedPolygon3D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::PaintedPolygon2D::PaintedPolygon2D( RefCountPtr< const Kernel::GraphicsState > metaState, RefCountPtr< const Lang::ElementaryPath2D > path )
-	: Lang::PaintedPath2D( metaState, "B" )
+	: Lang::PaintedPath2D( metaState, "E" )  // "E" for "extended fill"
 {
 	if( ! path->isClosed( ) )
 		{
