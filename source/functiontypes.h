@@ -76,6 +76,7 @@ namespace Shapes
 			bool isSlot( size_t i ) const;
 
 			size_t size( ) const;
+			bool empty( ) const;
 
 			Kernel::StateHandle getState( size_t i );
 			const Ast::SourceLocation & getStateLoc( size_t i ) const;

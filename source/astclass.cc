@@ -426,7 +426,7 @@ Ast::ClassFunction::getLocalMessageMap( RefCountPtr< const Lang::Class > _myClas
 bool
 Ast::ClassFunction::isRepeatableBase( ) const
 {
-	return constructorFormals_->argumentOrder_->size( ) == 0;
+	return constructorFormals_->argumentOrder_->empty( );
 }
 
 #if 0

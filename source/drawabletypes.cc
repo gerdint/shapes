@@ -143,7 +143,7 @@ Lang::GroupPair2D::bbox( ) const
 	RefCountPtr< const Lang::ElementaryPath2D > carbbox = car_->bbox( );
 	RefCountPtr< const Lang::ElementaryPath2D > cdrbbox = cdr_->bbox( );
 
-	if( cdrbbox->size( ) == 0 )
+	if( cdrbbox->empty( ) )
 		{
 			return carbbox;
 		}
@@ -508,7 +508,7 @@ Lang::PaintedPath2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::PaintedPath2D::bbox( ) const
 {
-	if( path_.size( ) == 0 )
+	if( path_.empty( ) )
 		{
 			return RefCountPtr< const Lang::ElementaryPath2D >( new Lang::ElementaryPath2D );
 		}
@@ -676,7 +676,7 @@ Lang::Clipped2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfStat
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::Clipped2D::bbox( ) const
 {
-	if( clipList_.size( ) == 0 )
+	if( clipList_.empty( ) )
 		{
 			return RefCountPtr< const Lang::ElementaryPath2D >( new Lang::ElementaryPath2D );
 		}
@@ -2257,7 +2257,7 @@ Lang::PaintedPolygon2D::~PaintedPolygon2D( )
 RefCountPtr< const Lang::Drawable2D >
 Lang::PaintedPolygon2D::clip( std::list< Computation::ZBufTriangle > * regions, const RefCountPtr< const Lang::PaintedPolygon2D > selfRef ) const
 {
-	if( regions->size( ) == 0 )
+	if( regions->empty( ) )
 		{
 			throw Exceptions::InternalError( "Empty list of regions in PaintedPolygon2D::clip.	(This triangle should not have been generated at all!)" );
 		}
@@ -2482,13 +2482,14 @@ Lang::PaintedPath3D::polygonize( std::list< RefCountPtr< Computation::PaintedPol
 			return;
 		}
 
-	if( strcmp( paintCmd_, "f" ) != 0 )
+	if( ! ( strcmp( paintCmd_, "f" ) == 0 ||
+					strcmp( paintCmd_, "B" ) == 0 ) )
 		{
 			throw Exceptions::MiscellaneousRequirement( "Only stroked and (non-*) filled polygons can be put i a z buffer." );
 		}
 
 
-	// When we get here we know that the paintCmd_ is "f", that is, a plain fill.
+	// When we get here we know that the paintCmd_ is "f" or "B", that is, a plain fill.
 
 //	 if( path.size( ) > 1 )
 //		 {

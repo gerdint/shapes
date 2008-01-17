@@ -434,7 +434,7 @@ PDF_in::parse( )
 						tokenStack.pop_back( );
 						objectStack.pop_back( );
 
-						if( objectStack.size( ) == 0 )
+						if( objectStack.empty( ) )
 							{
 								return RefCountPtr< PDF_Object >( newDic );
 							}

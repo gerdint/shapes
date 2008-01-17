@@ -123,7 +123,7 @@ namespace Shapes
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				if( args.size( ) == 0 )
+				if( args.empty( ) )
 					{
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( THE_TRUE, evalState );
@@ -155,7 +155,7 @@ namespace Shapes
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				if( args.size( ) == 0 )
+				if( args.empty( ) )
 					{
 						Kernel::ContRef cont = evalState->cont_;
 						cont->takeValue( Lang::THE_FALSE, evalState );

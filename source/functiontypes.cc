@@ -481,7 +481,7 @@ Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
 		{
 			sinkArgList_ = new Ast::ArgListExprs( false ); // This is not an expression-owner.
 			sinkValues_ = RefCountPtr< const Lang::SingleList >( new Lang::SingleListNull( ) );
-			if( formals_->formals_->argumentOrder_->size( ) == 0 )
+			if( formals_->formals_->argumentOrder_->empty( ) )
 				{
 					// All arguments go in the sink.
 					dst_ = INT_MAX;
@@ -913,6 +913,12 @@ size_t
 Kernel::Arguments::size( ) const
 {
 	return variables_->size( );
+}
+
+bool
+Kernel::Arguments::empty( ) const
+{
+	return variables_->empty( );
 }
 
 void

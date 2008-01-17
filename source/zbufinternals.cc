@@ -604,7 +604,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 void
 Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles, Lang::Clipped2D * dst )
 {
-	if( triangles->size( ) == 0 )
+	if( triangles->empty( ) )
 		{
 			return;
 		}

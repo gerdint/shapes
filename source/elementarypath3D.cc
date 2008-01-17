@@ -70,7 +70,7 @@ Lang::ElementaryPath3D::getField( const char * fieldID, const RefCountPtr< const
 		}
 	if( strcmp( fieldID, "null?" ) == 0 )
 		{
-			if( size( ) == 0 )
+			if( empty( ) )
 				{
 					return Kernel::THE_TRUE_VARIABLE;
 				}
@@ -190,7 +190,7 @@ Lang::ElementaryPath3D::findSegmentReverse( Concrete::Time t, Concrete::Time * t
 RefCountPtr< const Lang::Coords3D >
 Lang::ElementaryPath3D::point( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no points at all." );
 		}
@@ -236,7 +236,7 @@ Lang::ElementaryPath3D::point( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::speed( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no speed at all." );
 		}
@@ -300,7 +300,7 @@ Lang::ElementaryPath3D::speed( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::reverse_speed( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no speed at all." );
 		}
@@ -364,7 +364,7 @@ Lang::ElementaryPath3D::reverse_speed( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatTriple >
 Lang::ElementaryPath3D::direction( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no directions at all." );
 		}
@@ -408,7 +408,7 @@ Lang::ElementaryPath3D::direction( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatTriple >
 Lang::ElementaryPath3D::reverse_direction( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no directions at all." );
 		}
@@ -452,7 +452,7 @@ Lang::ElementaryPath3D::reverse_direction( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatTriple >
 Lang::ElementaryPath3D::normal( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no normals at all." );
 		}
@@ -571,7 +571,7 @@ Lang::ElementaryPath3D::normal( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatTriple >
 Lang::ElementaryPath3D::reverse_normal( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no normals at all." );
 		}
@@ -688,7 +688,7 @@ Lang::ElementaryPath3D::reverse_normal( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::radiusOfCurvature( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no curvature at all." );
 		}
@@ -771,7 +771,7 @@ Lang::ElementaryPath3D::radiusOfCurvature( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::reverse_radiusOfCurvature( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no curvature at all." );
 		}
@@ -855,7 +855,7 @@ Lang::ElementaryPath3D::reverse_radiusOfCurvature( Concrete::Time globalTime ) c
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::radiusOfTorsion( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no torsion at all." );
 		}
@@ -952,7 +952,7 @@ Lang::ElementaryPath3D::radiusOfTorsion( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath3D::reverse_radiusOfTorsion( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no torsion at all." );
 		}
@@ -1059,7 +1059,7 @@ Lang::ElementaryPath3D::duration( ) const
 bool
 Lang::ElementaryPath3D::controllingMaximizer( const Lang::FloatTriple & d, Lang::Coords3D * dst ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -1106,7 +1106,7 @@ Lang::ElementaryPath3D::discreteMean( ) const
 	Concrete::Length x = 0;
 	Concrete::Length y = 0;
 	Concrete::Length z = 0;
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be averaged along." );
 		}
@@ -1145,7 +1145,7 @@ Lang::ElementaryPath3D::controllingMaximizer( const Lang::FloatTriple & d ) cons
 Concrete::SplineTime
 Lang::ElementaryPath3D::discreteMaximizer( const Lang::FloatTriple & d ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -1170,7 +1170,7 @@ Lang::ElementaryPath3D::discreteMaximizer( const Lang::FloatTriple & d ) const
 Concrete::SplineTime
 Lang::ElementaryPath3D::discreteApproximator( const Lang::Coords3D & p ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -1195,7 +1195,7 @@ Lang::ElementaryPath3D::discreteApproximator( const Lang::Coords3D & p ) const
 RefCountPtr< const Lang::Coords3D >
 Lang::ElementaryPath3D::continuousMean( ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be averaged along." );
 		}
@@ -1295,7 +1295,7 @@ Lang::ElementaryPath3D::continuousMean( ) const
 Concrete::SplineTime
 Lang::ElementaryPath3D::continuousMaximizer( const Lang::FloatTriple & dNonUnit ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -1451,7 +1451,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 {
 	const Concrete::Length DISTANCE_TOL = 0.001 * Computation::the_arcdelta;
 
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be approximated along." );
 		}
@@ -2039,7 +2039,7 @@ Shapes::ApproximationSegmentSection3D::duration( ) const
 Concrete::Length
 Lang::ElementaryPath3D::arcLength( ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2120,7 +2120,7 @@ Lang::ElementaryPath3D::arcLength( ) const
 Concrete::Length
 Lang::ElementaryPath3D::arcLength( Concrete::Time tRemaining ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2241,7 +2241,7 @@ Lang::ElementaryPath3D::arcLength( Concrete::Time tRemaining ) const
 Concrete::Length
 Lang::ElementaryPath3D::negative_arcLength( Concrete::Time tRemaining ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2370,7 +2370,7 @@ Lang::ElementaryPath3D::negative_arcLength( Concrete::Time tRemaining ) const
 Concrete::SplineTime
 Lang::ElementaryPath3D::arcTime( const Concrete::Length & t, Concrete::Time t0 ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no arctimes defined." );
 		}
@@ -2604,7 +2604,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 		{
 			throw Exceptions::InternalError( "Negative t in negative_arcTime." );
 		}
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no arctimes defined." );
 		}
@@ -2852,7 +2852,7 @@ Lang::ElementaryPath3D::negative_arcTime( const Concrete::Length deltaLen, Concr
 RefCountPtr< const Lang::ElementaryPath3D >
 Lang::ElementaryPath3D::subpath( const Concrete::SplineTime splt1, const Concrete::SplineTime splt2 ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no subpaths." );
 		}
@@ -3457,7 +3457,7 @@ Lang::ElementaryPath3D::viewDistortionTooBig( const Concrete::Coords3D & p0, con
 void
 Lang::ElementaryPath3D::dashifyIn2D( RefCountPtr< const Lang::Group2D > * res, Concrete::Length eyez, const RefCountPtr< const Kernel::GraphicsState > & metaState ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			return;
 		}

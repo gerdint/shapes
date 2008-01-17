@@ -68,7 +68,7 @@ Lang::ElementaryPath2D::getField( const char * fieldID, const RefCountPtr< const
 		}
 	if( strcmp( fieldID, "null?" ) == 0 )
 		{
-			if( size( ) == 0 )
+			if( empty( ) )
 				{
 					return Kernel::THE_TRUE_VARIABLE;
 				}
@@ -289,7 +289,7 @@ Lang::ElementaryPath2D::findSegmentReverse( Concrete::Time t, Concrete::Time * t
 RefCountPtr< const Lang::Coords2D >
 Lang::ElementaryPath2D::point( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no points at all." );
 		}
@@ -330,7 +330,7 @@ Lang::ElementaryPath2D::point( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath2D::speed( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no speed at all." );
 		}
@@ -385,7 +385,7 @@ Lang::ElementaryPath2D::speed( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath2D::reverse_speed( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no speed at all." );
 		}
@@ -440,7 +440,7 @@ Lang::ElementaryPath2D::reverse_speed( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatPair >
 Lang::ElementaryPath2D::direction( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no directions at all." );
 		}
@@ -484,7 +484,7 @@ Lang::ElementaryPath2D::direction( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::FloatPair >
 Lang::ElementaryPath2D::reverse_direction( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no directions at all." );
 		}
@@ -528,7 +528,7 @@ Lang::ElementaryPath2D::reverse_direction( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath2D::radiusOfCurvature( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no curvature at all." );
 		}
@@ -600,7 +600,7 @@ Lang::ElementaryPath2D::radiusOfCurvature( Concrete::Time globalTime ) const
 RefCountPtr< const Lang::Length >
 Lang::ElementaryPath2D::reverse_radiusOfCurvature( Concrete::Time globalTime ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no curvature at all." );
 		}
@@ -683,7 +683,7 @@ Lang::ElementaryPath2D::duration( ) const
 bool
 Lang::ElementaryPath2D::controllingMaximizer( const Lang::FloatPair & d, Lang::Coords2D * dst ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -727,7 +727,7 @@ Lang::ElementaryPath2D::controllingMaximizer( const Lang::FloatPair & d, Lang::C
 bool
 Lang::ElementaryPath2D::boundingRectangle( Concrete::Coords2D * dstll, Concrete::Coords2D * dstur ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no bounding rectangle." );
 		}
@@ -868,7 +868,7 @@ Lang::ElementaryPath2D::discreteMean( ) const
 	double count = 0;
 	Concrete::Length x( 0 );
 	Concrete::Length y( 0 );
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be averaged along." );
 		}
@@ -896,7 +896,7 @@ Lang::ElementaryPath2D::discreteMean( ) const
 Concrete::SplineTime
 Lang::ElementaryPath2D::discreteMaximizer( const Lang::FloatPair & d ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -920,7 +920,7 @@ Lang::ElementaryPath2D::discreteMaximizer( const Lang::FloatPair & d ) const
 Concrete::SplineTime
 Lang::ElementaryPath2D::discreteApproximator( const Lang::Coords2D & p ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -944,7 +944,7 @@ Lang::ElementaryPath2D::discreteApproximator( const Lang::Coords2D & p ) const
 RefCountPtr< const Lang::Coords2D >
 Lang::ElementaryPath2D::continuousMean( ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be averaged along." );
 		}
@@ -1031,7 +1031,7 @@ Lang::ElementaryPath2D::continuousMean( ) const
 Concrete::SplineTime
 Lang::ElementaryPath2D::continuousMaximizer( const Lang::FloatPair & dNonUnit ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be maximized along." );
 		}
@@ -1175,7 +1175,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 {
 	const Concrete::Length DISTANCE_TOL = 0.001 * Computation::the_arcdelta;
 
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path cannot be approximated along." );
 		}
@@ -1705,7 +1705,7 @@ namespace Shapes
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::ElementaryPath2D::controlling_hull( ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			return Lang::THE_EMPTYPATH2D;
 		}
@@ -1859,7 +1859,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			return Lang::THE_EMPTYPATH2D;
 		}
@@ -1884,7 +1884,7 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 			const_iterator i1 = begin( );
 			Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i1)->rear_, *(*i1)->mid_ );
 			sampler( & sampleTimes, controls );
-			if( sampleTimes.size( ) == 0 )
+			if( sampleTimes.empty( ) )
 				{
 					res->push_back( new Concrete::PathPoint2D( *front( ) ) );
 					return RefCountPtr< const Lang::ElementaryPath2D >( res );
@@ -1927,7 +1927,7 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 			Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i0)->mid_, *(*i0)->front_, *(*i1)->rear_, *(*i1)->mid_ );
 			sampleTimes.clear( );	// Not needed here, but included for symmetry with the general case below.
 			sampler( & sampleTimes, controls );
-			if( sampleTimes.size( ) == 0 )
+			if( sampleTimes.empty( ) )
 				{
 					rearHandle = *(*i1)->rear_;
 				}
@@ -1964,7 +1964,7 @@ Lang::ElementaryPath2D::upsample( const Computation::Upsampler2D & sampler ) con
 			Bezier::ControlPoints< Concrete::Coords2D > controls( *(*i1)->mid_, *(*i1)->front_, *(*i2)->rear_, *(*i2)->mid_ );
 			sampleTimes.clear( );
 			sampler( & sampleTimes, controls );
-			if( sampleTimes.size( ) == 0 )
+			if( sampleTimes.empty( ) )
 				{
 					Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( new Concrete::Coords2D( controls.p0_ ) );
 					newPoint->front_ = new Concrete::Coords2D( controls.p1_ );
@@ -2102,7 +2102,7 @@ Lang::ElementaryPath2D::convexPolyContains( const Concrete::Coords2D & p, Concre
 Concrete::Length
 Lang::ElementaryPath2D::arcLength( ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2179,7 +2179,7 @@ Lang::ElementaryPath2D::arcLength( ) const
 Concrete::Length
 Lang::ElementaryPath2D::arcLength( Concrete::Time tRemaining ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2296,7 +2296,7 @@ Lang::ElementaryPath2D::arcLength( Concrete::Time tRemaining ) const
 Concrete::Length
 Lang::ElementaryPath2D::negative_arcLength( Concrete::Time tRemaining ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no defined arclength." );
 		}
@@ -2421,7 +2421,7 @@ Lang::ElementaryPath2D::negative_arcLength( Concrete::Time tRemaining ) const
 Concrete::SplineTime
 Lang::ElementaryPath2D::arcTime( const Concrete::Length & t, Concrete::Time t0 ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no arctimes defined." );
 		}
@@ -2647,7 +2647,7 @@ Lang::ElementaryPath2D::negative_arcTime( const Concrete::Length deltaLen, Concr
 		{
 			throw Exceptions::InternalError( "Negative t in negative_arcTime." );
 		}
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no arctimes defined." );
 		}
@@ -2990,7 +2990,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 	const Concrete::Length DISTANCE_TOL = 0.001 * Computation::the_arcdelta;
 	const double CUT_LOSS = 0.01;
 
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path does not intersect with anying." );
 		}
@@ -3706,7 +3706,7 @@ Computation::IntersectionSegmentSections2D::maxSpeed_b( ) const
 RefCountPtr< const Lang::ElementaryPath2D >
 Lang::ElementaryPath2D::subpath( const Concrete::SplineTime splt1, const Concrete::SplineTime splt2 ) const
 {
-	if( size( ) == 0 )
+	if( empty( ) )
 		{
 			throw Exceptions::OutOfRange( "The empty path has no subpaths." );
 		}

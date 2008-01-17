@@ -114,7 +114,7 @@ Lang::DocumentDestination::getDirectDestination( const RefCountPtr< SimplePDF::P
 	if( target_ != NullPtr< const Lang::Drawable2D >( ) )
 		{
 			RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( );
-			if( theBBox->size( ) == 0 )
+			if( theBBox->empty( ) )
 				{
 					throw Exceptions::MiscellaneousRequirement( "The destination target produced an empty bounding box." );
 				}
@@ -531,7 +531,7 @@ Kernel::WarmCatalog::getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * e
 bool
 Kernel::WarmCatalog::isEmpty( ) const
 {
-	return pages_.size( ) == 0;
+	return pages_.empty( );
 }
 
 void
@@ -550,7 +550,7 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 	pageContents->shipout( contents->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
 
 	RefCountPtr< const Lang::ElementaryPath2D > theBBox = pageContents->bbox( );
-	if( theBBox->size( ) == 0 )
+	if( theBBox->empty( ) )
 		{
 			throw Exceptions::InsertingEmptyPage( callLoc );
 		}

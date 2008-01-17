@@ -114,7 +114,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 {
 	std::string res;
 
-	if( suffix.size( ) == 0 )
+	if( suffix.empty( ) )
 		{
 			throw Exceptions::InternalError( strrefdup( "ShapesScanner::searchFile called with empty argument." ) );
 		}
@@ -130,7 +130,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 			throw Exceptions::FileOpenError( shapeslloc, strrefdup( suffix ), 0 );
 		}
 
-	if( needSearchPath.size( ) == 0 )
+	if( needSearchPath.empty( ) )
 		{
 			throw Exceptions::ScannerError( shapeslloc, strrefdup( "Relative file inclusion impossible since search path is empty." ) );
 		}

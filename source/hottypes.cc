@@ -801,7 +801,7 @@ Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< 
 void
 Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-	if( pile_->size( ) == 0 )
+	if( pile_->empty( ) )
 		{
 			Kernel::ContRef cont = evalState->cont_;
 			cont->takeValue( Lang::THE_NULL2D,
@@ -978,7 +978,7 @@ Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCount
 									throw Exceptions::MiscellaneousRequirement( "Multiply specified value." );
 								}
 							static std::set< const char *, charPtrLess > legalStretchValues;
-							if( legalStretchValues.size( ) == 0 )
+							if( legalStretchValues.empty( ) )
 								{
 									initializeLegalStrechValues( & legalStretchValues );
 								}
@@ -1238,7 +1238,7 @@ Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCount
 void
 Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-	if( glyphs_.size( ) == 0 )
+	if( glyphs_.empty( ) )
 		{
 			throw Exceptions::OutOfRange( callLoc, "A font without glyphs?!" );
 		}
@@ -1645,7 +1645,7 @@ Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const Re
 void
 Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-	if( pile_->size( ) == 0 )
+	if( pile_->empty( ) )
 		{
 			throw Exceptions::MiscellaneousRequirement( strrefdup( "There are no colors that define the interpolation." ) );
 		}

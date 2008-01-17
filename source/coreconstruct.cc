@@ -960,7 +960,7 @@ namespace Shapes
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				if( args.size( ) == 0 )
+				if( args.empty( ) )
 					{
 						throw Exceptions::CoreArityMismatch( title_, 1, args.size( ) );
 					}

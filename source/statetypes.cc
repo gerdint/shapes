@@ -1215,7 +1215,7 @@ Lang::Dash::length( ) const
 bool
 Lang::Dash::isSolid( ) const
 {
-	return pattern_->size( ) == 0;
+	return pattern_->empty( );
 }
 
 Lang::Dash::Iterator

@@ -34,7 +34,7 @@ Lang::Font::searchGlyphList( )
 {
 	std::string res;
 
-	if( theFontMetricsSearchPath_.size( ) == 0 )
+	if( theFontMetricsSearchPath_.empty( ) )
 		{
 			throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up (needed for the glyph list).	Consider defining the environment variable SHAPESFONTMETRICS." ) );
 		}
@@ -67,7 +67,7 @@ Lang::Font::searchFontMetrics( RefCountPtr< const char > fontName )
 			throw Exceptions::InternalError( "The font name cannot begin with \"/\", as if is was an absolute path to something." );
 		}
 
-	if( theFontMetricsSearchPath_.size( ) == 0 )
+	if( theFontMetricsSearchPath_.empty( ) )
 		{
 			throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.	Consider defining the environment variable SHAPESFONTMETRICS." ) );
 		}
@@ -90,7 +90,7 @@ Lang::Font::searchCharacterEncoding( const char * encodingName )
 {
 	std::string res;
 
-	if( theFontMetricsSearchPath_.size( ) == 0 )
+	if( theFontMetricsSearchPath_.empty( ) )
 		{
 			throw Exceptions::ExternalError( strrefdup( "The font metrics path was not set up.	Consider defining the environment variable SHAPESFONTMETRICS." ) );
 		}

@@ -41,7 +41,7 @@ Kernel::DebugLog::os( )
 {
 	if( os_ == 0 )
 		{
-			if( filename_.size( ) == 0 )
+			if( filename_.empty( ) )
 				{
 					throw Exceptions::InternalError( "The debug log filename was not initialized before it was needed." );
 				}

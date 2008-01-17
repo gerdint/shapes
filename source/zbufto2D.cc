@@ -262,7 +262,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 			typedef typeof disjointTriangles ListType;
 			for( ListType::iterator i = disjointTriangles.begin( ); i != disjointTriangles.end( ); ++i )
 				{
-					if( (*i)->size( ) == 0 )
+					if( (*i)->empty( ) )
 						{
 							continue;
 						}

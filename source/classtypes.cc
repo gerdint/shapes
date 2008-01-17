@@ -549,7 +549,7 @@ Lang::Class::getMethodDefinitionClass( const Kernel::MethodId & method ) const
 		{
 			throw Exceptions::NoSuchMethod( selfRef, method );
 		}
-	if( i->second.size( ) == 0 )
+	if( i->second.empty( ) )
 		{
 			throw Exceptions::InternalError( "Asking for class defining abstract method." );
 		}
@@ -921,7 +921,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 					{
 						continue;
 					}
-				if( i->second.size( ) == 0 )
+				if( i->second.empty( ) )
 					{
 						j = abstractSet.insert( j, i->first );
 					}
