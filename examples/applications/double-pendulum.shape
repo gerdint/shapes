@@ -1,0 +1,81 @@
+##needs circle
+##needs arrowheads
+##needs blockdraw_wfo
+##needs golden
+
+r1: 25mm
+r2: r1
+
+theta1: 12°
+theta2: 16°
+
+rm1: 1.2mm
+rm2: rm1
+
+armStyle: @width:1bp
+angleStyle: @width:0.3bp
+helperStyle: angleStyle & @dash:[dashpattern 2bp 2bp]
+forceStyle: @width:0.6bp
+
+angleHead: [MetaPostArrow ahLength:1.5mm ...]
+forceHead: [MetaPostArrow ahLength:2.5mm ...]
+
+/**
+ ** Of course, the hinge is at the origin.
+ **/
+hExtend: 0.9
+
+z0: (0mm,0mm) |**  Hinge
+z1: z0 + r1*[dir ~90°+theta1]  |** Center of first mass
+z1r: z0 + hExtend*r1*[dir ~90°]  |** Reference position of first mass
+z2: z1 + r2*[dir ~90°+theta1+theta2]  |** Center of second mass
+z2r: z1 + hExtend*r2*[dir ~90°]
+z2rr: z1 + hExtend*r2*[dir ~90°+theta1]
+
+|** Draw the ceiling
+•page << @width:1mm | [[shift (0,0.5*@width)] [stroke (~1cm,0)--(1cm,0)]]
+
+
+
+•page << armStyle | [stroke z0--z1--z2]
+•page << helperStyle | [stroke z0--z1r]
+			<< helperStyle | [stroke z1--z2r]
+			<< helperStyle | [stroke z1--z2rr]
+			<< armStyle & @nonstroking:GRAY_WHITE | [fillstroke [shift z1] [] [circle rm1]]
+			<< armStyle & @nonstroking:GRAY_WHITE | [fillstroke [shift z2] [] [circle rm2]]
+
+{
+  p: [ccw_arc z0 z1r z1 15mm]
+	•page << angleStyle | [stroke p head:angleHead]
+	•page << [putlabelBelow (TeX `$\theta_{1}$´) [mspoint p 0.5] ~0.5]
+}
+
+{
+  p: [ccw_arc z1 z2r z2rr 17mm]
+	•page << angleStyle | [stroke p head:angleHead]
+	•page << [putlabelBelow (TeX `$\theta_{1}$´) [mspoint p 0.5] ~0.5]
+}
+
+{
+  p: [ccw_arc z1 z2rr z2 15mm]
+	•page << angleStyle | [stroke p head:angleHead]
+	•page << [putlabelBelow (TeX `$\theta_{2}$´) [mspoint p 0.5] ~0.5]
+}
+
+{
+  p: [ccw_arc z0 1mm*[dir ~150°] 1mm*[dir ~30°] 4mm]
+	•page << angleStyle | [stroke p head:angleHead]
+	•page << [putlabelBelow (TeX `$\tau$´) [mspoint p 0 1mm] 0]
+}
+
+{
+  p: z1--(+(0,~10mm))
+	•page << forceStyle | [stroke p head:angleHead]
+	•page << [putlabelLeft (TeX `$m_{1} g$´) p.end.p ~1]
+}
+
+{
+  p: z2--(+(0,~10mm))
+	•page << forceStyle | [stroke p head:angleHead]
+	•page << [putlabelLeft (TeX `$m_{2} g$´) p.end.p ~1]
+}
