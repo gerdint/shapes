@@ -6,6 +6,7 @@
 
 #include <cerrno>
 #include <fstream>
+#include <sstream>
 #include <limits>
 
 using namespace Shapes;
@@ -100,7 +101,7 @@ Ast::operator << ( std::ostream & os, const Ast::SourceLocation & self )
 								os << "?" ;
 							}
 					}
-					os << ")-" 
+					os << ")-"
 						 << self.lastLine << "(" ;
 					{
 						size_t col = Ast::SourceLocation::byteColumnToUTF8Column( self.filename, self.lastLine, self.lastColumn );
@@ -139,7 +140,9 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 			std::ifstream iFile( filename );
 			if( ! iFile.is_open( ) )
 				{
-					std::cerr << "*** Error in error message: Failed to open file pointed to by source location: " << filename << std::endl ;
+					std::ostringstream msg;
+					msg << "Error in error message: Failed to open file pointed to by source location: " << filename ;
+					Kernel::thePostCheckErrorsList.push_back( new Exceptions::InternalError( msg ) );
 					return 0;
 				}
 			for( lineInCache = 1; lineInCache < line; ++lineInCache )
@@ -148,7 +151,9 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 				}
 			if( iFile.eof( ) )
 				{
-					std::cerr << "*** Error in error message: Source location's line (" << line << ") is way beyond end of file: " << filename << std::endl ;
+					std::ostringstream msg;
+					msg << "Error in error message: Source location's line (" << line << ") is way beyond end of file: " << filename ;
+					Kernel::thePostCheckErrorsList.push_back( new Exceptions::InternalError( msg ) );
 					return 0;
 				}
 			getline( iFile, cachedLine );
@@ -157,7 +162,9 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 			 */
 //			 if( iFile.eof( ) )
 //				 {
-//					 std::cerr << "*** Error in error message: Source location's line (" << line << ") is one beyond end of file: " << filename << std::endl ;
+//					std::ostringstream msg;
+//					msg << "Error in error message: Source location's line (" << line << ") is one beyond end of file: " << filename ;
+//					Kernel::thePostCheckErrorsList.push_back( new Exceptions::InternalError( msg );
 //					 return 0;
 //				 }
 		}
@@ -210,26 +217,26 @@ Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t by
 												& outbuf, & outbytesleft );
 	if( count == (size_t)(-1) )
 		{
+			const char * msgStart = "Error in error message, when converting byte column to utf-8: ";
+			std::ostringstream msg;
 			if( errno == EINVAL )
 				{
-					std::cerr << "*** Error in error message, when converting byte column to utf-8: (EINVAL) Found invalid utf-8 byte sequence." << std::endl ;
-					return 0;
+					msg << msgStart << "(EINVAL) Found invalid utf-8 byte sequence."  ;
 				}
 			else if( errno == EILSEQ )
 				{
-					std::cerr << "*** Error in error message, when converting byte column to utf-8: (EILSEQ) Found invalid utf-8 byte." << std::endl ;
-					return 0;
+					msg << msgStart << "(EILSEQ) Found invalid utf-8 byte." ;
 				}
 			else if( errno == E2BIG )
 				{
-					std::cerr << "*** Error in error message, when converting byte column to utf-8: (E2BIG) Insufficient memory allocated." << std::endl ;
-					return 0;
+					msg << msgStart << "(E2BIG) Insufficient memory allocated." ;
 				}
 			else
 				{
-					std::cerr << "*** Error in error message, when converting byte column to utf-8: iconv failed with un unrecognized error code: " << errno << "." << std::endl ;
-					return 0;
+					msg << msgStart << "iconv failed with un unrecognized error code: " << errno << "."  ;
 				}
+			Kernel::thePostCheckErrorsList.push_back( new Exceptions::InternalError( msg ) );
+			return std::numeric_limits< size_t >::max( );
 		}
 
 	return ( bufSize - outbytesleft ) / 4;

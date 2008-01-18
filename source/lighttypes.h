@@ -158,10 +158,10 @@ namespace Shapes
 
 	class DistantLightGray : public GrayLight
 	{
-		Concrete::UnitFloatTriple unitNormal_;
+		Concrete::UnitFloatTriple rHatLight_;
 		Concrete::Gray intensity_;
 	public:
-		DistantLightGray( const Concrete::UnitFloatTriple & unitNormal, const Concrete::Gray & intensity, bool shadows );
+		DistantLightGray( const Concrete::UnitFloatTriple & rHatLight, const Concrete::Gray & intensity, bool shadows );
 		virtual ~DistantLightGray( );
 		virtual RefCountPtr< const Lang::LightSource > typed_transformed( const Lang::Transform3D & tf ) const;
 		virtual Concrete::RGB illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const;
@@ -170,10 +170,10 @@ namespace Shapes
 
 	class DistantLightRGB : public RGBLight
 	{
-		Concrete::UnitFloatTriple unitNormal_;
+		Concrete::UnitFloatTriple rHatLight_;
 		Concrete::RGB intensity_;
 	public:
-		DistantLightRGB( const Concrete::UnitFloatTriple & unitNormal, const Concrete::RGB & intensity, bool shadows );
+		DistantLightRGB( const Concrete::UnitFloatTriple & rHatLight, const Concrete::RGB & intensity, bool shadows );
 		virtual ~DistantLightRGB( );
 		virtual RefCountPtr< const Lang::LightSource > typed_transformed( const Lang::Transform3D & tf ) const;
 		virtual Concrete::RGB illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const;

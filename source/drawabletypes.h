@@ -58,16 +58,16 @@ namespace Shapes
 			Concrete::Coords3D position_;
 			RefCountPtr< const Lang::SpecularReflection > reflections_;
 			Concrete::UnitFloatTriple reflectionUnitNormal_;
-			RefCountPtr< const Lang::RGB > lightMultiply_;
+			Concrete::RGB lightMultiply_;
 			RefCountPtr< const Lang::SpecularReflection > autoScattering_;
-			RefCountPtr< const Lang::RGB > autoIntensity_;
+			Concrete::RGB autoIntensity_;
 		public:
 			FacetNormalRGB( const Concrete::Coords3D & position,
 											const RefCountPtr< const Lang::SpecularReflection > & reflections,
 											const Concrete::UnitFloatTriple & reflectionUnitNormal,
-											const RefCountPtr< const Lang::RGB > & lightMultiply,
+											const Concrete::RGB & lightMultiply,
 											const RefCountPtr< const Lang::SpecularReflection > & autoScattering,
-											const RefCountPtr< const Lang::RGB > & autoIntensity );
+											const Concrete::RGB & autoIntensity );
 			virtual ~FacetNormalRGB( );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 
@@ -267,6 +267,7 @@ namespace Shapes
 													 PtrOwner_back_Access< std::list< const Computation::FacetLatticeVertex * > > * vertexMem,
 													 const Computation::FacetLatticeTriangle ** child1, const Computation::FacetLatticeTriangle ** child2 ) const;
 			RefCountPtr< const Lang::Drawable2D > paint( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Length eyez ) const;
+			RefCountPtr< const Lang::Drawable2D > paint( const RefCountPtr< const Computation::FacetInterpolatorRGB > & interpolator, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Length eyez ) const;
 			void getVertexes( const Computation::FacetLatticeVertex ** va, const Computation::FacetLatticeVertex ** vb, const Computation::FacetLatticeVertex ** vc ) const;
 			unsigned char extendLattice( const Computation::FacetLatticeVertex ** va, const Computation::FacetLatticeVertex ** vb, const Computation::FacetLatticeVertex ** vc ) const;
 			void display2D( std::ostream & os ) const;
@@ -395,6 +396,85 @@ namespace Shapes
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
+	class FacetInterpolatorRGB
+	{
+	public:
+		FacetInterpolatorRGB( ){ };
+		virtual ~FacetInterpolatorRGB( );
+		virtual RefCountPtr< const Lang::RGB > compute( const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Coords3D & point, const Concrete::Length eyez ) const = 0;
+		virtual RefCountPtr< const Lang::RGB > getDebugColor( ) const = 0;
+		virtual RefCountPtr< const Computation::FacetInterpolatorRGB > transformed( const Lang::Transform3D & tf ) const = 0;
+		virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
+	};
+
+		class FacetInterpolatorRGB1 : public FacetInterpolatorRGB
+	{
+		RefCountPtr< const Lang::FacetNormalRGB > n1_;
+	public:
+		FacetInterpolatorRGB1( const RefCountPtr< const Lang::FacetNormalRGB > & n1 )
+			: n1_( n1 )
+			{ }
+		virtual ~FacetInterpolatorRGB1( );
+		virtual RefCountPtr< const Lang::RGB > compute( const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Coords3D & point, const Concrete::Length eyez ) const;
+		virtual RefCountPtr< const Lang::RGB > getDebugColor( ) const;
+		virtual RefCountPtr< const Computation::FacetInterpolatorRGB > transformed( const Lang::Transform3D & tf ) const;
+		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	};
+
+	class FacetInterpolatorRGB2 : public FacetInterpolatorRGB
+	{
+		RefCountPtr< const Lang::FacetNormalRGB > n1_;
+		RefCountPtr< const Lang::FacetNormalRGB > n2_;
+
+		// We define members such that the weight of n2_ at point p is
+		//	 ( < t_, p > - m_ ) / d_
+		// that is, at least as long as this number is in the range [ 0, 1 ].
+		Concrete::Length d_;
+		Concrete::UnitFloatTriple t_;
+		Concrete::Length m_;
+
+		// We also define members that describe how the normal at n1_ is rotated to obtain the normal at n2_
+		double angle_;
+		Concrete::UnitFloatTriple rotationDirection_;
+	public:
+		FacetInterpolatorRGB2( const RefCountPtr< const Lang::FacetNormalRGB > & n1,
+													 const RefCountPtr< const Lang::FacetNormalRGB > & n2 );
+		virtual ~FacetInterpolatorRGB2( );
+		virtual RefCountPtr< const Lang::RGB > compute( const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Coords3D & point, const Concrete::Length eyez ) const;
+		virtual RefCountPtr< const Lang::RGB > getDebugColor( ) const;
+		virtual RefCountPtr< const Computation::FacetInterpolatorRGB > transformed( const Lang::Transform3D & tf ) const;
+		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	};
+
+	class FacetInterpolatorRGB3 : public FacetInterpolatorRGB
+	{
+		RefCountPtr< const Lang::FacetNormalRGB > n1_;
+		RefCountPtr< const Lang::FacetNormalRGB > n2_;
+		RefCountPtr< const Lang::FacetNormalRGB > n3_;
+
+		// The interpolation here is much less sophisticated compared to the interpolation of two normals.
+		// We compute positive, unnormalized weights wuch that each weight is one at the point it belongs to, and vanishes
+		// at the line through the other points.	Then we normalize.	This should be subject to change in later versions!
+		Concrete::Coords3D p1_;
+		Concrete::Coords3D p2_;
+		Concrete::Coords3D p3_;
+		Concrete::UnitFloatTriple d1_;
+		Concrete::UnitFloatTriple d2_;
+		Concrete::UnitFloatTriple d3_;
+		Concrete::Length l1_;
+		Concrete::Length l2_;
+		Concrete::Length l3_;
+	public:
+		FacetInterpolatorRGB3( const RefCountPtr< const Lang::FacetNormalRGB > & n1,
+													 const RefCountPtr< const Lang::FacetNormalRGB > & n2,
+													 const RefCountPtr< const Lang::FacetNormalRGB > & n3 );
+		virtual ~FacetInterpolatorRGB3( );
+		virtual RefCountPtr< const Lang::RGB > compute( const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, const Concrete::Coords3D & point, const Concrete::Length eyez ) const;
+		virtual RefCountPtr< const Lang::RGB > getDebugColor( ) const;
+		virtual RefCountPtr< const Computation::FacetInterpolatorRGB > transformed( const Lang::Transform3D & tf ) const;
+		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	};
+
 	class FilledPolygon3D : public PaintedPolygon3D
 	{
 		RefCountPtr< const Kernel::GraphicsState > metaState_;
@@ -418,20 +498,20 @@ namespace Shapes
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
-	class GraySingleSidedPolygon3D : public PaintedPolygon3D
+	class SingleSidedPolygon3DGray : public PaintedPolygon3D
 	{
 		RefCountPtr< const Computation::FacetInterpolatorGray > interpolator_;
 		Concrete::Length viewResolution_;
 		Computation::FacetShadeOrder shadeOrder_;	// legal values: { 0, 1, 2 }
 	public:
-		GraySingleSidedPolygon3D( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+		SingleSidedPolygon3DGray( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
 															bool singleSided, // Confusingly, this type is sometimes used also for double-sided polygons.
 															const Concrete::UnitFloatTriple & polygonUnitNormal,
 															Concrete::Length m,
 															Concrete::Length tiebreaker,
 															Concrete::Length viewResolution,
 															Computation::FacetShadeOrder shadeOrder );
-		virtual ~GraySingleSidedPolygon3D( );
+		virtual ~SingleSidedPolygon3DGray( );
 		virtual RefCountPtr< const Lang::PaintedPolygon2D > polygon_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 		virtual RefCountPtr< const Lang::Color > getColor( ) const;		 // shall only be used for debugging!
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -450,21 +530,36 @@ namespace Shapes
 																	unsigned int val, size_t bits );
 	};
 
-	class RGBSingleSidedPolygon3D : public PaintedPolygon3D
+	class SingleSidedPolygon3DRGB : public PaintedPolygon3D
 	{
-		RefCountPtr< const Computation::FacetInterpolatorGray > interpolator_;
+		RefCountPtr< const Computation::FacetInterpolatorRGB > interpolator_;
 		Concrete::Length viewResolution_;
 		Computation::FacetShadeOrder shadeOrder_;	// legal values: { 0, 1, 2 }
 	public:
-		RGBSingleSidedPolygon3D( const RefCountPtr< const Computation::FacetInterpolatorGray > & interpolator,
+		SingleSidedPolygon3DRGB( const RefCountPtr< const Computation::FacetInterpolatorRGB > & interpolator,
+														 bool singleSided, // Confusingly, this type is sometimes used also for double-sided polygons.
 														 const Concrete::UnitFloatTriple & polygonUnitNormal,
 														 Concrete::Length m,
+														 Concrete::Length tiebreaker,
 														 Concrete::Length viewResolution,
 														 Computation::FacetShadeOrder shadeOrder );
-		virtual ~RGBSingleSidedPolygon3D( );
+		virtual ~SingleSidedPolygon3DRGB( );
 		virtual RefCountPtr< const Lang::PaintedPolygon2D > polygon_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
 		virtual RefCountPtr< const Lang::Color > getColor( ) const;		 // shall only be used for debugging!
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
+
+	private:
+		RefCountPtr< const Lang::PaintedPolygon2D > simple_polygon_to2D( const Concrete::Length eyez, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights ) const;
+		RefCountPtr< const Lang::PaintedPolygon2D > render0( const Concrete::Length eyez, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, PtrOwner_back_Access< std::list< const Computation::FacetLatticeTriangle * > > * lattice ) const;
+		RefCountPtr< const Lang::PaintedPolygon2D > render1( const Concrete::Length eyez, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, PtrOwner_back_Access< std::list< const Computation::FacetLatticeTriangle * > > * lattice ) const;
+		RefCountPtr< const Lang::PaintedPolygon2D > render2( const Concrete::Length eyez, const Lang::Transform3D & tf, const std::list< RefCountPtr< const Lang::LightSource > > & lights, PtrOwner_back_Access< std::list< const Computation::FacetLatticeTriangle * > > * lattice, const PtrOwner_back_Access< std::list< const FacetLatticeVertex * > > & vertexMem ) const;
+
+	protected:
+		static void writePacked( std::ostream & os,
+														 const size_t BITS_PER_COORDINATE, const size_t BITS_PER_COMPONENT, const size_t BITS_PER_FLAG,
+														 const double x, const double y, const Concrete::RGB & color, const unsigned char flag );
+		static void writePackedValue( std::ostream & os, char * rest, size_t * restAvail,
+																	unsigned int val, size_t bits );
 	};
 
 	class UndirectedEdge
@@ -847,6 +942,37 @@ namespace Shapes
 											 Concrete::Length viewResolution,
 											 Computation::FacetShadeOrder shadeOrder );
 		virtual ~SingleSided3DGray( );
+		TYPEINFODECL;
+		virtual RefCountPtr< const Lang::Drawable2D > typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
+		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
+		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	};
+
+	class SingleSided3DRGB : public Lang::Drawable3D
+	{
+		// This is a historical note worth to remember.
+		// It doesn't make sense to store Computation::PaintedPolygon3D in a Lang:: object, since a Computation::PaintedPolygon3D cannot be transformed
+		// but must be created at its final position, while a Lang:: object can be transformed.
+		// In a class like this, one can only store stuff that enables us to create the Computation:: object later when the Transform3D is known.
+
+		RefCountPtr< const Lang::ElementaryPath3D > points_;
+		RefCountPtr< const Computation::FacetInterpolatorRGB > interpolator_;
+		bool singleSided_;
+		Concrete::UnitFloatTriple polygonUnitNormal_;
+		Concrete::Length m_;
+		Concrete::Length tiebreaker_;	// This is used to break ties in the z-buffer.
+		Concrete::Length viewResolution_;
+		Computation::FacetShadeOrder shadeOrder_;
+	public:
+		SingleSided3DRGB( const RefCountPtr< const Lang::ElementaryPath3D > & points,
+											 const RefCountPtr< const Computation::FacetInterpolatorRGB > & interpolator,
+											 bool singleSided,	// Confusing, but true; this type is curretly sometimes used also for double-sided objects.
+											 const Concrete::UnitFloatTriple & polygonUnitNormal,
+											 Concrete::Length m,
+											 Concrete::Length tiebreaker,
+											 Concrete::Length viewResolution,
+											 Computation::FacetShadeOrder shadeOrder );
+		virtual ~SingleSided3DRGB( );
 		TYPEINFODECL;
 		virtual RefCountPtr< const Lang::Drawable2D > typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
 		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;

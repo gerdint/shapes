@@ -333,9 +333,9 @@ namespace Shapes
 																																														 location->z_.get( ) ),
 																																				 facetState->reflections_,
 																																				 Concrete::UnitFloatTriple( normal->x_, normal->y_, normal->z_ ),
-																																				 lightMultiply,
+																																				 lightMultiply->components( ),
 																																				 facetState->autoScattering_,
-																																				 Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, facetState->autoIntensity_, callLoc ) ) ),
+																																				 Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, facetState->autoIntensity_, callLoc )->components( ) ) ),
 														 evalState );
 						return;
 					}
@@ -373,14 +373,116 @@ namespace Shapes
 				// Note that the <double> defaults to false if and only if there is at least one normal specifyed, and all normals agree on what is the outward normal.
 
 				typedef const Lang::ElementaryPath3D PathType;
-				typedef const Lang::FacetNormalGray NormalType;
+				typedef const Lang::FacetNormalGray GrayNormalType;
+				typedef const Lang::FacetNormalRGB RGBNormalType;
 				typedef const Lang::Length TiebreakerType;
 				typedef const Lang::Boolean DoubleSidedType;
 
 				RefCountPtr< PathType > path = Helpers::elementaryPathCast3D( title_, args, 0, callLoc );
-				RefCountPtr< NormalType > n1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
-				RefCountPtr< NormalType > n2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
-				RefCountPtr< NormalType > n3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
+
+				bool isRGB = true;
+				bool foundColor = false;
+				size_t numNormals = 0;
+				RefCountPtr< GrayNormalType > nGray1 = RefCountPtr< GrayNormalType >( NullPtr< GrayNormalType >( ) );
+				RefCountPtr< GrayNormalType > nGray2 = RefCountPtr< GrayNormalType >( NullPtr< GrayNormalType >( ) );
+				RefCountPtr< GrayNormalType > nGray3 = RefCountPtr< GrayNormalType >( NullPtr< GrayNormalType >( ) );
+				RefCountPtr< RGBNormalType > nRGB1 = RefCountPtr< RGBNormalType >( NullPtr< RGBNormalType >( ) );
+				RefCountPtr< RGBNormalType > nRGB2 = RefCountPtr< RGBNormalType >( NullPtr< RGBNormalType >( ) );
+				RefCountPtr< RGBNormalType > nRGB3 = RefCountPtr< RGBNormalType >( NullPtr< RGBNormalType >( ) );
+				Concrete::UnitFloatTriple d1( 0, 0, 0, 1. );
+				Concrete::UnitFloatTriple d2( 0, 0, 0, 1. );
+				Concrete::UnitFloatTriple d3( 0, 0, 0, 1. );
+				try
+					{
+						typedef GrayNormalType NormalType;
+						nGray1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
+						nGray2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
+						nGray3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
+						// If we reach here, numNormals will be zero.
+						if( nGray1 != NullPtr< NormalType >( ) )
+							{
+								d1 = nGray1->normal( );
+ 								++numNormals;
+							}
+						if( nGray2 != NullPtr< NormalType >( ) )
+							{
+								if( numNormals < 1 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 2, "The normal n1 must be provided before providing n2." );
+									}
+								d2 = nGray2->normal( );
+								++numNormals;
+							}
+						if( nGray3 != NullPtr< NormalType >( ) )
+							{
+								if( numNormals < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 2, "The normals n1 and n2 must be provided before providing n3." );
+									}
+								d3 = nGray3->normal( );
+								++numNormals;
+							}
+						foundColor = true;
+						isRGB = false;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+				if( ! foundColor )
+					{
+						try
+							{
+								typedef RGBNormalType NormalType;
+								nRGB1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
+								nRGB2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
+								nRGB3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
+								// If we reach here, numNormals will be zero.
+								if( nRGB1 != NullPtr< NormalType >( ) )
+									{
+										++numNormals;
+										d1 = nRGB1->normal( );
+									}
+								if( nRGB2 != NullPtr< NormalType >( ) )
+									{
+										if( numNormals < 1 )
+											{
+												throw Exceptions::CoreOutOfRange( title_, args, 2, "The normal n1 must be provided before providing n2." );
+											}
+										++numNormals;
+										d2 = nRGB2->normal( );
+									}
+								if( nRGB3 != NullPtr< NormalType >( ) )
+									{
+										if( numNormals < 2 )
+											{
+												throw Exceptions::CoreOutOfRange( title_, args, 2, "The normals n1 and n2 must be provided before providing n3." );
+											}
+										++numNormals;
+										d3 = nRGB3->normal( );
+									}
+								foundColor = true;
+							}
+						catch( const NonLocalExit::NotThisType & ball )
+							{
+								/* Wrong type; never mind!.. but see below!
+								 */
+							}
+					}
+				RefCountPtr< const Lang::Color > nonStroking = evalState->dyn_->getGraphicsState( )->nonStrokingColor_;
+				if( numNormals == 0 )
+					{
+						isRGB = dynamic_cast< const Lang::RGB * >( nonStroking.getPtr( ) ) != 0;
+						if( ! isRGB &&
+								dynamic_cast< const Lang::Gray * >( nonStroking.getPtr( ) ) == 0 )
+							{
+								throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING,
+																													 nonStroking->getTypeName( ),
+																													 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
+							}
+					}
+
 				RefCountPtr< TiebreakerType > tiebreaker = Helpers::down_cast_CoreArgument< TiebreakerType >( title_, args, 4, callLoc );
 				RefCountPtr< DoubleSidedType > doubleSided = Helpers::down_cast_CoreArgument< DoubleSidedType >( title_, args, 5, callLoc, true );
 
@@ -401,40 +503,6 @@ namespace Shapes
 								}
 						}
 				}
-
-				size_t numNormals = 0;
-
-				if( n1 == NullPtr< NormalType >( ) )
-					{
-						if( n2 != NullPtr< NormalType >( ) )
-							{
-								throw Exceptions::CoreOutOfRange( title_, args, 2, "The normal n1 must be provided before providing n2." );
-							}
-						if( n3 != NullPtr< NormalType >( ) )
-							{
-								throw Exceptions::CoreOutOfRange( title_, args, 3, "The normal n1 must be provided before providing n3." );
-							}
-					}
-				else
-					{
-						++numNormals;
-					}
-				if( n2 == NullPtr< NormalType >( ) )
-					{
-						if( n3 != NullPtr< NormalType >( ) )
-							{
-								throw Exceptions::CoreOutOfRange( title_, args, 3, "The normal n2 must be provided before providing n3." );
-							}
-					}
-				else
-					{
-						++numNormals;
-					}
-
-				if( n3 != NullPtr< NormalType >( ) )
-					{
-						++numNormals;
-					}
 
 				Kernel::ContRef cont = evalState->cont_;
 
@@ -471,14 +539,14 @@ namespace Shapes
 						else
 							{
 								bool allAgree = true;
-								bool n1Agree = Concrete::inner( normal, n1->normal( ) ) > 0;
-								if( n2 != NullPtr< NormalType >( ) )
+								bool n1Agree = Concrete::inner( normal, d1 ) > 0;
+								if( d2.normSquaredThatOughtToBeOne( ) > 0.5 )
 									{
-										allAgree = allAgree && ( ( Concrete::inner( normal, n2->normal( ) ) > 0 ) == n1Agree );
+										allAgree = allAgree && ( ( Concrete::inner( normal, d2 ) > 0 ) == n1Agree );
 									}
-								if( n3 != NullPtr< NormalType >( ) )
+								if( d3.normSquaredThatOughtToBeOne( ) > 0.5 )
 									{
-										allAgree = allAgree && ( ( Concrete::inner( normal, n3->normal( ) ) > 0 ) == n1Agree );
+										allAgree = allAgree && ( ( Concrete::inner( normal, d3 ) > 0 ) == n1Agree );
 									}
 								if( allAgree )
 									{
@@ -496,16 +564,73 @@ namespace Shapes
 							}
 					}
 
-
-				RefCountPtr< const Computation::FacetInterpolatorGray > interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >( NullPtr< const Computation::FacetInterpolatorGray >( ) );
-				if( numNormals == 0 )
+				if( isRGB )
 					{
-						RefCountPtr< const Lang::Color > nonStroking = evalState->dyn_->getGraphicsState( )->nonStrokingColor_;
-						try
+						typedef RGBNormalType NormalType;
+						RefCountPtr< NormalType > n1 = nRGB1;
+						RefCountPtr< NormalType > n2 = nRGB2;
+						RefCountPtr< NormalType > n3 = nRGB3;
+						RefCountPtr< const Computation::FacetInterpolatorRGB > interpolator = RefCountPtr< const Computation::FacetInterpolatorRGB >( NullPtr< const Computation::FacetInterpolatorRGB >( ) );
+
+						if( numNormals == 0 )
+							{
+								typedef const Lang::RGB ColorType;
+								RefCountPtr< ColorType > lightMultiply = Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, nonStroking, callLoc );
+								RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
+
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorRGB >
+									( new Computation::FacetInterpolatorRGB1
+										( RefCountPtr< const Lang::FacetNormalRGB >
+											( new Lang::FacetNormalRGB
+												( (1./3)*( p0 + p1 + p2 ),
+													facetState->reflections_,
+													normal,
+													lightMultiply->components( ),
+													facetState->autoScattering_,
+													Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY, facetState->autoIntensity_, callLoc )->components( ) ) ) ) );
+							}
+						else if( numNormals == 1 )
+							{
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorRGB >
+									( new Computation::FacetInterpolatorRGB1( n1 ) );
+							}
+						else if( numNormals == 2 )
+							{
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorRGB >
+									( new Computation::FacetInterpolatorRGB2( n1, n2 ) );
+							}
+						else if( numNormals == 3 )
+							{
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorRGB >
+									( new Computation::FacetInterpolatorRGB3( n1, n2, n3 ) );
+							}
+						else
+							{
+								throw Exceptions::InternalError( "Number of facet normals is out of range!" );
+							}
+
+						RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
+
+						cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DRGB( path, interpolator,
+																																					 ! isDoubleSided,	// Note that this argument refers to single-sidedness
+																																					 normal, Concrete::inner( normal, p0 ),
+																																					 tiebreaker->get( ),
+																																					 facetState->viewResolution_,
+																																					 facetState->shadeOrder_ ) ),
+														 evalState );
+					}
+				else // not isRGB
+					{
+						typedef GrayNormalType NormalType;
+						RefCountPtr< NormalType > n1 = nGray1;
+						RefCountPtr< NormalType > n2 = nGray2;
+						RefCountPtr< NormalType > n3 = nGray3;
+						RefCountPtr< const Computation::FacetInterpolatorGray > interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >( NullPtr< const Computation::FacetInterpolatorGray >( ) );
+
+						if( numNormals == 0 )
 							{
 								typedef const Lang::Gray ColorType;
-								RefCountPtr< ColorType > lightMultiply = Helpers::try_cast_CoreArgument< ColorType >( nonStroking );
-
+								RefCountPtr< ColorType > lightMultiply = Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, nonStroking, callLoc );
 								RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
 
 								interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
@@ -519,48 +644,37 @@ namespace Shapes
 													facetState->autoScattering_,
 													Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY, facetState->autoIntensity_, callLoc )->components( ) ) ) ) );
 
-								goto done;
 							}
-						catch( const NonLocalExit::NotThisType & ball )
+						else if( numNormals == 1 )
 							{
-								/* Wrong type; never mind!.. but see below!
-								 */
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
+									( new Computation::FacetInterpolatorGray1( n1 ) );
+							}
+						else if( numNormals == 2 )
+							{
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
+									( new Computation::FacetInterpolatorGray2( n1, n2 ) );
+							}
+						else if( numNormals == 3 )
+							{
+								interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
+									( new Computation::FacetInterpolatorGray3( n1, n2, n3 ) );
+							}
+						else
+							{
+								throw Exceptions::InternalError( "Number of facet normals is out of range!" );
 							}
 
-						throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING,
-																											 nonStroking->getTypeName( ),
-																											 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
-					}
-				else if( numNormals == 1 )
-					{
-						interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
-							( new Computation::FacetInterpolatorGray1( n1 ) );
-					}
-				else if( numNormals == 2 )
-					{
-						interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
-							( new Computation::FacetInterpolatorGray2( n1, n2 ) );
-					}
-				else if( numNormals == 3 )
-					{
-						interpolator = RefCountPtr< const Computation::FacetInterpolatorGray >
-							( new Computation::FacetInterpolatorGray3( n1, n2, n3 ) );
-					}
-				else
-					{
-						throw Exceptions::InternalError( "Number of facet normals is out of range!" );
-					}
+						RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
 
-			done:
-				RefCountPtr< const Kernel::FacetState > facetState = evalState->dyn_->getFacetState( );
-
-				cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DGray( path, interpolator,
-																																				! isDoubleSided,	// Note that this argument refers to single-sidedness
-																																				normal, Concrete::inner( normal, p0 ),
-																																				tiebreaker->get( ),
-																																				facetState->viewResolution_,
-																																				facetState->shadeOrder_ ) ),
-												 evalState );
+						cont->takeValue( Kernel::ValueRef( new Lang::SingleSided3DGray( path, interpolator,
+																																						! isDoubleSided,	// Note that this argument refers to single-sidedness
+																																						normal, Concrete::inner( normal, p0 ),
+																																						tiebreaker->get( ),
+																																						facetState->viewResolution_,
+																																						facetState->shadeOrder_ ) ),
+														 evalState );
+					}
 			}
 		};
 

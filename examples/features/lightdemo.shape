@@ -5,16 +5,16 @@
 r: 10cm
 ##unit w = 3.4cm
 obj:
-    @nonstroking:[gray 0.8]
+    @nonstroking:[rgb 0.8 0 0]
   & @reflections:[phong 1]
-  & @autointensity:[gray 0.05]
+  & @autointensity:[rgb 0 0.05 0]
   & @autoscattering:[phong 0.2]
   & @facetresolution:2cm
   |
   [facet (r,~5cm,~0.5w)--(r,5cm,~0.5w)--(r,5cm,0.5w)--(r,~5cm,0.5w)--cycle]
 
 [[range 20° 360° 20°].foldsl
- \ p e •st .> 
+ \ p e •st .>
   !{
     •st << [rotate3D (0,1,0) ~e] [] obj
     p

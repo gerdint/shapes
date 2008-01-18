@@ -17,6 +17,7 @@ namespace Shapes
 		typedef char FacetShadeOrder;
 
 		class FacetInterpolatorGray;
+		class FacetInterpolatorRGB;
 
 		class BasicSimplex;
 

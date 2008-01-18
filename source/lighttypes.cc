@@ -276,7 +276,44 @@ Lang::SpecularLightGray::typed_transformed( const Lang::Transform3D & tf ) const
 Concrete::RGB
 Lang::SpecularLightGray::illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	// Refer to SpecularLightGray::illuminateGray for comments regarding this code.
+	// This function shall be analogous to that function.
+
+	Concrete::Coords3D rLight = p_ - point;
+	Concrete::Coords3D rEye = Concrete::Coords3D( Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, eyez ) - point;
+	Concrete::Length dLight = rLight.norm( );
+	Concrete::Length dEye = rEye.norm( );
+	Concrete::UnitFloatTriple rHatLight = rLight.direction( dLight );
+	Concrete::UnitFloatTriple rHatEye = rEye.direction( dEye );
+	Concrete::Length dTot = dLight + dEye;
+
+	Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight );
+
+	// This breaks the Phong model, but I want reflection in all directions!
+	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
+
+	// Just in case numeric errors make c negative anyway...
+	if( cPhong2 <= 0 )
+		{
+			return Concrete::RGB( 0, 0, 0 );
+		}
+
+	// Further, I want something that becomes ambient when refl.exponent == 0.
+
+	double cAmb = 1;
+	if( refl.exponent( ) < 1 )
+		{
+			cAmb = pow( fabs( Concrete::inner( unitNormal, rHatLight ) ), 1 - refl.exponent( ) );
+		}
+
+	double rRel = 1;
+	if( intensityRadius_ < Concrete::HUGE_LENGTH )
+		{
+			rRel = intensityRadius_ / dTot;
+		}
+
+	double a = intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb * rRel * rRel ).gr_;
+	return Concrete::RGB( a, a, a );
 }
 
 Concrete::Gray
@@ -329,7 +366,7 @@ Lang::SpecularLightGray::illuminateGray( const Concrete::Coords3D & point, const
 //	 std::cerr << "	Distance factor: " << rRel * rRel << std::endl ;
 //	 std::cerr << "	Total: " << refl.weight( ) * pow( c, refl.exponent( ) ) * rRel * rRel * intensity_.gr_ << std::endl ;
 
-	return Concrete::Gray( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb * rRel * rRel * intensity_.gr_ );
+	return intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb * rRel * rRel );
 }
 
 Lang::SpecularLightRGB::SpecularLightRGB( const Concrete::Coords3D & p, const Concrete::RGB & intensity, Concrete::Length intensityRadius, bool shadows )
@@ -348,11 +385,47 @@ Lang::SpecularLightRGB::typed_transformed( const Lang::Transform3D & tf ) const
 Concrete::RGB
 Lang::SpecularLightRGB::illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	// Refer to SpecularLightGray::illuminateGray for comments regarding this code.
+	// This function shall be analogous to that function.
+
+	Concrete::Coords3D rLight = p_ - point;
+	Concrete::Coords3D rEye = Concrete::Coords3D( Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, eyez ) - point;
+	Concrete::Length dLight = rLight.norm( );
+	Concrete::Length dEye = rEye.norm( );
+	Concrete::UnitFloatTriple rHatLight = rLight.direction( dLight );
+	Concrete::UnitFloatTriple rHatEye = rEye.direction( dEye );
+	Concrete::Length dTot = dLight + dEye;
+
+	Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight );
+
+	// This breaks the Phong model, but I want reflection in all directions!
+	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
+
+	// Just in case numeric errors make c negative anyway...
+	if( cPhong2 <= 0 )
+		{
+			return Concrete::RGB( 0, 0, 0 );
+		}
+
+	// Further, I want something that becomes ambient when refl.exponent == 0.
+
+	double cAmb = 1;
+	if( refl.exponent( ) < 1 )
+		{
+			cAmb = pow( fabs( Concrete::inner( unitNormal, rHatLight ) ), 1 - refl.exponent( ) );
+		}
+
+	double rRel = 1;
+	if( intensityRadius_ < Concrete::HUGE_LENGTH )
+		{
+			rRel = intensityRadius_ / dTot;
+		}
+
+	return intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb * rRel * rRel );
 }
 
-Lang::DistantLightGray::DistantLightGray( const Concrete::UnitFloatTriple & unitNormal, const Concrete::Gray & intensity, bool shadows )
-	: Lang::GrayLight( shadows ), unitNormal_( unitNormal ), intensity_( intensity )
+Lang::DistantLightGray::DistantLightGray( const Concrete::UnitFloatTriple & rHatLight, const Concrete::Gray & intensity, bool shadows )
+	: Lang::GrayLight( shadows ), rHatLight_( rHatLight ), intensity_( intensity )
 { }
 
 Lang::DistantLightGray::~DistantLightGray( )
@@ -361,24 +434,75 @@ Lang::DistantLightGray::~DistantLightGray( )
 RefCountPtr< const Lang::LightSource >
 Lang::DistantLightGray::typed_transformed( const Lang::Transform3D & tf ) const
 {
-	return RefCountPtr< const Lang::LightSource >( new Lang::DistantLightGray( tf.transformPlaneUnitNormal( unitNormal_ ), intensity_, shadows_ ) );
+	return RefCountPtr< const Lang::LightSource >( new Lang::DistantLightGray( tf.transformPlaneUnitNormal( rHatLight_ ), intensity_, shadows_ ) );
 }
 
 Concrete::RGB
 Lang::DistantLightGray::illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	// Compare SpecularLightGray::illuminateGray.
+
+	Concrete::Coords3D rEye = Concrete::Coords3D( Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, eyez ) - point;
+	Concrete::Length dEye = rEye.norm( );
+	Concrete::UnitFloatTriple rHatEye = rEye.direction( dEye );
+
+	Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight_ );
+
+	// This breaks the Phong model, but I want reflection in all directions!
+	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
+
+	// Just in case numeric errors make c negative anyway...
+	if( cPhong2 <= 0 )
+		{
+			return Concrete::RGB( 0, 0, 0 );
+		}
+
+	// Further, I want something that becomes ambient when refl.exponent == 0.
+
+	double cAmb = 1;
+	if( refl.exponent( ) < 1 )
+		{
+			cAmb = pow( fabs( Concrete::inner( unitNormal, rHatLight_ ) ), 1 - refl.exponent( ) );
+		}
+
+	double a = intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb ).gr_;
+	return Concrete::RGB( a, a, a );
 }
 
 Concrete::Gray
 Lang::DistantLightGray::illuminateGray( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	// Compare SpecularLightGray::illuminateGray.
+
+	Concrete::Coords3D rEye = Concrete::Coords3D( Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, eyez ) - point;
+	Concrete::Length dEye = rEye.norm( );
+	Concrete::UnitFloatTriple rHatEye = rEye.direction( dEye );
+
+	Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight_ );
+
+	// This breaks the Phong model, but I want reflection in all directions!
+	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
+
+	// Just in case numeric errors make c negative anyway...
+	if( cPhong2 <= 0 )
+		{
+			return Concrete::Gray( 0 );
+		}
+
+	// Further, I want something that becomes ambient when refl.exponent == 0.
+
+	double cAmb = 1;
+	if( refl.exponent( ) < 1 )
+		{
+			cAmb = pow( fabs( Concrete::inner( unitNormal, rHatLight_ ) ), 1 - refl.exponent( ) );
+		}
+
+	return intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb );
 }
 
 
-Lang::DistantLightRGB::DistantLightRGB( const Concrete::UnitFloatTriple & unitNormal, const Concrete::RGB & intensity, bool shadows )
-	: Lang::RGBLight( shadows ), unitNormal_( unitNormal ), intensity_( intensity )
+Lang::DistantLightRGB::DistantLightRGB( const Concrete::UnitFloatTriple & rHatLight, const Concrete::RGB & intensity, bool shadows )
+	: Lang::RGBLight( shadows ), rHatLight_( rHatLight ), intensity_( intensity )
 { }
 
 Lang::DistantLightRGB::~DistantLightRGB( )
@@ -387,13 +511,38 @@ Lang::DistantLightRGB::~DistantLightRGB( )
 RefCountPtr< const Lang::LightSource >
 Lang::DistantLightRGB::typed_transformed( const Lang::Transform3D & tf ) const
 {
-	return RefCountPtr< const Lang::LightSource >( new Lang::DistantLightRGB( tf.transformPlaneUnitNormal( unitNormal_ ), intensity_, shadows_ ) );
+	return RefCountPtr< const Lang::LightSource >( new Lang::DistantLightRGB( tf.transformPlaneUnitNormal( rHatLight_ ), intensity_, shadows_ ) );
 }
 
 Concrete::RGB
-Lang::DistantLightRGB::illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & unitNormal, const Lang::SpecularReflectionTerm & refl ) const
+Lang::DistantLightRGB::illuminateRGB( const Concrete::Coords3D & point, const Concrete::Length eyez, const Concrete::UnitFloatTriple & rHatLight, const Lang::SpecularReflectionTerm & refl ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	// Compare SpecularLightGray::illuminateGray.
+
+	Concrete::Coords3D rEye = Concrete::Coords3D( Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, eyez ) - point;
+	Concrete::Length dEye = rEye.norm( );
+	Concrete::UnitFloatTriple rHatEye = rEye.direction( dEye );
+
+	Concrete::UnitFloatTriple rHatReflection = rHatLight_.reflect( rHatLight_ );
+
+	// This breaks the Phong model, but I want reflection in all directions!
+	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
+
+	// Just in case numeric errors make c negative anyway...
+	if( cPhong2 <= 0 )
+		{
+			return Concrete::RGB( 0, 0, 0 );
+		}
+
+	// Further, I want something that becomes ambient when refl.exponent == 0.
+
+	double cAmb = 1;
+	if( refl.exponent( ) < 1 )
+		{
+			cAmb = pow( fabs( Concrete::inner( rHatLight_, rHatLight_ ) ), 1 - refl.exponent( ) );
+		}
+
+	return intensity_.mulNoCheck( refl.weight( ) * pow( cPhong2, refl.exponent( ) ) * cAmb );
 }
 
 Lang::LightGroup::LightGroup( )
@@ -410,13 +559,13 @@ Lang::LightGroup::~LightGroup( )
 RefCountPtr< const Lang::Geometric3D >
 Lang::LightGroup::transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	return typed_transformed( tf, self.down_cast< const Lang::LightGroup >( ) );
 }
 
 RefCountPtr< const Lang::Geometric2D >
 Lang::LightGroup::to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const
 {
-	throw Exceptions::NotImplemented( "XXXLightXXX::illuminateXXX" );
+	throw Exceptions::MiscellaneousRequirement( "Lights cannot exist in 2D." );
 }
 
 
@@ -431,7 +580,7 @@ Lang::LightNull::typed_transformed( const Lang::Transform3D & tf, const RefCount
 {
 	return self;
 }
- 
+
 bool
 Lang::LightNull::isNull( ) const
 {

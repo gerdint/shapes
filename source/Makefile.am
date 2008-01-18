@@ -32,7 +32,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  consts.h containertypes.h continuations.h debuglog.h \
                  dispatch_case.h dispatch_none.h dispatch_void.h \
                  dispatch_vtbl.h drawabletypes.h dynamicenvironment.h \
-                 elementarycoords.h  elementarylength.h elementarytypes.h \
+                 elementarycoords.h elementarylength.h elementarytypes.h \
                  environment.h errorhandlers.h facettypes.h \
                  FontMetrics_decls.h fontmetrics.h fonttypes.h \
                  functiontypes.h globals.h glyphlist.h hottypes.h \
@@ -66,7 +66,7 @@ shapes_SOURCES = shapesyylex.ll \
 		pagecontentstates.cc \
 		elementarycoords.cc statetypes.cc pathtypes.cc elementarypath2D.cc \
 		elementarypath3D.cc bezier.cc upsamplers.cc \
-		pathslider2D.cc pathslider3D.cc drawabletypes.cc shadingtypes.cc \
+		pathslider2D.cc pathslider3D.cc drawabletypes.cc singlesidedpolygons.cc shadingtypes.cc \
 		functiontypes.cc pdffunctiontypes.cc \
 		lighttypes.cc containertypes.cc timetypes.cc hottypes.cc \
 		multipage.cc annotations.cc tagtypes.cc shapesvalue.cc \
