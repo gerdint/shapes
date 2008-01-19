@@ -11,7 +11,7 @@ add: \ x .> \ y .> x + y
 •stdout << `Bye¢n´
 {
   add: \ x .> 2*x
-  •stdout << [add 5] << [debuglog `This string goes to the log file, the next string is returned.¢n´ `¢n´]
+  •stdout << [add 5] << [debuglog_after `This string goes to the log file, the next string is returned.¢n´ `¢n´]
 }
 •stdout << [[add '5] '8] << `¢n´
 

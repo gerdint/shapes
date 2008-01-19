@@ -18,7 +18,7 @@ obj:
 	 [facetnormal (r,5cm,0cm) [normalized (r,5cm,0cm)]]]
 
 [[range 20° 160° 20°].foldsl
- \ p e •st .> 
+ \ p e •st .>
   !{
     •st << [rotate3D (0,1,0) ~e] [] obj
     p

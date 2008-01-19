@@ -1,43 +1,53 @@
 ##needs circle
 ##needs arrowheads
 
+•rand: [newRandom (•time)]
+
 {
  pth: [circle 1cm]
- @<< [stroke pth]
+ •page << [stroke pth]
 
+ •page <<
+ (
  @width: 0.2bp
  |
- [[range '1 '200].foldl
-  \ pile e .>
+ [[range '1 '200].foldsl
+  \ pile e •randstate .>
   {
-   p: 1.4cm * [random2D]
-   @<< [stroke p--[continuous_approximator pth p].p ]
-   pile
+   p: 1.4cm * [random2D •randstate]
+   pile & [stroke p--[continuous_approximator pth p].p ]
   }
-  VOID
+  null
+	•rand
  ]
+ )
 }
 
-randPath: \ n .>
- [[range '1 n].foldl
-  \ pile e .>  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
-  EMPTYPATH2D]
+randPath: \ n •rand .>
+ [[range '1 n].foldsl
+  \ pile e •randstate .>  pile--( ^ )<(1cm*[random2D •randstate])>( 2mm * (1+[random1D •randstate]) ^ 180°*[random1D •randstate] )
+  emptypath
+	•rand]
 
 {
   sh: [shift (3cm,0cm)]
-  pth: sh [] [randPath '10]
-  @<< [stroke pth]
-  @<< @stroking:RGB_RED | [stroke controlling [] pth]
+  pth: sh [] [randPath '10 •rand]
+  •page << [stroke pth]
+  •page << @stroking:RGB_RED | [stroke controlling [] pth]
 
-  @width: 0.2bp
-  |
-  [[range '1 '200].foldl
-   \ pile e .>
-   {
-    p: sh [] 1.4cm * [random2D]
-    @<< [stroke p--[continuous_approximator pth p].p ]
-    pile
-   }
-   VOID
-  ]
+ •page <<
+ (
+ @width: 0.2bp
+ |
+ [[range '1 '200].foldsl
+  \ pile e •randstate .>
+  {
+   p: sh [] 1.4cm * [random2D •randstate]
+   pile & [stroke p--[continuous_approximator pth p].p ]
+  }
+  null
+	•rand
+ ]
+ )
+
 }
