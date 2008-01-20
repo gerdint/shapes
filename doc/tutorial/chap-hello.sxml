@@ -1,0 +1,17 @@
+<section id="chap-hello">
+<title>Hello, Shaper!</title>
+<top>
+<p>Let's begin by working through a very small example.  We'll just make a diagonal line — that's pretty much the simplest thing I can think of.</p>
+</top>
+
+<section id="hello-source">
+<title>Writing the source</title>
+<body>
+<p>The following line of code is all we need for this example:</p>
+<pre>
+&bullet;page &lt;&lt; [stroke (0cm,0cm)--(2cm,1cm)]
+</pre>
+</body>
+</section><!-- End of hello-source -->
+
+</section><!-- end of chap-hello -->

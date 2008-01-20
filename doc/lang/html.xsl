@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:include href="../notation/html.xsl" />
 
 <xsl:template match="/book">
   <html>
     <head>
       <title><xsl:value-of select="title" /></title>
-      <link rel="stylesheet" href="../shapes.css" />
+      <link rel="stylesheet" href="../../shapes.css" />
     </head>
     <body>
     <h0><xsl:value-of select="title" /></h0>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
-    <xsl:for-each select="section[@id='chap-kerntypes']">
+    <xsl:for-each select="section">
       <h1><xsl:value-of select="title" /></h1>
       <xsl:apply-templates select="top" />
       <xsl:apply-templates select="body" />
@@ -29,7 +31,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
       </xsl:for-each>
     </xsl:for-each>
   </body>
-  </html>
+  </html><xsl:text>
+</xsl:text>
 </xsl:template>
 
 <xsl:template match="secref-title[@id]">
@@ -350,11 +353,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="function/case/arguments/arg">(__)<xsl:apply-templates select="default" />::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
 <xsl:template match="function/case/arguments/arg[@identifier]"><varname><xsl:value-of select="@identifier" /><xsl:apply-templates select="default" /></varname>::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
 <xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
-
-<xsl:template match="str-PDF">PDF</xsl:template>
-<xsl:template match="str-Shapes">Shapes</xsl:template>
-
-<xsl:template match="char-cdot">*</xsl:template>
 
 </xsl:stylesheet>
 

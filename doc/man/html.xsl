@@ -3,6 +3,8 @@
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" indent="no" />
 
+<xsl:include href="../notation/html.xsl" />
+
 <xsl:template match="/man">
   <html>
     <head>
@@ -86,7 +88,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><b><xsl:value-of select="." /></b></xsl:template>
-<xsl:template match="filename"><filename><xsl:value-of select="." /></filename></xsl:template>
 
 <xsl:template match="syntax-name"><syntax-name><xsl:value-of select="." /></syntax-name></xsl:template>
 <xsl:template match="bnf"><bnf><xsl:value-of select="." /></bnf></xsl:template>
@@ -95,20 +96,5 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="p/em"><em><xsl:value-of select="." /></em></xsl:template>
 <xsl:template match="p/b"><b><xsl:value-of select="." /></b></xsl:template>
-
-<xsl:template match="physical"><span class="nowrap"><xsl:apply-templates select="scalar" /><span class="xx-small"> </span><xsl:apply-templates select="unit" /></span></xsl:template>
-<xsl:template match="sci-fmt[@mantissa,@exp]"><span class="nowrap"><xsl:value-of select="@mantissa" /><span class="small-caps">e</span><xsl:value-of select="@exp" /></span></xsl:template>
-<xsl:template match="quote">“<xsl:apply-templates />”</xsl:template>
-
-
-<xsl:template match="str-PDF"><span class="medium-caps">pdf</span></xsl:template>
-<xsl:template match="str-Shapes">Shapes</xsl:template>
-<xsl:template match="str-TeX"><span class="tex">T<sub>e</sub>X</span></xsl:template>
-<xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
-<xsl:template match="em-dash">—</xsl:template>
-
-<xsl:template match="char-bullet">•</xsl:template>
-<xsl:template match="char-str-open">`</xsl:template>
-<xsl:template match="char-str-close">´</xsl:template>
 
 </xsl:stylesheet>

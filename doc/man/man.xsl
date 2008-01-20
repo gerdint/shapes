@@ -4,6 +4,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:output method="text" indent="no" />
 
+<xsl:include href="../notation/man.xsl" />
+
 <xsl:template match="/man">
 <xsl:apply-templates select="manhead" />
 <xsl:text>
@@ -89,9 +91,6 @@ version of this page.</xsl:text>
 <xsl:template match="prog-name"><xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
-<xsl:template match="filename"><xsl:text>
-.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
-.ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="synopsis-case/syntax-name"><xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
@@ -115,19 +114,5 @@ version of this page.</xsl:text>
 <xsl:template match="p/b"><xsl:text>
 .ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
-
-<xsl:template match="physical"><xsl:apply-templates select="scalar" /><xsl:apply-templates select="unit" /></xsl:template>
-<xsl:template match="sci-fmt[@mantissa,@exp]"><xsl:value-of select="@mantissa" />e<xsl:value-of select="@exp" /></xsl:template>
-<xsl:template match="quote">"<xsl:apply-templates />"</xsl:template>
-
-<xsl:template match="str-PDF">PDF</xsl:template>
-<xsl:template match="str-Shapes">Shapes</xsl:template>
-<xsl:template match="str-TeX">TeX</xsl:template>
-<xsl:template match="str-LaTeX">LaTeX</xsl:template>
-<xsl:template match="em-dash">\-</xsl:template>
-
-<xsl:template match="char-bullet">#</xsl:template>
-<xsl:template match="char-str-open">("</xsl:template>
-<xsl:template match="char-str-close">")</xsl:template>
 
 </xsl:stylesheet>
