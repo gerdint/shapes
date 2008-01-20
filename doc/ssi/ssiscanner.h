@@ -34,12 +34,10 @@ class SSIScanner : public ssiFlexLexer
 	};
 	bool onlyDependencies_;
 	std::stack< yy_buffer_state * > stateStack_;
-	std::stack< const char * > filenameStack_;
-	std::stack< std::list< const char * > > depStack_;
 	char * includeFilename_;
 	void more( );
 public:
-	SSIScanner( const char * filename, bool onlyDependencies, std::istream * yyin = 0, std::ostream * yyout = 0 );
+	SSIScanner( bool onlyDependencies, std::istream * yyin = 0, std::ostream * yyout = 0 );
 	virtual ~SSIScanner( );
 	virtual int yylex( );
  private:

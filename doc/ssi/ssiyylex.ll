@@ -58,18 +58,6 @@
 }
 <<EOF>> {
 
-	if( onlyDependencies_ && ! depStack_.top( ).empty( ) )
-		{
-			*yyout << filenameStack_.top( ) << ":" ;
-			for( std::list< const char * >::const_iterator i = depStack_.top( ).begin( ); i != depStack_.top( ).end( ); ++i )
-				{
-					*yyout << " " << *i ;
-				}
-			*yyout << std::endl ;
-		}
-	depStack_.pop( );
-	filenameStack_.pop( );
-
 	/* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
 	 * however ignornig yyleng (which has the value 1).
 	 */
@@ -107,7 +95,10 @@
 void
 SSIScanner::doInclusion( )
 {
-	depStack_.top( ).push_back( includeFilename_ );
+	if( onlyDependencies_ )
+		{
+			*yyout << " " << includeFilename_ ;
+		}
 
 	std::ifstream * iFile = new std::ifstream( includeFilename_ );
 	if( ! iFile->good( ) )
@@ -118,9 +109,6 @@ SSIScanner::doInclusion( )
 
 	stateStack_.push( YY_CURRENT_BUFFER );
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
-
-	filenameStack_.push( includeFilename_ );
-	depStack_.push( std::list< const char * >( ) );
 
 	BEGIN( INITIAL );
 }

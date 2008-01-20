@@ -5,12 +5,9 @@
 using namespace std;
 
 
-SSIScanner::SSIScanner( const char * filename, bool onlyDependencies, istream * yyin, ostream * yyout )
+SSIScanner::SSIScanner( bool onlyDependencies, istream * yyin, ostream * yyout )
 	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies )
-{
-	filenameStack_.push( filename );
-	depStack_.push( std::list< const char * >( ) );
-}
+{ }
 
 SSIScanner::~SSIScanner( )
 { }

@@ -7,11 +7,11 @@ int
 main( int argc, char ** argv )
 {
 	bool onlyDependencies = false;
-
+	bool doEndl = false;
 
 	--argc;
 	++argv;
-	while( argc > 1 )
+	while( argc > 0 )
 		{
 			if( strcmp( *argv, "--deps" ) == 0 )
 				{
@@ -19,28 +19,27 @@ main( int argc, char ** argv )
 					++argv;
 					--argc;
 				}
+			else if( strcmp( *argv, "--head" ) == 0 )
+				{
+					std::cout << *( argv + 1 ) << ":" ;
+					doEndl = true;
+					argv += 2;
+					argc -= 2;
+				}
 			else
 				{
 					std::cerr << "Illegal command line option: " << *argv << std::endl ;
 					exit( 1 );
 				}
 		}
-	if( argc < 1 )
-		{
-			std::cerr << "Missing input filename as final command line argument." << std::endl ;
-			exit( 1 );
-		}
-	const char * filename = *argv;
 
-	std::ifstream iFile( filename );
-	if( ! iFile.good( ) )
-		{
-			std::cerr << "Failed to open main file: " << filename << std::endl ;
-			exit( 1 );
-		}
-
-	SSIScanner scanner( filename, onlyDependencies, & iFile, & std::cout );
+	SSIScanner scanner( onlyDependencies, & std::cin, & std::cout );
 	scanner.yylex( );
+
+	if( doEndl )
+		{
+			std::cout << std::endl ;
+		}
 
 	return 0;
 }
