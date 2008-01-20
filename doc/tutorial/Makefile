@@ -1,7 +1,6 @@
 JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
 JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-PP_HTML=../postproc/html
-PP_MAN=../postproc/man
+POSTPROCDIR=../postproc
 SSI=../ssi/ssipp
 
 ifneq ($(strip $(wildcard $(JAR1))),)
@@ -21,12 +20,15 @@ all: $(PRODUCTS)
 %.xml: %.sxml %.depend
 	cat $< | $(SSI) > $@
 
-html/index.html: tutorial.xml ../lang/html.xsl $(PP_HTML)
-	$(SAXON) $< ../lang/html.xsl | $(PP_HTML) > $@
+html/index.html: tutorial.xml ../lang/html.xsl $(POSTPROCDIR)/html
+	$(SAXON) $< ../lang/html.xsl | $(POSTPROCDIR)/html > $@
 
 .PHONY: clean
 clean:
 	-rm $(PRODUCTS) *.depend
+
+$(POSTPROCDIR)/html $(POSTPROCDIR)/man:
+	cd $(POSTPROCDIR); make
 
 .PRECIOUS: *.depend
 %.depend: %.sxml $(wildcard *.sxml)

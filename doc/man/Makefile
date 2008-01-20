@@ -1,7 +1,6 @@
 JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
 JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-PP_HTML=../postproc/html
-PP_MAN=../postproc/man
+POSTPROCDIR=../postproc
 
 ifneq ($(strip $(wildcard $(JAR1))),)
 SAXON=java -jar $(JAR1)
@@ -16,12 +15,15 @@ all: $(PRODUCTS)
 # This is how I used to apply the transform before I needed XPATH 2 functions:
 #	@xsltproc man.xsl mini.sxml | sed '1,1d' > $@
 
-man1/shapes.1: tool-interface.sxml man.xsl $(PP_MAN)
-	$(SAXON) $< man.xsl | $(PP_MAN) > $@
+man1/shapes.1: tool-interface.sxml man.xsl $(POSTPROCDIR)/man
+	$(SAXON) $< man.xsl | $(POSTPROCDIR)/man > $@
 
-html/index.html: tool-interface.sxml html.xsl $(PP_HTML)
-	$(SAXON) $< html.xsl | $(PP_HTML) > $@
+html/index.html: tool-interface.sxml html.xsl $(POSTPROCDIR)/html
+	$(SAXON) $< html.xsl | $(POSTPROCDIR)/html > $@
 
 .PHONY: clean
 clean:
 	-rm $(PRODUCTS)
+
+$(POSTPROCDIR)/html $(POSTPROCDIR)/man:
+	cd $(POSTPROCDIR); make
