@@ -484,7 +484,7 @@ Computation::ZBufTriangle::overlapsAlong( const ZBufTriangle & other, const Comp
 	// This is much simpler than the simplex solution to the general overlap problem.	Unfortunately, it doesn't seem like
 	// just keeping track of an upper and lower bound of the time along the line, since this will very often involve division
 	// by tiny numbers when line is parallel to any of the triangle sides.
-	// 
+	//
 	// Instead, I keep track of two points points on the line, initialized far away in both directions.	When comparing against
 	// a triangle side, four situations can occur, given by which of the points that satisfy the constraint.	If none of the points
 	// satisfy the constraint, there is no intersection along the line.	If both satisfy the constraint, the constraint does not
@@ -737,7 +737,7 @@ Computation::ZBufTriangle::pushIntersection( std::vector< Computation::SplicingL
 	Concrete::Coords3D p0( 0, 0, 0 );
 	Concrete::Coords3D p1( 0, 0, 0 );
 	if( intersectionLinePoints( other, & p0, & p1 ) )
-		{ 
+		{
 		 pushIfUnique( dst, p0, p1, false );
 		}
 }

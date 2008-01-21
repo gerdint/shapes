@@ -184,7 +184,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 
 	// I keep track of which objects an object has to be drawn after.	The objects that are not
 	// waiting for other objects to be drawn are kept in a special list.
-	// To do this efficiently, each object need to know how many objects it is waiting for to be 
+	// To do this efficiently, each object need to know how many objects it is waiting for to be
 	// drawn.	It must also know what objects to update when it has been drawn.	An object is identified
 	// by the pointer to its list, so the additional information must be kept in a separate structure.
 	// As usual, objects are identified by their position in a memory vector.

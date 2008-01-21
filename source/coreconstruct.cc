@@ -474,7 +474,59 @@ namespace Shapes
 						// Never mind, see below
 					}
 
-				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+				try
+					{
+						typedef const Lang::Length ArgType;
+
+						double begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->getScalar( );
+						double end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->getScalar( );
+						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
+						if( stepPtr == NullPtr< ArgType >( ) )
+							{
+								throw Exceptions::MiscellaneousRequirement( "The <step> argument must be provided when constructing a range of lengths." );
+							}
+						double step = stepPtr->getScalar( );
+
+						std::list< double > tmp;
+
+						RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
+						if( step > 0 )
+							{
+								for( double x = begin; x < end; x += step )
+									{
+										tmp.push_back( x );
+									}
+							}
+						else if( step < 0 )
+							{
+								for( double x = begin; x > end; x += step )
+									{
+										tmp.push_back( x );
+									}
+							}
+						else
+							{
+								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
+							}
+
+						while( tmp.size( ) != 0 )
+							{
+								res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Helpers::newValHandle( new Lang::Length( tmp.back( ) ) ),
+																																											 res ) );
+								tmp.pop_back( );
+							}
+
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( res,
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						// Never mind, see below
+					}
+
+				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::Float::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
 
