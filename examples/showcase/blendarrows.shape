@@ -7,6 +7,6 @@
 @defaultunit: 1%C
 |
 {
-  •page << [stroke (0cm,0cm)>(^)--(^)<(1cm,1cm)>(^)--(^)<(0cm,2.5cm) head:metaPostArrow]
-  •page << [stroke (1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(1cm,2cm) head:metaPostArrow]
+  •page << [stroke (0cm,0cm)>(^)--(^)<(1cm,1cm)>(^)--(^)<(0cm,2.5cm) head:MetaPostArrow]
+  •page << [stroke (1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(1cm,2cm) head:MetaPostArrow]
 }

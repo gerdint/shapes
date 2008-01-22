@@ -57,7 +57,7 @@ ballSpace: 0.2
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }
@@ -83,7 +83,7 @@ ballSpace: 0.2
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }

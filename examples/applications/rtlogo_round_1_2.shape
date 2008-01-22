@@ -45,7 +45,7 @@ ballSpace: 0.24
 
 |**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1r,[baseline 0].p.y)--(1r,(+0r))]
-  
+
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.
    **/
@@ -57,7 +57,7 @@ ballSpace: 0.24
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }
@@ -83,7 +83,7 @@ ballSpace: 0.24
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }

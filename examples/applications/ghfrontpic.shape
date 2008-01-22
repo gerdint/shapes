@@ -30,7 +30,7 @@ table: •table;
 
 colorScale: \ z .> [rgb 0.3+0.7*z 0 0]
 
-surfacePoly: \ c00 c11 z00 z01 z10 z11 .>
+surfacePoly4: \ c00 c11 z00 z01 z10 z11 .>
 {
   p00: [immerse c00*1u]
   p11: [immerse c11*1u]
@@ -38,6 +38,11 @@ surfacePoly: \ c00 c11 z00 z01 z10 z11 .>
   [facet (p00+z00*zHat)--(p00.x,p11.y,z01*1u)--(p11.x,p00.y,z10*1u)--cycle]
 	&
   [facet (p11+z11*zHat)--(p00.x,p11.y,z01*1u)--(p11.x,p00.y,z10*1u)--cycle]
+}
+surfacePoly3: \ c0 c1 c2 z0 z1 z2 .>
+{
+	zHat: (0u,0u,1u)
+  [facet ([immerse c0*1u]+z0*zHat)--([immerse c1*1u]+z1*zHat)--([immerse c2*1u]+z2*zHat)--cycle]
 }
 •densitysurface: newZSorter
 •densitysurface << lights
@@ -51,7 +56,8 @@ surfacePoly: \ c00 c11 z00 z01 z10 z11 .>
   |
 {
   •densitysurface
-   << [surfacePoly (0,0) (0.2,0.2) 1 2 2 1.5]
+   << [surfacePoly4 (0,0) (0.2,0.2) 1 2 2 1.5]
+   << [surfacePoly3 (0.2,0.2) (0.2,0.4) (0.1,0.5) 0.1 1 0.5]
 }
 densitysurface: •densitysurface;
 

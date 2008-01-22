@@ -1,0 +1,4 @@
+T1: [shift (2cm,~3mm)]
+T2: [rotate 25°]
+lbl: (TeX `$x^{2} + y^{2}$´)
+•page << [T1 lbl] << [T2 lbl] << lbl
