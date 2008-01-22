@@ -9,7 +9,7 @@ else
 SAXON=java -jar $(JAR2)
 endif
 
-PRODUCTS = html/index.html
+PRODUCTS = html/index.html html/coretypes.html html/bindings.html
 TUT_DEPS = tutorial.sxml chap-hello.sxml
 
 all: $(PRODUCTS)
@@ -22,6 +22,10 @@ all: $(PRODUCTS)
 
 html/index.html: lang.xml html.xsl $(POSTPROCDIR)/html
 	$(SAXON) $< html.xsl | $(POSTPROCDIR)/html > $@
+html/coretypes.html: coretypes.xml html-types.xsl $(POSTPROCDIR)/html
+	$(SAXON) $< html-types.xsl | $(POSTPROCDIR)/html > $@
+html/bindings.html: bindings.xml html-bindings.xsl $(POSTPROCDIR)/html
+	$(SAXON) $< html-bindings.xsl | $(POSTPROCDIR)/html > $@
 
 .PHONY: clean
 clean:
@@ -37,9 +41,3 @@ $(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
 	cat $*.sxml | $(SSI) --head $*.sxml --deps > $@
 
 -include $(wildcard *.depend)
-
-all: coretypes.html
-
-coretypes.html: coretypes.xml types_html.xsl types.dtd
-	xmlto -x types_html.xsl html coretypes.xml
-	mv coretypes.proc $@
