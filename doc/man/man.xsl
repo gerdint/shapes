@@ -30,16 +30,6 @@ version of this page.</xsl:text>
 
 <xsl:template match="manhead">.TH <xsl:value-of select="prog-name" /> <xsl:value-of select="man-section" /> &quot;<xsl:value-of select="modification-date" />&quot; &quot;<xsl:value-of select="left-footer" />&quot; &quot;<xsl:value-of select="center-header" />&quot;</xsl:template>
 
-<xsl:template match="p"><xsl:apply-templates/><xsl:text>
-
-</xsl:text></xsl:template>
-
-<xsl:template match="command-line"><xsl:text>
-.br  </xsl:text><xsl:apply-templates/><xsl:text>
-
-.br
-</xsl:text></xsl:template>
-
 <xsl:template match="synopsis-table">
 <xsl:for-each select="synopsis-case"><xsl:apply-templates/><xsl:text>
 </xsl:text></xsl:for-each>

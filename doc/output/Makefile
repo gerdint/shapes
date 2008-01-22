@@ -1,14 +1,18 @@
 all: jpg stdout
 
-jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg
+jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg tutorial-transforms_y_big.jpg
 stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdout
 
-.PRECIOUS: %.pdf
+.PRECIOUS: %.pdf %_3.pdf
 
 %.pdf %.stdout: ../../examples/features/%.shape
 	shapes --in $< --out $*.pdf > $*.stdout
+%.pdf %.stdout: ../../examples/doc/%.shape
+	shapes --in $< --out $*.pdf > $*.stdout
 
 %_3.pdf: ../../examples/features/%.shape
+	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
+%_3.pdf: ../../examples/doc/%.shape
 	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
 
 %_y_big.jpg: %_3.pdf

@@ -137,7 +137,7 @@
 <section id="kerntypes-Coords2D">
 <title>Coords2D</title>
 <body>
-<p>How coordinates in 2D are constructed is described in <secref-title id="syntax-coords2D" />.</p>
+<p>How coordinates in <str-2D /> are constructed is described in <secref-title id="syntax-coords2D" />.</p>
 
 <p>There is a subtype of <typename>Coords2D</typename>, called <typename>CornerCoords2D</typename>.  Objects of this type behave as <typename>Coords2D</typename> in every situation except when being the center point of a path point with one or more undetermined handle angles.</p>
 
@@ -164,7 +164,7 @@
 <section id="kerntypes-Coords3D">
 <title>Coords3D</title>
 <body>
-<p>How coordinates in 3D are constructed is described in <secref-title id="syntax-coords3D" />.</p>
+<p>How coordinates in <str-3D /> are constructed is described in <secref-title id="syntax-coords3D" />.</p>
 
 <p>The following fields can be referenced:</p>
 <type-field-table>
@@ -340,7 +340,7 @@
 <p>Compare with <typename>PathPoint3D</typename>.</p>
 
 <note>
-  <p>A major difference between path points in 2D and 3D is that the machinery for deducing values of undertermined handle angles and radii is not generalized to 3D.</p>
+  <p>A major difference between path points in <str-2D /> and <str-3D /> is that the machinery for deducing values of undertermined handle angles and radii is not generalized to <str-3D />.</p>
 </note>
 
 <p>The following fields are possible to reference:</p>
@@ -488,13 +488,13 @@
 <section id="kerntypes-graphics-2D">
 <title>Graphics in 2D</title>
 <top>
-<p>Values of the types described here can be drawn (possibly after projection to 2D).</p>
+<p>Values of the types described here can be drawn (possibly after projection to <str-2D />).</p>
 </top>
 
 <section id="kerntypes-Drawable2D">
 <title>Drawable2D</title>
 <body>
-<p>This is the common base type of drawable things in 2D.</p>
+<p>This is the common base type of drawable things in <str-2D />.</p>
 
 <p>A <typename>Drawable2D</typename> has no fields.</p>
 
@@ -508,7 +508,7 @@
 <section id="kerntypes-graphics-3D">
 <title>Graphics in 3D and lightening</title>
 <top>
-<p>There are two important differences when it comes to graphics in 3D compared to that in 2D.  First, one has to consider the relation between the 3D scene where the objects are defined, and the 2D media they must eventually be incorporated with.  Second, light modeling is a very important tool for obtaining reasonable colors of objects in 3D.</p>
+<p>There are two important differences when it comes to graphics in <str-3D /> compared to that in <str-2D />.  First, one has to consider the relation between the <str-3D /> scene where the objects are defined, and the <str-2D /> media they must eventually be incorporated with.  Second, light modeling is a very important tool for obtaining reasonable colors of objects in <str-3D />.</p>
 </top>
 </section>  <!-- end of kerntypes-graphics-3D -->
 

@@ -34,16 +34,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<p><em><b>Note:</b> The examples here may be presented using characters that may not be available in the man page format.  Hence, the examples may be presented differently in the man page.</em></p>
 </xsl:template>
 
-<xsl:template match="p">
-  <p><xsl:apply-templates/></p>
-</xsl:template>
-
-<xsl:template match="command-line">
-<pre class="terminal">
-<xsl:apply-templates/>
-</pre>
-</xsl:template>
-
 <xsl:template match="synopsis-table">
 <xsl:for-each select="synopsis-case">
 	<p><xsl:apply-templates/></p>

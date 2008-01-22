@@ -1,0 +1,6 @@
+<!DOCTYPE book [
+<!ENTITY bullet "<char-bullet />">
+<!ENTITY str-open "<char-str-open />">
+<!ENTITY str-close "<char-str-close />">
+<!ENTITY cdot "<char-cdot />">
+]>

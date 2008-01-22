@@ -7,8 +7,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-TeX">TeX</xsl:template>
 <xsl:template match="str-LaTeX">LaTeX</xsl:template>
 <xsl:template match="str-UTF-8">UTF-8</xsl:template>
+<xsl:template match="str-2D">2D</xsl:template>
+<xsl:template match="str-3D">3D</xsl:template>
 
-<xsl:template match="char-em-dash">\-</xsl:template>
 <xsl:template match="char-cdot">*</xsl:template>
 <xsl:template match="char-bullet">#</xsl:template>
 <xsl:template match="char-str-open">("</xsl:template>
@@ -21,5 +22,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="filename"><xsl:text>
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
+
+<xsl:template match="p"><xsl:apply-templates/><xsl:text>
+
+</xsl:text></xsl:template>
+
+<xsl:template match="command-line"><xsl:text>
+.br  </xsl:text><xsl:apply-templates/><xsl:text>
+
+.br
+</xsl:text></xsl:template>
 
 </xsl:stylesheet>

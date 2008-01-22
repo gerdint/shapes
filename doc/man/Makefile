@@ -25,5 +25,7 @@ html/index.html: tool-interface.sxml html.xsl $(POSTPROCDIR)/html
 clean:
 	-rm $(PRODUCTS)
 
-$(POSTPROCDIR)/html $(POSTPROCDIR)/man:
+$(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
+	cd $(POSTPROCDIR); make
+$(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
 	cd $(POSTPROCDIR); make

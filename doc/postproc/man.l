@@ -1,3 +1,5 @@
+/* ÅÄÖåäö -- UTF-8 hint
+ */
 %%
 
 ([\n]".ensure-line-break"[ ]*)+ { printf( "\n" ); }
@@ -8,6 +10,11 @@
 "&amp;" { printf( "&" ); }
 "&apos;" { printf( "'" ); }
 "&quot;" { printf( "\"" ); }
+
+"—" { printf( "\\-" ); }
+"…" { printf( "..." ); }
+"⋅" { printf( "*" ); }
+
 
 %%
 

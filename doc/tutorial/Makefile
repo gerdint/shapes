@@ -25,9 +25,11 @@ html/index.html: tutorial.xml ../lang/html.xsl $(POSTPROCDIR)/html
 
 .PHONY: clean
 clean:
-	-rm $(PRODUCTS) *.depend
+	-rm $(PRODUCTS)
 
-$(POSTPROCDIR)/html $(POSTPROCDIR)/man:
+$(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
+	cd $(POSTPROCDIR); make
+$(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
 	cd $(POSTPROCDIR); make
 
 .PRECIOUS: *.depend

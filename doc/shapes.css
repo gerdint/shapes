@@ -106,7 +106,7 @@ varname.replacable, paramname.replacable, typename.replacable, constname.replaca
 pre { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
-inline    { }
+inline    { color: #009; }
 varname   { }
 lengthunit{ text-decoration: overline; }
 paramname { font-style: italic; }
@@ -158,6 +158,10 @@ table.note { width:100%; border-style:solid; border-color:#0C0; }
 		font-size: smaller;
 		text-transform: uppercase;
 }
+.medium-caps sup, .small-caps sup {
+  vertical-align: 0.15em;
+}
+
 .xx-small
 {
 		font-size: xx-small;
