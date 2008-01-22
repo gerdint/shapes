@@ -623,7 +623,7 @@ Computation::SingleSidedPolygon3DRGB::render2( const Concrete::Length eyez, cons
 			}
 	}
 
-	RefCountPtr< const Lang::ColorSpace > colorSpace = Lang::THE_COLOR_SPACE_DEVICE_GRAY;
+	RefCountPtr< const Lang::ColorSpace > colorSpace = Lang::THE_COLOR_SPACE_DEVICE_RGB;
 
 	RefCountPtr< SimplePDF::PDF_Stream_out > form;
 

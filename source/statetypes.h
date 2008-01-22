@@ -102,6 +102,7 @@ namespace Shapes
 			Gray( const Concrete::Gray & components );
 			virtual ~Gray( );
 			TYPEINFODECL;
+			virtual void show( std::ostream & os ) const;
 			virtual void setStroking( std::ostream & os ) const;
 			virtual void setNonStroking( std::ostream & os ) const;
 			virtual RefCountPtr< SimplePDF::PDF_Vector > componentVector( ) const;
@@ -116,6 +117,7 @@ namespace Shapes
 			RGB( const Concrete::RGB & components );
 			virtual ~RGB( );
 			TYPEINFODECL;
+			virtual void show( std::ostream & os ) const;
 			virtual void setStroking( std::ostream & os ) const;
 			virtual void setNonStroking( std::ostream & os ) const;
 			virtual RefCountPtr< SimplePDF::PDF_Vector > componentVector( ) const;
@@ -130,6 +132,7 @@ namespace Shapes
 			CMYK( const Concrete::CMYK & components );
 			virtual ~CMYK( );
 			TYPEINFODECL;
+			virtual void show( std::ostream & os ) const;
 			virtual void setStroking( std::ostream & os ) const;
 			virtual void setNonStroking( std::ostream & os ) const;
 			virtual RefCountPtr< SimplePDF::PDF_Vector > componentVector( ) const;

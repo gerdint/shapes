@@ -1267,6 +1267,12 @@ RefCountPtr< const Lang::Class > Lang::Gray::TypeID( new Lang::SystemFinalClass(
 TYPEINFOIMPL( Gray );
 
 void
+Lang::Gray::show( std::ostream & os ) const
+{
+	os << "[gray " << components_.gr_ << "]" ;
+}
+
+void
 Lang::Gray::setStroking( ostream & os ) const
 {
 	components_.setStroking( os );
@@ -1298,6 +1304,12 @@ RefCountPtr< const Lang::Class > Lang::RGB::TypeID( new Lang::SystemFinalClass( 
 TYPEINFOIMPL( RGB );
 
 void
+Lang::RGB::show( std::ostream & os ) const
+{
+	os << "[rgb " << components_.r_ << " " << components_.g_ << " " << components_.b_ << "]" ;
+}
+
+void
 Lang::RGB::setStroking( ostream & os ) const
 {
 	components_.setStroking( os );
@@ -1327,6 +1339,12 @@ Lang::CMYK::~CMYK( )
 
 RefCountPtr< const Lang::Class > Lang::CMYK::TypeID( new Lang::SystemFinalClass( strrefdup( "CMYK" ) ) );
 TYPEINFOIMPL( CMYK );
+
+void
+Lang::CMYK::show( std::ostream & os ) const
+{
+	os << "[cmyk " << components_.c_ << " " << components_.m_ << " " << components_.y_ << " " << components_.k_ << "]" ;
+}
 
 void
 Lang::CMYK::setStroking( ostream & os ) const

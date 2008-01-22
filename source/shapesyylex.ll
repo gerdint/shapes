@@ -36,7 +36,7 @@ using namespace Shapes;
 
 #define YY_USER_ACTION doBeforeEachAction( );
 
-double shapes_strtod( const char * str, char ** end );
+double shapes_strtod( char * str, char ** end );
 
 %}
 
@@ -50,7 +50,7 @@ double shapes_strtod( const char * str, char ** end );
 
 WhiteSpace [ \t]
 
-Float [~]?[0-9]+([.][0-9]*)?
+Float [~]?[0-9]+([.][0-9]*)?("*^"[~]?[0-9]+)?
 Greek "α"|"β"|"γ"|"Γ"|"δ"|"Δ"|"ε"|"ζ"|"η"|"Θ"|"ι"|"κ"|"λ"|"Λ"|"μ"|"ν"|"χ"|"Ξ"|"π"|"Π"|"ρ"|"σ"|"Σ"|"τ"|"ϕ"|"ω"|"Ω"
 LowerCaseLetter [a-z_?]
 UpperCaseLetter [A-Z]
@@ -831,20 +831,29 @@ Escape "¢"|"¤"
  * This section is where you put definitions of helper functions.
  */
 
-double shapes_strtod( const char * str, char ** end )
+double shapes_strtod( char * str, char ** end )
 {
-	bool negate = false;
 	if( *str == '~' )
 		{
-			negate = true;
-			++str;
+			*str = '-';
 		}
-	double absval = strtod( str, end );
-	if( negate )
+	double val = strtod( str, end );
+	if( **end == '*' )
 		{
-			return -absval;
+			// We replace the "^*" by something in the notation of strtod
+			**end = 'e';
+			if( *(*end+2) == '~' )
+				{
+					*(*end+1) = '-';
+					*(*end+2) = '0';
+				}
+			else
+				{
+					*(*end+1) = '0';
+				}
+			val = strtod( str, end );
 		}
-	return absval;
+	return val;
 }
 
 void

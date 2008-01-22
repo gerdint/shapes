@@ -920,14 +920,14 @@ main( int argc, char ** argv )
 	{
 		std::string inDir;
 		std::string inPath = inputName;
-		char * slash = strrchr( inPath.c_str( ), '/' );
-		if( slash == 0 )
+		std::string::size_type slash = inPath.find( '/' );
+		if( slash == std::string::npos )
 			{
 				inPath = "";
 			}
 		else
 			{
-				*slash = '\0';
+				inPath = inPath.substr( 0, slash );
 			}
 		if( inPath[0] == '/' )
 			{
@@ -1082,7 +1082,7 @@ main( int argc, char ** argv )
 		{
 			(*Kernel::the_pdfo->info_)[ "Title" ] = SimplePDF::PDF_out::newString( inputName.c_str( ) );
 			iFile.open( inputName.c_str( ) );
-			if( ! iFile.good( ) )
+			if( ! iFile.good( ) || ! iFile.is_open( ) )
 				{
 					std::cerr << "Failed to open " << inputName << " for input." << std::endl ;
 					exit( 1 );

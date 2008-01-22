@@ -406,7 +406,7 @@ Kernel::FacetState::FacetState( const Kernel::FacetState & newValues, const Kern
 
 Kernel::FacetState::FacetState( bool setDefaults )
 	: reflections_( RefCountPtr< const Lang::SpecularReflection >( new Lang::SpecularReflectionNull( ) ) ),
-		autoIntensity_( RefCountPtr< const Lang::Color >( new Lang::Gray( 1 ) ) ),
+		autoIntensity_( RefCountPtr< const Lang::Color >( new Lang::Gray( 0 ) ) ),
 		autoScattering_( RefCountPtr< const Lang::SpecularReflection >( new Lang::SpecularReflectionNull( ) ) ),
 		viewResolution_( Concrete::HUGE_LENGTH ),
 		shadeOrder_( 0 )

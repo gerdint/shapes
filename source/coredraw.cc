@@ -301,6 +301,11 @@ namespace Shapes
 				Kernel::ContRef cont = evalState->cont_;
 
 				RefCountPtr< const Lang::Color > nonStroking = evalState->dyn_->getGraphicsState( )->nonStrokingColor_;
+
+				/* If both @nonstroking and @autointensity are Gray, then we create a FacetNormalGray, otherwise colors are converted when needed to RGB so that we can create
+				 * a FacetNormalRGB.
+				 */
+
 				try
 					{
 						typedef const Lang::Gray ColorType;
@@ -313,7 +318,7 @@ namespace Shapes
 																																					Concrete::UnitFloatTriple( normal->x_, normal->y_, normal->z_ ),
 																																					lightMultiply->components( ),
 																																					facetState->autoScattering_,
-																																					Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, facetState->autoIntensity_, callLoc )->components( ) ) ),
+																																					Helpers::try_cast_CoreArgument< ColorType >( facetState->autoIntensity_ )->components( ) ) ),
 														 evalState );
 						return;
 					}
@@ -323,31 +328,73 @@ namespace Shapes
 						 */
 					}
 
+				// When we reach here, we shall try to convert all colors to RGB.
+
+				typedef const Lang::RGB ColorType;
+				Concrete::RGB lightMultiply( 0, 0, 0 );
 				try
 					{
-						typedef const Lang::RGB ColorType;
-						RefCountPtr< ColorType > lightMultiply = Helpers::try_cast_CoreArgument< ColorType >( nonStroking );
-
-						cont->takeValue( Kernel::ValueRef( new Lang::FacetNormalRGB( Concrete::Coords3D( location->x_.get( ),
-																																														 location->y_.get( ),
-																																														 location->z_.get( ) ),
-																																				 facetState->reflections_,
-																																				 Concrete::UnitFloatTriple( normal->x_, normal->y_, normal->z_ ),
-																																				 lightMultiply->components( ),
-																																				 facetState->autoScattering_,
-																																				 Helpers::down_cast_CoreDynamic< ColorType >( title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING, facetState->autoIntensity_, callLoc )->components( ) ) ),
-														 evalState );
-						return;
+						lightMultiply = Helpers::try_cast_CoreArgument< ColorType >( nonStroking )->components( );
+						goto doneMultiply;
 					}
 				catch( const NonLocalExit::NotThisType & ball )
 					{
 						/* Wrong type; never mind!.. but see below!
 						 */
 					}
-
+				try
+					{
+						double a = Helpers::try_cast_CoreArgument< const Lang::Gray >( nonStroking )->components( ).gr_;
+						lightMultiply = Concrete::RGB( a, a, a );
+						goto doneMultiply;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
 				throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_NONSTROKING,
+																										 nonStroking->getTypeName( ),
+																									 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
+			doneMultiply:
+
+				Concrete::RGB autoIntensity( 0, 0, 0 );
+				try
+					{
+						autoIntensity = Helpers::try_cast_CoreArgument< ColorType >( facetState->autoIntensity_ )->components( );
+						goto doneAuto;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+				try
+					{
+						double a = Helpers::try_cast_CoreArgument< const Lang::Gray >( facetState->autoIntensity_ )->components( ).gr_;
+						autoIntensity = Concrete::RGB( a, a, a );
+						goto doneAuto;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+				throw Exceptions::CoreDynamicTypeMismatch( callLoc, title_, Lang::DYNAMIC_VARIABLE_ID_AUTOINTENSITY,
 																									 nonStroking->getTypeName( ),
 																									 Helpers::typeSetString( Lang::Gray::staticTypeName( ), Lang::RGB::staticTypeName( ) ) );
+			doneAuto:
+
+				cont->takeValue( Kernel::ValueRef( new Lang::FacetNormalRGB( Concrete::Coords3D( location->x_.get( ),
+																																												 location->y_.get( ),
+																																												 location->z_.get( ) ),
+																																		 facetState->reflections_,
+																																		 Concrete::UnitFloatTriple( normal->x_, normal->y_, normal->z_ ),
+																																		 lightMultiply,
+																																		 facetState->autoScattering_,
+																																		 autoIntensity ) ),
+												 evalState );
+				return;
 			}
 		};
 
@@ -395,9 +442,9 @@ namespace Shapes
 				try
 					{
 						typedef GrayNormalType NormalType;
-						nGray1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
-						nGray2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
-						nGray3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
+						nGray1 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 1 ), true );
+						nGray2 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 2 ), true );
+						nGray3 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 3 ), true );
 						// If we reach here, numNormals will be zero.
 						if( nGray1 != NullPtr< NormalType >( ) )
 							{
@@ -435,9 +482,9 @@ namespace Shapes
 						try
 							{
 								typedef RGBNormalType NormalType;
-								nRGB1 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 1, callLoc, true );
-								nRGB2 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 2, callLoc, true );
-								nRGB3 = Helpers::down_cast_CoreArgument< NormalType >( title_, args, 3, callLoc, true );
+								nRGB1 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 1 ), true );
+								nRGB2 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 2 ), true );
+								nRGB3 = Helpers::try_cast_CoreArgument< NormalType >( args.getValue( 3 ), true );
 								// If we reach here, numNormals will be zero.
 								if( nRGB1 != NullPtr< NormalType >( ) )
 									{
@@ -469,6 +516,10 @@ namespace Shapes
 								/* Wrong type; never mind!.. but see below!
 								 */
 							}
+					}
+				if( ! foundColor )
+					{
+						throw Exceptions::MiscellaneousRequirement( "The procided facet normals must either be all gray or all RGB." );
 					}
 				RefCountPtr< const Lang::Color > nonStroking = evalState->dyn_->getGraphicsState( )->nonStrokingColor_;
 				if( numNormals == 0 )
