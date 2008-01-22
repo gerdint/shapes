@@ -19,7 +19,7 @@ all: $(PRODUCTS)
 #	@xsltproc man.xsl mini.sxml | sed '1,1d' > $@
 
 %.xml: %.sxml %.depend $(SSI)
-	cat $< | $(SSI)/ssipp > $@
+	cat $< | $(SSI) > $@
 
 html/index.html: tutorial.xml ../lang/html.xsl $(POSTPROCDIR)/html
 	$(SAXON) $< ../lang/html.xsl | $(POSTPROCDIR)/html > $@

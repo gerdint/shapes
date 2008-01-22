@@ -1,1 +1,1 @@
-tutorial.sxml: ../notation/doctype-book.xml chap-install.sxml chap-hello.sxml chap-basics.sxml ../../examples/doc/tutorial-transforms.shape
+tutorial.sxml: ../notation/doctype-book.xml chap-install.sxml chap-hello.sxml chap-basics.sxml ../../examples/doc/tutorial-transforms.shape ../../examples/doc/tutorial-path-painting.shape

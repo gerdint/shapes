@@ -19,7 +19,7 @@ triangleArrow: \ p ahLength:void ahAngle:30° fillAsStroking:true .>
   |
   { sl: [p 0]
     z: sl.p
-    d: [angle sl.t]
+    d: [angle sl.T]
     theLength: [if [typeof ahLength]==§Void @width*5 ahLength]
     (>
       picture: @nonstroking:[if fillAsStroking @stroking @nonstroking]
@@ -48,9 +48,9 @@ twoCircles3DArrow:
       l: [min theLength*[cos ahAngle] 0.9*[abs p]]
       e: [p 0]--[p l]
       (>
-        picture: [stroke [[shift [p 0.5*theLength*[cos ahAngle]].p]*[ztf [p 0.5*theLength*[cos ahAngle]].t] [immerse [circle 0.5*theLength*[sin ahAngle]]]]]
+        picture: [stroke [[shift [p 0.5*theLength*[cos ahAngle]].p]*[ztf [p 0.5*theLength*[cos ahAngle]].T] [immerse [circle 0.5*theLength*[sin ahAngle]]]]]
                  &
-		 [stroke [[shift [p theLength*[cos ahAngle]].p]*[ztf [p theLength*[cos ahAngle]].t] [immerse [circle theLength*[sin ahAngle]]]]]
+		 [stroke [[shift [p theLength*[cos ahAngle]].p]*[ztf [p theLength*[cos ahAngle]].T] [immerse [circle theLength*[sin ahAngle]]]]]
         cut: 0mm
       <)
     }
@@ -74,14 +74,14 @@ triangleArrow3D: \ p normal:(0,0,1) ahLength:void ahAngle:30° .>
   { sl: [p 0]
     z: sl.p
     l: [if [typeof ahLength]==§Void @width*5 ahLength]
-    rotDir1: [cross sl.t [orthogonal sl.t]]
+    rotDir1: [cross sl.T [orthogonal sl.T]]
     (>
       picture:
         { rotDir: rotDir1
-          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.t))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.t))--cycle ) }
+          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) }
 	&
-	{ rotDir: [cross sl.t rotDir1]
-          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.t))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.t))--cycle ) }
+	{ rotDir: [cross sl.T rotDir1]
+          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) }
       cut: 2*@width
     <)
   }

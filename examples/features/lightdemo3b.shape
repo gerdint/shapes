@@ -1,0 +1,62 @@
+##needs centering
+
+•zbuf: newZBuf
+
+interp: ( newRGBInterpolator
+ << 0.0 << [rgb 0.8 0 0]
+ << 0.1 << [rgb 1 0.8 0.8]
+ << 0.2 << [rgb 0 0 0.8]
+ << 0.3 << [rgb 1 0.8 0.8]
+ << 0.4 << [rgb 0.8 0 0]
+ << 0.5 << [rgb 1 0.8 0.8]
+ << 0.6 << [rgb 0.8 0 0]
+ << 0.7 << [rgb 1 0.8 0.8]
+ << 0.8 << [rgb 0 0.8 0]
+ << 0.9 << [rgb 1 0.8 0.8]
+ << 1.0 << [rgb 0.8 0 0]
+ )
+
+yMin: ~5cm
+yMax: 5cm
+
+makeNormal: \ p .> ( @nonstroking:[interp (p.y-yMin)/(yMax-yMin)] | [debuglog_before [sprintf `%g¢n´ (p.y-yMin)/(yMax-yMin)] [facetnormal p [normalized (p.x,p.y,0bp)]]] )
+
+r: 6cm
+##unit w = 1cm
+delta: 0.03
+obj:
+   @reflections:[phong 1]
+  & @autointensity:[gray 0.15]
+  & @autoscattering:[phong 0.2]
+  & @shadeorder:'2
+  & @facetresolution:1cm
+  |
+  [[range 0 0.9999-delta delta].foldl
+   \ p e .> {
+	   y1: yMin + e * ( yMax - yMin )
+	   y2: yMin + ( e + delta ) * ( yMax - yMin )
+   	 p &
+		 [facet (r,y1,~0.5w)--(r,y2,~0.5w)--(r,y2,0.5w)--(r,y1,0.5w)--cycle
+	 	 	 	 		         [makeNormal (r,y1,~1cm)]
+										 [makeNormal (r,y1,1cm)]
+										 [makeNormal (r,y2,0cm)]]
+		}
+   null3D]
+
+[[range 10° 170° 10°].foldsl
+ \ p e •st .>
+  !{
+    •st << [rotate3D (0,1,0) ~e] [] obj
+    p
+  }
+ void
+ •zbuf]
+
+•zbuf << [shift (10cm,3cm,10cm)] [] [specular_light [gray 0.9]]
+
+zbuf: •zbuf;
+
+tmp: [enlargebbox [view zbuf] (5mm,5mm)]
+
+•page << @nonstroking:GRAY_BLACK | [fill [bbox tmp]]
+•page << tmp

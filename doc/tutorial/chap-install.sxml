@@ -1,0 +1,49 @@
+<section id="chap-install">
+<title>Installing Shapes</title>
+<top>
+<p>Before we get to the interesting parts, we must make sure the tools are in place.</p>
+</top>
+
+<section id="install-depend">
+<title>Dependencies</title>
+<body>
+<p>In order to build the <str-Shapes /> compiler, the following software need to be installed on your system:</p>
+<ol>
+<li><p><em>zLib</em>, the compression library</p></li>
+<li><p>The <em>iconv</em> library, for conversions between virous character encodings</p></li>
+<li><p>The Gnu Scientific Library, <em>gsl</em>, for mathematical algorithms</p></li>
+<li><p><str-LaTeX /> (not required), for typesetting labels in your figures</p></li>
+</ol>
+</body>
+</section><!-- End of install-depend -->
+
+<section id="install-fetch">
+<title>Obtaining the source code</title>
+<body>
+<p>The source code can be downloaded from the <a href="http://www.control.isy.liu.se/~tidefelt/projects/shapes/download/">download</a> section of the <str-Shapes /> homepage.</p>
+</body>
+</section><!-- End of install-fetch -->
+
+<section id="install-build">
+<title>Building and installing</title>
+<body>
+<p>Assuming the downloaded file was called <filename>shapes-x-y-z.tgz</filename>, the standard procedure below contains the necessary steps.</p>
+<command-line>
+tar zxf shapes-x-y-z.tgz
+cd shapes-x-y-z
+autoreconf -ivfs
+./configure
+make
+make check
+sudo make install
+</command-line>
+<p>You may omit the <quote>make check</quote> part if you like, but it won't save you much time.  Also, the <quote>sudo</quote> word at the beginning of the last line may not be appropriate for your system, or not required if the installation was configured to install somewhere where your user has permission to write files.</p>
+<p>To see for yourself that the program is installed, you may try reading its terminal-based documentation:</p>
+<command-line>
+man shapes
+</command-line>
+<p>That's it; now you're ready for the rest of this tutorial, which is the fun part!</p>
+</body>
+</section><!-- End of install-fetch -->
+
+</section><!-- end of chap-install -->
