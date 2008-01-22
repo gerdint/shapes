@@ -242,7 +242,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </tr>
 </xsl:template>
 
-<xsl:template match="function/case/arguments/arg">(__)<xsl:apply-templates select="default" />::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
+<xsl:template match="function/case/arguments/arg[not(@identifier)]">(__)<xsl:apply-templates select="default" />::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
 <xsl:template match="function/case/arguments/arg[@identifier]"><varname><xsl:value-of select="@identifier" /><xsl:apply-templates select="default" /></varname>::<xsl:apply-templates select="type" /><xsl:text> </xsl:text></xsl:template>
 <xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
 

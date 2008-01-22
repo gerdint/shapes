@@ -18,7 +18,7 @@
 <tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
 <tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname> <bnf>|</bnf> <syntaxname>basic-float</syntaxname>°</inline></td></tr>
 </syntax-table>
-<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inilne>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
+<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
 
 <token-example-table>
 <head>
@@ -498,8 +498,8 @@ Multi-line...´
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
 <image pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" />
-<source file="../../examples/features/cornerpoint.drool">
-<![CDATA[<!--#include virtual="../../examples/features/cornerpoint.drool" -->]]>
+<source file="../../examples/features/cornerpoint.shape">
+<![CDATA[<!--#include virtual="../../examples/features/cornerpoint.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -578,8 +578,8 @@ Multi-line...´
 </pre>
 
 <example-with-output title="Example" internal-id="example-values">
-<source file="../../examples/features/values.drool">
-<![CDATA[<!--#include virtual="../../examples/features/values.drool" -->]]>
+<source file="../../examples/features/values.shape">
+<![CDATA[<!--#include virtual="../../examples/features/values.shape" -->]]>
 </source>
 <stdout>
 <![CDATA[<!--#include virtual="../output/values.stdout" -->]]>
@@ -875,8 +875,8 @@ inc: [addn '1]
 <p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
 <example-with-output title="Example" internal-id="example-lex-scopes">
-<source file="../../examples/features/scopes.drool">
-<![CDATA[<!--#include virtual="../../examples/features/scopes.drool" -->]]>
+<source file="../../examples/features/scopes.shape">
+<![CDATA[<!--#include virtual="../../examples/features/scopes.shape" -->]]>
 </source>
 <stdout>
 <![CDATA[<!--#include virtual="../output/scopes.stdout" -->]]>
@@ -940,8 +940,8 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </pre>
 
 <example-with-output title="Example" internal-id="example-dyn-scopes">
-<source file="../../examples/features/dynamic.drool">
-<![CDATA[<!--#include virtual="../../examples/features/dynamic.drool" -->]]>
+<source file="../../examples/features/dynamic.shape">
+<![CDATA[<!--#include virtual="../../examples/features/dynamic.shape" -->]]>
 </source>
 <stdout>
 <![CDATA[<!--#include virtual="../output/dynamic.stdout" -->]]>
@@ -973,8 +973,8 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </remark>
 
 <example-with-output title="Example" internal-id="example-escape">
-<source file="../../examples/features/escape.drool">
-<![CDATA[<!--#include virtual="../../examples/features/escape.drool" -->]]>
+<source file="../../examples/features/escape.shape">
+<![CDATA[<!--#include virtual="../../examples/features/escape.shape" -->]]>
 </source>
 <stdout>
 <![CDATA[<!--#include virtual="../output/escape.stdout" -->]]>
@@ -1085,8 +1085,8 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 
 <example-with-output title="Example" internal-id="example-escape">
 <image pdf="../output/pathconstruction.pdf" jpg="../output/pathconstruction_y_small.jpg" />
-<source file="../../examples/features/pathconstruction.drool">
-<![CDATA[<!--#include virtual="../../examples/features/pathconstruction.drool" -->]]>
+<source file="../../examples/features/pathconstruction.shape">
+<![CDATA[<!--#include virtual="../../examples/features/pathconstruction.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -1112,8 +1112,8 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
 <example-with-output title="Example" internal-id="example-evalorder">
-<source file="../../examples/features/evalorder.drool">
-<![CDATA[<!--#include virtual="../../examples/features/evalorder.drool" -->]]>
+<source file="../../examples/features/evalorder.shape">
+<![CDATA[<!--#include virtual="../../examples/features/evalorder.shape" -->]]>
 </source>
 <stdout>
 <![CDATA[<!--#include virtual="../output/evalorder.stdout" -->]]>

@@ -65,8 +65,8 @@ facing: [../facing scale:true distort:true ...]
 
 <example-with-output title="Example" internal-id="example-boxedeq">
 <image pdf="../output/boxedeq.pdf" jpg="../output/boxedeq_y_small.jpg" />
-<source file="../../examples/features/boxedeq.drool">
-<![CDATA[<!--#include virtual="../../examples/features/boxedeq.drool" -->]]>
+<source file="../../examples/features/boxedeq.shape">
+<![CDATA[<!--#include virtual="../../examples/features/boxedeq.shape" -->]]>
 </source>
 </example-with-output>
 
