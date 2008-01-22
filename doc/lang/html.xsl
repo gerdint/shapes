@@ -57,82 +57,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:apply-templates select="//section[@id=$dstid]/title" />
 </xsl:template>
 
-<xsl:template match="ol">
-  <ol><xsl:apply-templates/></ol>
-</xsl:template>
-<xsl:template match="ol/li">
-  <li><xsl:apply-templates/></li>
-</xsl:template>
-
-<xsl:template match="pre">
-<pre>
-<xsl:apply-templates/>
-</pre>
-</xsl:template>
-<xsl:template match="pre[@class]">
-<xsl:element name="pre">
-<xsl:attribute name="class"><xsl:value-of select="@class" /></xsl:attribute>
-<xsl:apply-templates/>
-</xsl:element>
-</xsl:template>
-
-<xsl:template match="note">
-  <table class="note">
-    <tr><td><xsl:apply-templates/></td></tr>
-  </table>
-</xsl:template>
-
-
-<xsl:template match="inline">
-  <inline><xsl:apply-templates/></inline>
-</xsl:template>
-<xsl:template match="em">
-  <em><xsl:apply-templates/></em>
-</xsl:template>
-<xsl:template match="bnf">
-  <bnf><xsl:apply-templates/></bnf>
-</xsl:template>
-<xsl:template match="typename">
-  <typename><xsl:apply-templates/></typename>
-</xsl:template>
-<xsl:template match="typename[@class='replacable']">
-  <typename class="replacable"><xsl:apply-templates/></typename>
-</xsl:template>
-<xsl:template match="varname">
-  <varname><xsl:apply-templates/></varname>
-</xsl:template>
-<xsl:template match="varname[@class='replacable']">
-  <varname class="replacable"><xsl:apply-templates/></varname>
-</xsl:template>
-<xsl:template match="lexerregexp">
-  <lexerregexp><xsl:apply-templates/></lexerregexp>
-</xsl:template>
-<xsl:template match="syntaxname[@class='new']">
-  <xsl:element name="a">
-    <xsl:attribute name="name">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname class="new"><xsl:apply-templates/></syntaxname>
-  </xsl:element>
-</xsl:template>
-<xsl:template match="syntaxname">
-  <xsl:element name="a">
-    <xsl:attribute name="href">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname><xsl:apply-templates/></syntaxname>
-  </xsl:element>
-</xsl:template>
-<xsl:template match="a[@href]">
-  <xsl:element name="a">
-    <xsl:attribute name="href"><xsl:value-of select="@href" /></xsl:attribute>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
-<xsl:template match="exampleswitch[@onclick]">
-  <xsl:element name="div">
-    <xsl:attribute name="style">display:inline;</xsl:attribute>
-    <xsl:attribute name="onclick"><xsl:value-of select="@onclick" /></xsl:attribute>
-    <exampleswitch><xsl:apply-templates/></exampleswitch>
-  </xsl:element>
-</xsl:template>
-
 <xsl:template match="syntax-table">
   <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
 </xsl:template>
@@ -142,11 +66,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:apply-templates select="body"/>
   </table>
 </xsl:template>
-<xsl:template match="tight-table">
-  <table><xsl:apply-templates select="tr"/></table>
-</xsl:template>
-<xsl:template match="loose-table">
-  <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
+
+<xsl:template match="exampleswitch[@onclick]">
+  <xsl:element name="div">
+    <xsl:attribute name="style">display:inline;</xsl:attribute>
+    <xsl:attribute name="onclick"><xsl:value-of select="@onclick" /></xsl:attribute>
+    <exampleswitch><xsl:apply-templates/></exampleswitch>
+  </xsl:element>
 </xsl:template>
 <xsl:template match="example-with-output[@*]">
   <table class="codefile">
@@ -218,35 +144,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </td>
   </xsl:element>
 </xsl:template>
-<xsl:template match="tr">
-  <tr><xsl:apply-templates/></tr>
-</xsl:template>
 <xsl:template match="token-example-table/head/tr">
   <tr align="left"><xsl:apply-templates/></tr>
 </xsl:template>
 <xsl:template match="code-file-table/tr">
   <tr align="center"><xsl:apply-templates/></tr>
-</xsl:template>
-<xsl:template match="tr[@align]">
-  <xsl:element name="tr">
-    <xsl:attribute name="align"><xsl:value-of select="./@align" /></xsl:attribute>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
-<xsl:template match="head/tr/td">
-  <th><xsl:apply-templates/></th>
-</xsl:template>
-<xsl:template match="td">
-  <td><xsl:apply-templates/></td>
-</xsl:template>
-<xsl:template match="th">
-  <th><xsl:apply-templates/></th>
-</xsl:template>
-<xsl:template match="th[@colspan]">
-  <xsl:element name="th">
-    <xsl:attribute name="colspan"><xsl:value-of select="./@colspan" /></xsl:attribute>
-    <xsl:apply-templates/>
-  </xsl:element>
 </xsl:template>
 
 <xsl:template match="type-field-table">
@@ -264,13 +166,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <td><xsl:apply-templates select="type"/></td>
     <td><xsl:apply-templates select="description"/></td>
   </tr>
-</xsl:template>
-
-<xsl:template match="img[@*]">
-  <xsl:element name="img">
-    <xsl:attribute name="src"><xsl:value-of select="@src" /></xsl:attribute>
-    <xsl:attribute name="alt"><xsl:value-of select="@alt" /></xsl:attribute>
-  </xsl:element>
 </xsl:template>
 
 <xsl:template match="operator-table[@type]">
