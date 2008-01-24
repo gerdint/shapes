@@ -1,0 +1,1 @@
+This directory contains the documentation sources.  Each subdirectory is responsible for knowing how to produce its output in various formats, and the output shall go to the one of the designated subdirectories in the ../formats directory.  Make sure output filenames don't collide with output from other parts!
