@@ -1,0 +1,1 @@
+This directory contains subdirectories with style files of various kinds, to be used from formatted files.  For example, a HTML document in formats/html may refer to a CSS file in the html subdirectory of this directory.  This means that this directory contains documentation sources that must have a fixed location relative to the formats directory.
