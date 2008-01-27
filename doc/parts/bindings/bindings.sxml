@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="../notation/html.xsl"?>
-<?xml-stylesheet type="text/xsl" href="html-bindings.xsl"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
 
 <book>
-<title>List of global bindings in the Shapes language</title>
+<title>Shapes' global bindings</title>
 <top>
 <p>This part of the documentation is simply that; an alphabetical listing of all global bindings defined by the kernel.  Below, an alphabetical list of links to bindings is provided.  For a grouping of the bindings by cathegory, the readers is referred to the the chapter on system bindings in the main language reference.</p>
 <alphabetical-list-of-links />
 </top>
+<body>
 <alphabetical-list-of-bindings />
-<!--#include virtual="bindings.sxml" -->
+</body>
+<!--#include virtual="functions.sxml" -->
 </book>

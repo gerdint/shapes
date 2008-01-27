@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:include href="../notation/html.xsl" />
+<xsl:include href="../../formats/html.xsl" />
 
 <xsl:template match="/book">
   <html>
     <head>
       <title><xsl:value-of select="title" /></title>
-      <link rel="stylesheet" href="../shapes.css" />
+      <link rel="stylesheet" href="../../styles/html/shapes.css" />
     </head>
     <body>
 			<h0><xsl:value-of select="title" /></h0>
@@ -32,3 +32,5 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="alphabetical-list-of-bindings">
 Foo
 </xsl:template>
+
+</xsl:stylesheet>

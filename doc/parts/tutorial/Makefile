@@ -17,13 +17,14 @@ SAXON=java -jar $(JAR2)
 endif
 
 PRODUCTS = $(HTMLDIR)/tutorial.html
+DEPENDS = build/tutorial.depend
 
 all: $(PRODUCTS)
 
-%.xml: %.sxml %.depend $(SSI)
+build/%.xml: %.sxml build/%.depend $(SSI)
 	cat $< | $(SSI) > $@
 
-$(HTMLDIR)/tutorial.html: tutorial.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
+$(HTMLDIR)/tutorial.html: build/tutorial.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 $(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
@@ -37,8 +38,8 @@ $(SSI): $(SSIDIR)/main.cc $(SSIDIR)/ssiyylex.ll $(SSIDIR)/ssiscanner.h $(SSIDIR)
 clean:
 	-rm $(PRODUCTS)
 
-.PRECIOUS: *.depend
-%.depend: %.sxml $(wildcard *.sxml) $(SSI)
+.PRECIOUS: build/*.depend
+build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
 	cat $*.sxml | $(SSI) --head $*.sxml --deps > $@
 
--include $(wildcard *.depend)
+-include $(wildcard build/*.depend)
