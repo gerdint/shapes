@@ -4,7 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:output method="text" indent="no" />
 
-<xsl:include href="../notation/man.xsl" />
+<xsl:include href="../../formats/man.xsl" />
 
 <xsl:template match="/man">
 <xsl:apply-templates select="manhead" />

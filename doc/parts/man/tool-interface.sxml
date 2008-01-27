@@ -24,9 +24,9 @@
 		<title>Synopsis</title>
 		<body>
 			<synopsis-table>
-				<synopsis-case><prog-name>shapes</prog-name> <syntax-name>option</syntax-name><bnf>*</bnf> <replacable>source</replacable></synopsis-case>
-				<synopsis-case><prog-name>shapes</prog-name> <syntax-name>option</syntax-name><bnf>*</bnf></synopsis-case>
-				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <syntax-name>options</syntax-name> <bnf>|</bnf> <syntax-name>file-request</syntax-name> <bnf>)*</bnf> </synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf> <replacable>source</replacable></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <synatxname>options</synatxname> <bnf>|</bnf> <synatxname>file-request</synatxname> <bnf>)*</bnf> </synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>
@@ -41,7 +41,7 @@
 	<section>
 		<title>Command line options</title>
 		<top>
-			<p>Command line options fall into two cathegories, most of which were referred to as <syntax-name>option</syntax-name> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <syntax-name>file-request</syntax-name> above.</p>
+			<p>Command line options fall into two cathegories, most of which were referred to as <synatxname>option</synatxname> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <synatxname>file-request</synatxname> above.</p>
 		</top>
  		<section>
 			<title>Files</title>

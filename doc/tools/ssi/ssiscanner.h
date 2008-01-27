@@ -41,6 +41,7 @@ public:
 	virtual ~SSIScanner( );
 	virtual int yylex( );
  private:
+	char * expandDefines( const char * str ); // Returns newly allocated memory.
 	void doInclusion( );
 };
 

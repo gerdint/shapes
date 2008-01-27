@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--#include virtual="../notation/doctype-book.xml" -->
+<!--#include virtual="../formats/doctype-book.xml" -->
 <book>
 <title>The short Shapes tutorial</title>
 <top>

@@ -497,9 +497,9 @@ Multi-line...´
 <p />
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
-<image pdf="../output/cornerpoint.pdf" jpg="../output/cornerpoint_y_big.jpg" />
-<source file="../../examples/features/cornerpoint.shape">
-<![CDATA[<!--#include virtual="../../examples/features/cornerpoint.shape" -->]]>
+<image pdf="cornerpoint.pdf" jpg="cornerpoint_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/cornerpoint.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/cornerpoint.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -578,11 +578,11 @@ Multi-line...´
 </pre>
 
 <example-with-output title="Example" internal-id="example-values">
-<source file="../../examples/features/values.shape">
-<![CDATA[<!--#include virtual="../../examples/features/values.shape" -->]]>
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/values.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/values.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="../output/values.stdout" -->]]>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/values.stdout" -->]]>
 </stdout>
 </example-with-output>
 
@@ -875,11 +875,11 @@ inc: [addn '1]
 <p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
 <example-with-output title="Example" internal-id="example-lex-scopes">
-<source file="../../examples/features/scopes.shape">
-<![CDATA[<!--#include virtual="../../examples/features/scopes.shape" -->]]>
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/scopes.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/scopes.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="../output/scopes.stdout" -->]]>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/scopes.stdout" -->]]>
 </stdout>
 </example-with-output>
 
@@ -940,11 +940,11 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </pre>
 
 <example-with-output title="Example" internal-id="example-dyn-scopes">
-<source file="../../examples/features/dynamic.shape">
-<![CDATA[<!--#include virtual="../../examples/features/dynamic.shape" -->]]>
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/dynamic.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/dynamic.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="../output/dynamic.stdout" -->]]>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/dynamic.stdout" -->]]>
 </stdout>
 </example-with-output>
 
@@ -973,11 +973,11 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </remark>
 
 <example-with-output title="Example" internal-id="example-escape">
-<source file="../../examples/features/escape.shape">
-<![CDATA[<!--#include virtual="../../examples/features/escape.shape" -->]]>
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/escape.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/escape.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="../output/escape.stdout" -->]]>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/escape.stdout" -->]]>
 </stdout>
 </example-with-output>
 
@@ -1083,10 +1083,10 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <p>The difference is that <varname>p1</varname> will generally get handles of unequal length, while <varname>p2</varname> gets handles of equal length.</p>
 </remark>
 
-<example-with-output title="Example" internal-id="example-escape">
-<image pdf="../output/pathconstruction.pdf" jpg="../output/pathconstruction_y_small.jpg" />
-<source file="../../examples/features/pathconstruction.shape">
-<![CDATA[<!--#include virtual="../../examples/features/pathconstruction.shape" -->]]>
+<example-with-output title="Example" internal-id="example-pathconstruction">
+<image pdf="pathconstruction.pdf" jpg="pathconstruction_y_small.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/pathconstruction.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/pathconstruction.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -1112,11 +1112,11 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
 <example-with-output title="Example" internal-id="example-evalorder">
-<source file="../../examples/features/evalorder.shape">
-<![CDATA[<!--#include virtual="../../examples/features/evalorder.shape" -->]]>
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/evalorder.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/evalorder.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="../output/evalorder.stdout" -->]]>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/evalorder.stdout" -->]]>
 </stdout>
 </example-with-output>
 

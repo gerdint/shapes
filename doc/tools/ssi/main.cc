@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 int
 main( int argc, char ** argv )
@@ -13,7 +14,21 @@ main( int argc, char ** argv )
 	++argv;
 	while( argc > 0 )
 		{
-			if( strcmp( *argv, "--deps" ) == 0 )
+			if( strncmp( *argv, "-d", 2 ) == 0 )
+				{
+					char * name = *argv + 2;
+					char * asgn = strchr( name, '=' );
+					if( asgn == 0 )
+						{
+							std::cerr << "Missing '=' in command line option '-d'." << std::endl ;
+							exit( 1 );
+						}
+					*asgn = '\0';
+					setenv( name, asgn + 1, 1 );
+					++argv;
+					--argc;
+				}
+			else if( strcmp( *argv, "--deps" ) == 0 )
 				{
 					onlyDependencies = true;
 					++argv;

@@ -2,13 +2,13 @@
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:include href="../notation/html.xsl" />
+<xsl:include href="../../formats/html.xsl" />
 
 <xsl:template match="/book">
   <html>
     <head>
       <title><xsl:value-of select="title" /></title>
-      <link rel="stylesheet" href="../../shapes.css" />
+      <link rel="stylesheet" href="../../styles/html/shapes.css" />
     </head>
     <body>
     <h0><xsl:value-of select="title" /></h0>
@@ -85,9 +85,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="example-with-output/image[@*]">
   <tr align="center"><td>
       <xsl:element name="a">
-	<xsl:attribute name="href">../<xsl:value-of select="@pdf" /></xsl:attribute>
+	<xsl:attribute name="href">../../output/<xsl:value-of select="@pdf" /></xsl:attribute>
 	<xsl:element name="img">
-	  <xsl:attribute name="src">../<xsl:value-of select="@jpg" /></xsl:attribute>
+	  <xsl:attribute name="src">../../output/<xsl:value-of select="@jpg" /></xsl:attribute>
 	  <xsl:attribute name="alt">Angry</xsl:attribute>
 	</xsl:element>
       </xsl:element>
@@ -97,18 +97,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <tr><td><hr /></td></tr>
   <tr align="center"><td>Source: 
       <xsl:element name="exampleswitch">
-	<xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-src&apos;).style.display='inline'</xsl:attribute>
-	show
-      </xsl:element>
-      — 
-      <xsl:element name="exampleswitch">
-	<xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-src&apos;).style.display='none'</xsl:attribute>
-	hide
+				<xsl:attribute name="onclick">if(document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-src&apos;).style.display=='none'){document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-src&apos;).style.display='inline'}else{document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-src&apos;).style.display='none'}</xsl:attribute>
+				show/hide
       </xsl:element>
       — 
       <xsl:element name="a">
-	<xsl:attribute name="href">../<xsl:value-of select="@file" /></xsl:attribute>
-	visit
+				<xsl:attribute name="href"><xsl:value-of select="@file" /></xsl:attribute>
+				visit
       </xsl:element>
   </td></tr>
   <xsl:element name="tr">
@@ -125,13 +120,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <tr><td><hr /></td></tr>
   <tr align="center"><td>stdout: 
       <xsl:element name="exampleswitch">
-	<xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-stdout&apos;).style.display='inline'</xsl:attribute>
-	show
-      </xsl:element>
-      — 
-      <xsl:element name="exampleswitch">
-	<xsl:attribute name="onclick">document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-stdout&apos;).style.display='none'</xsl:attribute>
-	hide
+	<xsl:attribute name="onclick">if(document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-stdout&apos;).style.display=='none'){document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-stdout&apos;).style.display='inline'}else{document.getElementById(&apos;<xsl:value-of select="../@internal-id" />-stdout&apos;).style.display='none'}</xsl:attribute>
+	show/hide
       </xsl:element>
   </td></tr>
   <xsl:element name="tr">

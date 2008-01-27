@@ -3,13 +3,13 @@
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" indent="no" />
 
-<xsl:include href="../notation/html.xsl" />
+<xsl:include href="../../formats/html.xsl" />
 
 <xsl:template match="/man">
   <html>
     <head>
       <title><xsl:value-of select="manhead/center-header" /></title>
-      <link rel="stylesheet" href="../../shapes.css" />
+      <link rel="stylesheet" href="../../styles/html/shapes.css" />
     </head>
     <body>
 			<xsl:apply-templates select="manhead" />
@@ -79,12 +79,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><b><xsl:value-of select="." /></b></xsl:template>
 
-<xsl:template match="syntax-name"><syntax-name><xsl:value-of select="." /></syntax-name></xsl:template>
-<xsl:template match="bnf"><bnf><xsl:value-of select="." /></bnf></xsl:template>
 <xsl:template match="synopsis-case/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
 <xsl:template match="parameters/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
-
-<xsl:template match="p/em"><em><xsl:value-of select="." /></em></xsl:template>
-<xsl:template match="p/b"><b><xsl:value-of select="." /></b></xsl:template>
 
 </xsl:stylesheet>

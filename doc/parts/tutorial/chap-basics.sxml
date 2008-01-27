@@ -55,9 +55,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 
 <p>The complete example with output is given below.</p>
 <example-with-output title="Transforms" internal-id="example-transforms">
-<image pdf="../output/tutorial-transforms_3.pdf" jpg="../output/tutorial-transforms_y_big.jpg" />
-<source file="../../examples/doc/tutorial-transforms.shape">
-<![CDATA[<!--#include virtual="../../examples/doc/tutorial-transforms.shape" -->]]>
+<image pdf="tutorial-transforms_3.pdf" jpg="tutorial-transforms_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-transforms.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-transforms.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -84,9 +84,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <body>
 <p>You are already familiar with one of the path-painting functions, namely <inline>stroke</inline>.  A similar function, <inline>fill</inline>, will fill the path with paint instead of stroking it.  The following example also shows how to put an arrowhead on the path while stroking it.</p>
 <example-with-output title="Path-painting" internal-id="example-path-painting">
-<image pdf="../output/tutorial-path-painting_3.pdf" jpg="../output/tutorial-path-painting_y_big.jpg" />
-<source file="../../examples/doc/tutorial-path-painting.shape">
-<![CDATA[<!--#include virtual="../../examples/doc/tutorial-path-painting.shape" -->]]>
+<image pdf="tutorial-path-painting_3.pdf" jpg="tutorial-path-painting_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-path-painting.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-path-painting.shape" -->]]>
 </source>
 </example-with-output>
 <p>Things to note:</p>

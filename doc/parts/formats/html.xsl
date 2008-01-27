@@ -80,7 +80,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <syntaxname class="new"><xsl:apply-templates/></syntaxname>
   </xsl:element>
 </xsl:template>
-<xsl:template match="syntaxname">
+<xsl:template match="syntaxname[not(@class)]">
   <xsl:element name="a">
     <xsl:attribute name="href">#stx-<xsl:value-of select="." /></xsl:attribute>
     <syntaxname><xsl:apply-templates/></syntaxname>

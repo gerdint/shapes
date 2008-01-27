@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="../notation/html.xsl"?>
-<?xml-stylesheet type="text/xsl" href="html.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../formats/html.xsl"?>
 <book>
 <title>The Shapes language reference</title>
 <top>
@@ -13,5 +12,4 @@
 <!--#include virtual="chap-lexer.sxml" -->
 <!--#include virtual="chap-tolerances.sxml" -->
 <!--#include virtual="operators.sxml" -->
-<!--#include virtual="bindings.sxml" -->
 </book>
