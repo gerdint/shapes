@@ -4,8 +4,9 @@ PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=formats
 EXDIR=../../../examples
 EXOUTDIR=../../output
+SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 
-SSI=$(SSIDIR)/ssipp -dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
+SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 MAN1DIR=$(PRODUCED_FORMATS_DIR)/man/man1
@@ -25,7 +26,7 @@ DEPENDS = build/man.depend
 all: $(DEPENDS) $(PRODUCTS)
 
 build/%.xml: %.sxml build/%.depend $(SSI)
-	cat $< | $(SSI) > $@
+	cat $< | $(SSI) $(SSIFLAGS) > $@
 
 $(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) $(POSTPROCDIR)/man
 	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/man > $@
@@ -47,6 +48,6 @@ clean:
 
 .PRECIOUS: build/*.depend
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
-	cat $*.sxml | $(SSI) --head $*.sxml --deps > $@
+	cat $*.sxml | $(SSI) $(SSIFLAGS) --head $*.sxml --deps > $@
 
 -include $(wildcard build/*.depend)

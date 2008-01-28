@@ -92,6 +92,9 @@ p {
 	margin-top:					0.3em;
 	margin-bottom:				0.7em;
 }
+p.center {
+	text-align: center;
+}
 
 body { font-size: 12pt }
 

@@ -3,8 +3,9 @@ SSIDIR=../../tools/ssi
 PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=../lang/formats
 EXDIR=../../../examples
+SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 
-SSI=$(SSIDIR)/ssipp -dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
+SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 
@@ -22,7 +23,7 @@ DEPENDS = build/tutorial.depend
 all: $(PRODUCTS)
 
 build/%.xml: %.sxml build/%.depend $(SSI)
-	cat $< | $(SSI) > $@
+	cat $< | $(SSI) $(SSIFLAGS) > $@
 
 $(HTMLDIR)/tutorial.html: build/tutorial.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
@@ -40,6 +41,6 @@ clean:
 
 .PRECIOUS: build/*.depend
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
-	cat $*.sxml | $(SSI) --head $*.sxml --deps > $@
+	cat $*.sxml | $(SSI) $(SSIFLAGS) --head $*.sxml --deps > $@
 
 -include $(wildcard build/*.depend)

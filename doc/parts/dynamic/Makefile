@@ -18,19 +18,15 @@ else
 SAXON=java -jar $(JAR2)
 endif
 
-PRODUCTS = $(HTMLDIR)/lang.html
-DEPENDS = build/lang.depend
+PRODUCTS = $(HTMLDIR)/dynvars.html
+DEPENDS = build/dynvars.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
 build/%.xml: %.sxml build/%.depend $(SSI)
 	cat $< | $(SSI) $(SSIFLAGS) > $@
 
-$(HTMLDIR)/lang.html: build/lang-book.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
-$(HTMLDIR)/types.html: build/coretypes.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
-$(HTMLDIR)/bindings.html: build/bindings.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
+$(HTMLDIR)/dynvars.html: build/dynvars.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 $(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l

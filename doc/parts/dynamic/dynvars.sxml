@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+<title>Shapes' global dynamic variables</title>
+<top>
+<p>This is a very brief listing of the global dynamic variables in <str-Shapes />.  The purpose is only to provide a link between functions that use the same dynamic variables.</p>
+</top>
+<body>
+<alphabetical-list-of-dynvars />
+</body>
+<!--#include virtual="../bindings/functions.sxml" -->
+</book>

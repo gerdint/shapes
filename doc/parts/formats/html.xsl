@@ -49,19 +49,24 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </table>
 </xsl:template>
 
+<xsl:template match="binding[@name]">
+	<xsl:element name="a">
+		<xsl:attribute name="href">bindings.html#<xsl:value-of select="@name" /></xsl:attribute>
+		<varname><xsl:value-of select="@name" /></varname>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="dynvar[@name]">
+	<xsl:element name="a">
+		<xsl:attribute name="href">dynvars.html#<xsl:value-of select="@name" /></xsl:attribute>
+		<varname>@<xsl:value-of select="@name" /></varname>
+	</xsl:element>
+</xsl:template>
 
-<xsl:template match="inline">
-  <inline><xsl:apply-templates/></inline>
-</xsl:template>
-<xsl:template match="em">
-  <em><xsl:apply-templates/></em>
-</xsl:template>
-<xsl:template match="bnf">
-  <bnf><xsl:apply-templates/></bnf>
-</xsl:template>
-<xsl:template match="typename">
-  <typename><xsl:apply-templates/></typename>
-</xsl:template>
+
+<xsl:template match="inline"><inline><xsl:apply-templates/></inline></xsl:template>
+<xsl:template match="em"><em><xsl:apply-templates/></em></xsl:template>
+<xsl:template match="bnf"><bnf><xsl:apply-templates/></bnf></xsl:template>
+<xsl:template match="typename"><typename><xsl:apply-templates/></typename></xsl:template>
 <xsl:template match="typename[@class='replacable']">
   <typename class="replacable"><xsl:apply-templates/></typename>
 </xsl:template>

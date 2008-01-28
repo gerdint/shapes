@@ -1,3 +1,9 @@
+<section id="bindings-functions">
+<title>Functions</title>
+<top>
+<p>These are the functions!</p>
+</top>
+
 <system-binding identifier="affinetransform">
 	<function>
 		<case constructor-of="Transform2D">
@@ -12,6 +18,7 @@
 					<type><typename>Coords2D</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform from multiplier for x and y coordinates, followed by a shift.</description>
 		</case>
 	</function>
@@ -34,6 +41,7 @@
 					<type><typename>Coords3D</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform from multiplier for x, y, and z coordinates, followed by a shift.</description>
 		</case>
 	</function>
@@ -47,6 +55,7 @@
 					<type><typename>Coords2D</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform.</description>
 		</case>
 		<case constructor-of="Transform3D">
@@ -55,6 +64,7 @@
 					<type><typename>Coords3D</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform.</description>
 		</case>
 	</function>
@@ -68,6 +78,7 @@
 					<type><typename>Float</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform.</description>
 		</case>
 	</function>
@@ -84,6 +95,7 @@
 					<type><typename>Float</typename></type>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct rotation transform about given direction.</description>
 		</case>
 	</function>
@@ -106,6 +118,7 @@
 					<default>1</default>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and y by <varname>r</varname><char-cdot /><varname>y</varname>.</description>
 		</case>
 	</function>
@@ -132,7 +145,67 @@
 					<default>1</default>
 				</arg>
 			</arguments>
+			<dynamic-references></dynamic-references>
 			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and similarly with y and z.</description>
 		</case>
 	</function>
 </system-binding>
+
+<system-binding identifier="stroke">
+	<function>
+		<case constructor-of="Drawable">
+			<arguments>
+				<arg identifier="path">
+					<type><typename>Path</typename></type>
+				</arg>
+				<arg identifier="head">
+					<default><binding name="NO_ARROW" /></default>
+					<type>(<typename>Path</typename> → (&gt; <varname>picture</varname>:<typename>Drawable</typename> <varname>cut</varname>:<typename>Length</typename> &lt;) )</type>
+				</arg>
+				<arg identifier="tail">
+					<default><binding name="NO_ARROW" /></default>
+					<type>(<typename>Path</typename> → (&gt; <varname>picture</varname>:<typename>Drawable</typename> <varname>cut</varname>:<typename>Length</typename> &lt;) )</type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="width" /> <dynvar name="stroking" /> <dynvar name="dash" /> <dynvar name="cap" /> <dynvar name="join" /> <dynvar name="miterlimit" /></dynamic-references>
+			<description>
+				<p>Paints the <varname>path</varname> argument by stroking it.  Properties such as color (<dynvar>stroking</dynvar>), width, et cetera are taken from the dynamic environment.</p>
+				<p>The arguments <varname>head</varname> and <varname>tail</varname> define arrowheads at the corresponding ends of the stroke.  An arrowhead is defined by a function that takes the path as argument, and returns a tuple with fields <varname>picture</varname> and <varname>cut</varname>.  Here, <varname>picture</varname> shall be the grahpics that is the actual arrowhead, while <varname>cut</varname> tells how much the stroke shall be shortened to not interfere with the arrowhead.  Note that the arrowhead and the stroke usually overlap, but that it is not desirable that the stroke goes all the way to the point of the arrowhead.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="fill">
+	<function>
+		<case constructor-of="Drawable">
+			<arguments>
+				<arg identifier="path">
+					<type><typename>Path</typename></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>
+			<description>
+				<p>Paints the <varname>path</varname> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
+			</description>
+		</case>
+		<case constructor-of="Drawable3D">
+			<arguments>
+				<arg identifier="path">
+					<type><typename>Path3D</typename></type>
+				</arg>
+				<arg identifier="tiebreaker">
+					<default>0</default>
+					<type><typename>Length</typename></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>
+			<description>
+				<p>Paints the <varname>path</varname> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
+				<p></p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+</section>
