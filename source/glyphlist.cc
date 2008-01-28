@@ -3,6 +3,7 @@
 #include "autoonoff.h"
 #include "shapesexceptions.h"
 #include "charconverters.h"
+#include "utf8tools.h"
 #include "config.h"
 
 #include <cstring>
@@ -153,7 +154,6 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
 	const size_t BUF_SIZE = 64;
 	static char buf[ BUF_SIZE ];
 
-	iconv_t converter = Shapes::Helpers::requireUTF8ToUCS4Converter( );
 	if( *code == '\0' )
 		{
 			throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:	The source value is empty." );
@@ -165,59 +165,60 @@ GlyphList::UTF8_to_name( const char * code, const char ** dst ) const
 			throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:	This many bytes definitely represents more than one UTF-8 character." );
 		}
 
-	char * outbuf;
-	bool success = false;
-	// This is an awkward check that there is not more than one character in <code>.
-	// The smallest prefix that defines a valid UTF-8 string is determined, and if this is the complete
-	// sting, then (and only then) do we have exactly one value.
-	for( size_t inbytesGuess = 1; inbytesGuess <= inbytesMax; ++inbytesGuess )
+	{
+		// Make sure there is just one character in the string.
+		size_t count = 0;
+		for( const char * src = code; *src != '\0'; ++src )
+			{
+				if( Shapes::Helpers::utf8leadByte( *src ) )
+					{
+						++count;
+					}
+			}
+		if( count != 1 )
+			{
+				throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:	There was not exactly one character." );
+			}
+	}
+
+
+	iconv_t converter = Shapes::Helpers::requireUTF8ToUCS4Converter( );
+
+	const char * inbuf = code;
+	size_t inbytesleft = inbytesMax;
+	char * outbuf = buf;
+	size_t outbytesleft = BUF_SIZE;
+	// The ICONV_CAST macro is defined in config.h.
+	size_t count = iconv( converter,
+												ICONV_CAST( & inbuf ), & inbytesleft,
+												& outbuf, & outbytesleft );
+	if( count == (size_t)(-1) )
 		{
-			const char * inbuf = code;
-			size_t inbytesleft = inbytesGuess;
-			outbuf = buf;
-			size_t outbytesleft = BUF_SIZE;
-			// The ICONV_CAST macro is defined in config.h.
-			size_t count = iconv( converter,
-														ICONV_CAST( & inbuf ), & inbytesleft,
-														& outbuf, & outbytesleft );
-			if( count == (size_t)(-1) )
+			if( errno == EINVAL )
 				{
-					if( errno == EINVAL )
-						{
-							// This is the base case, so to speak.
-							continue;
-						}
-					else if( errno == EILSEQ )
-						{
-							throw Shapes::Exceptions::ExternalError( "An invalid UTF-8 byte was encountered." );
-						}
-					else if( errno == E2BIG )
-						{
-							throw Shapes::Exceptions::InternalError( "The buffer allocated for UTF-8 to UTF-16BE conversion was too small." );
-						}
-					else
-						{
-							std::ostringstream msg;
-							msg << "iconv failed with an unrecognized error code: " << errno ;
-							throw Shapes::Exceptions::InternalError( strrefdup( msg ) );
-						}
+					throw Shapes::Exceptions::ExternalError( "The single UTF-8 character to be converted to UTF-16BE was incomplete." );
 				}
-			if( inbytesGuess < inbytesMax )
+			else if( errno == EILSEQ )
 				{
-					throw Shapes::Exceptions::MiscellaneousRequirement( "When converting a single UTF-8 value to UTF-16BE:	Found more than one character." );
+					throw Shapes::Exceptions::ExternalError( "An invalid UTF-8 byte was encountered." );
 				}
-			success = true;
-			break;
-		}
-	if( ! success )
-		{
-			throw Shapes::Exceptions::MiscellaneousRequirement( "The single UTF-8 character to be converted to UTF-16BE was incompletene." );
+			else if( errno == E2BIG )
+				{
+					throw Shapes::Exceptions::InternalError( "The buffer allocated for UTF-8 to UTF-16BE conversion was too small." );
+				}
+			else
+				{
+					std::ostringstream msg;
+					msg << "iconv failed with an unrecognized error code: " << errno ;
+					throw Shapes::Exceptions::InternalError( strrefdup( msg ) );
+				}
 		}
 	size_t bytesUsed = outbuf - buf;
 	if( bytesUsed > 8 )
 		{
 			throw Shapes::Exceptions::ExternalError( "Conversion of one UTF-8 character to UTF-16BE resulted in more than 8 bytes." );
 		}
+
 	// Next we proceed in two steps.	I can't see what the probelm here is, but it could be some alignment stuff...
 	// 1) Place in most significant bytes of a UnicodeType, with crap to the left.
 	UnicodeType codeUCS4 = *reinterpret_cast< const UnicodeType * >( buf ) >> ( 8 * ( sizeof( UnicodeType ) - bytesUsed ) );

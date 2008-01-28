@@ -2,12 +2,14 @@
 #include "charconverters.h"
 #include "shapesexceptions.h"
 #include "globals.h"
+#include "utf8tools.h"
 #include "config.h"
 
 #include <cerrno>
 #include <fstream>
 #include <sstream>
 #include <limits>
+#include <iomanip>
 
 using namespace Shapes;
 
@@ -175,69 +177,14 @@ Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line,
 size_t
 Ast::SourceLocation::byteColumnToUTF8Column( const std::string & line, size_t byteCol )
 {
-	iconv_t converter;
-	static bool failingConverter = false;
-	try
+	size_t count = 0;
+	const char * end = line.c_str( ) + byteCol;
+	for( const char * src = line.c_str( ); src != end && *src != '\0'; ++src )
 		{
-			converter = Helpers::requireUTF8ToUCS4Converter( );
+			if( Helpers::utf8leadByte( *src ) )
+				{
+					++count;
+				}
 		}
-	catch( const Exceptions::ExternalError & ball )
-		{
-			if( ! failingConverter )
-				{
-					failingConverter = true;
-					Kernel::thePostCheckErrorsList.push_back( ball.clone( ) );
-				}
-			return std::numeric_limits< size_t >::max( );
-		}
-
-	static size_t bufSize = 0;
-	static char * buf = 0;
-	{
-		size_t neededSize = ( byteCol + 1 ) * 4;
-		if( bufSize < neededSize )
-			{
-				if( buf != 0 )
-					{
-						delete buf;
-					}
-				buf = new char[ neededSize ];
-				bufSize = neededSize;
-			}
-	}
-
-
-	const char * inbuf = line.c_str( );
-	size_t inbytesleft = byteCol;
-	char * outbuf = buf;
-	size_t outbytesleft = bufSize;
-	// The ICONV_CAST macro is defined in config.h.
-	size_t count = iconv( converter,
-												ICONV_CAST( & inbuf ), & inbytesleft,
-												& outbuf, & outbytesleft );
-	if( count == (size_t)(-1) )
-		{
-			const char * msgStart = "Error in error message, when converting byte column to utf-8: ";
-			std::ostringstream msg;
-			if( errno == EINVAL )
-				{
-					msg << msgStart << "(EINVAL) Found invalid utf-8 byte sequence."  ;
-				}
-			else if( errno == EILSEQ )
-				{
-					msg << msgStart << "(EILSEQ) Found invalid utf-8 byte." ;
-				}
-			else if( errno == E2BIG )
-				{
-					msg << msgStart << "(E2BIG) Insufficient memory allocated." ;
-				}
-			else
-				{
-					msg << msgStart << "iconv failed with un unrecognized error code: " << errno << "."  ;
-				}
-			Kernel::thePostCheckErrorsList.push_back( new Exceptions::InternalError( msg ) );
-			return std::numeric_limits< size_t >::max( );
-		}
-
-	return ( bufSize - outbytesleft ) / 4;
+	return count;
 }
