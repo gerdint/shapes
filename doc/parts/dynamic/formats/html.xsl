@@ -84,8 +84,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:if>
 		</xsl:for-each>
 	</p>
+	<xsl:apply-templates select="type" />
 	<xsl:apply-templates select="constraint" />
 	<xsl:apply-templates select="description" />
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/type">
+	<p>
+		<b>Type: </b><xsl:apply-templates />
+	</p>
 </xsl:template>
 
 <xsl:template match="dynamic-variable[@identifier]/constraint">
