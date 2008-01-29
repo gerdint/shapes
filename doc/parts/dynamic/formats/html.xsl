@@ -15,16 +15,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<h1><xsl:value-of select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
-			<p>Sections:<xsl:text> </xsl:text>
+			<p><b>Sections:</b>
 				<xsl:for-each select="section">
+					  
 					<xsl:element name="a">
 						<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:value-of select="title" />
 					</xsl:element>
-					  
 				</xsl:for-each>
 			</p>
 
+			<hr class="thin"/>
+			<p class="center"><b>Alphabetical list</b></p>
 			<p class="center">
 				<xsl:for-each select="/book/section/dynamic-variable[@identifier]">
 					<xsl:sort select="@identifier" />
@@ -35,6 +37,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					  
 				</xsl:for-each>
 			</p>
+			<hr class="thin"/>
 
 			<xsl:for-each select="section">
 				<h2>
@@ -65,15 +68,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:variable name="self">
     <xsl:value-of select="@identifier" />
   </xsl:variable>
-	<hr class="thin"/>
-	<h2>
+	<h3>
 		<xsl:element name="a">
 			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
 			@<xsl:value-of select="@identifier" />
 		</xsl:element>
-	</h2>
+	</h3>
 	<p><b>Used by: </b>
-		<xsl:for-each select="/book/section/system-binding[@identifier]">
+		<xsl:for-each select="/book/external/section/system-binding[@identifier]">
 			<xsl:if test="function/case/dynamic-references/dynvar[@name=$self]">
 				<xsl:element name="a">
 					<xsl:attribute name="href">bindings#<xsl:value-of select="@identifier" /></xsl:attribute>
@@ -93,8 +95,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="dynamic-variable[@identifier]/description">
-	<h3>Description</h3>
+	<h4>Description</h4>
 	<xsl:apply-templates />
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/constraint/self">
+	@<xsl:value-of select="../../@identifier" />
 </xsl:template>
 
 </xsl:stylesheet>

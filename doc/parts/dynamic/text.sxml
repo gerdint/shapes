@@ -1,0 +1,22 @@
+<section id="dynamic-text">
+<title>Text</title>
+<top>
+	<p>The bindings in this section are closely related to the <em>text state parameters</em> in <str-PDF />.</p>
+</top>
+
+<dynamic-variable identifier="text_font">
+	<type><named-type name="Font" /></type>
+	<description>
+		<p>Intended to be used when creating text using the built-in mechanisms of <str-PDF />.</p>
+	</description>
+</dynamic-variable>
+
+<dynamic-variable identifier="text_size">
+	<type><named-type name="Length" /></type>
+	<constraint><self /> &gt; <physical><scalar>0</scalar><unit>bp</unit></physical></constraint>
+	<description>
+		<p>Intended to be used as the size of text.</p>
+	</description>
+</dynamic-variable>
+
+</section>

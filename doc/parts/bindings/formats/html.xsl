@@ -15,16 +15,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<h1><xsl:value-of select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
-			<p>Sections:<xsl:text> </xsl:text>
+			<p><b>Sections:</b>
 				<xsl:for-each select="section">
+					  
 					<xsl:element name="a">
 						<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:value-of select="title" />
 					</xsl:element>
-					  
 				</xsl:for-each>
 			</p>
 
+			<hr class="thin"/>
+			<p class="center"><b>Alphabetical list</b></p>
 			<p class="center">
 				<xsl:for-each select="/book/section/system-binding[@identifier]">
 					<xsl:sort select="@identifier" />
@@ -35,6 +37,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					  
 				</xsl:for-each>
 			</p>
+			<hr class="thin"/>
 
 			<xsl:for-each select="section">
 				<h2>

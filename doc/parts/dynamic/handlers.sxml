@@ -1,0 +1,14 @@
+<section id="dynamic-handlers">
+<title>Error handlers</title>
+<top>
+	<p>The bindings in this section provide a way of controlling the behavior in error situations; a function may call a dynamically bound function bound function when an error is detected instead of returning with a non-sense result.</p>
+</top>
+
+<dynamic-variable identifier="handler_NoIntersection">
+	<type><named-type name="Function" /></type>
+	<description>
+		<p>To be called when the intersection between two paths cannot be found.</p>
+	</description>
+</dynamic-variable>
+
+</section>

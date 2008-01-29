@@ -6,9 +6,9 @@
 
 <dynamic-variable identifier="width">
 	<type><named-type name="Length" /></type>
-	<constraint><self /> ≥ <physical scalar="0" unit="bp" /></constraint>
+	<constraint><self /> ≥ <physical><scalar>0</scalar><unit>bp</unit></physical></constraint>
 	<description>
-		<p>Intended to be used as the width when paths are stroked.</p>
+		<p>Intended to be used as the width when paths are stroked.  A value of <physical><scalar>0</scalar><unit>bp</unit></physical> has a special meaning in <str-PDF />, being that the stroke shall be as thin as possible without dissappearing on the rendering device.  On high resolution printers, this may result in a line which is very hard to read, while such a line shall allways be clearly visible on a computer screen.</p>
 	</description>
 </dynamic-variable>
 

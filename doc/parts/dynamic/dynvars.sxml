@@ -9,6 +9,11 @@
 <body>
 <alphabetical-list-of-dynvars />
 </body>
-<!--#include virtual="dynvarlist.sxml" -->
+<!--#include virtual="graphic.sxml" -->
+<!--#include virtual="text.sxml" -->
+<!--#include virtual="handlers.sxml" -->
+<!--#include virtual="misc.sxml" -->
+<external>
 <!--#include virtual="../bindings/functions.sxml" -->
+</external>
 </book>
