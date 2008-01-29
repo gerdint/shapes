@@ -1,3 +1,9 @@
+<section id="dynamic-graphic">
+<title>Graphics</title>
+<top>
+	<p>The bindings in this section are closely related to the <em>graphics state parameters</em> in <str-PDF />.</p>
+</top>
+
 <dynamic-variable identifier="width">
 	<type><named-type name="Length" /></type>
 	<constraint><self /> ≥ <physical scalar="0" unit="bp" /></constraint>
@@ -12,3 +18,5 @@
 		<p>Intended to be used as the color when paths are stroked.</p>
 	</description>
 </dynamic-variable>
+
+</section>

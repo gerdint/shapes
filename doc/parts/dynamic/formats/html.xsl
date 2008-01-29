@@ -15,9 +15,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<h1><xsl:value-of select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
+			<p>Sections:<xsl:text> </xsl:text>
+				<xsl:for-each select="section">
+					<xsl:element name="a">
+						<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
+						<xsl:value-of select="title" />
+					</xsl:element>
+					  
+				</xsl:for-each>
+			</p>
 
 			<p class="center">
-				<xsl:for-each select="/book/dynamic-variable[@identifier]">
+				<xsl:for-each select="/book/section/dynamic-variable[@identifier]">
 					<xsl:sort select="@identifier" />
 					<xsl:element name="a">
 						<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
@@ -27,13 +36,32 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				</xsl:for-each>
 			</p>
 
-			<xsl:apply-templates select="/book/dynamic-variable[@identifier]" />
+			<xsl:for-each select="section">
+				<h2>
+					<xsl:element name="a">
+						<xsl:attribute name="name"><xsl:value-of select="@id" /></xsl:attribute>
+						<xsl:value-of select="title" />
+					</xsl:element>
+				</h2>
+				<xsl:apply-templates select="top" />
+				<p class="center">
+					<xsl:for-each select="dynamic-variable[@identifier]">
+						<xsl:sort select="@identifier" />
+						<xsl:element name="a">
+							<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
+							@<xsl:value-of select="@identifier" />
+						</xsl:element>
+						  
+					</xsl:for-each>
+				</p>
+				<xsl:apply-templates select="dynamic-variable" />
+			</xsl:for-each>
 
 		</body>
   </html>
 </xsl:template>
 
-<xsl:template match="/book/dynamic-variable[@identifier]">
+<xsl:template match="dynamic-variable[@identifier]">
   <xsl:variable name="self">
     <xsl:value-of select="@identifier" />
   </xsl:variable>
@@ -58,13 +86,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:apply-templates select="description" />
 </xsl:template>
 
-<xsl:template match="/book/dynamic-variable[@identifier]/constraint">
+<xsl:template match="dynamic-variable[@identifier]/constraint">
 	<p>
 		<b>Constraint: </b><xsl:apply-templates />
 	</p>
 </xsl:template>
 
-<xsl:template match="/book/dynamic-variable[@identifier]/description">
+<xsl:template match="dynamic-variable[@identifier]/description">
 	<h3>Description</h3>
 	<xsl:apply-templates />
 </xsl:template>
