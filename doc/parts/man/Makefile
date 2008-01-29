@@ -21,7 +21,7 @@ SAXON=java -jar $(JAR2)
 endif
 
 PRODUCTS = $(MAN1DIR)/shapes.1 $(HTMLDIR)/man.html
-DEPENDS = build/man.depend
+DEPENDS = build/tool-interface.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
