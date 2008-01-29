@@ -4,10 +4,11 @@
 <book>
 <title>Shapes' global dynamic variables</title>
 <top>
-<p>This is a very brief listing of the global dynamic variables in <str-Shapes />.  The purpose is only to provide a link between functions that use the same dynamic variables.</p>
+<p>This is a very brief listing of the global dynamic variables in <str-Shapes />.  It not only gives a brief description of each variable, but also provides the link between several functions using the same dynamic bindings.</p>
 </top>
 <body>
 <alphabetical-list-of-dynvars />
 </body>
+<!--#include virtual="dynvarlist.sxml" -->
 <!--#include virtual="../bindings/functions.sxml" -->
 </book>

@@ -1,0 +1,14 @@
+<dynamic-variable identifier="width">
+	<type><named-type name="Length" /></type>
+	<constraint><self /> ≥ <physical scalar="0" unit="bp" /></constraint>
+	<description>
+		<p>Intended to be used as the width when paths are stroked.</p>
+	</description>
+</dynamic-variable>
+
+<dynamic-variable identifier="stroking">
+	<type><named-type name="Color" /></type>
+	<description>
+		<p>Intended to be used as the color when paths are stroked.</p>
+	</description>
+</dynamic-variable>

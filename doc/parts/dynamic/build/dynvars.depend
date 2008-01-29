@@ -1,1 +1,1 @@
-dynvars.sxml: ../bindings/functions.sxml
+dynvars.sxml: dynvarlist.sxml ../bindings/functions.sxml
