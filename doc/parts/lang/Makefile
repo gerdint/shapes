@@ -19,7 +19,7 @@ SAXON=java -jar $(JAR2)
 endif
 
 PRODUCTS = $(HTMLDIR)/lang.html
-DEPENDS = build/lang.depend
+DEPENDS = build/lang-book.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 

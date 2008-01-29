@@ -44,7 +44,12 @@
 %%
 
 <INITIAL>"<!--#include"[ \t]+"virtual"[ \t]*"="[ \t]* { BEGIN( INCLUDE_FILENAME ); }
-<INITIAL>"<!--#expand-next-string"[ \t]*"-->"[ \t]* { BEGIN( EXPAND ); }
+<INITIAL>"<!--#expand-next-string"[ \t]*"-->"[ \t]* {
+	if( ! onlyDependencies_ )
+		{
+			BEGIN( EXPAND );
+		}
+ }
 <INCLUDE_FILENAME>[\"][^\"]*[\"] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	includeFilename_ = expandDefines( yytext + 1 );
