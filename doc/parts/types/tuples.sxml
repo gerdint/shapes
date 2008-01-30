@@ -1,0 +1,20 @@
+<section id="types-tuples">
+<title>Elementary tuple types</title>
+<top>
+	<p>Values of types in this section combine a fixed number of other values to form a tuple.</p>
+</top>
+
+  <coretype name="Coord2D">
+    <abstraction>
+      <p>The <self /> type is a pair of <named-type name="Length" /> ordinates.</p>
+    </abstraction>
+    <construction>
+      <p>The syntax to construct a coordinate object is
+				<syntaxlines>
+					( <syntaxname>Length</syntaxname>, <syntaxname>Length</syntaxname> )
+				</syntaxlines>
+			</p>
+    </construction>
+  </coretype>
+
+</section>

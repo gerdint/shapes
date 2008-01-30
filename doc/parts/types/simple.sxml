@@ -1,0 +1,20 @@
+<section id="types-simple">
+<title>Simple types</title>
+<top>
+	<p>Values that are naturally characterized by a single scalar are considered to have simple types.</p>
+</top>
+
+  <coretype name="Length">
+    <abstraction>
+			<p>The <self /> type represents a physical length.  Lengths are often specified as a scalar times a unit of length.</p>
+    </abstraction>
+    <construction>
+      <p>The syntax to specify a length is
+			<syntaxlines>
+				<syntaxname>float</syntaxname><syntaxname>identifier</syntaxname>
+			</syntaxlines>
+      where <syntaxname>identifier</syntaxname> must refer to a defined unit of length.</p>
+    </construction>
+  </coretype>
+
+</section>

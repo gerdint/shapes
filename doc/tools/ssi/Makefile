@@ -30,4 +30,4 @@ all:$(PROGRAM)
 $(PROGRAM):$(OBJECTS)
 	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJECTS) $(LIBS)
 clean:
-	rm -f *.o *yylex.cc$(PROGRAM)
+	rm -f *.o *yylex.cc $(PROGRAM)
