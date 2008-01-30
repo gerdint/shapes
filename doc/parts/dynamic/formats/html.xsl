@@ -78,7 +78,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:for-each select="/book/external/section/system-binding[@identifier]">
 			<xsl:if test="function/case/dynamic-references/dynvar[@name=$self]">
 				<xsl:element name="a">
-					<xsl:attribute name="href">bindings#<xsl:value-of select="@identifier" /></xsl:attribute>
+					<xsl:attribute name="href">bindings.html#<xsl:value-of select="@identifier" /></xsl:attribute>
 					<varname><xsl:value-of select="@identifier" /></varname>
 				</xsl:element>
 			</xsl:if>
