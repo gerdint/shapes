@@ -16,7 +16,7 @@ LEXFLAGS = -d
 YACCFLAGS = -dvt
 
 INCS =
-LIBS = -lc -ll
+LIBS = -lc -lfl
 
 all:$(PROGRAM)
 
@@ -30,4 +30,4 @@ all:$(PROGRAM)
 $(PROGRAM):$(OBJECTS)
 	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJECTS) $(LIBS)
 clean:
-	rm -f *.o $(PROGRAM)
+	rm -f *.o *yylex.cc$(PROGRAM)

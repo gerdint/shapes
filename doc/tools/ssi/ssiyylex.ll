@@ -15,8 +15,6 @@
 #include <fstream>
 #include <sstream>
 
-%}
-
  /*
 	* The section before the first %% is the Definitions section of the lex
 	* input file. Here is where you set options for the scanner, define lex
@@ -28,6 +26,8 @@
 /*
 	At the moment, escape characters must occypy exactly 2 bytes.
 */
+
+%}
 
 %option c++
 %option noyywrap
