@@ -1,0 +1,96 @@
+<section id="syntax/bracket">
+<title>Code bracket</title>
+<top>
+<p>The code bracket is a rather complicated kind of expression.  It is the home of many program elements, and its sementics is defined to avoid unnecessary nesting of scoping constructs.  The general form is</p>
+<syntax-table>
+<tr> <td><syntax name="code-bracket" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>{ <syntax name="bracket-item" /><bnf>*</bnf> }</inline></td></tr>
+<tr> <td><syntax name="bracket-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="variable-definition" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="split-definition" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="state-item" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-variable-declaration" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-state-declaration" /></inline></td></tr>
+</syntax-table>
+
+<p>The top level semantics of the code brackets is defined by two phases.  In the first phase, all items in the bracket that can be evaluated at any time and without evaluation of sub-expressions, are evaluated.  This includes variable definitions whose right hand side can be delayed using a thunk.  Any items related to states are excluded from this phase.</p>
+
+<p>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
+
+<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a href="#expressions">expressions</a> for the details of pure and non-pure expressions.</p>
+
+<p>Note that <syntax name="split-definition" /> was defined under <a href="#structures">structures</a>.</p>
+</top>
+
+<section id="syntax/bracket/var-def">
+<title>Variable definitions</title>
+<body>
+<syntax-table>
+<tr> <td><syntax name="variable-definition" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> : <syntax name="expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> : <syntax name="lex-state" /> ;</inline></td></tr>
+</syntax-table>
+<p>The latter form is at the same time a kind of state item, and as such it is always evaluated in the second phase of the code bracket evaluation..</p>
+
+<p>The semantics of the variable definitions is simple.  Bind the the variable to the value of expression, or freeze the state and bind to the final value of the state.  The former form is delayed unless the expression in the right hand side is immediate (see <a href="#laziness">laziness control</a>) or involves states or procedure applications.</p>
+</body>
+</section>
+
+<section id="syntax/bracket/state-items">
+<title>State items</title>
+<body>
+<syntax-table>
+<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> : <bnf>&lt;</bnf><named-type name="Hot" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="state" /> <bnf>(</bnf> &lt;&lt; <syntax name="expr" /> <bnf>)+</bnf>  </inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="lex-state" /> ;</inline></td></tr>
+</syntax-table>
+<p>The state items are always evaluated in order of appearance in the code bracket (note also the special kind of variable definition involving a state).</p>
+
+<p>The first form introduces a state.  It requires a value of the special type <named-type name="Hot" /> in the right hand side.  Values of this type has the special ability to spawn fresh states.  Note that a value of type <named-type name="Hot" /> will always spawn identical fresh states, since being a <em>value</em> it has no internal state of its own.  On the other hand, it never spawns the <em>same</em> state twice, so each state it spawns lives its own life.</p>
+
+<p>The second form modifies the state.  Note that states may also be modified by <a href="#expressions">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
+
+<p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
+
+<p>A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value.  The syntax is:</p>
+<syntax-table>
+<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="state" /> )</inline></td></tr>
+</syntax-table>
+<p>Note that a <syntax name="state" /> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.</p>
+</body>
+</section>
+
+<section id="syntax/bracket/dyn-decl">
+<title>Dynamic declarations</title>
+<body>
+<syntax-table>
+<tr> <td><syntax name="dynamic-variable-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> dynamic <syntax name="expr" /></inline></td></tr>
+</syntax-table>
+<p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
+
+<p>A dynamic variable may also be bound to a dynamic expression at the top level, and this is obtained using the second form of the declaration.</p>
+
+<p>Typical dynamic variable declarations may not care about the possibility to use the filter for type and range checks, and look like this:</p>
+<pre>
+dynamic @tex_bbox_grow_abs identity 1bp
+dynamic @tex_bbox_grow_rel identity 1.01
+</pre>
+<p>A simple filter could look like this:</p>
+<pre>
+<![CDATA[dynamic @tex_bbox_grow_rel
+  \ new .>
+    [if not [typeof new].isa[]Float
+      [error `Type mismatch for @tex_bbox_grow_rel: required a Float.´]
+      [if new <= 0
+        [error `Out of range error for @tex_bbox_grow_rel: required a positive value.´]
+        new]]
+  1.01]]>
+</pre>
+
+<p>Dynamic states is a language feature with subtleties.  At this time, they will not be further discussed.  Anyway, the syntax is:</p>
+<syntax-table>
+<tr> <td><syntax name="dynamic-state-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntax name="dyn-state" /> <syntax name="state" /></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+</section><!-- end of syntax-bracket -->

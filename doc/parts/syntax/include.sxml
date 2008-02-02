@@ -1,0 +1,37 @@
+<section id="syntax/include">
+<title>File inclusion and comments</title>
+<top>
+<p>These are two very basic functions of the scanner, and have in common that they have nothing to do with the <em>meaning</em> of program code, but only where (not) to <em>find</em> the code.</p>
+</top>
+
+<section id="syntax/include/include">
+<title>File inclusion</title>
+<body>
+<p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is</p>
+<pre>
+##needs <filename class="replacable">filenamebase</filename> <bnf>(</bnf>: <bnf>_</bnf> <filename class="replacable">directory</filename><bnf>)?</bnf>
+</pre>
+<p>which <em>must appear at the beginning of a line</em> (note the mandatory whitespace after the colon).  The syntax for <inline>##include</inline> is analogous, like this:</p>
+<pre>
+##needs blockdraw
+##needs book_settings : ~/Library/Shapes/Project Settings
+##include background
+##include foreground
+</pre>
+<p />
+
+<p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
+</body>
+</section>
+
+<section id="syntax/include/comments">
+<title>Comments</title>
+<body>
+<p>Multi-line comments are delimited by <inline>/**</inline> and <inline>**/</inline>, and nest.  It is recommended that multi-line comments begin each line with <inline>**</inline>.  It is also recommended that no code is put on the same line as a multi-line comment, since it will be very hard for the eye to see what really is commented out.</p>
+
+<p>Rest-of-line comments start with <inline>|**</inline>.</p>
+
+<p>The designers of the C language may have a good point when they say that rest-of-line comments is the only type of comment to be used to comment out code.  Whether they think that rest-of-line comments may also be used for comments I don't know, but I think it would be a good idea to reserve the use of rest-of-line comments for only commenting out code, and to use multiline comments for comments (documentation).</p>
+</body>
+</section>
+</section><!-- end of syntax-include -->

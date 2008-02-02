@@ -1,0 +1,30 @@
+<section id="syntax/continuations">
+<title>Continuations</title>
+<top>
+<p><str-Shapes /> is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
+
+<p>The reader is referred to the WWW for details on continuations and continuation passing style evaluation.  One place to start would be the documentation for <varname>call-with-current-continuation</varname> found in <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/doc/r5rs-9.html#Standard-procedures">R5RS</a>.  Here, we only describe the related syntax briefely.</p>
+<syntax-table>
+<tr> <td><syntax name="with-escape-continuation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( escape_continuation <syntax name="identifier" /> <syntax name="expr" /> )</inline></td></tr>
+<tr> <td><syntax name="invoke-escape-continuation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( escape_continue <syntax name="identifier" /> <syntax name="expr" /> )</inline></td></tr>
+</syntax-table>
+<p>The construct <syntax name="with-escape-continuation" /> introduces an escape continuation in the dynamic environment (although the identifier does not look like a dynamic variable), and evaluates the expression in the new dynamic environment.</p>
+<p>To escape through an escsape continuation, the construct <syntax name="invoke-escape-continuation" /> is used.  The identifier must refer to an escape continuation in dynamic scope, and evaluation continues by evaluating the new expression with the appropriate continuation.</p>
+
+<p>The keywords <inline>continuation</inline> and <inline>continue</inline> are reserved for future use.</p>
+
+<remark>
+<p>Even if continuations are presently handled in a way such that it cannot be determined if they are functions or not, I find it really obscuring to hide a continuation inside a function.  Hence, if continuations are made available more generally in the future, don't expect them to be wrapped in functions.  If a function that behaves like a continuation object in Scheme is needed, such a function will be easy to construct.</p>
+</remark>
+
+<example-with-output title="Example" internal-id="example-escape">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/escape.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/escape.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/escape.stdout" -->]]>
+</stdout>
+</example-with-output>
+
+</top>
+</section><!-- end of syntax-continuations -->

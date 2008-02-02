@@ -3,6 +3,9 @@
 
 <book>
 <title>Shapes' global bindings</title>
+<description>
+	<p>Gives you</p>
+</description>
 <top>
 <p>This part of the documentation is simply that; a listing of all global bindings defined by the kernel.  Below, an alphabetical list of links to bindings is provided.  For a grouping of the bindings by cathegory, the readers is referred to the the chapter on system bindings in the main language reference.</p>
 </top>

@@ -1,0 +1,6 @@
+<section id="syntax/types">
+<title>Classes and type information</title>
+<body>
+<p>Since <str-Shapes /> is dynamically typed, it sometimes becomes important to query and compare types.  Further, it is planned that future versions of the language shall allow for user-defined types.  Read on!</p>
+</body>
+</section><!-- end of syntax-types -->

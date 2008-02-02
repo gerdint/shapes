@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../formats/html.xsl"?>
+<book>
+<title>The <str-Shapes /> language reference</title>
+<top>
+	<p>Without a reference documentation, the lanugage would not be defined. On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is ready for public use.</p>
+	<p>Here you will find descriptions of the various parts of the documetation, along with links taking you there.  You will also find a section describing the notation used thourghout the documentation.</p>
+</top>
+
+<section id="index/index">
+	<title>Index</title>
+	<body>
+		<p>The following list of links will take you to the various parts of the documentation:</p>
+		<index-of-books />
+	</body>
+</section>
+
+<!--#include virtual="chap-notation" -->
+
+<external>
+<!--#include virtual="../syntax/syntax.sxml" -->
+<!--#include virtual="../bindings/bindings.sxml" -->
+</external>
+
+</book>

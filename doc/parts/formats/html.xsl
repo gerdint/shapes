@@ -139,15 +139,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="syntax[@name and @class='new']">
   <xsl:element name="a">
-    <xsl:attribute name="name">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname class="new"><xsl:value-of select="name"/></syntaxname>
+    <xsl:attribute name="name">#stx-<xsl:value-of select="@name" /></xsl:attribute>
+    <syntaxname class="new"><xsl:value-of select="@name"/></syntaxname>
   </xsl:element>
 </xsl:template>
 <xsl:template match="syntax[@name and not(@class)]">
   <xsl:element name="a">
     <xsl:attribute name="class">discrete</xsl:attribute>
-    <xsl:attribute name="href">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname><xsl:value-of select="name"/></syntaxname>
+    <xsl:attribute name="href">#stx-<xsl:value-of select="@name" /></xsl:attribute>
+    <syntaxname><xsl:value-of select="@name"/></syntaxname>
   </xsl:element>
 </xsl:template>
 <xsl:template match="a[@href]">

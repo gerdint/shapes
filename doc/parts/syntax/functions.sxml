@@ -1,0 +1,113 @@
+<section id="syntax/fun-apply">
+<title>Function application and evaluated cuts</title>
+<top>
+<p>The basic syntax for applying (or <em>calling</em>) functions is borrowed from the Scheme language.  However, there is a predefined set of operators with fixed priorities that allow exceptions to this rule.  In addition, special syntax is used when a function is applied over a structure, and there is syntactic sugar for calling functions of just one argument.  A similar operation to calling a function is to define a new function by providing values for only some of the arguments — this is referred to as an <a href="http://srfi.schemers.org/srfi-26/srfi-26.html"><em>evaluated cut</em></a>.</p>
+</top>
+
+<section id="syntax/fun-apply/basic">
+<title>Basic function application</title>
+<body>
+<p>Besides ordinary functions, there are some other objects which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The general form of a function application is</p>
+<syntax-table>
+<tr> <td><syntax name="basic-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> ]</inline></td></tr>
+<tr> <td><syntax name="arg-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /> <bnf>|</bnf> <syntax name="named-expr" /></inline></td></tr>
+<tr> <td><syntax name="named-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> : <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="state" /> <bnf>|</bnf> <syntax name="named-state" /></inline></td></tr>
+<tr> <td><syntax name="named-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> : <syntax name="state" /></inline></td></tr>
+<tr> <td><named-type name="Applicable" /></td> <td><bnf>=</bnf></td> <td><union-type><named-type name="Function" /><named-type name="AffineTransform" /><named-type name="Path" /></union-type></td> </tr>
+</syntax-table>
+
+<p>The syntax <syntax name="arg-item" /> and <syntax name="state-item" /> defined above can each be either <em>ordered</em> (that is, not named) or <em>named</em>, but there is a rule for how these may be ordered.  The rule exist to avoid confusing situations; not because it is necessary to define the semantics.  The rule is that ordered arguments (represented by <syntax name="expr" />) must go before named arguments (represented by <syntax name="named-expr" />), and ordered states (represented by <syntax name="state" />) before named states (represented by <syntax name="named-state" />).</p>
+
+<remark>
+<p>Of the conceivable semantics that could be defined if named arguments were allowed to appear before ordered arguments were allowed, two will be ruled out here.  First, one could simply ignore the order of appearance, and treat all named arguments just as if they appeared after the ordered arguments.  This would obscure the actual position of ordered arguments without adding any power to the language.  Second, one could add some power to the language by interpreting the position of ordered arguments in view of what unbound arguments there are, given the named and ordered arguments seen so far in a left to right scan.  However, such semantics would also obscure the actual position of ordered arguments severely.</p>
+</remark>
+
+<p>Arguments and states may appear in any order, since they do not interact at all.</p>
+
+<p>It is not allowed to specify the same argument or state more than once by name.</p>
+
+<p>Recall that the formal parameters of a function is an ordered list where each element has a name (with some exceptions).  To define the semantics of a function call, it must be described how items in the application is mapped to formal parameters.  Let us first consider the passing of arguments (as opposed to states).  First, the ordered arguments in the application are mapped to the corresponding positions in the list of formal parameters.  Then, the formal parameters which have not been specified by ordered arguments may be addressed by named arguemnts.  Finally, default values are used for formal parameters which are still unassigned.  It is an error if an unassigned formal parameter has no default value.</p>
+
+<p>It is an error if there are too many arguments or if a named argument does not match the name of any formal parameter, unless the function has a sink.</p>
+
+<p>The semantics for passing states is analogous to that of passing arguments.</p>
+
+<p>The evaluation of argument expressions is typically delayed by passing a thunk instead of a value unless the argument is immediate or the corresponding formal parameter requires the argument to be forced.  (Most elementary functions in the kernel will require all their arguments to be forced, while user-defined functions only take thunks by default.)</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/procedures">
+<title>Procedure application</title>
+<body>
+<p>The general form of a procedure application is</p>
+<syntax-table>
+<tr> <td><syntax name="proc-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><named-type name="Procedure" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> ]</inline></td></tr>
+</syntax-table>
+<p>Here, <syntax name="fun-expr" /> is simply an expression that evaluates to a procedure.  Recall that a procedure may access dynamic states, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  Besides this difference, the semantics are the same as that of a function application.</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/unary">
+<title>Unary function application</title>
+<body>
+<p>To apply a function to a single argument, one may use</p>
+<syntax-table>
+<tr> <td><syntax name="unary-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntax name="expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntax name="named-expr" /></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[]</inline> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.</p>
+
+<p>Postfix alternatives for unary application may be introduced in the future.</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/structures">
+<title>Structures in function application</title>
+<body>
+<p>Structures are special values that contain ordered as well as named components.  Applying a function to a structure has the same semantics as if the ordered and named components were split in a basic function application.  The syntax for calling a function with a structure is:</p>
+<syntax-table>
+<tr> <td><syntax name="split-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] &lt;&gt; <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/cute-basic">
+<title>Basic evaluated cuts</title>
+<body>
+<p>The syntax for the basic evaluated cut is simple:</p>
+<syntax-table>
+<tr> <td><syntax name="basic-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> ... ]</inline></td></tr>
+</syntax-table>
+<p>Note that states cannot be bound in evaluated cuts, since this would store a reference to the state in a manner that does not match a functional language.  Also note that, as in function application, ordered arguments must be passed before named arguments.</p>
+
+<p>The semantics of the evaluated cut may not be quite as everone expects.  Ordered arguments are simply mapped to the corresponding positions in the callee's list of formal parameters, and are bound without possibility to override in the evaluated cut.  Named arguments, however, are not actually bound to the addressed formal parameters, but only assigns (or replaces) the default value for that parameter.  Hence, named arguments in the evaluated cut are possible to override.</p>
+
+<p>Note that it is a bad idea to use ordered arguments with a function whose list of formal parameters is unavailable for inspection.  It is such a bad idea that it would be pointless at best to allow named arguments to bind permanentally to a formal parameter in an evaluated cut, since the use of this would be to change the positions of ordered arguments in an obscure way.</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/cute-unary">
+<title>Unary evaluated cuts</title>
+<body>
+<p>The following allows evaluated cuts to be constructed as easy as an unary function application:</p>
+<syntax-table>
+<tr> <td><syntax name="unary-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] <syntax name="expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] <syntax name="named-expr" /></inline></td></tr>
+</syntax-table>
+<p>Note that the <inline>[...]</inline> must be written as a single token without whitespace.</p>
+</body>
+</section>
+
+<section id="syntax/fun-apply/cute-structure">
+<title>Structures and evaluated cuts</title>
+<body>
+<p>The syntax to use a structure for an evaluated cut is</p>
+<syntax-table>
+<tr> <td><syntax name="split-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+</section><!-- end of syntax-fun-apply -->

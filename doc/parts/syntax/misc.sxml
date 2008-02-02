@@ -1,0 +1,158 @@
+<section id="syntax/misc-expr">
+<title>Other expressions and expressions in general</title>
+<top>
+<p>There are many kinds of expressions.  An expression can be either <em>non-pure</em> or <em>pure</em> depending on whether it interacts with states or not.  An expression may also be <em>immediate</em>, wither because it is of a certain kind which is always immediate, or because the user has flagged it to be immediate for some reason.  Expressions that are non-pure or immediate cannot or must not be delayed, and are evaluated in the second phase of code bracket evaluation.  While non-purity is a property that a child can (and generally does) give to its parent in the abstract syntax tree, the immediate flag is never transferred between child and parent.</p>
+
+<p>The following breaks down <syntax name="expr" />:</p>
+<syntax-table>
+<tr> <td><syntax name="expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="expr" /> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="constant" /> <bnf>|</bnf> <syntax name="reference" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="tuple" /> <bnf>|</bnf> <syntax name="structure" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="function" /> <bnf>|</bnf> <syntax name="procedure" /> <bnf>|</bnf> <syntax name="application" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="reach-out" /> <bnf>|</bnf> <syntax name="immediate-expr" /> <bnf>|</bnf> <syntax name="tex-expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-binding" /> <bnf>|</bnf> <syntax name="with-dynamic" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="with-escape-continuation" /> <bnf>|</bnf> <syntax name="invoke-escape-continuation" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="insertion-expr" /> <bnf>|</bnf> <syntax name="empty-expr" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="unary" /> <bnf>|</bnf> <syntax name="binary-arithmetic" /> <bnf>|</bnf> <syntax name="binary-relational" /></inline></td></tr>
+
+<tr> <td><syntax name="reference" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="identifier" /> <bnf>|</bnf> <syntax name="dyn-var" /> <bnf>|</bnf> <syntax name="peek-state" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="field-ref" /> <bnf>|</bnf> <syntax name="lookup-symbol" /> <bnf>|</bnf> <syntax name="typename" /></inline></td></tr>
+
+<tr> <td><syntax name="application" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="basic-call" /> <bnf>|</bnf> <syntax name="proc-call" /> <bnf>|</bnf> <syntax name="unary-call" /> <bnf>|</bnf> <syntax name="split-call" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline> <syntax name="basic-cute" /> <bnf>|</bnf> <syntax name="unary-cute" /> <bnf>|</bnf> <syntax name="split-cute" /></inline></td></tr>
+
+<tr> <td><syntax name="constant" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float" /> <bnf>|</bnf> <syntax name="length" /> <bnf>|</bnf> <syntax name="string" /> <bnf>|</bnf> <syntax name="boolean" /> <bnf>|</bnf> <syntax name="integer" /> <bnf>|</bnf> <syntax name="symbol" /></inline></td></tr>
+
+<tr> <td><syntax name="tuple" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float-pair" /> <bnf>|</bnf> <syntax name="float-triple" /> <bnf>|</bnf> <syntax name="coords-2D" /> <bnf>|</bnf> <syntax name="coords-3D" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="polar-handle-2D" /> <bnf>|</bnf> <syntax name="corner-point-2D" /></inline></td></tr>
+
+<tr> <td><syntax name="unary" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="not-expr" /> <bnf>|</bnf> <syntax name="cycle" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="negation" /> <bnf>|</bnf> <syntax name="relative" /></inline></td></tr>
+
+<tr> <td><syntax name="binary-arithmetic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="plus" /> <bnf>|</bnf> <syntax name="minus" /> <bnf>|</bnf> <syntax name="star" /> <bnf>|</bnf> <syntax name="slash" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="plus-plus" /> <bnf>|</bnf> <syntax name="minus-minus" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="angle" /> <bnf>|</bnf> <syntax name="projection" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="ampersand" /> <bnf>|</bnf> <syntax name="compose" /></inline></td></tr>
+
+<tr> <td><syntax name="binary-relational" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="less" /> <bnf>|</bnf> <syntax name="less-equal" /> <bnf>|</bnf> <syntax name="greater" /> <bnf>|</bnf> <syntax name="greater-equal" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="equal" /> <bnf>|</bnf> <syntax name="not-equal" /></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="and" /> <bnf>|</bnf> <syntax name="or" /> <bnf>|</bnf> <syntax name="xor" /></inline></td></tr>
+</syntax-table>
+</top>
+
+<section id="syntax/misc-expr/path-constr">
+<title>Path construction</title>
+<body>
+<p>In the end, all paths are piecewise cubic splines.  Parameterizing the splines as Bezier splines, we refer to <em>interpolation points</em> instead of <em>spline coefficients</em>.  In general, the spline has two <em>endpoints</em>, and two <em>intermediate</em> interpolation points.  The two end points may be referred to as the <em>first endpoint</em> and <em>second endpoint</em>, respectively.  The intermediate interpolation points may be referred to as the <em>first intermediate</em> and <em>second intermediate</em> interpolation point, respectively.  The intermediate interpolation points may be omitted as a shorthand for placing them at the neighboring endpoint.</p>
+
+<p>The Bezier spline will pass through the enpoints, and be contained in the convex hull of all four interpolation points.  Adjacent splines share one of the endpoints, so that the path becomes continuous.  This makes it convenient to think of the path, not as a sequence of Bezier splines, but as a sequence of points on the path, where each point on the path may have a forward and a backward control point (or <em>handle</em>).  Please refer to the WWW for more details on the splines, for instance <a href="http://en.wikipedia.org/wiki/Bézier_curve">Wikipedia</a>.  Here, we shall focus on how the handles may be laid out.</p>
+
+<p>The syntax that constructs path points with handles is:</p>
+<syntax-table>
+<tr> <td><syntax name="path-point-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
+<tr> <td><syntax name="path-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
+</syntax-table>
+<p>It is illegal to put a handle on a pathpoint which already has a handle in the same direction.</p>
+
+<p>Often, paths are constructed according to the pattern</p>
+<pre>
+<syntax name="path-point-2D" /> <bnf>(</bnf> -- <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> -- cycle <bnf>)?</bnf>
+</pre>
+<p>but this is just a special case of the general</p>
+
+<syntax-table>
+<tr> <td><syntax name="simple-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="SimplePath2D" /></td></tr>
+<tr> <td><syntax name="simple-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="cycle" /></inline></td></tr>
+<tr> <td><syntax name="cycle" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- cycle</inline></td></tr>
+</syntax-table>
+<p>It is illegal to close a path that is already closed, or to extend a closed path.</p>
+
+<p>What remains to be described regarding simple paths is how the free parts of polar handles are determined.  When all handles have been determined, an <em>elementary</em> path has been obtained, but this concept is insignificant from the user's perspective.  Anyway, most of the computations on paths require an elementary path, and will trigger the following compuation if needed:</p>
+<ol>
+<li><p>Find all angles to handles that are determined explicitly.</p></li>
+<li><p>Propagate all known angles to any free angles on the other side of a path point (taking corner angles into account).</p></li>
+<li><p>Compute remaining angles based on the path points position relative its neighboring path points.</p><todo><p>Fill in details!</p></todo></li>
+<li><p>Compute all distances to handles that are given explicitly.  Note that this requires all angles to be known.</p></li>
+<li><p>Propagate known distances to any free distances on the other side of a path point.</p></li>
+<li><p>Use <varname>@defaultunit</varname> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>
+</ol>
+<p>Note that the rules above means that there is a subtle difference between the following two path points:</p>
+<pre>
+<![CDATA[p1: (1%C^)<(0cm,0cm)>(1%C^)
+p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
+</pre>
+<remark>
+<p>The difference is that <varname>p1</varname> will generally get handles of unequal length, while <varname>p2</varname> gets handles of equal length.</p>
+</remark>
+
+<example-with-output title="Example" internal-id="example-pathconstruction">
+<image pdf="pathconstruction.pdf" jpg="pathconstruction_y_small.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/pathconstruction.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/pathconstruction.shape" -->]]>
+</source>
+</example-with-output>
+
+<p>When it comes to filling paths with color, it becomes necessary to handle collections of simple paths.  Sometimes, composite paths may also serve merely as a container for simple paths.  The ampersand operator is used to construct composite paths:</p>
+<syntax-table>
+<tr> <td><syntax name="composite-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="Path2D" /></td></tr>
+<tr> <td><syntax name="composite-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+
+<p>Paths in <str-3D /> are constructed in the same way as in <str-2D />, although their path points cannot have polar handles.</p>
+
+</body>
+</section>
+
+<section id="syntax/misc-expr/laziness">
+<title>Laziness control</title>
+<body>
+<p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  Delayed evaluation is prohibited by flagging an expression as <em>immediate</em>:</p>
+<syntax-table>
+<tr> <td><syntax name="immediate-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>!! <syntax name="expr" /></inline></td></tr>
+</syntax-table>
+<p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
+
+<example-with-output title="Example" internal-id="example-evalorder">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/evalorder.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/evalorder.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/evalorder.stdout" -->]]>
+</stdout>
+</example-with-output>
+
+</body>
+</section>
+
+<section id="syntax/misc-expr/unary">
+<title>Unary operators</title>
+<body>
+<p>The expansions of <syntax name="unary" /> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.</p>
+<syntax-table>
+<tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( - <syntax name="expr" /> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( + <syntax name="expr" /> )</inline></td></tr>
+<tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
+</syntax-table>
+</body>
+</section>
+
+<section id="syntax/misc-expr/binary">
+<title>Binary arithmetic operators</title>
+<body>
+</body>
+</section>
+
+<section id="syntax/misc-expr/relational">
+<title>Relational operators</title>
+<body>
+</body>
+</section>
+
+</section><!-- end of syntax/misc-expr -->
