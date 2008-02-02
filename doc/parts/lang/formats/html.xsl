@@ -8,23 +8,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/book">
   <html>
     <head>
-      <title><xsl:value-of select="title" /></title>
+      <title><xsl:apply-templates select="title" /></title>
       <link rel="stylesheet" href="../../styles/html/shapes.css" />
     </head>
     <body>
-    <h0><xsl:value-of select="title" /></h0>
+    <h0><xsl:apply-templates select="title" /></h0>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
     <xsl:for-each select="section">
-      <h1><xsl:value-of select="title" /></h1>
+      <h1><xsl:apply-templates select="title" /></h1>
       <xsl:apply-templates select="top" />
       <xsl:apply-templates select="body" />
       <xsl:for-each select="section">
-	<h2><xsl:value-of select="title" /></h2>
+	<h2><xsl:apply-templates select="title" /></h2>
 	<xsl:apply-templates select="top" />
 	<xsl:apply-templates select="body" />
 	<xsl:for-each select="section">
-	  <h3><xsl:value-of select="title" /></h3>
+	  <h3><xsl:apply-templates select="title" /></h3>
 	  <xsl:apply-templates select="top" />
 	  <xsl:apply-templates select="body" />
 <!--	  <xsl:value-of select="content" disable-output-escaping="yes" /> -->

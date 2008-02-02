@@ -118,7 +118,7 @@ lexerregexp { color: F00; font-weight: bold; }
 constname { font-weight: bold; }
 filename  { font-family: sans-serif; font-style: italic; font-size: 90%; }
 
-syntaxname { font-style: italic; color: #F0F; text-decoration: underline; }
+syntaxname { font-style: italic; color: #F0F; text-decoration: none; }
 syntaxname.new { text-decoration: none; }
 bnf  { font-size: 140%; color: #00F; }
 
@@ -173,4 +173,21 @@ table.note { width:100%; border-style:solid; border-color:#0C0; }
 .nowrap
 {
 		white-space: nowrap;
+}
+
+a:link.discrete
+{
+		text-decoration: none;
+		color: black;
+}
+a:visited.discrete
+{
+		text-decoration: none;
+		color: black;
+}
+a:hover.discrete
+{
+		text-decoration: none;
+		color: black;
+		background-color: #CCCCCC;
 }

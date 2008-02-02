@@ -51,27 +51,79 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="binding[@name]">
 	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
 		<xsl:attribute name="href">bindings.html#<xsl:value-of select="@name" /></xsl:attribute>
 		<varname><xsl:value-of select="@name" /></varname>
 	</xsl:element>
 </xsl:template>
 <xsl:template match="dynvar[@name]">
 	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
 		<xsl:attribute name="href">dynvars.html#<xsl:value-of select="@name" /></xsl:attribute>
 		<varname>@<xsl:value-of select="@name" /></varname>
 	</xsl:element>
 </xsl:template>
-<xsl:template match="named-type[@name]">
+<xsl:template match="named-type[@name and not(@link)]">
 	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
 		<xsl:attribute name="href">types.html#<xsl:value-of select="@name" /></xsl:attribute>
-		<varname>§<xsl:value-of select="@name" /></varname>
+		<typename>§<xsl:value-of select="@name" /></typename>
 	</xsl:element>
+</xsl:template>
+<xsl:template match="named-type[@name and @link='no']">
+	<typename>§<xsl:value-of select="@name" /></typename>
 </xsl:template>
 
 
 <xsl:template match="inline"><inline><xsl:apply-templates/></inline></xsl:template>
 <xsl:template match="em"><em><xsl:apply-templates/></em></xsl:template>
 <xsl:template match="bnf"><bnf><xsl:apply-templates/></bnf></xsl:template>
+<xsl:template match="union-type">
+	<typename><xsl:text>( </xsl:text></typename>
+	<xsl:for-each select="./*">
+		<xsl:if test="position() > 1">
+			<typename><xsl:text>| </xsl:text></typename>
+		</xsl:if>
+		<xsl:apply-templates select="." />
+		<xsl:text> </xsl:text>
+	</xsl:for-each>
+	<typename>)</typename>
+</xsl:template>
+<xsl:template match="structure-type">
+	<typename><xsl:text>(&gt; </xsl:text></typename>
+	<xsl:for-each select="field">
+		<xsl:if test="@name">
+			<xsl:value-of select="@name" />::
+		</xsl:if>
+		<xsl:if test="not(@name)">
+			<xsl:value-of select="position( )" />::
+		</xsl:if>
+		<xsl:if test="not(type)">
+			<typename>Any-Type</typename>
+		</xsl:if>
+		<xsl:apply-templates select="type" />
+		<xsl:text> </xsl:text>
+	</xsl:for-each>
+	<typename>&lt;)</typename>
+</xsl:template>
+<xsl:template match="structure-type/field">
+</xsl:template>
+<xsl:template match="function-type">
+	<typename><xsl:text>( </xsl:text></typename>
+	<xsl:for-each select="arguments/arg">
+		<xsl:if test="position() > 1">
+			<typename><xsl:text>| </xsl:text></typename>
+		</xsl:if>
+		<xsl:apply-templates select="." />
+		<xsl:text> </xsl:text>
+	</xsl:for-each>
+	<xsl:if test="arguments/sink[@name]">
+		<xsl:text>&lt;&gt;</xsl:text><varname><xsl:value-of select="@name" /></varname>
+	</xsl:if>
+	<xsl:text> → </xsl:text>
+	<xsl:apply-templates select="result" />
+	<typename><xsl:text> )</xsl:text></typename>
+</xsl:template>
 <xsl:template match="typename"><typename><xsl:apply-templates/></typename></xsl:template>
 <xsl:template match="typename[@class='replacable']">
   <typename class="replacable"><xsl:apply-templates/></typename>
@@ -93,6 +145,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="syntaxname[not(@class)]">
   <xsl:element name="a">
+    <xsl:attribute name="class">discrete</xsl:attribute>
     <xsl:attribute name="href">#stx-<xsl:value-of select="." /></xsl:attribute>
     <syntaxname><xsl:apply-templates/></syntaxname>
   </xsl:element>

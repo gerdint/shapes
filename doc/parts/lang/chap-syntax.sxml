@@ -6,44 +6,6 @@
 <p>It might be confusing, though, to find that many of the composite expression syntaxes are implemented as function calls, which the user may become aware of when encoutering certain error messages.</p>
 </top>
 
-<section id="syntax-atoms">
-<title>Atoms</title>
-
-<section id="syntax-floats">
-<title>Floats</title>
-<body>
-<syntax-table>
-<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
-<tr> <td><syntaxname class="new">basic-float</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td></tr>
-<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
-<tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname> <bnf>|</bnf> <syntaxname>basic-float</syntaxname>°</inline></td></tr>
-</syntax-table>
-<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
-
-<token-example-table>
-<head>
-<tr> <td>Token</td> <td>Valid float?</td> </tr>
-</head>
-<body>
-<tr> <td><inline>13</inline></td> <td>Yes (= 13)</td> </tr>
-<tr> <td><inline>~13</inline></td> <td>Yes (= -13)</td> </tr>
-<tr> <td><inline>2.</inline></td> <td>Yes (= 2.0)</td> </tr>
-<tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
-<tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
-<tr> <td><inline>5*^~3°</inline></td> <td>Yes, (= 0.005*π/180)</td> </tr>
-<tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
-<tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
-<tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
-<tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
-</body>
-</token-example-table>
-<p />
-
-<p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
-</body>
-</section>
-
-</section><!-- End of syntax-atoms -->
 
 <section id="syntax-include">
 <title>File inclusion and comments</title>
@@ -93,16 +55,16 @@
 <title>Floats</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
-<tr> <td><syntaxname class="new">basic-float</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td></tr>
-<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntaxname>basic-float</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
+<tr> <td><syntaxname class="new">basic-float</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
+<tr> <td><syntaxname>float</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
 <tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname> <bnf>|</bnf> <syntaxname>basic-float</syntaxname>°</inline></td></tr>
 </syntax-table>
-<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and finally an optional sequence of decimal digits.  A degree sign can be appended, effectively multiplying the preceding float by pi/180.  Examples are given below.</p>
+<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
 
 <token-example-table>
 <head>
-<tr> <td>Token</td> <td>Valid float?</td></tr>
+<tr> <td>Token</td> <td>Valid float?</td> </tr>
 </head>
 <body>
 <tr> <td><inline>13</inline></td> <td>Yes (= 13)</td> </tr>
@@ -110,6 +72,7 @@
 <tr> <td><inline>2.</inline></td> <td>Yes (= 2.0)</td> </tr>
 <tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
 <tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
+<tr> <td><inline>5*^~3°</inline></td> <td>Yes, (= 0.005*π/180)</td> </tr>
 <tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
 <tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
 <tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
@@ -127,7 +90,7 @@
 <title>Lengths</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname>length</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Length</typename></td></tr>
+<tr> <td><syntaxname>length</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
 <tr> <td><syntaxname class="new">length</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>basic-float</syntaxname><bnf>;</bnf><syntaxname>length-unit</syntaxname></inline></td></tr>
 </syntax-table>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
@@ -143,6 +106,7 @@
 <tr> <td><inline>2.5pt</inline></td> <td>No (unless the unit <lengthunit>pt</lengthunit> is defined)</td> </tr>
 <tr> <td><inline>~3mm</inline></td> <td>Yes</td> </tr>
 <tr> <td><inline>3 mm</inline></td> <td>No (space not allowed)</td> </tr>
+<tr> <td><inline>3*^~3m</inline></td> <td>Yes (<physical><scalar>3</scalar><unit>mm</unit></physical>)</td> </tr>
 <tr> <td><inline>180°mm</inline></td> <td>No (degree sign not allowed)</td> </tr>
 </body>
 </token-example-table>
@@ -260,7 +224,7 @@ Multi-line...´
 <title>Booleans</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname>boolean</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Boolean</typename></td></tr>
+<tr> <td><syntaxname>boolean</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
 <tr> <td><syntaxname class="new">boolean</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
 </syntax-table>
 
@@ -348,7 +312,7 @@ Multi-line...´
 <title>Symbols</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname>symbol</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Symbol</typename></td></tr>
+<tr> <td><syntaxname>symbol</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
 <tr> <td><syntaxname class="new">symbol</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>'<syntaxname>identifier</syntaxname></inline></td></tr>
 </syntax-table>
 <p>Note that there must not be any whitespace after the apostrophe.</p>
@@ -379,10 +343,10 @@ Multi-line...´
 <title>Float pairs and triples</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatPair</typename></td></tr>
-<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td><syntaxname>float-triple</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>FloatTriple</typename></td></tr>
-<tr> <td><syntaxname class="new">float-triple</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>float-pair</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="FloatPair" /></td></tr>
+<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>float-triple</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="FloatTriple" /></td></tr>
+<tr> <td><syntaxname class="new">float-triple</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
 </syntax-table>
 
 <p>Float pairs and triples are useful generalizations of directions in <str-2D /> and <str-3D />, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
@@ -407,17 +371,17 @@ Multi-line...´
 <body>
 <p>Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:</p>
 <syntax-table>
-<tr> <td><syntaxname>offset</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>OffsetLength</typename></td></tr>
-<tr> <td><syntaxname class="new">offset</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td><typename>LengthLike</typename></td> <td><bnf>=</bnf></td> <td><inline> <typename>Length</typename> | <typename>OffsetLength</typename></inline></td></tr>
+<tr> <td><syntaxname>offset</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="OffsetLength" /></td></tr>
+<tr> <td><syntaxname class="new">offset</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><named-type name="LengthLike" /></td> <td><bnf>=</bnf></td> <td><inline> <named-type name="Length" /> | <named-type name="OffsetLength" /></inline></td></tr>
 </syntax-table>
 </body>
 </section>
 
 <section id="syntax-compound-coords">
-<title>Coordinates in 2D and 3D</title>
+<title>Coordinates in <str-2D /> and <str-3D /></title>
 <body>
-<p>In this context, <str-2D /> and <str-3D /> refer to the perceivable space (3D) and plane (2D).  Coordinates are never explicitly associated with a base frame, which would imply that coordinates denoted a particular point in the perceivable spaces.  Rather, coordinates are always relative, possibly with the exception of when graphics are laid out on the output plane.  However, even when graphics are placed on the output plane, they remain relative to an artificial origin, and this is particularly obvious when the output's media box is determined <em>after</em> the contents of the output has been laid out.</p>
+<p>In this context, <str-2D /> and <str-3D /> refer to the perceivable space (<str-3D />) and plane (<str-2D />).  Coordinates are never explicitly associated with a base frame, which would imply that coordinates denoted a particular point in the perceivable spaces.  Rather, coordinates are always relative, possibly with the exception of when graphics are laid out on the output plane.  However, even when graphics are placed on the output plane, they remain relative to an artificial origin, and this is particularly obvious when the output's media box is determined <em>after</em> the contents of the output has been laid out.</p>
 
 <p>That said, we can drop the distinction of the two types of coordinates, and it is, for example, always permissible to add coordinates.  The basic way to construct coordinates is similar to how pairs/triples are constructed, but with lengths instead of floats.  One notable exception to this rule is that if one of the lengths in <str-2D /> are zero, it may be given as the <em>float</em> zero.  Coordinates may also be constructed as relative an undetermined base frame, please refer to the documentation on path construction for how the base frame may be determined later.</p>
 
@@ -425,13 +389,13 @@ Multi-line...´
 
 <p>The following table below lists the valid constructs.</p>
 <syntax-table>
-<tr> <td><syntaxname>coords-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord2D</typename></td></tr>
-<tr> <td><syntaxname class="new">coords-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, 0 )</inline></td></tr>
+<tr> <td><syntaxname>coords-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Coord2D" /></td></tr>
+<tr> <td><syntaxname class="new">coords-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, 0 )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-2D</syntaxname> )</inline></td></tr>
-<tr> <td><syntaxname>coords-3D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Coord3D</typename></td></tr>
-<tr> <td><syntaxname class="new">coords-3D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>coords-3D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
+<tr> <td><syntaxname class="new">coords-3D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntaxname>coords-3D</syntaxname> )</inline></td></tr>
 </syntax-table>
 
@@ -457,7 +421,7 @@ Multi-line...´
 </section>
 
 <section id="syntax-compound-polar">
-<title>Polar handles and corder points in 2D</title>
+<title>Polar handles and corder points in <str-2D /></title>
 <body>
 <p><em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like</p>
 <pre>
@@ -465,8 +429,8 @@ Multi-line...´
 </pre>
 <p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
 <syntax-table>
-<tr> <td><syntaxname>polar-handle-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>PolarHandle2D</typename></td></tr>
-<tr> <td><syntaxname class="new">polar-handle-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Length</typename><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;?</bnf> )</inline></td></tr>
+<tr> <td><syntaxname>polar-handle-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle2D" /></td></tr>
+<tr> <td><syntaxname class="new">polar-handle-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
 </syntax-table>
 <p>When the distance is missing, it <em>may</em> fall back on <varname>@defaultunit</varname>, so be prepared to have a binding for <varname>@defaultunit</varname> in dynamic scope unless you really know that it won't be needed.</p>
 
@@ -490,9 +454,9 @@ Multi-line...´
 </token-example-table>
 <p />
 
-<p>A <em>corner point</em> is a generalization of <typename>Coord2D</typename>.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <typename>Coord2D</typename> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
+<p>A <em>corner point</em> is a generalization of <named-type name="Coord2D" />.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <named-type name="Coord2D" /> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
 <table cellspacing="5">
-<tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>LengthLike</typename><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname class="new">corner-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
 </table>
 <p />
 
@@ -520,9 +484,9 @@ Multi-line...´
 </pre>
 <p>This fits into (note that there is only a small difference between the syntax for functions and procedures)</p>
 <syntax-table>
-<tr> <td><syntaxname>function</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Function</typename></td></tr>
+<tr> <td><syntaxname>function</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
 <tr> <td><syntaxname class="new">function</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntaxname>identifier</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td><syntaxname>procedure</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Procedure</typename></td></tr>
+<tr> <td><syntaxname>procedure</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
 <tr> <td><syntaxname class="new">function</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntaxname>identifier</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntaxname>state-identifier</syntaxname> <bnf>)*</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> .> ! <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">default</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>: <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">sink</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntaxname>identifier</syntaxname></inline></td></tr>
@@ -540,7 +504,7 @@ Multi-line...´
 <p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a href="#funapply">function application</a> for an explanation of <syntaxname>named-expr</syntaxname>, and to see how structures may be used.</p>
 
 <syntax-table>
-<tr> <td><syntaxname>structure</syntaxname></td> <td><bnf>::</bnf></td> <td>“<typename>Structure</typename>”</td></tr>
+<tr> <td><syntaxname>structure</syntaxname></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>
 <tr> <td><syntaxname class="new">structure</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> &lt;)</inline></td></tr>
 </syntax-table>
 
@@ -549,7 +513,7 @@ Multi-line...´
 <p>Besides getting parts out of a structure by applying a function to it, it is possible to bind to multiple values in the structure at once.  The syntax is</p>
 
 <syntax-table>
-<tr> <td><syntaxname class="new">split-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&lt; <bnf>(</bnf> <syntaxname>split-item</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)+</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> &gt;) : <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">split-definition</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>(&lt; <bnf>(</bnf> <syntaxname>split-item</syntaxname> <syntaxname>default</syntaxname><bnf>?</bnf> <bnf>)+</bnf> <syntaxname>sink</syntaxname><bnf>?</bnf> &gt;) : <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td><syntaxname class="new">split-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . <syntaxname>identifier</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : . &quot;</inline></td></tr>
@@ -601,12 +565,12 @@ Multi-line...´
 <body>
 <p>Besides ordinary functions, there are some other objects which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The general form of a function application is</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">basic-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+<tr> <td><syntaxname class="new">basic-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
 <tr> <td><syntaxname class="new">arg-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>expr</syntaxname> <bnf>|</bnf> <syntaxname>named-expr</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">named-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>|</bnf> <syntaxname>named-state</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">named-state</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>identifier</syntaxname> : <syntaxname>state</syntaxname></inline></td></tr>
-<tr> <td><typename>Applicable</typename></td> <td><bnf>=</bnf></td> <td><typename>Function</typename> <bnf>|</bnf> <typename>AffineTransform</typename> <bnf>|</bnf> <typename>Path</typename></td> </tr>
+<tr> <td><named-type name="Applicable" /></td> <td><bnf>=</bnf></td> <td><union-type><named-type name="Function" /><named-type name="AffineTransform" /><named-type name="Path" /></union-type></td> </tr>
 </syntax-table>
 
 <p>The syntax <syntaxname>arg-item</syntaxname> and <syntaxname>state-item</syntaxname> defined above can each be either <em>ordered</em> (that is, not named) or <em>named</em>, but there is a rule for how these may be ordered.  The rule exist to avoid confusing situations; not because it is necessary to define the semantics.  The rule is that ordered arguments (represented by <syntaxname>expr</syntaxname>) must go before named arguments (represented by <syntaxname>named-expr</syntaxname>), and ordered states (represented by <syntaxname>state</syntaxname>) before named states (represented by <syntaxname>named-state</syntaxname>).</p>
@@ -634,7 +598,7 @@ Multi-line...´
 <body>
 <p>The general form of a procedure application is</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">proc-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><typename>Procedure</typename><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
+<tr> <td><syntaxname class="new">proc-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><named-type name="Procedure" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntaxname>arg-item</syntaxname> <bnf>|</bnf> <syntaxname>state-item</syntaxname> <bnf>)*</bnf> ]</inline></td></tr>
 </syntax-table>
 <p>Here, <syntaxname>fun-expr</syntaxname> is simply an expression that evaluates to a procedure.  Recall that a procedure may access dynamic states, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  Besides this difference, the semantics are the same as that of a function application.</p>
 </body>
@@ -645,8 +609,8 @@ Multi-line...´
 <body>
 <p>To apply a function to a single argument, one may use</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">unary-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] <syntaxname>named-expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">unary-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntaxname>named-expr</syntaxname></inline></td></tr>
 </syntax-table>
 <p>Note that the <inline>[]</inline> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.</p>
 
@@ -659,7 +623,7 @@ Multi-line...´
 <body>
 <p>Structures are special values that contain ordered as well as named components.  Applying a function to a structure has the same semantics as if the ordered and named components were split in a basic function application.  The syntax for calling a function with a structure is:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">split-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Applicable</typename><bnf>&gt;</bnf> [] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">split-call</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] &lt;&gt; <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
 </syntax-table>
 <p>Note that the <inline>[]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.</p>
 </body>
@@ -670,7 +634,7 @@ Multi-line...´
 <body>
 <p>The syntax for the basic evaluated cut is simple:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">basic-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> ... ]</inline></td></tr>
+<tr> <td><syntaxname class="new">basic-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>[ <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntaxname>expr</syntaxname><bnf>*</bnf> <syntaxname>named-expr</syntaxname><bnf>*</bnf> ... ]</inline></td></tr>
 </syntax-table>
 <p>Note that states cannot be bound in evaluated cuts, since this would store a reference to the state in a manner that does not match a functional language.  Also note that, as in function application, ordered arguments must be passed before named arguments.</p>
 
@@ -685,8 +649,8 @@ Multi-line...´
 <body>
 <p>The following allows evaluated cuts to be constructed as easy as an unary function application:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">unary-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] <syntaxname>named-expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">unary-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] <syntaxname>named-expr</syntaxname></inline></td></tr>
 </syntax-table>
 <p>Note that the <inline>[...]</inline> must be written as a single token without whitespace.</p>
 </body>
@@ -697,7 +661,7 @@ Multi-line...´
 <body>
 <p>The syntax to use a structure for an evaluated cut is</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">split-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><typename>Structure</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">split-cute</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> [...] &lt;&gt; <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
 </syntax-table>
 </body>
 </section>
@@ -744,13 +708,13 @@ Multi-line...´
 <title>State items</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname class="new">state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> : <bnf>&lt;</bnf><typename>Hot</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">state-item</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> : <bnf>&lt;</bnf><named-type name="Hot" /><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>state</syntaxname> <bnf>(</bnf> &lt;&lt; <syntaxname>expr</syntaxname> <bnf>)+</bnf>  </inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>lex-state</syntaxname> ;</inline></td></tr>
 </syntax-table>
 <p>The state items are always evaluated in order of appearance in the code bracket (note also the special kind of variable definition involving a state).</p>
 
-<p>The first form introduces a state.  It requires a value of the special type <typename>Hot</typename> in the right hand side.  Values of this type has the special ability to spawn fresh states.  Note that a value of type <typename>Hot</typename> will always spawn identical fresh states, since being a <em>value</em> it has no internal state of its own.  On the other hand, it never spawns the <em>same</em> state twice, so each state it spawns lives its own life.</p>
+<p>The first form introduces a state.  It requires a value of the special type <named-type name="Hot" /> in the right hand side.  Values of this type has the special ability to spawn fresh states.  Note that a value of type <named-type name="Hot" /> will always spawn identical fresh states, since being a <em>value</em> it has no internal state of its own.  On the other hand, it never spawns the <em>same</em> state twice, so each state it spawns lives its own life.</p>
 
 <p>The second form modifies the state.  Note that states may also be modified by <a href="#expressions">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
 
@@ -768,8 +732,8 @@ Multi-line...´
 <title>Dynamic declarations</title>
 <body>
 <syntax-table>
-<tr> <td><syntaxname class="new">dynamic-variable-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> <syntaxname>expr</syntaxname></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><typename>Function</typename><bnf>&gt;</bnf> dynamic <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">dynamic-variable-declaration</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntaxname>dyn-var</syntaxname> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> dynamic <syntaxname>expr</syntaxname></inline></td></tr>
 </syntax-table>
 <p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
 
@@ -892,7 +856,7 @@ inc: [addn '1]
 <body>
 <p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">with-dynamic</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf> | <syntaxname>expr</syntaxname></inline></td></tr>
+<tr> <td><syntaxname class="new">with-dynamic</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> | <syntaxname>expr</syntaxname></inline></td></tr>
 </syntax-table>
 <p>(Note that the vertical bar is not part of the BNF structure, but is the operator that indicates a change of dynamic scope.)</p>
 
@@ -900,10 +864,10 @@ inc: [addn '1]
 
 <p>Dynamic bindings are constructed with the following syntax:</p>
 <syntax-table>
-<tr> <td><syntaxname>dynamic-bindings</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>DynamicBindings</typename></td></tr>
-<tr> <td><syntaxname>dynamic-binding</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>DynamicBinding</typename></td></tr>
-<tr> <td><syntaxname class="new">dynamic-bindings</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBinding</typename><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><typename>DynamicBindings</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname>dynamic-bindings</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBindings" /></td></tr>
+<tr> <td><syntaxname>dynamic-binding</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBinding" /></td></tr>
+<tr> <td><syntaxname class="new">dynamic-bindings</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBinding" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td><syntaxname class="new">dynamic-binding</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>dyn-var</syntaxname> : <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dyn-var</syntaxname> : dynamic <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>dyn-state</syntaxname> : <syntaxname>state</syntaxname></inline></td></tr>
@@ -1042,11 +1006,11 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 
 <p>The syntax that constructs path points with handles is:</p>
 <syntax-table>
-<tr> <td><syntaxname>path-point-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>PathPoint2D</typename></td></tr>
-<tr> <td><syntaxname class="new">path-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>Coords2D</typename><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>Handle2D</typename><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><typename>Handle2D</typename><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><typename>Handle2D</typename></td> <td><bnf>=</bnf></td> <td><typename>Coords2D</typename> <bnf>|</bnf> <typename>PolarHandle2D</typename></td></tr>
+<tr> <td><syntaxname>path-point-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
+<tr> <td><syntaxname class="new">path-point-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
 </syntax-table>
 <p>It is illegal to put a handle on a pathpoint which already has a handle in the same direction.</p>
 
@@ -1057,11 +1021,11 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 <p>but this is just a special case of the general</p>
 
 <syntax-table>
-<tr> <td><syntaxname>simple-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>SimplePath2D</typename></td></tr>
-<tr> <td><syntaxname class="new">simple-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>PathPoint2D</typename><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname>simple-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="SimplePath2D" /></td></tr>
+<tr> <td><syntaxname class="new">simple-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntaxname>cycle</syntaxname></inline></td></tr>
-<tr> <td><syntaxname class="new">cycle</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf> -- cycle</inline></td></tr>
+<tr> <td><syntaxname class="new">cycle</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- cycle</inline></td></tr>
 </syntax-table>
 <p>It is illegal to close a path that is already closed, or to extend a closed path.</p>
 
@@ -1092,9 +1056,9 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 
 <p>When it comes to filling paths with color, it becomes necessary to handle collections of simple paths.  Sometimes, composite paths may also serve merely as a container for simple paths.  The ampersand operator is used to construct composite paths:</p>
 <syntax-table>
-<tr> <td><syntaxname>composite-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Path2D</typename></td></tr>
-<tr> <td><syntaxname class="new">composite-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><typename>SimplePath2D</typename><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><typename>CompositePath2D</typename><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><typename>CompositePath2D</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname>composite-path-2D</syntaxname></td> <td><bnf>::</bnf></td> <td><named-type name="Path2D" /></td></tr>
+<tr> <td><syntaxname class="new">composite-path-2D</syntaxname></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></inline></td></tr>
 </syntax-table>
 
 <p>Paths in <str-3D /> are constructed in the same way as in <str-2D />, although their path points cannot have polar handles.</p>
@@ -1131,7 +1095,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <tr> <td><syntaxname class="new">negation</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( - <syntaxname>expr</syntaxname> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntaxname>expr</syntaxname></inline></td></tr>
 <tr> <td><syntaxname class="new">relative</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( + <syntaxname>expr</syntaxname> )</inline></td></tr>
-<tr> <td><syntaxname class="new">not-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><typename>Boolean</typename><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntaxname class="new">not-expr</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
 </syntax-table>
 </body>
 </section>

@@ -1,7 +1,7 @@
 <section id="chap-lexer">
 <title>Miscellaneous lexer directives</title>
 <body>
-<p>The following directive allows a source file to print a message to stdout when the file is scanned:</p>
+<p>The following directive allows a source file to print a message to <filename>stdout</filename> when the file is scanned:</p>
 <pre>
 ##echo <varname class="replacable">text-to-end-of-line-will-be-echoed</varname>
 </pre>

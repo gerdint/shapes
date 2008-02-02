@@ -9,6 +9,7 @@ SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
+HTML_MORE_FORMATS=../formats/html.xsl
 MAN1DIR=$(PRODUCED_FORMATS_DIR)/man/man1
 MANFORMAT=$(PART_FORMATS_DIR)/man.xsl
 
@@ -31,7 +32,7 @@ build/%.xml: %.sxml build/%.depend $(SSI)
 $(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) $(POSTPROCDIR)/man
 	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/man > $@
 
-$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
+$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 

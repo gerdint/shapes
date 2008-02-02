@@ -15,7 +15,7 @@
 <tr> <td>Formal parameter name</td> <td><paramname>head</paramname></td> <td></td> </tr>
 <tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
 <tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
-<tr> <td>Type name</td> <td><typename>Path2D</typename></td> <td>Not yet supported by the language.</td> </tr>
+<tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td>Not yet supported by the language.</td> </tr>
 <tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
 <tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
 <tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
@@ -28,9 +28,9 @@
 <tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
 </syntax-table>
 
-<p>It is also possible to indicate expressions that evaluate to a valua of a given type, using the notation <inline><bnf>&lt;</bnf><typename class="replacable">SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
+<p>It is also possible to indicate expressions that evaluate to a value of a given type, using the notation <inline><bnf>&lt;</bnf><typename class="replacable">SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf>, <bnf>&lt;</bnf><typename>Float</typename><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
 </syntax-table>
 
 

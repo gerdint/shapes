@@ -9,6 +9,7 @@ SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
+HTML_MORE_FORMATS=../formats/html.xsl
 
 JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
 JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
@@ -26,7 +27,7 @@ all: $(DEPENDS) $(PRODUCTS)
 build/%.xml: %.sxml build/%.depend $(SSI)
 	cat $< | $(SSI) $(SSIFLAGS) > $@
 
-$(HTMLDIR)/types.html: build/types.xml $(HTMLFORMAT) $(POSTPROCDIR)/html
+$(HTMLDIR)/types.html: build/types.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 $(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
