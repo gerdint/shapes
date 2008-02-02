@@ -17,28 +17,28 @@
 <tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
 <tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td>Not yet supported by the language.</td> </tr>
 <tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
-<tr> <td>Syntax rule name</td> <td><syntaxname>call-expr</syntaxname></td> <td></td> </tr>
+<tr> <td>Syntax rule name</td> <td><syntax name="call-expr" /></td> <td></td> </tr>
 <tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
 </loose-table>
 
-<p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntaxname>basicf-float</syntaxname><bnf>;</bnf><syntaxname>unit</syntaxname></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>
+<p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntax name="basicf-float" /><bnf>;</bnf><syntax name="unit" /></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>
 
 <p>To denote that a piece of syntax allows expression that evaluate to a certain type, the <bnf>::</bnf> notation is used, like this:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">float</syntaxname></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
+<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><typename>Float</typename></td></tr>
 </syntax-table>
 
 <p>It is also possible to indicate expressions that evaluate to a value of a given type, using the notation <inline><bnf>&lt;</bnf><typename class="replacable">SomeType</typename><bnf>&gt;</bnf></inline>, like this:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">float-pair</syntaxname></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="float-pair" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
 </syntax-table>
 
 
 <p>The following character classes will be used later:</p>
 <syntax-table>
-<tr> <td><syntaxname class="new">LowerCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?π§]</lexerregexp></td></tr>
-<tr> <td><syntaxname class="new">UpperCaseLetter</syntaxname></td> <td><bnf>→</bnf></td> <td><lexerregexp>[A-Z]</lexerregexp></td></tr>
-<tr> <td><syntaxname class="new">Letter</syntaxname></td> <td><bnf>→</bnf></td> <td><inline><syntaxname>LowerCaseLetter</syntaxname> <bnf>|</bnf> <syntaxname>UpperCaseLetter</syntaxname></inline></td></tr>
+<tr> <td><syntax name="LowerCaseLetter" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?π§]</lexerregexp></td></tr>
+<tr> <td><syntax name="UpperCaseLetter" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[A-Z]</lexerregexp></td></tr>
+<tr> <td><syntax name="Letter" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="LowerCaseLetter" /> <bnf>|</bnf> <syntax name="UpperCaseLetter" /></inline></td></tr>
 </syntax-table>
 </body>
 

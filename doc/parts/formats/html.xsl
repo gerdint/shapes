@@ -137,17 +137,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="lexerregexp">
   <lexerregexp><xsl:apply-templates/></lexerregexp>
 </xsl:template>
-<xsl:template match="syntaxname[@class='new']">
+<xsl:template match="syntax[@name and @class='new']">
   <xsl:element name="a">
     <xsl:attribute name="name">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname class="new"><xsl:apply-templates/></syntaxname>
+    <syntaxname class="new"><xsl:value-of select="name"/></syntaxname>
   </xsl:element>
 </xsl:template>
-<xsl:template match="syntaxname[not(@class)]">
+<xsl:template match="syntax[@name and not(@class)]">
   <xsl:element name="a">
     <xsl:attribute name="class">discrete</xsl:attribute>
     <xsl:attribute name="href">#stx-<xsl:value-of select="." /></xsl:attribute>
-    <syntaxname><xsl:apply-templates/></syntaxname>
+    <syntaxname><xsl:value-of select="name"/></syntaxname>
   </xsl:element>
 </xsl:template>
 <xsl:template match="a[@href]">
