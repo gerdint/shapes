@@ -7,10 +7,13 @@
 	<p>Gives you</p>
 </description>
 <top>
-<p>This part of the documentation is simply that; a listing of all global bindings defined by the kernel.  Below, an alphabetical list of links to bindings is provided.  For a grouping of the bindings by cathegory, the readers is referred to the the chapter on system bindings in the main language reference.</p>
+<p><str-Shapes /> comes with a set of built-in bindings.  Most of these give access to standard functions, while others give access to type objects.  There are also many important bindings that fall into neither of the previous categories.  The number of system bindings is expected to increase as long as the language is maintained.</p>
 </top>
 <body>
 <alphabetical-list-of-bindings />
 </body>
 <!--#include virtual="functions.sxml" -->
+<!--#include virtual="misc.sxml" -->
+<!--#include virtual="types.sxml" -->
+<!--#include virtual="hot.sxml" -->
 </book>

@@ -16,6 +16,7 @@
 	<!--#include virtual="functions.sxml" -->
 	<!--#include virtual="bracket.sxml" -->
 	<!--#include virtual="binding.sxml" -->
+	<!--#include virtual="tex.sxml" -->
 	<!--#include virtual="continuations.sxml" -->
 	<!--#include virtual="types.sxml" -->
 	<!--#include virtual="misc.sxml" -->

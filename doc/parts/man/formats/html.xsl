@@ -67,6 +67,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:apply-templates select="description/*"/>
 </li>
 </xsl:template>
+<xsl:template match="command-line-tolparam[@name]">
+  <xsl:variable name="tolname">
+    <xsl:value-of select="@name" />
+  </xsl:variable>
+	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolame]" />
+</xsl:template>
 
 <xsl:template match="command-line-item/parameters[@flag]">
 	<b><xsl:value-of select="@flag" /></b> <xsl:apply-templates /><br />
@@ -74,6 +80,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="command-line-item/short-parameter[@flag]">
 	<b><xsl:value-of select="@flag" /></b><paramname class="replacable"><xsl:value-of select="."/></paramname><br />
+</xsl:template>
+
+<xsl:template match="tolerance-parameter[@name]">
+	<li>
+		<xsl:apply-templates select="command-line-option" />
+		<xsl:apply-templates select="description/*"/>
+	</li>
 </xsl:template>
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>

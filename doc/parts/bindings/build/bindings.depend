@@ -1,1 +1,1 @@
-bindings.sxml: functions.sxml
+bindings.sxml: functions.sxml misc.sxml types.sxml hot.sxml

@@ -166,6 +166,14 @@ table.note { width:100%; border-style:solid; border-color:#0C0; }
   vertical-align: 0.4em;
 }
 
+tolparam
+{
+  font-family: helvetica;
+	font-style: italic;
+  font-size: 0.9em;
+	color: orange;
+}
+
 .xx-small
 {
 		font-size: xx-small;

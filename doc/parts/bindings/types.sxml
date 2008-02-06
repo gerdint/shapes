@@ -1,0 +1,11 @@
+<section id="bindings/types">
+<title>Types</title>
+<top>
+<p>At the time of writing, only a few types are directly accessible to the user; while other types are hidden, knowledge of them will still help understanding the language.  When, a binding exist, it will have the same identifier as is used to refer to the type abstractly in the documentation.  Types in the list below are represented with a global binding:</p>
+<ul>
+	<li><named-type name="Void" /></li>
+</ul>
+</top>
+
+</section>
+

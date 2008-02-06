@@ -20,15 +20,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
       <xsl:apply-templates select="top" />
       <xsl:apply-templates select="body" />
       <xsl:for-each select="section">
-	<h2><xsl:apply-templates select="title" /></h2>
-	<xsl:apply-templates select="top" />
-	<xsl:apply-templates select="body" />
-	<xsl:for-each select="section">
-	  <h3><xsl:apply-templates select="title" /></h3>
-	  <xsl:apply-templates select="top" />
-	  <xsl:apply-templates select="body" />
-<!--	  <xsl:value-of select="content" disable-output-escaping="yes" /> -->
-	</xsl:for-each>
+				<h2><xsl:apply-templates select="title" /></h2>
+				<xsl:apply-templates select="top" />
+				<xsl:apply-templates select="body" />
+				<xsl:for-each select="section">
+					<h3><xsl:apply-templates select="title" /></h3>
+					<xsl:apply-templates select="top" />
+					<xsl:apply-templates select="body" />
+				</xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
   </body>

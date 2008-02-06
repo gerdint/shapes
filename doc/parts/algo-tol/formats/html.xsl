@@ -15,7 +15,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<h1><xsl:value-of select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
-			<p><b>Sections:</b>
+			<p><b>Algorithms:</b>
 				<xsl:for-each select="section">
 					  
 					<xsl:element name="a">
@@ -26,17 +26,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</p>
 
 			<hr class="thin"/>
-			<p class="center"><b>Alphabetical list</b></p>
-			<p class="center">
-				<xsl:for-each select="/book/section/system-binding[@identifier]">
-					<xsl:sort select="@identifier" />
+			<p class="center"><b>Tolerance parameters</b></p>
+			<xsl:for-each select="/book/tolerance-parameter[@name]">
+				<xsl:sort select="@name" />
+				<h4>
 					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-						<xsl:value-of select="@identifier" />
+						<xsl:attribute name="name">tol-<xsl:value-of select="@name" /></xsl:attribute>
+						<tolparam><xsl:value-of select="@name" /></tolparam>
 					</xsl:element>
-					  
-				</xsl:for-each>
-			</p>
+					<xsl:text> : </xsl:text><xsl:apply-templates select="default" /><xsl:text> :: </xsl:text><xsl:apply-templates select="type" />
+				</h4>
+				<xsl:apply-templates select="description" />
+			</xsl:for-each>
 			<hr class="thin"/>
 
 			<xsl:for-each select="section">
@@ -47,17 +48,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					</xsl:element>
 				</h2>
 				<xsl:apply-templates select="top" />
-				<p class="center">
-					<xsl:for-each select="system-binding[@identifier]">
-						<xsl:sort select="@identifier" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-							<xsl:value-of select="@identifier" />
-						</xsl:element>
-						  
+				<xsl:apply-templates select="body" />
+				<xsl:for-each select="section">
+					<h3><xsl:apply-templates select="title" /></h3>
+					<xsl:apply-templates select="top" />
+					<xsl:apply-templates select="body" />
+					<xsl:for-each select="section">
+						<h4><xsl:apply-templates select="title" /></h4>
+						<xsl:apply-templates select="top" />
+						<xsl:apply-templates select="body" />
 					</xsl:for-each>
-				</p>
-				<xsl:apply-templates select="system-binding" />
+				</xsl:for-each>
 			</xsl:for-each>
 		</body>
   </html>

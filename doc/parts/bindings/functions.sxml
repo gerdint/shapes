@@ -1,7 +1,15 @@
-<section id="bindings-functions">
+<section id="bindings/functions">
 <title>Functions</title>
 <top>
 <p>These are the functions!</p>
+
+<p>After all, <str-Shapes /> is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
+
+<p>Remember <binding name="immerse" /> and <binding name="facing" />, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <binding name="facing" />.  The following is quite nice:
+</p>
+<pre>
+facing: [../facing scale:true distort:true ...]
+</pre>
 </top>
 
 <system-binding identifier="affinetransform">

@@ -73,6 +73,26 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="named-type[@name and @link='no']">
 	<typename>§<xsl:value-of select="@name" /></typename>
 </xsl:template>
+<xsl:template match="named-state-type[@name and not(@link)]">
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">states.html#<xsl:value-of select="@name" /></xsl:attribute>
+		<typename>§•<xsl:value-of select="@name" /></typename>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="named-state-type[@name and @link='no']">
+	<typename>§•<xsl:value-of select="@name" /></typename>
+</xsl:template>
+<xsl:template match="tol-param[@name and @link='no']">
+	<tolparam><xsl:value-of select="@name" /></tolparam>
+</xsl:template>
+<xsl:template match="tol-param[@name and not(@link)]">
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">algo-tol.html#tol-<xsl:value-of select="@name" /></xsl:attribute>
+		<tolparam><xsl:value-of select="@name" /></tolparam>
+	</xsl:element>
+</xsl:template>
 
 
 <xsl:template match="inline"><inline><xsl:apply-templates/></inline></xsl:template>

@@ -535,4 +535,7 @@ shapes --no-resources --needpath ../../resources/extensions/ --fontmetricspath .
 		</body>
 	</section>
 
+	<external>
+		<!--#include virtual="../algo-tol/tolerances.sxml" -->
+	</external>
 </man>

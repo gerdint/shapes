@@ -66,6 +66,13 @@ version of this page.</xsl:text>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
+<xsl:template match="command-line-tolparam[@name]">
+  <xsl:variable name="tolname">
+    <xsl:value-of select="@name" />
+  </xsl:variable>
+	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolame]" />
+</xsl:template>
+
 <xsl:template match="command-line-item/parameters[@flag]"><xsl:text>
 .ensure-line-break.B "</xsl:text><xsl:value-of select="@flag" /><xsl:text>"
 .ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>

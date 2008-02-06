@@ -1,0 +1,16 @@
+<section id="bindings/hot">
+<title>Hot values</title>
+<top>
+<p>States stem from <em>hot values</em>.  The system provides a few, all of which are important because the efficiency enhancements they bring.  What you find here is basically just a bunch of links to where the corresponding state types are described.</p>
+</top>
+
+<system-binding identifier="newGroup">
+	<hot>
+		<constructor-of><named-state-type name="Group" /></constructor-of>
+		<dynamic-references></dynamic-references>
+		<description></description>
+	</hot>
+</system-binding>
+
+</section>
+
