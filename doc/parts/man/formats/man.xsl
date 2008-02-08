@@ -70,7 +70,17 @@ version of this page.</xsl:text>
   <xsl:variable name="tolname">
     <xsl:value-of select="@name" />
   </xsl:variable>
-	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolame]" />
+	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolname]" />
+</xsl:template>
+<xsl:template match="command-line-tolparam-remaining">
+	<xsl:for-each select="/man/external/tolerance-parameter">
+		<xsl:variable name="tolname">
+			<xsl:value-of select="@name" />
+		</xsl:variable>
+		<xsl:if test="not(//command-line-tolparam[@name=$tolname])">
+			<xsl:apply-templates select="." />
+		</xsl:if>
+	</xsl:for-each>
 </xsl:template>
 
 <xsl:template match="command-line-item/parameters[@flag]"><xsl:text>
@@ -81,6 +91,21 @@ version of this page.</xsl:text>
 
 <xsl:template match="command-line-item/short-parameter[@flag]"><xsl:text>
 .ensure-line-break.BI &quot;</xsl:text><xsl:value-of select="@flag" /><xsl:text>&quot; &quot;</xsl:text><xsl:value-of select="."/><xsl:text>
+.ensure-line-break.br
+.ensure-line-break</xsl:text></xsl:template>
+
+<xsl:template match="tolerance-parameter[@name]">
+<xsl:text>
+
+</xsl:text><xsl:apply-templates select="command-line-option" />
+<xsl:apply-templates select="description/*"/><xsl:text>
+.ensure-line-break.br
+Default value: </xsl:text><xsl:apply-templates select="default" />
+</xsl:template>
+
+<xsl:template match="tolerance-parameter/command-line-option[@flag]"><xsl:text>
+.ensure-line-break.B "</xsl:text><xsl:value-of select="@flag" /><xsl:text>"
+.ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
@@ -102,6 +127,9 @@ version of this page.</xsl:text>
 .ensure-line-break.I "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="parameters/replacable"><xsl:text>
+.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break</xsl:text></xsl:template>
+<xsl:template match="command-line-option/replacable"><xsl:text>
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 

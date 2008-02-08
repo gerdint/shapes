@@ -71,7 +71,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:variable name="tolname">
     <xsl:value-of select="@name" />
   </xsl:variable>
-	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolame]" />
+	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolname]" />
+</xsl:template>
+<xsl:template match="command-line-tolparam-remaining">
+	<xsl:for-each select="/man/external/tolerance-parameter">
+		<xsl:variable name="tolname">
+			<xsl:value-of select="@name" />
+		</xsl:variable>
+		<xsl:if test="not(//command-line-tolparam[@name=$tolname])">
+			<xsl:apply-templates select="." />
+		</xsl:if>
+	</xsl:for-each>
 </xsl:template>
 
 <xsl:template match="command-line-item/parameters[@flag]">
@@ -86,13 +96,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<li>
 		<xsl:apply-templates select="command-line-option" />
 		<xsl:apply-templates select="description/*"/>
+		<p>Default value: <xsl:apply-templates select="default" /></p>
 	</li>
 </xsl:template>
+
+<xsl:template match="tolerance-parameter/command-line-option[@flag]">
+	<b><xsl:value-of select="@flag" /></b> <xsl:apply-templates /><br />
+</xsl:template>
+
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><b><xsl:value-of select="." /></b></xsl:template>
 
 <xsl:template match="synopsis-case/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
 <xsl:template match="parameters/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
+<xsl:template match="command-line-option/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
 
 </xsl:stylesheet>

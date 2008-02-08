@@ -160,18 +160,8 @@
 							<p>Initializes the global random number generator by calling the srand function..</p>
 						</description>
 					</command-line-item>
-					<command-line-item>
-						<parameters flag="--arcdelta"> <replacable>length</replacable></parameters>
-						<description>
-							<p>Set maximum integration step length to use when integrating along paths.  Defaults to <physical><scalar>0.1</scalar><unit>bp</unit></physical>.  See also --dtmin.</p>
-						</description>
-					</command-line-item>
-					<command-line-item>
-						<parameters flag="--dtmin"> <replacable>low</replacable></parameters>
-						<description>
-							<p>Set minimum integration step to use when integrating along paths.  Defaults to <sci-fmt mantissa="1" exp="-4" />.  See also --arcdelta.</p>
-						</description>
-					</command-line-item>
+					<command-line-tolparam name="arcdelta" />
+					<command-line-tolparam name="dtmin" />
 					<command-line-item>
 						<parameters flag="--dtminerror"></parameters>
 						<parameters flag="--no-dtminerror"></parameters>
@@ -180,18 +170,7 @@
 							<p><b>Rationale:</b> By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.</p>
 						</description>
 					</command-line-item>
-					<command-line-item>
-						<parameters flag="--splicingtol"> <replacable>tol</replacable></parameters>
-						<description>
-							<p>Tolerance used when a 3D scene is viewed in 2D.  Defaults to <physical><scalar><sci-fmt mantissa="1" exp="-5" /></scalar><unit>bp</unit></physical>.</p>
-						</description>
-					</command-line-item>
-					<command-line-item>
-						<parameters flag="--overlaptol"> <replacable>tol</replacable></parameters>
-						<description>
-							<p>Tolerance used when a 3D scene is viewed in 2D.  Defaults to <physical><scalar><sci-fmt mantissa="1" exp="-3" /></scalar><unit>bp</unit></physical>.</p>
-						</description>
-					</command-line-item>
+					<command-line-tolparam-remaining />
 					<command-line-item>
 						<parameters flag="--fmguesserror"></parameters>
 						<parameters flag="--no-fmguesserror"></parameters>

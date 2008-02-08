@@ -19,6 +19,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="sci-fmt[@mantissa,@exp]"><xsl:value-of select="@mantissa" />e<xsl:value-of select="@exp" /></xsl:template>
 <xsl:template match="quote">"<xsl:apply-templates />"</xsl:template>
 
+<xsl:template match="tol-param"><xsl:text>
+.ensure-line-break.B </xsl:text><xsl:value-of select="@name" /><xsl:text>
+.ensure-line-break</xsl:text></xsl:template>
+
 <xsl:template match="filename"><xsl:text>
 .ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>

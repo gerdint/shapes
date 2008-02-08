@@ -29,10 +29,10 @@ all: $(DEPENDS) $(PRODUCTS)
 build/%.xml: %.sxml build/%.depend $(SSI)
 	cat $< | $(SSI) $(SSIFLAGS) > $@
 
-$(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) $(POSTPROCDIR)/man
+$(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) ../formats/man.xsl $(POSTPROCDIR)/man
 	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/man > $@
 
-$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
+$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 

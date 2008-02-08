@@ -1,1 +1,1 @@
-tool-interface.sxml:
+tool-interface.sxml: ../algo-tol/tolerances.sxml
