@@ -1,11 +1,5 @@
 %{
 
-/* The text within this first region delimited by %{ and %} is assumed to
- * be C/C++ code and will be copied verbatim to the lex.pdf.c file ahead
- * of the definitions of the pdflex() function. Add other header file inclusions
- * or C++ variable declarations/prototypes that are needed by your code here.
- */
-
 #include <cmath>
 
 #include "ssiscanner.h"
@@ -15,17 +9,7 @@
 #include <fstream>
 #include <sstream>
 
- /*
-	* The section before the first %% is the Definitions section of the lex
-	* input file. Here is where you set options for the scanner, define lex
-	* states, and can set up definitions to give names to regular expressions
-	* as a simple substitution mechanism that allows for more readable
-	* entries in the Rules section later.
-	*/
-
-/*
-	At the moment, escape characters must occypy exactly 2 bytes.
-*/
+bool strtobool( const char * str, const char * attribute );
 
 %}
 
@@ -39,6 +23,7 @@
 %x INCLUDE
 %x INCLUDE_FILENAME
 %x INCLUDE_DEPTH
+%x INCLUDE_META
 %x EXPAND
 
 
@@ -46,6 +31,7 @@
 
 <INITIAL>"<!--#include"[ \t]+ {
 	 currentDepthLimit_ = depthLimitStack_.top( ) - 1;
+	 currentMeta_ = false;
 	 BEGIN( INCLUDE );
 }
 
@@ -56,7 +42,26 @@
 		}
 	else
 		{
-			if( stateStack_.empty( ) )
+			if( metaInclusionStack_.top( ) )
+				{
+					ECHO;
+				}
+			else
+				{
+					*yyout << "<!--SSI comment: " ;
+					ECHO;
+					*yyout << "-->" ;
+				}
+		}
+}
+<INITIAL>"<!DOCTYPE"[ \t\n]+[^ \t\n]+[ \t\n]*"["[^\]]*"]>" {
+	if( onlyDependencies_ )
+		{
+			// Do nothing
+		}
+	else
+		{
+			if( metaInclusionStack_.top( ) )
 				{
 					ECHO;
 				}
@@ -72,6 +77,7 @@
 <INCLUDE>[ \t]+ { }
 <INCLUDE>"virtual"[ \t]*"="[ \t]* { BEGIN( INCLUDE_FILENAME ); }
 <INCLUDE>"depth"[ \t]*"="[ \t]* { BEGIN( INCLUDE_DEPTH ); }
+<INCLUDE>"meta"[ \t]*"="[ \t]* { BEGIN( INCLUDE_META ); }
 <INCLUDE>"-->" {
 	doInclusion( );
 	BEGIN( INITIAL );
@@ -121,6 +127,7 @@
 	if( *endp != '\0' )
 		{
 			std::cerr << "Invalid depth string in SSI file inclusion: " << ( yytext + 1 ) << std::endl ;
+			exit( 1 );
 		}
 	size_t depthTmp = 0;
 	if( depthSigned > 0 )
@@ -131,6 +138,17 @@
 		{
 			currentDepthLimit_ = depthTmp;
 		}
+	BEGIN( INCLUDE );
+}
+
+<INCLUDE_META>[\"][^\"]*[\"] {
+	yytext[ strlen( yytext ) - 1 ] = '\0';
+	currentMeta_ = strtobool( yytext + 1, "meta" );
+	BEGIN( INCLUDE );
+}
+<INCLUDE_META>[\'][^\']*[\'] {
+	yytext[ strlen( yytext ) - 1 ] = '\0';
+	currentMeta_ = strtobool( yytext + 1, "meta" );
 	BEGIN( INCLUDE );
 }
 
@@ -165,6 +183,7 @@
 		yy_switch_to_buffer( stateStack_.top( ) );
 		stateStack_.pop( );
 		depthLimitStack_.pop( );
+		metaInclusionStack_.pop( );
 	}
 }
 
@@ -239,6 +258,7 @@ SSIScanner::doInclusion( )
 			return;
 		}
 	depthLimitStack_.push( currentDepthLimit_ );
+	metaInclusionStack_.push( currentMeta_ );
 
 	if( onlyDependencies_ )
 		{
@@ -256,3 +276,19 @@ SSIScanner::doInclusion( )
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
 }
 
+bool
+strtobool( const char * str, const char * attribute )
+{
+	if( strcmp( str, "yes" ) == 0 ||
+			strcmp( str, "true" ) == 0 )
+		{
+			return true;
+		}
+	if( strcmp( str, "no" ) == 0 ||
+			strcmp( str, "false" ) == 0 )
+		{
+			return false;
+		}
+	std::cerr << "Invalid boolean value for the SSI inclusion attribute " << attribute << ": " << str << std::endl ;
+	exit( 1 );
+}

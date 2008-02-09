@@ -10,6 +10,7 @@ SSIScanner::SSIScanner( bool onlyDependencies, istream * yyin, ostream * yyout )
 	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies )
 {
 	depthLimitStack_.push( std::numeric_limits< size_t >::max( ) );
+	metaInclusionStack_.push( true );
 }
 
 SSIScanner::~SSIScanner( )
