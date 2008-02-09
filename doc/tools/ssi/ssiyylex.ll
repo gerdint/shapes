@@ -172,11 +172,11 @@
 <INITIAL>.|\n {
 	if( onlyDependencies_ )
 		{
-			ECHO;
+			// Do nothing
 		}
 	else
 		{
-			*yyout << yytext ;
+			ECHO;
 		}
 }
 
