@@ -1,0 +1,1 @@
+index.sxml: ../formats/doctype-book.xml chap-notation.sxml ../tutorial/tutorial.sxml ../syntax/syntax.sxml ../bindings/bindings.sxml ../dynamic/dynvars.sxml ../types/types.sxml ../algo-tol/algo-tol.sxml ../man/tool-interface.sxml

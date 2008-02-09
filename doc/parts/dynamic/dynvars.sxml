@@ -3,6 +3,9 @@
 
 <book>
 <title>Shapes' global dynamic variables</title>
+<description>
+	<p>Presentation of the dynamic variables defined in the initial environment.</p>
+</description>
 <top>
 <p>This is a very brief listing of the global dynamic variables in <str-Shapes />.  It not only gives a brief description of each variable, but also provides the link between several functions using the same dynamic bindings.</p>
 </top>

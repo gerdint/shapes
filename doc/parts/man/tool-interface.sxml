@@ -11,6 +11,9 @@
 		<modification-date>2007-12-18</modification-date>
 		<left-footer>Tiddes</left-footer>
 		<center-header>The Shapes language compiler</center-header>
+		<description>
+			<p>The man page descripting the commad line interface of the compiler.</p>
+		</description>
 	</manhead>
 
 	<section>

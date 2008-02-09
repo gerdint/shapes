@@ -37,10 +37,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="index-of-books">
 	<ul>
-		<xsl:for-each select="/book/external/book">
-			<p><b><xsl-apply-templates select="title" /></b>: <xsl-apply-templates select="description" /></p>
-		</xsl:for-each>
+		<xsl:apply-templates select="/book/external/book | /book/external/man" />
 	</ul>
+</xsl:template>
+
+<xsl:template match="external/book">
+	<li>
+		<b><xsl:apply-templates select="title" /></b>:
+		<xsl:apply-templates select="description" />
+	</li>
+</xsl:template>
+
+<xsl:template match="external/man">
+	<li>
+		<b><xsl:apply-templates select="manhead/center-header" /></b>:
+		<xsl:apply-templates select="manhead/description" />
+	</li>
 </xsl:template>
 
 </xsl:stylesheet>

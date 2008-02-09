@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../formats/html.xsl"?>
+<!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
+
 <book>
 <title>The <str-Shapes /> language reference</title>
 <top>
@@ -15,11 +17,16 @@
 	</body>
 </section>
 
-<!--#include virtual="chap-notation" -->
+<!--#include virtual="chap-notation.sxml" -->
 
 <external>
-<!--#include virtual="../syntax/syntax.sxml" -->
-<!--#include virtual="../bindings/bindings.sxml" -->
+<!--#include virtual="../tutorial/tutorial.sxml" depth="0" -->
+<!--#include virtual="../syntax/syntax.sxml" depth="0" -->
+<!--#include virtual="../bindings/bindings.sxml" depth="0" -->
+<!--#include virtual="../dynamic/dynvars.sxml" depth="0" -->
+<!--#include virtual="../types/types.sxml" depth="0" -->
+<!--#include virtual="../algo-tol/algo-tol.sxml" depth="0" -->
+<!--#include virtual="../man/tool-interface.sxml" depth="0" -->
 </external>
 
 </book>

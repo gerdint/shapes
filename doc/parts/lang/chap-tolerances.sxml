@@ -1,9 +1,0 @@
-<section id="chap-tolerances">
-<title>Tolerance settings</title>
-<top>
-<p>Some of the algorithms used by the <str-Shapes /> implementation rely on appropriate setting of certain tolerances.  Often, there is a trade-off between computational time, accuracy of the result, and size of the resulting output file.</p>
-</top>
-<body>
-</body>
-
-</section><!-- end of chap-tolerances -->

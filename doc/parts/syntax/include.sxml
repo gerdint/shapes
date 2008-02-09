@@ -1,5 +1,5 @@
 <section id="syntax/include">
-<title>File inclusion and comments</title>
+<title>File inclusion, comments, and other lexer directives</title>
 <top>
 <p>These are two very basic functions of the scanner, and have in common that they have nothing to do with the <em>meaning</em> of program code, but only where (not) to <em>find</em> the code.</p>
 </top>
@@ -34,4 +34,27 @@
 <p>The designers of the C language may have a good point when they say that rest-of-line comments is the only type of comment to be used to comment out code.  Whether they think that rest-of-line comments may also be used for comments I don't know, but I think it would be a good idea to reserve the use of rest-of-line comments for only commenting out code, and to use multiline comments for comments (documentation).</p>
 </body>
 </section>
+
+<section id="syntax/other-lexer">
+<title>Miscellaneous lexer directives</title>
+<body>
+<p>The following directive allows a source file to print a message to <filename>stdout</filename> when the file is scanned:</p>
+<pre>
+##echo <varname class="replacable">text-to-end-of-line-will-be-echoed</varname>
+</pre>
+
+<p>You can put your name in the <str-PDF /> file using the following directive:</p>
+<pre>
+##author <varname class="replacable">your name</varname>
+</pre>
+<p>It can be used both in application files and in extension files, although it is not treated as the main author of the produced document in the latter case.</p>
+
+<p>The <varname>srand</varname> function in the Standard C Library, can be accessed through</p>
+<pre>
+##seed <varname class="replacable">integer</varname>
+</pre>
+<p>although I don't think there is any reason to do so.  Please consult the documentation on the random number facilities for an explanation.</p>
+</body>
+</section>
+
 </section><!-- end of syntax-include -->
