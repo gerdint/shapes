@@ -49,6 +49,26 @@
 	 BEGIN( INCLUDE );
 }
 
+<INITIAL>"<?xml"[^?]*"?>" {
+	if( onlyDependencies_ )
+		{
+			// Do nothing
+		}
+	else
+		{
+			if( stateStack_.empty( ) )
+				{
+					ECHO;
+				}
+			else
+				{
+					*yyout << "<!--SSI comment: " ;
+					ECHO;
+					*yyout << "-->" ;
+				}
+		}
+}
+
 <INCLUDE>[ \t]+ { }
 <INCLUDE>"virtual"[ \t]*"="[ \t]* { BEGIN( INCLUDE_FILENAME ); }
 <INCLUDE>"depth"[ \t]*"="[ \t]* { BEGIN( INCLUDE_DEPTH ); }
@@ -135,7 +155,7 @@
 	/* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
 	 * however ignornig yyleng (which has the value 1).
 	 */
-	if( stateStack_.size( ) == 0 )
+	if( stateStack_.empty( ) )
 	{
 		return 0;
 	}
@@ -152,7 +172,7 @@
 <INITIAL>.|\n {
 	if( onlyDependencies_ )
 		{
-			// Do nothing
+			ECHO;
 		}
 	else
 		{
@@ -214,11 +234,11 @@ SSIScanner::expandDefines( const char * str )
 void
 SSIScanner::doInclusion( )
 {
-	depthLimitStack_.push( currentDepthLimit_ );
 	if( depthLimitStack_.top( ) == 0 )
 		{
 			return;
 		}
+	depthLimitStack_.push( currentDepthLimit_ );
 
 	if( onlyDependencies_ )
 		{
