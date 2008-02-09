@@ -36,34 +36,84 @@
 %option prefix="ssi"
 %option yyclass="SSIScanner"
 
+%x INCLUDE
 %x INCLUDE_FILENAME
-%x INCLUDE_CLOSING
+%x INCLUDE_DEPTH
 %x EXPAND
 
 
 %%
 
-<INITIAL>"<!--#include"[ \t]+"virtual"[ \t]*"="[ \t]* { BEGIN( INCLUDE_FILENAME ); }
+<INITIAL>"<!--#include"[ \t]+ {
+	 currentDepthLimit_ = depthLimitStack_.top( ) - 1;
+	 BEGIN( INCLUDE );
+}
+
+<INCLUDE>[ \t]+ { }
+<INCLUDE>"virtual"[ \t]*"="[ \t]* { BEGIN( INCLUDE_FILENAME ); }
+<INCLUDE>"depth"[ \t]*"="[ \t]* { BEGIN( INCLUDE_DEPTH ); }
+<INCLUDE>"-->" {
+	doInclusion( );
+	BEGIN( INITIAL );
+}
+
 <INITIAL>"<!--#expand-next-string"[ \t]*"-->"[ \t]* {
 	if( ! onlyDependencies_ )
 		{
 			BEGIN( EXPAND );
 		}
  }
+
 <INCLUDE_FILENAME>[\"][^\"]*[\"] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	includeFilename_ = expandDefines( yytext + 1 );
-	BEGIN( INCLUDE_CLOSING );
+	BEGIN( INCLUDE );
 }
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	includeFilename_ = expandDefines( yytext + 1 );
-	BEGIN( INCLUDE_CLOSING );
+	BEGIN( INCLUDE );
 }
-<INCLUDE_CLOSING>[ \t]*"-->" {
-	doInclusion( );
-	BEGIN( INITIAL );
+
+<INCLUDE_DEPTH>[\"][^\"]*[\"] {
+	yytext[ strlen( yytext ) - 1 ] = '\0';
+	char * endp;
+	int depthSigned = strtol( yytext + 1, &endp, 10 );
+	if( *endp != '\0' )
+		{
+			std::cerr << "Invalid depth string in SSI file inclusion: " << ( yytext + 1 ) << std::endl ;
+		}
+	size_t depthTmp = 0;
+	if( depthSigned > 0 )
+		{
+			depthTmp = depthSigned;
+		}
+	if( depthTmp < currentDepthLimit_ )
+		{
+			currentDepthLimit_ = depthTmp;
+		}
+	BEGIN( INCLUDE );
 }
+<INCLUDE_DEPTH>[\'][^\']*[\'] {
+	yytext[ strlen( yytext ) - 1 ] = '\0';
+	char * endp;
+	int depthSigned = strtol( yytext + 1, &endp, 10 );
+	if( *endp != '\0' )
+		{
+			std::cerr << "Invalid depth string in SSI file inclusion: " << ( yytext + 1 ) << std::endl ;
+		}
+	size_t depthTmp = 0;
+	if( depthSigned > 0 )
+		{
+			depthTmp = depthSigned;
+		}
+	if( depthTmp < currentDepthLimit_ )
+		{
+			currentDepthLimit_ = depthTmp;
+		}
+	BEGIN( INCLUDE );
+}
+
 <EXPAND>[\"][^\"]*[\"] {
 	char stringDelim = yytext[ 0 ];
 	yytext[ strlen( yytext ) - 1 ] = '\0';
@@ -94,6 +144,7 @@
 		yy_delete_buffer( YY_CURRENT_BUFFER );
 		yy_switch_to_buffer( stateStack_.top( ) );
 		stateStack_.pop( );
+		depthLimitStack_.pop( );
 	}
 }
 
@@ -163,6 +214,12 @@ SSIScanner::expandDefines( const char * str )
 void
 SSIScanner::doInclusion( )
 {
+	depthLimitStack_.push( currentDepthLimit_ );
+	if( depthLimitStack_.top( ) == 0 )
+		{
+			return;
+		}
+
 	if( onlyDependencies_ )
 		{
 			*yyout << " " << includeFilename_ ;
@@ -177,7 +234,5 @@ SSIScanner::doInclusion( )
 
 	stateStack_.push( YY_CURRENT_BUFFER );
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
-
-	BEGIN( INITIAL );
 }
 

@@ -1,13 +1,16 @@
 #include "ssiscanner.h"
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
 
 SSIScanner::SSIScanner( bool onlyDependencies, istream * yyin, ostream * yyout )
 	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies )
-{ }
+{
+	depthLimitStack_.push( std::numeric_limits< size_t >::max( ) );
+}
 
 SSIScanner::~SSIScanner( )
 { }
