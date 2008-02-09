@@ -1,1 +1,1 @@
-types.sxml: simple.sxml tuples.sxml
+build/types.xml: simple.sxml tuples.sxml

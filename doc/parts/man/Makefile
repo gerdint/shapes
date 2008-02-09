@@ -49,6 +49,6 @@ clean:
 
 .PRECIOUS: build/*.depend
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
-	cat $*.sxml | $(SSI) $(SSIFLAGS) --head $*.sxml --deps > $@
+	cat $*.sxml | $(SSI) $(SSIFLAGS) --head build/$*.xml --deps > $@
 
 -include $(wildcard build/*.depend)

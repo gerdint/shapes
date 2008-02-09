@@ -1,1 +1,1 @@
-dynvars.sxml: graphic.sxml text.sxml handlers.sxml misc.sxml ../bindings/functions.sxml
+build/dynvars.xml: graphic.sxml text.sxml handlers.sxml misc.sxml ../bindings/functions.sxml

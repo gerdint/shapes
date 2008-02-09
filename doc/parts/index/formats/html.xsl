@@ -43,14 +43,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="external/book">
 	<li>
-		<b><xsl:apply-templates select="title" /></b>:
+		<xsl:element name="a">
+			<xsl:attribute name="href"><xsl:value-of select="meta-filename" /></xsl:attribute>
+			<b><xsl:apply-templates select="title" /></b>
+		</xsl:element>:
 		<xsl:apply-templates select="description" />
 	</li>
 </xsl:template>
 
 <xsl:template match="external/man">
 	<li>
-		<b><xsl:apply-templates select="manhead/center-header" /></b>:
+		<xsl:element name="a">
+			<xsl:attribute name="href"><xsl:value-of select="manhead/meta-filename" /></xsl:attribute>
+			<b><xsl:apply-templates select="manhead/center-header" /></b>
+		</xsl:element>:
 		<xsl:apply-templates select="manhead/description" />
 	</li>
 </xsl:template>
