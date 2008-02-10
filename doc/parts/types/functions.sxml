@@ -1,0 +1,7 @@
+<section id="types/functions">
+<title>Functions and function-like things</title>
+<top>
+	<p>Besides objects of type <typename>Function</typename>, there are other objects that can behave like functions in many ways.  Most importantly, objects of the types in this section can appear at the first position in a composite expression.</p>
+</top>
+
+</section>

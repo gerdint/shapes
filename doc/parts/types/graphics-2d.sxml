@@ -1,0 +1,7 @@
+<section id="types/graphics-2d">
+<title>Graphics in <str-2D /></title>
+<top>
+	<p>Values of the types described here can be drawn (possibly after projection to <str-2D />).</p>
+</top>
+
+</section>

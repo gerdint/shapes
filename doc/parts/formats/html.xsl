@@ -49,6 +49,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </table>
 </xsl:template>
 
+<xsl:template match="part-href[@name='syntax']">syntax.html</xsl:template>
+<xsl:template match="part-href[@name='bindings']">bindings.html</xsl:template>
+<xsl:template match="part-href[@name='dynamic']">dynvars.html</xsl:template>
+<xsl:template match="part-href[@name='types']">types.html</xsl:template>
+<xsl:template match="part-href[@name='algo-tol']">algo-tol.html</xsl:template>
+<xsl:template match="part-href[@name='man']">man.html</xsl:template>
+<xsl:template match="part-href[@name='tutorial']">tutorial.html</xsl:template>
+
 <xsl:template match="binding[@name]">
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>

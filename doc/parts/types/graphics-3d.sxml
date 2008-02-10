@@ -1,0 +1,7 @@
+<section id="types/graphics-3d">
+<title>Graphics in <str-3D /> and lightening</title>
+<top>
+	<p>There are two important differences when it comes to graphics in <str-3D /> compared to that in <str-2D />.  First, one has to consider the relation between the <str-3D /> scene where the objects are defined, and the <str-2D /> media they must eventually be incorporated with.  Second, light modeling is a very important tool for obtaining reasonable colors of objects in <str-3D />.</p>
+</top>
+
+</section>

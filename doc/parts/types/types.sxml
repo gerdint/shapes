@@ -6,7 +6,7 @@
 <description>
 	<p>Presentation of the variable types defined by the core language.</p>
 </description>
-<meta-filename>types.html</meta-filename>
+<meta-selflink><part-href name="types" /></meta-selflink>
 <top>
 <p>This part of the documentation is a somewhat arbitrary description of the core types in the language a user should be aware of.  The reason for having such a sloppy characterization of what is presented here, is that as long as <str-Shapes /> is dynamically typed, it is not <em>that</em> important to know exactly what type an object has.  It also becomes a rather arbitrary language design decision when the language should reflect a subdivision into subtypes in the compiler.  For instance, the language end type <named-type name="Drawable" /> has certainly many different types representing it in the compiler.</p>
 <p>Below, an alphabetical list of links to bindings is provided.  For a grouping of the bindings by cathegory, the readers is referred to the the chapter on system bindings in the main language reference.</p>
@@ -16,4 +16,9 @@
 </body>
 <!--#include virtual="simple.sxml" -->
 <!--#include virtual="tuples.sxml" -->
+<!--#include virtual="points-paths.sxml" -->
+<!--#include virtual="graphics-2d.sxml" -->
+<!--#include virtual="functions.sxml" -->
+<!--#include virtual="misc.sxml" -->
+<!--#include virtual="graphics-3d.sxml" -->
 </book>

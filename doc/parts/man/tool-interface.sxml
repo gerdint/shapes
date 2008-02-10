@@ -14,7 +14,7 @@
 		<description>
 			<p>The man page descripting the commad line interface of the compiler.</p>
 		</description>
-		<meta-filename>man.html</meta-filename>
+		<meta-selflink><part-href name="man" /></meta-selflink>
 	</manhead>
 
 	<section>
