@@ -1,1 +1,1 @@
-build/types.xml: simple.sxml tuples.sxml points-paths.sxml
+build/types.xml: simple.sxml tuples.sxml points-paths.sxml graphics-2d.sxml functions.sxml misc.sxml graphics-3d.sxml ../bindings/functions.sxml ../syntax/operators.sxml

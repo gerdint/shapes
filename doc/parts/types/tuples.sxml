@@ -9,12 +9,22 @@
       <p>The <self /> type is a pair of <named-type name="Length" /> ordinates.</p>
     </abstraction>
     <construction>
-      <p>The syntax to construct a coordinate object is
-				<syntaxlines>
-					( <syntaxname>Length</syntaxname>, <syntaxname>Length</syntaxname> )
-				</syntaxlines>
-			</p>
+      <syntax name="coords-2D" />
     </construction>
+		<fields>
+			<field name="x">
+				<type><named-type name="Length" /></type>
+				<description>First component.</description>
+			</field>
+			<field name="y">
+				<type><named-type name="Length" /></type>
+				<description>Second component.</description>
+			</field>
+			<field name="a">
+				<type><named-type name="Float" /></type>
+				<description>Angle of <named-type name="CornerCoords2D" /> object.</description>
+			</field>
+		</fields>
   </coretype>
 
 </section>

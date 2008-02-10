@@ -1,49 +1,49 @@
 <operator-unary op="~" side="prefix">
 
 <case type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Negation.
 </description>
 </case>
 
 <case type="Integer">
-<result><typename>Integer</typename></result>
+<result><named-type name="Integer" /></result>
 <description>
 Negation.
 </description>
 </case>
 
 <case type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Negation.
 </description>
 </case>
 
 <case type="FloatPair">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Scaling by negative unit.
 </description>
 </case>
 
 <case type="FloatTriple">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Scaling by negative unit.
 </description>
 </case>
 
 <case type="Coords-2D">
-<result><typename>Coords-2D</typename></result>
+<result><named-type name="Coords-2D" /></result>
 <description>
 Scaling by negative unit.
 </description>
 </case>
 
 <case type="Coords-3D">
-<result><typename>Coords-3D</typename></result>
+<result><named-type name="Coords-3D" /></result>
 <description>
 Scaling by negative unit.
 </description>
@@ -55,21 +55,21 @@ Scaling by negative unit.
 <operator-unary op="+" side="prefix">
 
 <case type="Length">
-<result><typename>Offset</typename></result>
+<result consider-constructor="yes"><named-type name="Offset" /></result>
 <description>
 <em>Note: Requires enclosing parantheses!</em>  Constructs a relative length.
 </description>
 </case>
 
 <case type="Coords-2D">
-<result><typename>Offset-2D</typename></result>
+<result consider-constructor="yes"><named-type name="Offset-2D" /></result>
 <description>
 <em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
 </description>
 </case>
 
 <case type="Coords-3D">
-<result><typename>Offset-3D</typename></result>
+<result consider-constructor="yes"><named-type name="Offset-3D" /></result>
 <description>
 <em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
 </description>
@@ -81,7 +81,7 @@ Scaling by negative unit.
 <operator-unary op="not" side="prefix">
 
 <case type="Boolean">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Negation.
 </description>
@@ -92,28 +92,28 @@ Negation.
 <operator-unary op="--cycle" side="postfix">
 
 <case type="PathPoint-2D">
-<result><typename>Path-2D</typename></result>
+<result><named-type name="Path-2D" /></result>
 <description>
 Constructs a closed path with only one spline.
 </description>
 </case>
 
 <case type="Path-2D">
-<result><typename>Path-2D</typename></result>
+<result><named-type name="Path-2D" /></result>
 <description>
 Closes an open path.
 </description>
 </case>
 
 <case type="Path-3D">
-<result><typename>Path-2D</typename></result>
+<result><named-type name="Path-2D" /></result>
 <description>
 Closes an open path.
 </description>
 </case>
 
 <case type="PathPoint-3D">
-<result><typename>Path-3D</typename></result>
+<result><named-type name="Path-3D" /></result>
 <description>
 Constructs a closed path with only one spline.
 </description>
@@ -125,136 +125,136 @@ Constructs a closed path with only one spline.
 <operator-binary op="--">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Pythagoream subtraction.  Both terms must be non-negative, and second term must not be larger than the first.
 </description>
 </case>
 
 <case first-type="Length" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Pythagoream subtraction.  Both terms must be non-negative, and second term must not be larger than the first.
 </description>
 </case>
 
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Coords2D" second-type="PathPoint2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint2D" second-type="PathPoint2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Path2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path2D" second-type="Coords2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint2D" second-type="PathPoint2D">
-<result><typename>Path2D</typename></result>
+<result consider-constructor="yes"><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint2D" second-type="Path2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path2D" second-type="PathPoint2D">
-<result><typename>Path2D</typename></result>
+<result><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path2D" second-type="Path2D">
-<result><typename>Path2D</typename></result>
+<result consider-constructor="yes"><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathSlider2D" second-type="PathSlider2D">
-<result><typename>Path2D</typename></result>
+<result consider-constructor="yes"><named-type name="Path2D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Coords3D" second-type="PathPoint3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint3D" second-type="PathPoint3D">
-<result><typename>Path3D</typename></result>
+<result consider-constructor="yes"><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Path3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path3D" second-type="Coords3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint3D" second-type="PathPoint3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathPoint3D" second-type="Path3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path3D" second-type="PathPoint3D">
-<result><typename>Path3D</typename></result>
+<result><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="Path3D" second-type="Path3D">
-<result><typename>Path3D</typename></result>
+<result consider-constructor="yes"><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
 </case>
 <case first-type="PathSlider3D" second-type="PathSlider3D">
-<result><typename>Path3D</typename></result>
+<result consider-constructor="yes"><named-type name="Path3D" /></result>
 <description>
 Path connection.
 </description>
@@ -266,14 +266,14 @@ Path connection.
 <operator-binary op="++">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Pythagoream addition.
 </description>
 </case>
 
 <case first-type="Length" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Pythagoream addition.
 </description>
@@ -285,71 +285,71 @@ Pythagoream addition.
 <operator-binary op="&amp;">
 
 <case first-type="Path2D" second-type="Path2D">
-<result><typename>MultiPath2D</typename></result>
+<result consider-constructor="yes"><named-type name="MultiPath2D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="MultiPath2D" second-type="Path2D">
-<result><typename>MultiPath2D</typename></result>
+<result><named-type name="MultiPath2D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="Path2D" second-type="MultiPath2D">
-<result><typename>MultiPath2D</typename></result>
+<result><named-type name="MultiPath2D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="MultiPath2D" second-type="MultiPath2D">
-<result><typename>MultiPath2D</typename></result>
+<result><named-type name="MultiPath2D" /></result>
 <description>
 Path union.
 </description>
 </case>
 
 <case first-type="Path3D" second-type="Path3D">
-<result><typename>MultiPath3D</typename></result>
+<result consider-constructor="yes"><named-type name="MultiPath3D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="MultiPath3D" second-type="Path3D">
-<result><typename>MultiPath3D</typename></result>
+<result><named-type name="MultiPath3D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="Path3D" second-type="MultiPath3D">
-<result><typename>MultiPath3D</typename></result>
+<result><named-type name="MultiPath3D" /></result>
 <description>
 Path union.
 </description>
 </case>
 <case first-type="MultiPath3D" second-type="MultiPath3D">
-<result><typename>MultiPath3D</typename></result>
+<result><named-type name="MultiPath3D" /></result>
 <description>
 Path union.
 </description>
 </case>
 
 <case first-type="DynamicBindings" second-type="DynamicBindings">
-<result><typename>DynamicBindings</typename></result>
+<result><named-type name="DynamicBindings" /></result>
 <description>
 Dynamic binding union.
 </description>
 </case>
 
 <case first-type="Drawable2D" second-type="Drawable2D">
-<result><typename>Drawable2D</typename></result>
+<result><named-type name="Drawable2D" /></result>
 <description>
 Graphics composition.  Second argument on top of first.
 </description>
 </case>
 
 <case first-type="Drawable3D" second-type="Drawable3D">
-<result><typename>Drawable3D</typename></result>
+<result><named-type name="Drawable3D" /></result>
 <description>
 Graphics composition.  Second argument on top of first.
 </description>
@@ -361,107 +361,107 @@ Graphics composition.  Second argument on top of first.
 <operator-binary op="+">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Integer</typename></result>
+<result><named-type name="Integer" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="FloatPair" second-type="FloatPair">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="FloatTriple">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Addition.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Addition.
 </description>
 </case>
 
 <case first-type="String" second-type="String">
-<result><typename>String</typename></result>
+<result><named-type name="String" /></result>
 <description>
 Concatenation.
 </description>
 </case>
 
 <case first-type="Dash" second-type="Length">
-<result><typename>Dash</typename></result>
+<result><named-type name="Dash" /></result>
 <description>
 Shift.
 </description>
 </case>
 <case first-type="Length" second-type="Dash">
-<result><typename>Dash</typename></result>
+<result><named-type name="Dash" /></result>
 <description>
 Shift.
 </description>
 </case>
 
 <case first-type="PathSlider2D" second-type="Float">
-<result><typename>PathSlider2D</typename></result>
+<result><named-type name="PathSlider2D" /></result>
 <description>
 Move spline time.
 </description>
 </case>
 <case first-type="PathSlider2D" second-type="Length">
-<result><typename>PathSlider2D</typename></result>
+<result><named-type name="PathSlider2D" /></result>
 <description>
 Move distance.
 </description>
 </case>
 <case first-type="PathSlider3D" second-type="Float">
-<result><typename>PathSlider3D</typename></result>
+<result><named-type name="PathSlider3D" /></result>
 <description>
 Move spline time.
 </description>
 </case>
 <case first-type="PathSlider3D" second-type="Length">
-<result><typename>PathSlider3D</typename></result>
+<result><named-type name="PathSlider3D" /></result>
 <description>
 Move distance.
 </description>
 </case>
 
 <case first-type="RGB" second-type="RGB">
-<result><typename>RGB</typename></result>
+<result><named-type name="RGB" /></result>
 <description>
 Component-wise addition.
 </description>
 </case>
 <case first-type="Gray" second-type="Gray">
-<result><typename>Gray</typename></result>
+<result><named-type name="Gray" /></result>
 <description>
 Component addition.
 </description>
 </case>
 <case first-type="SpecularReflection" second-type="SpecularReflection">
-<result><typename>SpecularReflection</typename></result>
+<result><named-type name="SpecularReflection" /></result>
 <description>
 Combine reflections.
 </description>
@@ -473,68 +473,68 @@ Combine reflections.
 <operator-binary op="-">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Integer</typename></result>
+<result><named-type name="Integer" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="FloatPair" second-type="FloatPair">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="FloatTriple">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Subtraction.
 </description>
 </case>
 
 <case first-type="PathSlider2D" second-type="Float">
-<result><typename>PathSlider2D</typename></result>
+<result><named-type name="PathSlider2D" /></result>
 <description>
 Reverse move spline time.
 </description>
 </case>
 <case first-type="PathSlider2D" second-type="Length">
-<result><typename>PathSlider2D</typename></result>
+<result><named-type name="PathSlider2D" /></result>
 <description>
 Reverse move distance.
 </description>
 </case>
 <case first-type="PathSlider3D" second-type="Float">
-<result><typename>PathSlider3D</typename></result>
+<result><named-type name="PathSlider3D" /></result>
 <description>
 Reverse move spline time.
 </description>
 </case>
 <case first-type="PathSlider3D" second-type="Length">
-<result><typename>PathSlider3D</typename></result>
+<result><named-type name="PathSlider3D" /></result>
 <description>
 Reverse move distance.
 </description>
@@ -546,75 +546,75 @@ Reverse move distance.
 <operator-binary op="/_">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  The result is zero if signs are equal, otherwise the result is π.
 </description>
 </case>
 <case first-type="Float" second-type="Length">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  The result is zero if signs are equal, otherwise the result is π.
 </description>
 </case>
 <case first-type="Length" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  The result is zero if signs are equal, otherwise the result is π.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  The result is zero if signs are equal, otherwise the result is π.
 </description>
 </case>
 
 <case first-type="FloatPair" second-type="FloatPair">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Coords2D">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="Coords2D" second-type="FloatPair">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 
 <case first-type="FloatTriple" second-type="FloatTriple">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="Coords3D">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="Coords3D" second-type="FloatTriple">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
@@ -626,226 +626,226 @@ In presence of a zero arguent, the result is π/2.  Otherwise, the usual definit
 <operator-binary op="*">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 
 <case first-type="FloatPair" second-type="FloatPair">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Float">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Float" second-type="FloatPair">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="FloatTriple">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="Float">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Float" second-type="FloatTriple">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 
 <case first-type="Float" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 <case first-type="Length" second-type="Float">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 
 <case first-type="Coords2D" second-type="Float">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Float" second-type="Coords2D">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Coords2D" second-type="FloatPair">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Coords2D">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Length">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Scale direction by length.
 </description>
 </case>
 <case first-type="Length" second-type="FloatPair">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Scale direction by length.
 </description>
 </case>
 
 <case first-type="Coords3D" second-type="Float">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Float" second-type="Coords3D">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
 <case first-type="Coords3D" second-type="FloatTriple">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="Coords3D">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="Length">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Scale direction by length.
 </description>
 </case>
 <case first-type="Length" second-type="FloatTriple">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Scale direction by length.
 </description>
 </case>
 
 <case first-type="Dash" second-type="Float">
-<result><typename>Dash</typename></result>
+<result><named-type name="Dash" /></result>
 <description>
 Scale.
 </description>
 </case>
 <case first-type="Float" second-type="Dash">
-<result><typename>Dash</typename></result>
+<result><named-type name="Dash" /></result>
 <description>
 Scale.
 </description>
 </case>
 
 <case first-type="Transform2D" second-type="Transform2D">
-<result><typename>Transform2D</typename></result>
+<result><named-type name="Transform2D" /></result>
 <description>
 Composition.
 </description>
 </case>
 <case first-type="Transform3D" second-type="Transform3D">
-<result><typename>Transform3D</typename></result>
+<result><named-type name="Transform3D" /></result>
 <description>
 Composition.
 </description>
 </case>
 
 <case first-type="Float" second-type="RGB">
-<result><typename>RGB</typename></result>
+<result><named-type name="RGB" /></result>
 <description>
 Scale components.
 </description>
 </case>
 <case first-type="RGB" second-type="Float">
-<result><typename>RGB</typename></result>
+<result><named-type name="RGB" /></result>
 <description>
 Scale components.
 </description>
 </case>
 <case first-type="Float" second-type="Gray">
-<result><typename>Gray</typename></result>
+<result><named-type name="Gray" /></result>
 <description>
 Scale components.
 </description>
 </case>
 <case first-type="Gray" second-type="Float">
-<result><typename>Gray</typename></result>
+<result><named-type name="Gray" /></result>
 <description>
 Scale components.
 </description>
 </case>
 
 <case first-type="Float" second-type="SpecularReflection">
-<result><typename>SpecularReflection</typename></result>
+<result><named-type name="SpecularReflection" /></result>
 <description>
 Scale weight.
 </description>
 </case>
 <case first-type="SpecularReflection" second-type="Float">
-<result><typename>SpecularReflection</typename></result>
+<result><named-type name="SpecularReflection" /></result>
 <description>
 Scale weight.
 </description>
 </case>
 
 <case first-type="Integer" second-type="Integer">
-<result><typename>Integer</typename></result>
+<result><named-type name="Integer" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 <case first-type="Float" second-type="Integer">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 <case first-type="Integer" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 <case first-type="Length" second-type="Integer">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Multiplication.
 </description>
 </case>
 <case first-type="Integer" second-type="Length">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Multiplication.
 </description>
@@ -857,76 +857,76 @@ Multiplication.
 <operator-binary op="/">
 
 <case first-type="Float" second-type="Float">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Division.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Ratio.
 </description>
 </case>
 <case first-type="Length" second-type="Float">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Division.
 </description>
 </case>
 
 <case first-type="FloatPair" second-type="Float">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Division by scalar.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Length">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Directional ratio.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Float">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Division by scalar.
 </description>
 </case>
 
 <case first-type="FloatTriple" second-type="Float">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Division by scalar.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Length">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Directional ratio.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Float">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Division by scalar.
 </description>
 </case>
 
 <case first-type="Integer" second-type="Integer">
-<result><typename>Integer</typename></result>
+<result><named-type name="Integer" /></result>
 <description>
 Integer division.
 </description>
 </case>
 <case first-type="Float" second-type="Integer">
-<result><typename>Float</typename></result>
+<result><named-type name="Float" /></result>
 <description>
 Division.
 </description>
 </case>
 <case first-type="Length" second-type="Integer">
-<result><typename>Length</typename></result>
+<result><named-type name="Length" /></result>
 <description>
 Division.
 </description>
@@ -938,50 +938,50 @@ Division.
 <operator-binary op="*/">
 
 <case first-type="FloatPair" second-type="FloatPair">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Coords2D">
-<result><typename>FloatPair</typename></result>
+<result><named-type name="FloatPair" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="Coords2D" second-type="FloatPair">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>Coords2D</typename></result>
+<result><named-type name="Coords2D" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 
 <case first-type="FloatTriple" second-type="FloatTriple">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="FloatTriple" second-type="Coords3D">
-<result><typename>FloatTriple</typename></result>
+<result><named-type name="FloatTriple" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="Coords3D" second-type="FloatTriple">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>Coords3D</typename></result>
+<result><named-type name="Coords3D" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
@@ -992,21 +992,21 @@ Orthogonal projection of first argument on direction given by second argument.
 <operator-binary op="()">
 
 <case first-type="Transform2D" second-type="Transform2D">
-<result><typename>Transform2D</typename></result>
+<result><named-type name="Transform2D" /></result>
 <description>
 Composition.
 </description>
 </case>
 
 <case first-type="Transform3D" second-type="Transform3D">
-<result><typename>Transform3D</typename></result>
+<result><named-type name="Transform3D" /></result>
 <description>
 Composition.
 </description>
 </case>
 
 <case first-type="Function" second-type="Function">
-<result><typename>Function</typename></result>
+<result><named-type name="Function" /></result>
 <description>
 Composition.
 </description>
@@ -1018,82 +1018,82 @@ Composition.
 <operator-binary op="&lt;">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Order predicate.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Less than comparison.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Less than comparison.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Less than comparison (with signed lengths).
 </description>
 </case>
 
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>PathPoint2D</typename></result>
+<result><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="Coords2D" second-type="PathPoint2D">
-<result><typename>PathPoint2D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="Coords2D" second-type="PathSlider2D">
-<result><typename>PathPoint2D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 
 <case first-type="PolarHandleBase" second-type="Coords2D">
-<result><typename>PathPoint2D</typename></result>
+<result><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="PolarHandleBase" second-type="PathPoint2D">
-<result><typename>PathPoint2D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="PolarHandleBase" second-type="PathSlider2D">
-<result><typename>PathPoint2D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>PathPoint3D</typename></result>
+<result><named-type name="PathPoint3D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="Coords3D" second-type="PathPoint3D">
-<result><typename>PathPoint3D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint3D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 <case first-type="Coords3D" second-type="PathSlider3D">
-<result><typename>PathPoint3D</typename></result>
+<result consider-constructor="yes"><named-type name="PathPoint3D" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
@@ -1104,82 +1104,82 @@ Attach backward handle to second argument.
 <operator-binary op="&gt;">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Order predicate.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Greater than comparison.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Greater than comparison.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Greater than comparison (with signed lengths).
 </description>
 </case>
 
 <case first-type="Coords2D" second-type="Coords2D">
-<result><typename>PathPoint2D</typename></result>
+<result><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="PathPoint2D">
-<result><typename>PathPoint2D</typename></result>
+<case first-type="PathPoint2D" second-type="Coords2D">
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="PathSlider2D">
-<result><typename>PathPoint2D</typename></result>
+<case first-type="PathSlider2D" second-type="Coords2D">
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
 
-<case first-type="PolarHandleBase" second-type="Coords2D">
-<result><typename>PathPoint2D</typename></result>
+<case first-type="Coords2D" second-type="PolarHandleBase">
+<result><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PolarHandleBase" second-type="PathPoint2D">
-<result><typename>PathPoint2D</typename></result>
+<case first-type="PathPoint2D" second-type="PolarHandleBase">
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PolarHandleBase" second-type="PathSlider2D">
-<result><typename>PathPoint2D</typename></result>
+<case first-type="PathSlider2D" second-type="PolarHandleBase">
+<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
 
 <case first-type="Coords3D" second-type="Coords3D">
-<result><typename>PathPoint3D</typename></result>
+<result><named-type name="PathPoint3D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="Coords3D" second-type="PathPoint3D">
-<result><typename>PathPoint3D</typename></result>
+<case first-type="PathPoint3D" second-type="Coords3D">
+<result consider-constructor="yes"><named-type name="PathPoint3D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="Coords3D" second-type="PathSlider3D">
-<result><typename>PathPoint3D</typename></result>
+<case first-type="PathSlider3D" second-type="Coords3D">
+<result consider-constructor="yes"><named-type name="PathPoint3D" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
@@ -1191,32 +1191,32 @@ Attach forward handle to first argument.
 <operator-binary op="=">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Equality test.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Equality test.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Equality test.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Equality test.
 </description>
 </case>
 
 <case first-type="Class" second-type="Class">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Same type test.
 </description>
@@ -1228,32 +1228,32 @@ Same type test.
 <operator-binary op="=/=">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 
 <case first-type="Class" second-type="Class">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Not same type test.
 </description>
@@ -1265,32 +1265,32 @@ Not same type test.
 <operator-binary op="≠">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Inequality test.
 </description>
 </case>
 
 <case first-type="Class" second-type="Class">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Not same type test.
 </description>
@@ -1302,25 +1302,25 @@ Not same type test.
 <operator-binary op="&lt;=">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Reflexive order predicate.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test less than or equal.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test less than or equal.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test less than or equal.
 </description>
@@ -1332,25 +1332,25 @@ Test less than or equal.
 <operator-binary op="&gt;=">
 
 <case first-type="Symbol" second-type="Symbol">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Reflexive order predicate.
 </description>
 </case>
 <case first-type="Float" second-type="Float">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test greater than or equal.
 </description>
 </case>
 <case first-type="Integer" second-type="Integer">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test greater than or equal.
 </description>
 </case>
 <case first-type="Length" second-type="Length">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Test greater than or equal.
 </description>
@@ -1362,7 +1362,7 @@ Test greater than or equal.
 <operator-binary op="and">
 
 <case first-type="Boolean" second-type="Boolean">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Conjunction.
 </description>
@@ -1374,7 +1374,7 @@ Conjunction.
 <operator-binary op="or">
 
 <case first-type="Boolean" second-type="Boolean">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Disjunction.
 </description>
@@ -1386,7 +1386,7 @@ Disjunction.
 <operator-binary op="xor">
 
 <case first-type="Boolean" second-type="Boolean">
-<result><typename>Boolean</typename></result>
+<result><named-type name="Boolean" /></result>
 <description>
 Exclusive or.
 </description>

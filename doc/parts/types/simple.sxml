@@ -1,20 +1,40 @@
 <section id="types-simple">
 <title>Simple types</title>
 <top>
-	<p>Values that are naturally characterized by a single scalar are considered to have simple types.</p>
+	<p>Values that are naturally characterized by a single scalar are considered to have simple types.  These types generally have no fields.</p>
 </top>
+
+  <coretype name="Float">
+    <abstraction>
+			<p>A scalar; a quantity without physical dimension.</p>
+    </abstraction>
+    <construction>
+      <syntax name="float" />
+    </construction>
+		<operators>
+			<p>A large number of types may be scaled by floats, which makes the list of operators very long for floats.  Since dividing by a float is expected to mean the same as multiplying by the multiplicative inverse of the float, the list gets even longer.</p>
+		</operators>
+  </coretype>
 
   <coretype name="Length">
     <abstraction>
 			<p>The <self /> type represents a physical length.  Lengths are often specified as a scalar times a unit of length.</p>
     </abstraction>
     <construction>
-      <p>The syntax to specify a length is
-			<syntaxlines>
-				<syntaxname>float</syntaxname><syntaxname>identifier</syntaxname>
-			</syntaxlines>
-      where <syntaxname>identifier</syntaxname> must refer to a defined unit of length.</p>
+      <syntax name="length" />
     </construction>
+  </coretype>
+
+  <coretype name="Offset">
+    <abstraction>
+			<p>The <self /> type represents a coordinate which is to be interpreted relative a local coordinate frame.  The values are sometimes referred to as <em>relative lengths</em>, since they specify a length relative to something else.</p>
+    </abstraction>
+  </coretype>
+
+  <coretype name="LengthLike">
+    <abstraction>
+			<p>The <self /> type is something which can be used as a coordinate.  It is either an ordinary <named-type name="Length" />, or an <named-type name="Offset" />.</p>
+    </abstraction>
   </coretype>
 
 </section>
