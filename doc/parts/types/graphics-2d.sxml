@@ -4,4 +4,10 @@
 	<p>Values of the types described here can be drawn (possibly after projection to <str-2D />).</p>
 </top>
 
+  <coretype name="Drawable">
+    <abstraction>
+			<p>This is the common base type of drawable things in <str-2D />.</p>
+    </abstraction>
+	</coretype>
+
 </section>

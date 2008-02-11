@@ -14,16 +14,16 @@ facing: [../facing scale:true distort:true ...]
 
 <system-binding identifier="affinetransform">
 	<function>
-		<case constructor-of="Transform2D">
+		<case constructor-of="Transform">
 			<arguments>
 				<arg>
-					<type><typename>FloatPair</typename></type>
+					<type><named-type name="FloatPair" /></type>
 				</arg>
 				<arg>
-					<type><typename>FloatPair</typename></type>
+					<type><named-type name="FloatPair" /></type>
 				</arg>
 				<arg>
-					<type><typename>Coords2D</typename></type>
+					<type><named-type name="Coords" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -37,16 +37,16 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Transform3D">
 			<arguments>
 				<arg>
-					<type><typename>FloatTriple</typename></type>
+					<type><named-type name="FloatTriple" /></type>
 				</arg>
 				<arg>
-					<type><typename>FloatTriple</typename></type>
+					<type><named-type name="FloatTriple" /></type>
 				</arg>
 				<arg>
-					<type><typename>FloatTriple</typename></type>
+					<type><named-type name="FloatTriple" /></type>
 				</arg>
 				<arg>
-					<type><typename>Coords3D</typename></type>
+					<type><named-type name="Coords3D" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -57,10 +57,10 @@ facing: [../facing scale:true distort:true ...]
 
 <system-binding identifier="shift">
 	<function>
-		<case constructor-of="Transform2D">
+		<case constructor-of="Transform">
 			<arguments>
 				<arg>
-					<type><typename>Coords2D</typename></type>
+					<type><named-type name="Coords" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -69,7 +69,7 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Transform3D">
 			<arguments>
 				<arg>
-					<type><typename>Coords3D</typename></type>
+					<type><named-type name="Coords3D" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -80,10 +80,10 @@ facing: [../facing scale:true distort:true ...]
 
 <system-binding identifier="rotate">
 	<function>
-		<case constructor-of="Transform2D">
+		<case constructor-of="Transform">
 			<arguments>
 				<arg identifier="angle">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -97,10 +97,10 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Transform3D">
 			<arguments>
 				<arg identifier="dir">
-					<type><typename>FloatTriple</typename></type>
+					<type><named-type name="FloatTriple" /></type>
 				</arg>
 				<arg identifier="angle">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
@@ -111,18 +111,18 @@ facing: [../facing scale:true distort:true ...]
 
 <system-binding identifier="scale">
 	<function>
-		<case constructor-of="Transform2D">
+		<case constructor-of="Transform">
 			<arguments>
 				<arg identifier="r">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 				<arg identifier="x">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 				<arg identifier="y">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 			</arguments>
@@ -137,19 +137,19 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Transform3D">
 			<arguments>
 				<arg identifier="r">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 				<arg identifier="x">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 				<arg identifier="y">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 				<arg identifier="z">
-					<type><typename>Float</typename></type>
+					<type><named-type name="Float" /></type>
 					<default>1</default>
 				</arg>
 			</arguments>
@@ -164,15 +164,15 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Drawable">
 			<arguments>
 				<arg identifier="path">
-					<type><typename>Path</typename></type>
+					<type><named-type name="Path" /></type>
 				</arg>
 				<arg identifier="head">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<typename>Path</typename> → (&gt; <varname>picture</varname>:<typename>Drawable</typename> <varname>cut</varname>:<typename>Length</typename> &lt;) )</type>
+					<type>(<named-type name="Path" /> → (&gt; <varname>picture</varname>::<named-type name="Drawable" /> <varname>cut</varname>::<named-type name="Length" /> &lt;) )</type>
 				</arg>
 				<arg identifier="tail">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<typename>Path</typename> → (&gt; <varname>picture</varname>:<typename>Drawable</typename> <varname>cut</varname>:<typename>Length</typename> &lt;) )</type>
+					<type>(<named-type name="Path" /> → (&gt; <varname>picture</varname>::<named-type name="Drawable" /> <varname>cut</varname>::<named-type name="Length" /> &lt;) )</type>
 				</arg>
 			</arguments>
 			<dynamic-references><dynvar name="width" /> <dynvar name="stroking" /> <dynvar name="dash" /> <dynvar name="cap" /> <dynvar name="join" /> <dynvar name="miterlimit" /></dynamic-references>
@@ -189,7 +189,7 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Drawable">
 			<arguments>
 				<arg identifier="path">
-					<type><typename>Path</typename></type>
+					<type><named-type name="Path" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>
@@ -200,11 +200,11 @@ facing: [../facing scale:true distort:true ...]
 		<case constructor-of="Drawable3D">
 			<arguments>
 				<arg identifier="path">
-					<type><typename>Path3D</typename></type>
+					<type><named-type name="Path3D" /></type>
 				</arg>
 				<arg identifier="tiebreaker">
 					<default>0</default>
-					<type><typename>Length</typename></type>
+					<type><named-type name="Length" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>

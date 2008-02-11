@@ -8,10 +8,10 @@
 <title>Floats</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="basic-float" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
-<tr> <td><syntax name="float" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-<tr> <td><syntax name="float" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" />°</inline></td></tr>
+<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
+<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
+<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
+<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" />°</inline></td></tr>
 </syntax-table>
 <p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
 
@@ -43,8 +43,8 @@
 <title>Lengths</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="length" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
-<tr> <td><syntax name="length" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
+<tr> <td><syntax name="length" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
+<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
 </syntax-table>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
 
@@ -177,8 +177,8 @@ Multi-line...´
 <title>Booleans</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="boolean" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
-<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
+<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
 </syntax-table>
 
 <p>The valid Booleans are listed below.</p>
@@ -197,6 +197,16 @@ Multi-line...´
 <section id="syntax/atoms/integers">
 <title>Integers</title>
 <body>
+<syntax-table>
+<tr> <td><syntax name="integer" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+<tr> <td><syntax name="integer" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>'</lexerregexp><bnf>;(</bnf> <syntax name="integer-2" /> <bnf>|</bnf> <syntax name="integer-10" /> <bnf>|</bnf> <syntax name="integer-16" /> <bnf>)</bnf></td></tr>
+<tr> <td><syntax name="integer-2" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+<tr> <td><syntax name="integer-2" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0b[01]+</lexerregexp></td></tr>
+<tr> <td><syntax name="integer-10" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+<tr> <td><syntax name="integer-10" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+</lexerregexp></td></tr>
+<tr> <td><syntax name="integer-16" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+<tr> <td><syntax name="integer-16" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0x[0-9A-F]+</lexerregexp></td></tr>
+</syntax-table>
 <p>Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:</p>
 
 <token-example-table>
@@ -265,8 +275,8 @@ Multi-line...´
 <title>Symbols</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="symbol" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
-<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
+<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
+<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
 </syntax-table>
 <p>Note that there must not be any whitespace after the apostrophe.</p>
 

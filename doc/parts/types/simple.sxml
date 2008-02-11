@@ -16,6 +16,24 @@
 		</operators>
   </coretype>
 
+  <coretype name="Boolean">
+    <abstraction>
+			<p>A truth value.</p>
+    </abstraction>
+    <construction>
+      <syntax name="boolean" />
+    </construction>
+  </coretype>
+
+  <coretype name="Integer">
+    <abstraction>
+			<p>An integer number.</p>
+    </abstraction>
+    <construction>
+      <syntax name="integer" />
+    </construction>
+  </coretype>
+
   <coretype name="Length">
     <abstraction>
 			<p>The <self /> type represents a physical length.  Lengths are often specified as a scalar times a unit of length.</p>
@@ -35,6 +53,24 @@
     <abstraction>
 			<p>The <self /> type is something which can be used as a coordinate.  It is either an ordinary <named-type name="Length" />, or an <named-type name="Offset" />.</p>
     </abstraction>
+  </coretype>
+
+  <coretype name="Symbol">
+    <abstraction>
+			<p>A value defined by its name; the value analogue of identifiers in the source.</p>
+    </abstraction>
+    <construction>
+      <syntax name="symbol" />
+    </construction>
+  </coretype>
+
+  <coretype name="String">
+    <abstraction>
+			<p>A chunk of text.</p>
+    </abstraction>
+    <construction>
+      <syntax name="string" />
+    </construction>
   </coretype>
 
 </section>

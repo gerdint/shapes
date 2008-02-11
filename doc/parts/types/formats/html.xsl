@@ -71,7 +71,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<h3>
 		<xsl:element name="a">
 			<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
-			<xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
+			Type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
 		</xsl:element>
 	</h3>
 	<xsl:apply-templates select="abstraction" />
@@ -89,27 +89,27 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<p>
 			<b>Operators:</b>
 			<xsl:for-each select="/book/external//operator-unary[@side='prefix']/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
+				<xsl:text>  ( </xsl:text>
 				<xsl:value-of select="../@op" />
-				<xsl:text> </xsl:text>
+				<xsl:text> </xsl:text>
 				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> )</xsl:text>
+				<xsl:text> )</xsl:text>
 			</xsl:for-each>
 			<xsl:for-each select="/book/external//operator-unary[@side='postfix']/case/result[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
+				<xsl:text>  ( </xsl:text>
 				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> </xsl:text>
+				<xsl:text> </xsl:text>
  				<xsl:value-of select="../@op" />
-				<xsl:text> )</xsl:text>
+				<xsl:text> )</xsl:text>
 			</xsl:for-each>
 			<xsl:for-each select="/book/external//operator-binary/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
+				<xsl:text>  ( </xsl:text>
 				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@first-type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> </xsl:text>
+				<xsl:text> </xsl:text>
  				<xsl:value-of select="../@op" />
-				<xsl:text> </xsl:text>
+				<xsl:text> </xsl:text>
 				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@second-type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> )</xsl:text>
+				<xsl:text> )</xsl:text>
 			</xsl:for-each>
 		</p>
 	</xsl:if>
@@ -162,6 +162,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="coretype[@name]/fields">
+	<xsl:apply-templates select="top" />
   <table cellspacing="5">
     <tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
     <tr><td colspan="3"><hr /></td></tr>

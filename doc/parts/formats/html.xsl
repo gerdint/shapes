@@ -57,20 +57,46 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="part-href[@name='man']">man.html</xsl:template>
 <xsl:template match="part-href[@name='tutorial']">tutorial.html</xsl:template>
 
-<xsl:template match="binding[@name]">
+<xsl:template name="name-to-binding">
+	<xsl:param name="name" />
+	<varname><xsl:value-of select="$name" /></varname>
+</xsl:template>
+<xsl:template name="name-to-linked-binding">
+	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">bindings.html#<xsl:value-of select="@name" /></xsl:attribute>
-		<varname><xsl:value-of select="@name" /></varname>
+		<xsl:attribute name="href">bindings.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:call-template name="name-to-binding">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="binding[@name]">
+	<xsl:call-template name="name-to-linked-binding">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template name="name-to-dynvar">
+	<xsl:param name="name" />
+	<varname>@<xsl:value-of select="$name" /></varname>
+</xsl:template>
+<xsl:template name="name-to-linked-dynvar">
+	<xsl:param name="name" />
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">dynvars.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:call-template name="name-to-dynvar">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
 	</xsl:element>
 </xsl:template>
 <xsl:template match="dynvar[@name]">
-	<xsl:element name="a">
-		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">dynvars.html#<xsl:value-of select="@name" /></xsl:attribute>
-		<varname>@<xsl:value-of select="@name" /></varname>
-	</xsl:element>
+	<xsl:call-template name="name-to-linked-dynvar">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
+
 <xsl:template name="name-to-type">
 	<xsl:param name="name" />
 	<typename>§<xsl:value-of select="$name" /></typename>
@@ -95,6 +121,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
+
 <xsl:template match="named-state-type[@name and not(@link)]">
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>

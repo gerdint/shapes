@@ -80,7 +80,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="system-binding[@identifier]/function/case[@constructor-of]">
 	<h4 class="plain">
 		<b>Case</b>  
- 		<xsl:apply-templates select="arguments"/>→ <typename><xsl:value-of select="@constructor-of" /></typename>
+ 		<xsl:apply-templates select="arguments"/>→ <xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@constructor-of" /></xsl:with-param></xsl:call-template>
 	</h4>
  	<xsl:apply-templates select="dynamic-references"/>
  	<xsl:apply-templates select="description"/>

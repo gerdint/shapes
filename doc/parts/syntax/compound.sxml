@@ -8,10 +8,10 @@
 <title>Float pairs and triples</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="float-pair" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatPair" /></td></tr>
-<tr> <td><syntax name="float-pair" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td><syntax name="float-triple" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatTriple" /></td></tr>
-<tr> <td><syntax name="float-triple" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="float-pair" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatPair" /></td></tr>
+<tr> <td><syntax name="float-pair" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="float-triple" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatTriple" /></td></tr>
+<tr> <td><syntax name="float-triple" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
 </syntax-table>
 
 <p>Float pairs and triples are useful generalizations of directions in <str-2D /> and <str-3D />, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
@@ -36,8 +36,8 @@
 <body>
 <p>Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:</p>
 <syntax-table>
-<tr> <td><syntax name="offset" /></td> <td><bnf>::</bnf></td> <td><named-type name="OffsetLength" /></td></tr>
-<tr> <td><syntax name="offset" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="offset" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="OffsetLength" /></td></tr>
+<tr> <td><syntax name="offset" /></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td><named-type name="LengthLike" /></td> <td><bnf>=</bnf></td> <td><inline> <named-type name="Length" /> | <named-type name="OffsetLength" /></inline></td></tr>
 </syntax-table>
 </body>
@@ -54,13 +54,13 @@
 
 <p>The following table below lists the valid constructs.</p>
 <syntax-table>
-<tr> <td><syntax name="coords-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord2D" /></td></tr>
-<tr> <td><syntax name="coords-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="coords-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord2D" /></td></tr>
+<tr> <td><syntax name="coords-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, 0 )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-2D" /> )</inline></td></tr>
-<tr> <td><syntax name="coords-3D" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
-<tr> <td><syntax name="coords-3D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="coords-3D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
+<tr> <td><syntax name="coords-3D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-3D" /> )</inline></td></tr>
 </syntax-table>
 
@@ -94,8 +94,8 @@
 </pre>
 <p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
 <syntax-table>
-<tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle2D" /></td></tr>
-<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
+<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle2D" /></td></tr>
+<tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
 </syntax-table>
 <p>When the distance is missing, it <em>may</em> fall back on <varname>@defaultunit</varname>, so be prepared to have a binding for <varname>@defaultunit</varname> in dynamic scope unless you really know that it won't be needed.</p>
 
@@ -149,10 +149,10 @@
 </pre>
 <p>This fits into (note that there is only a small difference between the syntax for functions and procedures)</p>
 <syntax-table>
-<tr> <td><syntax name="function" /></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
-<tr> <td><syntax name="function" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="procedure" /></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
-<tr> <td><syntax name="function" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> ! <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="function" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
+<tr> <td><syntax name="function" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="procedure" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
+<tr> <td><syntax name="procedure" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> ! <syntax name="expr" /></inline></td></tr>
 <tr> <td><syntax name="default" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>: <syntax name="expr" /></inline></td></tr>
 <tr> <td><syntax name="sink" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntax name="identifier" /></inline></td></tr>
 </syntax-table>
@@ -169,8 +169,8 @@
 <p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a href="#funapply">function application</a> for an explanation of <syntax name="named-expr" />, and to see how structures may be used.</p>
 
 <syntax-table>
-<tr> <td><syntax name="structure" /></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>
-<tr> <td><syntax name="structure" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> &lt;)</inline></td></tr>
+<tr> <td><syntax name="structure" class="new" /></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>
+<tr> <td><syntax name="structure" /></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> &lt;)</inline></td></tr>
 </syntax-table>
 
 <p>Note that the type of a structure is a complex type, which we don't bother to write out here.</p>

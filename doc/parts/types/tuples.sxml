@@ -4,7 +4,49 @@
 	<p>Values of types in this section combine a fixed number of other values to form a tuple.</p>
 </top>
 
-  <coretype name="Coord2D">
+  <coretype name="FloatPair">
+    <abstraction>
+      <p>The <self /> type is typically a sized direction in the plane.</p>
+    </abstraction>
+    <construction>
+      <syntax name="float-pair" />
+    </construction>
+		<fields>
+			<field name="x">
+				<type><named-type name="Float" /></type>
+				<description>First component.</description>
+			</field>
+			<field name="y">
+				<type><named-type name="Float" /></type>
+				<description>Second component.</description>
+			</field>
+		</fields>
+  </coretype>
+
+  <coretype name="FloatTriple">
+    <abstraction>
+      <p>The <self /> type is typically a sized direction in the perceivable space.</p>
+    </abstraction>
+    <construction>
+      <syntax name="float-triple" />
+    </construction>
+		<fields>
+			<field name="x">
+				<type><named-type name="Float" /></type>
+				<description>First component.</description>
+			</field>
+			<field name="y">
+				<type><named-type name="Float" /></type>
+				<description>Second component.</description>
+			</field>
+			<field name="z">
+				<type><named-type name="Float" /></type>
+				<description>Third component.</description>
+			</field>
+		</fields>
+  </coretype>
+
+  <coretype name="Coords">
     <abstraction>
       <p>The <self /> type is a pair of <named-type name="Length" /> ordinates.</p>
     </abstraction>
@@ -20,9 +62,51 @@
 				<type><named-type name="Length" /></type>
 				<description>Second component.</description>
 			</field>
+		</fields>
+  </coretype>
+
+  <coretype name="CornerCoords">
+    <abstraction>
+			<p><self /> is a subtype of <named-type name="Coords" />.  Objects of this type behave as <named-type name="Coords" /> in every situation except when being the center point of a path point with one or more undetermined handle angles.</p>
+    </abstraction>
+    <construction>
+      <syntax name="corner-point-2D" />
+    </construction>
+		<fields>
+			<field name="x">
+				<type><named-type name="Length" /></type>
+				<description>First component.</description>
+			</field>
+			<field name="y">
+				<type><named-type name="Length" /></type>
+				<description>Second component.</description>
+			</field>
 			<field name="a">
 				<type><named-type name="Float" /></type>
-				<description>Angle of <named-type name="CornerCoords2D" /> object.</description>
+				<description>Corner angle.</description>
+			</field>
+		</fields>
+  </coretype>
+
+  <coretype name="Coords3D">
+    <abstraction>
+      <p>The <self /> type is a triple of <named-type name="Length" /> ordinates.</p>
+    </abstraction>
+    <construction>
+      <syntax name="coords-3D" />
+    </construction>
+		<fields>
+			<field name="x">
+				<type><named-type name="Length" /></type>
+				<description>First component.</description>
+			</field>
+			<field name="y">
+				<type><named-type name="Length" /></type>
+				<description>Second component.</description>
+			</field>
+			<field name="z">
+				<type><named-type name="Length" /></type>
+				<description>Third component.</description>
 			</field>
 		</fields>
   </coretype>

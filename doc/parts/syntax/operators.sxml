@@ -35,15 +35,15 @@ Scaling by negative unit.
 </description>
 </case>
 
-<case type="Coords-2D">
-<result><named-type name="Coords-2D" /></result>
+<case type="Coords">
+<result><named-type name="Coords" /></result>
 <description>
 Scaling by negative unit.
 </description>
 </case>
 
-<case type="Coords-3D">
-<result><named-type name="Coords-3D" /></result>
+<case type="Coords3D">
+<result><named-type name="Coords3D" /></result>
 <description>
 Scaling by negative unit.
 </description>
@@ -61,15 +61,15 @@ Scaling by negative unit.
 </description>
 </case>
 
-<case type="Coords-2D">
-<result consider-constructor="yes"><named-type name="Offset-2D" /></result>
+<case type="Coords">
+<result consider-constructor="yes"><named-type name="OffsetCoords" /></result>
 <description>
 <em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
 </description>
 </case>
 
-<case type="Coords-3D">
-<result consider-constructor="yes"><named-type name="Offset-3D" /></result>
+<case type="Coords3D">
+<result consider-constructor="yes"><named-type name="OffsetCoords3D" /></result>
 <description>
 <em>Note: Requires enclosing parantheses!</em>  Constructs relative coordinates.
 </description>
@@ -91,29 +91,29 @@ Negation.
 
 <operator-unary op="--cycle" side="postfix">
 
-<case type="PathPoint-2D">
-<result><named-type name="Path-2D" /></result>
+<case type="PathPoint">
+<result><named-type name="Path" /></result>
 <description>
 Constructs a closed path with only one spline.
 </description>
 </case>
 
-<case type="Path-2D">
-<result><named-type name="Path-2D" /></result>
+<case type="Path">
+<result><named-type name="Path" /></result>
 <description>
 Closes an open path.
 </description>
 </case>
 
-<case type="Path-3D">
-<result><named-type name="Path-2D" /></result>
+<case type="Path3D">
+<result><named-type name="Path" /></result>
 <description>
 Closes an open path.
 </description>
 </case>
 
-<case type="PathPoint-3D">
-<result><named-type name="Path-3D" /></result>
+<case type="PathPoint3D">
+<result><named-type name="Path3D" /></result>
 <description>
 Constructs a closed path with only one spline.
 </description>
@@ -138,62 +138,62 @@ Pythagoream subtraction.  Both terms must be non-negative, and second term must 
 </description>
 </case>
 
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="Coords2D" second-type="PathPoint2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="Coords" second-type="PathPoint">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="PathPoint2D" second-type="PathPoint2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="PathPoint" second-type="PathPoint">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Path2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="Coords" second-type="Path">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="Path2D" second-type="Coords2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="Path" second-type="Coords">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="PathPoint2D" second-type="PathPoint2D">
-<result consider-constructor="yes"><named-type name="Path2D" /></result>
+<case first-type="PathPoint" second-type="PathPoint">
+<result consider-constructor="yes"><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="PathPoint2D" second-type="Path2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="PathPoint" second-type="Path">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="Path2D" second-type="PathPoint2D">
-<result><named-type name="Path2D" /></result>
+<case first-type="Path" second-type="PathPoint">
+<result><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="Path2D" second-type="Path2D">
-<result consider-constructor="yes"><named-type name="Path2D" /></result>
+<case first-type="Path" second-type="Path">
+<result consider-constructor="yes"><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
 </case>
-<case first-type="PathSlider2D" second-type="PathSlider2D">
-<result consider-constructor="yes"><named-type name="Path2D" /></result>
+<case first-type="PathSlider" second-type="PathSlider">
+<result consider-constructor="yes"><named-type name="Path" /></result>
 <description>
 Path connection.
 </description>
@@ -284,26 +284,26 @@ Pythagoream addition.
 
 <operator-binary op="&amp;">
 
-<case first-type="Path2D" second-type="Path2D">
-<result consider-constructor="yes"><named-type name="MultiPath2D" /></result>
+<case first-type="Path" second-type="Path">
+<result consider-constructor="yes"><named-type name="MultiPath" /></result>
 <description>
 Path union.
 </description>
 </case>
-<case first-type="MultiPath2D" second-type="Path2D">
-<result><named-type name="MultiPath2D" /></result>
+<case first-type="MultiPath" second-type="Path">
+<result><named-type name="MultiPath" /></result>
 <description>
 Path union.
 </description>
 </case>
-<case first-type="Path2D" second-type="MultiPath2D">
-<result><named-type name="MultiPath2D" /></result>
+<case first-type="Path" second-type="MultiPath">
+<result><named-type name="MultiPath" /></result>
 <description>
 Path union.
 </description>
 </case>
-<case first-type="MultiPath2D" second-type="MultiPath2D">
-<result><named-type name="MultiPath2D" /></result>
+<case first-type="MultiPath" second-type="MultiPath">
+<result><named-type name="MultiPath" /></result>
 <description>
 Path union.
 </description>
@@ -341,8 +341,8 @@ Dynamic binding union.
 </description>
 </case>
 
-<case first-type="Drawable2D" second-type="Drawable2D">
-<result><named-type name="Drawable2D" /></result>
+<case first-type="Drawable" second-type="Drawable">
+<result><named-type name="Drawable" /></result>
 <description>
 Graphics composition.  Second argument on top of first.
 </description>
@@ -384,8 +384,8 @@ Addition.
 Addition.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="Coords" /></result>
 <description>
 Addition.
 </description>
@@ -423,14 +423,14 @@ Shift.
 </description>
 </case>
 
-<case first-type="PathSlider2D" second-type="Float">
-<result><named-type name="PathSlider2D" /></result>
+<case first-type="PathSlider" second-type="Float">
+<result><named-type name="PathSlider" /></result>
 <description>
 Move spline time.
 </description>
 </case>
-<case first-type="PathSlider2D" second-type="Length">
-<result><named-type name="PathSlider2D" /></result>
+<case first-type="PathSlider" second-type="Length">
+<result><named-type name="PathSlider" /></result>
 <description>
 Move distance.
 </description>
@@ -496,8 +496,8 @@ Subtraction.
 Subtraction.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="Coords" /></result>
 <description>
 Subtraction.
 </description>
@@ -515,14 +515,14 @@ Subtraction.
 </description>
 </case>
 
-<case first-type="PathSlider2D" second-type="Float">
-<result><named-type name="PathSlider2D" /></result>
+<case first-type="PathSlider" second-type="Float">
+<result><named-type name="PathSlider" /></result>
 <description>
 Reverse move spline time.
 </description>
 </case>
-<case first-type="PathSlider2D" second-type="Length">
-<result><named-type name="PathSlider2D" /></result>
+<case first-type="PathSlider" second-type="Length">
+<result><named-type name="PathSlider" /></result>
 <description>
 Reverse move distance.
 </description>
@@ -576,19 +576,19 @@ In presence of a zero arguent, the result is π/2.  The result is zero if signs 
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
-<case first-type="FloatPair" second-type="Coords2D">
+<case first-type="FloatPair" second-type="Coords">
 <result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
-<case first-type="Coords2D" second-type="FloatPair">
+<case first-type="Coords" second-type="FloatPair">
 <result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Coords2D">
+<case first-type="Coords" second-type="Coords">
 <result><named-type name="Float" /></result>
 <description>
 In presence of a zero arguent, the result is π/2.  Otherwise, the usual definition of angle between vector applies.
@@ -682,38 +682,38 @@ Multiplication.
 </description>
 </case>
 
-<case first-type="Coords2D" second-type="Float">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="Float">
+<result><named-type name="Coords" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
-<case first-type="Float" second-type="Coords2D">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Float" second-type="Coords">
+<result><named-type name="Coords" /></result>
 <description>
 Vector-scalar multiplication.
 </description>
 </case>
-<case first-type="Coords2D" second-type="FloatPair">
+<case first-type="Coords" second-type="FloatPair">
 <result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
-<case first-type="FloatPair" second-type="Coords2D">
+<case first-type="FloatPair" second-type="Coords">
 <result><named-type name="Length" /></result>
 <description>
 Standard inner product.
 </description>
 </case>
 <case first-type="FloatPair" second-type="Length">
-<result><named-type name="Coords2D" /></result>
+<result><named-type name="Coords" /></result>
 <description>
 Scale direction by length.
 </description>
 </case>
 <case first-type="Length" second-type="FloatPair">
-<result><named-type name="Coords2D" /></result>
+<result><named-type name="Coords" /></result>
 <description>
 Scale direction by length.
 </description>
@@ -769,8 +769,8 @@ Scale.
 </description>
 </case>
 
-<case first-type="Transform2D" second-type="Transform2D">
-<result><named-type name="Transform2D" /></result>
+<case first-type="Transform" second-type="Transform">
+<result><named-type name="Transform" /></result>
 <description>
 Composition.
 </description>
@@ -881,14 +881,14 @@ Division.
 Division by scalar.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Length">
+<case first-type="Coords" second-type="Length">
 <result><named-type name="FloatPair" /></result>
 <description>
 Directional ratio.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Float">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="Float">
+<result><named-type name="Coords" /></result>
 <description>
 Division by scalar.
 </description>
@@ -943,20 +943,20 @@ Division.
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
-<case first-type="FloatPair" second-type="Coords2D">
+<case first-type="FloatPair" second-type="Coords">
 <result><named-type name="FloatPair" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="FloatPair">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="FloatPair">
+<result><named-type name="Coords" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="Coords2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="Coords" /></result>
 <description>
 Orthogonal projection of first argument on direction given by second argument.
 </description>
@@ -991,8 +991,8 @@ Orthogonal projection of first argument on direction given by second argument.
 
 <operator-binary op="()">
 
-<case first-type="Transform2D" second-type="Transform2D">
-<result><named-type name="Transform2D" /></result>
+<case first-type="Transform" second-type="Transform">
+<result><named-type name="Transform" /></result>
 <description>
 Composition.
 </description>
@@ -1042,39 +1042,39 @@ Less than comparison (with signed lengths).
 </description>
 </case>
 
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="PathPoint2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="PathPoint2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="Coords" second-type="PathPoint">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
-<case first-type="Coords2D" second-type="PathSlider2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="Coords" second-type="PathSlider">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
 
-<case first-type="PolarHandleBase" second-type="Coords2D">
-<result><named-type name="PathPoint2D" /></result>
+<case first-type="PolarHandleBase" second-type="Coords">
+<result><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
-<case first-type="PolarHandleBase" second-type="PathPoint2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PolarHandleBase" second-type="PathPoint">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
 </case>
-<case first-type="PolarHandleBase" second-type="PathSlider2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PolarHandleBase" second-type="PathSlider">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach backward handle to second argument.
 </description>
@@ -1128,39 +1128,39 @@ Greater than comparison (with signed lengths).
 </description>
 </case>
 
-<case first-type="Coords2D" second-type="Coords2D">
-<result><named-type name="PathPoint2D" /></result>
+<case first-type="Coords" second-type="Coords">
+<result><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PathPoint2D" second-type="Coords2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PathPoint" second-type="Coords">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PathSlider2D" second-type="Coords2D">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PathSlider" second-type="Coords">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
 
-<case first-type="Coords2D" second-type="PolarHandleBase">
-<result><named-type name="PathPoint2D" /></result>
+<case first-type="Coords" second-type="PolarHandleBase">
+<result><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PathPoint2D" second-type="PolarHandleBase">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PathPoint" second-type="PolarHandleBase">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>
 </case>
-<case first-type="PathSlider2D" second-type="PolarHandleBase">
-<result consider-constructor="yes"><named-type name="PathPoint2D" /></result>
+<case first-type="PathSlider" second-type="PolarHandleBase">
+<result consider-constructor="yes"><named-type name="PathPoint" /></result>
 <description>
 Attach forward handle to first argument.
 </description>

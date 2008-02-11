@@ -4,27 +4,26 @@
 	<p>Besides objects of type <typename>Function</typename>, there are other objects that can behave like functions in many ways.  Most importantly, objects of the types in this section can appear at the first position in a composite expression.</p>
 </top>
 
-  <coretype name="Transform2D">
+  <coretype name="Function">
     <abstraction>
-      <p>The <self /> type is an affine transform, mapping <named-type name="Coord2D" /> to <named-type name="Coord2D" />.</p>
+			<p>In <str-Shapes />, the type <self /> serves two purposes; an object of type <self /> may be either a <em>true function</em>, or a <em>procedure</em>.  A true function cannot have side effects, and will always return the same result given the same arguments and dynamic environment.  Note that changing the dynamic environment may change the result of a function.</p>
     </abstraction>
     <construction>
-      <p>There is no special syntax.</p>
+      <syntax name="function" />
+      <syntax name="procedure" />
     </construction>
-		<fields>
-			<field name="x">
-				<type><named-type name="Length" /></type>
-				<description>First component.</description>
-			</field>
-			<field name="y">
-				<type><named-type name="Length" /></type>
-				<description>Second component.</description>
-			</field>
-			<field name="a">
-				<type><named-type name="Float" /></type>
-				<description>Angle of <named-type name="CornerCoords2D" /> object.</description>
-			</field>
-		</fields>
+  </coretype>
+
+  <coretype name="Transform">
+    <abstraction>
+      <p>The <self /> type is an affine transform, mapping <named-type name="Coord" /> to <named-type name="Coord" />.</p>
+    </abstraction>
+  </coretype>
+
+  <coretype name="Transform3D">
+    <abstraction>
+			<p>The analogue of <named-type name="Transform" />, in <str-3D /> instead of <str-2D />.</p>
+    </abstraction>
   </coretype>
 
 </section>
