@@ -1,7 +1,7 @@
 POSTPROCDIR=../../tools/postproc
 SSIDIR=../../tools/ssi
 PRODUCED_FORMATS_DIR=../../formats
-PART_FORMATS_DIR=../lang/formats
+PART_FORMATS_DIR=formats
 EXDIR=../../../examples
 SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 
