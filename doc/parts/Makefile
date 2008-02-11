@@ -9,6 +9,8 @@ all-parts:
 	cd tutorial; make
 	cd index; make
 
+SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
+SSI=$(SSIDIR)/ssipp
 
 $(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
 	cd $(POSTPROCDIR); make

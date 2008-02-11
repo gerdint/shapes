@@ -16,12 +16,12 @@
 #page &lt;&lt; [stroke (0cm,0cm)--(2cm,1cm)]
 </pre>
 <p>In either case, make sure your file is encoded using <str-UTF-8 /> (if you avoid the bullet character, most eight bit encodings should be fine by intended coincidence).  Call the file <filename>hello.shape</filename>.</p>
-<p>So what does the code mean?  As you might have guessed, <shapes-state>page</shapes-state>, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from C++) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <shapes-binding>stroke</shapes-binding> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <shapes-operator>--</shapes-operator>.</p>
+<p>So what does the code mean?  As you might have guessed, <state name="page" />, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from C++) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <binding name="stroke" /> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <operator name="--" />.</p>
 <p>The example displays the following traits of the <str-Shapes /> language</p>
 <ol>
 <li>Function calls have the callee <em>inside</em> the bracketing syntax, like in Scheme.</li>
 <li>Statements are not terminated using a designated token; statements end by themselves, like in Haskell.</li>
-<li><em>States</em> (here, <shapes-state>page</shapes-state>) and <em>variables</em> (here, <shapes-binding>stroke</shapes-binding>) are distinguished by belonging to different name spaces, like variables are distinguished from types in Haskell.  This is called <em>Hungarian notation</em>, and is used also for other distinctions in <str-Shapes />.</li>
+<li><em>States</em> (here, <state name="page" />) and <em>variables</em> (here, <binding name="stroke" />) are distinguished by belonging to different name spaces, like variables are distinguished from types in Haskell.  This is called <em>Hungarian notation</em>, and is used also for other distinctions in <str-Shapes />.</li>
 <li>Coordinates are specified as pairs of lengths, as opposed to pairs of scalars, unlike many other graphics languages where there is no distinction between lengths and scalars.</li>
 </ol>
 </body>

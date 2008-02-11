@@ -4,7 +4,7 @@
 <book>
 	<title>Shapes' global bindings</title>
 	<description>
-		<p>Presentation of the variable binding in the initial environment.</p>
+		<p>Presentation of the (“variable”) bindings in the initial environment.</p>
 	</description>
 	<meta-selflink><part-href name="bindings" /></meta-selflink>
 	<top>

@@ -51,6 +51,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="part-href[@name='syntax']">syntax.html</xsl:template>
 <xsl:template match="part-href[@name='bindings']">bindings.html</xsl:template>
+<xsl:template match="part-href[@name='states']">states.html</xsl:template>
 <xsl:template match="part-href[@name='dynamic']">dynvars.html</xsl:template>
 <xsl:template match="part-href[@name='types']">types.html</xsl:template>
 <xsl:template match="part-href[@name='algo-tol']">algo-tol.html</xsl:template>
@@ -93,6 +94,26 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="dynvar[@name]">
 	<xsl:call-template name="name-to-linked-dynvar">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template name="name-to-state">
+	<xsl:param name="name" />
+	<varname>•<xsl:value-of select="$name" /></varname>
+</xsl:template>
+<xsl:template name="name-to-linked-state">
+	<xsl:param name="name" />
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">states.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:call-template name="name-to-state">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="state[@name]">
+	<xsl:call-template name="name-to-linked-state">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
@@ -141,6 +162,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:attribute name="href">algo-tol.html#tol-<xsl:value-of select="@name" /></xsl:attribute>
 		<tolparam><xsl:value-of select="@name" /></tolparam>
 	</xsl:element>
+</xsl:template>
+
+<xsl:template name="name-to-operator">
+	<xsl:param name="name" />
+	<inline><xsl:value-of select="$name" /></inline>
+</xsl:template>
+<xsl:template match="operator[@name]">
+	<xsl:call-template name="name-to-operator">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 

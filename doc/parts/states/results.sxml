@@ -1,0 +1,27 @@
+<section id="states/results">
+<title>Results</title>
+<top>
+<p>These states define a <str-Shapes /> program's main output, that is, the graphical result.</p>
+</top>
+
+<system-state identifier="page">
+	<type><named-state-type name="Group" /></type>
+	<description>
+		<p>Holds result of single-page programs.</p>
+		<p>It is an error if the program terminates with both <self /> and <state name="catalog" /> being non-empty.</p>
+		<note>
+			<p>Note the conceptual difference between programs that produce many pages of output (and it may happen to be just one), and programs that produce just one piece of graphics; a “book” with just one page is still a book, and hence not something which should be included on a page of another document.  If the output is something to be placed on a page of an external document, then there is only one logical page to paint, namely <self />.</p>
+		</note>
+	</description>
+</system-state>
+
+<system-state identifier="catalog">
+	<type><named-state-type name="Catalog" /></type>
+	<description>
+		<p>Holds result of multi-page programs.</p>
+		<p>It is an error if the program terminates with both <self /> and <state name="page" /> being non-empty.</p>
+		<p>See also the note at <state name="page" />.</p>
+	</description>
+</system-state>
+
+</section>

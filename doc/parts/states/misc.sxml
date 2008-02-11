@@ -1,0 +1,30 @@
+<section id="states/misc">
+<title>Everything else</title>
+<top>
+<p>Well, the states here do not have much in common except that they are generally not needed for basic applications.</p>
+</top>
+
+<system-state identifier="ignore">
+	<type><named-state-type name="Ignore" /></type>
+	<description>
+		<p>To be used when a state parameter is required by a procedure, but one does not care about the result.</p>
+	</description>
+</system-state>
+
+<system-state identifier="time">
+	<type><named-state-type name="Time" /></type>
+	<description>
+		<p>Represents the ever-changing state being the current time.  It's main characteristic is nothing but that; one can be sure that it will change from one peek of it to the next.</p>
+		<p>So what's the use of it?  For semantic reasons, it shall be required by the kernel's procedures that interact with the outside world in such a way that the result may be different from one invocation to another (and would otherwise not have any state parameters).</p>
+		<p>Another obvious use of <self /> is to simply ask for the time.  Please refer to <named-state-type name="Time" /> for details.</p>
+	</description>
+</system-state>
+
+<system-state identifier="randomdevice">
+	<type><named-state-type name="RandomDevice" /></type>
+	<description>
+		<p>Source of high quality random seeds.</p>
+	</description>
+</system-state>
+
+</section>

@@ -1,0 +1,21 @@
+<section id="states/streams">
+<title>Standard streams</title>
+<top>
+<p>These states define a way for <str-Shapes /> programs to write to the standard output streams.</p>
+</top>
+
+<system-state identifier="stdout">
+	<type><named-state-type name="Ostream" /></type>
+	<description>
+		<p>A wrapper for <filename>stdout</filename>.</p>
+	</description>
+</system-state>
+
+<system-state identifier="stderr">
+	<type><named-state-type name="Ostream" /></type>
+	<description>
+		<p>A wrapper for <filename>stderr</filename>.</p>
+	</description>
+</system-state>
+
+</section>

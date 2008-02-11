@@ -1,1 +1,1 @@
-build/index.xml: ../formats/doctype-book.xml chap-notation.sxml ../tutorial/tutorial.sxml ../syntax/syntax.sxml ../bindings/bindings.sxml ../dynamic/dynvars.sxml ../types/types.sxml ../man/tool-interface.sxml ../algo-tol/algo-tol.sxml
+build/index.xml: ../formats/doctype-book.xml chap-notation.sxml ../tutorial/tutorial.sxml ../syntax/syntax.sxml ../bindings/bindings.sxml ../states/states.sxml ../dynamic/dynvars.sxml ../types/types.sxml ../man/tool-interface.sxml ../algo-tol/algo-tol.sxml

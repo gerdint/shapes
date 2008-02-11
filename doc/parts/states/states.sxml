@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>Shapes' global states</title>
+	<description>
+		<p>Presentation of the states belonging in the initial environment.</p>
+	</description>
+	<meta-selflink><part-href name="states" /></meta-selflink>
+	<top>
+		<p><str-Shapes /> only defines a few states in the initial environment.  Some of these are merely a matter of convenience, while other have a stronger reason for being defined globally — while it would make perfect sense to let the output of the program be defined by the last expression in the source (after all, the whole program is just a code bracket without visible delimiters, so this would be to say that <em>the output is defined by the value of the program</em>), states representing communication with the outside world <em>must</em> be defined globally (or else they could not be allowed to change at will).</p>
+		<p>The reason <state name="page" /> (and <state name="catalog" />) <em>is</em> defined after all, is that it makes a <str-Shapes /> program easier to read since not every user will have to invent its own name for a state with the same purpose.</p>
+	</top>
+	<body>
+		<alphabetical-list-of-states />
+	</body>
+	<!--#include virtual="results.sxml" -->
+	<!--#include virtual="streams.sxml" -->
+	<!--#include virtual="misc.sxml" -->
+</book>

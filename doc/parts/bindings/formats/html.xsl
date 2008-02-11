@@ -68,7 +68,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<h3>
 		<xsl:element name="a">
 			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
-			<xsl:value-of select="@identifier" />
+			<xsl:call-template name="name-to-binding"><xsl:with-parameter name="name"><xsl:value-of select="@identifier" /></xsl:parameter></xsl:call-template>
 		</xsl:element>
 	</h3>
 	<xsl:apply-templates />
