@@ -13,6 +13,7 @@
 #include "globals.h"
 #include "trianglefunctions.h"
 #include "pagecontentstates.h"
+#include "continuations.h"
 
 #include <ctype.h>
 #include <list>
@@ -1196,6 +1197,72 @@ void
 Lang::Facing2Din3D::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Drawable2D * >( element_.getPtr( ) )->gcMark( marked );
+}
+
+
+Lang::FacingFunction3D::FacingFunction3D( Kernel::PassedDyn dyn, RefCountPtr< const Lang::Function > generator )
+	: dyn_( dyn ), generator_( generator )
+{ }
+
+Lang::FacingFunction3D::~FacingFunction3D( )
+{ }
+
+RefCountPtr< const Lang::Drawable2D >
+Lang::FacingFunction3D::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const
+{
+	/* Too bad we can't call the function CPP here...
+	 */
+	Kernel::ValueRef valUntyped = NullPtr< const Lang::Value >( );
+
+	Ast::SourceLocation loc = Ast::SourceLocation( "** Facing a function in 3D... **" );
+
+	/* Note that the use of a StoreValueContinuation relies on valUntyped being alive at the time the continuation is invoked.
+	 */
+	bool done = false;
+	Kernel::EvalState evalState( 0,
+															 0,
+															 dyn_,
+															 Kernel::ContRef( new Kernel::StoreValueContinuation( & valUntyped,
+																																										Kernel::ContRef( new Kernel::ExitContinuation( & done, loc ) ),
+																																										loc ) ) );
+
+	generator_->call( & evalState, RefCountPtr< const Lang::Value >( new Lang::Transform3D( tf ) ), loc );
+
+	while( ! done )
+		{
+			evalState.expr_->eval( & evalState );
+		}
+
+	return Helpers::down_cast< const Lang::Drawable2D >( valUntyped, loc );
+}
+
+void
+Lang::FacingFunction3D::polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const
+{
+	throw Exceptions::MiscellaneousRequirement( "Facing functions cannot be polygonized." );
+}
+
+void
+Lang::FacingFunction3D::findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const
+{
+	/*
+	 * At the moment, we don't search facing functions for tags!
+	 */
+}
+
+bool
+Lang::FacingFunction3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const
+{
+	/*
+	 * At the moment, we don't search facing functions for tags!
+	 */
+	return false;
+}
+
+void
+Lang::FacingFunction3D::gcMark( Kernel::GCMarkedSet & marked )
+{
+	const_cast< Lang::Function * >( generator_.getPtr( ) )->gcMark( marked );
 }
 
 

@@ -1,16 +1,4 @@
-/*
- * File:	pdfyylex.l
- * ----------------
- * Lex inupt file to generate the yylex method for the parser of input of pdf file structure.
- */
-
 %{
-
-/* The text within this first region delimited by %{ and %} is assumed to
- * be C/C++ code and will be copied verbatim to the lex.pdf.c file ahead
- * of the definitions of the pdflex() function. Add other header file inclusions
- * or C++ variable declarations/prototypes that are needed by your code here.
- */
 
 #include "pdfstructure.h"
 #include "pdfscanner.h"
@@ -26,14 +14,6 @@ size_t stringParenDepth;
 using namespace SimplePDF;
 
 %}
-
- /*
-	* The section before the first %% is the Definitions section of the lex
-	* input file. Here is where you set options for the scanner, define lex
-	* states, and can set up definitions to give names to regular expressions
-	* as a simple substitution mechanism that allows for more readable
-	* entries in the Rules section later. 
-	*/
 
 WhiteSpace [ \t\n\r]
 Delimiter [\[\]\(\)\{\}\<\>\/\%]

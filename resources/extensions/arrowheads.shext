@@ -66,7 +66,7 @@ MetaPostArrow3D: \ normal p ahLength:void ahAngle:30° .>
       picture: [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--rev--cycle]
                &
                [fill [[shift z]*[rotate3D dir:normal angle:ahAngle*0.5]*[shift ~z] e]--[reverse [[shift z]*[rotate3D dir:normal angle: ~ahAngle*0.5]*[shift ~z] e]]--cycle]
-      cut: 2*@width
+      cut: 0.8*[cos ahAngle*0.5]*theLength
     <)
   }
 

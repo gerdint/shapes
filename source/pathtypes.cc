@@ -92,11 +92,11 @@ Kernel::PolarHandleTruePromise::force( const Concrete::PathPoint2D * specialUnit
 	 */
 	bool done = false;
 	Kernel::EvalState evalState( 0,
-																0,
-																NullPtr< Kernel::DynamicEnvironment >( ),
-																Kernel::ContRef( new Kernel::StoreValueContinuation( & valUntyped, 
-																																											 Kernel::ContRef( new Kernel::ExitContinuation( & done, thunk_->getExpr( )->loc( ) ) ),
-																																											 thunk_->getExpr( )->loc( ) ) ) );
+															 0,
+															 NullPtr< Kernel::DynamicEnvironment >( ),
+															 Kernel::ContRef( new Kernel::StoreValueContinuation( & valUntyped,
+																																										Kernel::ContRef( new Kernel::ExitContinuation( & done, thunk_->getExpr( )->loc( ) ) ),
+																																										thunk_->getExpr( )->loc( ) ) ) );
 
 	thunk_->force( & evalState, false );	/* note that the dynamic environment is set below, before evaluation begins. "false" means that the thunk may be forced repeatedly */
 

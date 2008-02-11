@@ -1,16 +1,4 @@
-/*
- * File:	afmyylex.l
- * ----------------
- * Lex inupt file to generate the yylex method for the Adobe Font Metrics file parser.
- */
-
 %{
-
-/* The text within this first region delimited by %{ and %} is assumed to
- * be C/C++ code and will be copied verbatim to the lex.afm.c file ahead
- * of the definitions of the yylex() function. Add other header file inclusions
- * or C++ variable declarations/prototypes that are needed by your code here.
- */
 
 #include <cmath>
 
@@ -24,20 +12,13 @@
 const char * strtoname( char * begin, char ** endp, const char * delim = " \t" );
 const char * strtoname( char * begin, char ** endp, const char * delim, size_t delimSize );
 
-%}
-
- /*
-	* The section before the first %% is the Definitions section of the lex
-	* input file. Here is where you set options for the scanner, define lex
-	* states, and can set up definitions to give names to regular expressions
-	* as a simple substitution mechanism that allows for more readable
-	* entries in the Rules section later. 
-	*/
-
-/* The following is not in agreement with the specification, as far as I can see,
+/* The rule HorizontalWhiteSpace is not in agreement with the specification, as far as I can see,
  * but it's the smallest change I can think of which should make this program work
  * with DOS files as well as ordiary files.
  */
+
+%}
+
 HorizontalWhiteSpace [ \t\r]*
 
 Integer [+-]?[0-9]+

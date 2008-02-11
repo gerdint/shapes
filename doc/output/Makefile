@@ -1,6 +1,6 @@
 all: jpg stdout
 
-jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg tutorial-transforms_y_big.jpg tutorial-path-painting_y_big.jpg
+jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg tutorial-transforms_y_big.jpg tutorial-path-painting_y_big.jpg facefun_y_big.jpg
 stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdout
 
 .PRECIOUS: %.pdf %_3.pdf

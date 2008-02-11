@@ -782,11 +782,39 @@ namespace Shapes
 			{
 				args.applyDefaults( );
 
-				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::ValueRef( new Lang::Facing2Din3D( Helpers::down_cast_CoreArgument< const Lang::Drawable2D >( title_, args, 0, callLoc ),
-																																	 Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 1, callLoc )->val_,
-																																	 Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 2, callLoc )->val_ ) ),
-												 evalState );
+				try
+					{
+						typedef const Lang::Drawable2D ArgType;
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( Kernel::ValueRef( new Lang::Facing2Din3D( Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) ),
+																																			 Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 1, callLoc )->val_,
+																																			 Helpers::down_cast_CoreArgument< const Lang::Boolean >( title_, args, 2, callLoc )->val_ ) ),
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+
+				try
+					{
+						typedef const Lang::Function ArgType;
+						Kernel::ContRef cont = evalState->cont_;
+						/* The scale and distort arguments will simply be ignored.
+						 */
+						cont->takeValue( Kernel::ValueRef( new Lang::FacingFunction3D( evalState->dyn_, Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) ) ) ),
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+
+				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Drawable2D::staticTypeName( ), Lang::Function::staticTypeName( ) ) );
 			}
 		};
 

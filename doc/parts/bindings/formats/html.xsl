@@ -4,6 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
+<xsl:include href="../../formats/examplecode-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -100,13 +101,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
 <xsl:template match="function/case/arguments/arg/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
 
-<xsl:template match="dynamic-references[not(dynvar)]">
+<xsl:template match="dynamic-references[not(dynvar | dynstate)]">
 	<p><b>Dynamic references:</b><xsl:text> </xsl:text><em>none</em></p>
 </xsl:template>
-<xsl:template match="dynamic-references[dynvar]">
+<xsl:template match="dynamic-references[dynvar | dynstate]">
 	<p><b>Dynamic references:</b><xsl:text> </xsl:text>
 		<xsl:apply-templates />
 	</p>
+</xsl:template>
+<xsl:template match="dynamic-references/dynstate[@name='all']">
+	<xsl:text>The entire dynamic state</xsl:text>
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]/hot">

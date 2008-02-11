@@ -890,6 +890,20 @@ namespace Shapes
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
+	class FacingFunction3D : public Lang::Drawable3D
+	{
+		Kernel::PassedDyn dyn_;
+		RefCountPtr< const Lang::Function > generator_;
+	public:
+		FacingFunction3D( Kernel::PassedDyn dyn, RefCountPtr< const Lang::Function > generator );
+		virtual ~FacingFunction3D( );
+		virtual RefCountPtr< const Lang::Drawable2D > typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
+		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
+		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const;
+		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const;
+		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	};
+
 	class PaintedPath3D : public Lang::Drawable3D
 	{
 		RefCountPtr< const Kernel::GraphicsState > metaState_;

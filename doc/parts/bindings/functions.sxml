@@ -216,4 +216,58 @@ facing: [../facing scale:true distort:true ...]
 	</function>
 </system-binding>
 
+<system-binding identifier="facing">
+	<function>
+		<case constructor-of="Drawable3D">
+			<arguments>
+				<arg identifier="obj">
+					<type><named-type name="Drawable" /></type>
+				</arg>
+				<arg identifier="scale">
+					<type><named-type name="Boolean" /></type>
+					<default>false</default>
+				</arg>
+				<arg identifier="distort">
+					<type><named-type name="Boolean" /></type>
+					<default>false</default>
+				</arg>
+			</arguments>
+			<description>
+				<p>Creates an object in <str-3D /> which is always facing the viewer.  It is useful for labels and other <str-2D /> annotations that need to be positioned in terms of objects in a <str-3D /> world.  The <varname>scale</varname> and <varname>distort</varname> arguments control how to interpret the <str-3D /> transform when the object is being viewed.</p>
+			</description>
+		</case>
+		<case constructor-of="Drawable3D">
+			<arguments>
+				<arg identifier="obj">
+					<type>
+						<function-type>
+							<arguments>
+								<arg><named-type name="Transform3D" /></arg>
+							</arguments>
+							<result><named-type name="Drawable" /></result>
+						</function-type>
+					</type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynstate name="all" /></dynamic-references>
+			<description>
+				<p>Gives the user full control of how to display the object when being viewed through a <str-3D /> transform.  The dynamic state is captured, and will be in scope later when the embedded function is invoked.</p>
+
+				<note>
+					<p>The evaluation order is quite non-standard for the objects created here.  Viewing an object is generally an atomic operation from a continuation passing point of view.  Hence, when the function is applied to the transform to obtain the <str-2D /> result, this will take place in an evaluation loop of its own.  This is very likely to render generated error messages rather useless when it comes to localizing the problem.</p>
+				</note>
+
+				<p>If you ever considered solving the intricate problem of generating nice arrowheads for paths in <str-3D /> by simply treating the path as if it was in <str-2D />, think again, as the example below shows!</p>
+
+				<example-with-output title="Example" internal-id="example/facing-function">
+					<image pdf="facefun_3.pdf" jpg="facefun_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/facefun.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/facefun.shape" -->]]>
+</source>
+				</example-with-output>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 </section>

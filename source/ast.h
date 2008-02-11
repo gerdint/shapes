@@ -18,7 +18,7 @@ namespace Shapes
 
 	namespace Kernel
 	{
- 
+
 		class EvalState
 		{
 		public:
