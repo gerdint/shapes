@@ -255,6 +255,7 @@ facing: [../facing scale:true distort:true ...]
 
 				<note>
 					<p>The evaluation order is quite non-standard for the objects created here.  Viewing an object is generally an atomic operation from a continuation passing point of view.  Hence, when the function is applied to the transform to obtain the <str-2D /> result, this will take place in an evaluation loop of its own.  This is very likely to render generated error messages rather useless when it comes to localizing the problem.</p>
+					<p>Since the object created here only has a meaning when being viewed, it cannot be searched (see <binding name="tag" /> and <binding name="find" />) for tags as long as it remains in <str-3D />.</p>
 				</note>
 
 				<p>If you ever considered solving the intricate problem of generating nice arrowheads for paths in <str-3D /> by simply treating the path as if it was in <str-2D />, think again, as the example below shows!</p>
