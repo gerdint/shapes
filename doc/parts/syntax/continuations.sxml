@@ -3,7 +3,7 @@
 <top>
 <p><str-Shapes /> is currently implemented using full-scale continuations, but their use is restricted by only allowing them to be bound dynamically.  This restriction is enforced using special syntax to handle continuations.  Note that a dynamically bound continuation merely provides the same functionality as an <em>escape continuation</em>.</p>
 
-<p>The reader is referred to the WWW for details on continuations and continuation passing style evaluation.  One place to start would be the documentation for <varname>call-with-current-continuation</varname> found in <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/doc/r5rs-9.html#Standard-procedures">R5RS</a>.  Here, we only describe the related syntax briefely.</p>
+<p>The reader is referred to the WWW for details on continuations and continuation passing style evaluation.  One place to start would be the documentation for <foreign lang="Scheme">call-with-current-continuation</foreign> found in <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/doc/r5rs-9.html#Standard-procedures">R5RS</a>.  Here, we only describe the related syntax briefely.</p>
 <syntax-table>
 <tr> <td><syntax name="with-escape-continuation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( escape_continuation <syntax name="identifier" /> <syntax name="expr" /> )</inline></td></tr>
 <tr> <td><syntax name="invoke-escape-continuation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( escape_continue <syntax name="identifier" /> <syntax name="expr" /> )</inline></td></tr>

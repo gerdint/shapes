@@ -98,12 +98,12 @@ p.center {
 
 body { font-size: 12pt }
 
-pre, inline, varname, paramname, lengthunit, lexerregexp, syntaxname, typename, bnf
+pre, inline, varname, lengthunit, lexerregexp, syntaxname, typename, bnf, program-param
 {
   font-family: courier;
   font-size: 0.9em
 }
-varname.replacable, paramname.replacable, typename.replacable, constname.replacable, filename.replacable, lengthunit.replacable
+varname.replacable, typename.replacable, constname.replacable, filename.replacable, lengthunit.replacable, program-param.replacable
 { color: #CC6600; }
 
 pre { margin-left: 1.5em; }

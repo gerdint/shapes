@@ -88,7 +88,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="function/case/arguments/arg[@identifier]">
-	<paramname><xsl:value-of select="@identifier" /></paramname>
+	<xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 	<xsl:apply-templates select="default"/>
 	<xsl:apply-templates select="type"/>
 	<xsl:text> </xsl:text>

@@ -77,6 +77,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
+<xsl:template match="user-binding[@name]">
+	<xsl:call-template name="name-to-binding">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
 
 <xsl:template name="name-to-dynvar">
 	<xsl:param name="name" />
@@ -228,10 +233,35 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="typename[@class='replacable']">
   <typename class="replacable"><xsl:apply-templates/></typename>
 </xsl:template>
-<xsl:template match="varname">
+<xsl:template match="replacable-text[@name]">
+  <varname class="replacable"><xsl:value-of select="@name" /></varname>
+</xsl:template>
+
+<xsl:template name="name-to-argument">
+	<xsl:param name="name" />
+	<xsl:param name="class" />
+	<xsl:element name="varname">
+		<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
+		<xsl:value-of select="$name" />
+	</xsl:element>
+</xsl:template>
+<xsl:template match="arg[@name]">
+	<xsl:call-template name="name-to-argument">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+		<xsl:with-param name="class"><xsl:value-of select="@class" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template match="state-arg[@name and not(@class)]">
+  <varname>•<xsl:apply-templates/></varname>
+</xsl:template>
+<xsl:template match="state-arg[@name and @class='replacable']">
+  <varname class="replacable">•<xsl:apply-templates/></varname>
+</xsl:template>
+<xsl:template match="field[@name and not(@class)]">
   <varname><xsl:apply-templates/></varname>
 </xsl:template>
-<xsl:template match="varname[@class='replacable']">
+<xsl:template match="field[@name and @class='replacable']">
   <varname class="replacable"><xsl:apply-templates/></varname>
 </xsl:template>
 <xsl:template match="lexerregexp">

@@ -97,10 +97,10 @@
 <tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle2D" /></td></tr>
 <tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
 </syntax-table>
-<p>When the distance is missing, it <em>may</em> fall back on <varname>@defaultunit</varname>, so be prepared to have a binding for <varname>@defaultunit</varname> in dynamic scope unless you really know that it won't be needed.</p>
+<p>When the distance is missing, it <em>may</em> fall back on <dynavar name="defaultunit" />, so be prepared to have a binding for <dynavar name="defaultunit" /> in dynamic scope unless you really know that it won't be needed.</p>
 
 <remark>
-<p>A polar handle will store the distance part as a thunk, thereby capturing the current lexical and dynamic environments.  Hence, it is not when the polar handles are used to build paths, that <varname>@defaultunit</varname> may be required, but when the polar handles themselves are constructed.</p>
+<p>A polar handle will store the distance part as a thunk, thereby capturing the current lexical and dynamic environments.  Hence, it is not when the polar handles are used to build paths, that <dynavar name="defaultunit" /> may be required, but when the polar handles themselves are constructed.</p>
 </remark>
 
 <token-example-table>
@@ -110,8 +110,8 @@
 <body>
 <tr> <td><inline>( 5cm ^ 60° )</inline></td> <td>Yes, equivalent to <inline>(+ 5cm*[dir 60°])</inline></td> </tr>
 <tr> <td><inline>( 1%C ^ 60° )</inline></td> <td>Yes, but cannot be rewritten as above</td> </tr>
-<tr> <td><inline>( ^ 0.5 )</inline></td> <td>Yes, angle in radians, may require a binding for <varname>@defaultunit</varname></td> </tr>
-<tr> <td><inline>( ^ )</inline></td> <td>Yes, may require a binding for <varname>@defaultunit</varname></td> </tr>
+<tr> <td><inline>( ^ 0.5 )</inline></td> <td>Yes, angle in radians, may require a binding for <dynavar name="defaultunit" /></td> </tr>
+<tr> <td><inline>( ^ )</inline></td> <td>Yes, may require a binding for <dynavar name="defaultunit" /></td> </tr>
 <tr> <td><inline>( 1%C ^ )</inline></td> <td>Yes</td> </tr>
 <tr> <td><inline>( 1 ^ )</inline></td> <td>No, <inline>1</inline> is not a length</td> </tr>
 <tr> <td><inline>( ^ 1cm )</inline></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>

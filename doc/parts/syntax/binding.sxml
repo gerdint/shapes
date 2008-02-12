@@ -13,13 +13,13 @@
 
 <p>First, functions set up a new environment for the passed arguments when they are called.  The parent of the new environment is the environment that was in scope where the function was created (this is typically not the current environment where the function is called).  The body of the function is then evaluated in the new environment.  These rules simply ensure that the variables that were in scope were the function was created are also in scope when the body of the function is evaluated (except in case of shadowing).</p>
 
-<p>A classic example of how lexical scoping works is the <varname>addn</varname> function:</p>
+<p>A classic example of how lexical scoping works is the <user-binding name="addn" /> function:</p>
 <pre>
 <![CDATA[addn: \ n .> \ x .> x + n
 inc: [addn '1]
 •stdout << [inc '3]]]>
 </pre>
-<p>The above program prints the integer 4.  Note that <varname>n</varname> must be in scope when <inline>x + n</inline> is evaluated, even though <varname>n</varname> is not in scope where <varname>inc</varname> is invoked.  What is important is that <varname>n</varname> is in scope where the function bound to <varname>inc</varname> was created.</p>
+<p>The above program prints the integer 4.  Note that <arg name="n" /> must be in scope when <inline>x + n</inline> is evaluated, even though <arg name="n" /> is not in scope where <user-binding name="inc" /> is invoked.  What is important is that <arg name="n" /> is in scope where the function bound to <user-binding name="inc" /> was created.</p>
 
 <p>Second, every code bracket sets up a new environment, under the current environment.  The new environment is both home for bindings introduced in the code bracket, and becomes the current environment for the expressions evaluated in the code bracket.  This means that the following is a valid code bracket:</p>
 <pre>
@@ -29,7 +29,7 @@ inc: [addn '1]
   b
 }]]>
 </pre>
-<p>So far, this seems similar to the semantics of <varname>let*</varname> in Scheme.  However, the following code bracket is equivalent:</p>
+<p>So far, this seems similar to the semantics of <foreign lang="Scheme">let*</foreign> in Scheme.  However, the following code bracket is equivalent:</p>
 <pre>
 <![CDATA[{
   b: a + '1
@@ -37,7 +37,7 @@ inc: [addn '1]
   b
 }]]>
 </pre>
-<p>This reminds more of <varname>letrec</varname> in Scheme, but the reason it works has another explanation: laziness.  The variables <varname>b</varname> and <varname>a</varname> are bound to thunks before the expression <varname>b</varname> is evaluated.</p>
+<p>This reminds more of <foreign lang="Scheme">letrec</foreign> in Scheme, but the reason it works has another explanation: laziness.  The variables <user-binding name="b" /> and <user-binding name="a" /> are bound to thunks before the expression <user-binding name="b" /> is evaluated.</p>
 
 <p>It is possible to <em>reach out</em> from the current lexical scope to circumvent <em>shadowing</em> bindings.  The syntax for this is</p>
 <syntax-table>
@@ -45,7 +45,7 @@ inc: [addn '1]
 </syntax-table>
 <p>In theory, the semantics of this is simple; evaluate <syntax name="expr" /> in the lexical environment which is the parent of the current lexical environment.  However, sometimes a deeper understanding of the language is required to see how many generations one must walk up the chain of environments to avoid a given binding.  On the other hand, with this problem in mind, empty environments are never optimized away.</p>
 
-<p>As an example of reach out, suppose we regret how we defined the paramter <paramname>depth</paramname> long time ago.  Now we have to live with it since our function is part of a library with many users which we don't want to bother with the off-by-one change that would make our implementation of the function more natural.  The following is not an option, since the function may be called with named arguments:</p>
+<p>As an example of reach out, suppose we regret how we defined the paramter <arg name="depth" /> long time ago.  Now we have to live with it since our function is part of a library with many users which we don't want to bother with the off-by-one change that would make our implementation of the function more natural.  The following is not an option, since the function may be called with named arguments:</p>
 <pre class="bad">
 <![CDATA[\ off_by_one_depth .>
   {
@@ -55,7 +55,7 @@ inc: [addn '1]
      **/
   }]]>
 </pre>
-<p>Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <paramname>depth</paramname>.  Then we could use a reach-out:</p>
+<p>Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <arg name="depth" />.  Then we could use a reach-out:</p>
 <pre>
 <![CDATA[\ depth .>
   {
@@ -68,7 +68,7 @@ inc: [addn '1]
      **/
   }]]>
 </pre>
-<p>Note that this changes the binding for <varname>depth</varname> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
+<p>Note that this changes the binding for <user-binding name="depth" /> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
 <example-with-output title="Example" internal-id="example-lex-scopes">
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/features/scopes.shape">
@@ -120,7 +120,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 </pre>
 <p>The program prints <inline>8<lengthunit>cm</lengthunit></inline>, followed by <inline>4<lengthunit>cm</lengthunit></inline>, and finally <inline>5<lengthunit>cm</lengthunit></inline>.</p>
 
-<p>Dynamic variables are used extensively for controlling all parts of the graphics state.  For instance, if <varname>pth</varname> is a path to be stroked, the color and width of the stroke can be set as follows:</p>
+<p>Dynamic variables are used extensively for controlling all parts of the graphics state.  For instance, if <user-binding name="pth" /> is a path to be stroked, the color and width of the stroke can be set as follows:</p>
 <pre>
 <![CDATA[•page << @stroking:rgb_RED & @width:2cm | [stroke pth]]]>
 </pre>

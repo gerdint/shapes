@@ -13,7 +13,7 @@
 </pre>
 <p>Things worth noting here:</p>
 <ol>
-<li>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <inline>TeX</inline> keyword.</li>
+<li>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <operator name="TeX" /> keyword.</li>
 <li>The string delimiters is a pair of a grave and once acute accent.  If you find these difficult to produce using your keyboard layout, there is an alternative syntax; the poor man's string looks like <inline>("$\Xi^{2}$")</inline>.</li>
 <li>The backslash character (\) is not an escape character.</li>
 <li><str-LaTeX /> is also useful for including pictures via the <inline>includegraphics</inline> macro.</li>
@@ -22,7 +22,7 @@
 Generally, the string syntax is chosen carefully not to interfere with the use of <str-LaTeX />.  Hence, two characters rarely used in <str-LaTeX /> source code were selected to be used interchangeably as escape characters, namely the cent sign (¢) and the sun sign (¤).  However, characters such as newlines and tabs can be included literally in strings, so there is seldom an urge to produce the rather unusual escape characters.
 </note>
 <note>
-<p>There is also a function that does the same job as the <inline>TeX</inline> special form, but there are good reasons for avoiding it.</p>
+<p>There is also a function that does the same job as the <operator name="TeX" /> special form, but there are good reasons for avoiding it.</p>
 </note>
 </body>
 </section><!-- End of basics-LaTeX -->
@@ -30,8 +30,8 @@ Generally, the string syntax is chosen carefully not to interfere with the use o
 <section id="basics-transforms">
 <title>Moving things around</title>
 <body>
-<p>When putting strokes on the page, there is a natural way of controlling where the strokes appear by simply specifying the desired coordinates.  When using the <inline>TeX</inline> special form, however, the produced graphics always ends up at the origin.  We clearly need to be able to move things around<char-ellipsis /> well, strictly speaking, we don't <em>move</em> things in <str-Shapes />, since the language is functional.  What we really do is create a new object which only differs from the original by a <em>transform</em>.</p>
-<p>In <str-Shapes /> each transform is represented as an object in itself, which can then be applied to objects of geometric nature.  For example, to create the transform that moves (<em>shifts</em>) things <physical scalar="2" unit="cm" /> to the right and <physical scalar="3" unit="mm" /> down, we write (we also give a name to the transform, so that it can be referred to later):</p>
+<p>When putting strokes on the page, there is a natural way of controlling where the strokes appear by simply specifying the desired coordinates.  When using the <operator name="TeX" /> special form, however, the produced graphics always ends up at the origin.  We clearly need to be able to move things around<char-ellipsis /> well, strictly speaking, we don't <em>move</em> things in <str-Shapes />, since the language is functional.  What we really do is create a new object which only differs from the original by a <em>transform</em>.</p>
+<p>In <str-Shapes /> each transform is represented as an object in itself, which can then be applied to objects of geometric nature.  For example, to create the transform that moves (<em>shifts</em>) things <physical><scalar>2</scalar><unit>cm</unit></physical> to the right and <physical><scalar>3</scalar><unit>mm</unit></physical> down, we write (we also give a name to the transform, so that it can be referred to later):</p>
 <pre>
 T1: [shift (2cm,~3mm)]
 </pre>
@@ -61,14 +61,14 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 </source>
 </example-with-output>
 
-<p>Transforms can be combined using the multiplication operator (*).  Hence, the following two lines do the same thing:</p>
+<p>Transforms can be combined using the multiplication operator (<operator name="*" />).  Hence, the following two lines do the same thing:</p>
 <pre>
 &bullet;page &lt;&lt; [T2 [T1 lbl]]
 &bullet;page &lt;&lt; [T2*T1 lbl]
 </pre>
 <p>It is almost allways the case that combining the operators is (sometimes much) more efficient than applying one transform after the other.</p>
 
-<p>Well, that's about all we are going to say regarding transforms in this tutorial.  Befor enging, we'll just mention that there are other constructors beside the ones seen here, that (almost all) transforms can be inverted, and that transforms also exist in <str-3D />.</p>
+<p>Well, that's about all we are going to say regarding transforms in this tutorial.  Befor ending, we'll just mention that there are other constructors beside the ones seen here, that (almost all) transforms can be inverted, and that transforms also exist in <str-3D />.</p>
 </body>
 </section><!-- End of basics-transforms -->
 
@@ -82,7 +82,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <section id="basics-path-painting">
 <title>Painting paths</title>
 <body>
-<p>You are already familiar with one of the path-painting functions, namely <inline>stroke</inline>.  A similar function, <inline>fill</inline>, will fill the path with paint instead of stroking it.  The following example also shows how to put an arrowhead on the path while stroking it.</p>
+<p>You are already familiar with one of the path-painting functions, namely <binding name="stroke" />.  A similar function, <binding name="fill" />, will fill the path with paint instead of stroking it.  The following example also shows how to put an arrowhead on the path while stroking it.</p>
 <example-with-output title="Path-painting" internal-id="example-path-painting">
 <image pdf="tutorial-path-painting_3.pdf" jpg="tutorial-path-painting_y_big.jpg" />
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-path-painting.shape">
@@ -92,8 +92,8 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <p>Things to note:</p>
 <ol>
 <li><p>The arrowheads are defined in a <str-Shapes /> <em>extension</em> file.  If your <str-Shapes /> compiler has the path <filename>/usr/local/bin/shapes</filename>, then the extension files are typically located in <filename>/usr/local/share/shapes/extenions/</filename>.</p></li>
-<li><p>Functions can take <em>named arguments</em>, and here the argument called <inline>head</inline> is some kind of object which defines what the arrowhead shall look like.</p></li>
-<li><p>As you might have guessed, <inline>stroke</inline> also takes an argument called <inline>tail</inline>.</p></li>
+<li><p>Functions can take <em>named arguments</em>, and here the argument called <arg name="head" /> is some kind of object which defines what the arrowhead shall look like.</p></li>
+<li><p>As you might have guessed, <binding name="stroke" /> also takes an argument called <arg name="tail" />.</p></li>
 </ol>
 </body>
 </section><!-- End of basics-path-painting -->
@@ -101,7 +101,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <section id="basics-colors">
 <title>Changing graphics parameters, such as color</title>
 <body>
-<p>Until now, all our drawings have been black on white, and all strokes of the default width <physical scalar="1" unit="bp" />.  In <str-PDF /> such properties are part of the <em>graphics state</em>, and <str-Shapes /> gives you control over these parameters via dynamic variables; just like <inline>@defaultunit</inline> has an impact on how smooth paths come out, <inline>@width</inline> controls how thick the lines coming from <inline>stroke</inline> are.</p>
+<p>Until now, all our drawings have been black on white, and all strokes of the default width <physical><scalar>1</scalar><unit>bp</unit></physical>.  In <str-PDF /> such properties are part of the <em>graphics state</em>, and <str-Shapes /> gives you control over these parameters via dynamic variables; just like <dynvar name="defaultunit" /> has an impact on how smooth paths come out, <dynvar name="width" /> controls how thick the lines coming from <binding name="stroke" /> are.</p>
 <p>As usual, we use an example to show what the most important parameters are called, and how to set them.</p>
 </body>
 </section><!-- End of basics-colors -->

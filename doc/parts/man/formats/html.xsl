@@ -89,7 +89,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="command-line-item/short-parameter[@flag]">
-	<b><xsl:value-of select="@flag" /></b><paramname class="replacable"><xsl:value-of select="."/></paramname><br />
+	<b><xsl:value-of select="@flag" /></b><program-param class="replacable"><xsl:value-of select="."/></program-param><br />
 </xsl:template>
 
 <xsl:template match="tolerance-parameter[@name]">
@@ -108,8 +108,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><b><xsl:value-of select="." /></b></xsl:template>
 
-<xsl:template match="synopsis-case/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
-<xsl:template match="parameters/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
-<xsl:template match="command-line-option/replacable"><paramname class="replacable"><xsl:value-of select="." /></paramname></xsl:template>
+<xsl:template match="synopsis-case/replacable"><program-param class="replacable"><xsl:value-of select="." /></program-param></xsl:template>
+<xsl:template match="parameters/replacable"><program-param class="replacable"><xsl:value-of select="." /></program-param></xsl:template>
+<xsl:template match="command-line-option/replacable"><program-param class="replacable"><xsl:value-of select="." /></program-param></xsl:template>
 
 </xsl:stylesheet>

@@ -82,7 +82,7 @@
 <body>
 <p>Special units of lengths are used when constructing smooth paths.  Then, it is often desirable not to have to provide the distance to control points in terms of absolute distances, but one would rather specify the distance relative to the distance between the first and final interpolation point, and the angles from the first and final interpolation points to the intermediate control points.</p>
 
-<p>The most frequent use of special units of lengths is to assign the dynamic variable <varname>@defaultunit</varname>, see <a href="#pathconstruction">path construction</a>.</p>
+<p>The most frequent use of special units of lengths is to assign the dynamic variable <dynavar name="defaultunit" />, see <a href="#pathconstruction">path construction</a>.</p>
 
 <p>Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:</p>
 <loose-table>

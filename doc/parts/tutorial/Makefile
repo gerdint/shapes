@@ -3,9 +3,7 @@ SSIDIR=../../tools/ssi
 PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=formats
 EXDIR=../../../examples
-SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 
-SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl

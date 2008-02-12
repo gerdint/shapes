@@ -5,7 +5,7 @@
 
 <p>After all, <str-Shapes /> is a special-purpose language aimed at the production of graphics.  Hence, functions for path drawing, creation of affine transforms, and path computations are a very important part of the language.</p>
 
-<p>Remember <binding name="immerse" /> and <binding name="facing" />, and in particular the <paramname>scale</paramname> and <paramname>distort</paramname> options to <binding name="facing" />.  The following is quite nice:
+<p>Remember <binding name="immerse" /> and <binding name="facing" />, and in particular the <arg name="scale" /> and <arg name="distort" /> options to <binding name="facing" />.  The following is quite nice:
 </p>
 <pre>
 facing: [../facing scale:true distort:true ...]
@@ -127,7 +127,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and y by <varname>r</varname><char-cdot /><varname>y</varname>.</description>
+			<description>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and y by <arg name="r" /><char-cdot /><arg name="y" />.</description>
 		</case>
 	</function>
 </system-binding>
@@ -154,7 +154,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform that scales x by <varname>r</varname><char-cdot /><varname>x</varname>, and similarly with y and z.</description>
+			<description>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and similarly with y and z.</description>
 		</case>
 	</function>
 </system-binding>
@@ -168,17 +168,17 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 				<arg identifier="head">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<named-type name="Path" /> → (&gt; <varname>picture</varname>::<named-type name="Drawable" /> <varname>cut</varname>::<named-type name="Length" /> &lt;) )</type>
+					<type>(<named-type name="Path" /> → (&gt; <field name="picture" />::<named-type name="Drawable" /> <field name="cut" />::<named-type name="Length" /> &lt;) )</type>
 				</arg>
 				<arg identifier="tail">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<named-type name="Path" /> → (&gt; <varname>picture</varname>::<named-type name="Drawable" /> <varname>cut</varname>::<named-type name="Length" /> &lt;) )</type>
+					<type>(<named-type name="Path" /> → (&gt; <field name="picture" />::<named-type name="Drawable" /> <field name="cut" />::<named-type name="Length" /> &lt;) )</type>
 				</arg>
 			</arguments>
 			<dynamic-references><dynvar name="width" /> <dynvar name="stroking" /> <dynvar name="dash" /> <dynvar name="cap" /> <dynvar name="join" /> <dynvar name="miterlimit" /></dynamic-references>
 			<description>
-				<p>Paints the <varname>path</varname> argument by stroking it.  Properties such as color (<dynvar>stroking</dynvar>), width, et cetera are taken from the dynamic environment.</p>
-				<p>The arguments <varname>head</varname> and <varname>tail</varname> define arrowheads at the corresponding ends of the stroke.  An arrowhead is defined by a function that takes the path as argument, and returns a tuple with fields <varname>picture</varname> and <varname>cut</varname>.  Here, <varname>picture</varname> shall be the grahpics that is the actual arrowhead, while <varname>cut</varname> tells how much the stroke shall be shortened to not interfere with the arrowhead.  Note that the arrowhead and the stroke usually overlap, but that it is not desirable that the stroke goes all the way to the point of the arrowhead.</p>
+				<p>Paints the <arg name="path" /> argument by stroking it.  Properties such as color (<dynvar>stroking</dynvar>), width, et cetera are taken from the dynamic environment.</p>
+				<p>The arguments <arg name="head" /> and <arg name="tail" /> define arrowheads at the corresponding ends of the stroke.  An arrowhead is defined by a function that takes the path as argument, and returns a tuple with fields <field name="picture" /> and <field name="cut" />.  Here, <field name="picture" /> shall be the grahpics that is the actual arrowhead, while <field name="cut" /> tells how much the stroke shall be shortened to not interfere with the arrowhead.  Note that the arrowhead and the stroke usually overlap, but that it is not desirable that the stroke goes all the way to the point of the arrowhead.</p>
 			</description>
 		</case>
 	</function>
@@ -194,7 +194,7 @@ facing: [../facing scale:true distort:true ...]
 			</arguments>
 			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>
 			<description>
-				<p>Paints the <varname>path</varname> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
+				<p>Paints the <arg name="path" /> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
 			</description>
 		</case>
 		<case constructor-of="Drawable3D">
@@ -209,7 +209,7 @@ facing: [../facing scale:true distort:true ...]
 			</arguments>
 			<dynamic-references><dynvar name="nonstroking" /></dynamic-references>
 			<description>
-				<p>Paints the <varname>path</varname> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
+				<p>Paints the <arg name="path" /> (that shall be closed) argument by filling it.  The fill color is taken from <dynvar>nonstroking</dynvar>.</p>
 				<p></p>
 			</description>
 		</case>
@@ -233,7 +233,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<description>
-				<p>Creates an object in <str-3D /> which is always facing the viewer.  It is useful for labels and other <str-2D /> annotations that need to be positioned in terms of objects in a <str-3D /> world.  The <varname>scale</varname> and <varname>distort</varname> arguments control how to interpret the <str-3D /> transform when the object is being viewed.</p>
+				<p>Creates an object in <str-3D /> which is always facing the viewer.  It is useful for labels and other <str-2D /> annotations that need to be positioned in terms of objects in a <str-3D /> world.  The <arg name="scale" /> and <arg name="distort" /> arguments control how to interpret the <str-3D /> transform when the object is being viewed.</p>
 			</description>
 		</case>
 		<case constructor-of="Drawable3D">

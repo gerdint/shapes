@@ -79,7 +79,7 @@
 <li><p>Compute remaining angles based on the path points position relative its neighboring path points.</p><todo><p>Fill in details!</p></todo></li>
 <li><p>Compute all distances to handles that are given explicitly.  Note that this requires all angles to be known.</p></li>
 <li><p>Propagate known distances to any free distances on the other side of a path point.</p></li>
-<li><p>Use <varname>@defaultunit</varname> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>
+<li><p>Use <dynvar name="defaultunit" /> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>
 </ol>
 <p>Note that the rules above means that there is a subtle difference between the following two path points:</p>
 <pre>
@@ -87,7 +87,7 @@
 p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 </pre>
 <remark>
-<p>The difference is that <varname>p1</varname> will generally get handles of unequal length, while <varname>p2</varname> gets handles of equal length.</p>
+<p>The difference is that <user-binding name="p1" />  will generally get handles of unequal length, while <user-binding name="p2" /> gets handles of equal length.</p>
 </remark>
 
 <example-with-output title="Example" internal-id="example-pathconstruction">

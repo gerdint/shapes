@@ -40,18 +40,18 @@
 <body>
 <p>The following directive allows a source file to print a message to <filename>stdout</filename> when the file is scanned:</p>
 <pre>
-##echo <varname class="replacable">text-to-end-of-line-will-be-echoed</varname>
+##echo <replacable-text name="text-to-end-of-line-will-be-echoed" />
 </pre>
 
 <p>You can put your name in the <str-PDF /> file using the following directive:</p>
 <pre>
-##author <varname class="replacable">your name</varname>
+##author <replacable-text name="your name" />
 </pre>
 <p>It can be used both in application files and in extension files, although it is not treated as the main author of the produced document in the latter case.</p>
 
-<p>The <varname>srand</varname> function in the Standard C Library, can be accessed through</p>
+<p>The <foreign lang="c">srand</foreign> function in the Standard C Library, can be accessed through</p>
 <pre>
-##seed <varname class="replacable">integer</varname>
+##seed <replacable-text name="integer" />
 </pre>
 <p>although I don't think there is any reason to do so.  Please consult the documentation on the random number facilities for an explanation.</p>
 </body>
