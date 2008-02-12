@@ -6,10 +6,28 @@
 
   <core-state-type name="Group">
     <abstraction>
-      <p>States of type <self /> are used to construct fill containers of type <named-type name="Group" />.</p>
+      <p>States of type <self /> are used to fill containers of type <named-type name="Group" />.</p>
     </abstraction>
     <construction>
 			<binding name="newGroup" />
+    </construction>
+  </core-state-type>
+
+  <core-state-type name="Group3D">
+    <abstraction>
+      <p>States of type <self /> are used to fill containers of type <named-type name="Group3D" />.</p>
+    </abstraction>
+    <construction>
+			<binding name="newGroup3D" />
+    </construction>
+  </core-state-type>
+
+  <core-state-type name="Catalog">
+    <abstraction>
+      <p>States of type <self /> are used to construct documents with many pages, page labels, cross references, and so on.</p>
+    </abstraction>
+    <construction>
+			<state name="catalog" />
     </construction>
   </core-state-type>
 
