@@ -4,8 +4,10 @@ all-parts:
 	cd man; make
 	cd syntax; make
 	cd bindings; make
+	cd states; make
 	cd dynamic; make
 	cd types; make
+	cd state-types; make
 	cd tutorial; make
 	cd index; make
 

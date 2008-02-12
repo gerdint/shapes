@@ -1,0 +1,17 @@
+<section id="state-types/streams">
+<title>Streams</title>
+<top>
+	<p>States of types in this section are used to wrap files for input/output.</p>
+</top>
+
+  <core-state-type name="Ostream">
+    <abstraction>
+      <p>States of type <self /> wrap a file stream for output.</p>
+    </abstraction>
+    <construction>
+			<state name="stdout" />
+			<state name="stderr" />
+    </construction>
+  </core-state-type>
+
+</section>

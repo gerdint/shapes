@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>Shapes' core state types</title>
+	<description>
+		<p>Presentation of the variable types of states defined by the core language.</p>
+	</description>
+	<meta-selflink><part-href name="state-types" /></meta-selflink>
+	<top>
+		<p>The most important core states are designed to be really easy to use; they have a simple tack-on operation, treating all types of pieces similarly, and may often be frozen to harvest the goods being piled up.  There is almost nothing one has to know about these states.  Then, however, there are also state types defining more complex behaviors, and some states interact in special ways with core functions.  This part of the documentation will be useful when it comes to these types of states.</p>
+	</top>
+	<body>
+		<alphabetical-list-of-state-types />
+	</body>
+	<!--#include virtual="containers.sxml" -->
+	<!--#include virtual="streams.sxml" -->
+	<!--#include virtual="misc.sxml" -->
+	<external>
+		<!--#include virtual="../bindings/functions.sxml" -->
+		<!--#include virtual="../syntax/operators.sxml" -->
+	</external>
+</book>

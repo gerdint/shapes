@@ -54,6 +54,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="part-href[@name='states']">states.html</xsl:template>
 <xsl:template match="part-href[@name='dynamic']">dynvars.html</xsl:template>
 <xsl:template match="part-href[@name='types']">types.html</xsl:template>
+<xsl:template match="part-href[@name='state-types']">state-types.html</xsl:template>
 <xsl:template match="part-href[@name='algo-tol']">algo-tol.html</xsl:template>
 <xsl:template match="part-href[@name='man']">man.html</xsl:template>
 <xsl:template match="part-href[@name='tutorial']">tutorial.html</xsl:template>
@@ -148,16 +149,31 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="named-state-type[@name and not(@link)]">
+<xsl:template name="name-to-state-type">
+	<xsl:param name="name" />
+	<typename>§•<xsl:value-of select="$name" /></typename>
+</xsl:template>
+<xsl:template name="name-to-linked-state-type">
+	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">states.html#<xsl:value-of select="@name" /></xsl:attribute>
-		<typename>§•<xsl:value-of select="@name" /></typename>
+		<xsl:attribute name="href">state-types.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:call-template name="name-to-state-type">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
 	</xsl:element>
 </xsl:template>
-<xsl:template match="named-state-type[@name and @link='no']">
-	<typename>§•<xsl:value-of select="@name" /></typename>
+<xsl:template match="named-state-type[@name and not(@link)]">
+	<xsl:call-template name="name-to-linked-state-type">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
+<xsl:template match="named-state-type[@name and @link='no']">
+	<xsl:call-template name="name-to-state-type">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="tol-param[@name and @link='no']">
 	<tolparam><xsl:value-of select="@name" /></tolparam>
 </xsl:template>
@@ -253,10 +269,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="state-arg[@name and not(@class)]">
-  <varname>•<xsl:apply-templates/></varname>
+  <varname>•<xsl:value-of select="@name" /></varname>
 </xsl:template>
 <xsl:template match="state-arg[@name and @class='replacable']">
-  <varname class="replacable">•<xsl:apply-templates/></varname>
+  <varname class="replacable">•<xsl:value-of select="@name" /></varname>
 </xsl:template>
 <xsl:template match="field[@name and not(@class)]">
   <varname><xsl:apply-templates/></varname>

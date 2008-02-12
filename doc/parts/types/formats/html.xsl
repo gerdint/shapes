@@ -169,7 +169,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:apply-templates select="field"/>
   </table>
 </xsl:template>
-<xsl:template match="coretype/fields/field">
+<xsl:template match="coretype/fields/type-field">
   <tr>
     <td><varname><xsl:value-of select="@name" /></varname></td>
     <td><xsl:apply-templates select="type"/></td>

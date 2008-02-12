@@ -1,0 +1,16 @@
+<section id="state-types/containers">
+<title>Containers</title>
+<top>
+	<p>States of types in this section are used to produce containers with objects in.</p>
+</top>
+
+  <core-state-type name="Group">
+    <abstraction>
+      <p>States of type <self /> are used to construct fill containers of type <named-type name="Group" />.</p>
+    </abstraction>
+    <construction>
+			<binding name="newGroup" />
+    </construction>
+  </core-state-type>
+
+</section>

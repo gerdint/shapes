@@ -1,4 +1,4 @@
-<section id="types-tuples">
+<section id="types/tuples">
 <title>Elementary tuple types</title>
 <top>
 	<p>Values of types in this section combine a fixed number of other values to form a tuple.</p>
@@ -12,14 +12,14 @@
       <syntax name="float-pair" />
     </construction>
 		<fields>
-			<field name="x">
+			<type-field name="x">
 				<type><named-type name="Float" /></type>
 				<description>First component.</description>
-			</field>
-			<field name="y">
+			</type-field>
+			<type-field name="y">
 				<type><named-type name="Float" /></type>
 				<description>Second component.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -31,18 +31,18 @@
       <syntax name="float-triple" />
     </construction>
 		<fields>
-			<field name="x">
+			<type-field name="x">
 				<type><named-type name="Float" /></type>
 				<description>First component.</description>
-			</field>
-			<field name="y">
+			</type-field>
+			<type-field name="y">
 				<type><named-type name="Float" /></type>
 				<description>Second component.</description>
-			</field>
-			<field name="z">
+			</type-field>
+			<type-field name="z">
 				<type><named-type name="Float" /></type>
 				<description>Third component.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -54,14 +54,14 @@
       <syntax name="coords-2D" />
     </construction>
 		<fields>
-			<field name="x">
+			<type-field name="x">
 				<type><named-type name="Length" /></type>
 				<description>First component.</description>
-			</field>
-			<field name="y">
+			</type-field>
+			<type-field name="y">
 				<type><named-type name="Length" /></type>
 				<description>Second component.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -73,18 +73,18 @@
       <syntax name="corner-point-2D" />
     </construction>
 		<fields>
-			<field name="x">
+			<type-field name="x">
 				<type><named-type name="Length" /></type>
 				<description>First component.</description>
-			</field>
-			<field name="y">
+			</type-field>
+			<type-field name="y">
 				<type><named-type name="Length" /></type>
 				<description>Second component.</description>
-			</field>
-			<field name="a">
+			</type-field>
+			<type-field name="a">
 				<type><named-type name="Float" /></type>
 				<description>Corner angle.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -96,18 +96,18 @@
       <syntax name="coords-3D" />
     </construction>
 		<fields>
-			<field name="x">
+			<type-field name="x">
 				<type><named-type name="Length" /></type>
 				<description>First component.</description>
-			</field>
-			<field name="y">
+			</type-field>
+			<type-field name="y">
 				<type><named-type name="Length" /></type>
 				<description>Second component.</description>
-			</field>
-			<field name="z">
+			</type-field>
+			<type-field name="z">
 				<type><named-type name="Length" /></type>
 				<description>Third component.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 

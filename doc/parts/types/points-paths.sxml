@@ -12,18 +12,18 @@
       <syntax name="path-point-2D" />
     </construction>
 		<fields>
-			<field name="rear">
+			<type-field name="rear">
 				<type><named-type name="Coords" /></type>
 				<description>Control point in backwards direction.</description>
-			</field>
-			<field name="mid">
+			</type-field>
+			<type-field name="mid">
 				<type><named-type name="Coords" /></type>
 				<description>Center (or <em>via</em>) point.</description>
-			</field>
-			<field name="front">
+			</type-field>
+			<type-field name="front">
 				<type><named-type name="Coords" /></type>
 				<description>Control point in forward direction.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -33,64 +33,64 @@
     </abstraction>
 		<fields>
 			<top>
-				<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.</p>
+				<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the type-field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.</p>
 			</top>
-			<field name="p">
+			<type-field name="p">
 				<type><named-type name="Coords" /></type>
 				<description>The coordinates of the point.</description>
-			</field>
-			<field name="v">
+			</type-field>
+			<type-field name="v">
 				<type><named-type name="Length" /></type>
 				<description>The speed at the point.  Note that this does not make sense from a geometric point of view, since it is not a property of the shape of the path but its representation.</description>
-			</field>
-			<field name="rv">
+			</type-field>
+			<type-field name="rv">
 				<type><named-type name="Length" /></type>
 				<description>The speed in the reverse direction.</description>
-			</field>
-			<field name="T">
+			</type-field>
+			<type-field name="T">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the tangent direction.</description>
-			</field>
-			<field name="rT">
+			</type-field>
+			<type-field name="rT">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the reverse tangent direction.</description>
-			</field>
-			<field name="N">
+			</type-field>
+			<type-field name="N">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the normal direction (always pointing couter-clockwise from the tangent).</description>
-			</field>
-			<field name="rN">
+			</type-field>
+			<type-field name="rN">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the reverse normal direction.</description>
-			</field>
-			<field name="ik">
+			</type-field>
+			<type-field name="ik">
 				<type><named-type name="Length" /></type>
 				<description>Radius of curvature (that is, the inverse of the curvature).</description>
-			</field>
-			<field name="rik">
+			</type-field>
+			<type-field name="rik">
 				<type><named-type name="Length" /></type>
 				<description>Rverse radius of curvature.</description>
-			</field>
-			<field name="time">
+			</type-field>
+			<type-field name="time">
 				<type><named-type name="Float" /></type>
 				<description>Path time at the slider.</description>
-			</field>
-			<field name="length">
+			</type-field>
+			<type-field name="length">
 				<type><named-type name="Length" /></type>
 				<description>Distance from beginning of path to slider.</description>
-			</field>
-			<field name="past">
+			</type-field>
+			<type-field name="past">
 				<type><named-type name="Boolean" /></type>
 				<description>Slider is beyond the end of the path.</description>
-			</field>
-			<field name="looped">
+			</type-field>
+			<type-field name="looped">
 				<type><named-type name="Boolean" /></type>
 				<description>Slider was reached by looping on a closed path.</description>
-			</field>
-			<field name="mod">
+			</type-field>
+			<type-field name="mod">
 				<type><named-type name="PathSlider" /></type>
 				<description>Slider obtained by computing the path time modulo the duration of the path.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -102,23 +102,26 @@
 			</note>
     </abstraction>
 		<fields>
-			<field name="begin">
+			<type-field name="begin">
 				<type><named-type name="PathSlider" /></type>
 				<description>Beginning of path.</description>
-			</field>
-			<field name="end">
+			</type-field>
+			<type-field name="end">
 				<type><named-type name="PathSlider" /></type>
 				<description>End of path.</description>
-			</field>
-			<field name="closed?">
+			</type-field>
+			<type-field name="closed?">
 				<type><named-type name="Boolean" /></type>
 				<description>True for closed paths.</description>
-			</field>
-			<field name="null?">
+			</type-field>
+			<type-field name="null?">
 				<type><named-type name="Boolean" /></type>
 				<description>True if there are no path points on the path.</description>
-			</field>
+			</type-field>
 		</fields>
+		<description>
+			<p>Since a path is a curve, and a curve is typically defined as a continuous mapping from a real parameter to the space containing the curve, <str-Shapes /> allows objects of type <named-type name="Path" /> to be used as functions.  Since the curve can be measured, a path can be applied also to <named-type name="Length" /> objects.  Hence, <inline>[pth u]</inline> becomes a shorthand for <inline>( pth.begin + u )</inline>.</p>
+		</description>
 	</coretype>
 
   <coretype name="MultiPath">
@@ -139,18 +142,18 @@
       <syntax name="path-point-3D" />
     </construction>
 		<fields>
-			<field name="rear">
+			<type-field name="rear">
 				<type><named-type name="Coords3D" /></type>
 				<description>Control point in backwards direction.</description>
-			</field>
-			<field name="mid">
+			</type-field>
+			<type-field name="mid">
 				<type><named-type name="Coords3D" /></type>
 				<description>Center (or <em>via</em>) point.</description>
-			</field>
-			<field name="front">
+			</type-field>
+			<type-field name="front">
 				<type><named-type name="Coords3D" /></type>
 				<description>Control point in forward direction.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -159,23 +162,24 @@
 			<p>The analogue of <named-type name="Path" />, in <str-3D /> instead of <str-2D />.</p>
     </abstraction>
 		<fields>
-			<field name="begin">
+			<type-field name="begin">
 				<type><named-type name="PathSlider3D" /></type>
 				<description>Beginning of path.</description>
-			</field>
-			<field name="end">
+			</type-field>
+			<type-field name="end">
 				<type><named-type name="PathSlider3D" /></type>
 				<description>End of path.</description>
-			</field>
-			<field name="closed?">
+			</type-field>
+			<type-field name="closed?">
 				<type><named-type name="Boolean" /></type>
 				<description>True for closed paths.</description>
-			</field>
-			<field name="null?">
+			</type-field>
+			<type-field name="null?">
 				<type><named-type name="Boolean" /></type>
 				<description>True if there are no path points on the path.</description>
-			</field>
+			</type-field>
 		</fields>
+		<p>Just like <named-type name="Path" />, objects of type <named-type name="Path3D" /> can behave like functions.</p>
 	</coretype>
 
   <coretype name="MultiPath3D">
@@ -190,72 +194,72 @@
     </abstraction>
 		<fields>
 			<top>
-				<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.</p>
+				<p>A path slider has many fields.  Many appear in pairs, and in most cases the either one can easily be computed given the other.  The exception is when the slider is at the transition from one spline to another.  Then the “reversed” version of the type-field refers to a property of the first spline, while the “plain“ version refers to a property of the second spline.</p>
 			</top>
-			<field name="p">
+			<type-field name="p">
 				<type><named-type name="Coords3D" /></type>
 				<description>The coordinates of the point.</description>
-			</field>
-			<field name="v">
+			</type-field>
+			<type-field name="v">
 				<type><named-type name="Length" /></type>
 				<description>The speed at the point.  Note that this does not make sense from a geometric point of view, since it is not a property of the shape of the path but its representation.</description>
-			</field>
-			<field name="rv">
+			</type-field>
+			<type-field name="rv">
 				<type><named-type name="Length" /></type>
 				<description>The speed in the reverse direction.</description>
-			</field>
-			<field name="T">
+			</type-field>
+			<type-field name="T">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the tangent direction.</description>
-			</field>
-			<field name="rT">
+			</type-field>
+			<type-field name="rT">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the reverse tangent direction.</description>
-			</field>
-			<field name="N">
+			</type-field>
+			<type-field name="N">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the normal direction (this direction is normal to the tangent).</description>
-			</field>
-			<field name="rN">
+			</type-field>
+			<type-field name="rN">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the reverse normal direction.</description>
-			</field>
-			<field name="B">
+			</type-field>
+			<type-field name="B">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the bi-normal direction (pointing such that the tangent, the normal, and the bi-normal forms a system with positive orientation).</description>
-			</field>
-			<field name="rV">
+			</type-field>
+			<type-field name="rV">
 				<type><named-type name="FloatPair" /></type>
 				<description>Unit vector in the reverse bi-normal direction.</description>
-			</field>
-			<field name="ik">
+			</type-field>
+			<type-field name="ik">
 				<type><named-type name="Length" /></type>
 				<description>Radius of curvature (that is, the inverse of the curvature).</description>
-			</field>
-			<field name="rik">
+			</type-field>
+			<type-field name="rik">
 				<type><named-type name="Length" /></type>
 				<description>Rverse radius of curvature.</description>
-			</field>
-			<field name="time">
+			</type-field>
+			<type-field name="time">
 				<type><named-type name="Float" /></type>
 				<description>Path time at the slider.</description>
-			</field>
-			<field name="length">
+			</type-field>
+			<type-field name="length">
 				<type><named-type name="Length" /></type>
 				<description>Distance from beginning of path to slider.</description>
-			</field>
-			<field name="past">
+			</type-field>
+			<type-field name="past">
 				<type><named-type name="Boolean" /></type>
 				<description>Slider is beyond the end of the path.</description>
-			</field>
-			<field name="looped">
+			</type-field>
+			<type-field name="looped">
 				<type><named-type name="Boolean" /></type>
 				<description>Slider was reached by looping on a closed path.</description>
-			</field>
-			<field name="mod">
+			</type-field>
+			<type-field name="mod">
 				<type><named-type name="PathSlider3D" /></type>
 				<description>Slider obtained by computing the path time modulo the duration of the path.</description>
-			</field>
+			</type-field>
 		</fields>
   </coretype>
 

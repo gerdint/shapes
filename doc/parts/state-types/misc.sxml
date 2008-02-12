@@ -1,0 +1,25 @@
+<section id="state-types/misc">
+<title>Miscellaneous</title>
+<top>
+	<p>All the rest…</p>
+</top>
+
+  <core-state-type name="Ignore">
+    <abstraction>
+      <p>States of type <self /> just ignores everything tacked onto them.</p>
+    </abstraction>
+    <construction>
+			<binding name="newIgnore" />
+    </construction>
+  </core-state-type>
+
+  <core-state-type name="Time">
+    <abstraction>
+      <p>States of type <self /> represent the ever-changing time.</p>
+    </abstraction>
+    <construction>
+			<state name="time" />
+    </construction>
+  </core-state-type>
+
+</section>
