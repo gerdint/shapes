@@ -1,0 +1,123 @@
+##needs blockdraw_wfo
+##needs braces
+
+##unit u = 1cm
+
+pointMark: [facing [fill [circle 2bp]]]
+
+baseVectors3D: \ nx ny nz .>
+{
+	len: 1.5u
+	tmpHead: [MetaPostArrow3D ahLength:3mm ...]
+	@width: 1.5bp
+	|
+  ( newGroup3D
+	  << pointMark
+	  << [stroke (0u,0u,0u)--(len,0u,0u) head:[tmpHead normal:nx ...]]
+	  << [stroke (0u,0u,0u)--(0u,len,0u) head:[tmpHead normal:ny ...]]
+	  << [stroke (0u,0u,0u)--(0u,0u,len) head:[tmpHead normal:nz ...]]
+		<< [tag 'x (len,0u,0u)]
+		<< [tag 'y (0u,len,0u)]
+		<< [tag 'z (0u,0u,len)]
+  )
+}
+
+baseVectors2D: \ .>
+{
+	nx: (0,0,1)
+	ny: (0,0,1)
+	len: 1u
+	tmpHead: [MetaPostArrow3D ahLength:2mm ahAngle:60° ...]
+	@width: 0.6bp
+	|
+  ( newGroup3D
+	  << pointMark
+	  << [stroke (0u,0u,0u)--(len,0u,0u) head:[tmpHead normal:nx ...]]
+	  << [stroke (0u,0u,0u)--(0u,len,0u) head:[tmpHead normal:ny ...]]
+		<< [tag 'x (len,0u,0u)]
+		<< [tag 'y (0u,len,0u)]
+  )
+}
+
+•world: newGroup3D
+
+/**
+ ** We draw the picture in the camera's coordinates
+ **/
+
+C: (0u,0u,0u)
+P: (1u,0.5u,8u)
+P0: (0u,0u,9u)
+f: 5u
+p: [mspoint C--P f/P.z]
+
+{
+	base: [baseVectors3D (0,0,1) (0,0,1) (1,0,0)]
+	•world << base
+		 		 << [shift [find base 'x]] [] [facing [putlabelBelow (TeX `$x$´) (0m,0m) ~1]]
+		 		 << [shift [find base 'y]] [] [facing [putlabelRight (TeX `$y$´) (0m,0m) ~1]]
+				 << [shift [find base 'z]] [] [facing [putlabelAbove (TeX `$z$´) (0m,0m) 1]]
+}
+
+•rayWorld: newZSorter
+•rayWorld << [stroke C--P]
+•rayWorld << @dash:[dashpattern 1mm 1mm] | [stroke C--P0]
+{
+	sz: 1.5u
+	imageFrame: [shift (0u,0u,f)] [] [immerse [rectangle (~sz,~sz) (sz,sz)]]
+  •rayWorld << @nonstroking:GRAY_WHITE | [fill imageFrame]
+  •rayWorld << [stroke imageFrame]
+}
+rayWorld: •rayWorld;
+•world << rayWorld
+{
+	base: [shift (0u,0u,f)] [] [baseVectors2D]
+	•world << base
+		 		 << [shift [find base 'x]] [] [facing [putlabelAbove (TeX `$x$´) (0m,0m) ~1]]
+		 		 << [shift [find base 'y]] [] [facing [putlabelRight (TeX `$y$´) (0m,0m) ~1]]
+}
+
+{
+	bracePath: [rotate3D dir:(0,1,0) angle:~90°] [] [immerse [someClosedBrace (f,0u) (0u,0u)]]
+  •world << [fill bracePath]
+	|** Next, I use that I happen to know that the tip of the brace is at path time 1.
+  •world << [shift [bracePath 1].p] [] [facing [putlabelBelow (TeX `$\mathrm{f}$´) (0m,0m) 0]]
+}
+
+•world << [shift C] [] [facing [putlabelAbove (TeX `$\mathrm{C}$´) (0m,0m) 1]]
+			 << [tag 'C C]
+			 << [shift P] [] pointMark
+			 << [tag 'P P]
+			 << [shift P] [] [facing [putlabelBelow (TeX `$P$´) (0m,0m) 0]]
+			 << [shift p] [] pointMark
+			 << [shift p] [] [facing [putlabelLeft (TeX `$p$´) (0m,0m) 1]]
+			 << [tag 'P0 P0]
+			 << [tag 'planePoint [shift (0u,0u,f)][][immerse (0.3u,~1u)]]
+
+flatWorld: view [] [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°]*[rotate3D dir:(0,1,0) angle:90°] [] (•world)
+•page << flatWorld
+
+  @width: 0.5bp
+& @defaultunit: 1%C
+|
+{
+  lblArrow: [MetaPostArrow ahLength:2mm ...]
+{
+	pt: [find flatWorld 'C]
+	lblPt: pt + (0.3u,1u)
+	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\centre\end{minipage}´) (0,~1)]
+	•page << [stroke lblPt>(^~80°)--(^60°)<pt head:lblArrow]
+}
+{
+	pt: [mspoint [find flatWorld 'C]--[find flatWorld 'P0] 1 ~1.5u]
+	lblPt: pt + (0.5u,1u)
+	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\axis\end{minipage}´) (0,~1)]
+	•page << [stroke lblPt>(^~100°)--(^90°)<pt head:lblArrow]
+}
+{
+	pt: [find flatWorld 'planePoint]
+	lblPt: pt + (~1.5u,0.2u)
+	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering image\\plane\end{minipage}´) (1,0)]
+	•page << [stroke lblPt>(^10°)--(^180°)<pt head:lblArrow]
+}
+}
