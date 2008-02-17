@@ -49,7 +49,7 @@ shapes --xpdf hello.shape
 <title>Final comments</title>
 <body>
 <p>If you reached this point, this shows you're up and running!  You're ready to go on with more exciting examples!  By the way, can you figure out how you would go about to add another stroke to your page, or a longer stroke connecting several points?</p>
-<p>There are many things the user can control using command line options to the compiler, but these won't be covered in this tutorial.  Please refer to the man page for further details on this.</p>
+<p>There are many things the user can control using command line options to the compiler, but these won't be covered in this tutorial.  Please refer to the <a part="man">man page</a> for further details on this.</p>
 </body>
 </section><!-- End of hello-final-comments -->
 

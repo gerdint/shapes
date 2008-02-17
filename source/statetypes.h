@@ -35,6 +35,15 @@ namespace Shapes
 			DISPATCHDECL;
 		};
 
+		class DynamicBindingsNull : public DynamicBindings
+		{
+		public:
+			DynamicBindingsNull( );
+			virtual ~DynamicBindingsNull( );
+			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
+		};
+
 		class DynamicBindingsPair : public DynamicBindings
 		{
 			RefCountPtr< const Lang::DynamicBindings > car_;

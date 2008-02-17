@@ -854,7 +854,7 @@ Kernel::Arguments::applyDefaults( )
 			variables_->push_back
 				( Helpers::newValHandle
 					( new Lang::Structure( sinkArgList_,
-																 sinkValues_, 
+																 sinkValues_,
 																 true ) ) ); // true means that the sinkArgList_ gets owned by the Structure.
 			sinkArgList_ = 0;
 		}

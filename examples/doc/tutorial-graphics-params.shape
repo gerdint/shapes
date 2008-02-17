@@ -1,0 +1,32 @@
+pth: @defaultunit:1%C | (0cm,0cm)>(^60°)--(^)<(2cm,0.5cm)>(^)--(^)<(3cm,~1cm)--(^)<(6cm,0cm)>(^90°)--(5cm,0.5cm)--(0.5cm,1cm)--cycle
+
+yStep: 2cm
+
+|** Topmost, we just stroke the path to show what it looks like with default parameters
+•page << [stroke pth]
+
+|** The default fill color is black:
+•page << [shift (0,~1*yStep)] [] [fill pth]
+
+|** The color, width, cap, miter limit, and dash of a stroke is set as follows,
+|** note the function bindings which relieves us from all the ampersands:
+•page <<
+  [bindings
+   @stroking:RGB_GREEN
+   @width:1mm
+   @cap:CAP_ROUND
+   @miterlimit:1.5mm
+   @dash:[dashpattern 3mm 2mm 1bp 2mm]
+  ]
+  |
+  [shift (0,~2*yStep)] [] [stroke pth]
+
+|** The fill color is changed as follows:
+•page << @nonstroking:RGB_BLUE | [shift (0,~3*yStep)] [] [fill pth]
+
+|** If a path is both to be filled and stroked, it is efficient to use the fillstroke command:
+•page <<
+    @nonstroking:GRAY_WHITE
+  & @stroking:[rgb 0.5 0.5 0]
+  |
+  [shift (0,~4*yStep)]*[rotate 30°] [] [fillstroke pth]

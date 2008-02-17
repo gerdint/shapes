@@ -240,6 +240,37 @@ namespace Shapes
 			}
 		};
 
+		class Core_ampersand_dynamic : public Lang::CoreFunction
+		{
+		public:
+			Core_ampersand_dynamic( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function (&) for dynamic bindings >", true ) )
+			{
+			}
+
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				//				args.applyDefaults( );
+				/*
+				 * Here, we should check that there are no named arguments, and that there are no states being passed...
+				 */
+
+				RefCountPtr< const Lang::DynamicBindings > res = RefCountPtr< const Lang::DynamicBindings >( new Lang::DynamicBindingsNull( ) );
+
+				for( size_t i = 0; i != args.size( ); ++i )
+					{
+						res = RefCountPtr< const Lang::DynamicBindings >
+							( new Lang::DynamicBindingsPair( Helpers::down_cast_CoreArgument< const Lang::DynamicBindings >( title_, args, args.size( ) - 1 - i, callLoc, true ),
+																							 res ) );
+					}
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( res,
+												 evalState );
+			}
+		};
+
 		class Core_nextpagenumber : public Lang::CoreFunction
 		{
 		public:
@@ -417,6 +448,7 @@ Kernel::registerCore_misc( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_rectangle( "rectangle" ) );
 	env->initDefineCoreFunction( new Lang::Core_memoryinfo( "memoryinfo" ) );
 	env->initDefineCoreFunction( new Lang::Core_hot( "hot" ) );
+	env->initDefineCoreFunction( new Lang::Core_ampersand_dynamic( "bindings" ) );
 
 	env->initDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
 	env->initDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );

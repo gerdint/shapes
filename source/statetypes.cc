@@ -55,6 +55,23 @@ Lang::DynamicBindingsPair::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
+Lang::DynamicBindingsNull::DynamicBindingsNull( )
+{ }
+
+Lang::DynamicBindingsNull::~DynamicBindingsNull( )
+{ }
+
+void
+Lang::DynamicBindingsNull::bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const
+{
+}
+
+void
+Lang::DynamicBindingsNull::gcMark( Kernel::GCMarkedSet & marked )
+{
+}
+
+
 Lang::UserDynamicBinding::UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & _key, const char * _id, const Ast::SourceLocation & _loc, const Kernel::VariableHandle & _var )
 	: key_( _key ), id_( _id ), loc_( _loc ), var_( _var )
 { }

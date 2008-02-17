@@ -49,15 +49,37 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </table>
 </xsl:template>
 
-<xsl:template match="part-href[@name='syntax']">syntax.html</xsl:template>
-<xsl:template match="part-href[@name='bindings']">bindings.html</xsl:template>
-<xsl:template match="part-href[@name='states']">states.html</xsl:template>
-<xsl:template match="part-href[@name='dynamic']">dynvars.html</xsl:template>
-<xsl:template match="part-href[@name='types']">types.html</xsl:template>
-<xsl:template match="part-href[@name='state-types']">state-types.html</xsl:template>
-<xsl:template match="part-href[@name='algo-tol']">algo-tol.html</xsl:template>
-<xsl:template match="part-href[@name='man']">man.html</xsl:template>
-<xsl:template match="part-href[@name='tutorial']">tutorial.html</xsl:template>
+<xsl:template name="part-to-href">
+	<xsl:param name="name" />
+	<xsl:choose>
+		<xsl:when test="$name='syntax'">syntax.html</xsl:when>
+		<xsl:when test="$name='bindings'">bindings.html</xsl:when>
+		<xsl:when test="$name='states'">states.html</xsl:when>
+		<xsl:when test="$name='dynamic'">dynvars.html</xsl:when>
+		<xsl:when test="$name='types'">types.html</xsl:when>
+		<xsl:when test="$name='state-types'">state-types.html</xsl:when>
+		<xsl:when test="$name='algo-tol'">algo-tol.html</xsl:when>
+		<xsl:when test="$name='man'">man.html</xsl:when>
+		<xsl:when test="$name='tutorial'">tutorial.html</xsl:when>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template match="part-href[@name]">
+	<xsl:call-template name="part-to-href">
+			<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template match="a[@part]">
+	<xsl:element name="a">
+		<xsl:attribute name="href">
+			<xsl:call-template name="part-to-href">
+				<xsl:with-param name="name"><xsl:value-of select="@part" /></xsl:with-param>
+			</xsl:call-template>
+		</xsl:attribute>
+		<xsl:apply-templates />
+	</xsl:element>
+</xsl:template>
 
 <xsl:template name="name-to-binding">
 	<xsl:param name="name" />

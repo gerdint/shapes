@@ -14,7 +14,7 @@
 		<fields>
 			<type-field name="rear">
 				<type><named-type name="Coords" /></type>
-				<description>Control point in backwards direction.</description>
+				<description>Control point in backward direction.</description>
 			</type-field>
 			<type-field name="mid">
 				<type><named-type name="Coords" /></type>
@@ -144,7 +144,7 @@
 		<fields>
 			<type-field name="rear">
 				<type><named-type name="Coords3D" /></type>
-				<description>Control point in backwards direction.</description>
+				<description>Control point in backward direction.</description>
 			</type-field>
 			<type-field name="mid">
 				<type><named-type name="Coords3D" /></type>
