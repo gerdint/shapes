@@ -1,0 +1,48 @@
+<section id="types/composite">
+	<title>Composite</title>
+	<top>
+		<p>These types are defined in terms of other types.  What this comes down to is classes of functions and structures, and union types.</p>
+	</top>
+
+  <coretype name="ArrowHead">
+    <abstraction>
+			<p>An arrowhead that <binding name="stroke" /> can use when painting paths.</p>
+    </abstraction>
+    <definition>
+			<function-type>
+				<arguments>
+					<arg><named-type name="Path" /></arg>
+				</arguments>
+				<result>
+					<structure-type>
+						<field name="picture"><type><named-type name="Drawable" /></type></field>
+						<field name="cut"><type><named-type name="Length" /></type></field>
+					</structure-type>
+				</result>
+			</function-type>
+    </definition>
+		<see-also>
+			<named-type name="ArrowHead" />
+		</see-also>
+  </coretype>
+
+  <coretype name="ArrowHead3D">
+    <abstraction>
+			<p>This is the analogue of <named-type name="ArrowHead" />, but in <str-3D /> instead of <str-2D />.</p>
+    </abstraction>
+    <definition>
+			<function-type>
+				<arguments>
+					<arg><named-type name="Path3D" /></arg>
+				</arguments>
+				<result>
+					<structure-type>
+						<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+						<field name="cut"><type><named-type name="Length" /></type></field>
+					</structure-type>
+				</result>
+			</function-type>
+    </definition>
+  </coretype>
+
+</section>

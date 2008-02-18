@@ -150,6 +150,7 @@ Shapes::Kernel::registerGlobals( Kernel::Environment * env )
 	env->initDefine( "void", Lang::THE_VOID );
 	env->initDefine( "null", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_NULL2D ) );
 	env->initDefine( "null3D", static_cast< RefCountPtr< const Lang::Geometric3D > >( Lang::THE_NULL3D ) );
+	env->initDefine( "nullbind", RefCountPtr< const Lang::Value >( new Lang::DynamicBindingsNull( ) ) );
 	env->initDefine( "emptypath", Lang::THE_EMPTYPATH2D );
 	env->initDefine( "emptypath3D", Lang::THE_EMPTYPATH3D );
 	env->initDefine( "pointpicture", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_POINTPICTURE ) );

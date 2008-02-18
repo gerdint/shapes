@@ -64,7 +64,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </html>
 </xsl:template>
 
-<xsl:template match="coretype[@name]">
+<xsl:template match="coretype[@name and not(definition)]">
   <xsl:variable name="self">
     <xsl:value-of select="@name" />
   </xsl:variable>
@@ -154,6 +154,37 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:apply-templates select="/book/external//operator-binary/case[@first-type!=$self and @second-type=$self]" />
     <tr><td colspan="5"><hr class="thick"/></td></tr>
   </table>
+</xsl:template>
+
+<xsl:template match="coretype[@name and definition]">
+  <xsl:variable name="self">
+    <xsl:value-of select="@name" />
+  </xsl:variable>
+	<h3>
+		<xsl:element name="a">
+			<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
+			Type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
+		</xsl:element>
+	</h3>
+	<xsl:apply-templates select="abstraction" />
+	<h4>Defined as</h4>
+	<xsl:apply-templates select="definition" />
+	<xsl:if test="see-also or /book/external//system-binding/function/case[@constructor-of=$self]">
+		<p>
+			<b>See also:</b>
+			<xsl:for-each select="see-also/*">
+				<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+			</xsl:for-each>
+			<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
+				<xsl:text>  </xsl:text>
+				<xsl:element name="a">
+					<xsl:attribute name="class">discrete</xsl:attribute>
+					<xsl:attribute name="href">bindings.html#<xsl:value-of select="../../@identifier" /></xsl:attribute>
+					<varname><xsl:value-of select="../../@identifier" /></varname>
+				</xsl:element>
+			</xsl:for-each>
+		</p>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="coretype[@name]/abstraction">

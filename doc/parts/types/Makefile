@@ -12,11 +12,11 @@ HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl
 
 PRODUCTS = $(HTMLDIR)/types.html
-DEPENDS = build/types.depend
+DEPENDS = build/index.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(HTMLDIR)/types.html: build/types.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
+$(HTMLDIR)/types.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
 include ../Makefile

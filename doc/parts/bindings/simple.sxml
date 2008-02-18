@@ -1,0 +1,104 @@
+<section id="bindings/simple">
+<title>Simple values</title>
+<top>
+<p>These bindings give access to many named constants that either serve as special tokens in certain situations, or simply deserve a binding due to their common use or special meaning.</p>
+</top>
+
+<system-binding identifier="void">
+	<simple-value>
+		<type><named-type name="Void" /></type>
+		<description>
+			<p>A value used to symbolize the absence of a value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="null">
+	<simple-value>
+		<type><named-type name="Drawable" /></type>
+		<description>
+			<p>An empty <str-2D /> graphics value.  Useful in folds, for instance.</p>
+		</description>
+		<see-also>
+			<binding name="null3D" />
+		</see-also>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="null3D">
+	<simple-value>
+		<type><named-type name="Drawable3D" /></type>
+		<description>
+			<p>The analogue of <binding name="null" />, but in <str-3D /> instead of <str-2D />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="emptypath">
+	<simple-value>
+		<type><named-type name="Path" /></type>
+		<description>
+			<p>An empty <str-2D /> path.  Useful in folds, for instance.</p>
+		</description>
+		<see-also>
+			<binding name="emptypath3D" />
+		</see-also>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="emptypath3D">
+	<simple-value>
+		<type><named-type name="Path3D" /></type>
+		<description>
+			<p>The analogue of <binding name="emptypath" />, but in <str-3D /> instead of <str-2D />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="pointpicture">
+	<simple-value>
+		<type><named-type name="Drawable" /></type>
+		<description>
+			<p>An invisible <str-2D /> graphics value with a point-like bounding box as the origin.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="nullbind">
+	<simple-value>
+		<type><named-type name="DynamicBindings" /></type>
+		<description>
+			<p>May be used when combinding several dynamic bindings, and one would like — for clarity of notation — to use exactly one operator <operator name="&amp;" /> for each dynamic binding; not having the operator for the first (or last, depending on how you see things) will break symmetry and make it difficult to indent source code nicely.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="NO_MASK">
+	<simple-value>
+		<type><named-type name="SoftMask" /></type>
+		<description>
+			<p>Value for <dynvar name="alpha" /> and <dynvar name="luminosity" /> that indicates that the transparent imaging shall not be used.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="NO_ARROW">
+	<simple-value>
+		<type><named-type name="ArrowHead" /></type>
+		<description>
+			<p>Value that can be passed to <binding name="stroke" /> to indicate that no arrowhead shall be drawn.  This special value will be recognized, and handled efficiently.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="identity">
+	<simple-value>
+		<type><named-type name="Function" /></type>
+		<description>
+			<p>A convenient function of one argument, that simply returns the argument.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+</section>
+

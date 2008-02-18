@@ -168,11 +168,11 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 				<arg identifier="head">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<named-type name="Path" /> → (&gt; <field name="picture" />::<named-type name="Drawable" /> <field name="cut" />::<named-type name="Length" /> &lt;) )</type>
+					<type><named-type name="ArrowHead" /></type>
 				</arg>
 				<arg identifier="tail">
 					<default><binding name="NO_ARROW" /></default>
-					<type>(<named-type name="Path" /> → (&gt; <field name="picture" />::<named-type name="Drawable" /> <field name="cut" />::<named-type name="Length" /> &lt;) )</type>
+					<type><named-type name="ArrowHead" /></type>
 				</arg>
 			</arguments>
 			<dynamic-references><dynvar name="width" /> <dynvar name="stroking" /> <dynvar name="dash" /> <dynvar name="cap" /> <dynvar name="join" /> <dynvar name="miterlimit" /></dynamic-references>

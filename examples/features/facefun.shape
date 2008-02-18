@@ -1,10 +1,16 @@
 ##needs arrowheads
 
+ahLength:2.5mm
+
 strokeWithFlatHead: \ p .>
   [facing \ tf .>
 		{
- 		  [stroke [view [tf p]] head:MetaPostArrow]
+ 		  [stroke [view [tf p]] head:[MetaPostArrow ahLength:ahLength ...]]
 		}]
+
+@width:0.5bp
+|
+{
 
 •page << view [] [rotate3D dir:(1,0,0) angle:~70°]*[rotate3D dir:(0,0,1) angle:~15°]
 []
@@ -17,8 +23,9 @@ strokeWithFlatHead: \ p .>
 •page << [shift (1cm,0cm)] [] view [] [rotate3D dir:(1,0,0) angle:~70°]*[rotate3D dir:(0,0,1) angle:~15°]
 []
 ( newGroup3D
-	<< [stroke (0cm,0cm,0cm)--(1cm,0cm,0cm) head:[MetaPostArrow3D normal:(0,1,0) ...]]
-	<< [stroke (0cm,0cm,0cm)--(0cm,1cm,0cm) head:[MetaPostArrow3D normal:(0,0,1) ...]]
-	<< [stroke (0cm,0cm,0cm)--(0cm,0cm,1cm) head:[MetaPostArrow3D normal:(0,1,0) ...]]
+	<< [stroke (0cm,0cm,0cm)--(1cm,0cm,0cm) head:[MetaPostArrow3D ahLength:ahLength normal:(0,0,1) ...]]
+	<< [stroke (0cm,0cm,0cm)--(0cm,1cm,0cm) head:[MetaPostArrow3D ahLength:ahLength normal:(0,0,1) ...]]
+	<< [stroke (0cm,0cm,0cm)--(0cm,0cm,1cm) head:[MetaPostArrow3D ahLength:ahLength normal:(0,1,0) ...]]
 )
 
+}

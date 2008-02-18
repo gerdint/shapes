@@ -118,6 +118,31 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<p>Spawns states of type <xsl:apply-templates select="constructor-of" />.</p>
 </xsl:template>
 
+<xsl:template match="system-binding[@identifier]/simple-value">
+	<p><b>Type:</b><xsl:text> </xsl:text><xsl:apply-templates select="type"/></p>
+	<xsl:apply-templates select="description"/>
+	<xsl:if test="type/named-type">
+		<xsl:variable name="self"><xsl:value-of select="../@identifier" /></xsl:variable>
+		<xsl:variable name="t"><xsl:value-of select="type/named-type/@name" /></xsl:variable>
+ 		<p>
+			<b>Related by type:</b>
+			<xsl:for-each select="//system-binding[@identifier!=$self]/simple-value/type/named-type[@name=$t]">
+				<xsl:text>  </xsl:text><xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../../@identifier" /></xsl:with-param></xsl:call-template>
+			</xsl:for-each>
+		</p>
+	</xsl:if>
+	<xsl:apply-templates select="see-also"/>
+</xsl:template>
+
+<xsl:template match="system-binding[@identifier]/simple-value/see-also">
+ 	<p>
+		<b>See also:</b>
+		<xsl:for-each select="./*">
+			<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+		</xsl:for-each>
+	</p>
+</xsl:template>
+
 
 
 </xsl:stylesheet>

@@ -21,6 +21,7 @@
 	<!--#include virtual="functions.sxml" -->
 	<!--#include virtual="misc.sxml" -->
 	<!--#include virtual="graphics-3d.sxml" -->
+	<!--#include virtual="composite.sxml" -->
 	<external>
 		<!--#include virtual="../bindings/functions.sxml" -->
 		<!--#include virtual="../syntax/operators.sxml" -->

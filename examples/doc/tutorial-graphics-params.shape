@@ -8,18 +8,43 @@ yStep: 2cm
 |** The default fill color is black:
 •page << [shift (0,~1*yStep)] [] [fill pth]
 
+
 |** The color, width, cap, miter limit, and dash of a stroke is set as follows,
-|** note the function bindings which relieves us from all the ampersands:
+|** note the various ways to combine many several bindings:
+
+|** This way, it is difficult to indent nicely since there is no ampersand associated with the first binding.
 •page <<
-  [bindings
-   @stroking:RGB_GREEN
-   @width:1mm
-   @cap:CAP_ROUND
-   @miterlimit:1.5mm
-   @dash:[dashpattern 3mm 2mm 1bp 2mm]
-  ]
+    @stroking:[rgb 0.1 0.3 0.2]
+  & @width:2bp
+  & @cap:CAP_SQUARE
+  & @dash:[dashpattern 3mm 2mm 1bp 2mm]
   |
   [shift (0,~2*yStep)] [] [stroke pth]
+
+|** This way, one has to introduce <nullbind>, and indenting is still not an easy question.
+•page <<
+  nullbind
+  & @stroking:RGB_BLUE
+  & @width:2bp
+  & @cap:CAP_BUTT
+  & @dash:[dashpattern 3mm 2mm 1bp 2mm]
+  |
+  [shift (0,~2.25*yStep)] [] [stroke pth]
+
+|** This way, one has to abandon the good old & way of combining bindings, and learn about the new function <bindings>.
+|** However, indenting is easy here.
+•page <<
+  [bindings
+    @stroking:RGB_GREEN
+    @width:1mm
+    @cap:CAP_ROUND
+	  @join:JOIN_MITER
+    @miterlimit:1.5mm
+    @dash:[dashpattern 3mm 2mm 1bp 2mm]
+  ]
+  |
+  [shift (0,~2.5*yStep)] [] [stroke pth]
+
 
 |** The fill color is changed as follows:
 •page << @nonstroking:RGB_BLUE | [shift (0,~3*yStep)] [] [fill pth]
