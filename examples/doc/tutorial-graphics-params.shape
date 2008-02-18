@@ -9,8 +9,7 @@ yStep: 2cm
 •page << [shift (0,~1*yStep)] [] [fill pth]
 
 
-|** The color, width, cap, miter limit, and dash of a stroke is set as follows,
-|** note the various ways to combine many several bindings:
+|** Note the various ways to combine many several bindings, as shown in the following examples that set properties of a stroke.
 
 |** This way, it is difficult to indent nicely since there is no ampersand associated with the first binding.
 •page <<
@@ -49,7 +48,8 @@ yStep: 2cm
 |** The fill color is changed as follows:
 •page << @nonstroking:RGB_BLUE | [shift (0,~3*yStep)] [] [fill pth]
 
-|** If a path is both to be filled and stroked, it is efficient to use the fillstroke command:
+|** If a path is both to be filled and stroked, it is efficient to use the fillstroke command,
+|** here, the ampersand is used instead of the function <bindings>:
 •page <<
     @nonstroking:GRAY_WHITE
   & @stroking:[rgb 0.5 0.5 0]

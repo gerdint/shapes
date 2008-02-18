@@ -3,4 +3,25 @@
 <top>
 <p>Standard stream objects, null objects, mathematical constants, and more…</p>
 </top>
+
+<system-binding identifier="bindings">
+	<function>
+		<case constructor-of="DynamicBindings">
+			<arguments>
+				<arg>
+					<type><named-type name="DynamicBindings" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="DynamicBindings" /></type>
+				</arg>
+				<arg identifier="...">
+					<type><named-type name="DynamicBindings" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>Combines dynamic bindings.  Can be used instead of repeating the operator <operator name="&amp;" />.</description>
+		</case>
+	</function>
+</system-binding>
+
 </section>

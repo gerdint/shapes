@@ -109,6 +109,10 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-graphics-params.shape" -->]]>
 </source>
 </example-with-output>
+<p>Things to note:</p>
+<ol>
+<li><p>The various ways several dynamic bindings can be combined to a set of bindings, including using the function <binding name="bindings" /> and inserting the empty set of bindings <binding name="nillbind" /> explicitly to make it one operator <operator name="&amp;" /> per binding..</p></li>
+</ol>
 </body>
 </section><!-- End of basics-colors -->
 
