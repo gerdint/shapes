@@ -58,10 +58,10 @@
 <tr> <td><syntax name="coords-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, 0 )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-2D" /> )</inline></td></tr>
+<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-2D" /> )</inline></td></tr> -->
 <tr> <td><syntax name="coords-3D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
 <tr> <td><syntax name="coords-3D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-3D" /> )</inline></td></tr>
+<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-3D" /> )</inline></td></tr> -->
 </syntax-table>
 
 <p>Some examples are given in the table below.</p>
@@ -77,9 +77,9 @@
 <tr> <td><inline>( 2mm, 7mm, 5mm )</inline></td> <td>Yes, yields coordinates in the perceivable space</td> </tr>
 <tr> <td><inline>( 2mm, 0, 5mm )</inline></td> <td>No, the float zero is only allowed in <str-2D /></td> </tr>
 <tr> <td><inline>( (+0mm), 1mm ))</inline></td> <td>Yes, the x component is relative an undetermined base frame</td> </tr>
-<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td>Yes, same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
 <tr> <td><inline>(+ 3mm*[dir 20°])</inline></td> <td>Yes, same as <inline>( (+ (3mm*[dir 20°]).x), (+ (3mm*[dir 20°]).y) )</inline></td> </tr>
 <tr> <td><inline>( (+0mm), 1mm, (+7mm) )</inline></td> <td>Yes, relative coordinates may be used in both <str-2D /> and <str-3D /></td> </tr>
+<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td>Yes, but this is application of unary <operator-unary-prefix name="+" />, yielding the same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
 </body>
 </token-example-table>
 </body>
@@ -94,7 +94,7 @@
 </pre>
 <p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
 <syntax-table>
-<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle2D" /></td></tr>
+<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle" /></td></tr>
 <tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
 </syntax-table>
 <p>When the distance is missing, it <em>may</em> fall back on <dynavar name="defaultunit" />, so be prepared to have a binding for <dynavar name="defaultunit" /> in dynamic scope unless you really know that it won't be needed.</p>

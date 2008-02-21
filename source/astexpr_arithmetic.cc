@@ -371,6 +371,14 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::MultiPath3D ) arg1, DUMMYANDR
 RefCountPtr< const Lang::Value >
 Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2, const Kernel::PassedDyn & dyn ) const
 {
+	if( arg1 == Lang::THE_NULL_DYNAMIC_BINDINGS )
+		{
+			return arg2;
+		}
+	if( arg2 == Lang::THE_NULL_DYNAMIC_BINDINGS )
+		{
+			return arg1;
+		}
 	return RefCountPtr< Lang::DynamicBindings >( new Lang::DynamicBindingsPair( arg1, arg2 ) );
 }
 

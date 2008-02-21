@@ -100,5 +100,283 @@
 	</simple-value>
 </system-binding>
 
+<system-binding identifier="CAP_BUTT">
+	<simple-value>
+		<type><named-type name="Cap" /></type>
+		<description>
+			<p>Value for <dynvar name="cap" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="CAP_ROUND">
+	<simple-value>
+		<type><named-type name="Cap" /></type>
+		<description>
+			<p>Value for <dynvar name="cap" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="CAP_SQUARE">
+	<simple-value>
+		<type><named-type name="Cap" /></type>
+		<description>
+			<p>Value for <dynvar name="cap" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="JOIN_MITER">
+	<simple-value>
+		<type><named-type name="Join" /></type>
+		<description>
+			<p>Value for <dynvar name="join" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="JOIN_ROUND">
+	<simple-value>
+		<type><named-type name="Join" /></type>
+		<description>
+			<p>Value for <dynvar name="join" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="JOIN_BEVEL">
+	<simple-value>
+		<type><named-type name="Join" /></type>
+		<description>
+			<p>Value for <dynvar name="join" />.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="GRAY_BLACK">
+	<simple-value>
+		<type><named-type name="Gray" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="GRAY_WHITE">
+	<simple-value>
+		<type><named-type name="Gray" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="RGB_BLACK">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_WHITE">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_RED">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_GREEN">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_BLUE">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_YELLOW">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_CYAN">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="RGB_MAGENTA">
+	<simple-value>
+		<type><named-type name="RGB" /></type>
+		<description>
+			<p>Predefined color value.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="DEVICE_GRAY">
+	<simple-value>
+		<type><named-type name="ColorSpace" /></type>
+		<description>
+			<p>Access to non-calibrated color space.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="DEVICE_RGB">
+	<simple-value>
+		<type><named-type name="ColorSpace" /></type>
+		<description>
+			<p>Access to non-calibrated color space.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="DEVICE_CMYK">
+	<simple-value>
+		<type><named-type name="ColorSpace" /></type>
+		<description>
+			<p>Access to non-calibrated color space.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
+<system-binding identifier="BLEND_NORMAL">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_MULTIPLY">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_SCREEN">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_OVERLAY">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_DARKEN">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_LIGHTEN">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_COLOR_DODGE">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_COLOR_BURN">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_HARD_LIGHT">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_SOFT_LIGHT">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_DIFFERENCE">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_EXCLUSION">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_HUE">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_SATURATION">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+<system-binding identifier="BLEND_COLOR">
+	<simple-value>
+		<type><named-type name="BlendMode" /></type>
+		<description>
+			<p>Access to blend mode constant.</p>
+		</description>
+	</simple-value>
+</system-binding>
+
 </section>
 

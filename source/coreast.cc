@@ -238,5 +238,5 @@ RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( 
 /* This belongs in consts.cc but we must make sure it is initialized before we use it below.	Note that the identifier will actually be destroyed
  * before Ast::THE_FUNCTION_TeX is destroyed, but that should not cause a failure...
  */
-RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "teX" );
+RefCountPtr< const char > Lang::TEX_SYNTAX_ID = strrefdup( "TeX" );
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_TeX( new Lang::Core_TeX( Lang::TEX_SYNTAX_ID.getPtr( ) ) );

@@ -81,6 +81,7 @@ namespace Shapes
 
 		extern RefCountPtr< const Lang::GroupNull2D > THE_NULL2D;
 		extern RefCountPtr< const Lang::GroupNull3D > THE_NULL3D;
+		extern RefCountPtr< const Lang::DynamicBindings > THE_NULL_DYNAMIC_BINDINGS;
 		extern RefCountPtr< const Lang::LightGroup > THE_NULL_LIGHTS;
 		extern RefCountPtr< const Lang::SingleListNull > THE_CONS_NULL;
 		extern RefCountPtr< const Lang::Structure > THE_EMPTY_STRUCT;

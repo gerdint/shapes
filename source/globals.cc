@@ -62,6 +62,7 @@ bool Interaction::characterColumnInBytes = false;
 
 RefCountPtr< const Lang::GroupNull2D > Lang::THE_NULL2D( new Lang::GroupNull2D( ) );
 RefCountPtr< const Lang::GroupNull3D > Lang::THE_NULL3D( new Lang::GroupNull3D( ) );
+RefCountPtr< const Lang::DynamicBindings > Lang::THE_NULL_DYNAMIC_BINDINGS( new Lang::DynamicBindingsNull( ) );
 RefCountPtr< const Lang::LightGroup > Lang::THE_NULL_LIGHTS( new Lang::LightNull( ) );
 RefCountPtr< const Lang::SingleListNull > Lang::THE_CONS_NULL( new Lang::SingleListNull( ) );
 RefCountPtr< const Lang::SpecularReflectionNull > Lang::THE_SPECULARREFLECTION_NULL( new Lang::SpecularReflectionNull( ) );
@@ -150,7 +151,7 @@ Shapes::Kernel::registerGlobals( Kernel::Environment * env )
 	env->initDefine( "void", Lang::THE_VOID );
 	env->initDefine( "null", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_NULL2D ) );
 	env->initDefine( "null3D", static_cast< RefCountPtr< const Lang::Geometric3D > >( Lang::THE_NULL3D ) );
-	env->initDefine( "nullbind", RefCountPtr< const Lang::Value >( new Lang::DynamicBindingsNull( ) ) );
+	env->initDefine( "nullbind", Lang::THE_NULL_DYNAMIC_BINDINGS );
 	env->initDefine( "emptypath", Lang::THE_EMPTYPATH2D );
 	env->initDefine( "emptypath3D", Lang::THE_EMPTYPATH3D );
 	env->initDefine( "pointpicture", static_cast< RefCountPtr< const Lang::Geometric2D > >( Lang::THE_POINTPICTURE ) );

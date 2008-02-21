@@ -10,6 +10,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-2D">2<span class="medium-caps"><sup>d</sup></span></xsl:template>
 <xsl:template match="str-3D">3<span class="medium-caps"><sup>d</sup></span></xsl:template>
 
+<xsl:template match="abbr-etc">&amp;c</xsl:template>
+
 <xsl:template match="char-cdot">*</xsl:template>
 <xsl:template match="char-bullet">•</xsl:template>
 <xsl:template match="char-str-open">`</xsl:template>
@@ -213,6 +215,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="operator[@name]">
 	<xsl:call-template name="name-to-operator">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+<xsl:template name="name-to-operator-unary-prefix">
+	<xsl:param name="name" />
+	<inline><xsl:value-of select="$name" /></inline>
+</xsl:template>
+<xsl:template match="operator-unary-prefix[@name]">
+	<xsl:call-template name="name-to-operator-unary-prefix">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>

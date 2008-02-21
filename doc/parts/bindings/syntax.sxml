@@ -1,0 +1,147 @@
+<section id="bindings/syntax">
+<title>Syntax equivalents</title>
+<top>
+<p>The functions in this section correspond directly to syntactic constructs.</p>
+
+<p>The user should generally <em>not</em> use these functions directly.</p>
+</top>
+
+<system-binding identifier="coords2D">
+	<function>
+		<case constructor-of="FloatPair">
+			<arguments>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Implements <syntax name="float-pair" />.</p>
+			</description>
+		</case>
+		<case constructor-of="Coords">
+			<arguments>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Implements <syntax name="coords-2D" />.</p>
+				<p>One of the arguments is allowed to be the special <named-type name="Float" /> value zero, which is interpreted as a zero absolute length.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="coords3D">
+	<function>
+		<case constructor-of="FloatTriple">
+			<arguments>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Implements <syntax name="float-triple" />.</p>
+			</description>
+		</case>
+		<case constructor-of="Coords3D">
+			<arguments>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Implements <syntax name="coords-3D" />.</p>
+				<p>Note that all arguments must be <named-type name="LengthLike" />, with no exception.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="cornercoords2D">
+	<function>
+		<case constructor-of="Coords">
+			<arguments>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="LengthLike" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Implements <syntax name="corner-point-2D" />.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="polarhandleFree_r">
+	<function>
+		<case constructor-of="PolarHandle">
+			<arguments>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="defaultunit" /></dynamic-references>
+			<description>
+				<p>Implements <syntax name="polar-handle-2D" /> in the case when the modulus of the handle is not specified.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="polarhandleFree_ra">
+	<function>
+		<case constructor-of="PolarHandle">
+			<arguments>
+			</arguments>
+			<dynamic-references><dynvar name="defaultunit" /></dynamic-references>
+			<description>
+				<p>Implements <syntax name="polar-handle-2D" /> in the case when neither modulus nor angle of the handle is not specified.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="TeX">
+	<function>
+		<case constructor-of="Drawable">
+			<arguments>
+					<type><named-type name="String" /></type>
+			</arguments>
+			<description>
+				<p>Implements <syntax name="tex-expr" />.  Using the syntax <syntax name="tex-expr" /> is much more efficient when the argument is known beforehand, since this allows the preprocessor to collect several strings to be sent to <str-LaTeX />, and process all at once.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+</section>

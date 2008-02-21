@@ -18,4 +18,5 @@
 	<!--#include virtual="misc.sxml" -->
 	<!--#include virtual="types.sxml" -->
 	<!--#include virtual="hot.sxml" -->
+	<!--#include virtual="syntax.sxml" -->
 </book>
