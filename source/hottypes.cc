@@ -1626,13 +1626,20 @@ Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const Re
 	if( hasKey_ )
 		{
 			typedef const Lang::RGB ArgType;
-			typedef typeof *pile_ MapType;
-			pile_->insert( MapType::value_type( lastKey_, Helpers::down_cast< ArgType >( piece, callLoc )->components( ) ) );
+			color_->push_back( Helpers::down_cast< ArgType >( piece, callLoc )->components( ) );
 		}
 	else
 		{
 			typedef const Lang::Float ArgType;
-			lastKey_ = Helpers::down_cast< ArgType >( piece, callLoc )->val_;
+			double key = Helpers::down_cast< ArgType >( piece, callLoc )->val_;
+			if( !key_->empty( ) && key < key_->back( ) )
+				{
+					throw Exceptions::MiscellaneousRequirement( strrefdup( "Keys must be added in nondecreasing order to an interpolator." ) );
+				}
+			else
+				{
+					key_->push_back( key );
+				}
 		}
 
 	hasKey_ = ! hasKey_;
@@ -1645,7 +1652,7 @@ Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const Re
 void
 Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-	if( pile_->empty( ) )
+	if( key_->empty( ) )
 		{
 			throw Exceptions::MiscellaneousRequirement( strrefdup( "There are no colors that define the interpolation." ) );
 		}
@@ -1655,7 +1662,7 @@ Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const As
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::RGBInterpolator( pile_ ) ),
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::RGBInterpolator( key_, color_ ) ),
 									 evalState );
 }
 
@@ -1694,4 +1701,3 @@ Kernel::registerHot( Kernel::Environment * env )
 	env->initDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
 	env->initDefine( "newRGBInterpolator", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmRGBInterpolator > ) );
 }
-

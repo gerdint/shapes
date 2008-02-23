@@ -1736,10 +1736,11 @@ Lang::VectorFunction::getNumeric( const Ast::SourceLocation & callLoc ) const
 
 const char * Lang::RGBInterpolator::title_ = "<RGB-interpolator>";
 
-Lang::RGBInterpolator::RGBInterpolator( const RefCountPtr< const std::map< double, Concrete::RGB > > & mem )
-	: Lang::Function( new Kernel::EvaluatedFormals( Lang::RGBInterpolator::title_, true ) ), mem_( mem ),
-		lowCol_( new Lang::RGB( mem_->begin( )->second ) ),
-		highCol_( new Lang::RGB( mem_->rbegin( )->second ) )
+Lang::RGBInterpolator::RGBInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< ColorContainer > & color )
+	: Lang::Function( new Kernel::EvaluatedFormals( Lang::RGBInterpolator::title_, true ) ),
+	  key_( key ), color_ ( color ),
+		lowCol_( new Lang::RGB( color_->front( ) ) ), highCol_( new Lang::RGB( color_->back( ) ) )
+
 {
 	formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 }
@@ -1752,11 +1753,11 @@ Lang::RGBInterpolator::getField( const char * fieldID, const RefCountPtr< const 
 {
 	if( strcmp( fieldID, "low" ) == 0 )
 		{
-			return Helpers::newValHandle( new Lang::Float( mem_->begin( )->first ) );
+			return Helpers::newValHandle( new Lang::Float( key_->front( ) ) );
 		}
 	if( strcmp( fieldID, "high" ) == 0 )
 		{
-			return Helpers::newValHandle( new Lang::Float( mem_->end( )->first ) );
+			return Helpers::newValHandle( new Lang::Float( key_->back( ) ) );
 		}
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
@@ -1773,9 +1774,8 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 	typedef const Lang::Float ArgType;
 	double key = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc )->val_;
 
-	typedef typeof *mem_ MapType;
-	MapType::const_iterator iHigh = mem_->upper_bound( key );
-	if( iHigh == mem_->end( ) )
+	KeyContainer::const_iterator keyHi = lower_bound( key_->begin( ), key_->end( ), key );
+	if( keyHi == key_->end( ) )
 		{
 			Kernel::ContRef cont = evalState->cont_;
 			cont->takeValue( highCol_,
@@ -1783,7 +1783,7 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 			return;
 		}
 
-	if( iHigh == mem_->begin( ) )
+	if( keyHi == key_->begin( ) )
 		{
 			Kernel::ContRef cont = evalState->cont_;
 			cont->takeValue( lowCol_,
@@ -1791,13 +1791,14 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 			return;
 		}
 
-	MapType::const_iterator iLow = iHigh;
-	--iLow;
+	KeyContainer::const_iterator keyLo = keyHi - 1;
+	ColorContainer::const_iterator colorHi = color_->begin( ) + ( keyHi - key_->begin( ) );
+	ColorContainer::const_iterator colorLo = colorHi - 1;
 
-	double rem = ( key - iLow->first ) / ( iHigh->first - iLow->first );
+	double rem = ( key - *keyLo ) / ( *keyHi  - *keyLo );
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( iLow->second.mulNoCheck( 1 - rem ).addNoCheck( iHigh->second.mulNoCheck( rem ) ) ) ),
+	cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( colorLo->mulNoCheck( 1 - rem ).addNoCheck( colorHi->mulNoCheck( rem ) ) ) ),
 									 evalState );
 }
 

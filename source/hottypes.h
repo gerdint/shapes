@@ -303,9 +303,12 @@ namespace Shapes
 
 		class WarmRGBInterpolator : public Kernel::State
 		{
+			typedef std::vector< double > KeyContainer;
+			typedef std::vector< Concrete::RGB > ColorContainer;
+
+			RefCountPtr< KeyContainer > key_;
+			RefCountPtr< ColorContainer > color_;
 			bool hasKey_;
-			double lastKey_;
-			RefCountPtr< std::map< double, Concrete::RGB > > pile_;
 		public:
 			WarmRGBInterpolator( );
 			virtual ~WarmRGBInterpolator( );

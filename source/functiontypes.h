@@ -338,12 +338,16 @@ namespace Shapes
 
 		class RGBInterpolator : public Lang::Function
 		{
-			RefCountPtr< const std::map< double, Concrete::RGB > > mem_;
+			typedef const std::vector< double > KeyContainer;
+			typedef const std::vector< Concrete::RGB > ColorContainer;
+
+			RefCountPtr< KeyContainer > key_;
+			RefCountPtr< ColorContainer > color_;
 			RefCountPtr< const Lang::RGB > lowCol_;
 			RefCountPtr< const Lang::RGB > highCol_;
 			static const char * title_;
 		public:
-			RGBInterpolator( const RefCountPtr< const std::map< double, Concrete::RGB > > & mem );
+			RGBInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< ColorContainer > & color );
 			virtual ~RGBInterpolator( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
