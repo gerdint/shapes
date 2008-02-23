@@ -330,7 +330,7 @@ OneOrMoreArgListItems
 | OneOrMoreArgListItems Expr
 {
 	$$ = $1;
-	if( $$->namedExprs_->size( ) != 0 )
+	if( ! $$->namedExprs_->empty( ) )
 		{
 			Ast::theAnalysisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Unnamed expressions may not appear among named expressions." ) ) );
 		}
@@ -339,7 +339,7 @@ OneOrMoreArgListItems
 | OneOrMoreArgListItems StateReference
 {
 	$$ = $1;
-	if( $$->namedStates_->size( ) != 0 )
+	if( ! $$->namedStates_->empty( ) )
 		{
 			Ast::theAnalysisErrorsList.push_back( new Exceptions::ParserError( @2, strrefdup( "Unnamed states may not appear among named states." ) ) );
 		}

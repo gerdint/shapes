@@ -408,7 +408,7 @@ Lang::KernedText::makeList( ) const
 		}
 
 	RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
-	while( revlist.size( ) > 0 )
+	while( ! revlist.empty( ) )
 		{
 			res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Kernel::VariableHandle( new Kernel::Variable( revlist.back( ) ) ),
 																																						 res ) );

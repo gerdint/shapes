@@ -1555,7 +1555,7 @@ Lang::ElementaryPath3D::continuousApproximator( const Lang::Coords3D & _p ) cons
 			work.push_back( WorkItem( seg, lowerBound ) );
 		}
 
-	while( work.size( ) > 0 )
+	while( ! work.empty( ) )
 		{
 			Shapes::ApproximationSegmentSection3D * seg = work.front( ).first;
 			Concrete::Length lowerBound = work.front( ).second;
@@ -3337,7 +3337,7 @@ Lang::ElementaryPath3D::make2D( Concrete::Length eyez ) const
 						{
 							cycleSegment.front( )->rear_ = passedRear_;
 						}
-					while( cycleSegment.size( ) > 0 )
+					while( ! cycleSegment.empty( ) )
 						{
 							res->push_back( cycleSegment.front( ) );
 							cycleSegment.pop_front( );
@@ -3530,7 +3530,7 @@ Lang::ElementaryPath3D::dashifyIn2D( RefCountPtr< const Lang::Group2D > * res, C
 					throw Exceptions::InternalError( "passedRear_ != 0, but the dash iterator is not on." );
 					// If this wasn't an error situation, passedRear_ should be deleted here.
 				}
-			if( newPath.size( ) > 0 )
+			if( ! newPath.empty( ) )
 				{
 					throw Exceptions::InternalError( "There are points in the newPath, but the dash iterator is not on." );
 				}
@@ -3591,7 +3591,7 @@ Lang::ElementaryPath3D::dashifySegment( RefCountPtr< const Lang::Group2D > * res
 			while( l <= segLength )
 				{
 					++dashi;
-					if( newPath.size( ) > 0 )
+					if( ! newPath.empty( ) )
 						{
 							Concrete::PathPoint3D * newPoint = new Concrete::PathPoint3D( new Concrete::Coords3D( p0->x_ + ( p3->x_ - p0->x_ ) * l / segLength,
 																																																															 p0->y_ + ( p3->y_ - p0->y_ ) * l / segLength,

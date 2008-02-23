@@ -137,7 +137,7 @@ Computation::SingleSidedPolygon3DGray::render0( const Concrete::Length eyez, con
 {
 	RefCountPtr< const Lang::Group2D > contents = Lang::THE_NULL2D;
 
-	while( lattice->size( ) > 0 )
+	while( ! lattice->empty( ) )
 		{
 			const Computation::FacetLatticeTriangle * triangle = lattice->back( );
 			contents = RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( triangle->paint( interpolator_, lights, eyez ),
@@ -287,7 +287,7 @@ Computation::SingleSidedPolygon3DGray::render2( const Concrete::Length eyez, con
 								 vertexColors[ vc->i_ ]->components( ), 0 );
 	}
 
-	while( lattice->size( ) > 0 )
+	while( ! lattice->empty( ) )
 		{
 			typedef typeof *lattice ListType;
 			bool found = false;
@@ -552,7 +552,7 @@ Computation::SingleSidedPolygon3DRGB::render0( const Concrete::Length eyez, cons
 {
 	RefCountPtr< const Lang::Group2D > contents = Lang::THE_NULL2D;
 
-	while( lattice->size( ) > 0 )
+	while( ! lattice->empty( ) )
 		{
 			const Computation::FacetLatticeTriangle * triangle = lattice->back( );
 			contents = RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( triangle->paint( interpolator_, lights, eyez ),
@@ -702,7 +702,7 @@ Computation::SingleSidedPolygon3DRGB::render2( const Concrete::Length eyez, cons
 								 vertexColors[ vc->i_ ]->components( ), 0 );
 	}
 
-	while( lattice->size( ) > 0 )
+	while( ! lattice->empty( ) )
 		{
 			typedef typeof *lattice ListType;
 			bool found = false;

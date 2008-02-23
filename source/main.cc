@@ -981,7 +981,7 @@ main( int argc, char ** argv )
 		}
 #endif
 
-	if( filenameRequestList.size( ) > 0 )
+	if( ! filenameRequestList.empty( ) )
 		{
 			std::list< const char * >::const_iterator resource = resourceRequestList.begin( );
 			for( std::list< int >::const_iterator i = filenameRequestList.begin( );
@@ -1092,7 +1092,7 @@ main( int argc, char ** argv )
 		}
 
 	std::istringstream prependStreamIn;
-	if( prependStreamOut.str( ).size( ) > 0 )
+	if( ! prependStreamOut.str( ).empty( ) )
 		{
 			prependStreamIn.str( prependStreamOut.str( ) );
 			Ast::theShapesScanner.prependStream( & prependStreamIn );
@@ -1128,7 +1128,7 @@ main( int argc, char ** argv )
 			Kernel::registerCore_annotation( Kernel::theGlobalEnvironment );
 			Ast::theGlobalAnalysisEnvironment = Kernel::theGlobalEnvironment->newAnalysisEnvironment( );
 			Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
-			if( Ast::theAnalysisErrorsList.size( ) > 0 )
+			if( ! Ast::theAnalysisErrorsList.empty( ) )
 				{
 					std::cout.flush( );
 					typedef typeof Ast::theAnalysisErrorsList ListType;
@@ -1273,7 +1273,7 @@ main( int argc, char ** argv )
 			exit( 1 );
 		}
 
-	if( Kernel::thePostCheckErrorsList.size( ) > 0 )
+	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
 			abortProcedure( & oFile, outputName );
 		}
@@ -1389,10 +1389,10 @@ performIterativeStartup( const std::string & labelDBName )
 void
 abortProcedure( std::ofstream * oFile, const std::string & outputName )
 {
-	if( Kernel::thePostCheckErrorsList.size( ) > 0 )
+	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
 			std::cout.flush( );
-			while( Kernel::thePostCheckErrorsList.size( ) > 0 )
+			while( ! Kernel::thePostCheckErrorsList.empty( ) )
 				{
 					Exceptions::Exception * e = Kernel::thePostCheckErrorsList.front( );
 					Kernel::thePostCheckErrorsList.pop_front( );

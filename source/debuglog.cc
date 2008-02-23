@@ -13,7 +13,7 @@ Kernel::DebugLog::~DebugLog( )
 bool
 Kernel::DebugLog::initialized( ) const
 {
-	return os_ != 0 || filename_.size( ) > 0;
+	return os_ != 0 || ! filename_.empty( );
 }
 
 void

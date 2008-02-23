@@ -65,7 +65,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			}
 	}
 
-	if( allShadowLights.size( ) > 0 )
+	if( ! allShadowLights.empty( ) )
 		{
 			throw Exceptions::MiscellaneousRequirement( "Shadow lights cannot be used in a z-sorter." );
 		}
@@ -114,7 +114,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 					splitFound1:
 						continue; // this is just a no-op to make this a valid jump destination
 					}
-				while( job.size( ) != 0 )
+				while( ! job.empty( ) )
 					{
 						Computation::SplitJob & currentJob = job.front( );
 						if( ! currentJob.splitted_->intersection( *currentJob.splitting_, & spliceLine ) )
@@ -251,7 +251,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			size_t drawnCount = 0;
 			while( drawnCount < triangleCount )
 				{
-					while( drawQueue.size( ) > 0 )
+					while( ! drawQueue.empty( ) )
 						{
 							// First, use find the polygon whith the most triangles in drawQueue.
 							const Computation::PaintedPolygon3D * painter = 0;
@@ -364,7 +364,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 	}
 
 	std::list< const Computation::ZBufLine * > disjointLines;
-	while( lineQueue.size( ) > 0 )
+	while( ! lineQueue.empty( ) )
 		{
 
 			std::list< const Computation::ZBufLine * > queue1;
@@ -379,7 +379,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			typedef typeof drawOrder ListType;
 			for( ListType::const_iterator i = drawOrder.begin( ); i != drawOrder.end( ); ++i )
 				{
-					while( currentQueue->size( ) > 0 )
+					while( ! currentQueue->empty( ) )
 						{
 							const Computation::ZBufLine * currentLine = currentQueue->front( );
 							currentQueue->pop_front( );
@@ -407,7 +407,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 
 			// The algorithm below is inefficient, because it will generally make the overlap comparison
 			// several times for any overlaping pair of line segments.
-			while( currentQueue->size( ) > 0 )
+			while( ! currentQueue->empty( ) )
 				{
 					const Computation::ZBufLine * current = currentQueue->front( );
 					currentQueue->pop_front( );
@@ -491,7 +491,7 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 
 
 	// Finally we draw the lines.
-	while( disjointLines.size( ) > 0 )
+	while( ! disjointLines.empty( ) )
 		{
 			const Computation::ZBufLine * current = disjointLines.front( );
 			disjointLines.pop_front( );

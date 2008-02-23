@@ -10,7 +10,7 @@
 
 #include "../basicsimplex.h"
 
-    
+
 int
 main( int argc, char ** argv )
 {
@@ -28,12 +28,12 @@ main( int argc, char ** argv )
 	for( ; dummy == '\n'; std::cin.get( dummy ) )
 	  ;
       }
-    
+
     // Skip the final comment row.
     for( std::cin.get( dummy ); dummy != '\n'; std::cin.get( dummy ) )
       ;
   }
-  
+
   size_t nVars;
   size_t nEqns;
   std::cin >> nVars >> nEqns ;
@@ -53,7 +53,7 @@ main( int argc, char ** argv )
     {
       std::string line;
       std::getline( std::cin, line );
-      if( line.size( ) == 0 )
+      if( line.empty( ) )
 	{
 	  // After reading nEqns, the trailing newline was not eaten up.
 	  std::getline( std::cin, line );

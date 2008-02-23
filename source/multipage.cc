@@ -680,7 +680,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 							}
 					}
 
-				if( (*i)->annotations_.size( ) > 0 )
+				if( ! (*i)->annotations_.empty( ) )
 					{
 						typedef typeof annotations ListType;
 						annotations.push_back( ListType::value_type( *i, ListType::value_type::second_type( newPage, i_newPage ) ) );
@@ -777,7 +777,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 		{
 			doc->root_->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( doc );
 		}
-	if( namedDestinations.size( ) > 0 )
+	if( ! namedDestinations.empty( ) )
 		{
 			// If there are named destinations, the PDF version is already checked to be high enough.
 			RefCountPtr< SimplePDF::PDF_Dictionary > dests( new SimplePDF::PDF_Dictionary );
@@ -805,7 +805,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 			}
 		}
 
-	if( names->dic.size( ) > 0 )
+	if( ! names->dic.empty( ) )
 		{
 			doc->root_->dic[ "Names" ] = doc->indirect( names );
 		}

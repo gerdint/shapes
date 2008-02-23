@@ -468,7 +468,7 @@ Lang::Class::show( std::ostream & os ) const
 {
 	os << "Pretty-name: " << prettyName.getPtr( ) ;
 
-	if( abstractSet.size( ) != 0 )
+	if( ! abstractSet.empty( ) )
 		{
 			os << ", +" ;
 		}
@@ -932,7 +932,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 			}
 	}
 
-	if( ! declaredAbstract && abstractSet.size( ) != 0 )
+	if( ! declaredAbstract && ! abstractSet.empty( ) )
 		{
 			throw Exceptions::FailedToDeclareClassAbstract( selfRef, classExpr );
 		}
@@ -941,7 +941,7 @@ Lang::UserClass::setupAndCheck( bool declaredAbstract )
 Kernel::ValueRef
 Lang::UserClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
-	if( abstractSet.size( ) != 0 )
+	if( ! abstractSet.empty( ) )
 		{
 			throw Exceptions::InstantiatingAbstractClass( selfRef );
 		}

@@ -31,7 +31,7 @@ namespace Shapes
 			{
 				RefCountPtr< std::list< Concrete::Length > > pat;
 
-				if( args.size( ) > 0 )
+				if( ! args.empty( ) )
 					{
 						Concrete::Length totalLength = 0;
 

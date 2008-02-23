@@ -44,7 +44,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 			}
 	}
 
-	if( allShadowLights.size( ) > 0 )
+	if( ! allShadowLights.empty( ) )
 		{
 			throw Exceptions::NotImplemented( "Shadow lights in ZBuf::typed_to2D" );
 		}
@@ -80,7 +80,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 			std::list< Computation::ZBufTriangle > * currentDisjoint = new std::list< Computation::ZBufTriangle >;
 			std::list< Computation::ZBufTriangle > * currentOccluded = new std::list< Computation::ZBufTriangle >;
 
-			while( triangleQueue->size( ) > 0 )
+			while( ! triangleQueue->empty( ) )
 				{
 					SPLICEDEBUG( std::cerr << "====( Debug step number " << debugCounter << " )====" << std::endl );
 					Computation::ZBufTriangle current = triangleQueue->front( );
@@ -158,7 +158,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 	}
 
 	std::list< const Computation::ZBufLine * > disjointLines;
-	while( lineQueue.size( ) > 0 )
+	while( ! lineQueue.empty( ) )
 		{
 
 			std::list< const Computation::ZBufLine * > queue1;
@@ -176,7 +176,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 					typedef typeof **i SubListType;
 					for( SubListType::iterator j = (*i)->begin( ); j != (*i)->end( ); ++j )
 						{
-							while( currentQueue->size( ) > 0 )
+							while( ! currentQueue->empty( ) )
 								{
 									const Computation::ZBufLine * currentLine = currentQueue->front( );
 									currentQueue->pop_front( );
@@ -205,7 +205,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 
 			// The algorithm below is inefficient, because it will generally make the overlap comparison
 			// several times for any overlaping pair of line segments.
-			while( currentQueue->size( ) > 0 )
+			while( ! currentQueue->empty( ) )
 				{
 					const Computation::ZBufLine * current = currentQueue->front( );
 					currentQueue->pop_front( );
@@ -286,7 +286,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 		}
 
 
-	while( disjointTriangles.size( ) > 0 )
+	while( ! disjointTriangles.empty ( ) )
 		{
 			delete disjointTriangles.back( );
 			disjointTriangles.pop_back( );
@@ -295,7 +295,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 			occludedTriangles.pop_back( );
 		}
 
-	while( triangleQueues.size( ) > 0 )
+	while( ! triangleQueues.empty( ) )
 		{
 			delete triangleQueues.back( );
 			triangleQueues.pop_back( );
@@ -303,7 +303,7 @@ Lang::ZBuf::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D &
 
 
 	// Finally we draw the lines.
-	while( disjointLines.size( ) > 0 )
+	while( ! disjointLines.empty( ) )
 		{
 			const Computation::ZBufLine * current = disjointLines.front( );
 			disjointLines.pop_front( );

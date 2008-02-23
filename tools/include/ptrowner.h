@@ -10,7 +10,7 @@ class PtrOwner_top_Access : public T
     { }
   void clear( )
     {
-      while( T::size( ) > 0 )
+      while( ! T::empty( ) )
 	{
 	  delete T::top( );
 	  T::pop( );
@@ -30,7 +30,7 @@ class PtrOwner_back_Access : public T
     { }
   void clear( )
     {
-      while( T::size( ) > 0 )
+      while( ! T::empty( ) )
 	{
 	  delete T::back( );
 	  T::pop_back( );
@@ -50,7 +50,7 @@ class PtrOwner_front_Access : public T
     { }
   void clear( )
     {
-      while( T::size( ) > 0 )
+      while( ! T::empty( ) )
 	{
 	  delete T::front( );
 	  T::pop_front( );

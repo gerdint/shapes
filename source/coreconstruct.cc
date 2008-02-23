@@ -317,7 +317,7 @@ namespace Shapes
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
 				RefCountPtr< const Lang::SingleList > res = Lang::THE_CONS_NULL;
-				if( args.size( ) > 0 )
+				if( ! args.empty( ) )
 					{
 						for( size_t i = args.size( ) - 1; ; --i )
 							{
@@ -404,7 +404,7 @@ namespace Shapes
 								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
 							}
 
-						while( tmp.size( ) != 0 )
+						while( ! tmp.empty( ) )
 							{
 								res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Helpers::newValHandle( new Lang::Integer( tmp.back( ) ) ),
 																																											 res ) );
@@ -457,7 +457,7 @@ namespace Shapes
 								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
 							}
 
-						while( tmp.size( ) != 0 )
+						while( ! tmp.empty( ) )
 							{
 								res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Helpers::newValHandle( new Lang::Float( tmp.back( ) ) ),
 																																											 res ) );
@@ -509,7 +509,7 @@ namespace Shapes
 								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
 							}
 
-						while( tmp.size( ) != 0 )
+						while( ! tmp.empty( ) )
 							{
 								res = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( Helpers::newValHandle( new Lang::Length( tmp.back( ) ) ),
 																																											 res ) );
@@ -1442,7 +1442,7 @@ namespace Shapes
 										pendingKerning = 0;
 										if( currentKerning != 0 )
 											{
-												if( pendingChars.str( ).size( ) > 0 )
+												if( ! pendingChars.str( ).empty( ) )
 													{
 														res->pushString( RefCountPtr< const Lang::String >( new Lang::String( strrefdup( pendingChars ) ) ) );
 														pendingChars.str( "" );
@@ -1506,7 +1506,7 @@ namespace Shapes
 						throw Exceptions::CoreTypeMismatch( callLoc, title_, args, i, Helpers::typeSetString( Lang::String::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 					}
 
-				if( pendingChars.str( ).size( ) > 0 )
+				if( ! pendingChars.str( ).empty( ) )
 					{
 						res->pushString( RefCountPtr< const Lang::String >( new Lang::String( strrefdup( pendingChars ) ) ) );
 						pendingChars.str( "" );

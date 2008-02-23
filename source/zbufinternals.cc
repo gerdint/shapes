@@ -302,7 +302,7 @@ Lang::ZBuf::mergeTriangles( std::list< Computation::ZBufTriangle > * triangles )
 	// Need I say it feels like this algorithm is running out of control?
 
 	std::vector< Concrete::Coords2D > cornerMem;
-	while( triangles->size( ) > 0 )
+	while( ! triangles->empty( ) )
 		{
 			const std::vector< Concrete::Coords2D > & points = triangles->front( ).points_;
 			indexRepMem.push_back( IndexRepresentation( ) );
@@ -356,7 +356,7 @@ Lang::ZBuf::mergeTriangles( std::list< Computation::ZBufTriangle > * triangles )
 			}
 	}
 
-	while( jobQueue.size( ) > 0 )
+	while( ! jobQueue.empty( ) )
 		{
 			Computation::UndirectedEdge edge = jobQueue.front( );
 			jobQueue.pop_front( );
@@ -456,7 +456,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 	std::list< Lang::ZBuf::IndexRepresentation > indexRepMem;
 
 	std::vector< Concrete::Coords2D > cornerMem;
-	while( mergedTriangles->size( ) > 0 )
+	while( ! mergedTriangles->empty( ) )
 		{
 			const std::vector< Concrete::Coords2D > & points = mergedTriangles->front( ).points_;
 			indexRepMem.push_back( IndexRepresentation( ) );
@@ -500,7 +500,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 
 	Computation::UndirectedEdgeMatrix< std::list< PolyIndices * > > edgeMatrix( pointCount );
 
-	while( indexRepMem.size( ) > 0 )
+	while( ! indexRepMem.empty( ) )
 	{
 		bool foundExtension = false;
 		typedef typeof indexRepMem TrianglesType;
@@ -531,7 +531,7 @@ Lang::ZBuf::recombineTriangles( std::list< Computation::ZBufTriangle > * mergedT
 			}
 	}
 
-	while( polyMem.size( ) > 0 )
+	while( ! polyMem.empty( ) )
 		{
 			PolyIndices & poly = polyMem.back( );
 			// First we remove unnecessary points on straight segments
@@ -612,7 +612,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 	const bool DEBUGME = false;
 	if( DEBUGME )
 	{
-		while( triangles->size( ) > 0 )
+		while( ! triangles->empty( ) )
 			{
 				const std::vector< Concrete::Coords2D > & points = triangles->front( ).points_;
 
@@ -635,7 +635,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 
 	{
 		std::list< Lang::ZBuf::IndexRepresentation > indexRepQueue;
-		while( triangles->size( ) > 0 )
+		while( ! triangles->empty( ) )
 			{
 				const std::vector< Concrete::Coords2D > & points = triangles->front( ).points_;
 				indexRepQueue.push_back( IndexRepresentation( ) );
@@ -672,7 +672,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 				triangles->pop_front( );
 			}
 
-		while( indexRepQueue.size( ) > 0 )
+		while( ! indexRepQueue.empty( ) )
 			{
 				Lang::ZBuf::IndexRepresentation & current = indexRepQueue.front( );
 
@@ -747,7 +747,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 
 	Computation::UndirectedEdgeMatrix< std::list< PolyIndices * > > edgeMatrix( pointCount );
 
-	while( indexRepMem.size( ) > 0 )
+	while( ! indexRepMem.empty( ) )
 	{
 		bool foundExtension = false;
 		typedef typeof indexRepMem TrianglesType;
@@ -778,7 +778,7 @@ Lang::ZBuf::trianglesToPolys( std::list< Computation::ZBufTriangle > * triangles
 			}
 	}
 
-	while( polyMem.size( ) > 0 )
+	while( ! polyMem.empty( ) )
 		{
 			PolyIndices & poly = polyMem.back( );
 			if( poly.size( ) > 3 )

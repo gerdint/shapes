@@ -33,7 +33,7 @@ WS [ \t\n]*
 "\}" {
   if( doBraces )
     {
-      if( tokenStack.size( ) == 0 )
+      if( tokenStack.empty( ) )
 	{
 	  std::cerr << "Underflow at \"" << yytext << "\" on line " << lineNumber << std::endl ;
 	  exit( 1 );
@@ -66,7 +66,7 @@ WS [ \t\n]*
 "\)" {
   if( doParens )
     {
-      if( tokenStack.size( ) == 0 )
+      if( tokenStack.empty( ) )
 	{
 	  std::cerr << "Underflow at \"" << yytext << "\" on line " << lineNumber << std::endl ;
 	  exit( 1 );
@@ -128,7 +128,7 @@ main( int argc, char ** argv )
 
   yylex( );
 
-  if( tokenStack.size( ) == 0 )
+  if( tokenStack.empty( ) )
     {
       return 0;
     }

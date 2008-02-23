@@ -26,7 +26,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 
 	std::stack< const Lang::Value * > nodeStack;
 	nodeStack.push( this );
-	while( nodeStack.size( ) > 0 )
+	while( ! nodeStack.empty( ) )
 		{
 			const Lang::Value * node = nodeStack.top( );
 			nodeStack.pop( );

@@ -1276,7 +1276,7 @@ Lang::ElementaryPath2D::continuousApproximator( const Lang::Coords2D & coordPoin
 			work.push_back( WorkItem( seg, lowerBound ) );
 		}
 
-	while( work.size( ) > 0 )
+	while( ! work.empty( ) )
 		{
 			Shapes::ApproximationSegmentSection2D * seg = work.front( ).first;
 			Concrete::Length lowerBound = work.front( ).second;
@@ -1818,7 +1818,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 				 i != sortedPoints.end( );
 				 ++i )
 			{
-				while( hullPoints.size( ) > 0 )	// Remember that size( ) does not count the last point.
+				while( ! hullPoints.empty( ) > 0 )	// Remember that size( ) does not count the last point.
 					{
 						/* If new point is to the right of the line from second last to last point,
 						 * then the last point is removed.
@@ -3125,7 +3125,7 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 
 			/* Then we do the work...
 			 */
-			while( work.size( ) > 0 )
+			while( ! work.empty( ) )
 				{
 					IntersectionSegmentSections2D * workItem = work.front( );
 					work.pop_front( );

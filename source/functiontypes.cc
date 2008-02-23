@@ -499,7 +499,7 @@ Kernel::Arguments
 Kernel::Arguments::clone( ) const
 {
 	CHECK(
-				if( states_->size( ) != 0 )
+				if( ! states_->empty( ) )
 					{
 						throw Exceptions::InternalError( "Arguments with states may not be cloned." );
 					}

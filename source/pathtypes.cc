@@ -770,7 +770,7 @@ Lang::HeadedPath2D::HeadedPath2D( Kernel::ValueRef rear, const RefCountPtr< cons
 		{
 			throw Exceptions::InternalError( strrefdup( "Attempt to create closed but headed path." ) );
 		}
-	if( bodyPath->size( ) == 0 )
+	if( bodyPath->empty( ) )
 		{
 			throw Exceptions::InternalError( strrefdup( "Attempt to create empty but headed path." ) );
 		}
@@ -1223,7 +1223,7 @@ Lang::CompositePath3D::computeElementaryPath( ) const
 
 	std::stack< const Lang::Path3D * > nodeStack;
 	nodeStack.push( this );
-	while( nodeStack.size( ) > 0 )
+	while( ! nodeStack.empty( ) )
 		{
 			const Lang::Path3D * node = nodeStack.top( );
 			nodeStack.pop( );
@@ -1248,7 +1248,7 @@ Lang::HeadedPath3D::HeadedPath3D( Kernel::ValueRef rear, const RefCountPtr< cons
 		{
 			throw Exceptions::InternalError( strrefdup( "Attempt to create closed but headed path." ) );
 		}
-	if( bodyPath->size( ) == 0 )
+	if( bodyPath->empty( ) )
 		{
 			throw Exceptions::InternalError( strrefdup( "Attempt to create empty but headed path." ) );
 		}

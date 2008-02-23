@@ -1024,7 +1024,7 @@ namespace Shapes
 						Concrete::SplineTime t1 = path_->arcTime( cutTail->get( ) );
 						Concrete::SplineTime t2( HUGE_VAL );
 						RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
 																																			RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, subpath, "S" ) ) ),
@@ -1092,7 +1092,7 @@ namespace Shapes
 						Concrete::SplineTime t1( 0 );
 						Concrete::SplineTime t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
 						RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
 																																			RefCountPtr< const Lang::Drawable2D >( new Lang::PaintedPath2D( graphicsState_, subpath, "S" ) ) ),
@@ -1175,7 +1175,7 @@ namespace Shapes
 
 						RefCountPtr< const Lang::ElementaryPath2D > subpath = path_->subpath( t1, t2 );
 
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newSolidTransparencyGroup( picture,
 																																			tail_,
@@ -1369,7 +1369,7 @@ namespace Shapes
 						Concrete::SplineTime t1 = path_->arcTime( cutTail->get( ) );
 						Concrete::SplineTime t2( HUGE_VAL );
 						RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
 																											 picture,
@@ -1439,7 +1439,7 @@ namespace Shapes
 						Concrete::SplineTime t1( 0 );
 						Concrete::SplineTime t2 = path_->arcTime( path_->arcLength( ) - cutHead->get( ) );
 						RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
 																											 picture,
@@ -1524,7 +1524,7 @@ namespace Shapes
 
 						RefCountPtr< const Lang::ElementaryPath3D > subpath = path_->subpath( t1, t2 );
 
-						if( subpath->size( ) > 0 )
+						if( ! subpath->empty( ) )
 							{
 								cont_->takeValue( Helpers::newGroup3D( evalState->dyn_->getGraphicsState( ),
 																											 picture,

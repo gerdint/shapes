@@ -28,27 +28,27 @@ void
 PDF_Resources::writeTo( std::ostream & os ) const
 {
 	PDF_Dictionary dic;
-	if( xobject->dic.size( ) > 0 )
+	if( ! xobject->dic.empty( ) )
 		{
 			dic[ "XObject" ] = Shapes::Kernel::the_pdfo->indirect( xobject );
 		}
-	if( graphicsStates->dic.size( ) > 0 )
+	if( ! graphicsStates->dic.empty( ) )
 		{
 			dic[ "ExtGState" ] = Shapes::Kernel::the_pdfo->indirect( graphicsStates );
 		}
-	if( colorSpaces->dic.size( ) > 0 )
+	if( ! colorSpaces->dic.empty( ) )
 		{
 			dic[ "ColorSpaces" ] = Shapes::Kernel::the_pdfo->indirect( colorSpaces );
 		}
-	if( fonts->dic.size( ) > 0 )
+	if( !fonts->dic.empty( ) )
 		{
 			dic[ "Font" ] = Shapes::Kernel::the_pdfo->indirect( fonts );
 		}
-	if( procSetsVector->vec.size( ) > 0 )
+	if( ! procSetsVector->vec.empty( ) )
 		{
 			dic[ "ProcSet" ] = procSetsVector;
 		}
-	if( shadings->dic.size( ) > 0 )
+	if( ! shadings->dic.empty( ) )
 		{
 			dic[ "Shading" ] = Shapes::Kernel::the_pdfo->indirect( shadings );
 		}
@@ -184,7 +184,7 @@ SimplePDF::PDF_out::writeData( )
 
 	i_info = indirect( info_ );
 
-	if( extensionAuthorStrings.size( ) > 0 )
+	if( ! extensionAuthorStrings.empty( ) )
 		{
 			std::ostringstream oss;
 			typedef typeof extensionAuthorStrings ListType;
@@ -249,7 +249,7 @@ SimplePDF::PDF_out::writeData( )
 			exit( 1 );
 		}
 
-	while( importSources.size( ) > 0 )
+	while( ! importSources.empty( ) )
 		{
 			importSources.pop_back( );
 		}
@@ -565,7 +565,7 @@ SimplePDF::OutlineItem::addKid( const RefCountPtr< OutlineItem > & kid )
 bool
 SimplePDF::OutlineItem::hasKids( ) const
 {
-	return kids_.size( ) > 0;
+	return ! kids_.empty( );
 }
 
 RefCountPtr< SimplePDF::PDF_Indirect_out >
@@ -575,7 +575,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 	RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = doc->indirect( res );
 	res->dic[ "Type"	] = doc->newName( "Outlines" );
 
-	if( kids_.size( ) > 0 )
+	if( ! kids_.empty( ) )
 		{
 			size_t openCount = 0;
 
@@ -645,7 +645,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 
 	size_t openCount = 0;
 
-	if( kids_.size( ) > 0 )
+	if( ! kids_.empty( ) )
 		{
 			typedef typeof kids_ ListType;
 			ListType::const_iterator i = kids_.begin( );

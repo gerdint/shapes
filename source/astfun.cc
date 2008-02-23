@@ -108,7 +108,7 @@ Kernel::Formals::newArgListForcePos( const Ast::ArgListExprs * argList ) const
 	res->resize( argList->orderedExprs_->size( ) );
 	res->reserve( argList->orderedExprs_->size( ) + argList->namedExprs_->size( ) );
 
-		if( argList->orderedExprs_->size( ) > 0 )
+		if( ! argList->orderedExprs_->empty( ) )
 			{
 				typedef typeof forcePos_ SrcType;
 				SrcType::const_iterator src = forcePos_.begin( );
@@ -144,7 +144,7 @@ Kernel::Formals::newArgListForcePos( const Ast::ArgListExprs * argList, const Ke
 	res->resize( argList->orderedExprs_->size( ) );
 	res->reserve( argList->orderedExprs_->size( ) + argList->namedExprs_->size( ) );
 
-	if( argList->orderedExprs_->size( ) > 0 )
+	if( ! argList->orderedExprs_->empty( ) )
 		{
 			typedef typeof forcePos_ SrcType;
 			SrcType::const_iterator src = forcePos_.begin( );
@@ -533,7 +533,7 @@ Ast::ArgListExprs::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment *
 
 	/* Analyze this node given that the children have been analyzed.
 	 */
-	imperative_ = orderedStates_->size( ) > 0 || namedStates_->size( ) > 0;
+	imperative_ = ! orderedStates_->empty( ) || ! namedStates_->empty( );
 	{
 		typedef typeof *orderedExprs_ ListType;
 		for( ListType::const_iterator i = orderedExprs_->begin( ); i != orderedExprs_->end( ); ++i )
@@ -763,7 +763,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 					{
 						throw Exceptions::CoreArityMismatch( "<transform application>", 1, argList_->orderedExprs_->size( ) );
 					}
-				if( argList_->namedExprs_->size( ) != 0 )
+				if( ! argList_->namedExprs_->empty( ) )
 					{
 						throw Exceptions::CoreNoNamedFormals( "<transform application>" );
 					}
@@ -787,7 +787,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 					{
 						throw Exceptions::CoreArityMismatch( "<transform application>", 1, argList_->orderedExprs_->size( ) );
 					}
-				if( argList_->namedExprs_->size( ) != 0 )
+				if( ! argList_->namedExprs_->empty( ) )
 					{
 						throw Exceptions::CoreNoNamedFormals( "<transform application>" );
 					}
@@ -819,7 +819,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 			{
 				throw Exceptions::CoreArityMismatch( "<path point selection>", 1, argList_->orderedExprs_->size( ) );
 			}
-		if( argList_->namedExprs_->size( ) != 0 )
+		if( ! argList_->namedExprs_->empty( ) )
 			{
 				throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
 			}
@@ -854,7 +854,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 			{
 				throw Exceptions::CoreArityMismatch( "<path point selection>", 1, argList_->orderedExprs_->size( ) );
 			}
-		if( argList_->namedExprs_->size( ) != 0 )
+		if( ! argList_->namedExprs_->empty( ) )
 			{
 				throw Exceptions::CoreNoNamedFormals( "<path point selection>" );
 			}

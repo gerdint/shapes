@@ -460,7 +460,7 @@ Kernel::TeXLabelManager::compileSetupCode( )
 
 	ostringstream res;
 	res << "\\documentclass" ;
-	if( documentoptions.size( ) > 0 )
+	if( ! documentoptions.empty( ) )
 		{
 			res << "[" ;
 			std::list< std::string >::const_iterator i = documentoptions.begin( );

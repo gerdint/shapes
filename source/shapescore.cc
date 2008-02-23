@@ -276,7 +276,7 @@ Helpers::typeSetString( const std::list< RefCountPtr< const char > > types )
 {
 	std::ostringstream oss;
 	oss << "any of {" ;
-	if( types.size( ) > 0 )
+	if( ! types.empty( ) )
 		{
 			typedef typeof types ListType;
 			ListType::const_iterator i = types.begin( );

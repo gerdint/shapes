@@ -135,7 +135,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 				bs->dic[ "BE" ] = be;
 			}
 
-		if( bs->dic.size( ) > 0 )
+		if( ! bs->dic.empty( ) )
 			{
 				if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
 					{
@@ -164,7 +164,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 				ap->dic[ "D" ] = appearanceDown_->getResource( );
 			}
 
-		if( ap->dic.size( ) > 0 )
+		if( ! ap->dic.empty( ) )
 			{
 				if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
 					{

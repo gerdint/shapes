@@ -706,7 +706,7 @@ Escape "¢"|"¤"
 }
 
 <Author>.* {
-	if( stateStack.size( ) > 0 )
+	if( ! stateStack.empty( ) )
 		{
 			Kernel::the_pdfo->extensionAuthorStrings.push_back( shapeslloc.filename + std::string( " by " ) + yytext );
 		}
@@ -729,7 +729,7 @@ Escape "¢"|"¤"
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
 
-	if( stateStack.size( ) == 0 )
+	if( stateStack.empty( ) )
 	{
 		if( appendStream_ != 0 )
 			{

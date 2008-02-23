@@ -1779,7 +1779,7 @@ Computation::PaintedPolygon3D::makeLattice( PtrOwner_back_Access< std::list< con
 				}
 		}
 
-	while( jobQueue.size( ) > 0 )
+	while( ! jobQueue.empty( ) )
 		{
 			//			std::cerr << "Triangles in queue: " << jobQueue.size( ) << "	Triangles in lattice: " << lattice->size( ) << std::endl ;
 			const Computation::FacetLatticeTriangle * currentTriangle = jobQueue.front( );
