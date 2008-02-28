@@ -290,6 +290,11 @@ Lang::SpecularLightGray::illuminateRGB( const Concrete::Coords3D & point, const 
 	Concrete::UnitFloatTriple rHatReflection = unitNormal.reflect( rHatLight );
 
 	// This breaks the Phong model, but I want reflection in all directions!
+	// ... as long as the light and the eye are on the same side of the surface!
+	if( ( Concrete::inner( unitNormal, rHatEye ) > 0 ) != ( Concrete::inner( unitNormal, rHatLight ) > 0 ) )
+		{
+			return Concrete::RGB( 0, 0, 0 );
+		}
 	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
 
 	// Just in case numeric errors make c negative anyway...
@@ -338,6 +343,11 @@ Lang::SpecularLightGray::illuminateGray( const Concrete::Coords3D & point, const
 //	 std::cerr << "	Phong's angle: " << acos( Concrete::inner( rHatReflection, rHatEye ) ) << std::endl ;
 
 	// This breaks the Phong model, but I want reflection in all directions!
+	// ... as long as the light and the eye are on the same side of the surface!
+	if( ( Concrete::inner( unitNormal, rHatEye ) > 0 ) != ( Concrete::inner( unitNormal, rHatLight ) > 0 ) )
+		{
+			return Concrete::Gray( 0 );
+		}
 	const double cPhong2 = cos( 0.5 * acos( Concrete::inner( rHatReflection, rHatEye ) ) );
 
 	// Just in case numeric errors make c negative anyway...
