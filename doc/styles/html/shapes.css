@@ -88,10 +88,31 @@ h3.puff {
 	margin:					0.1em 0 0 0;
 }
 
-p {
+div.p {
 	margin-top:					0.3em;
 	margin-bottom:				0.7em;
 }
+div.p ol {
+	margin-top:					0.1em;
+	margin-bottom:				0.1em;
+}
+div.p ol li {
+	margin-top:					0em;
+	margin-bottom:				0.3em;
+}
+div.p ol li p {
+	margin-top:					0.3em;
+	margin-bottom:				0em;
+}
+div.p pre {
+	margin-top:					0.5em;
+	margin-bottom:				0.5em;
+}
+div.p table.syntax, div.p table.tight, div.p table.loose {
+	margin-top:					0.1em;
+	margin-bottom:				0.1em;
+}
+
 p.center {
 	text-align: center;
 }
@@ -106,7 +127,7 @@ pre, inline, varname, lengthunit, lexerregexp, syntaxname, typename, bnf, progra
 varname.replacable, typename.replacable, constname.replacable, filename.replacable, lengthunit.replacable, program-param.replacable
 { color: #CC6600; }
 
-pre { margin-left: 1.5em; }
+pre, table.syntax, table.tokens, table.tight, table.loose { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { color: #009; }
@@ -124,13 +145,17 @@ bnf  { font-size: 140%; color: #00F; }
 
 exampleswitch { font-size: bigger; color: #9900FF; text-decoration: underline; cursor:pointer }
 
-remark p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
-here-caption p { margin-left: 10%; margin-right: 10%; font-size: smaller; font-style: italic; }
-todo p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; }
+remark div.p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
+here-caption div.p { margin-left: 10%; margin-right: 10%; font-size: smaller; font-style: italic; }
+todo div.p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; }
 
 table.codefile { width:100%; background:#FFFFCC; }
 table.operator-table { width:100%; background:#FFFFCC; }
 table.constructor-table { background:#FFFFCC; }
+table.syntax { cellspacing:5; }
+table.tokens { cellspacing:5; }
+table.loose { cellspacing:5; }
+table.tight { cellspacing:0; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 hr.thin { border:0; height:1px; color:#666; background:#000; }
 

@@ -46,6 +46,7 @@ namespace Shapes
 
 		class Value
 		{
+			mutable const Ast::Node * node_;
 		public:
 			Value( );
 			virtual ~Value( );
@@ -59,6 +60,9 @@ namespace Shapes
 			virtual void show( std::ostream & os ) const;
 
 			RefCountPtr< const char > getTypeName( ) const;
+
+			inline void set_node( const Ast::Node * node ) const { node_ = node; }
+			inline const Ast::Node * node( ) const { return node_; }
 
 			DISPATCHBASEDECL;
 		};

@@ -7,18 +7,19 @@
 <section id="syntax/include/include">
 <title>File inclusion</title>
 <body>
-<p>Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is</p>
+<p>
+	Files are included using the scanner directives <inline>##needs</inline> and <inline>##include</inline>.  The <inline>##needs</inline> directive is used to require extension sources to be loaded, and will only load each source once.  This avoids the duplicate definitions that would occur if the source was loaded several times at, say, the global scope.  It is strongly recommended not to use <inline>##needs</inline> but in the global scope.  The <inline>##include</inline> directive will load the source unconditionally, and is used with application sources (use with extension source may be permitted in the future).  The syntax is
 <pre>
 ##needs <filename class="replacable">filenamebase</filename> <bnf>(</bnf>: <bnf>_</bnf> <filename class="replacable">directory</filename><bnf>)?</bnf>
 </pre>
-<p>which <em>must appear at the beginning of a line</em> (note the mandatory whitespace after the colon).  The syntax for <inline>##include</inline> is analogous, like this:</p>
+	which <em>must appear at the beginning of a line</em> (note the mandatory whitespace after the colon).  The syntax for <inline>##include</inline> is analogous, like this:
 <pre>
 ##needs blockdraw
 ##needs book_settings : ~/Library/Shapes/Project Settings
 ##include background
 ##include foreground
 </pre>
-<p />
+</p>
 
 <p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
 </body>
@@ -38,22 +39,28 @@
 <section id="syntax/other-lexer">
 <title>Miscellaneous lexer directives</title>
 <body>
-<p>The following directive allows a source file to print a message to <filename>stdout</filename> when the file is scanned:</p>
+<p>
+	The following directive allows a source file to print a message to <filename>stdout</filename> when the file is scanned:
 <pre>
 ##echo <replacable-text name="text-to-end-of-line-will-be-echoed" />
 </pre>
+</p>
 
-<p>You can put your name in the <str-PDF /> file using the following directive:</p>
+<p>
+	You can put your name in the <str-PDF /> file using the following directive:
 <pre>
 ##author <replacable-text name="your name" />
 </pre>
-<p>It can be used both in application files and in extension files, although it is not treated as the main author of the produced document in the latter case.</p>
+  It can be used both in application files and in extension files, although it is not treated as the main author of the produced document in the latter case.
+</p>
 
-<p>The <foreign lang="c">srand</foreign> function in the Standard C Library, can be accessed through</p>
+<p>
+	The <foreign lang="c">srand</foreign> function in the Standard C Library, can be accessed through
 <pre>
 ##seed <replacable-text name="integer" />
 </pre>
-<p>although I don't think there is any reason to do so.  Please consult the documentation on the random number facilities for an explanation.</p>
+  although I don't think there is any reason to do so.  Please consult the documentation on the random number facilities for an explanation.
+</p>
 </body>
 </section>
 

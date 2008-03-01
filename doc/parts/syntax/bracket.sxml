@@ -50,11 +50,13 @@
 
 <p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
 
-<p>A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value.  The syntax is:</p>
-<syntax-table>
-<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="state" /> )</inline></td></tr>
-</syntax-table>
-<p>Note that a <syntax name="state" /> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.</p>
+<p>
+	A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value.  The syntax is:
+	<syntax-table>
+		<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="state" /> )</inline></td></tr>
+	</syntax-table>
+	Note that a <syntax name="state" /> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.
+</p>
 </body>
 </section>
 
@@ -69,12 +71,15 @@
 
 <p>A dynamic variable may also be bound to a dynamic expression at the top level, and this is obtained using the second form of the declaration.</p>
 
-<p>Typical dynamic variable declarations may not care about the possibility to use the filter for type and range checks, and look like this:</p>
+<p>
+	Typical dynamic variable declarations may not care about the possibility to use the filter for type and range checks, and look like this:
 <pre>
 dynamic @tex_bbox_grow_abs identity 1bp
 dynamic @tex_bbox_grow_rel identity 1.01
 </pre>
-<p>A simple filter could look like this:</p>
+</p>
+<p>
+	A simple filter could look like this:
 <pre>
 <![CDATA[dynamic @tex_bbox_grow_rel
   \ new .>
@@ -85,11 +90,14 @@ dynamic @tex_bbox_grow_rel identity 1.01
         new]]
   1.01]]>
 </pre>
+</p>
 
-<p>Dynamic states is a language feature with subtleties.  At this time, they will not be further discussed.  Anyway, the syntax is:</p>
-<syntax-table>
-<tr> <td><syntax name="dynamic-state-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntax name="dyn-state" /> <syntax name="state" /></inline></td></tr>
-</syntax-table>
+<p>
+	Dynamic states is a language feature with subtleties.  At this time, they will not be further discussed.  Anyway, the syntax is:
+	<syntax-table>
+		<tr> <td><syntax name="dynamic-state-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntax name="dyn-state" /> <syntax name="state" /></inline></td></tr>
+	</syntax-table>
+</p>
 </body>
 </section>
 

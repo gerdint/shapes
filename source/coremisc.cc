@@ -429,6 +429,57 @@ namespace Shapes
 			}
 		};
 
+		class Core_locate : public Lang::CoreFunction
+		{
+		public:
+			Core_locate( const char * title ) : CoreFunction( title ) { }
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				const size_t ARITY = 1;
+				CHECK_ARITY( args, ARITY, title_ );
+
+				RefCountPtr< const Lang::Value > res = args.getValue( 0 );
+				res->set_node( args.getNode( 0 ) );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( res,
+												 evalState );
+			}
+		};
+
+		class Core_sourceof : public Lang::CoreFunction
+		{
+		public:
+			Core_sourceof( const char * title ) : CoreFunction( title ) { }
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				const size_t ARITY = 1;
+				CHECK_ARITY( args, ARITY, title_ );
+
+				const Ast::Node * node = args.getValue( 0 )->node( );
+				if( node == 0 )
+					{
+						throw Exceptions::CoreOutOfRange( title_, args, 0, "The value has not been located." );
+					}
+
+				std::ostringstream oss;
+				try
+					{
+						node->loc( ).copy( & oss );
+					}
+				catch( const std::string & ball )
+					{
+						std::ostringstream msg;
+						msg << "Source of located value could not be copied.  Reason: " << ball ;
+						throw Exceptions::CoreOutOfRange( title_, args, 0, strrefdup( msg ) );
+					}
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::String( strrefdup( oss.str( ) ) ) ),
+													evalState );
+			}
+		};
+
 	}
 }
 
@@ -453,5 +504,8 @@ Kernel::registerCore_misc( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
 	env->initDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );
 	env->initDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
+
+	env->initDefineCoreFunction( new Lang::Core_locate( "locate" ) );
+	env->initDefineCoreFunction( new Lang::Core_sourceof( "sourceof" ) );
 }
 

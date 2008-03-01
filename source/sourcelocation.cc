@@ -123,6 +123,38 @@ Ast::operator << ( std::ostream & os, const Ast::SourceLocation & self )
 	return os;
 }
 
+void
+Ast::SourceLocation::copy( std::ostream * os ) const
+{
+	if( *filename == '\0' )
+		{
+			throw std::string( "No filename" );
+		}
+	std::ifstream iFile( filename );
+	if( ! iFile.is_open( ) )
+		{
+			std::ostringstream msg;
+			msg << "Failed to open file: " << filename ;
+			throw msg.str( );
+		}
+	size_t line = 1;
+	for( ; line < firstLine; ++line )
+		{
+			iFile.ignore( std::numeric_limits< std::streamsize >::max( ), '\n' );
+		}
+	iFile.ignore( firstColumn, '\0' );
+	std::string tmpLine;
+	size_t col1 = firstColumn;
+	for( ; line < lastLine; ++line )
+		{
+			getline( iFile, tmpLine );
+			*os << tmpLine << std::endl ;
+			col1 = 0;
+		}
+	getline( iFile, tmpLine );
+	*os << tmpLine.substr( 0, lastColumn - col1 ) ;
+}
+
 size_t
 Ast::SourceLocation::byteColumnToUTF8Column( const char * filename, size_t line, size_t byteCol )
 {

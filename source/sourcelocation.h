@@ -24,6 +24,8 @@ namespace Shapes
 			bool contains( const SourceLocation & loc2 ) const;
 			friend std::ostream & operator << ( std::ostream & os, const SourceLocation & self );
 
+			void copy( std::ostream * os ) const;
+
 			static size_t byteColumnToUTF8Column( const char * filename, size_t line, size_t byteCol );
 			static size_t byteColumnToUTF8Column( const std::string & line, size_t byteCol );
 		};

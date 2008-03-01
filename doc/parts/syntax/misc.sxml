@@ -47,21 +47,25 @@
 
 <p>The Bezier spline will pass through the enpoints, and be contained in the convex hull of all four interpolation points.  Adjacent splines share one of the endpoints, so that the path becomes continuous.  This makes it convenient to think of the path, not as a sequence of Bezier splines, but as a sequence of points on the path, where each point on the path may have a forward and a backward control point (or <em>handle</em>).  Please refer to the WWW for more details on the splines, for instance <a href="http://en.wikipedia.org/wiki/Bézier_curve">Wikipedia</a>.  Here, we shall focus on how the handles may be laid out.</p>
 
-<p>The syntax that constructs path points with handles is:</p>
-<syntax-table>
-<tr> <td><syntax name="path-point-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
-<tr> <td><syntax name="path-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
-</syntax-table>
-<p>It is illegal to put a handle on a pathpoint which already has a handle in the same direction.</p>
+<p>
+	The syntax that constructs path points with handles is:
+	<syntax-table>
+		<tr> <td><syntax name="path-point-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
+		<tr> <td><syntax name="path-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
+	</syntax-table>
+	It is illegal to put a handle on a pathpoint which already has a handle in the same direction.
+</p>
 
-<p>Often, paths are constructed according to the pattern</p>
+<p>
+	Often, paths are constructed according to the pattern
 <pre>
 <syntax name="path-point-2D" /> <bnf>(</bnf> -- <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> -- cycle <bnf>)?</bnf>
 </pre>
-<p>but this is just a special case of the general</p>
+	but this is just a special case of the general
+</p>
 
 <syntax-table>
 <tr> <td><syntax name="simple-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="SimplePath2D" /></td></tr>
@@ -81,11 +85,14 @@
 <li><p>Propagate known distances to any free distances on the other side of a path point.</p></li>
 <li><p>Use <dynvar name="defaultunit" /> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>
 </ol>
-<p>Note that the rules above means that there is a subtle difference between the following two path points:</p>
+<p>
+	Note that the rules above means that there is a subtle difference between the following two path points:
 <pre>
 <![CDATA[p1: (1%C^)<(0cm,0cm)>(1%C^)
 p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 </pre>
+</p>
+
 <remark>
 <p>The difference is that <user-binding name="p1" />  will generally get handles of unequal length, while <user-binding name="p2" /> gets handles of equal length.</p>
 </remark>

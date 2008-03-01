@@ -11,19 +11,24 @@
 <pre>
 &bullet;page &lt;&lt; (TeX <char-str-open />$\Xi^{2}$<char-str-close />)
 </pre>
-<p>Things worth noting:</p>
-<ol>
-<li>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <operator name="TeX" /> keyword.</li>
-<li>The string delimiters is a pair of one grave and once acute accent.  If you find these difficult to produce using your keyboard layout, there is an alternative syntax; the poor man's string combines straight double quote marks with a pair of parentheses, in this case <inline>("$\Xi^{2}$")</inline>.</li>
-<li>The backslash character (\) is not an escape character.</li>
-<li><str-LaTeX /> is also useful for including pictures via the <inline>includegraphics</inline> macro.</li>
-</ol>
+<p>
+	Things worth noting:
+	<ol>
+		<li><p>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <operator name="TeX" /> keyword.</p></li>
+		<li><p>The string delimiters is a pair of one grave and once acute accent.  If you find these difficult to produce using your keyboard layout, there is an alternative syntax; the poor man's string combines straight double quote marks with a pair of parentheses, in this case <inline>("$\Xi^{2}$")</inline>.</p></li>
+		<li><p>The backslash character (\) is not an escape character.</p></li>
+		<li><p><str-LaTeX /> is also useful for including pictures via the <inline>includegraphics</inline> macro.</p></li>
+	</ol>
+</p>
+
 <note>
 Generally, the string syntax is chosen carefully not to interfere with the use of <str-LaTeX />.  Hence, two characters rarely used in <str-LaTeX /> source code were selected to be used interchangeably as escape characters, namely the cent sign (¢) and the sun sign (¤).  However, characters such as newlines and tabs can be included literally in strings, so there is seldom an urge to produce the rather unusual escape characters.
 </note>
+
 <note>
 <p>There is also a function that does the same job as the <operator name="TeX" /> special form, but there are good reasons for avoiding it.</p>
 </note>
+
 </body>
 </section><!-- End of basics/LaTeX -->
 
@@ -31,27 +36,37 @@ Generally, the string syntax is chosen carefully not to interfere with the use o
 <title>Moving things around</title>
 <body>
 <p>When putting strokes on the page, there is a natural way of controlling where the strokes appear by simply specifying the desired coordinates.  When using the <operator name="TeX" /> special form, however, the produced graphics always ends up at the origin.  We clearly need to be able to move things around… well, strictly speaking, we don't <em>move</em> things in <str-Shapes />, since the language is functional.  What we really do is create a new object which only differs from the original by a <em>transform</em>, see <named-type name="Transform" />.</p>
-<p>In <str-Shapes /> each transform is represented as an object in itself, which can then be applied to objects of geometric nature.  For example, to create the transform that moves (<em>shifts</em>, see <binding name="shift" />) things <physical><scalar>2</scalar><unit>cm</unit></physical> to the right and <physical><scalar>3</scalar><unit>mm</unit></physical> down, we write (we also give a name to the transform, so that it can be referred to later):</p>
+<p>
+	In <str-Shapes /> each transform is represented as an object in itself, which can then be applied to objects of geometric nature.  For example, to create the transform that moves (<em>shifts</em>, see <binding name="shift" />) things <physical><scalar>2</scalar><unit>cm</unit></physical> to the right and <physical><scalar>3</scalar><unit>mm</unit></physical> down, we write (we also give a name to the transform, so that it can be referred to later):
 <pre>
 T1: [shift (2cm,~3mm)]
 </pre>
-Note:
-<ol>
-<li>The sign of a negative number or length is written using the tilde (~) character.  Negative values can also be written using the usual dash (-) if enclosed withing parentheses, for instance, <inline>(2cm,(-3mm))</inline>.  The latter alternative is convenient when the source is produced by other programs.</li>
-</ol>
-<p>Another very common transformation is rotation (see <binding name="rotate" />):</p>
+</p>
+<p>
+	Note:
+	<ol>
+		<li><p>The sign of a negative number or length is written using the tilde (~) character.  Negative values can also be written using the usual dash (-) if enclosed withing parentheses, for instance, <inline>(2cm,(-3mm))</inline>.  The latter alternative is convenient when the source is produced by other programs.</p></li>
+	</ol>
+</p>
+
+<p>Another very common transformation is rotation (see <binding name="rotate" />):
 <pre>
 T2: [rotate 25°]
 </pre>
-Note:
-<ol>
-<li>The angle argument is basically interpreted as radians, but angles may be entered in degrees if immediately followed by the degree sign (°).  In fact, <inline>25°</inline> is just a way of entering the number 25⋅π/180.  For the full syntax of floats, see <syntax name="float" />.</li>
-</ol>
-<p>The following program illustrates how the transforms can be applied:</p>
+</p>
+<p>
+	Note:
+	<ol>
+		<li><p>The angle argument is basically interpreted as radians, but angles may be entered in degrees if immediately followed by the degree sign (°).  In fact, <inline>25°</inline> is just a way of entering the number 25⋅π/180.  For the full syntax of floats, see <syntax name="float" />.</p></li>
+	</ol>
+</p>
+<p>
+	The following program illustrates how the transforms can be applied:
 <pre>
 lbl: (TeX `$x^{2} + y^{2}$´)
 &bullet;page &lt;&lt; [T1 lbl] &lt;&lt; [T2 lbl] &lt;&lt; lbl
 </pre>
+</p>
 
 <p>The complete example with output is given below.</p>
 <example-with-output title="Transforms" internal-id="example/transforms">
@@ -64,11 +79,13 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 </caption>
 </example-with-output>
 
-<p>Transforms can be combined using the multiplication operator (<operator name="*" />).  Hence, the following two lines do the same thing:</p>
+<p>
+	Transforms can be combined using the multiplication operator (<operator name="*" />).  Hence, the following two lines do the same thing:
 <pre>
 &bullet;page &lt;&lt; [T2 [T1 lbl]]
 &bullet;page &lt;&lt; [T2*T1 lbl]
 </pre>
+</p>
 <p>It is almost allways the case that combining the operators is (sometimes much) more efficient than applying one transform after the other.</p>
 
 <p>Well, that's about all we are going to say regarding transforms in this tutorial.  Befor ending, we'll just mention that there are other constructors beside the ones seen here, that (almost all) transforms can be inverted (see <binding name="inverse" />), and that transforms also exist in <str-3D /> (see <named-type name="Transform3D" />).</p>
@@ -92,6 +109,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 </example-with-output>
 
 <p>In the next example we will see how to connect spline segments, and how offsets are interpreted.</p>
+
 <example-with-output title="Connected Bezier splines" internal-id="example/bezier-connected">
 <image pdf="tutorial-bezier-connected_3.pdf" jpg="tutorial-bezier-connected_y_big.jpg" />
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-bezier-connected.shape">
@@ -117,12 +135,14 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 	<p>Filling, stroking, and stroking a path with an arrow head.</p>
 </caption>
 </example-with-output>
-<p>Things to note:</p>
-<ol>
-<li><p>The arrowheads are defined in a <str-Shapes /> <em>extension</em> file.  If your <str-Shapes /> compiler has the path <filename>/usr/local/bin/shapes</filename>, then the extension files are typically located in <filename>/usr/local/share/shapes/extenions/</filename>.</p></li>
-<li><p>Functions can take <em>named arguments</em>, and here the argument called <arg name="head" /> is some kind of object which defines what the arrowhead shall look like.</p></li>
-<li><p>As you might have guessed, <binding name="stroke" /> also takes an argument called <arg name="tail" />.</p></li>
-</ol>
+<p>
+	Things to note:
+	<ol>
+		<li><p>The arrowheads are defined in a <str-Shapes /> <em>extension</em> file.  If your <str-Shapes /> compiler has the path <filename>/usr/local/bin/shapes</filename>, then the extension files are typically located in <filename>/usr/local/share/shapes/extenions/</filename>.</p></li>
+		<li><p>Functions can take <em>named arguments</em>, and here the argument called <arg name="head" /> is some kind of object which defines what the arrowhead shall look like.</p></li>
+		<li><p>As you might have guessed, <binding name="stroke" /> also takes an argument called <arg name="tail" />.</p></li>
+	</ol>
+</p>
 </body>
 </section><!-- End of basics/path-painting -->
 
@@ -140,10 +160,12 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 	<p>Changing parameters in the <str-PDF /> graphics state, such as stroking and non-stroking (that is, fill) color, dashpattern, <abbr-etc />.</p>
 </caption>
 </example-with-output>
-<p>Things to note:</p>
-<ol>
-<li><p>The various ways several dynamic bindings can be combined to one set of bindings, including using the function <binding name="bindings" /> and inserting the empty set of bindings <binding name="nillbind" /> explicitly to make it one operator <operator name="&amp;" /> per binding.</p></li>
-</ol>
+<p>
+	Things to note:
+	<ol>
+		<li><p>The various ways several dynamic bindings can be combined to one set of bindings, including using the function <binding name="bindings" /> and inserting the empty set of bindings <binding name="nillbind" /> explicitly to make it one operator <operator name="&amp;" /> per binding.</p></li>
+	</ol>
+</p>
 </body>
 </section><!-- End of basics/colors -->
 

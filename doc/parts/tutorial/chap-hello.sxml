@@ -7,42 +7,62 @@
 <section id="hello/source">
 <title>The source</title>
 <body>
-<p>The following line of code is all we need for this example, it will be explained in just a moment:</p>
+	<p>
+		The following line of code is all we need for this example, it will be explained in just a moment:
 <pre>
 &bullet;page &lt;&lt; [stroke (0cm,0cm)--(2cm,1cm)]
 </pre>
-<p>If you don't like the bullet character (&bullet;), you may prefix <inline>page</inline> with a hash sign (#) instead, like so:</p>
+	</p>
+
+	<p>
+		If you don't like the bullet character (&bullet;), you may prefix <inline>page</inline> with a hash sign (#) instead, like so:
 <pre>
 #page &lt;&lt; [stroke (0cm,0cm)--(2cm,1cm)]
 </pre>
-<p>In either case, make sure your file is encoded using <str-UTF-8 /> (if you avoid the bullet character, most eight bit encodings should be fine by intended coincidence).  Call the file <filename>hello.shape</filename>.</p>
-<p>So what does the code mean?  As you might have guessed, <state name="page" />, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from C++) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <binding name="stroke" /> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <operator name="--" />.</p>
-<p>The example displays the following traits of the <str-Shapes /> language</p>
-<ol>
-<li>Function calls have the callee <em>inside</em> the bracketing syntax, like in Scheme.</li>
-<li>Statements are not terminated using a designated token; statements end by themselves, like in Haskell.</li>
-<li><em>States</em> (here, <state name="page" />) and <em>variables</em> (here, <binding name="stroke" />) are distinguished by belonging to different name spaces, like variables are distinguished from types in Haskell.  This is called <em>Hungarian notation</em>, and is used also for other distinctions in <str-Shapes />.</li>
-<li>Coordinates are specified as pairs of lengths, as opposed to pairs of scalars, unlike many other graphics languages where there is no distinction between lengths and scalars.</li>
-</ol>
+	</p>
+
+	<p>In either case, make sure your file is encoded using <str-UTF-8 /> (if you avoid the bullet character, most eight bit encodings should be fine by intended coincidence).  Call the file <filename>hello.shape</filename>.</p>
+
+	<p>So what does the code mean?  As you might have guessed, <state name="page" />, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from C++) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <binding name="stroke" /> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <operator name="--" />.</p>
+
+	<p>
+		The example displays the following traits of the <str-Shapes /> language
+		<ol>
+			<li><p>Function calls have the callee <em>inside</em> the bracketing syntax, like in Scheme.</p></li>
+			<li><p>Statements are not terminated using a designated token; statements end by themselves, like in Haskell.</p></li>
+			<li><p><em>States</em> (here, <state name="page" />) and <em>variables</em> (here, <binding name="stroke" />) are distinguished by belonging to different name spaces, like variables are distinguished from types in Haskell.  This is called <em>Hungarian notation</em>, and is used also for other distinctions in <str-Shapes />.</p></li>
+			<li><p>Coordinates are specified as pairs of lengths, as opposed to pairs of scalars, unlike many other graphics languages where there is no distinction between lengths and scalars.</p></li>
+		</ol>
+	</p>
 </body>
 </section><!-- End of hello/source -->
 
 <section id="hello/compile">
 <title>Compiling and viewing</title>
 <body>
-<p>To obtain the pretty piece of graphics so carefully designed above, we just need to pass the file to the <str-Shapes /> compiler:</p>
+<p>
+	To obtain the pretty piece of graphics so carefully designed above, we just need to pass the file to the <str-Shapes /> compiler:
 <command-line>
 shapes hello.shape
 </command-line>
-<p>This will produce the file <filename>hello.pdf</filename>, and if your favorite <str-PDF /> viewer happens to be xpdf, you could open the file by typing</p>
+</p>
+
+<p>
+	This will produce the file <filename>hello.pdf</filename>, and if your favorite <str-PDF /> viewer happens to be xpdf, you could open the file by typing
 <command-line>
 xpdf hello.pdf &amp;
 </command-line>
-<p>However, when your file changes, you will want to update the xpdf window, and then <str-Shapes /> comes to the rescue; try using the compiler with an extra option:</p>
+</p>
+
+<p>
+	However, when your file changes, you will want to update the xpdf window, and then <str-Shapes /> comes to the rescue; try using the compiler with an extra option:
 <command-line>
 shapes --xpdf hello.shape
 </command-line>
+</p>
+
 <p>If you're on a Mac, you may replace <inline>--xpdf</inline> by <inline>--open</inline>.</p>
+
 </body>
 </section><!-- End of hello/compile -->
 

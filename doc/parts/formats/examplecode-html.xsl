@@ -10,14 +10,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </xsl:element>
 </xsl:template>
 <xsl:template match="example-with-output[@*]">
-  <table class="codefile">
-    <tr><td><hr class="thick"/></td></tr>
-    <tr><th colspan="3"><xsl:value-of select="@title" /></th></tr>
-    <xsl:apply-templates select="image" />
-    <xsl:apply-templates select="caption" />
-    <xsl:apply-templates select="source" />
-    <tr><td><hr class="thick"/></td></tr>
-  </table>
+	<div class="p">
+		<table class="codefile">
+			<tr><td><hr class="thick"/></td></tr>
+			<tr><th colspan="3"><xsl:value-of select="@title" /></th></tr>
+			<xsl:apply-templates select="image" />
+			<xsl:apply-templates select="caption" />
+			<xsl:apply-templates select="source" />
+			<xsl:apply-templates select="stdout" />
+			<tr><td><hr class="thick"/></td></tr>
+		</table>
+	</div>
 </xsl:template>
 <xsl:template match="example-with-output/image[@*]">
   <tr align="center"><td>

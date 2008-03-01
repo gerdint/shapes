@@ -24,8 +24,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="filename"><filename><xsl:value-of select="." /></filename></xsl:template>
 
 <xsl:template match="p">
-  <p><xsl:apply-templates/></p>
+  <div class="p"><xsl:apply-templates/></div>
 </xsl:template>
+
 <xsl:template match="ol">
   <ol><xsl:apply-templates/></ol>
 </xsl:template>
@@ -351,10 +352,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="tight-table">
-  <table><xsl:apply-templates select="tr"/></table>
+  <table class="tight"><xsl:apply-templates select="tr"/></table>
 </xsl:template>
 <xsl:template match="loose-table">
-  <table cellspacing="5"><xsl:apply-templates select="tr"/></table>
+  <table class="loose"><xsl:apply-templates select="tr"/></table>
 </xsl:template>
 
 <xsl:template match="tr">

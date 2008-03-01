@@ -7,39 +7,45 @@
 <section id="syntax/compound/float-tuples">
 <title>Float pairs and triples</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="float-pair" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatPair" /></td></tr>
-<tr> <td><syntax name="float-pair" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td><syntax name="float-triple" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatTriple" /></td></tr>
-<tr> <td><syntax name="float-triple" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
-</syntax-table>
+	<p>
+		<syntax-table>
+			<tr> <td><syntax name="float-pair" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatPair" /></td></tr>
+			<tr> <td><syntax name="float-pair" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+			<tr> <td><syntax name="float-triple" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="FloatTriple" /></td></tr>
+			<tr> <td><syntax name="float-triple" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+		</syntax-table>
+	</p>
 
 <p>Float pairs and triples are useful generalizations of directions in <str-2D /> and <str-3D />, and may serve other purposes as well.  The way they generalize directions is that they can be multiplied by a length to yield coordinates.  The drawback of using these objects to represent directions, of course, is that the origin is a valid value, but does not represent a direction.  However, it is believed that the inconvenience of having to keep apart diractions and pairs/triples whould overshadow the conceptual and type safety winnings.  (Internal computations, however, do keep directions and pairs/triples apart.)</p>
 
-<p>The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  The following table gives a few examples.</p>
+<p>
+	The syntax for constructing pairs and triples is to separate the floats by commas, and enclose it all in parentheses.  The following table gives a few examples.
+	<token-example-table>
+		<head>
+			<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>( 5, 7 )</inline></td> <td>Yes, yields a float pair</td> </tr>
+			<tr> <td><inline>( 1.2, 3.4, 5 )</inline></td> <td>Yes, yields a float triple</td> </tr>
+			<tr> <td><inline>( 5, '7 )</inline></td> <td>No, <inline>'7</inline> is an integer</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
-<token-example-table>
-<head>
-<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>( 5, 7 )</inline></td> <td>Yes, yields a float pair</td> </tr>
-<tr> <td><inline>( 1.2, 3.4, 5 )</inline></td> <td>Yes, yields a float triple</td> </tr>
-<tr> <td><inline>( 5, '7 )</inline></td> <td>No, <inline>'7</inline> is an integer</td> </tr>
-</body>
-</token-example-table>
 </body>
 </section>
 
 <section id="syntax/compound/offsets">
 <title>Offsets</title>
 <body>
-<p>Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:</p>
-<syntax-table>
-<tr> <td><syntax name="offset" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="OffsetLength" /></td></tr>
-<tr> <td><syntax name="offset" /></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td><named-type name="LengthLike" /></td> <td><bnf>=</bnf></td> <td><inline> <named-type name="Length" /> | <named-type name="OffsetLength" /></inline></td></tr>
-</syntax-table>
+<p>
+	Sometimes, the context defines an alternative base point than can define the meaning of coordinates.  To make a difference between coordinates that are relative the usual origin and the context-defined base point, the former coordinates are referred to as <em>offsets</em>, constructed using the unary plus operator:
+	<syntax-table>
+		<tr> <td><syntax name="offset" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="OffsetLength" /></td></tr>
+		<tr> <td><syntax name="offset" /></td> <td><bnf>→</bnf></td> <td><inline>( + <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;</bnf> )</inline></td></tr>
+		<tr> <td><named-type name="LengthLike" /></td> <td><bnf>=</bnf></td> <td><inline> <named-type name="Length" /> | <named-type name="OffsetLength" /></inline></td></tr>
+	</syntax-table>
+</p>
 </body>
 </section>
 
@@ -52,89 +58,102 @@
 
 <p>The unary plus may be used either to construct offsets on a per-dimension level, or on a complete coordinates expression.</p>
 
-<p>The following table below lists the valid constructs.</p>
-<syntax-table>
-<tr> <td><syntax name="coords-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord2D" /></td></tr>
-<tr> <td><syntax name="coords-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, 0 )</inline></td></tr>
-<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-2D" /> )</inline></td></tr> -->
-<tr> <td><syntax name="coords-3D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
-<tr> <td><syntax name="coords-3D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
-<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-3D" /> )</inline></td></tr> -->
-</syntax-table>
+<p>
+	The following table below lists the valid constructs.
+	<syntax-table>
+		<tr> <td><syntax name="coords-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord2D" /></td></tr>
+		<tr> <td><syntax name="coords-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( 0 , <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, 0 )</inline></td></tr>
+		<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-2D" /> )</inline></td></tr> -->
+		<tr> <td><syntax name="coords-3D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Coord3D" /></td></tr>
+		<tr> <td><syntax name="coords-3D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> )</inline></td></tr>
+		<!-- <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>( + <syntax name="coords-3D" /> )</inline></td></tr> -->
+	</syntax-table>
+</p>
 
-<p>Some examples are given in the table below.</p>
-
-<token-example-table>
-<head>
-<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>( 5cm, 7in )</inline></td> <td>Yes, yields coordinates in the perceivable plane</td> </tr>
-<tr> <td><inline>( 5cm, 0 )</inline></td> <td>Yes, same as <inline>( 5cm, 0m )</inline></td> </tr>
-<tr> <td><inline>( 0, 7bp )</inline></td> <td>Yes, same as <inline>( 0m, 7bp )</inline></td> </tr>
-<tr> <td><inline>( 2mm, 7mm, 5mm )</inline></td> <td>Yes, yields coordinates in the perceivable space</td> </tr>
-<tr> <td><inline>( 2mm, 0, 5mm )</inline></td> <td>No, the float zero is only allowed in <str-2D /></td> </tr>
-<tr> <td><inline>( (+0mm), 1mm ))</inline></td> <td>Yes, the x component is relative an undetermined base frame</td> </tr>
-<tr> <td><inline>(+ 3mm*[dir 20°])</inline></td> <td>Yes, same as <inline>( (+ (3mm*[dir 20°]).x), (+ (3mm*[dir 20°]).y) )</inline></td> </tr>
-<tr> <td><inline>( (+0mm), 1mm, (+7mm) )</inline></td> <td>Yes, relative coordinates may be used in both <str-2D /> and <str-3D /></td> </tr>
-<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td>Yes, but this is application of unary <operator-unary-prefix name="+" />, yielding the same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
-</body>
-</token-example-table>
+<p>
+	Some examples are given in the table below.
+	<token-example-table>
+		<head>
+			<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>( 5cm, 7in )</inline></td> <td>Yes, yields coordinates in the perceivable plane</td> </tr>
+			<tr> <td><inline>( 5cm, 0 )</inline></td> <td>Yes, same as <inline>( 5cm, 0m )</inline></td> </tr>
+			<tr> <td><inline>( 0, 7bp )</inline></td> <td>Yes, same as <inline>( 0m, 7bp )</inline></td> </tr>
+			<tr> <td><inline>( 2mm, 7mm, 5mm )</inline></td> <td>Yes, yields coordinates in the perceivable space</td> </tr>
+			<tr> <td><inline>( 2mm, 0, 5mm )</inline></td> <td>No, the float zero is only allowed in <str-2D /></td> </tr>
+			<tr> <td><inline>( (+0mm), 1mm ))</inline></td> <td>Yes, the x component is relative an undetermined base frame</td> </tr>
+			<tr> <td><inline>(+ 3mm*[dir 20°])</inline></td> <td>Yes, same as <inline>( (+ (3mm*[dir 20°]).x), (+ (3mm*[dir 20°]).y) )</inline></td> </tr>
+			<tr> <td><inline>( (+0mm), 1mm, (+7mm) )</inline></td> <td>Yes, relative coordinates may be used in both <str-2D /> and <str-3D /></td> </tr>
+			<tr> <td><inline>(+ ( 1cm, 1mm ))</inline></td> <td>Yes, but this is application of unary <operator-unary-prefix name="+" />, yielding the same as <inline> ( (+1cm), (+1mm) ))</inline></td> </tr>
+		</body>
+	</token-example-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/compound/polar">
 <title>Polar handles and corder points in <str-2D /></title>
 <body>
-<p><em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like</p>
+<p>
+	<em>Polar handles</em> is a special way to specify intermediate spline interpolation points.  Basically, one specifies and angle and a distance instead of rectangular coordinates, but the concept is much more powerful than simply providing a convenient syntax for something like
 <pre>
 <![CDATA[(+ dist*[dir ang])]]>
 </pre>
-<p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a id="syntax/misc-expr/path-constr">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
-<syntax-table>
-<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle" /></td></tr>
-<tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
-</syntax-table>
+</p>
+
+<p>
+	The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a id="syntax/misc-expr/path-constr">path construction</a>.  Here, we just show the syntax for the handles themselves:
+	<syntax-table>
+		<tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle" /></td></tr>
+		<tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
+	</syntax-table>
+</p>
+
 <p>When the distance is missing, it <em>may</em> fall back on <dynavar name="defaultunit" />, so be prepared to have a binding for <dynavar name="defaultunit" /> in dynamic scope unless you really know that it won't be needed.</p>
 
 <remark>
 <p>A polar handle will store the distance part as a thunk, thereby capturing the current lexical and dynamic environments.  Hence, it is not when the polar handles are used to build paths, that <dynavar name="defaultunit" /> may be required, but when the polar handles themselves are constructed.</p>
 </remark>
 
-<token-example-table>
-<head>
-<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>( 5cm ^ 60° )</inline></td> <td>Yes, equivalent to <inline>(+ 5cm*[dir 60°])</inline></td> </tr>
-<tr> <td><inline>( 1%C ^ 60° )</inline></td> <td>Yes, but cannot be rewritten as above</td> </tr>
-<tr> <td><inline>( ^ 0.5 )</inline></td> <td>Yes, angle in radians, may require a binding for <dynavar name="defaultunit" /></td> </tr>
-<tr> <td><inline>( ^ )</inline></td> <td>Yes, may require a binding for <dynavar name="defaultunit" /></td> </tr>
-<tr> <td><inline>( 1%C ^ )</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>( 1 ^ )</inline></td> <td>No, <inline>1</inline> is not a length</td> </tr>
-<tr> <td><inline>( ^ 1cm )</inline></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>
-</body>
-</token-example-table>
-<p />
+<p>
+	<token-example-table>
+		<head>
+			<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>( 5cm ^ 60° )</inline></td> <td>Yes, equivalent to <inline>(+ 5cm*[dir 60°])</inline></td> </tr>
+			<tr> <td><inline>( 1%C ^ 60° )</inline></td> <td>Yes, but cannot be rewritten as above</td> </tr>
+			<tr> <td><inline>( ^ 0.5 )</inline></td> <td>Yes, angle in radians, may require a binding for <dynavar name="defaultunit" /></td> </tr>
+			<tr> <td><inline>( ^ )</inline></td> <td>Yes, may require a binding for <dynavar name="defaultunit" /></td> </tr>
+			<tr> <td><inline>( 1%C ^ )</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>( 1 ^ )</inline></td> <td>No, <inline>1</inline> is not a length</td> </tr>
+			<tr> <td><inline>( ^ 1cm )</inline></td> <td>No, <inline>1cm</inline> is not a float</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
-<p>A <em>corner point</em> is a generalization of <named-type name="Coord2D" />.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <named-type name="Coord2D" /> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
-<table cellspacing="5">
-<tr> <td><syntax name="corner-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf><bnf>?</bnf> )</inline></td></tr>
-</table>
+<p>
+	A <em>corner point</em> is a generalization of <named-type name="Coord2D" />.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <named-type name="Coord2D" /> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:
+	<table cellspacing="5">
+		<tr> <td><syntax name="corner-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf><bnf>?</bnf> )</inline></td></tr>
+	</table>
+</p>
 <p>When the angle is not present, each angle is determined as if there was just one handle, that is, independently of the other angle.</p>
-<p />
-<token-example-table>
-<head>
-<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>( 5cm, 4cm ^ 60° )</inline></td> <td>Yes, corner point with 60° angle (unless both handles have specified angles).</td> </tr>
-<tr> <td><inline>( 5cm, 4cm ^ )</inline></td> <td>Yes, corner point with two independent handles.</td> </tr>
-</body>
-</token-example-table>
-<p />
+
+<p>
+	<token-example-table>
+		<head>
+			<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>( 5cm, 4cm ^ 60° )</inline></td> <td>Yes, corner point with 60° angle (unless both handles have specified angles).</td> </tr>
+			<tr> <td><inline>( 5cm, 4cm ^ )</inline></td> <td>Yes, corner point with two independent handles.</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
 <image pdf="cornerpoint.pdf" jpg="cornerpoint_y_big.jpg" />
@@ -154,19 +173,24 @@
 
 <p>There are true (pure) functions, non-pure functions, and horrible procedures, all of which are constructed similarly, but differ in how they are applied and what they are allowed to do.  First, pure functions will be discussed in detail.  Then, non-pure functions and procedures will be presented in terms of how they differ from pure functions.</p>
 
-<p>Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already):</p>
+<p>
+	Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already):
 <pre>
 <![CDATA[\ x y .> [sqrt x*x + y*y]]]>
 </pre>
-<p>This fits into (note that there is only a small difference between the syntax for functions and procedures)</p>
-<syntax-table>
-<tr> <td><syntax name="function" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
-<tr> <td><syntax name="function" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="procedure" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
-<tr> <td><syntax name="procedure" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> ! <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="default" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>: <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="sink" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntax name="identifier" /></inline></td></tr>
-</syntax-table>
+</p>
+
+<p>
+	This fits into (note that there is only a small difference between the syntax for functions and procedures)
+	<syntax-table>
+		<tr> <td><syntax name="function" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
+		<tr> <td><syntax name="function" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="procedure" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
+		<tr> <td><syntax name="procedure" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> ! <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="default" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>: <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="sink" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntax name="identifier" /></inline></td></tr>
+	</syntax-table>
+</p>
 
 <p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
 
@@ -177,32 +201,37 @@
 <section id="syntax/compound/structures">
 <title>Structures</title>
 <body>
-<p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a id="syntax/fun-apply">function application</a> for an explanation of <syntax name="named-expr" />, and to see how structures may be used.</p>
-
-<syntax-table>
-<tr> <td><syntax name="structure" class="new" /></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>
-<tr> <td><syntax name="structure" /></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> &lt;)</inline></td></tr>
-</syntax-table>
+<p>
+	Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a id="syntax/fun-apply">function application</a> for an explanation of <syntax name="named-expr" />, and to see how structures may be used.
+	<syntax-table>
+		<tr> <td><syntax name="structure" class="new" /></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>
+		<tr> <td><syntax name="structure" /></td> <td><bnf>→</bnf></td> <td><inline>(&gt; <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> &lt;)</inline></td></tr>
+	</syntax-table>
+</p>
 
 <p>Note that the type of a structure is a complex type, which we don't bother to write out here.</p>
 
-<p>Besides getting parts out of a structure by applying a function to it, it is possible to bind to multiple values in the structure at once.  The syntax is</p>
-
-<syntax-table>
-<tr> <td><syntax name="split-definition" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(&lt; <bnf>(</bnf> <syntax name="split-item" /> <syntax name="default" /><bnf>?</bnf> <bnf>)+</bnf> <syntax name="sink" /><bnf>?</bnf> &gt;) : <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><syntax name="split-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> : . <syntax name="identifier" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> : . &quot;</inline></td></tr>
-</syntax-table>
+<p>
+	Besides getting parts out of a structure by applying a function to it, it is possible to bind to multiple values in the structure at once.  The syntax is
+	<syntax-table>
+		<tr> <td><syntax name="split-definition" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(&lt; <bnf>(</bnf> <syntax name="split-item" /> <syntax name="default" /><bnf>?</bnf> <bnf>)+</bnf> <syntax name="sink" /><bnf>?</bnf> &gt;) : <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><syntax name="split-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> : . <syntax name="identifier" /></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> : . &quot;</inline></td></tr>
+	</syntax-table>
+</p>
 
 <p>The semantics reminds of a function can, but there are differences.  Most importantly, the created bindings populate the <em>current</em> environment, rather than a new one.  The first (or only) identifier in the <syntax name="split-item" /> is the identifier for the created binding.  There are ordered as well as named items; ordered items match ordered components in the structure, while named items match named components in the structure.  The ordered items are those with just one identifier.  When there are two identifiers, the latter is the name to be sought in the structure.  When there is a quotation mark (<inline>&quot;</inline>) instead of a second identifier, this means that the first identifier shall be used also as a second identifier.</p>
 
-<p>Unlike a function application, ordered and named items do not interact; a named item cannot get its value from an ordered component in the structure.  As an example, this confusing code is not legal:</p>
+<p>
+Unlike a function application, ordered and named items do not interact; a named item cannot get its value from an ordered component in the structure.  As an example, this confusing code is not legal:
 <pre class="bad">
 <![CDATA[s: (> '9 <)
 (< foo:bar >) : s]]>
 </pre>
-<p>inspite the fact that the following <em>is</em> legal:</p>
+</p>
+<p>
+	inspite the fact that the following <em>is</em> legal:
 <pre>
 <![CDATA[{
   s: (> '9 <)
@@ -210,12 +239,15 @@
   f [] <> s
 }]]>
 </pre>
+</p>
 
-<p>Named parts can also be accessed by an ordinary field reference, like this:</p>
+<p>
+	Named parts can also be accessed by an ordinary field reference, like this:
 <pre>
 <![CDATA[s: (> a:'1  b:'2 <)
 •stdout << s.b]]>
 </pre>
+</p>
 
 <example-with-output title="Example" internal-id="example-values">
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/features/values.shape">

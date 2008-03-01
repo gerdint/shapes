@@ -13,6 +13,7 @@ using namespace Shapes;
 
 
 Lang::Value::Value( )
+	: node_( 0 )
 { }
 
 Lang::Value::~Value( )

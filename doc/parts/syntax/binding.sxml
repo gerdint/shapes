@@ -13,15 +13,18 @@
 
 <p>First, functions set up a new environment for the passed arguments when they are called.  The parent of the new environment is the environment that was in scope where the function was created (this is typically not the current environment where the function is called).  The body of the function is then evaluated in the new environment.  These rules simply ensure that the variables that were in scope were the function was created are also in scope when the body of the function is evaluated (except in case of shadowing).</p>
 
-<p>A classic example of how lexical scoping works is the <user-binding name="addn" /> function:</p>
+<p>
+	A classic example of how lexical scoping works is the <user-binding name="addn" /> function:
 <pre>
 <![CDATA[addn: \ n .> \ x .> x + n
 inc: [addn '1]
 •stdout << [inc '3]]]>
 </pre>
+</p>
 <p>The above program prints the integer 4.  Note that <arg name="n" /> must be in scope when <inline>x + n</inline> is evaluated, even though <arg name="n" /> is not in scope where <user-binding name="inc" /> is invoked.  What is important is that <arg name="n" /> is in scope where the function bound to <user-binding name="inc" /> was created.</p>
 
-<p>Second, every code bracket sets up a new environment, under the current environment.  The new environment is both home for bindings introduced in the code bracket, and becomes the current environment for the expressions evaluated in the code bracket.  This means that the following is a valid code bracket:</p>
+<p>
+	Second, every code bracket sets up a new environment, under the current environment.  The new environment is both home for bindings introduced in the code bracket, and becomes the current environment for the expressions evaluated in the code bracket.  This means that the following is a valid code bracket:
 <pre>
 <![CDATA[{
   a: '1
@@ -29,7 +32,9 @@ inc: [addn '1]
   b
 }]]>
 </pre>
-<p>So far, this seems similar to the semantics of <foreign lang="Scheme">let*</foreign> in Scheme.  However, the following code bracket is equivalent:</p>
+</p>
+<p>
+	So far, this seems similar to the semantics of <foreign lang="Scheme">let*</foreign> in Scheme.  However, the following code bracket is equivalent:
 <pre>
 <![CDATA[{
   b: a + '1
@@ -37,12 +42,16 @@ inc: [addn '1]
   b
 }]]>
 </pre>
-<p>This reminds more of <foreign lang="Scheme">letrec</foreign> in Scheme, but the reason it works has another explanation: laziness.  The variables <user-binding name="b" /> and <user-binding name="a" /> are bound to thunks before the expression <user-binding name="b" /> is evaluated.</p>
+  This reminds more of <foreign lang="Scheme">letrec</foreign> in Scheme, but the reason it works has another explanation: laziness.  The variables <user-binding name="b" /> and <user-binding name="a" /> are bound to thunks before the expression <user-binding name="b" /> is evaluated.
+</p>
 
-<p>It is possible to <em>reach out</em> from the current lexical scope to circumvent <em>shadowing</em> bindings.  The syntax for this is</p>
-<syntax-table>
-<tr> <td><syntax name="reach-out" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>../ <syntax name="expr" /></inline></td></tr>
-</syntax-table>
+<p>
+	It is possible to <em>reach out</em> from the current lexical scope to circumvent <em>shadowing</em> bindings.  The syntax for this is
+	<syntax-table>
+		<tr> <td><syntax name="reach-out" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>../ <syntax name="expr" /></inline></td></tr>
+	</syntax-table>
+</p>
+
 <p>In theory, the semantics of this is simple; evaluate <syntax name="expr" /> in the lexical environment which is the parent of the current lexical environment.  However, sometimes a deeper understanding of the language is required to see how many generations one must walk up the chain of environments to avoid a given binding.  On the other hand, with this problem in mind, empty environments are never optimized away.</p>
 
 <p>As an example of reach out, suppose we regret how we defined the paramter <arg name="depth" /> long time ago.  Now we have to live with it since our function is part of a library with many users which we don't want to bother with the off-by-one change that would make our implementation of the function more natural.  The following is not an option, since the function may be called with named arguments:</p>
@@ -55,7 +64,8 @@ inc: [addn '1]
      **/
   }]]>
 </pre>
-<p>Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <arg name="depth" />.  Then we could use a reach-out:</p>
+<p>
+	Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <arg name="depth" />.  Then we could use a reach-out:
 <pre>
 <![CDATA[\ depth .>
   {
@@ -68,6 +78,7 @@ inc: [addn '1]
      **/
   }]]>
 </pre>
+</p>
 <p>Note that this changes the binding for <user-binding name="depth" /> in all of the code bracket, and hence it is a very good idea for readability to introduce the binding at the top of the code bracket.</p>
 
 <example-with-output title="Example" internal-id="example-lex-scopes">
@@ -86,26 +97,30 @@ inc: [addn '1]
 <section id="syntax/binding/dynamic">
 <title>Dynamic binding</title>
 <body>
-<p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct</p>
-<syntax-table>
-<tr> <td><syntax name="with-dynamic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> | <syntax name="expr" /></inline></td></tr>
-</syntax-table>
-<p>(Note that the vertical bar is not part of the BNF structure, but is the operator that indicates a change of dynamic scope.)</p>
+<p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct
+	<syntax-table>
+		<tr> <td><syntax name="with-dynamic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> | <syntax name="expr" /></inline></td></tr>
+	</syntax-table>
+	(Note that the vertical bar is not part of the BNF structure, but is the operator that indicates a change of dynamic scope.)
+</p>
 
 <p>The semantics is simply that a new dynamic environment is set up under the current dynamic environment, and populated with the provided bindings.  So far, except that the bindings are provided though special values instead of by using special syntax, this is how code brackets work.  The difference is when it comes to functions.  Calling a function <em>does not</em> change the dynamic environment.  One can think of dynamic variables as a way of passing parameters to functions without explicitly providing them as arguments; the dynamic environment is always passed implicitly.</p>
 
-<p>Dynamic bindings are constructed with the following syntax:</p>
-<syntax-table>
-<tr> <td><syntax name="dynamic-bindings" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBindings" /></td></tr>
-<tr> <td><syntax name="dynamic-binding" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBinding" /></td></tr>
-<tr> <td><syntax name="dynamic-bindings" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBinding" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><syntax name="dynamic-binding" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="dyn-var" /> : <syntax name="expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-var" /> : dynamic <syntax name="expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-state" /> : <syntax name="state" /></inline></td></tr>
-</syntax-table>
+<p>
+	Dynamic bindings are constructed with the following syntax:
+	<syntax-table>
+		<tr> <td><syntax name="dynamic-bindings" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBindings" /></td></tr>
+		<tr> <td><syntax name="dynamic-binding" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBinding" /></td></tr>
+		<tr> <td><syntax name="dynamic-bindings" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBinding" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><syntax name="dynamic-binding" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="dyn-var" /> : <syntax name="expr" /></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-var" /> : dynamic <syntax name="expr" /></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-state" /> : <syntax name="state" /></inline></td></tr>
+	</syntax-table>
+</p>
 
-<p>If a dynamic variable is bound to a <em>dynamic expression</em>, this expression is re-evaluated in the current dynamic environment each time the dynamic variable is accessed.  This way, one dynamic variable can be defined relative another dynamic variable.  For instance:</p>
+<p>
+	If a dynamic variable is bound to a <em>dynamic expression</em>, this expression is re-evaluated in the current dynamic environment each time the dynamic variable is accessed.  This way, one dynamic variable can be defined relative another dynamic variable.  For instance:
 <pre>
 <![CDATA[dynamic @smallskip identity 2cm
 dynamic @bigskip identity 5cm
@@ -118,13 +133,15 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
 }
 [test •stdout]]]>
 </pre>
+</p>
 <p>The program prints <inline>8<lengthunit>cm</lengthunit></inline>, followed by <inline>4<lengthunit>cm</lengthunit></inline>, and finally <inline>5<lengthunit>cm</lengthunit></inline>.</p>
 
-<p>Dynamic variables are used extensively for controlling all parts of the graphics state.  For instance, if <user-binding name="pth" /> is a path to be stroked, the color and width of the stroke can be set as follows:</p>
+<p>
+	Dynamic variables are used extensively for controlling all parts of the graphics state.  For instance, if <user-binding name="pth" /> is a path to be stroked, the color and width of the stroke can be set as follows:
 <pre>
 <![CDATA[•page << @stroking:rgb_RED & @width:2cm | [stroke pth]]]>
 </pre>
-<p>or, if there are several paths to be stroked with the same pen:</p>
+or, if there are several paths to be stroked with the same pen:
 <pre>
 <![CDATA[  @stroking:rgb_RED
 & @width:2cm
@@ -134,6 +151,7 @@ test: \ •dst .> { •dst << @bigskip << `¢n´ }
   •page << [stroke pth2]
 }]]>
 </pre>
+</p>
 
 <example-with-output title="Example" internal-id="example-dyn-scopes">
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/features/dynamic.shape">

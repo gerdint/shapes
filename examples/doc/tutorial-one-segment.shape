@@ -67,14 +67,24 @@ twoHandles: \ s1 s2 .>
 }
 
 ##unit dy = 1cm
-##unit xStep = 7cm
+##unit dx = 7cm
 
-•page << [shift (0xStep,0dy)] [] [twoHandles 1 1]
-			<< [shift (0xStep,~1dy)] [] [twoHandles 1 1/2]
-			<< [shift (0xStep,~2dy)] [] [twoHandles 1 1/4]
-			<< [shift (0xStep,~3dy)] [] [twoHandles 1 0.001]
-			<< [shift (0xStep,~4dy)] [] [twoHandles 1 0]
-			<< [shift (1xStep,~4dy)] [] [twoHandles 1/2 0]
-			<< [shift (2xStep,~4dy)] [] [twoHandles 1/4 0]
-			<< [shift (3xStep,~4dy)] [] [twoHandles 0.001 0]
-			<< [shift (4xStep,~4dy)] [] [twoHandles 0 0]
+•page << [shift (0dx,0dy)] [] [twoHandles 1 1]
+			<< [shift (0dx,~1dy)] [] [twoHandles 1 1/2]
+			<< [shift (0dx,~2dy)] [] [twoHandles 1 1/4]
+			<< [shift (0dx,~3dy)] [] [twoHandles 1 0.001]
+			<< [shift (0dx,~4dy)] [] [twoHandles 1 0]
+
+			<< [shift (1dx,~4dy)] [] [twoHandles 1/2 0]
+			<< [shift (2dx,~4dy)] [] [twoHandles 1/4 0]
+			<< [shift (3dx,~4dy)] [] [twoHandles 0.001 0]
+			<< [shift (4dx,~4dy)] [] [twoHandles 0 0]
+
+			<< [shift (1dx,0dy)] [] [twoHandles 1/2 1]
+			<< [shift (2dx,0dy)] [] [twoHandles 1/4 1]
+			<< [shift (3dx,0dy)] [] [twoHandles 0.001 1]
+			<< [shift (4dx,0dy)] [] [twoHandles 0 1]
+
+			<< [shift (4dx,~1dy)] [] [twoHandles 0 1/2]
+			<< [shift (4dx,~2dy)] [] [twoHandles 0 1/4]
+			<< [shift (4dx,~3dy)] [] [twoHandles 0 0.001]

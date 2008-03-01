@@ -6,7 +6,8 @@
 <body>
 <p>The interpreter goes to some lengths to avoid calling LaTeX too many times, but the problems this can cause is more of a tool matter than a language issue.  Here, we shall just describe the laguage constructs that relate to producing labels with LaTeX.</p>
 
-<p>First, there are a few directives that just transfer text to the top of the LaTeX document where the labels are to appear:</p>
+<p>
+	First, there are a few directives that just transfer text to the top of the LaTeX document where the labels are to appear:
 <pre>
 ##documentclass <replacable-text name="class-name" />
 ##classoption <replacable-text name="comma-separated-options" />
@@ -15,17 +16,24 @@
 ##no-lmodernT1
 ##no-utf8
 </pre>
-<p>The default document class is <em>article</em>, but this can be changed with the first of these directives.  The following three directives are self-explanatory, and may appear several times.  The last two disable the use of packages that are otherwise included by default.  When they are not disabled, the following goes before the lines from <inline>##preamble</inline>:</p>
+</p>
+
+<p>
+	The default document class is <em>article</em>, but this can be changed with the first of these directives.  The following three directives are self-explanatory, and may appear several times.  The last two disable the use of packages that are otherwise included by default.  When they are not disabled, the following goes before the lines from <inline>##preamble</inline>:
 <pre>
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 </pre>
+</p>
 
-<p>To produce the labels themselves, the syntax is simply:</p>
-<syntax-table>
-<tr> <td><syntax name="tex-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( TeX <bnf>&lt;</bnf><named-type name="String" /><bnf>&gt;</bnf> )</inline></td></tr>
-</syntax-table>
+<p>
+	To produce the labels themselves, the syntax is simply:
+	<syntax-table>
+		<tr> <td><syntax name="tex-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( TeX <bnf>&lt;</bnf><named-type name="String" /><bnf>&gt;</bnf> )</inline></td></tr>
+	</syntax-table>
+</p>
+
 <p>Note that <operator name="TeX" /> is not a function, although it could have been if it was not for efficiency reasons.</p>
 
 <p>If the expression is a string literal, it is handled more efficiently than if the string must be obtained by evaluation.  The origin of the produced label is the same as in LaTeX; at the leftmost point of the baseline.  Unfortunately, fonts lie about their bounding boxes to make them look smaller, and this will cause the produced label to be slightly cropped when imported.  At the moment, I can't think of a good way to get around this problem, since a tight bounding box is important for layout purposes.</p>

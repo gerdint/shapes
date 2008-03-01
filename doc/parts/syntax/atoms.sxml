@@ -7,32 +7,34 @@
 <section id="syntax/atoms/floats">
 <title>Floats</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
-<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" />°</inline></td></tr>
-</syntax-table>
-<p>A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.</p>
-
-<token-example-table>
-<head>
-<tr> <td>Token</td> <td>Valid float?</td> </tr>
-</head>
-<body>
-<tr> <td><inline>13</inline></td> <td>Yes (= 13)</td> </tr>
-<tr> <td><inline>~13</inline></td> <td>Yes (= -13)</td> </tr>
-<tr> <td><inline>2.</inline></td> <td>Yes (= 2.0)</td> </tr>
-<tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
-<tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
-<tr> <td><inline>5*^~3°</inline></td> <td>Yes, (= 0.005*π/180)</td> </tr>
-<tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
-<tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
-<tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
-<tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
-</body>
-</token-example-table>
-<p />
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
+		<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
+		<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
+		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" />°</inline></td></tr>
+	</syntax-table>
+</p>
+<p>
+	A float begins with an optional tilde sign which, when present, indicates that the number is negative.  Then follows one or more decimal digits, an optional decimal point, and an optional sequence of decimal digits.  An optional base 10 exponent can then be appended, prefixed with the sequence <inline>*^</inline>, negative exponents indicated using the tilde sign.  Finally, a degree sign can be appended, effectively multiplying the preceding float by π/180.  Examples are given below.
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid float?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>13</inline></td> <td>Yes (= 13)</td> </tr>
+			<tr> <td><inline>~13</inline></td> <td>Yes (= -13)</td> </tr>
+			<tr> <td><inline>2.</inline></td> <td>Yes (= 2.0)</td> </tr>
+			<tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
+			<tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
+			<tr> <td><inline>5*^~3°</inline></td> <td>Yes, (= 0.005*π/180)</td> </tr>
+			<tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
+			<tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
+			<tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
+			<tr> <td><inline>180 °</inline></td> <td>No (space is not allowed)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
 <p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
 </body>
@@ -42,37 +44,44 @@
 <section id="syntax/atoms/lengths">
 <title>Lengths</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="length" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
-<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
-</syntax-table>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="length" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
+		<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
+	</syntax-table>
+</p>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
 
 <p>The following lengths are provided by the system: <lengthunit>mm</lengthunit>, <lengthunit>cm</lengthunit>, <lengthunit>m</lengthunit>, <lengthunit>bp</lengthunit> (big point, also called <em>PostScript point</em>), and <lengthunit>in</lengthunit>.</p>
 
-<token-example-table>
-<head>
-<tr> <td>Token</td> <td>Valid length?</td> </tr>
-</head>
-<body>
-<tr> <td><inline>2.5cm</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>2.5pt</inline></td> <td>No (unless the unit <lengthunit>pt</lengthunit> is defined)</td> </tr>
-<tr> <td><inline>~3mm</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>3 mm</inline></td> <td>No (space not allowed)</td> </tr>
-<tr> <td><inline>3*^~3m</inline></td> <td>Yes (<physical><scalar>3</scalar><unit>mm</unit></physical>)</td> </tr>
-<tr> <td><inline>180°mm</inline></td> <td>No (degree sign not allowed)</td> </tr>
-</body>
-</token-example-table>
-<p />
+<p>
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid length?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>2.5cm</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>2.5pt</inline></td> <td>No (unless the unit <lengthunit>pt</lengthunit> is defined)</td> </tr>
+			<tr> <td><inline>~3mm</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>3 mm</inline></td> <td>No (space not allowed)</td> </tr>
+			<tr> <td><inline>3*^~3m</inline></td> <td>Yes (<physical><scalar>3</scalar><unit>mm</unit></physical>)</td> </tr>
+			<tr> <td><inline>180°mm</inline></td> <td>No (degree sign not allowed)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
-<p>A new unit is defined using the following syntax, which must appear <em>at the beginning of a line</em>:</p>
+<p>
+	A new unit is defined using the following syntax, which must appear <em>at the beginning of a line</em>:
 <pre>
 ##unit <lengthunit class="replacable">new_unit</lengthunit> = <syntax name="length" />
 </pre>
-<p>The point used by TeX is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:</p>
+</p>
+<p>
+	The point used by TeX is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:
 <pre>
 ##unit tex = 0.996264009963bp
 </pre>
+</p>
 </body>
 </section>
 
@@ -84,28 +93,32 @@
 
 <p>The most frequent use of special units of lengths is to assign the dynamic variable <dynvar name="defaultunit" />, see <a id="syntax/misc-expr/path-constr">path construction</a>.</p>
 
-<p>Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:</p>
-<loose-table>
-<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
-<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
-<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
-<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
-<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
-<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
-<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
-<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
-<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
-<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
-</loose-table>
+<p>
+	Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:
+	<loose-table>
+		<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
+		<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
+		<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
+		<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
+		<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
+		<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
+		<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
+		<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
+		<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
+		<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+	</loose-table>
+</p>
 <p>The meaning of the columns is the following.  If there is a check mark in the <em>Distance</em> column, then the distance between the first and last interpolation point is used as a base length.  If there is a check mark in the <em>Circelish</em> column, then the base length is multiplied by a factor based on the near angle, in such a way that circles are approximated well.  If there is a check mark under <em>Correction</em>, a correction factor is applied based on the difference between the near angle and the far angle; if both angles are the same, there is no correction.  If there is a check mark in the <em>No inflexion</em> column, then the distance to the intermediate control point is truncated to avoid inflexions, if necessary.  The unit which is not based on the distance between the first and last interpolation point is based on the inflexion limit instead.</p>
 <remark>
 <p>I know that the description of the special lengths is really bad.  I hope it will be better once I start documenting path construction in general.</p>
 </remark>
 
-<p>For instance, the following approximates a quarter of a circle well:</p>
+<p>
+	For instance, the following approximates a quarter of a circle well:
 <pre>
 <![CDATA[•page << [stroke (0cm,1cm)>(1%C^0°)--(1%C^90°)<(1cm,0cm)]]]>
 </pre>
+</p>
 </body>
 </section>
 
@@ -114,60 +127,63 @@
 <body>
 <p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
 
-<p>The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:</p>
+<p>
+	The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:
+	<token-example-table>
+		<head>
+			<tr> <td>Escape sequence (not showing use of <inline>¤</inline>)</td> <td>Resulting character</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>¢¢</inline></td> <td>¢</td> </tr>
+			<tr> <td><inline>¢¤</inline></td> <td>¤</td> </tr>
+			<tr> <td><inline>¢`</inline></td> <td>`</td> </tr>
+			<tr> <td><inline>¢´</inline></td> <td>´</td> </tr>
+			<tr> <td><inline>¢"</inline></td> <td>"</td> </tr>
+			<tr> <td><inline>¢n</inline></td> <td>(a newline)</td> </tr>
+			<tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
-<token-example-table>
-<head>
-<tr> <td>Escape sequence (not showing use of <inline>¤</inline>)</td> <td>Resulting character</td> </tr>
-</head>
-<body>
-<tr> <td><inline>¢¢</inline></td> <td>¢</td> </tr>
-<tr> <td><inline>¢¤</inline></td> <td>¤</td> </tr>
-<tr> <td><inline>¢`</inline></td> <td>`</td> </tr>
-<tr> <td><inline>¢´</inline></td> <td>´</td> </tr>
-<tr> <td><inline>¢"</inline></td> <td>"</td> </tr>
-<tr> <td><inline>¢n</inline></td> <td>(a newline)</td> </tr>
-<tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
-</body>
-</token-example-table>
-<p />
-
-<p>It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:</p>
-
-<token-example-table>
-<head>
-<tr> <td>Token</td> <td>Valid string?</td> </tr>
-</head>
-<body>
-<tr> <td><inline>`Hi there´</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Shapes string: `Hi there´´</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Boing!¢b´</inline></td> <td>No (no such escape sequence)</td> </tr>
-<tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td>No (Unbalanced delimiter)</td> </tr>
-<tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>`Dear Shaper¢n¢nMulti-line...´</inline></td> <td>Yes</td> </tr>
-<tr> <td><pre>
+<p>
+	It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid string?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>`Hi there´</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>`Shapes string: `Hi there´´</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>`Boing!¢b´</inline></td> <td>No (no such escape sequence)</td> </tr>
+			<tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td>No (Unbalanced delimiter)</td> </tr>
+			<tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>`Dear Shaper¢n¢nMulti-line...´</inline></td> <td>Yes</td> </tr>
+			<tr> <td><pre>
 `
 Dear Shaper,
 
 Multi-line...
 ´
 </pre></td> <td>Yes</td> </tr>
-<tr> <td><pre>
+			<tr> <td><pre>
 `Dear Shaper,
 
 Multi-line...´
 </pre></td> <td>Yes, but not recommended</td> </tr>
-</body>
-</token-example-table>
+		</body>
+	</token-example-table>
+</p>
 
 <p>The syntax of a poor man's string differs in several ways from the recommended strings.  First, they are delimited using <inline>("</inline> and <inline>")</inline>.  The delimiters no not nest, and either of the two characters in the closing delimiter must be escaped if a closing delimiter is to be included literally in the string.  At the time of writing, the escape character is the same as in recommended strings.</p>
 
 <note>
-<p>The escape character in poor man's strings has not been finalized yet.  The characters used today are two byte entities, and hence not really serving a poor man's needs.  The problem is that there is no obvious one byte choice.  Hence, one of the options would be to let the user specify the escape character to be used on a per string basis, like this, for example:</p>
+	<p>
+		The escape character in poor man's strings has not been finalized yet.  The characters used today are two byte entities, and hence not really serving a poor man's needs.  The problem is that there is no obvious one byte choice.  Hence, one of the options would be to let the user specify the escape character to be used on a per string basis, like this, for example:
 <pre>
 ("%On the next line there are two per cent signs:%n%%%%")
 </pre>
+	</p>
 </note>
 
 </body>
@@ -176,121 +192,142 @@ Multi-line...´
 <section id="syntax/atoms/booleans">
 <title>Booleans</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
-<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
-</syntax-table>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
+		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+	</syntax-table>
+</p>
 
-<p>The valid Booleans are listed below.</p>
-<token-example-table>
-<head>
-<tr> <th>Token</th> <th>Valid Boolean?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>false</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>true</inline></td> <td>Yes</td> </tr>
-</body>
-</token-example-table>
+<p>
+	The valid Booleans are listed below.
+	<token-example-table>
+		<head>
+			<tr> <th>Token</th> <th>Valid Boolean?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>false</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>true</inline></td> <td>Yes</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/atoms/integers">
 <title>Integers</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="integer" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
-<tr> <td><syntax name="integer" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>'</lexerregexp><bnf>;(</bnf> <syntax name="integer-2" /> <bnf>|</bnf> <syntax name="integer-10" /> <bnf>|</bnf> <syntax name="integer-16" /> <bnf>)</bnf></td></tr>
-<tr> <td><syntax name="integer-2" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
-<tr> <td><syntax name="integer-2" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0b[01]+</lexerregexp></td></tr>
-<tr> <td><syntax name="integer-10" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
-<tr> <td><syntax name="integer-10" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+</lexerregexp></td></tr>
-<tr> <td><syntax name="integer-16" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
-<tr> <td><syntax name="integer-16" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0x[0-9A-F]+</lexerregexp></td></tr>
-</syntax-table>
-<p>Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:</p>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="integer" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+		<tr> <td><syntax name="integer" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>'</lexerregexp><bnf>;(</bnf> <syntax name="integer-2" /> <bnf>|</bnf> <syntax name="integer-10" /> <bnf>|</bnf> <syntax name="integer-16" /> <bnf>)</bnf></td></tr>
+		<tr> <td><syntax name="integer-2" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+		<tr> <td><syntax name="integer-2" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0b[01]+</lexerregexp></td></tr>
+		<tr> <td><syntax name="integer-10" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+		<tr> <td><syntax name="integer-10" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+</lexerregexp></td></tr>
+		<tr> <td><syntax name="integer-16" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Integer" /></td></tr>
+		<tr> <td><syntax name="integer-16" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>0x[0-9A-F]+</lexerregexp></td></tr>
+	</syntax-table>
+</p>
 
-<token-example-table>
-<head>
-<tr> <th>Token</th> <th>Valid Integer?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>'13</inline></td> <td>Yes (= 13)</td> </tr>
-<tr> <td><inline>'~5</inline></td> <td>Yes (= -5)</td> </tr>
-<tr> <td><inline>'0xFF</inline></td> <td>Yes (= 255)</td> </tr>
-<tr> <td><inline>'0b110</inline></td> <td>Yes (= 6)</td> </tr>
-<tr> <td><inline>'~0xFF</inline></td> <td>No (negative integers must be entered with radix 10)</td> </tr>
-<tr> <td><inline>(-'0xFF)</inline></td> <td>Yes, but this is an expression, not a token.</td> </tr>
-</body>
-</token-example-table>
+<p>
+	Integers are entered with radix 10, 16, or 2, and begin with an apostrophe.  The tilde sign is placed after the apostrophe for negative values, and is only allowed with radix 10.  Examples:
+	<token-example-table>
+		<head>
+			<tr> <th>Token</th> <th>Valid Integer?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>'13</inline></td> <td>Yes (= 13)</td> </tr>
+			<tr> <td><inline>'~5</inline></td> <td>Yes (= -5)</td> </tr>
+			<tr> <td><inline>'0xFF</inline></td> <td>Yes (= 255)</td> </tr>
+			<tr> <td><inline>'0b110</inline></td> <td>Yes (= 6)</td> </tr>
+			<tr> <td><inline>'~0xFF</inline></td> <td>No (negative integers must be entered with radix 10)</td> </tr>
+			<tr> <td><inline>(-'0xFF)</inline></td> <td>Yes, but this is an expression, not a token.</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/atoms/identifiers">
 <title>Identifiers</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="identifier" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>{LowerCaseLetter}({Letter}|[0-9])*</lexerregexp></td></tr>
-</syntax-table>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="identifier" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>{LowerCaseLetter}({Letter}|[0-9])*</lexerregexp></td></tr>
+	</syntax-table>
+</p>
+
 <p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
 
 <p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9, the underscore, and the question mark.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.  As of today, identifiers may neither begin with a capital letter.  Instead, a capital letter indicates a type name.</p>
 
-<token-example-table>
-<head>
-<tr> <th>Token</th> <th>Valid identifier?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>cool?</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>a_1_2</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>__cplusplus</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>3cm</inline></td> <td>No (this begins with a digit and is a length)</td> </tr>
-<tr> <td><inline>_3abc</inline></td> <td>No (digit after underscore in first position)</td> </tr>
-</body>
-</token-example-table>
+<p>
+	<token-example-table>
+		<head>
+			<tr> <th>Token</th> <th>Valid identifier?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>cool?</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>a_1_2</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>__cplusplus</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>3cm</inline></td> <td>No (this begins with a digit and is a length)</td> </tr>
+			<tr> <td><inline>_3abc</inline></td> <td>No (digit after underscore in first position)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/atoms/dynamic-variables">
 <title>Dynamic variables</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntax name="identifier" /></inline></td></tr>
-</syntax-table>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntax name="identifier" /></inline></td></tr>
+	</syntax-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/atoms/state-ref">
 <title>State references</title>
 <body>
-<p>Note that state references are not expressions.</p>
-<syntax-table>
-<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></inline></td></tr>
-<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
-<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
-</syntax-table>
+<p>
+	Note that state references are not expressions:
+	<syntax-table>
+		<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></inline></td></tr>
+		<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
+	</syntax-table>
+</p>
 </body>
 </section>
 
 <section id="syntax/atoms/symbols">
 <title>Symbols</title>
 <body>
-<syntax-table>
-<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
-<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
-</syntax-table>
-<p>Note that there must not be any whitespace after the apostrophe.</p>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
+		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
+	</syntax-table>
+	Note that there must not be any whitespace after the apostrophe.
+</p>
 
-<p>Symbols are entered as the apostrophe followed by an identifier.</p>
-<token-example-table>
-<head>
-<tr> <th>Token</th> <th>Valid symbol?</th> </tr>
-</head>
-<body>
-<tr> <td><inline>'foo</inline></td> <td>Yes</td> </tr>
-<tr> <td><inline>'2dup</inline></td> <td>No (<inline>2dup</inline> is not an identifier)</td> </tr>
-<tr> <td><inline>'28</inline></td> <td>No, this is an integer</td> </tr>
-</body>
-</token-example-table>
+<p>
+	Symbols are entered as the apostrophe followed by an identifier:
+	<token-example-table>
+		<head>
+			<tr> <th>Token</th> <th>Valid symbol?</th> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>'foo</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>'2dup</inline></td> <td>No (<inline>2dup</inline> is not an identifier)</td> </tr>
+			<tr> <td><inline>'28</inline></td> <td>No, this is an integer</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 </body>
 </section>
 
