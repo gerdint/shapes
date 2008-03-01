@@ -65,6 +65,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:when test="$name='tutorial'">tutorial.html</xsl:when>
 	</xsl:choose>
 </xsl:template>
+<xsl:template name="id-to-anchor-name">
+	<xsl:param name="id" />
+	<xsl:text>secid:</xsl:text><xsl:value-of select="$id" />
+</xsl:template>
 
 <xsl:template match="part-href[@name]">
 	<xsl:call-template name="part-to-href">
@@ -72,12 +76,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="a[@part]">
+<xsl:template match="a[@part | @id]">
 	<xsl:element name="a">
 		<xsl:attribute name="href">
-			<xsl:call-template name="part-to-href">
-				<xsl:with-param name="name"><xsl:value-of select="@part" /></xsl:with-param>
-			</xsl:call-template>
+			<xsl:if test="@part">
+				<xsl:call-template name="part-to-href">
+					<xsl:with-param name="name"><xsl:value-of select="@part" /></xsl:with-param>
+				</xsl:call-template>
+			</xsl:if>
+			<xsl:if test="@id">
+				<xsl:text>#</xsl:text>
+				<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template>
+			</xsl:if>
 		</xsl:attribute>
 		<xsl:apply-templates />
 	</xsl:element>
@@ -227,7 +237,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-
 
 <xsl:template match="inline"><inline><xsl:apply-templates/></inline></xsl:template>
 <xsl:template match="em"><em><xsl:apply-templates/></em></xsl:template>

@@ -17,15 +17,45 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
     <xsl:for-each select="section">
-      <h2><xsl:apply-templates select="title" /></h2>
+			<xsl:choose>
+				<xsl:when test="@id">
+					<xsl:element name="a">
+						<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+						<h2><xsl:apply-templates select="title" /></h2>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<h2><xsl:apply-templates select="title" /></h2>
+				</xsl:otherwise>
+			</xsl:choose>
       <xsl:apply-templates select="top" />
       <xsl:apply-templates select="body" />
       <xsl:for-each select="section">
-				<h3><xsl:apply-templates select="title" /></h3>
+				<xsl:choose>
+					<xsl:when test="@id">
+						<xsl:element name="a">
+							<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+							<h3><xsl:apply-templates select="title" /></h3>
+						</xsl:element>
+					</xsl:when>
+					<xsl:otherwise>
+						<h3><xsl:apply-templates select="title" /></h3>
+					</xsl:otherwise>
+				</xsl:choose>
 				<xsl:apply-templates select="top" />
 				<xsl:apply-templates select="body" />
 				<xsl:for-each select="section">
-					<h4><xsl:apply-templates select="title" /></h4>
+					<xsl:choose>
+						<xsl:when test="@id">
+							<xsl:element name="a">
+								<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+								<h4><xsl:apply-templates select="title" /></h4>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<h4><xsl:apply-templates select="title" /></h4>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:apply-templates select="top" />
 					<xsl:apply-templates select="body" />
 				</xsl:for-each>

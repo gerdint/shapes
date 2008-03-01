@@ -16,9 +16,9 @@
 
 <p>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
 
-<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a href="#expressions">expressions</a> for the details of pure and non-pure expressions.</p>
+<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a id="syntax/misc-expr">expressions</a> for the details of pure and non-pure expressions.</p>
 
-<p>Note that <syntax name="split-definition" /> was defined under <a href="#structures">structures</a>.</p>
+<p>Note that <syntax name="split-definition" /> was defined under <a id="syntax/compound/structures">structures</a>.</p>
 </top>
 
 <section id="syntax/bracket/var-def">
@@ -30,7 +30,7 @@
 </syntax-table>
 <p>The latter form is at the same time a kind of state item, and as such it is always evaluated in the second phase of the code bracket evaluation..</p>
 
-<p>The semantics of the variable definitions is simple.  Bind the the variable to the value of expression, or freeze the state and bind to the final value of the state.  The former form is delayed unless the expression in the right hand side is immediate (see <a href="#laziness">laziness control</a>) or involves states or procedure applications.</p>
+<p>The semantics of the variable definitions is simple.  Bind the the variable to the value of expression, or freeze the state and bind to the final value of the state.  The former form is delayed unless the expression in the right hand side is immediate (see <a id="syntax/misc-expr/laziness">laziness control</a>) or involves states or procedure applications.</p>
 </body>
 </section>
 
@@ -46,7 +46,7 @@
 
 <p>The first form introduces a state.  It requires a value of the special type <named-type name="Hot" /> in the right hand side.  Values of this type has the special ability to spawn fresh states.  Note that a value of type <named-type name="Hot" /> will always spawn identical fresh states, since being a <em>value</em> it has no internal state of its own.  On the other hand, it never spawns the <em>same</em> state twice, so each state it spawns lives its own life.</p>
 
-<p>The second form modifies the state.  Note that states may also be modified by <a href="#expressions">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
+<p>The second form modifies the state.  Note that states may also be modified by <a id="syntax/misc-expr">non-pure expressions</a>.  It evaluates the right hand side expressions in order of appearance, and lets the state <em>tack on</em> the resulting values.</p>
 
 <p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
 

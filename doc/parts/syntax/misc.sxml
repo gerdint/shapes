@@ -1,7 +1,7 @@
 <section id="syntax/misc-expr">
 <title>Other expressions and expressions in general</title>
 <top>
-<p>There are many kinds of expressions.  An expression can be either <em>non-pure</em> or <em>pure</em> depending on whether it interacts with states or not.  An expression may also be <em>immediate</em>, wither because it is of a certain kind which is always immediate, or because the user has flagged it to be immediate for some reason.  Expressions that are non-pure or immediate cannot or must not be delayed, and are evaluated in the second phase of code bracket evaluation.  While non-purity is a property that a child can (and generally does) give to its parent in the abstract syntax tree, the immediate flag is never transferred between child and parent.</p>
+<p>There are many kinds of expressions.  An expression can be either <em>non-pure</em> or <em>pure</em> depending on whether it interacts with states or not.  An expression may also be <em>immediate</em>, either because it is of a certain kind which is always immediate, or because the user has flagged it to be immediate for some reason.  Expressions that are non-pure or immediate cannot or must not be delayed, and are evaluated in the second phase of code bracket evaluation.  While non-purity is a property that a child can (and generally does) give to its parent in the abstract syntax tree, the immediate flag is never transferred between child and parent.</p>
 
 <p>The following breaks down <syntax name="expr" />:</p>
 <syntax-table>
@@ -76,7 +76,7 @@
 <ol>
 <li><p>Find all angles to handles that are determined explicitly.</p></li>
 <li><p>Propagate all known angles to any free angles on the other side of a path point (taking corner angles into account).</p></li>
-<li><p>Compute remaining angles based on the path points position relative its neighboring path points.</p><todo><p>Fill in details!</p></todo></li>
+<li><p>Compute remaining angles based on the path point's position relative its neighboring path points.</p><todo><p>Fill in details!</p></todo></li>
 <li><p>Compute all distances to handles that are given explicitly.  Note that this requires all angles to be known.</p></li>
 <li><p>Propagate known distances to any free distances on the other side of a path point.</p></li>
 <li><p>Use <dynvar name="defaultunit" /> to find one value per remaining free distance.  At path points where only one such value is computed, use it as it is.  At path points where two such values are computed, use the smalles of these values on both sides.</p></li>

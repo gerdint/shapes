@@ -92,7 +92,7 @@
 <pre>
 <![CDATA[(+ dist*[dir ang])]]>
 </pre>
-<p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a href="#pathconstruction">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
+<p>The power comes from the option to leave out either or both of the distance and angle.  How the <em>free</em> components of a polar handle are deduced is discussed under <a id="syntax/misc-expr/path-constr">path construction</a>.  Here, we just show the syntax for the handles themselves:</p>
 <syntax-table>
 <tr> <td><syntax name="polar-handle-2D" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="PolarHandle" /></td></tr>
 <tr> <td><syntax name="polar-handle-2D" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="Length" /><bnf>&gt;?</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;?</bnf> )</inline></td></tr>
@@ -121,8 +121,19 @@
 
 <p>A <em>corner point</em> is a generalization of <named-type name="Coord2D" />.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <named-type name="Coord2D" /> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:</p>
 <table cellspacing="5">
-<tr> <td><syntax name="corner-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf> )</inline></td></tr>
+<tr> <td><syntax name="corner-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf><bnf>?</bnf> )</inline></td></tr>
 </table>
+<p>When the angle is not present, each angle is determined as if there was just one handle, that is, independently of the other angle.</p>
+<p />
+<token-example-table>
+<head>
+<tr> <th>Expression</th> <th>Valid construct?</th> </tr>
+</head>
+<body>
+<tr> <td><inline>( 5cm, 4cm ^ 60° )</inline></td> <td>Yes, corner point with 60° angle (unless both handles have specified angles).</td> </tr>
+<tr> <td><inline>( 5cm, 4cm ^ )</inline></td> <td>Yes, corner point with two independent handles.</td> </tr>
+</body>
+</token-example-table>
 <p />
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
@@ -139,7 +150,7 @@
 <section id="syntax/compound/functions">
 <title>Functions and friends</title>
 <body>
-<p>Functions are at the heart of a functional language.  Powerful ways of creating functions make source code both more compact and more comprehensible.  The language is <em>not</em> curried, but contains many constructs to support <em>evaluated cuts</em>, but these are presented in connection with <a href="#funapply">function calls</a>.</p>
+<p>Functions are at the heart of a functional language.  Powerful ways of creating functions make source code both more compact and more comprehensible.  The language is <em>not</em> curried, but contains many constructs to support <em>evaluated cuts</em>, but these are presented in connection with <a id="syntax/fun-apply">function calls</a>.</p>
 
 <p>There are true (pure) functions, non-pure functions, and horrible procedures, all of which are constructed similarly, but differ in how they are applied and what they are allowed to do.  First, pure functions will be discussed in detail.  Then, non-pure functions and procedures will be presented in terms of how they differ from pure functions.</p>
 
@@ -159,14 +170,14 @@
 
 <p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
 
-<p>A function with a sink can take any number of arguments, and arguments by any name.  Everything that does not match the list of formals before the sink is placed in the sink, which is a <a href="#structures">structure</a>.</p>
+<p>A function with a sink can take any number of arguments, and arguments by any name.  Everything that does not match the list of formals before the sink is placed in the sink, which is a <a id="syntax/compound/structures">structure</a>.</p>
 </body>
 </section>
 
 <section id="syntax/compound/structures">
 <title>Structures</title>
 <body>
-<p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a href="#funapply">function application</a> for an explanation of <syntax name="named-expr" />, and to see how structures may be used.</p>
+<p>Structures allows values to be grouped into a composite value, from which the components can later be extracted.  The mechanism for this is designed to remind as much as possible of how multiple values are passed to a function during a function call.  This creates some useful analogies.  Please refer to <a id="syntax/fun-apply">function application</a> for an explanation of <syntax name="named-expr" />, and to see how structures may be used.</p>
 
 <syntax-table>
 <tr> <td><syntax name="structure" class="new" /></td> <td><bnf>::</bnf></td> <td>“<named-type name="Structure" />”</td></tr>

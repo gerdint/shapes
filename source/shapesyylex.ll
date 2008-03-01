@@ -813,26 +813,48 @@ Escape "¢"|"¤"
 
 double shapes_strtod( char * str, char ** end )
 {
-	if( *str == '~' )
+	char termTmp;
+	char * term = str;
+	for( ; *term != '\0'; ++term )
 		{
-			*str = '-';
+			switch( *term )
+				{
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+				case '.':
+					continue;
+				case '~':
+					*term = '-';
+					continue;
+				case '*':
+					// We replace the "*^" by something in the notation of strtod
+					*term = 'e';
+					if( *(term+2) == '~' )
+						{
+							*(term+1) = '-';
+							*(term+2) = '0';
+							term += 3;
+						}
+					else
+						{
+							*(term+1) = '0';
+							term += 2;
+						}
+				}
+			break;
 		}
+	termTmp = *term;
+	*term = '\0';
 	double val = strtod( str, end );
-	if( **end == '*' )
-		{
-			// We replace the "^*" by something in the notation of strtod
-			**end = 'e';
-			if( *(*end+2) == '~' )
-				{
-					*(*end+1) = '-';
-					*(*end+2) = '0';
-				}
-			else
-				{
-					*(*end+1) = '0';
-				}
-			val = strtod( str, end );
-		}
+	*term = termTmp;
 	return val;
 }
 

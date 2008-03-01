@@ -159,6 +159,29 @@ facing: [../facing scale:true distort:true ...]
 	</function>
 </system-binding>
 
+<system-binding identifier="inverse">
+	<function>
+		<case constructor-of="Transform">
+			<arguments>
+				<arg>
+					<type><named-type name="Transform" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</description>
+		</case>
+		<case constructor-of="Transform3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Transform3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</description>
+		</case>
+	</function>
+</system-binding>
+
 <system-binding identifier="stroke">
 	<function>
 		<case constructor-of="Drawable">

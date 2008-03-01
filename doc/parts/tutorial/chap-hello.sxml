@@ -4,7 +4,7 @@
 <p>Let's begin by working through a very small example.  We'll just make a diagonal line — that's pretty much the simplest thing I can think of.</p>
 </top>
 
-<section id="hello-source">
+<section id="hello/source">
 <title>The source</title>
 <body>
 <p>The following line of code is all we need for this example, it will be explained in just a moment:</p>
@@ -25,9 +25,9 @@
 <li>Coordinates are specified as pairs of lengths, as opposed to pairs of scalars, unlike many other graphics languages where there is no distinction between lengths and scalars.</li>
 </ol>
 </body>
-</section><!-- End of hello-source -->
+</section><!-- End of hello/source -->
 
-<section id="hello-compile">
+<section id="hello/compile">
 <title>Compiling and viewing</title>
 <body>
 <p>To obtain the pretty piece of graphics so carefully designed above, we just need to pass the file to the <str-Shapes /> compiler:</p>
@@ -42,15 +42,16 @@ xpdf hello.pdf &amp;
 <command-line>
 shapes --xpdf hello.shape
 </command-line>
+<p>If you're on a Mac, you may replace <inline>--xpdf</inline> by <inline>--open</inline>.</p>
 </body>
-</section><!-- End of hello-compile -->
+</section><!-- End of hello/compile -->
 
-<section id="hello-final-comments">
+<section id="hello/final-comments">
 <title>Final comments</title>
 <body>
 <p>If you reached this point, this shows you're up and running!  You're ready to go on with more exciting examples!  By the way, can you figure out how you would go about to add another stroke to your page, or a longer stroke connecting several points?</p>
 <p>There are many things the user can control using command line options to the compiler, but these won't be covered in this tutorial.  Please refer to the <a part="man">man page</a> for further details on this.</p>
 </body>
-</section><!-- End of hello-final-comments -->
+</section><!-- End of hello/final-comments -->
 
 </section><!-- end of chap-hello -->

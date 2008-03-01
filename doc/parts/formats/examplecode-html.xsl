@@ -13,7 +13,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <table class="codefile">
     <tr><td><hr class="thick"/></td></tr>
     <tr><th colspan="3"><xsl:value-of select="@title" /></th></tr>
-    <xsl:apply-templates />
+    <xsl:apply-templates select="image" />
+    <xsl:apply-templates select="caption" />
+    <xsl:apply-templates select="source" />
     <tr><td><hr class="thick"/></td></tr>
   </table>
 </xsl:template>
@@ -26,6 +28,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	  <xsl:attribute name="alt">Angry</xsl:attribute>
 	</xsl:element>
       </xsl:element>
+  </td></tr>
+</xsl:template>
+<xsl:template match="example-with-output/caption">
+  <tr><td>
+			<here-caption>
+				<xsl:apply-templates />
+			</here-caption>
   </td></tr>
 </xsl:template>
 <xsl:template match="example-with-output/source[@file]">
