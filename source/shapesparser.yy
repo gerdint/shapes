@@ -248,6 +248,15 @@ Coords
 													Ast::THE_FUNCTION_cornercoords2D,
 													args );
 }
+| '(' Expr ',' Expr '^' ')'
+{
+	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+	args->orderedExprs_->push_back( $2 );
+	args->orderedExprs_->push_back( $4 );
+	$$ = new Ast::CallExpr( @$,
+													Ast::THE_FUNCTION_cornercoords2D,
+													args );
+}
 | '(' Expr ',' Expr ',' Expr ')'
 {
 	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );

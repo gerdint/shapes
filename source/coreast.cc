@@ -129,14 +129,25 @@ namespace Shapes
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				const size_t ARITY = 3;
-				CHECK_ARITY( args, ARITY, title_ );
-
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::ValueRef( new Lang::CornerCoords2D( * Helpers::down_cast_CoreArgument< const Lang::Length >( "( x ,<>^<>)", args, 0, callLoc ),
-																																		 * Helpers::down_cast_CoreArgument< const Lang::Length >( "(<>, y ^<>)", args, 1, callLoc ),
-																																		 Helpers::down_cast_CoreArgument< const Lang::Float >( "(<>,<>^ a )", args, 2, callLoc )->val_ ) ),
-												 evalState );
+				switch( args.size( ) )
+					{
+					case 2:
+						cont->takeValue( Kernel::ValueRef( new Lang::CornerCoords2D( * Helpers::down_cast_CoreArgument< const Lang::Length >( "( x, <> ^ )", args, 0, callLoc ),
+																																				 * Helpers::down_cast_CoreArgument< const Lang::Length >( "( <>, y ^ )", args, 1, callLoc ),
+																																				 std::numeric_limits< double >::signaling_NaN( ) ) ),
+														 evalState );
+						break;
+					case 3:
+						cont->takeValue( Kernel::ValueRef( new Lang::CornerCoords2D( * Helpers::down_cast_CoreArgument< const Lang::Length >( "( x, <> ^ <> )", args, 0, callLoc ),
+																																				 * Helpers::down_cast_CoreArgument< const Lang::Length >( "( <>, y ^ <> )", args, 1, callLoc ),
+																																				 Helpers::down_cast_CoreArgument< const Lang::Float >( "( <>, <> ^ a )", args, 2, callLoc )->val_ ) ),
+														 evalState );
+						break;
+					default:
+						throw Exceptions::CoreArityMismatch( title_, 2, 3, args.size( ) );
+					}
+
 			}
 		};
 

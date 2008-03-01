@@ -232,8 +232,9 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 				 i != pth->end( );
 				 ++i )
 			{
-				if( (*i)->rear_ == (*i)->mid_ &&
-						(*i)->front_ == (*i)->mid_ )
+				if( ( (*i)->rear_ == (*i)->mid_ &&
+							(*i)->front_ == (*i)->mid_ ) ||
+						isnan( (*i)->defaultAngle_ ) )
 					{
 						/* There are no handles at this point.
 						 * Set angles in direction to neighboring coordinates.
@@ -269,7 +270,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						if( (*i)->rearState_ & Concrete::PathPoint2D::UNFORCED_A )
 							{
 								/* Put code for forcing the angle here
-								 * ... 
+								 * ...
 								 */
 							}
 
@@ -305,7 +306,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 										Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
 										Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
 										(*i)->rearAngle_ = atan2( dyRear.offtype< 1, 0 >( ), dxRear.offtype< 1, 0 >( ) );
-										(*i)->frontAngle_ = (*i)->rearAngle_ + M_PI;  /* Both angles must always be set, even where there is no handle. */
+										(*i)->frontAngle_ = (*i)->rearAngle_ + M_PI + (*i)->defaultAngle_;    /* Both angles must always be set, even where there is no handle. */
 										if( ! ( (*i)->rearState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
 											{
 												(*i)->rear_->x_ = (*i)->mid_->x_ + (*i)->rearModulus_ * cos( (*i)->rearAngle_ );
@@ -318,7 +319,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
 						Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
 						(*i)->frontAngle_ = atan2( dyFront.offtype< 1, 0 >( ), dxFront.offtype< 1, 0 >( ) );  /* Both angles must always be set, even where there is no handle. */
-						(*i)->rearAngle_ = (*i)->frontAngle_ + M_PI;
+						(*i)->rearAngle_ = (*i)->frontAngle_ + M_PI - (*i)->defaultAngle_;
 						if( ! ( (*i)->rearState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
 							{
 								(*i)->rear_->x_ = (*i)->mid_->x_ + (*i)->rearModulus_ * cos( (*i)->rearAngle_ );
@@ -334,7 +335,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						if( (*i)->frontState_ & Concrete::PathPoint2D::UNFORCED_A )
 							{
 								/* Put code for forcing the angle here
-								 * ... 
+								 * ...
 								 */
 							}
 
@@ -370,7 +371,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 										Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
 										Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
 										(*i)->frontAngle_ = atan2( dyFront.offtype< 1, 0 >( ), dxFront.offtype< 1, 0 >( ) );
-										(*i)->rearAngle_ = (*i)->frontAngle_ + M_PI;  /* Both angles must always be set, even where there is no handle. */
+										(*i)->rearAngle_ = (*i)->frontAngle_ + M_PI - (*i)->defaultAngle_;  /* Both angles must always be set, even where there is no handle. */
 										if( ! ( (*i)->frontState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
 											{
 												(*i)->front_->x_ = (*i)->mid_->x_ + (*i)->frontModulus_ * cos( (*i)->frontAngle_ );
@@ -383,7 +384,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
 						Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
 						(*i)->rearAngle_ = atan2( dyRear.offtype< 1, 0 >( ), dxRear.offtype< 1, 0 >( ) );  /* Both angles must always be set, even where there is no handle. */
-						(*i)->frontAngle_ = (*i)->rearAngle_ + M_PI;
+						(*i)->frontAngle_ = (*i)->rearAngle_ + M_PI + (*i)->defaultAngle_;
 						if( ! ( (*i)->frontState_ & ( Concrete::PathPoint2D::FREE_MODULUS | Concrete::PathPoint2D::UNFORCED_M ) ) )
 							{
 								(*i)->front_->x_ = (*i)->mid_->x_ + (*i)->frontModulus_ * cos( (*i)->frontAngle_ );
@@ -399,14 +400,14 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 				if( (*i)->rearState_ & Concrete::PathPoint2D::UNFORCED_A )
 					{
 						/* Put code for forcing the angle here
-						 * ... 
+						 * ...
 						 */
 					}
 
 				if( (*i)->frontState_ & Concrete::PathPoint2D::UNFORCED_A )
 					{
 						/* Put code for forcing the angle here
-						 * ... 
+						 * ...
 						 */
 					}
 
