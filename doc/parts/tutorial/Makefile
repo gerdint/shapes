@@ -6,7 +6,7 @@ EXDIR=../../../examples
 
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
-HTML_MORE_FORMATS=../formats/html.xsl
+HTML_MORE_FORMATS=../formats/html.xsl ../formats/examplecode-html.xsl ../formats/plain-book-html.xsl
 
 PRODUCTS = $(HTMLDIR)/tutorial.html
 DEPENDS = build/tutorial.depend
