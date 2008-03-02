@@ -20,7 +20,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:for-each select="section">
 					  
 					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
+					<xsl:attribute name="href">#<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
 						<xsl:value-of select="title" />
 					</xsl:element>
 				</xsl:for-each>
@@ -43,7 +43,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:for-each select="section">
 				<h2>
 					<xsl:element name="a">
-						<xsl:attribute name="name"><xsl:value-of select="@id" /></xsl:attribute>
+						<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
 						<xsl:value-of select="title" />
 					</xsl:element>
 				</h2>

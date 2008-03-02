@@ -14,4 +14,6 @@
 	<!--#include virtual="chap-install.sxml" -->
 	<!--#include virtual="chap-hello.sxml" -->
 	<!--#include virtual="chap-basics.sxml" -->
+	<!--#include virtual="chap-prog.sxml" -->
+	<!--#include virtual="chap-paths.sxml" -->
 </book>

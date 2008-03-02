@@ -9,6 +9,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-UTF-8"><span class="medium-caps">utf</span>-8</xsl:template>
 <xsl:template match="str-2D">2<span class="medium-caps"><sup>d</sup></span></xsl:template>
 <xsl:template match="str-3D">3<span class="medium-caps"><sup>d</sup></span></xsl:template>
+<xsl:template name="str-Google" match="str-Google"><span class="Google"><blue>G</blue><red>o</red><yellow>o</yellow><blue>g</blue><green>l</green><red>e</red><black>™</black></span></xsl:template>
 
 <xsl:template match="abbr-etc">&amp;c</xsl:template>
 
@@ -90,9 +91,63 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template>
 			</xsl:if>
 		</xsl:attribute>
-		<xsl:apply-templates />
+		<xsl:choose>
+			<xsl:when test="node()">
+				<xsl:apply-templates />
+			</xsl:when>
+			<xsl:when test="@part">
+				<filename>
+					<xsl:call-template name="part-to-href">
+						<xsl:with-param name="name"><xsl:value-of select="@part" /></xsl:with-param>
+					</xsl:call-template>
+				</filename>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="dstid">
+					<xsl:value-of select="@id" />
+				</xsl:variable>
+				<xsl:apply-templates select="//section[@id=$dstid]/title" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:element>
 </xsl:template>
+<xsl:template match="a[@id]/title">
+  <xsl:variable name="dstid">
+    <xsl:value-of select="../@id" />
+  </xsl:variable>
+  <xsl:apply-templates select="//section[@id=$dstid]/title" />
+</xsl:template>
+
+<xsl:template match='a[@method="google-lucky" and @query]'>
+	<xsl:element name="a">
+		<xsl:attribute name="href">http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=<xsl:value-of select="@query" /></xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="node()">
+				<xsl:apply-templates />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>[</xsl:text><xsl:call-template name="str-Google" /><xsl:text>_lucky `</xsl:text><xsl:value-of select="@query" /><xsl:text>´]</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:element>
+</xsl:template>
+<xsl:template match='a[@method="google" and @query]'>
+	<xsl:element name="a">
+		<xsl:attribute name="href">http://www.google.com/search?q=<xsl:value-of select="@query" /></xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="node()">
+				<xsl:apply-templates />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>[</xsl:text><xsl:call-template name="str-Google" /><xsl:text> `</xsl:text><xsl:value-of select="@query" /><xsl:text>´]</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="a[@query]/query">
+  <xsl:value-of select="../@query" />
+</xsl:template>
+
 
 <xsl:template name="name-to-binding">
 	<xsl:param name="name" />

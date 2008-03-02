@@ -12,7 +12,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <h1><xsl:apply-templates select="title" /></h1>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
+
+		<p><b>Sections:</b>
+			<xsl:for-each select="section">
+				  
+				<xsl:element name="a">
+					<xsl:attribute name="href">#<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+					<xsl:value-of select="title" />
+				</xsl:element>
+			</xsl:for-each>
+		</p>
+
     <xsl:for-each select="section">
+			<hr class="thin"/>
 			<xsl:choose>
 				<xsl:when test="@id">
 					<xsl:element name="a">

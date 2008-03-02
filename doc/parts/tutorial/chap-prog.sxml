@@ -1,0 +1,227 @@
+<section id="chap-prog">
+<title>Programming</title>
+<top>
+<p>Under this overly generic title, we'll discuss basic programming concepts, such as states, functions, and structures.  As usual, we'll often do this by giving relevant pointers to the reference documentation.</p>
+</top>
+
+<section id="prog/bracket">
+<title>The code bracket</title>
+<body>
+
+	<p>
+		We have already seen how variable bindings can be introduced, like this:
+<pre>
+a: 8 + 7
+</pre>
+    but we have not yet discussed where such code may appear.  The proper place to introduce a variable binding is a <em>code bracket</em>.  A complete <str-Shapes /> program is implicitly enclosed in a code bracket, and the user may introduce new code brackets by using the delimiters <inline>{</inline> and <inline>}</inline>.</p>
+
+<p>
+  Here, the sum of 7 and 8 is squared by using a variable binding for the sum, and then multiplying that variable by itself:
+<pre>
+{
+  a: 8 + 7
+  a * a
+}
+</pre>
+	</p>
+
+	<p>Code brackets serve many purposes.  To learn more, see <syntax name="code-bracket" />.</p>
+</body>
+</section><!-- End of prog/bracket -->
+
+<section id="prog/functions">
+<title>Functions, and the lexical and dynamic environments</title>
+<body>
+	<p>In this section, the <em>pure functions</em> will be introduced.  These are my favourite function-like abstraction, and hence what you will find in most code examples.  Other function-like abstractions will be introduced later, after <em>state</em> have been properly introduced.</p>
+
+	<p>A function has no side effects.  Given arguments and a <em>dynamic</em> environment, a function returns a value.  Given the same arguments and the same dynamic environment, the function will always return the same result.  This implies that a function must not be allowed to access anything which can change from time to time.  In <str-Shapes /> these things which can change are the <em>states</em>, so the rule is simply that a pure function is not allowed to access any states.  Note that this does not mean a function cannot use states internally to compute its result.</p>
+
+	<p>
+		The following example shows how a function is constructed:
+<pre>
+textGreater: \ x y .> [if x > y `true´ `false´]
+</pre>
+    The <em>formal parameters</em> appear between <inline>\</inline> and <inline>.&gt;</inline>, and the expression that follows is the <em>body</em> of the function.  The result of calling the function is obtained by evaluating the body, with the formal parameters added to the <em>lexical scope</em>  For instance,
+<pre>
+•stdout &lt;&lt; [textGreater 4 5]
+</pre>
+    would result in <em>false</em> being written to <filename>stdout</filename>.
+	</p>
+
+	<p>The above example code shows what a typical function call looks like, with the callee and arguments enclosed in square brackets.  When there is only one argument, one may reorder things a little:
+<pre>
+•stdout &lt;&lt; sin [] 30°
+</pre>
+	</p>
+
+	<p>
+		Let us also show how <em>evaluated cuts</em> can be used to bind just some of the arguments of a function:
+<pre>
+textGreaterThanEight: [textGreater y:8 ...]
+</pre>
+    There is much more to say about evaluated cuts, but we shall just include links to <a part="syntax" id="syntax/fun-apply/cute-basic" />,  <a part="syntax" id="syntax/fun-apply/cute-unary" />, <a part="syntax" id="syntax/fun-apply/cute-structure" />, and an example here.
+	</p>
+
+<example-with-output title="Evaluated cuts" internal-id="example/cute">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/curry.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/curry.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/curry.stdout" -->]]>
+</stdout>
+<caption>
+	<p>Evaluated cuts may take some time to grok.  Use this example as an exercise!</p>
+</caption>
+</example-with-output>
+
+	<p>Function taking an arbitrary number of arguments can be defined by the use of a <syntax name="sink" />.  This is an advanced topic, also discussed in <a part="syntax" id="syntax/compound/structures" />.</p>
+
+	<p>The lexical scope is the set of bindings which can be “seen” from a particular point in the code.  This is a very common concept, explained in more detail in <a part="syntax" id="syntax/binding/lexical" /> (where the reader will also find the example included below), and the reader is referred to <a method="google" query='"lexical binding"'/> for further in-depth discussions.  One thing to note about the lexical scope in <str-Shapes />, though, is that when a new binding is introduced, the scope where the binding is introduced is in scope where the right hand side expression is evaluated.  That is, defining (mutually) recursive functions is trivial.</p>
+
+<example-with-output title="Lexical binding" internal-id="example/lexical-binding">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/scopes.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/scopes.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/scopes.stdout" -->]]>
+</stdout>
+<caption>
+	<p>Lexical scoping rules in <str-Shapes /> make it easy to define (mutually) recursive functions.  To access bindings shadowed in the current scope, one can <em>reach out</em> by using the <inline>../</inline> construct.</p>
+</caption>
+</example-with-output>
+
+<p>Dynamic bindings, recognized by being prefixed with the at sign (@) differ from lexical bindings in that one cannot determine where they were bound by a lexical analysis of the code.  Instead, one must (conceptually) unwind the chain of function calls to find the closest point where the dynamic variable was bound.  We have already seen dynamic variables in use in <a id="basics/colors" />, although the examples seen there were very simple and did not really display the power of dynamic binding.  The main documentation is in  <a part="syntax" id="syntax/binding/dynamic" /> (the example below also appears there), but interested readers should also try <a method="google" query='"dynamic binding" lexical' /> for further in-depth discussions.  The thing to note about dynamic bindings in <str-Shapes /> is that a dynamic variable can be bound to an expression that is to be evaluated each time the dynamic variable is accessed.  This feature i called an <em>dynamic expression</em> (note that these can only be bound to dynamic variables).</p>
+
+<example-with-output title="Dynamic binding" internal-id="example/dynamic-binding">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/dynamic.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/dynamic.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/dynamic.stdout" -->]]>
+</stdout>
+<caption>
+	<p>Dynamic scoping in <str-Shapes /> allows for both dynamically bound variables and dynamically evaluated expressions.  The keyword <inline>dynamic</inline> is used both for introducing new dynamic bindings and to indicate that an expression is to be evaluated dynamically.</p>
+</caption>
+</example-with-output>
+
+</body>
+</section><!-- End of prog/functions -->
+
+<section id="prog/states">
+<title>States</title>
+<body>
+	<p>By now, we know that a pure function may not access states, and we have seen the globally defined states <state name="page" /> and <state name="stdout" /> in use in the examples.  Here, the reader will learn how to set up new states, and what the basic operations on states are.  How states are used with non-pure functions and procedures is postponed until <a id="prog/non-pure" />.</p>
+
+	<p>
+		A state may be introduced in a code bracket just like a variable binding:
+<pre>
+•myState: newGroup
+</pre>
+    The right hand side is a value that is able to spawn new states, see <a part="bindings" id="bindings/hot" /> for the globally bound values with such capability.
+	</p>
+
+	<p>The states themselves are of <em>state type</em>.  For instance, <state name="page" /> is of type <named-state-type name="Group" />.  The operations on a state which we are about to describe briefly are further described in the documentation for state types.</p>
+
+	<p>
+		There are three basic operations, <em>tack on</em>, <em>peek</em>, and <em>freeze</em>.  The first of these looks like a C++ insertion operation, and may repeated:
+<pre>
+•myState &lt;&lt; (TeX `Hello!´)
+         &lt;&lt; [stroke (1cm,1cm)--(2cm,0cm)]
+</pre>
+    The state is free to modify itself as it pleases when values are tacked on to it.
+	</p>
+
+	<p>
+		The next operation, <em>peek</em>, may also modify the state, but shall also return a value somehow representing the current state of the state.  The syntax is simply to enclose the state in parentheses:
+<pre>
+picture: (•myState)
+</pre>
+    Not all state types allows the state to be peeked, usually for efficiency reasons.
+	</p>
+
+	<p>
+		The last operation, <em>freeze</em>, returns a value representing the state, and renders the state unusable in the future.  This allows for efficient implementation.  The state is frozen by writing a semicolon after the state, and this operation is only allowed as the right hand side of a variable binding, or as the last statement in a code bracket.  For instance,
+<pre>
+finalState: •myState;
+</pre>
+    Not all state types allows the state to be frozen.
+	</p>
+
+	<p>
+		States can also be used without naming the state.  For instance:
+<pre>
+picture: ( newGroup &lt;&lt; (TeX `Hello!´) &lt;&lt; [stroke (1cm,1cm)--(2cm,0cm)] )
+</pre>
+   gives the same result as
+<pre>
+picture: ( (TeX `Hello!´) &amp; [stroke (1cm,1cm)--(2cm,0cm)] )
+</pre>
+	</p>
+
+	<p>We end this section with an example.</p>
+
+<example-with-output title="States" internal-id="example/states">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/states.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/states.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/states.stdout" -->]]>
+</stdout>
+<caption>
+	<p>States allow imperative style programming to some extent in <str-Shapes />.  This example also illustrates non-pure functions and procedures, which have not yet been discussed.</p>
+</caption>
+</example-with-output>
+
+</body>
+</section><!-- End of prog/states -->
+
+<section id="prog/non-pure">
+<title>Non-pure functions and procedures</title>
+<body>
+
+	<p>A <em>non-pure function</em> is like a pure function, except that it also takes state arguments by reference.  This means that the result of a non-pure function call cannot be cached for reuse, and that the side effects the function may have are limited to the states explicitly passes in the call.</p>
+
+	<p>Non-pure functions are defined just like pure functions, and called the same way.  The only difference is that states appear among the formal parameters, and that states needs to be passed for these formal parameters.  The following example shows how a non-pure function is used to add a stroke to <state name="page" />:
+<pre>
+mark: \ •dst .> { •dst &lt;&lt; [stroke (0cm,0cm)--(1cm,1cm)] }
+[mark •page]
+</pre>
+	</p>
+
+	<note>
+		<p>A non-pure expression such as <inline>[mark •page]</inline> may be used as a <em>statement</em>, which is completely unlike a pure expression such as <inline>[stroke (0cm,0cm)--(1cm,1cm)]</inline>.  Statements may appear anywhere in a code bracket, while expressions only make sense at the end of a code bracket.</p>
+	</note>
+
+	<p>When a function is called, the formal parameters are bound in a scope where the body of the function is then evaluated.  One can think of this scope as a barrier through which states cannot be reached.  The main difference between functions and <em>procedures</em> is that the latter don't put up such a barrier for reaching states.  The use of procedures is discouraged, and the curious reader is referred to <syntax name="procedure" /> and <a part="syntax" id="syntax/fun-apply/procedures" />.  What it comes down to is that it must be clearly visible in the source where procedures are used, and that additional rules are needed for where procedures may be called and what states they may access.</p>
+
+	<p>See the example under <a id="prog/states" /> for more examples.</p>
+
+</body>
+</section><!-- End of prog/non-pure -->
+
+
+<section id="prog/structure">
+<title>Structures</title>
+<body>
+
+	<p><em>Structures</em> are the simple means for data abstraction currently supported by <str-Shapes />.</p>
+
+	<p>
+		A common application of structures that a user may need to know about is arrowheads.  An arrowhead function shall, given a path, return a length that the path shall be shortened by, and a picture that is the actual arrowhead.  This would be a valid arrowhead function:
+<pre>
+\ pth .>
+  (&gt;
+    cut: 2mm
+    picture: [shift pth.begin.p] [] [fill [circle 1mm]]
+  &lt;)
+</pre>
+   Note that the names of the field in the structure is part of the structure's type, and hence of the function's signature.
+	</p>
+
+	<p>Structures have many uses.  Please refer to <a part="syntax" id="syntax/compound/structures" /> for an example and more details.</p>
+
+</body>
+</section><!-- End of prog/structures -->
+
+
+</section><!-- End of chap-prog -->

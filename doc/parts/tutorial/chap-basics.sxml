@@ -7,10 +7,13 @@
 <section id="basics/LaTeX">
 <title>Producing nice labels with LaTeX</title>
 <body>
-<p>The following example shows how to produce a label typeset using <str-LaTeX />:</p>
+<p>
+	The following example shows how to produce a label typeset using <str-LaTeX />:
 <pre>
 &bullet;page &lt;&lt; (TeX <char-str-open />$\Xi^{2}$<char-str-close />)
 </pre>
+</p>
+
 <p>
 	Things worth noting:
 	<ol>
@@ -170,7 +173,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <section id="basics/colors">
 <title>Changing graphics parameters, such as color</title>
 <body>
-<p>Until now, all our drawings have been black on white, and all strokes of the default width <physical><scalar>1</scalar><unit>bp</unit></physical>.  In <str-PDF /> such properties are part of the <em>graphics state</em>, and <str-Shapes /> gives you control over these parameters via dynamic variables; just like <dynvar name="defaultunit" /> has an impact on how smooth paths come out, <dynvar name="width" /> controls how thick the lines coming from <binding name="stroke" /> are.</p>
+<p>Until now, all our drawings have been black on white, and all strokes of the default width <physical><scalar>1</scalar><unit>bp</unit></physical>.  In <str-PDF /> such properties are part of the <em>graphics state</em>, and <str-Shapes /> gives you control over these parameters via dynamic variables (see <a id="prog/functions" /> below); just like <dynvar name="defaultunit" /> has an impact on how smooth paths come out, <dynvar name="width" /> controls how thick the lines coming from <binding name="stroke" /> are.</p>
 <p>As usual, we use an example to show what the most important parameters are called, and how to set them.</p>
 <example-with-output title="Graphics-params" internal-id="example/graphics-params">
 <image pdf="tutorial-graphic-params_3.pdf" jpg="tutorial-graphics-params_y_big.jpg" />

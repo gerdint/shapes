@@ -7,10 +7,82 @@
 <system-binding identifier="newGroup">
 	<hot>
 		<constructor-of><named-state-type name="Group" /></constructor-of>
-		<dynamic-references></dynamic-references>
 		<description></description>
 	</hot>
 </system-binding>
+
+<system-binding identifier="newGroup3D">
+	<hot>
+		<constructor-of><named-state-type name="Group3D" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newLights">
+	<hot>
+		<constructor-of><named-state-type name="Lights" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newString">
+	<hot>
+		<constructor-of><named-state-type name="String" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newText">
+	<hot>
+		<constructor-of><named-state-type name="Text" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newIgnore">
+	<hot>
+		<constructor-of><named-state-type name="Ignore" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newTimer">
+	<hot>
+		<constructor-of><named-state-type name="Float" /></constructor-of>
+		<description>
+			<p>When the timer is frozen, it returns the time in seconds since its creation.</p>
+		</description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newZSorter">
+	<hot>
+		<constructor-of><named-state-type name="Drawable3D" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newZBuf">
+	<hot>
+		<constructor-of><named-state-type name="Drawable3D" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newFont">
+	<hot>
+		<constructor-of><named-state-type name="Font" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
+<system-binding identifier="newRGBInterpolator">
+	<hot>
+		<constructor-of><named-state-type name="RGBInterpolator" /></constructor-of>
+		<description></description>
+	</hot>
+</system-binding>
+
 
 </section>
 

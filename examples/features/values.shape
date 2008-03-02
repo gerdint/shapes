@@ -13,7 +13,7 @@
   multi: \  x .> (>  x  x+1  x+2  <)
 
   user: \ a1 a2 a3 .>  100*a1 + 10*a2 + a3
-  
+
   /** Note the special syntax used to call a function with the values expanded:
    **/
   •stdout << user [] <>[multi 5] << `¢n´
@@ -135,7 +135,7 @@
 
   {
     /** When it comes to named parts of a structure, there are some differences to the semantics of calling
-     ** a function.  First, it is not required that all named parts are received.  This makes it possible to 
+     ** a function.  First, it is not required that all named parts are received.  This makes it possible to
      ** extract only the parts of a structure with are useful, and avoids cluttering the destination scope with
      ** variables of no use.
      ** Second, the variables being introduced in the current scope are generally named different from the
@@ -149,7 +149,7 @@
        **/
       (<
         x:.a1
-	y:.a2
+        y:.a2
       >): bunch
 
       •stdout << `x = ´ << x  << `, y = ´ << y << `¢n´
@@ -188,7 +188,7 @@
       (<  x  y:1000 >): bunch
       •stdout << `x = ´ << x << `, y = ´ << y << `¢n´
     }
-     
+
   }
 
 }

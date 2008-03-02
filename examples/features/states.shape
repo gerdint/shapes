@@ -1,6 +1,3 @@
-/** This feature example is a translation (and reordering) of the old warm.shape example
- **/
-
 /** Basic use of states includes defining new states, tacking on to them, and finally using the result.
  **/
 
@@ -22,7 +19,7 @@ str: •str;
 /** We can also peek at the state.  This is a potentially expensive operation, depending on
  ** the implementation of this particular kind of state.
  **/
-•stderr << str << `¢n´ << (•msg) << `¢n´
+•stdout << str << `¢n´ << (•msg) << `¢n´
 
 /** The following is legal:
  **/
@@ -33,7 +30,7 @@ str: •str;
  ** where newString is used to spawn the unnamed state.  The state is frozen at the end of the
  ** insertion sequence within parentheses, and the final value is returned.
  **/
-•stderr << ( newString << `a ´ << `b¢n´ )
+•stdout << ( newString << `a ´ << `b¢n´ )
 
 
 /** Next, we turn to the scoping rules for lexical access of states.  The rule is that states
@@ -52,32 +49,25 @@ fun: \ a .>
     •s: newString
     proc: \ b .> !
       {
-        /** Note that, for instance, •stderr is not in scope here.
-	 **/
+        /** Note that, for instance, •stdout is not in scope here.
+         **/
         •s << b << a << b
       }
     [!proc `Hej!´]
     •s;
   }
 
-•stderr << [fun `--´] << `¢n´
+•stdout << [fun `--´] << `¢n´
 
 
-/** The following is illegal, since •stderr is in the global environment,
+/** The following would be illegal, since •stdout is in the global environment,
  ** which is outside the function boundary.
- ** At the time of writing, the error is not detected until badFun is invoked.
- ** It would be nice, though, if all lexiographic references were checked in a second scan of
- ** the program.
  **/
-badFun: \ a .>
-{
-  •stderr << a
-  `Hej!´
-}
-
-/** The following line would trigger the error.
- **/
-|** •stdout << [badFun `Foo!´]
+|** badFun: \ a .>
+|** {
+|**   •stdout << a
+|**   `Hej!´
+|** }
 
 
 /** States may also be passed to functions.  Functions that take states as arguments are like
@@ -114,21 +104,21 @@ dummyStroke: \ •dst2D .> { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 
 say_y: \ •dstStr .> { •dstStr << `y´ }
 
-|** dynamic @•dfoo •stderr
-|** 
+|** dynamic @•dfoo •stdout
+|**
 |** foo: \ .> !
 |**   {
 |**     @•dfoo << ` x ´
 |**     [say_y @•dfoo]
 |**   }
-|** 
+|**
 |** @•dfoo: •dst1
 |** | [! foo]
-|** 
+|**
 |** @•dfoo: •dst2
 |** | [! foo]
-|** 
+|**
 |** @•dfoo: •dst1
 |** | [! foo]
 
-|** •stderr << (•dst1) << `¢n´ << (•dst2) << `¢n´
+|** •stdout << (•dst1) << `¢n´ << (•dst2) << `¢n´

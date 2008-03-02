@@ -11,6 +11,18 @@
     <construction>
 			<binding name="newGroup" />
     </construction>
+		<tack-on>
+			<case>
+				<types><named-type name="Drawable" /></types>
+				<dynamic-references><dynvar name="blend" /></dynamic-references>
+			</case>
+		</tack-on>
+		<peek>
+			<type><named-type name="Drawable" /></type>
+		</peek>
+		<freeze>
+			<type><named-type name="Drawable" /></type>
+		</freeze>
   </core-state-type>
 
   <core-state-type name="Group3D">
@@ -29,6 +41,37 @@
     <construction>
 			<state name="catalog" />
     </construction>
+  </core-state-type>
+
+
+  <core-state-type name="Text">
+    <abstraction>
+      <p>States of type <self /> are used to combine font properties with strings to paint text.</p>
+    </abstraction>
+    <construction>
+			<state name="newText" />
+    </construction>
+		<tack-on>
+			<case>
+				<types><named-type name="String" /></types>
+				<dynamic-references><dynvar name="blend" /></dynamic-references>
+				<dynamic-references>
+					<dynvar name="text_font" />
+					<dynvar name="text_characterspacing" />
+					<dynvar name="text_wordspacing" />
+					<dynvar name="text_horizontalscaling" />
+					<dynvar name="text_leading" />
+					<dynvar name="text_font" />
+					<dynvar name="text_size" />
+					<dynvar name="text_rendering" />
+					<dynvar name="text_rise" />
+					<dynvar name="text_knockout" />
+				</dynamic-references>
+			</case>
+		</tack-on>
+		<freeze>
+			<type><named-type name="Drawable" /></type>
+		</freeze>
   </core-state-type>
 
 </section>

@@ -178,6 +178,12 @@ table.note { width:100%; border-style:solid; border-color:#0C0; }
   margin-left: -0.36em;
   margin-right: -0.15em;
 }
+span.Google { font-family: serif; }
+span.Google blue { color:#003EC5; }
+span.Google red { color:#D8240C; }
+span.Google yellow { color:#F4C513; }
+span.Google green { color:#2C9F2C; }
+span.Google black { color:#000; }
 
 .small-caps
 {

@@ -1,0 +1,15 @@
+<section id="chap-paths">
+<title>More on paths</title>
+<top>
+<p>In this chapter we'll explore some of the more powerful operations that can be performed on paths.</p>
+</top>
+
+<section id="paths/sliders">
+<title>Sliders</title>
+<body>
+	<p>A <em>path slider</em>, generally referred to as just <em>slider</em>, is a location on a particular path.</p>
+
+</body>
+</section><!-- End of paths/sliders -->
+
+</section><!-- End of chap-paths -->

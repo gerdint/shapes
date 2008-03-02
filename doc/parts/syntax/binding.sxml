@@ -88,6 +88,9 @@ inc: [addn '1]
 <stdout>
 <![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/scopes.stdout" -->]]>
 </stdout>
+<caption>
+	<p>Mutually recursive function definitions and reach-outs.</p>
+</caption>
 </example-with-output>
 
 </body>
@@ -160,6 +163,9 @@ or, if there are several paths to be stroked with the same pen:
 <stdout>
 <![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/dynamic.stdout" -->]]>
 </stdout>
+<caption>
+	<p>Dynamic variables, dynamic expressions, and dynamic bindings.</p>
+</caption>
 </example-with-output>
 
 </body>

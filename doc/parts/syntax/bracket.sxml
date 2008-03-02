@@ -16,7 +16,7 @@
 
 <p>In the second phase, the remaining items are evaluated in order of appearance.  The value of the last item is used as the value of the whole code bracket.</p>
 
-<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  See <a id="syntax/misc-expr">expressions</a> for the details of pure and non-pure expressions.</p>
+<p>It is an error to place a pure expression (that is one which does not interact with states) anywhere but at the end of the code bracket.  It is also an error to let a non-pure expression return with a value other than at the end of the code bracket.  See <a id="syntax/misc-expr">expressions</a> for the details of pure and non-pure expressions.</p>
 
 <p>Note that <syntax name="split-definition" /> was defined under <a id="syntax/compound/structures">structures</a>.</p>
 </top>
