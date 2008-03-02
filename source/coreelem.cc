@@ -71,7 +71,24 @@ namespace Shapes
 						 */
 					}
 
-				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+				try
+					{
+						typedef const Lang::Length ArgType;
+						RefCountPtr< ArgType > num = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) );
+						RefCountPtr< ArgType > den = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc );
+
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( Kernel::ValueRef( new Lang::Length( fmod( num->getScalar( ), den->getScalar( ) ) ) ),
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+
+				throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Lang::Integer::staticTypeName( ), Lang::Float::staticTypeName( ), Lang::Length::staticTypeName( ) ) );
 			}
 		};
 
