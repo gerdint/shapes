@@ -116,9 +116,30 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-bezier-connected.shape" -->]]>
 </source>
 <caption>
-	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.</p>
+	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.  Solid lines with arrowhead indicates how offset coordinates are interpreted during path construction.</p>
 </caption>
 </example-with-output>
+
+<p>
+	Given the examples above, the following observations and claims regarding path construction should seem at least plausible:
+	<ol>
+		<li><p>When the path leaves a through-point, it does so in direction towards the next interpolation point, or the next through-point if there are no interpolation points.</p></li>
+		<li><p>Hence, to avoid a corner at a path point, its handles mush point in opposite directions.</p></li>
+		<li><p>To avoid discontinuity in the second order derivatives, the handles shall additionally be of equal lengths.</p></li>
+		<li><p>Since angles to interpolation points are so important, it is desirable to be able to enter interpolation points in polar coordinates, relative to the through-point.</p></li>
+		<li><p>Specifying the distance to the interpolation points is not as intuitive as specifying the angles.</p></li>
+		<li><p>Hence, some mechanism for automatic determination of such distances should be welcome.</p></li>
+		<li><p>A mechanism for automatic determination of angles should be welcome too.</p></li>
+		<li><p>Automatic choices and values set directly by the user should mix in a way that allows complete freedom to mix the two, while also being easy to learn and remember.</p></li>
+		<li><p>While it is possible to use polar coordinates to specify interpolation points relative to the trough point by using the <binding name="dir" /> function, for example <inline>(+ r*[dir a])</inline>, this solution has no room for automatic choices.</p></li>
+	</ol>
+	Of course, all of these features are available in <str-Shapes />.  The syntax may feel a bit clumsy initially, but that's the small price we pay for the powerful and easy to remember syntax, see <syntax name="polar-handle-2D" /> and <syntax name="corner-point-2D" />.
+</p>
+
+<p>While automatic angles are determined using a rather simple scheme, selecting the distances is much more complicated.  In <str-Shapes />, angles are always determined before determining any distances.  This means that a scheme for automatic determination of distances has to determine these based on the location of the through-points and the angles from the through-points to the intermediate interpolation points.  (When the two distances at a path point shall be equal, and both are to be determined automatically, then both are determined individually first, and then the smaller is used on both sides of the path point.)  It is easy to see that the task is over-parameterized as stated here, and that the coordinates of the through-points can be reduced to just the distance between.  A <a part="syntax" id="syntax/atoms/special-lengths"><em>special unit</em></a> is a mapping from the three resulting parameters to a length.  The most frequently used special unit is <inline>%C</inline>, which helps to produce circular arcs.</p>
+
+<p>The use of polar handle coordinates and automatic determination of angles and distances will not be discussed further in this tutorial.  The reader is encouraged to follow the links in the text to the reference documentation in order to learn more about path construction.</p>
+
 </body>
 </section><!-- End of basics/paths -->
 

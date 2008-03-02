@@ -24,4 +24,38 @@
 	</function>
 </system-binding>
 
+<system-binding identifier="locate">
+	<function>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Value" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Value" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><em>Mutates</em> the value in order to associate it with the abstract syntax tree node of the argument passed to this function.</description>
+			<see-also>
+				<binding name="sourceof" />
+			</see-also>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="sourceof">
+	<function>
+		<case constructor-of="String">
+			<arguments>
+				<arg>
+					<type><named-type name="Value" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>Returns the source code string determined by the abstract syntax tree node associated with the argument.  The value needs to be properly prepared using <binding name="locate" />.</description>
+		</case>
+	</function>
+</system-binding>
+
 </section>

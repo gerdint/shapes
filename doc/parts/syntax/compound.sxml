@@ -137,9 +137,9 @@
 
 <p>
 	A <em>corner point</em> is a generalization of <named-type name="Coord2D" />.  The difference only matters when the point is the central point in a path point.  When either or both angles to the handles of the path point are not explicitly determined, a <named-type name="Coord2D" /> at the center causes the handles to have opposite angles.  A corner point may override this by specifying another angle.  The syntax is:
-	<table cellspacing="5">
+	<syntax-table>
 		<tr> <td><syntax name="corner-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf>, <bnf>&lt;</bnf><named-type name="LengthLike" /><bnf>&gt;</bnf> ^ <bnf>&lt;</bnf><named-type name="Float" /><bnf>&gt;</bnf><bnf>?</bnf> )</inline></td></tr>
-	</table>
+	</syntax-table>
 </p>
 <p>When the angle is not present, each angle is determined as if there was just one handle, that is, independently of the other angle.</p>
 

@@ -239,28 +239,32 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						/* There are no handles at this point.
 						 * Set angles in direction to neighboring coordinates.
 						 */
-						{
-							Lang::ElementaryPath2D::iterator prev = i;
-							--prev;
-							if( prev == the_rend )
-								{
-									prev = the_rbegin;
-								}
-							Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
-							Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
-							(*i)->rearAngle_ = atan2( dyRear.offtype< 1, 0 >( ), dxRear.offtype< 1, 0 >( ) );
-						}
-						{
-							Lang::ElementaryPath2D::iterator next = i;
-							++next;
-							if( next == pth->end( ) )
-								{
-									next = pth->begin( );
-								}
-							Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
-							Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
-							(*i)->frontAngle_ = atan2( dyFront.offtype< 1, 0 >( ), dxFront.offtype< 1, 0 >( ) ) + M_PI;
-						}
+						if( (*i)->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
+							{
+								Lang::ElementaryPath2D::iterator prev = i;
+								--prev;
+								if( prev == the_rend )
+									{
+										prev = the_rbegin;
+									}
+								Concrete::Length dxRear = (*prev)->mid_->x_ - (*i)->mid_->x_;
+								Concrete::Length dyRear = (*prev)->mid_->y_ - (*i)->mid_->y_;
+								(*i)->rearAngle_ = atan2( dyRear.offtype< 1, 0 >( ), dxRear.offtype< 1, 0 >( ) );
+								(*i)->rearState_ &= ~Concrete::PathPoint2D::FREE_ANGLE;
+							}
+						if( (*i)->frontState_ & Concrete::PathPoint2D::FREE_ANGLE )
+							{
+								Lang::ElementaryPath2D::iterator next = i;
+								++next;
+								if( next == pth->end( ) )
+									{
+										next = pth->begin( );
+									}
+								Concrete::Length dxFront = (*next)->mid_->x_ - (*i)->mid_->x_;
+								Concrete::Length dyFront = (*next)->mid_->y_ - (*i)->mid_->y_;
+								(*i)->frontAngle_ = atan2( dyFront.offtype< 1, 0 >( ), dxFront.offtype< 1, 0 >( ) );
+								(*i)->frontState_ &= ~Concrete::PathPoint2D::FREE_ANGLE;
+							}
 						continue;
 					}
 

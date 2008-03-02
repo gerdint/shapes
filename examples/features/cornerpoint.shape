@@ -14,3 +14,11 @@
         << [stroke pth head:MetaPostArrow]
 
 }
+
+{
+  pth: @defaultunit:1%F | (0cm,~9mm)>(5mm^0°)--(5mm^~90°)<(1cm,~0.5cm ^ )>(10mm^)--(5mm^~90°)<(0cm,~1mm)
+  sl: [pth 1]
+  •page << @stroking:RGB_RED | [stroke sl.p--(+ ~4mm*sl.rT)]
+        << [stroke pth head:MetaPostArrow]
+
+}

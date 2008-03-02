@@ -1,0 +1,133 @@
+##needs circle
+##needs blockdraw_wfo
+
+##preamble \usepackage[squaren]{SIunits}
+##preamble \usepackage{url}
+
+pathStyle: @width: 1bp
+controlStyle: @width: 0.3bp & @dash:[dashpattern 2mm 2mm] & @stroking:[gray 0.5]
+labelStyle: @width: 0.3bp & @stroking:[gray 0.5]
+onPathMark: @nonstroking:RGB_RED | [fill [circle 1mm]]
+controlHead: \ p .> (> cut:0bp
+                       picture: @width:1bp & @stroking:RGB_RED & @dash:[dashpattern] | ([shift p.begin.p]*[rotate [angle p.begin.T]])[][stroke (~1.5mm,~1.5mm)--(1.5mm,1.5mm) & (~1.5mm,1.5mm)--(1.5mm,~1.5mm)]
+                    <)
+arcHead: [MetaPostArrow ahLength:3mm ...]
+
+coordsHelper: \ src base offset .>
+{
+  p: (base--offset).end.p
+  (TeX
+    ( newString << `\url{´
+                << src
+                << `} $\Rightarrow (\unit{´
+                << [sprintf `%.1f´ p.x/1cm]
+                << `}{\centi\metre},\unit{´
+                << [sprintf `%.1f´ p.y/1cm]
+                << `}{\centi\metre})$´
+    )
+  )
+}
+
+arc: \ p0 p1 a .> ( @defaultunit:1%C | p0>(^[angle p1-p0]+a)--(^[angle p0-p1]-a)<p1 )
+
+p0: [locate (5cm,4cm)]
+p0r: [locate (+(~1cm,~1cm))]
+p0f: [locate (+(2cm,8mm))]
+
+p1: [locate (+(6cm,~2cm))]
+p1r: [locate (+(~1cm,2cm))]
+p1f: [locate (15cm,(+~3cm))]
+
+p2: [locate ((+5cm),3cm)]
+
+pth: p0r<p0>p0f--p1r<p1>p1f--p2
+
+@width: 0.5bp
+|
+{
+  xMax: 18.9cm
+  yMax: 6.9cm
+  •page << [stroke (~1.5cm,0cm)--(xMax,0cm) head:[MetaPostArrow ahLength:5mm ...]]
+        << [[range 1cm xMax 1cm].foldl
+            \ p e .> ( p & [stroke (e,0cm)--(+(0cm,~[if [abs [mod e 5cm]]<0.1mm 2.5mm 1mm]))] )
+            null]
+        << [putlabelBelow (TeX `$\unit{5}{\centi\metre}$´) (5cm,~3mm) 0]
+  •page << [stroke (0cm,~1.5cm)--(0cm,yMax) head:[MetaPostArrow ahLength:5mm ...]]
+        << [[range 1cm yMax 1cm].foldl
+            \ p e .> ( p & [stroke (0cm,e)--(+(~[if [abs [mod e 5cm]]<0.1mm 2.5mm 1mm],0cm))] )
+            null]
+        << [putlabelLeft (TeX `$\unit{5}{\centi\metre}$´) (~3mm,5cm) ~0.5]
+}
+
+•page << [[range '0 [duration pth]].foldl \ p e .> p & [[shift [pth e*1].p] onPathMark]  null]
+      << pathStyle | [stroke pth]
+
+{
+  pa: (0cm,0cm)
+  pb: p0
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (~2cm,1.5cm)
+  •page << [putlabelAbove [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa ~30°] head:arcHead]
+}
+{
+  pa: [pth 0].p
+  pb: p0r
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (0.5cm,~1cm)
+  •page << controlStyle | [stroke pa--pTo head:controlHead]
+        << [putlabelBelow [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa ~40°] head:arcHead]
+}
+{
+  pa: [pth 0].p
+  pb: p0f
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (0.5cm,1.5cm)
+  •page << controlStyle | [stroke pa--pTo head:controlHead]
+        << [putlabelAbove [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa ~40°] head:arcHead]
+}
+
+{
+  pa: [pth 0].p
+  pb: p1
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (~2.5cm,~1cm)
+  •page << [putlabelBelow [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa 20°] head:arcHead]
+}
+{
+  pa: [pth 1].p
+  pb: p1r
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (1cm,1.5cm)
+  •page << controlStyle | [stroke pa--pTo head:controlHead]
+        << [putlabelAbove [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa 40°] head:arcHead]
+}
+{
+  pa: [pth 1].p
+  pb: p1f
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (2cm,1.3cm)
+  •page << controlStyle | [stroke pa--pTo head:controlHead]
+        << [putlabelAbove [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa 40°] head:arcHead]
+}
+
+{
+  pa: [pth 1].p
+  pb: p2
+  pTo: (pa--pb).end.p
+  pLbl: pTo + (~1cm,1cm)
+  •page << [putlabelAbove [coordsHelper [sourceof pb] pa pb] pLbl 0]
+        << labelStyle | [stroke pLbl--pTo]
+        << labelStyle | [stroke [arc pTo pa ~20°] head:arcHead]
+}
