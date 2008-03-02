@@ -13,7 +13,8 @@ namespace Shapes
 	class NegExpr : public UnaryPrefixExpr
 	{
 	public:
-		NegExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr ) : UnaryPrefixExpr( _opLoc, _expr ) { }
+		NegExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & opLoc, Ast::Expression * expr ) : UnaryPrefixExpr( loc, opLoc, expr ) { }
+		NegExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr ) : UnaryPrefixExpr( opLoc, expr ) { }
 		UNARYCALLIMPL( CLASSTREE1_Float );
 		UNARYCALLIMPL( CLASSTREE1_Integer );
 		UNARYCALLIMPL( CLASSTREE1_Length );
@@ -34,7 +35,7 @@ namespace Shapes
 	class RelativeExpr : public UnaryPrefixExpr
 	{
 	public:
-		RelativeExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr ) : UnaryPrefixExpr( _opLoc, _expr ) { }
+		RelativeExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & opLoc, Ast::Expression * expr ) : UnaryPrefixExpr( loc, opLoc, expr ) { }
 		UNARYCALLIMPL( CLASSTREE1_Length );
 		UNARYCALLIMPL( CLASSTREE1_Coords2D );
 		UNARYCALLIMPL( CLASSTREE1_Coords3D );
@@ -47,7 +48,7 @@ namespace Shapes
 	class NotExpr : public UnaryPrefixExpr
 	{
 	public:
-		NotExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr ) : UnaryPrefixExpr( _opLoc, _expr ) { }
+		NotExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr ) : UnaryPrefixExpr( opLoc, expr ) { }
 		UNARYCALLIMPL( CLASSTREE1_Boolean );
 	private:
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Boolean ) arg, const Kernel::PassedDyn & dyn ) const;

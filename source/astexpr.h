@@ -23,6 +23,7 @@ namespace Shapes
 			Ast::SourceLocation opLoc_;
 			Ast::Expression * expr_;
 		public:
+			UnaryPrefixExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & opLoc, Ast::Expression * expr );
 			UnaryPrefixExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr );
 			virtual ~UnaryPrefixExpr( );
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );

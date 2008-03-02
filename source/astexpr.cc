@@ -44,6 +44,10 @@ Kernel::UnaryCont_1::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
+Ast::UnaryPrefixExpr::UnaryPrefixExpr( const Ast::SourceLocation & loc, const Ast::SourceLocation & opLoc, Ast::Expression * expr )
+	: Ast::UnaryExpr( loc ), opLoc_( opLoc ), expr_( expr )
+{ }
+
 Ast::UnaryPrefixExpr::UnaryPrefixExpr( const Ast::SourceLocation & opLoc, Ast::Expression * expr )
 	: Ast::UnaryExpr( Ast::SourceLocation( opLoc, expr->loc( ) ) ), opLoc_( opLoc ), expr_( expr )
 { }

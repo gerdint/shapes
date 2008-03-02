@@ -883,11 +883,11 @@ ExprExceptConstStrings
 }
 | '(' '-' Expr ')'
 {
-	$$ = new Ast::NegExpr( @$, $3 );
+	$$ = new Ast::NegExpr( @$, @2, $3 );
 }
 | '(' '+' Expr ')'
 {
-	$$ = new Ast::RelativeExpr( @$, $3 );
+	$$ = new Ast::RelativeExpr( @$, @2, $3 );
 }
 | '(' ')'
 {
