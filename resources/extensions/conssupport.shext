@@ -1,11 +1,11 @@
-foldl: \ op nullRes lst .> [if [isnull lst] nullRes [foldl op [op nullRes lst.car] lst.cdr]]
-foldr: \ op nullRes lst .> [if [isnull lst] nullRes [op [foldr op nullRes lst.cdr] lst.car]]
+foldl: \ op nullRes lst .> [if [null? lst] nullRes [foldl op [op nullRes lst.car] lst.cdr]]
+foldr: \ op nullRes lst .> [if [null? lst] nullRes [op [foldr op nullRes lst.cdr] lst.car]]
 /**
- foreach: \ op lst .> ! [if [isnull lst] void { [!op lst.car] [!foreach op lst.cdr]}]
+ foreach: \ op lst .> ! [if [null? lst] void { [!op lst.car] [!foreach op lst.cdr]}]
 **/
 
-foldsl: \ op nullRes •st lst .> [if [isnull lst] nullRes [foldsl op [op nullRes lst.car •st] •st lst.cdr]]
-foldsr: \ op nullRes •st lst .> [if [isnull lst] nullRes [op [foldsr op nullRes •st lst.cdr] lst.car •st]]
+foldsl: \ op nullRes •st lst .> [if [null? lst] nullRes [foldsl op [op nullRes lst.car •st] •st lst.cdr]]
+foldsr: \ op nullRes •st lst .> [if [null? lst] nullRes [op [foldsr op nullRes •st lst.cdr] lst.car •st]]
 
 consify: \ lst .> [lst.foldr (\ p e .> [cons e p]) [list]]
 map: \ f lst .> [foldr (\ p e .> [cons [f e] p]) [list] lst]

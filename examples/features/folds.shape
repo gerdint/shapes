@@ -12,7 +12,7 @@ stderr << `¢n´
 streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
 Fib: [cons '0 [cons '1 [streamadd Fib Fib.cdr]]]
 
-map: \ f lst .> [if [isnull lst] [list] [cons [f lst.car] [map f lst.cdr]]]
+map: \ f lst .> [if [null? lst] [list] [cons [f lst.car] [map f lst.cdr]]]
 Fib2: [map (\ x .> x*x) Fib]
 
 

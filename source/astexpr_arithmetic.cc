@@ -472,7 +472,7 @@ Ast::PlusExpr::impl( DUMMYANDREF( const Lang::String ) arg1, DUMMYANDREF( const 
 	char * mem = new char[ l1 + strlen( src2 ) + 1 ];
 	strcpy( mem, src1 );
 	strcpy( mem + l1, src2 );
-	return RefCountPtr< const Lang::Value >( new Lang::String( mem ) );
+	return RefCountPtr< const Lang::Value >( new Lang::String( mem, false ) );
 }
 
 RefCountPtr< const Lang::Value >

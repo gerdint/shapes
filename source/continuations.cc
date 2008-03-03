@@ -378,10 +378,37 @@ Kernel::Transform2DCont::~Transform2DCont( )
 void
 Kernel::Transform2DCont::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
-	RefCountPtr< const Lang::Geometric2D > arg = Helpers::down_cast< const Lang::Geometric2D >( val, traceLoc_ );
-	evalState->cont_ = cont_;
-	cont_->takeValue( arg->transformed( tf_, arg ),
-										evalState );
+	try
+		{
+			typedef const Lang::Geometric2D ArgType;
+			RefCountPtr< ArgType > arg = Helpers::try_cast_CoreArgument< ArgType >( val );
+			evalState->cont_ = cont_;
+			cont_->takeValue( arg->transformed( tf_, arg ),
+												evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	try
+		{
+			typedef const Lang::FloatPair ArgType;
+			RefCountPtr< ArgType > arg = Helpers::try_cast_CoreArgument< ArgType >( val );
+			evalState->cont_ = cont_;
+			cont_->takeValue( arg->transformed( tf_ ),
+												evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	throw Exceptions::ContinuationTypeMismatch( this, val->getTypeName( ), Helpers::typeSetString( Lang::Geometric2D::staticTypeName( ), Lang::FloatPair::staticTypeName( ) ) );
 }
 
 void
@@ -408,10 +435,37 @@ Kernel::Transform3DCont::~Transform3DCont( )
 void
 Kernel::Transform3DCont::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
-	RefCountPtr< const Lang::Geometric3D > arg = Helpers::down_cast< const Lang::Geometric3D >( val, traceLoc_ );
-	evalState->cont_ = cont_;
-	cont_->takeValue( arg->transformed( tf_, arg ),
-									 evalState );
+	try
+		{
+			typedef const Lang::Geometric3D ArgType;
+			RefCountPtr< ArgType > arg = Helpers::try_cast_CoreArgument< ArgType >( val );
+			evalState->cont_ = cont_;
+			cont_->takeValue( arg->transformed( tf_, arg ),
+												evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	try
+		{
+			typedef const Lang::FloatTriple ArgType;
+			RefCountPtr< ArgType > arg = Helpers::try_cast_CoreArgument< ArgType >( val );
+			evalState->cont_ = cont_;
+			cont_->takeValue( arg->transformed( tf_ ),
+												evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	throw Exceptions::ContinuationTypeMismatch( this, val->getTypeName( ), Helpers::typeSetString( Lang::Geometric3D::staticTypeName( ), Lang::FloatTriple::staticTypeName( ) ) );
 }
 
 void

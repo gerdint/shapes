@@ -842,7 +842,7 @@ Expr
 : ExprExceptConstStrings
 | T_string
 {
-	$$ = new Ast::Constant( @1, new Lang::String( $1 ) );
+	$$ = new Ast::Constant( @1, new Lang::String( $1, false ) );
 }
 ;
 
@@ -862,7 +862,7 @@ ExprExceptConstStrings
 {
 	Kernel::theTeXLabelManager.announce( string( $3 ) );
 	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
-	args->orderedExprs_->push_back( new Ast::Constant( @3, new Lang::String( $3 ) ) );
+	args->orderedExprs_->push_back( new Ast::Constant( @3, new Lang::String( $3, false ) ) );
 	$$ = new Ast::CallExpr( @$,
 													Ast::THE_FUNCTION_TeX,
 													args );

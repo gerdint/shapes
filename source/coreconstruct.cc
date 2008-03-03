@@ -359,27 +359,87 @@ namespace Shapes
 			Core_range( const char * title )
 				: CoreFunction( title, new Kernel::EvaluatedFormals( "< core function range >", true ) )
 			{
-				formals_->appendEvaluatedCoreFormal( "begin", Kernel::THE_SLOT_VARIABLE );
-				formals_->appendEvaluatedCoreFormal( "end", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "begin", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "end", Kernel::THE_VOID_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "step", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "count", Kernel::THE_VOID_VARIABLE );
 			}
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
+				typedef const Lang::Integer CountType;
+
 				args.applyDefaults( );
 
 				try
 					{
 						typedef const Lang::Integer ArgType;
 
-						ArgType::ValueType begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->val_;
-						ArgType::ValueType end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->val_;
-						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
-
-						ArgType::ValueType step = 1;
-						if( stepPtr != NullPtr< ArgType >( ) )
+						RefCountPtr< ArgType > beginPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ), true );
+						RefCountPtr< ArgType > endPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 1 ), true );
+						if( beginPtr == NullPtr< ArgType >( ) && endPtr == NullPtr< ArgType >( ) )
 							{
-								step = stepPtr->val_;
+								throw Exceptions::CoreRequirement( "At least one of the arguments <begin> and <end> must be provided.", title_, callLoc );
+							}
+						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
+						RefCountPtr< CountType > countPtr = Helpers::down_cast_CoreArgument< CountType >( title_, args, 3, callLoc, true );
+
+						if( beginPtr != NullPtr< ArgType >( ) && endPtr != NullPtr< ArgType >( ) &&
+								stepPtr != NullPtr< ArgType >( ) && countPtr != NullPtr< CountType >( ) )
+							{
+								throw Exceptions::CoreRequirement( "At least one of the arguments must be omitted.", title_, callLoc );
+							}
+
+						ArgType::ValueType begin = 0;
+						ArgType::ValueType end = -1;
+						ArgType::ValueType step = 1;
+						if( beginPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr != NullPtr< ArgType >( ) )
+									{
+										step = stepPtr->val_;
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of integers when <begin> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								end = endPtr->val_;
+								begin = end - step * ( countPtr->val_ - 1 );
+							}
+						else if( endPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr != NullPtr< ArgType >( ) )
+									{
+										step = stepPtr->val_;
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of integers when <end> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								begin = beginPtr->val_;
+								end = begin + step * ( countPtr->val_ - 1 );
+							}
+						else
+							{
+								if( countPtr != NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "It is an error to provide the <count> arguments when constructing a range of integers from <begin> to <end>.", title_, args.getLoc( 3 ) );
+									}
+
+								begin = beginPtr->val_;
+								end = endPtr->val_;
+								if( stepPtr != NullPtr< ArgType >( ) )
+									{
+										step = stepPtr->val_;
+									}
 							}
 
 						std::list< ArgType::ValueType > tmp;
@@ -425,14 +485,89 @@ namespace Shapes
 					{
 						typedef const Lang::Float ArgType;
 
-						double begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->val_;
-						double end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->val_;
-						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
-
-						double step = 1;
-						if( stepPtr != NullPtr< ArgType >( ) )
+						RefCountPtr< ArgType > beginPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ), true );
+						RefCountPtr< ArgType > endPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 1 ), true );
+						if( beginPtr == NullPtr< ArgType >( ) && endPtr == NullPtr< ArgType >( ) )
 							{
+								throw Exceptions::CoreRequirement( "At least one of the arguments <begin> and <end> must be provided.", title_, callLoc );
+							}
+						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
+						RefCountPtr< CountType > countPtr = Helpers::down_cast_CoreArgument< CountType >( title_, args, 3, callLoc, true );
+
+						if( beginPtr != NullPtr< ArgType >( ) && endPtr != NullPtr< ArgType >( ) &&
+								stepPtr != NullPtr< ArgType >( ) && countPtr != NullPtr< CountType >( ) )
+							{
+								throw Exceptions::CoreRequirement( "At least one of the arguments must be omitted.", title_, callLoc );
+							}
+
+						double begin = 0;
+						double end = -1;
+						double step = 1;
+						bool appendEnd = false;
+						if( beginPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr == NullPtr< ArgType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <step> must be provided when constructing a range of floats when <begin> is omitted.", title_, callLoc );
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of floats when <begin> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								end = endPtr->val_;
 								step = stepPtr->val_;
+								begin = end - step * ( countPtr->val_ - 1 );
+								end -= 0.5 * step;
+								appendEnd = true;
+							}
+						else if( endPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr == NullPtr< ArgType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <step> must be provided when constructing a range of floats when <end> is omitted.", title_, callLoc );
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of floats when <end> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								begin = beginPtr->val_;
+								step = stepPtr->val_;
+								end = begin + step * ( countPtr->val_ - 0.5 );
+							}
+						else
+							{
+								// When we reach here, we know that at most one of <step> and <count> is provided.
+								if( stepPtr != NullPtr< ArgType >( ) )
+									{
+										begin = beginPtr->val_;
+										end = endPtr->val_;
+										step = stepPtr->val_;
+									}
+								else if( countPtr != NullPtr< CountType >( ) )
+									{
+										if( countPtr->val_ < 2 )
+											{
+												throw Exceptions::CoreOutOfRange( title_, args, 3, "The number of elements must be at least 2." );
+											}
+										begin = beginPtr->val_;
+										end = endPtr->val_;
+										step = ( end - begin ) / ( countPtr->val_ - 1 );
+										end -= 0.5 * step;
+										appendEnd = true;
+									}
+								else
+									{
+										begin = beginPtr->val_;
+										end = endPtr->val_;
+									}
 							}
 
 						std::list< double > tmp;
@@ -455,6 +590,10 @@ namespace Shapes
 						else
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
+							}
+						if( appendEnd )
+							{
+								tmp.push_back( endPtr->val_ );
 							}
 
 						while( ! tmp.empty( ) )
@@ -478,14 +617,91 @@ namespace Shapes
 					{
 						typedef const Lang::Length ArgType;
 
-						double begin = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ) )->getScalar( );
-						double end = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 1, callLoc )->getScalar( );
-						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
-						if( stepPtr == NullPtr< ArgType >( ) )
+						RefCountPtr< ArgType > beginPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 0 ), true );
+						RefCountPtr< ArgType > endPtr = Helpers::try_cast_CoreArgument< ArgType >( args.getValue( 1 ), true );
+						if( beginPtr == NullPtr< ArgType >( ) && endPtr == NullPtr< ArgType >( ) )
 							{
-								throw Exceptions::MiscellaneousRequirement( "The <step> argument must be provided when constructing a range of lengths." );
+								throw Exceptions::CoreRequirement( "At least one of the arguments <begin> and <end> must be provided.", title_, callLoc );
 							}
-						double step = stepPtr->getScalar( );
+						RefCountPtr< ArgType > stepPtr = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 2, callLoc, true );
+						RefCountPtr< CountType > countPtr = Helpers::down_cast_CoreArgument< CountType >( title_, args, 3, callLoc, true );
+
+						if( beginPtr != NullPtr< ArgType >( ) && endPtr != NullPtr< ArgType >( ) &&
+								stepPtr != NullPtr< ArgType >( ) && countPtr != NullPtr< CountType >( ) )
+							{
+								throw Exceptions::CoreRequirement( "At least one of the arguments must be omitted.", title_, callLoc );
+							}
+
+						double begin = 0;
+						double end = -1;
+						double step = 1;
+						bool appendEnd = false;
+						if( beginPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr == NullPtr< ArgType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <step> must be provided when constructing a range of lengths when <begin> is omitted.", title_, callLoc );
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of lengths when <begin> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								end = endPtr->getScalar( );
+								step = stepPtr->getScalar( );
+								begin = end - step * ( countPtr->val_ - 1 );
+								end -= 0.5 * step;
+								appendEnd = true;
+							}
+						else if( endPtr == NullPtr< ArgType >( ) )
+							{
+								if( stepPtr == NullPtr< ArgType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <step> must be provided when constructing a range of lengths when <end> is omitted.", title_, callLoc );
+									}
+								if( countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "The <count> must be provided when constructing a range of lengths when <end> is omitted.", title_, callLoc );
+									}
+								if( countPtr->val_ < 2 )
+									{
+										throw Exceptions::CoreOutOfRange( title_, args, 3, "The <count> must be at least 2." );
+									}
+								begin = beginPtr->getScalar( );
+								step = stepPtr->getScalar( );
+								end = begin + step * ( countPtr->val_ - 0.5 );
+							}
+						else
+							{
+								if( stepPtr == NullPtr< ArgType >( ) && countPtr == NullPtr< CountType >( ) )
+									{
+										throw Exceptions::CoreRequirement( "Either of the <step> and <count> arguments must be provided when constructing a range of lengths from <begin> to <end>.", title_, callLoc );
+									}
+								// When we reach here, we know that exactly one of <step> and <count> is provided.
+								if( stepPtr != NullPtr< ArgType >( ) )
+									{
+										begin = beginPtr->getScalar( );
+										end = endPtr->getScalar( );
+										step = stepPtr->getScalar( );
+									}
+								else
+									{
+										begin = beginPtr->getScalar( );
+										end = endPtr->getScalar( );
+										// We know countPtr is not null here.
+										if( countPtr->val_ < 2 )
+											{
+												throw Exceptions::CoreOutOfRange( title_, args, 3, "The number of elements must be at least 2." );
+											}
+										step = ( end - begin ) / ( countPtr->val_ - 1 );
+										end -= 0.5 * step;
+										appendEnd = true;
+									}
+							}
+
 
 						std::list< double > tmp;
 
@@ -507,6 +723,10 @@ namespace Shapes
 						else
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, 2, "Step size must not be zero." );
+							}
+						if( appendEnd )
+							{
+								tmp.push_back( endPtr->getScalar( ) );
 							}
 
 						while( ! tmp.empty( ) )
@@ -1111,7 +1331,7 @@ namespace Shapes
 					}
 
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::ValueRef( new Lang::String( res ) ),
+				cont->takeValue( Kernel::ValueRef( new Lang::String( res, false ) ),
 												 evalState );
 			}
 		};
@@ -1134,7 +1354,7 @@ namespace Shapes
 				res << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec ;
 
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( res.str( ).c_str( ) ) ) ),
+				cont->takeValue( Kernel::ValueRef( new Lang::String( strrefdup( res ) ) ),
 												 evalState );
 			}
 		};
@@ -1855,7 +2075,7 @@ Kernel::registerCore_construct( Kernel::Environment * env )
 {
 	env->initDefineCoreFunction( new Lang::Core_cons( "cons" ) );
 	env->initDefineCoreFunction( new Lang::Core_list( "list" ) );
-	env->initDefineCoreFunction( new Lang::Core_isnull( "isnull" ) );
+	env->initDefineCoreFunction( new Lang::Core_isnull( "null?" ) );
 	env->initDefineCoreFunction( new Lang::Core_range( "range" ) );
 	env->initDefineCoreFunction( new Lang::Core_affinetransform( "affinetransform" ) );
 	env->initDefineCoreFunction( new Lang::Core_shift( "shift" ) );

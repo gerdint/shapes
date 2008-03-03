@@ -227,7 +227,7 @@ void
 Kernel::Warm_ostringstream::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::String( strrefdup( os_.str( ).c_str( ) ) ) ),
 									 evalState );
 }
 
@@ -235,7 +235,7 @@ void
 Kernel::Warm_ostringstream::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::String( strdup( os_.str( ).c_str( ) ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::String( strrefdup( os_.str( ).c_str( ) ) ) ),
 									 evalState );
 }
 

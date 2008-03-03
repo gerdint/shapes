@@ -1,27 +1,35 @@
-thetaSteps: '47
+##needs revolutionbody
+##needs circle
 
-profile:
+doughnutProfile:
 [rotate3D dir:(1,0,0) angle:~90°]
 []
 immerse
 []
-{
-	R: 3cm
-	r: 1.5cm
-  phiSteps: '36
-  [[range '0 phiSteps-'1].foldl
-	  \ p e .>
-    {
-		  phi: 360° * ( (e*1) / phiSteps )
-			p--((R,0m)+r*([cos phi],[sin phi]))
-		}
-		emptypath
-  ]--cycle
-}
+[shift (3cm,0cm)]
+[]
+[circle 1.5cm]
 
-section:
-{
-	T: [rotate3D dir:(0,0,1) angle: 360° / thetaSteps]
+square: \ x .> x * x
+
+doubleDoughnutProfile:
+[rotate3D dir:(1,0,0) angle:~90°]
+[]
+immerse
+[]
+[shift (3cm,0cm)]
+[]
+( @defaultunit:1%C
+  |
+  [[range 0° 359° 10°].foldl
+  	\ p e .>
+  	{
+  	  p--(^)<((0.5cm+1cm*[square [abs [cos e]]])*[dir e])>(^)
+  	}
+  	emptypath]--cycle
+)
+
+doughnut:
     @nonstroking:[gray 0.8]
   & @width:0.01bp            |** used to fill in object edges
   & @stroking:[gray 0.8]    |** used to fill in object edges
@@ -29,31 +37,11 @@ section:
   & @reflections:0.7*[phong 25] + 0.3*[phong 0.5]
   & @autointensity:[gray 0.3]
   & @autoscattering:[phong 0.2]
-  & @facetresolution:30mm
+  & @facetresolution:1cm
   & @shadeorder:'0          |** use '2 when targeting Adobe Reader or other viewers that can deal with gradient fills.
 	|
-  [[range '0 [duration profile]-'1].foldl
-	  \ p eInt .>
-    {
-		  e: eInt * 1
-			p
-			&
-			[facet [profile e].p--[profile e+1].p--[T [profile e+1].p--[profile e].p]--cycle]
-		}
-	  null3D
-  ]
-}
-
-doughnut:
-[[range '0 thetaSteps-'1].foldl
-  \ p e .>
-	{
-	  p
-		&
-		[[rotate3D dir:(0,0,1) angle: 360°*((e*1)/thetaSteps)] section]
-	}
-	null3D
-]
+|**  [revolutionBody doughnutProfile phiSteps:'25 thetaSteps:'37]
+  [revolutionBody doubleDoughnutProfile phiSteps:'36 thetaSteps:'37]
 
 lights: ( newLights << [shift (6cm,8cm,10cm)] [] [specular_light [gray 0.9]]
 |**                    << [ambient_light [gray 0.3]]

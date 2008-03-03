@@ -126,7 +126,7 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
 	// We rather call it an overlap than missing small overlaps, because undetected overlaps may make short
 	// segments of a line shine through a surface at spurious points.
 
-	// Beginning with the this line:
+	// Beginning with this line:
 	{
 		Concrete::UnitFloatPair normal = p0_.normalizedOrthogonal( p1_ );
 

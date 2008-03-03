@@ -313,4 +313,70 @@ facing: [../facing scale:true distort:true ...]
 	</function>
 </system-binding>
 
+<system-binding identifier="range">
+	<function>
+		<case constructor-of="SingleList">
+			<arguments>
+				<arg identifier="begin">
+					<type><named-type name="Integer" /></type>
+				</arg>
+				<arg identifier="end">
+					<type><named-type name="Integer" /></type>
+				</arg>
+				<arg identifier="step">
+					<type><named-type name="Integer" /></type>
+				</arg>
+				<arg identifier="count">
+					<type><named-type name="Integer" /></type>
+				</arg>
+			</arguments>
+			<description>
+				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to provide <arg name="begin" />, <arg name="end" />, and <arg name="count" /> at the same time.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
+				<p>See the float case for the semantics of the various argument combinations.</p>
+			</description>
+		</case>
+		<case constructor-of="SingleList">
+			<arguments>
+				<arg identifier="begin">
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg identifier="end">
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg identifier="step">
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg identifier="count">
+					<type><named-type name="Integer" /></type>
+				</arg>
+			</arguments>
+			<description>
+				<p>Constructs a range of real numbers.  One of the arguments must be omitted.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
+				<p>If <arg name="step" /> is provided, it determines the step length.  If <arg name="count" /> is provided, it must be at least 2, and determines the number of elements in the constructed range, which will begin at <arg name="begin" /> if <arg name="begin" /> is provided, and end at <arg name="end" /> if <arg name="end" /> is provided (note that achieving this using <arg name="step" /> may be inconvenient or even difficult due to problems with numeric precision).  If neither <arg name="step" /> nor <arg name="count" /> is provided, <arg name="step" /> defaults to 1.</p>
+			</description>
+		</case>
+		<case constructor-of="SingleList">
+			<arguments>
+				<arg identifier="begin">
+					<type><named-type name="Length" /></type>
+				</arg>
+				<arg identifier="end">
+					<type><named-type name="Length" /></type>
+				</arg>
+				<arg identifier="step">
+					<type><named-type name="Length" /></type>
+				</arg>
+				<arg identifier="count">
+					<type><named-type name="Integer" /></type>
+				</arg>
+			</arguments>
+			<description>
+				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to omit both <arg name="step" /> and <arg name="count" />.</p>
+				<p>See the float case for the semantics of the various argument combinations.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+
 </section>

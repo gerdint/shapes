@@ -13,9 +13,9 @@ obj:
   & @facetresolution:1cm
   |
   [facet (r,~5cm,~0.5w)--(r,5cm,~0.5w)--(r,5cm,0.5w)--(r,~5cm,0.5w)--cycle
-         [facetnormal (r,0cm,~1cm) [normalized (r,0cm,~1cm)]]
-	 [facetnormal (r,0cm,1cm) [normalized (r,0cm,1cm)]]
-	 [facetnormal (r,5cm,0cm) [normalized (r,5cm,0cm)]]]
+				 [facetnormal (r,0cm,~1cm) [normalized (r,0cm,~1cm)]]
+				 [facetnormal (r,0cm,1cm) [normalized (r,0cm,1cm)]]
+				 [facetnormal (r,5cm,0cm) [normalized (r,5cm,0cm)]]]
 
 [[range 20° 160° 20°].foldsl
  \ p e •st .>

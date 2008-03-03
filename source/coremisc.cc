@@ -86,15 +86,30 @@ namespace Shapes
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
+				std::ostringstream oss;
 				for( size_t i = 0; i != args.size( ); ++i )
 					{
-						std::cerr << args.getValue( i )->getTypeName( ) << ": " ;
-						args.getValue( i )->show( std::cerr );
-						std::cerr << std::endl ;
+						args.getValue( i )->show( oss );
 					}
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
-													evalState );
+				cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::String( strrefdup( oss ) ) ),
+												 evalState );
+			}
+		};
+
+		class Core_typename : public Lang::CoreFunction
+		{
+		public:
+			Core_typename( const char * title ) : CoreFunction( title ) { }
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				const size_t ARITY = 1;
+				CHECK_ARITY( args, ARITY, title_ );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::String( args.getValue( 0 )->getTypeName( ) ) ),
+												 evalState );
 			}
 		};
 
@@ -492,6 +507,7 @@ Kernel::registerCore_misc( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_typeof( "typeof" ) );
 	env->initDefineCoreFunction( new Lang::Core_error( "error" ) );
 	env->initDefineCoreFunction( new Lang::Core_show( "show" ) );
+	env->initDefineCoreFunction( new Lang::Core_typename( "typename" ) );
 	env->initDefineCoreFunction( new Lang::Core_debuglog_before( "debuglog_before" ) );
 	env->initDefineCoreFunction( new Lang::Core_debuglog_after( "debuglog_after" ) );
 	env->initDefineCoreFunction( new Lang::Core_if( "if" ) );

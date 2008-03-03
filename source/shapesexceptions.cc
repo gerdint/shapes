@@ -1174,13 +1174,13 @@ Exceptions::CoreDynamicTypeMismatch::~CoreDynamicTypeMismatch( )
 void
 Exceptions::CoreDynamicTypeMismatch::display( std::ostream & os ) const
 {
-	os << "Core function " << title_ << " encountered a type mismatch in the dynamic variable @" << id_ 
+	os << "Core function " << title_ << " encountered a type mismatch in the dynamic variable @" << id_
 		 << ": expected a " << expectedType_ << ", got a " << valueType_ << std::endl ;
 }
 
 Exceptions::ContinuationTypeMismatch::ContinuationTypeMismatch( const Kernel::Continuation * locationCont,
-																														 RefCountPtr< const char > valueType,
-																														 RefCountPtr< const char > expectedType )
+																																RefCountPtr< const char > valueType,
+																																RefCountPtr< const char > expectedType )
 	: Exceptions::RuntimeError( locationCont->traceLoc( ) ),
 		valueType_( valueType ),
 		expectedType_( expectedType )

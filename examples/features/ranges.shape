@@ -1,0 +1,41 @@
+helper: \ •dst rng .>
+{
+  •dst << `=== ´ << [sourceof rng] << ` ===¢n-->´
+			<< [rng.foldl \ p e .> ( p + `  ´ + [show e] ) `´]
+			<< `¢n¢n´
+}
+
+{
+  /**
+	 ** Note that the end value is included in the range of integers...
+	 **/
+	[helper •stdout locate[][range '3 '10]]
+}
+{
+  /**
+	 ** ... while it is not in the range of floats (unless there is numeric errors)
+	 **/
+	[helper •stdout locate[][range 3 10]]
+}
+
+{
+  /**
+	 ** Lengths are just like floats, but one must provide the step length:
+	 **/
+	[helper •stdout locate[][range 3mm 10mm 1mm]]
+}
+
+
+/**
+ ** The following ranges are just examples of how the arguments can be combined.
+ **/
+
+{
+	[helper •stdout locate[][range ~4cm 4cm count:'11]]
+}
+
+{
+	[helper •stdout locate[][range end:'10 step:'~3 count:'5]]
+}
+
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

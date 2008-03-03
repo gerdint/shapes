@@ -148,7 +148,7 @@ namespace Shapes
 		public:
 			RefCountPtr< const char > val_;
 			String( RefCountPtr< const char > val ) : val_( val ) { };
-			String( const char * val ) : val_( val ) { };
+			String( const char * val, bool duplicate ) : val_( duplicate ? strdup( val ) : val ) { };
 			virtual ~String( );
 			TYPEINFODECL;
 			virtual void show( std::ostream & os ) const;
@@ -165,6 +165,7 @@ namespace Shapes
 			FloatPair( const Concrete::UnitFloatPair & orig );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			TYPEINFODECL;
+			virtual RefCountPtr< const Lang::FloatPair > transformed( const Lang::Transform2D & tf ) const;
 			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;
@@ -180,6 +181,7 @@ namespace Shapes
 			FloatTriple( const Concrete::UnitFloatTriple & orig );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			TYPEINFODECL;
+			virtual RefCountPtr< const Lang::FloatTriple > transformed( const Lang::Transform3D & tf ) const;
 			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			DISPATCHDECL;

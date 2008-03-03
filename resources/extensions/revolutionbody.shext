@@ -1,0 +1,57 @@
+makeSectionThreeNormals: \ profile phiSteps thetaSteps .>
+{
+	stepLength: [abs profile] / phiSteps
+	T: [rotate3D dir:(0,0,1) angle: 360° / thetaSteps]
+
+  [[range '0 phiSteps-'1].foldl
+	  \ p e .>
+    {
+			sl1: [profile e * stepLength]
+		  sl2: [profile ( e + '1 ) * stepLength]
+			p
+			&
+			[facet sl1.p--sl2.p--[T sl2.p]--cycle
+				 [facetnormal sl1.p ~sl1.N]
+				 [facetnormal sl2.p ~sl2.N]
+				 [facetnormal [T sl2.p] [T ~sl2.N]]]
+			&
+			[facet sl1.p--[T sl2.p]--[T sl1.p]--cycle
+				 [facetnormal sl1.p ~sl1.N]
+				 [facetnormal [T sl2.p] [T ~sl2.N]]
+				 [facetnormal [T sl1.p] [T ~sl1.N]]]
+		}
+	  null3D
+  ]
+}
+
+makeSectionDefaultNormal: \ profile phiSteps thetaSteps .>
+{
+	stepLength: [abs profile] / phiSteps
+	T: [rotate3D dir:(0,0,1) angle: 360° / thetaSteps]
+
+  [[range '0 phiSteps-'1].foldl
+	  \ p e .>
+    {
+			sl1: [profile e * stepLength]
+		  sl2: [profile ( e + '1 ) * stepLength]
+			p
+			&
+			[facet sl1.p--sl2.p--[T sl2.p]--[T sl1.p]--cycle]
+		}
+	  null3D
+  ]
+}
+
+revolutionBody: \ profile phiSteps:36 thetaSteps:36 .>
+{
+	section: [makeSectionDefaultNormal profile phiSteps thetaSteps]
+  [[range '0 thetaSteps-'1].foldl
+    \ p e .>
+  	{
+  	  p
+  		&
+  		[[rotate3D dir:(0,0,1) angle: 360°*((e*1)/thetaSteps)] section]
+  	}
+  	null3D
+  ]
+}

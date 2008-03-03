@@ -342,6 +342,13 @@ Lang::FloatPair::getField( const char * fieldID, const RefCountPtr< const Lang::
 RefCountPtr< const Lang::Class > Lang::FloatPair::TypeID( new Lang::SystemFinalClass( strrefdup( "FloatPair" ) ) );
 TYPEINFOIMPL( FloatPair );
 
+RefCountPtr< const Lang::FloatPair >
+Lang::FloatPair::transformed( const Lang::Transform2D & tf ) const
+{
+	return RefCountPtr< const Lang::FloatPair >
+		( new Lang::FloatPair( tf.xx_ * x_ + tf.xy_ * y_, tf.yx_ * x_ + tf.yy_ * y_ ) );
+}
+
 void
 Lang::FloatPair::show( std::ostream & os ) const
 {
@@ -374,6 +381,15 @@ Lang::FloatTriple::getField( const char * fieldID, const RefCountPtr< const Lang
 
 RefCountPtr< const Lang::Class > Lang::FloatTriple::TypeID( new Lang::SystemFinalClass( strrefdup( "FloatTriple" ) ) );
 TYPEINFOIMPL( FloatTriple );
+
+RefCountPtr< const Lang::FloatTriple >
+Lang::FloatTriple::transformed( const Lang::Transform3D & tf ) const
+{
+	return RefCountPtr< const Lang::FloatTriple >
+		( new Lang::FloatTriple( tf.xx_ * x_ + tf.xy_ * y_ + tf.xz_ * z_,
+														 tf.yx_ * x_ + tf.yy_ * y_ + tf.yz_ * z_,
+														 tf.zx_ * x_ + tf.zy_ * y_ + tf.zz_ * z_ ) );
+}
 
 void
 Lang::FloatTriple::show( std::ostream & os ) const
@@ -538,8 +554,8 @@ Lang::Coords3D::transformedPtr( const Lang::Transform3D & tf ) const
 	Concrete::Length tmpy = y_.get( );
 	Concrete::Length tmpz = z_.get( );
 	return new Lang::Coords3D( tf.xx_ * tmpx + tf.xy_ * tmpy + tf.xz_ * tmpz + tf.xt_,
-																tf.yx_ * tmpx + tf.yy_ * tmpy + tf.yz_ * tmpz + tf.yt_,
-																tf.zx_ * tmpx + tf.zy_ * tmpy + tf.zz_ * tmpz + tf.zt_ );
+														 tf.yx_ * tmpx + tf.yy_ * tmpy + tf.yz_ * tmpz + tf.yt_,
+														 tf.zx_ * tmpx + tf.zy_ * tmpy + tf.zz_ * tmpz + tf.zt_ );
 }
 
 RefCountPtr< const Lang::Geometric3D >
