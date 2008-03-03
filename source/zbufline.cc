@@ -374,7 +374,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 	std::set< double > times;	// All interesting times.
 	times.insert( 0. );
 	times.insert( 1. );
- 
+
 	for( std::vector< Concrete::Coords2D >::const_iterator i0 = triangle.points_.begin( ); i0 != triangle.points_.end( ); ++i0 )
 		{
 			std::vector< Concrete::Coords2D >::const_iterator i1 = i0;
