@@ -30,6 +30,7 @@ namespace Shapes
 			Exception( );
 			virtual ~Exception( );
 			virtual void display( std::ostream & os ) const = 0;
+			static const char * locsep;
 		};
 
 		class NotImplemented : public Exception

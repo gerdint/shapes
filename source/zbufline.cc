@@ -400,8 +400,11 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 
 	if( tIn == tOut )
 		{
-			// Only one of the times can be the enter/exit time.
-			if( triangle.contains( p0_ + 0.5 * tIn * d_ ) )
+			/* Only one of the times can be the enter/exit time.
+			 * Note that the test below really needs to be this robust.
+			 */
+			if( tIn > 0.5 ? triangle.contains( p0_ + 0.5 * tIn * d_ )
+					: ! triangle.contains( p0_ + 0.5 * ( tIn + 1 ) * d_ ) )
 				{
 					tIn = -HUGE_VAL;
 				}

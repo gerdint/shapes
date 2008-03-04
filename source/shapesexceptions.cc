@@ -21,6 +21,7 @@ Exceptions::NotImplemented::display( std::ostream & os ) const
 	os << "Under construction: " << functionality << " is not implemented." << std::endl ;
 }
 
+const char * Exceptions::Exception::locsep = ": ";
 
 Exceptions::Exception::Exception( )
 { }
@@ -245,13 +246,13 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 	switch( type )
 		{
 		case OPEN:
-			os << loc << "Could not open file: " << filename ;
+			os << loc << locsep << "Could not open file: " << filename ;
 			break;
 		case STAT:
-			os << loc << "Could not stat() file: " << filename ;
+			os << loc << locsep << "Could not stat() file: " << filename ;
 			break;
 		default:
-			os << loc << "Internal error when displaying FileOpenError on file: " << filename ;
+			os << loc << locsep << "Internal error when displaying FileOpenError on file: " << filename ;
 		}
 	if( searchPath_ != 0 )
 		{
@@ -281,7 +282,7 @@ Exceptions::TeXSetupTooLate::~TeXSetupTooLate( )
 void
 Exceptions::TeXSetupTooLate::display( std::ostream & os ) const
 {
-	os << loc << "It is too late to make modifications to the TeX context." << std::endl ;
+	os << loc << locsep << "It is too late to make modifications to the TeX context." << std::endl ;
 }
 
 

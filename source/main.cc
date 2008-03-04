@@ -1195,7 +1195,7 @@ main( int argc, char ** argv )
 							evalState.cont_->backTrace( std::cerr );
 						}
 
-					std::cerr << evalState.cont_->traceLoc( ) << ": " ;
+					std::cerr << evalState.cont_->traceLoc( ) << Exceptions::Exception::locsep ;
 					ball.display( std::cerr );
 					abortProcedure( & oFile, outputName );
 				}
