@@ -97,6 +97,7 @@ namespace Shapes
 		extern RefCountPtr< const Lang::Boolean > THE_FALSE;
 		extern RefCountPtr< const Lang::Boolean > THE_TRUE;
 		extern RefCountPtr< const Lang::Gray > THE_BLACK;
+		extern RefCountPtr< const Lang::Gray > THE_OCCLUDING_WHITE;
 		extern RefCountPtr< const Lang::Alpha > THE_OPAQUE;
 		extern RefCountPtr< const Lang::Class > THE_OBJECT;
 		extern RefCountPtr< const Lang::CoreFunction > THE_NO_ARROW;

@@ -375,6 +375,16 @@ facing: [../facing scale:true distort:true ...]
 				<p>See the float case for the semantics of the various argument combinations.</p>
 			</description>
 		</case>
+		<body>
+			<example-with-output title="Range construction" internal-id="example/ranges">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/ranges.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/ranges.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/ranges.stdout" -->]]>
+</stdout>
+			</example-with-output>
+		</body>
 	</function>
 </system-binding>
 

@@ -77,6 +77,7 @@ RefCountPtr< const Lang::ElementaryPath3D > Lang::THE_EMPTYPATH3D( new Lang::Ele
 RefCountPtr< const Lang::Boolean > Lang::THE_FALSE( new Lang::Boolean( false ) );
 RefCountPtr< const Lang::Boolean > Lang::THE_TRUE( new Lang::Boolean( true ) );
 RefCountPtr< const Lang::Gray > Lang::THE_BLACK( new Lang::Gray( Concrete::Gray( 0 ) ) );
+RefCountPtr< const Lang::Gray > Lang::THE_OCCLUDING_WHITE( new Lang::Gray( Concrete::Gray( 1 ) ) );
 RefCountPtr< const Lang::Alpha > Lang::THE_OPAQUE( new Lang::Alpha( false, 1 ) );
 RefCountPtr< const Lang::Class > Lang::THE_OBJECT( new Lang::Object( ) );
 RefCountPtr< const Lang::Dash > Lang::THE_SOLID_DASH( new Lang::Dash( ) );
@@ -117,6 +118,7 @@ Shapes::Kernel::registerGlobals( Kernel::Environment * env )
 	env->initDefine( "JOIN_ROUND", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_ROUND ) ) );
 	env->initDefine( "JOIN_BEVEL", RefCountPtr< const Lang::JoinStyle >( new Lang::JoinStyle( Lang::JoinStyle::JOIN_BEVEL ) ) );
 	env->initDefine( "GRAY_BLACK", Lang::THE_BLACK );
+	env->initDefine( "OCCLUDING", Lang::THE_OCCLUDING_WHITE );
 	env->initDefine( "GRAY_WHITE", RefCountPtr< const Lang::Gray >( new Lang::Gray( Concrete::Gray( 1 ) ) ) );
 	env->initDefine( "RGB_BLACK", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 0, 0, 0 ) ) ) );
 	env->initDefine( "RGB_WHITE", RefCountPtr< const Lang::RGB >( new Lang::RGB( Concrete::RGB( 1, 1, 1 ) ) ) );

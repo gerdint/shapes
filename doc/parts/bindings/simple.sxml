@@ -166,6 +166,16 @@
 		</description>
 	</simple-value>
 </system-binding>
+<system-binding identifier="OCCLUDING">
+	<simple-value>
+		<type><named-type name="Gray" /></type>
+		<description>
+			<p>Color value with special interpretation.  If used as a color, it is the same as <binding name="GRAY_WHITE" />.  In a z-sorter (see <binding name="newZSorter" />), however, this color causes the surface not to be drawn at all.</p>
+			<p>This is useful when one wants to draw a picture where lines are drawn on a surface, and one is not interested in filling the surface with any color, but the surface is needed never the less to occlude lines.  Not filling the surface with any color allows the lines to be drawn on any background, and will also generate an output with much smaller memory footprint.</p>
+			<p>Note that a z-buffer always draws <em>all</em> visible line segments on top of the filled areas.</p>
+		</description>
+	</simple-value>
+</system-binding>
 
 <system-binding identifier="RGB_BLACK">
 	<simple-value>

@@ -9,3 +9,12 @@ foldsr: \ op nullRes •st lst .> [if [null? lst] nullRes [op [foldsr op nullRes
 
 consify: \ lst .> [lst.foldr (\ p e .> [cons e p]) [list]]
 map: \ f lst .> [foldr (\ p e .> [cons [f e] p]) [list] lst]
+
+sublist:
+{
+  helper: \ lst i n .> [if [null? lst] lst
+											 		[if i == n
+											 		  [cons lst.car [helper lst.cdr '1 n]]
+													  [helper lst.cdr i+'1 n]]]
+  \ lst n .> [helper lst n n]
+}

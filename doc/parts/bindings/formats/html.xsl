@@ -75,7 +75,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]/function">
+ 	<xsl:apply-templates select="top"/>
  	<xsl:apply-templates select="case"/>
+ 	<xsl:apply-templates select="body"/>
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]/function/case">

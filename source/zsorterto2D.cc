@@ -460,6 +460,13 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 			typedef typeof drawOrder ListType;
 			for( ListType::iterator i = drawOrder.begin( ); i != drawOrder.end( ); ) // Note that i shall not be incremented here.
 				{
+					const Computation::PaintedPolygon3D * painter = (*i)->painter_;
+					if( painter->getColor( ) == Lang::THE_OCCLUDING_WHITE )
+						{
+							++i;
+							continue;
+						}
+
 					std::list< Computation::ZBufTriangle > regions;
 					// This is a hideous copy!
 					regions.push_back( **i );
@@ -467,7 +474,6 @@ Lang::ZSorter::typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3
 					// Now we'll simply join the triangle **i with the immediately following triangles sharing the same painter.
 					// The job of joining triangles thus consists in placing them in a good order in drawOrder.
 
-					const Computation::PaintedPolygon3D * painter = (*i)->painter_;
 					++i;
 					for( ; i != drawOrder.end( ) && (*i)->painter_ == painter; ++i )
 						{

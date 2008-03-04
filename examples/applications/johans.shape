@@ -57,10 +57,10 @@ foldpairsl:
 		 	[helper op nullRes lst.car lst.cdr]]
 }
 
-functionMesh: \ zMap xRange yRange .>
+functionMesh: \ zMap xRange yRange step:'1 .>
 {
   xyz: \ p .> ( p.x, p.y, [zMap p] )
-  [xRange.foldl
+  [foldl
     \ p x .>
 			p
 			&
@@ -70,9 +70,10 @@ functionMesh: \ zMap xRange yRange .>
            emptypath3D
 			]]
     null3D
+		[sublist [consify xRange] step]
   ]
 	&
-  [yRange.foldl
+  [foldl
     \ p y .>
 			p
 			&
@@ -82,6 +83,7 @@ functionMesh: \ zMap xRange yRange .>
            emptypath3D
 			]]
     null3D
+		[sublist [consify yRange] step]
   ]
 }
 
@@ -111,10 +113,12 @@ functionSurface: \ zMap xRange yRange .>
 						[fill pc--p22--p21--cycle]
 						&
 						[fill pc--p21--p11--cycle]
+/**
 						&
 						[stroke p11--pc--p22]
 						&
 						[stroke p12--pc--p21]
+**/
 					}
          null3D
 				yConsRange
@@ -122,34 +126,77 @@ functionSurface: \ zMap xRange yRange .>
     null3D
 		xConsRange
   ]
+/**
 	&
 	[functionMesh zMap xRange yRange]
+**/
 }
 
-T_View: [rotate3D dir:(1,0,0) angle:~90°-~17°]*[rotate3D dir:(0,0,1) angle:~90°-25°]
+ridgeLines: \ zMap xRange yRange tf .>
+{
+  xyz: \ p .> ( p.x, p.y, [zMap p] )
+	test: \ a b c d e .>
+	  {
+		  da: [normalized a - b]
+		  dc: [normalized c - b]
+			dm0: 0.5 * ( da + dc )
+			dm: [if dm0 * ( d - b ) > 0m dm0 ~dm0]
+		  de: [normalized e - b]
+			de*dm < da*dm
+    }
+	xConsRange: [consify xRange]
+	yConsRange: [consify yRange]
+  [foldpairsl
+    \ p x1 x2 .>
+      [foldpairsl
+        \ p y1 y2 .>
+					{
+					  p11: view [] tf [] [xyz (x1,y1)]
+					  p12: view [] tf [] [xyz (x1,y2)]
+					  p21: view [] tf [] [xyz (x2,y1)]
+					  p22: view [] tf [] [xyz (x2,y2)]
+					  pc:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+						pc3D: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+						p
+						&
+						[if [test p21 p11 p12 p22 pc] [stroke [xyz (x1,y1)]--pc3D] null3D]
+						&
+						[if [test p11 p12 p22 p21 pc] [stroke [xyz (x1,y2)]--pc3D] null3D]
+						&
+						[if [test p12 p22 p21 p11 pc] [stroke [xyz (x2,y2)]--pc3D] null3D]
+						&
+						[if [test p22 p21 p11 p12 pc] [stroke [xyz (x2,y1)]--pc3D] null3D]
+					}
+        p
+				yConsRange
+			]
+    null3D
+		xConsRange
+  ]
+}
 
+T_view: [rotate3D dir:(1,0,0) angle:~90°-~17°]*[rotate3D dir:(0,0,1) angle:~90°-25°]
+
+N_major: '15
+N_minor: '3
+xRange: [range ~R R count: N_major * N_minor + '1]
+yRange: [range ~R R count: N_major * N_minor + '1]
 
 •page << [view
-				   T_View
+				   T_view
 					 []
 					 ( newZSorter
-					   <<   @nonstroking:[gray 1]
-						    & @stroking: [gray 0.5]
-					 	 		& @width: 0.1bp
-					 	 		| [functionSurface surfz
-					 	 		  								 [range ~R R count:'15]
-																	 [range ~R R count:'15]
-									]
-					   <<   @nonstroking:[gray 1]
-					 	 		& @width: 0.3bp
-					 	 		| [functionMesh surfz
-					 	 		  							[range ~R R count:'15]
-																[range ~R R count:'15]
-									]
+					   <<   @nonstroking:OCCLUDING
+						    & @width: 0.3bp
+					 	 		| [functionSurface surfz xRange yRange]
+					   << @width: 0.3bp
+					 	 		| [functionMesh surfz xRange yRange N_minor]
+					   << @width: 0.3bp
+					 	 		| [ridgeLines surfz xRange yRange T_view]
 					 )
 				 ]
 •page << [view
-				   T_View
+				   T_view
 					 []
 					 ( newGroup3D
 					 	 << @width:1.5bp & @cap:CAP_ROUND | [stroke points]
