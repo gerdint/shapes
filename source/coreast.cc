@@ -133,7 +133,7 @@ namespace Shapes
 				 * We don't check for presence of named arguments here since this function is generally called internally, and
 				 * we don't want the extra overhead of an unnecessary check.
 				 */
-				
+
 				Kernel::ContRef cont = evalState->cont_;
 				switch( args.size( ) )
 					{

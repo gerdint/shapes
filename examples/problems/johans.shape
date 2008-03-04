@@ -25,11 +25,15 @@ foldpairsl:
 
   \ op nullRes lst .>
     [if [null? lst]
-	    lst
+			lst
 		 	[helper op nullRes lst.car lst.cdr]]
 }
 
 functionSurface: \ zMap xRange yRange .>
+{
+  xyz: \ p .> ( p.x, p.y, [zMap p] )
+	xConsRange: [consify xRange]
+	yConsRange: [consify yRange]
   [foldpairsl
     \ p x1 x2 .>
 			p
@@ -39,24 +43,50 @@ functionSurface: \ zMap xRange yRange .>
           p
 					&
 					{
-					  z11: [zMap (x1,y1)]
-					  z12: [zMap (x1,y2)]
-					  z21: [zMap (x2,y1)]
-					  z22: [zMap (x2,y2)]
-						[fill (x1,y1,z11)--(x1,y2,z12)--(x2,y2,z22)--cycle]
+					  p11: [xyz (x1,y1)]
+					  p12: [xyz (x1,y2)]
+					  p21: [xyz (x2,y1)]
+					  p22: [xyz (x2,y2)]
+						[fill p11--p12--p22--cycle]
 						&
-						[fill (x1,y1,z11)--(x2,y2,z22)--(x2,y1,z21)--cycle]
+						[fill p11--p22--p21--cycle]
 						&
-						[stroke (x1,y1,z11)--(x1,y2,z12)--(x2,y2,z22)--(x2,y1,z21)--cycle]
+						[stroke p11--p12--p22--p21--cycle]
 					}
          null3D
-				yRange
+				yConsRange
 			]
     null3D
-		xRange
+		xConsRange
   ]
+	&
+  [xRange.foldl
+    \ p x .>
+			p
+			&
+			[stroke
+        [yRange.foldl
+           \ p y .> p--[xyz (x,y)]
+           emptypath3D
+			]]
+    null3D
+  ]
+	&
+  [yRange.foldl
+    \ p y .>
+			p
+			&
+			[stroke
+        [xRange.foldl
+           \ p x .> p--[xyz (x,y)]
+           emptypath3D
+			]]
+    null3D
+  ]
+}
 
-T_View: [rotate3D dir:(1,0,0) angle:~(90°-17°)]*[rotate3D dir:(0,0,1) angle:~25°]
+T_View: [rotate3D dir:(1,0,0) angle:~90°+17°]*[rotate3D dir:(0,0,1) angle:~25°]
+
 
 •page << [view
 				   T_View
@@ -64,10 +94,30 @@ T_View: [rotate3D dir:(1,0,0) angle:~(90°-17°)]*[rotate3D dir:(0,0,1) angle:~2
 					 ( newZSorter <<   @nonstroking:[gray 0.7]
 					 	 							 & @width: 0.3bp
 					 	 							 | [functionSurface surfz
-					 	 							 										consify[][range ~5cm step:20mm count:'2]
-																							consify[][range ~3cm 3cm 20mm]
-|**					 	 							 										consify[][range ~R R count:'10]
-|**																							consify[][range ~R R count:'10]
-																								]
+					 	 							 										[range ~R R count:'15]
+																							[range ~R R count:'15]
+														 ]
+					 )
+				 ]
+
+xyz: \ p .> ( p.x, p.y, [surfz p] )
+d: 2*R / '14
+helper: \ z11 z22 .>
+{
+  p11: xyz [] z11
+  p12: xyz [] (z11.x,z22.y)
+  p21: xyz [] (z22.x,z11.y)
+  p22: xyz [] z22
+	[fill p11--p12--p22--cycle]
+	&
+	[fill p11--p22--p21--cycle]
+}
+•page << @width: 0.3bp & @nonstroking:[gray 0.5] | [shift (3cm,0cm)][][view
+				   T_View
+					 []
+					 ( newZSorter
+					   << [helper (R-d,~R) (R,~R+d)]
+					   << [helper (R-d,~R+d) (R,~R+2*d)]
+						 << [stroke [xyz (R-2*d,~R+5*d)]--[xyz (R-2*d,~R+6*d)]]
 					 )
 				 ]

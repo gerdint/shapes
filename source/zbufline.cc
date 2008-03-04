@@ -361,6 +361,10 @@ Computation::ZBufLine::splice( const ZBufLine * line1, const ZBufLine * line2 , 
 void
 Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const Computation::ZBufLine * > * myLines ) const
 {
+	//	std::cerr << "Triangle color: " ;
+	//	dynamic_cast< const Computation::FilledPolygon3D * >( triangle.painter_ )->getColor( )->show( std::cerr );
+	//	std::cerr << std::endl ;
+
 	// Generally, a line may cross a triangle edge at two points, and may penetrate the triangle at one point.
 	// If these points are sorted, we'll end up with at most four segments, and visibility can be tested for each.
 	// Finally, adjacent visible segments are joined and pushed in the destination container.
@@ -371,9 +375,10 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 
 	double tIn = HUGE_VAL;	 // "time" when line enters triangle
 	double tOut = -HUGE_VAL; // "time" when line exits triangle
-	std::set< double > times;	// All interesting times.
-	times.insert( 0. );
-	times.insert( 1. );
+	std::vector< double > times;	// All interesting times.
+	times.reserve( 6 );
+	times.push_back( 0. );
+	times.push_back( 1. );
 
 	for( std::vector< Concrete::Coords2D >::const_iterator i0 = triangle.points_.begin( ); i0 != triangle.points_.end( ); ++i0 )
 		{
@@ -387,7 +392,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 			double tmp = intersectionTime( *i0, *i1 );	// the return value is non-positive if there is no intersection
 			if( tmp > 0 )
 				{
-					times.insert( tmp );
+					times.push_back( tmp );
 					tIn = std::min( tIn, tmp );
 					tOut = std::max( tOut, tmp );
 				}
@@ -395,8 +400,8 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 
 	if( tIn == tOut )
 		{
-			// Only of of the times can be the enter/exit time.
-			if( triangle.contains( p0_ ) )
+			// Only one of the times can be the enter/exit time.
+			if( triangle.contains( p0_ + 0.5 * tIn * d_ ) )
 				{
 					tIn = -HUGE_VAL;
 				}
@@ -425,7 +430,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 				double tmp = Concrete::inner( d_, pInt - p0_ ) / Concrete::inner( d_, d_ );
 				if( 0 < tmp && tmp < 1 )
 					{
-						times.insert( tmp );
+						times.push_back( tmp );
 					}
 			}
 		catch( const char * noIntersectionBall )
@@ -433,6 +438,8 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 				// Never mind.
 			}
 	}
+
+	std::sort( times.begin( ), times.end( ) );
 
 	{
 		// We now have the times in increasing order, and it is time to identify visible segments.
