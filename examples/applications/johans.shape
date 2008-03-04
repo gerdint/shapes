@@ -19,7 +19,7 @@ u: R/2.1
 
 /** The function describing the manifold.
  **/
-surfz: \ p .> u * [sin (p.x/u) * (p.y/u)]
+surfz: \ p .> (0.2*R) * [sin (p.x/u) * (p.y/u)]
 
 /** A general-purpose helper.
  **/
@@ -42,7 +42,7 @@ points:
   N: '100
 	[[range '1 N].foldl
 	 \ p i .>
-	 	 p--[surfit surfz (2/N)*(N-i)*u*[dir 1.4*(180°/N)*(N-i)+0.5]]
+	 	 p--[surfit surfz (2/N)*(N-i)*u*[dir 90°-(1.4*(180°/N)*(N-i)+0.5)]]
    emptypath3D]
 }
 
@@ -126,7 +126,7 @@ functionSurface: \ zMap xRange yRange .>
 	[functionMesh zMap xRange yRange]
 }
 
-T_View: [rotate3D dir:(1,0,0) angle:~90°+17°]*[rotate3D dir:(0,0,1) angle:~25°]
+T_View: [rotate3D dir:(1,0,0) angle:~90°-~17°]*[rotate3D dir:(0,0,1) angle:~90°-25°]
 
 
 •page << [view
