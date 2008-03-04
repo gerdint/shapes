@@ -45,7 +45,7 @@ Computation::ZBufLine::ZMap::operator () ( const Concrete::Coords2D & p ) const
 	const Physical< 2, 0 > bx = p.x_ * ( eyez_ - p0_.z_ ) - eyez_ * p0_.x_;
 	const Physical< 2, 0 > by = p.y_ * ( eyez_ - p0_.z_ ) - eyez_ * p0_.y_;
 	const Concrete::Length alpha = ( ax * bx + ay * by ) / ( ax * ax + ay * ay );
-	return p0_.z_ + alpha * k_z_; 
+	return p0_.z_ + alpha * k_z_;
 }
 
 Concrete::Coords3D
@@ -69,8 +69,8 @@ Computation::ZBufLine::ZMap::intersection( const Computation::ZBufTriangle::ZMap
 }
 
 
-Computation::ZBufLine::ZBufLine( const Computation::StrokedLine3D * painter, const RefCountPtr< const Computation::ZBufLine::ZMap > & zMap, const Concrete::Coords2D & p0, const Concrete::Coords2D & p1 )
-	: painter_( painter ), p0_( p0 ), p1_( p1 ), d_( p1 - p0 ), zMap_( zMap )
+Computation::ZBufLine::ZBufLine( const Computation::StrokedLine3D * painter, const RefCountPtr< const Computation::ZBufLine::ZMap > & zMap, const RefCountPtr< const Bezier::PolyCoeffs< Concrete::Coords2D > > & bezierView, const Concrete::Coords2D & p0, const Concrete::Coords2D & p1 )
+	: painter_( painter ), bezierView_( bezierView ), p0_( p0 ), p1_( p1 ), d_( p1 - p0 ), zMap_( zMap )
 { }
 
 Concrete::Length
@@ -345,13 +345,13 @@ Computation::ZBufLine::splice( const ZBufLine * line1, const ZBufLine * line2 , 
 	Concrete::Length l0 = ( botLine->p0_ - pInt ).norm( ) - cutLength;
 	if( l0 > Computation::theTrixelizeOverlapTol )
 		{
-			botContainer->push_back( new Computation::ZBufLine( botLine->painter_, botLine->zMap_, botLine->p0_, pInt - cutLength * d ) );
+			botContainer->push_back( new Computation::ZBufLine( botLine->painter_, botLine->zMap_, botLine->bezierView_, botLine->p0_, pInt - cutLength * d ) );
 		}
 
 	Concrete::Length l1 = ( botLine->p1_ - pInt ).norm( ) - cutLength;
 	if( l1 > Computation::theTrixelizeOverlapTol )
 		{
-			botContainer->push_back( new Computation::ZBufLine( botLine->painter_, botLine->zMap_, pInt + cutLength * d, botLine->p1_ ) );
+			botContainer->push_back( new Computation::ZBufLine( botLine->painter_, botLine->zMap_, botLine->bezierView_, pInt + cutLength * d, botLine->p1_ ) );
 		}
 
 	// Now we're finished with botLine.
@@ -478,7 +478,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 								Concrete::Coords2D pEnd = p0_ + *iLast * d_;
 								if( ( pEnd - pStart ).norm( ) > Computation::theTrixelizeOverlapTol )
 									{
-										myLines->push_back( new Computation::ZBufLine( painter_, zMap_, pStart, pEnd ) );
+										myLines->push_back( new Computation::ZBufLine( painter_, zMap_, bezierView_, pStart, pEnd ) );
 									}
 							}
 					}
@@ -490,7 +490,7 @@ Computation::ZBufLine::splice( const ZBufTriangle & triangle, std::list< const C
 				Concrete::Coords2D pEnd = p0_ + *iLast * d_;
 				if( ( pEnd - pStart ).norm( ) > Computation::theTrixelizeOverlapTol )
 					{
-						myLines->push_back( new Computation::ZBufLine( painter_, zMap_, pStart, pEnd ) );
+						myLines->push_back( new Computation::ZBufLine( painter_, zMap_, bezierView_, pStart, pEnd ) );
 					}
 			}
 	}
@@ -501,8 +501,47 @@ Computation::ZBufLine::stroke2D( ) const
 {
 	RefCountPtr< Lang::ElementaryPath2D > path = RefCountPtr< Lang::ElementaryPath2D >( new Lang::ElementaryPath2D( ) );
 
-	path->push_back( new Concrete::PathPoint2D( p0_.x_, p0_.y_ ) );
-	path->push_back( new Concrete::PathPoint2D( p1_.x_, p1_.y_ ) );
+	if( bezierView_ != NullPtr< typeof *bezierView_ >( ) )
+		{
+			double t0 = 0;
+			{
+				double t[4];
+				bezierView_->hyperplaneIntersections( t, d_, Concrete::innerScalar( d_, p0_ ) );
+				if( t[0] == HUGE_VAL )
+					{
+						throw Exceptions::InternalError( "ZBufLine::stroke2D: Failed to locate intersection for t0." );
+					}
+				if( t[1] != HUGE_VAL )
+					{
+						throw Exceptions::MiscellaneousRequirement( "ZBufLine::stroke2D: Problem due to non-monotonicity of the spline." );
+					}
+				t0 = t[0];
+			}
+			double t1 = 1;
+			{
+				double t[4];
+				bezierView_->hyperplaneIntersections( t, d_, Concrete::innerScalar( d_, p1_ ) );
+				if( t[0] == HUGE_VAL )
+					{
+						throw Exceptions::InternalError( "ZBufLine::stroke2D: Failed to locate intersection for t1." );
+					}
+				if( t[1] != HUGE_VAL )
+					{
+						throw Exceptions::MiscellaneousRequirement( "ZBufLine::stroke2D: Problem due to non-monotonicity of the spline." );
+					}
+				t1 = t[0];
+			}
+			Bezier::ControlPoints< Concrete::Coords2D > controls( bezierView_->subSection( t0, t1 ) );
+			path->push_back( new Concrete::PathPoint2D( p0_.x_, p0_.y_ ) );
+			path->back( )->front_ = new Concrete::Coords2D( controls.p1_ );
+			path->push_back( new Concrete::PathPoint2D( p1_.x_, p1_.y_ ) );
+			path->back( )->rear_ = new Concrete::Coords2D( controls.p2_ );
+		}
+	else
+		{
+			path->push_back( new Concrete::PathPoint2D( p0_.x_, p0_.y_ ) );
+			path->push_back( new Concrete::PathPoint2D( p1_.x_, p1_.y_ ) );
+		}
 
 	// If we don't cast path to const, the contructor call becomes ambiguous.
 	return RefCountPtr< const Lang::PaintedPath2D >( new Lang::PaintedPath2D( painter_->getMetaState( ),

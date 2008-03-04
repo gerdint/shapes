@@ -15,6 +15,7 @@
 #include "functiontypes.h"
 #include "elementarycoords.h"
 #include "concretecolors.h"
+#include "bezier.h"
 
 #include <list>
 #include <iostream>
@@ -179,12 +180,14 @@ namespace Shapes
 			};
 
 			const Computation::StrokedLine3D * painter_;
+			RefCountPtr< const Bezier::PolyCoeffs< Concrete::Coords2D > > bezierView_;
+
 			Concrete::Coords2D p0_;
 			Concrete::Coords2D p1_;
 			Concrete::Coords2D d_; // this is just p1_ - p0_
 			RefCountPtr< const ZMap > zMap_;
 
-			ZBufLine( const Computation::StrokedLine3D * painter, const RefCountPtr< const Computation::ZBufLine::ZMap > & zMap, const Concrete::Coords2D & p0, const Concrete::Coords2D & p1 );
+			ZBufLine( const Computation::StrokedLine3D * painter, const RefCountPtr< const Computation::ZBufLine::ZMap > & zMap, const RefCountPtr< const Bezier::PolyCoeffs< Concrete::Coords2D > > & bezierView, const Concrete::Coords2D & p0, const Concrete::Coords2D & p1 );
 			Concrete::Length zAt( const Concrete::Coords2D & p ) const;
 			bool overlaps( const ZBufTriangle & other ) const;
 			bool overlaps( const ZBufLine & other ) const;
@@ -276,14 +279,25 @@ namespace Shapes
 
 		class StrokedLine3D
 		{
+		protected:
 			Concrete::Coords3D p0_;
 			Concrete::Coords3D p1_;
 			RefCountPtr< const Kernel::GraphicsState > metaState_;
 		public:
 			StrokedLine3D( const Concrete::Coords3D & p0, const Concrete::Coords3D & p1, const RefCountPtr< const Kernel::GraphicsState > metaState );
-			~StrokedLine3D( );
-			void push_zBufLine( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< const Computation::ZBufLine * > * lineQueue ) const;
+			virtual ~StrokedLine3D( );
+			virtual void push_zBufLine( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< const Computation::ZBufLine * > * lineQueue ) const;
 			const RefCountPtr< const Kernel::GraphicsState > & getMetaState( ) const { return metaState_; }
+		};
+
+		class StrokedSplineSegment3D : public StrokedLine3D
+		{
+			Concrete::Coords3D p0front_;
+			Concrete::Coords3D p1rear_;
+		public:
+			StrokedSplineSegment3D( const Concrete::Coords3D & p0, const Concrete::Coords3D & p0front, const Concrete::Coords3D & p1rear, const Concrete::Coords3D & p1, const RefCountPtr< const Kernel::GraphicsState > metaState );
+			~StrokedSplineSegment3D( );
+			virtual void push_zBufLine( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< const Computation::ZBufLine * > * lineQueue ) const;
 		};
 
 		class PaintedPolygon3D

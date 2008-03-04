@@ -1810,11 +1810,13 @@ void
 Computation::StrokedLine3D::push_zBufLine( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< const Computation::ZBufLine * > * lineQueue ) const
 {
 	typedef Computation::ZBufLine::ZMap ZMapType;
+	typedef const Bezier::PolyCoeffs< Concrete::Coords2D > ViewType;
+	RefCountPtr< ViewType > nullView = RefCountPtr< ViewType >( NullPtr< ViewType >( ) );
 	if( tf.isIdentity( ) )
 		{
 			Concrete::Coords3D d = p1_ - p0_;
 			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.direction( ), eyez ) );
-			lineQueue->push_back( new Computation::ZBufLine( this, zMap, p0_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) );
+			lineQueue->push_back( new Computation::ZBufLine( this, zMap, nullView, p0_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) );
 		}
 	else
 		{
@@ -1822,10 +1824,44 @@ Computation::StrokedLine3D::push_zBufLine( const Lang::Transform3D & tf, const C
 			Concrete::Coords3D tfp1 = p1_.transformed( tf );
 			Concrete::Coords3D d = tfp1 - tfp0;
 			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.direction( ), eyez ) );
-			lineQueue->push_back( new Computation::ZBufLine( this, zMap, tfp0.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) );
+			lineQueue->push_back( new Computation::ZBufLine( this, zMap, nullView, tfp0.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) );
 		}
 }
 
+
+Computation::StrokedSplineSegment3D::StrokedSplineSegment3D( const Concrete::Coords3D & p0, const Concrete::Coords3D & p0front, const Concrete::Coords3D & p1rear, const Concrete::Coords3D & p1, const RefCountPtr< const Kernel::GraphicsState > metaState )
+	: Computation::StrokedLine3D( p0, p1, metaState ),
+		p0front_( p0front ),
+		p1rear_( p1rear )
+{ }
+
+Computation::StrokedSplineSegment3D::~StrokedSplineSegment3D( )
+{ }
+
+void
+Computation::StrokedSplineSegment3D::push_zBufLine( const Lang::Transform3D & tf, const Concrete::Length eyez, std::list< const Computation::ZBufLine * > * lineQueue ) const
+{
+	typedef Computation::ZBufLine::ZMap ZMapType;
+	typedef const Bezier::PolyCoeffs< Concrete::Coords2D > ViewType;
+	if( tf.isIdentity( ) )
+		{
+			Concrete::Coords3D d = p1_ - p0_;
+			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.direction( ), eyez ) );
+			RefCountPtr< ViewType > bezierView = RefCountPtr< ViewType >( new ViewType( Bezier::ControlPoints< Concrete::Coords2D >( p0_.make2DAutomatic( eyez ), p0front_.make2DAutomatic( eyez ), p1rear_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) ) );
+			lineQueue->push_back( new Computation::ZBufLine( this, zMap, bezierView, p0_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) );
+		}
+	else
+		{
+			Concrete::Coords3D tfp0 = p0_.transformed( tf );
+			Concrete::Coords3D tfp0front = p0front_.transformed( tf );
+			Concrete::Coords3D tfp1rear = p1rear_.transformed( tf );
+			Concrete::Coords3D tfp1 = p1_.transformed( tf );
+			Concrete::Coords3D d = tfp1 - tfp0;
+			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.direction( ), eyez ) );
+			RefCountPtr< ViewType > bezierView = RefCountPtr< ViewType >( new ViewType( Bezier::ControlPoints< Concrete::Coords2D >( tfp0.make2DAutomatic( eyez ), tfp0front.make2DAutomatic( eyez ), tfp1rear.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) ) );
+			lineQueue->push_back( new Computation::ZBufLine( this, zMap, bezierView, tfp0.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) );
+		}
+}
 
 
 Computation::FilledPolygon3D::FilledPolygon3D( const RefCountPtr< const Kernel::GraphicsState > & metaState,
@@ -2115,29 +2151,38 @@ Lang::PaintedPath3D::polygonize( std::list< RefCountPtr< Computation::PaintedPol
 
 					typedef typeof *theSub SubListType;
 					SubListType::const_iterator i = theSub->begin( );
-					if( (*i)->front_ != (*i)->mid_ || (*i)->rear_ != (*i)->mid_ )
-						{
-							throw "Corner has handle";
-						}
 					Concrete::Coords3D p0 = (*i)->mid_->transformed( tf );
+					SubListType::const_iterator iLast = i;
 					++i;
-					for( ; i != theSub->end( ); ++i )
+					for( ; i != theSub->end( ); iLast = i, ++i )
 						{
-							if( (*i)->front_ != (*i)->mid_ || (*i)->rear_ != (*i)->mid_ )
-								{
-									throw "Corner has handle";
-								}
 							Concrete::Coords3D p1 = (*i)->mid_->transformed( tf );
-							linePile->push_back( RefCountPtr< Computation::StrokedLine3D >
-																	 ( new Computation::StrokedLine3D( p0, p1, metaState_ ) ) );
+							if( (*iLast)->front_ != (*iLast)->mid_ || (*i)->rear_ != (*i)->mid_ )
+								{
+									linePile->push_back( RefCountPtr< Computation::StrokedSplineSegment3D >
+																			 ( new Computation::StrokedSplineSegment3D( p0, (*iLast)->front_->transformed( tf ), (*i)->rear_->transformed( tf ), p1, metaState_ ) ) );
+								}
+							else
+								{
+									linePile->push_back( RefCountPtr< Computation::StrokedLine3D >
+																			 ( new Computation::StrokedLine3D( p0, p1, metaState_ ) ) );
+								}
 							p0 = p1;
 						}
 					if( theSub->isClosed( ) )
 						{
 							i = theSub->begin( );
 							Concrete::Coords3D p1 = (*i)->mid_->transformed( tf );
-							linePile->push_back( RefCountPtr< Computation::StrokedLine3D >
-																	 ( new Computation::StrokedLine3D( p0, p1, metaState_ ) ) );
+							if( (*iLast)->front_ != (*iLast)->mid_ || (*i)->rear_ != (*i)->mid_ )
+								{
+									linePile->push_back( RefCountPtr< Computation::StrokedSplineSegment3D >
+																			 ( new Computation::StrokedSplineSegment3D( p0, (*iLast)->front_->transformed( tf ), (*i)->rear_->transformed( tf ), p1, metaState_ ) ) );
+								}
+							else
+								{
+									linePile->push_back( RefCountPtr< Computation::StrokedLine3D >
+																			 ( new Computation::StrokedLine3D( p0, p1, metaState_ ) ) );
+								}
 						}
 				}
 

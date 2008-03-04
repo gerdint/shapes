@@ -232,8 +232,8 @@ Lang::PolarHandle2DFree_ra::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Concrete::PathPoint2D::PathPoint2D( const Concrete::PathPoint2D & orig )
-	: rearState_( orig.rearState_ ), rearAngle_( orig.rearAngle_ ), rearModulus_( orig.rearModulus_ ), 
-		rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ), 
+	: rearState_( orig.rearState_ ), rearAngle_( orig.rearAngle_ ), rearModulus_( orig.rearModulus_ ),
+		rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		frontState_( orig.frontState_ ), frontAngle_( orig.frontAngle_ ), frontModulus_( orig.frontModulus_ ),
 		frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		defaultAngle_( orig.defaultAngle_ )
@@ -259,14 +259,14 @@ Concrete::PathPoint2D::PathPoint2D( const Concrete::PathPoint2D & orig )
 }
 
 Concrete::PathPoint2D::PathPoint2D( Concrete::Coords2D * mid )
-	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ), 
+	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		frontState_( COMPLETE ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		defaultAngle_( 0 ),
 		rear_( mid ), mid_( mid ), front_( mid )
 { }
 
 Concrete::PathPoint2D::PathPoint2D( Concrete::Length midx, Concrete::Length midy )
-	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ), 
+	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		frontState_( COMPLETE ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		defaultAngle_( 0 ),
 		rear_( new Concrete::Coords2D( midx, midy ) ), mid_( rear_ ), front_( rear_ )

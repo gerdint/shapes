@@ -15,8 +15,36 @@ display(p3,p4,p5,orientation=[-17,25]);
 **/
 
 R: 5cm
+u: R/2.1
 
-surfz: \ p .> 1cm * [sin (p.x/R)*2.1 * (p.y/R)*2.1]
+/** The function describing the manifold.
+ **/
+surfz: \ p .> u * [sin (p.x/u) * (p.y/u)]
+
+/** A general-purpose helper.
+ **/
+surfit: \ f p .> ( p.x, p.y, [f p] )
+
+/** A general-purpose surface-circle.
+ **/
+surfaceCircle: \ f r c sides:'12 .>
+{
+  mid: [surfit f c]
+	[[range '0 sides-'1].foldl
+   \ p e .> p & [fill mid--[surfit f c+r*[dir (360°*e)/sides]]--[surfit f c+r*[dir (360°*(e+'1))/sides]]--cycle]
+	 null3D]
+}
+
+/** A path on our surface.
+ **/
+points:
+{
+  N: '100
+	[[range '1 N].foldl
+	 \ p i .>
+	 	 p--[surfit surfz (2/N)*(N-i)*u*[dir 1.4*(180°/N)*(N-i)+0.5]]
+   emptypath3D]
+}
 
 
 foldpairsl:
@@ -29,37 +57,9 @@ foldpairsl:
 		 	[helper op nullRes lst.car lst.cdr]]
 }
 
-functionSurface: \ zMap xRange yRange .>
+functionMesh: \ zMap xRange yRange .>
 {
   xyz: \ p .> ( p.x, p.y, [zMap p] )
-	xConsRange: [consify xRange]
-	yConsRange: [consify yRange]
-  [foldpairsl
-    \ p x1 x2 .>
-			p
-			&
-      [foldpairsl
-         \ p y1 y2 .>
-          p
-					&
-					{
-					  p11: [xyz (x1,y1)]
-					  p12: [xyz (x1,y2)]
-					  p21: [xyz (x2,y1)]
-					  p22: [xyz (x2,y2)]
-						[fill p11--p12--p22--cycle]
-						&
-						[fill p11--p22--p21--cycle]
-						&
-						[stroke p11--p12--p22--p21--cycle]
-					}
-         null3D
-				yConsRange
-			]
-    null3D
-		xConsRange
-  ]
-	&
   [xRange.foldl
     \ p x .>
 			p
@@ -85,39 +85,75 @@ functionSurface: \ zMap xRange yRange .>
   ]
 }
 
+functionSurface: \ zMap xRange yRange .>
+{
+  xyz: \ p .> ( p.x, p.y, [zMap p] )
+	xConsRange: [consify xRange]
+	yConsRange: [consify yRange]
+  [foldpairsl
+    \ p x1 x2 .>
+			p
+			&
+      [foldpairsl
+         \ p y1 y2 .>
+          p
+					&
+					{
+					  p11: [xyz (x1,y1)]
+					  p12: [xyz (x1,y2)]
+					  p21: [xyz (x2,y1)]
+					  p22: [xyz (x2,y2)]
+					  pc: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+						[fill pc--p11--p12--cycle]
+						&
+						[fill pc--p12--p22--cycle]
+						&
+						[fill pc--p22--p21--cycle]
+						&
+						[fill pc--p21--p11--cycle]
+						&
+						[stroke p11--pc--p22]
+						&
+						[stroke p12--pc--p21]
+					}
+         null3D
+				yConsRange
+			]
+    null3D
+		xConsRange
+  ]
+	&
+	[functionMesh zMap xRange yRange]
+}
+
 T_View: [rotate3D dir:(1,0,0) angle:~90°+17°]*[rotate3D dir:(0,0,1) angle:~25°]
 
 
 •page << [view
 				   T_View
 					 []
-					 ( newZSorter <<   @nonstroking:[gray 0.7]
-					 	 							 & @width: 0.3bp
-					 	 							 | [functionSurface surfz
-					 	 							 										[range ~R R count:'15]
-																							[range ~R R count:'15]
-														 ]
+					 ( newZSorter
+					   <<   @nonstroking:[gray 1]
+						    & @stroking: [gray 0.5]
+					 	 		& @width: 0.1bp
+					 	 		| [functionSurface surfz
+					 	 		  								 [range ~R R count:'15]
+																	 [range ~R R count:'15]
+									]
+					   <<   @nonstroking:[gray 1]
+					 	 		& @width: 0.3bp
+					 	 		| [functionMesh surfz
+					 	 		  							[range ~R R count:'15]
+																[range ~R R count:'15]
+									]
 					 )
 				 ]
-
-xyz: \ p .> ( p.x, p.y, [surfz p] )
-d: 2*R / '14
-helper: \ z11 z22 .>
-{
-  p11: xyz [] z11
-  p12: xyz [] (z11.x,z22.y)
-  p21: xyz [] (z22.x,z11.y)
-  p22: xyz [] z22
-	[fill p11--p12--p22--cycle]
-	&
-	[fill p11--p22--p21--cycle]
-}
-•page << @width: 0.3bp & @nonstroking:[gray 0.5] | [shift (3cm,0cm)][][view
+•page << [view
 				   T_View
 					 []
-					 ( newZSorter
-					   << [helper (R-d,~R) (R,~R+d)]
-					   << [helper (R-d,~R+d) (R,~R+2*d)]
-						 << [stroke [xyz (R-2*d,~R+5*d)]--[xyz (R-2*d,~R+6*d)]]
+					 ( newGroup3D
+					 	 << @width:1.5bp & @cap:CAP_ROUND | [stroke points]
+						 << [surfaceCircle surfz 4bp (points.begin.p.x,points.begin.p.y)]
+						 << [surfaceCircle surfz 4bp (points.end.p.x,points.end.p.y)]
 					 )
 				 ]
