@@ -212,18 +212,18 @@ Kernel::registerCore_font( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_makeglyph( "basicglyph", Lang::Type3Glyph::BASIC ) );
 	env->initDefineCoreFunction( new Lang::Core_makeglyph( "coloredglyph", Lang::Type3Glyph::COLORED ) );
 
-	env->initDefine( "font_TIMES_ROMAN", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ROMAN ) ) );
-	env->initDefine( "font_TIMES_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLD ) ) );
-	env->initDefine( "font_TIMES_ITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ITALIC ) ) );
-	env->initDefine( "font_TIMES_BOLDITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLDITALIC ) ) );
-	env->initDefine( "font_HELVETICA", Lang::THE_FONT_HELVETICA );
-	env->initDefine( "font_HELVETICA_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLD ) ) );
-	env->initDefine( "font_HELVETICA_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_OBLIQUE ) ) );
-	env->initDefine( "font_HELVETICA_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLDOBLIQUE ) ) );
-	env->initDefine( "font_COURIER", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER ) ) );
-	env->initDefine( "font_COURIER_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLD ) ) );
-	env->initDefine( "font_COURIER_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_OBLIQUE ) ) );
-	env->initDefine( "font_COURIER_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLDOBLIQUE ) ) );
-	env->initDefine( "font_SYMBOL", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::SYMBOL ) ) );
-	env->initDefine( "font_ZAPFDINGBATS", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::ZAPFDINGBATS ) ) );
+	env->initDefine( "FONT_TIMES_ROMAN", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ROMAN ) ) );
+	env->initDefine( "FONT_TIMES_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLD ) ) );
+	env->initDefine( "FONT_TIMES_ITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_ITALIC ) ) );
+	env->initDefine( "FONT_TIMES_BOLDITALIC", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::TIMES_BOLDITALIC ) ) );
+	env->initDefine( "FONT_HELVETICA", Lang::THE_FONT_HELVETICA );
+	env->initDefine( "FONT_HELVETICA_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLD ) ) );
+	env->initDefine( "FONT_HELVETICA_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_OBLIQUE ) ) );
+	env->initDefine( "FONT_HELVETICA_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::HELVETICA_BOLDOBLIQUE ) ) );
+	env->initDefine( "FONT_COURIER", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER ) ) );
+	env->initDefine( "FONT_COURIER_BOLD", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLD ) ) );
+	env->initDefine( "FONT_COURIER_OBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_OBLIQUE ) ) );
+	env->initDefine( "FONT_COURIER_BOLDOBLIQUE", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::COURIER_BOLDOBLIQUE ) ) );
+	env->initDefine( "FONT_SYMBOL", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::SYMBOL ) ) );
+	env->initDefine( "FONT_ZAPFDINGBATS", RefCountPtr< const Lang::Font >( new Lang::Font( BuiltInFonts::ZAPFDINGBATS ) ) );
 }

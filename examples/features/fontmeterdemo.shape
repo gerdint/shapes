@@ -1,4 +1,4 @@
-myFont: @text_font:font_HELVETICA & @text_size:2cm
+myFont: @text_font:FONT_HELVETICA & @text_size:2cm
 
 bbdraw: \ •dst obj .>
 {
