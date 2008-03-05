@@ -1,4 +1,5 @@
 ##needs conssupport
+##needs blockdraw_wfo
 
 /**
 N := 1000:
@@ -19,7 +20,7 @@ u: R/2.1
 
 /** The function describing the manifold.
  **/
-surfz: \ p .> (0.2*R) * [sin (p.x/u) * (p.y/u)]
+surfz: \ p .> (0.24*R) * [sin (p.x/u) * (p.y/u)]
 
 /** A general-purpose helper.
  **/
@@ -42,7 +43,7 @@ points:
   N: '100
 	[[range '1 N].foldl
 	 \ p i .>
-	 	 p--[surfit surfz (2/N)*(N-i)*u*[dir 90°-(1.4*(180°/N)*(N-i)+0.5)]]
+	 	 p--[surfit surfz (2/N)*(N-i)*u*[dir 90°-(1.4*(180°/N)*(N-i)-0)]]
    emptypath3D]
 }
 
@@ -55,6 +56,18 @@ foldpairsl:
     [if [null? lst]
 			lst
 		 	[helper op nullRes lst.car lst.cdr]]
+}
+
+foldtriplesl:
+{
+  helper: \ op nullRes back2 back1 lst .> [if [null? lst] nullRes [helper op [op nullRes back2 back1 lst.car] back1 lst.car lst.cdr]]
+
+  \ op nullRes lst .>
+    [if [null? lst]
+			lst
+      [if [null? lst.cdr]
+	  		[list]
+		   	[helper op nullRes lst.car lst.cdr.car lst.cdr.cdr]]]
 }
 
 functionMesh: \ zMap xRange yRange step:'1 .>
@@ -132,17 +145,26 @@ functionSurface: \ zMap xRange yRange .>
 **/
 }
 
+angle_in_ccw_range?: \ a low high .>
+{
+	am: [mod a - low 360°]
+	[if am < 0 am+360° am] < high - low
+}
+
 ridgeLines: \ zMap xRange yRange tf .>
 {
   xyz: \ p .> ( p.x, p.y, [zMap p] )
-	test: \ a b c d e .>
+  ccwConcaveCorner: \ p1 p2 p3 .> [if [orthogonal [normalized p3-p2]]*([normalized p3-p2]+[normalized p1-p2]) < 0
+									 	 			 			 		 '1
+																		 '0]
+	test: \ neighbor1 corner neighbor2 opposite center .>
 	  {
-		  da: [normalized a - b]
-		  dc: [normalized c - b]
-			dm0: 0.5 * ( da + dc )
-			dm: [if dm0 * ( d - b ) > 0m dm0 ~dm0]
-		  de: [normalized e - b]
-			de*dm < da*dm
+		  a1: [angle [normalized neighbor1 - corner]]
+		  a2tmp: [angle [normalized neighbor2 - corner]]
+			a2: [if a2tmp > a1 a2tmp-360° a2tmp]
+			ac: [mod [angle center - corner] - a2
+			         360°]
+			[if ac < 0 ac+360° ac] > a1 - a2
     }
 	xConsRange: [consify xRange]
 	yConsRange: [consify yRange]
@@ -155,17 +177,38 @@ ridgeLines: \ zMap xRange yRange tf .>
 					  p12: view [] tf [] [xyz (x1,y2)]
 					  p21: view [] tf [] [xyz (x2,y1)]
 					  p22: view [] tf [] [xyz (x2,y2)]
+
 					  pc:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
 						pc3D: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+
+		  			ccw:   [ccwConcaveCorner p11 p12 p22]
+					 			 + [ccwConcaveCorner p12 p22 p21]
+					 			 + [ccwConcaveCorner p22 p21 p11]
+					 			 + [ccwConcaveCorner p21 p11 p12]
+					 			 <= '1
+
 						p
 						&
-						[if [test p21 p11 p12 p22 pc] [stroke [xyz (x1,y1)]--pc3D] null3D]
-						&
-						[if [test p11 p12 p22 p21 pc] [stroke [xyz (x1,y2)]--pc3D] null3D]
-						&
-						[if [test p12 p22 p21 p11 pc] [stroke [xyz (x2,y2)]--pc3D] null3D]
-						&
-						[if [test p22 p21 p11 p12 pc] [stroke [xyz (x2,y1)]--pc3D] null3D]
+						[if ccw
+						  (
+  						  [if [test p21 p11 p12 p22 pc] [stroke [xyz (x1,y1)]--pc3D] null3D]
+						    &
+						    [if [test p11 p12 p22 p21 pc] [stroke [xyz (x1,y2)]--pc3D] null3D]
+						    &
+						    [if [test p12 p22 p21 p11 pc] [stroke [xyz (x2,y2)]--pc3D] null3D]
+						    &
+						    [if [test p22 p21 p11 p12 pc] [stroke [xyz (x2,y1)]--pc3D] null3D]
+						 )
+						  (
+  						  [if [test p12 p11 p21 p22 pc] [stroke [xyz (x1,y1)]--pc3D] null3D]
+						    &
+						    [if [test p22 p12 p11 p21 pc] [stroke [xyz (x1,y2)]--pc3D] null3D]
+						    &
+						    [if [test p21 p22 p12 p11 pc] [stroke [xyz (x2,y2)]--pc3D] null3D]
+						    &
+						    [if [test p11 p21 p22 p12 pc] [stroke [xyz (x2,y1)]--pc3D] null3D]
+						 )
+					 ]
 					}
         p
 				yConsRange
@@ -173,9 +216,63 @@ ridgeLines: \ zMap xRange yRange tf .>
     null3D
 		xConsRange
   ]
+	&
+  [foldtriplesl
+    \ p x1 x2 x3 .>
+      [foldpairsl
+        \ p y1 y2 .>
+					{
+					  p1: view [] tf [] [xyz (x2,y1)]
+					  p2: view [] tf [] [xyz (x2,y2)]
+					  pc1:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+					  pc2:  view [] tf [] [xyz (0.5*(x2+x3),0.5*(y1+y2))]
+						d11: [normalized pc1 - p1]
+						d12: [normalized pc2 - p1]
+						dm1: d11 + d12
+						d21: [normalized pc1 - p2]
+						d22: [normalized pc2 - p2]
+						dm2: d21 + d22
+						dc: [normalized p2 - p1]
+						[if ( dm1*dc > dm1*d11 ) or ( ~(dm2*dc) > dm2*d22 )
+						  p
+							p & [stroke [xyz (x2,y1)]--[xyz (x2,y2)]]]
+					}
+        p
+				yConsRange
+			]
+    null3D
+		xConsRange
+  ]
+	&
+  [foldtriplesl
+    \ p y1 y2 y3 .>
+      [foldpairsl
+        \ p x1 x2 .>
+					{
+					  p1: view [] tf [] [xyz (x1,y2)]
+					  p2: view [] tf [] [xyz (x2,y2)]
+					  pc1:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+					  pc2:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y2+y3))]
+						d11: [normalized pc1 - p1]
+						d12: [normalized pc2 - p1]
+						dm1: 0.5 * ( d11 + d12 )
+						d21: [normalized pc1 - p2]
+						d22: [normalized pc2 - p2]
+						dm2: 0.5 * ( d21 + d22 )
+						dc: [normalized p2 - p1]
+						[if ( dm1*dc > dm1*d11 ) or ( ~(dm2*dc) > dm2*d22 )
+						  p
+							p & [stroke [xyz (x1,y2)]--[xyz (x2,y2)]]]
+					}
+        p
+				xConsRange
+			]
+    null3D
+		yConsRange
+  ]
 }
 
-T_view: [rotate3D dir:(1,0,0) angle:~90°-~17°]*[rotate3D dir:(0,0,1) angle:~90°-25°]
+T_view: [rotate3D dir:(1,0,0) angle:~90°-~19°]*[rotate3D dir:(0,0,1) angle:~90°+25°]
 
 N_major: '15
 N_minor: '3
@@ -204,3 +301,43 @@ yRange: [range ~R R count: N_major * N_minor + '1]
 						 << [surfaceCircle surfz 4bp (points.end.p.x,points.end.p.y)]
 					 )
 				 ]
+
+
+/**
+ ** Add coordinate arrows to ease development!
+ **/
+
+/**
+pointMark: [facing [fill [circle 2bp]]]
+
+baseVectors3D: \ nx ny nz .>
+{
+	len: 1*u
+	tmpHead: [MetaPostArrow3D ahLength:3mm ...]
+	@width: 1.5bp
+	|
+  ( newGroup3D
+	  << pointMark
+	  << [stroke (0m,0m,0m)--(len,0m,0m) head:[tmpHead normal:nx ...]]
+	  << [stroke (0m,0m,0m)--(0m,len,0m) head:[tmpHead normal:ny ...]]
+	  << [stroke (0m,0m,0m)--(0m,0m,len) head:[tmpHead normal:nz ...]]
+		<< [tag 'x (len,0m,0m)]
+		<< [tag 'y (0m,len,0m)]
+		<< [tag 'z (0m,0m,len)]
+  )
+}
+
+•page << [view
+				   (T_view*[shift (0m,0m,~R)])
+					 []
+{
+	base: [baseVectors3D (0,0,1) (0,0,1) (1,0,0)]
+  ( newGroup3D
+	  << base
+	  << [shift [find base 'x]] [] [facing [putlabelBelow (TeX `$x$´) (0m,0m) ~1]]
+	  << [shift [find base 'y]] [] [facing [putlabelRight (TeX `$y$´) (0m,0m) ~1]]
+	  << [shift [find base 'z]] [] [facing [putlabelAbove (TeX `$z$´) (0m,0m) 1]]
+  )
+}
+]
+**/
