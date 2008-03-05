@@ -2000,9 +2000,21 @@ Kernel::TextState::synchFontAndSize( std::ostream & os, const Kernel::TextState 
 				{
 					throw Exceptions::MiscellaneousRequirement( "It is impossible to leave unspecified only one of font and size." );
 				}
+			bool sizeChanged = ( size_ != ref->size_ );
 			font_ = ref->font_;
 			size_ = ref->size_;
 			os << resources->nameofFont( font_->resource( ) ) << " " << Concrete::Length::offtype( size_ ) << " Tf " ;
+			if( sizeChanged )
+				{
+					if( ref->hasLeading( ) && ref->leadingIsRelative_ )
+						{
+							synchLeading( os, ref, resources, true );
+						}
+					if( ref->hasRise( ) && ref->riseIsRelative_ )
+						{
+							synchRise( os, ref, resources, true );
+						}
+				}
 			return true;
 		}
 	return false;
