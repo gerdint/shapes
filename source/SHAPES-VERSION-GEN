@@ -12,15 +12,20 @@ SVF_DEF=$DIR/VERSION
 SVF_DIST=version
 VN=$(sed -e '2,$ d' < $SVF_DEF)
 
+if test -d $DIR/.svn
+then
+	CMS=svn
+else
+	CMS="git svn"
+fi
+
 if test -f $SVF_DIST
 then
 	VN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF_DIST)
 	VR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //' < $SVF_DIST)
 	VD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF_DIST)
-elif test -d $1/.svn &&
-     SVN_INFO=$(cd $DIR && svn info 2> /dev/null) ||
-		 test -d $1/.git &&
-     SVN_INFO=$(cd $DIR && git svn info 2> /dev/null)
+elif test -d $DIR/.svn -o -d $DIR/.git &&
+     SVN_INFO=$(cd $DIR && $CMS info 2> /dev/null)
 then
 	if VR=$(echo "$SVN_INFO" | \
 			sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //') &&
@@ -46,7 +51,7 @@ then
 		VD='---'
 	fi
 
-	if test -d $1/.svn
+	if test -d $DIR/.svn
 	then
 		dirty=$(cd $DIR && svn status 2> /dev/null) || dirty=
 	else
