@@ -243,30 +243,31 @@ ridgeLines:
 
 T_view: [rotate3D dir:(1,0,0) angle:~90°-~19°]*[rotate3D dir:(0,0,1) angle:~90°+25°]
 
-N_major: '15
-N_minor: '3
+N_major: '12
+N_minor: '4
 xRange: [range ~R R count: N_major * N_minor + '1]
 yRange: [range ~R R count: N_major * N_minor + '1]
 
-•page << [view
+•page << @width:0.8bp
+			   |
+				 [view
 				   T_view
 					 []
 					 ( newZSorter
 					   <<   @nonstroking:OCCLUDING
-						    & @width: 0.3bp
 					 	 		| [functionSurface surfz xRange yRange]
-					   << @width: 0.3bp
-					 	 		| [functionMesh surfz xRange yRange N_minor]
-					   << @width: 0.3bp
-					 	 		| [ridgeLines surfz xRange yRange T_view]
+					   << [functionMesh surfz xRange yRange N_minor]
+					   << [ridgeLines surfz xRange yRange T_view]
 					 )
 				 ]
-•page << [view
+•page << @width:2.5bp
+			   |
+				 [view
 				   T_view
 					 []
 					 ( newGroup3D
-					 	 << @width:1.5bp & @cap:CAP_ROUND | [stroke points]
-						 << [surfaceCircle surfz 4bp (points.begin.p.x,points.begin.p.y)]
-						 << [surfaceCircle surfz 4bp (points.end.p.x,points.end.p.y)]
+					 	 << @cap:CAP_ROUND | [stroke points]
+						 << [surfaceCircle surfz 2.5*@width (points.begin.p.x,points.begin.p.y)]
+						 << [surfaceCircle surfz 2.5*@width (points.end.p.x,points.end.p.y)]
 					 )
 				 ]
