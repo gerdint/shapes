@@ -179,7 +179,7 @@ void shapeserror( char * msg )
 %left ']' T_splitRight
 %left T_llthan
 %nonassoc T_bangbang
-%left '|'
+%right '|'
 %right T_mapsto T_emptybrackets T_bangbrackets
 %left T_dddotbrackets T_bangdddotbrackets
 %left '&'
