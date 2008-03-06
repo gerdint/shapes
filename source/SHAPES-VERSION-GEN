@@ -18,7 +18,9 @@ then
 	VR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //' < $SVF_DIST)
 	VD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF_DIST)
 elif test -d $1/.svn &&
-     SVN_INFO=$(cd $DIR && svn info 2> /dev/null)
+     SVN_INFO=$(cd $DIR && svn info 2> /dev/null) ||
+		 test -d $1/.git &&
+     SVN_INFO=$(cd $DIR && git svn info 2> /dev/null)
 then
 	if VR=$(echo "$SVN_INFO" | \
 			sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //') &&
@@ -44,7 +46,12 @@ then
 		VD='---'
 	fi
 
-	dirty=$(cd $DIR && svn status 2> /dev/null) || dirty=
+	if test -d $1/.svn
+	then
+		dirty=$(cd $DIR && svn status 2> /dev/null) || dirty=
+	else
+		dirty=$(git diff --quiet git-svn || echo dirty='YES') || dirty=
+	fi
 	case "$dirty" in
   '')
 		;;
