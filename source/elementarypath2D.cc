@@ -1800,7 +1800,7 @@ Lang::ElementaryPath2D::controlling_hull( ) const
 			}
 		last = start;
 		// Remove the starting points from the set by moving the last point to its position.
-		*start_i = *sortedPoints.rbegin( );
+		*start_i = sortedPoints.back( );
 		sortedPoints.pop_back( );
 	}
 
