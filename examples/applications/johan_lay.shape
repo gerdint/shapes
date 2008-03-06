@@ -2,12 +2,19 @@
 
 size1: @text_size:10bp
 size2: @text_size:16bp
-size3: @text_size:30bp & @text_horizontalscaling: 1.1
+size3: @text_size:30bp & @text_horizontalscaling:1.1
 font: @text_font:FONT_TIMES_ROMAN & @text_leading:1.3
 sentenceSep: 0.8
 
 leftMargin: 20mm
 topbotMargin: 20mm
+
+pageFrame_S5: [rectangle (0mm,0mm) (170mm,240mm)]
+pageFrame_A4: [rectangle (0mm,0mm) (210mm,297mm)]
+
+
+•helpers: newGroup
+helperStyle: @width:0bp & @dash:[dashpattern 3bp 2mm] & @stroking:[rgb 33.3*0.01	44.7*0.01	57.3*0.01]
 
 y1: 240mm - topbotMargin
 line1: [shift (leftMargin,y1)] [] [centerat font & size1 | ( newText << [kerning `Linköping studies in science and technology.´ ~sentenceSep `Dissertations.´ ~sentenceSep `No. 123.´] ) (~1,1)]
@@ -30,12 +37,21 @@ sheet: [import `johans.pdf´] [] '0   |** import all pages, and select page 0
 •page << [shift (leftMargin-5mm,y4)] [] [centerat sheet (~1,1)]
 
 y5: topbotMargin
+•helpers << helperStyle | [stroke (0mm,y5)--(170mm,(+0mm))]
 •page << [shift (leftMargin,y5)] [] ( font & size1 | ( newText << `Linköping 2008´ ) )
 
 LiTH: [import `LiTH_staende_eng_sv.pdf´] [] '0   |** import all pages, and select page 0
-•page << [shift (170mm-leftMargin-10mm,y5)] [] [centerat [scale 30mm/([ymax [bbox LiTH]]-[ymin [bbox LiTH]])] [] LiTH (1,~1)]
+•page << [shift (170mm-leftMargin-10mm,y5-2.3mm)] [] [centerat [scale 30mm/([ymax [bbox LiTH]]-[ymin [bbox LiTH]])] [] LiTH (1,~1)]
 
-pageFrame: [rectangle (0mm,0mm) (170mm,240mm)]
-•page << [bboxed null pageFrame]
-			<< @width:0bp & @dash:[dashpattern 1mm 3mm] | [stroke pageFrame]
+•helpers << [bboxed helperStyle | [stroke pageFrame_S5]
+				     				[shift (~20mm,~30mm)] [] pageFrame_A4]
 
+{
+  tmp: [bboxed [clip (•page) pageFrame_S5] pageFrame_S5]
+	[erase •page]
+  •page << tmp
+}
+
+/** Comment out the line below to remove helper lines!
+ **/
+•page << (•helpers)
