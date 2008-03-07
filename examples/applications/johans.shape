@@ -260,7 +260,7 @@ yRange: [range ~R R count: N_major * N_minor + '1]
 					   << [ridgeLines surfz xRange yRange T_view]
 					 )
 				 ]
-•page << @width:2.5bp
+•page << @width:1.8bp
 			   |
 				 [view
 				   T_view

@@ -33,7 +33,7 @@ line3: [shift (leftMargin,y3)] [] [centerat font & size2 | ( newText << `Johan S
 •page << line3
 
 y4: [ymin [bbox line3]] - 15mm
-sheet: [import `johans-fet.pdf´] [] '0   |** import all pages, and select page 0
+sheet: [import `johans.pdf´] [] '0   |** import all pages, and select page 0
 •page << [shift (leftMargin-5mm,y4)] [] [centerat sheet (~1,1)]
 
 y5: topbotMargin

@@ -553,7 +553,7 @@ Lang::Class::getMethodDefinitionClass( const Kernel::MethodId & method ) const
 		{
 			throw Exceptions::InternalError( "Asking for class defining abstract method." );
 		}
-	return i->second.front( );
+	return *( i->second.begin( ) );
 }
 
 
