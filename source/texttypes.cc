@@ -1002,7 +1002,11 @@ TYPEINFOIMPL( TextRenderingMode );
 
 
 Lang::CharacterSpacingBinding::CharacterSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing )
-	: loc_( loc ), spacing_( spacing )
+	: loc_( loc ), spacing_( spacing ), isRelative_( false )
+{ }
+
+Lang::CharacterSpacingBinding::CharacterSpacingBinding( const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), spacing_( r ), isRelative_( true )
 { }
 
 Lang::CharacterSpacingBinding::~CharacterSpacingBinding( )
@@ -1015,7 +1019,14 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 		{
 			*sysBindings = new Kernel::SystemDynamicVariables( );
 			Kernel::TextState * newState = new Kernel::TextState( );
-			newState->characterSpacing_ = spacing_;
+			if( isRelative_ )
+				{
+					newState->setCharacterSpacing( Concrete::Length::offtype( spacing_ ) );
+				}
+			else
+				{
+					newState->setCharacterSpacing( spacing_ );
+				}
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
@@ -1023,19 +1034,33 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
-			newState->characterSpacing_ = spacing_;
+			if( isRelative_ )
+				{
+					newState->setCharacterSpacing( Concrete::Length::offtype( spacing_ ) );
+				}
+			else
+				{
+					newState->setCharacterSpacing( spacing_ );
+				}
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
 
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
-	if( ! IS_NAN( newState->characterSpacing_ ) )
+	if( newState->hasCharacterSpacing( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< text state character spacing >", loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
-	newState->characterSpacing_ = spacing_;
+	if( isRelative_ )
+		{
+			newState->setCharacterSpacing( Concrete::Length::offtype( spacing_ ) );
+		}
+	else
+		{
+			newState->setCharacterSpacing( spacing_ );
+		}
 	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
@@ -1045,7 +1070,11 @@ Lang::CharacterSpacingBinding::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::WordSpacingBinding::WordSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing )
-	: loc_( loc ), spacing_( spacing )
+	: loc_( loc ), spacing_( spacing ), isRelative_( false )
+{ }
+
+Lang::WordSpacingBinding::WordSpacingBinding( const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), spacing_( r ), isRelative_( true )
 { }
 
 Lang::WordSpacingBinding::~WordSpacingBinding( )
@@ -1058,7 +1087,14 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 		{
 			*sysBindings = new Kernel::SystemDynamicVariables( );
 			Kernel::TextState * newState = new Kernel::TextState( );
-			newState->wordSpacing_ = spacing_;
+			if( isRelative_ )
+				{
+					newState->setWordSpacing( Concrete::Length::offtype( spacing_ ) );
+				}
+			else
+				{
+					newState->setWordSpacing( spacing_ );
+				}
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
@@ -1066,19 +1102,33 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 	if( (*sysBindings)->textState_ == NullPtr< const Kernel::TextState >( ) )
 		{
 			Kernel::TextState * newState = new Kernel::TextState( );
-			newState->wordSpacing_ = spacing_;
+			if( isRelative_ )
+				{
+					newState->setWordSpacing( Concrete::Length::offtype( spacing_ ) );
+				}
+			else
+				{
+					newState->setWordSpacing( spacing_ );
+				}
 			(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 			return;
 		}
 
 	Kernel::TextState * newState = new Kernel::TextState( *((*sysBindings)->textState_) );
 
-	if( ! IS_NAN( newState->wordSpacing_ ) )
+	if( newState->hasWordSpacing( ) )
 		{
 			throw Exceptions::MultipleDynamicBind( "< text state word spacing >", loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
-	newState->wordSpacing_ = spacing_;
+	if( isRelative_ )
+		{
+			newState->setWordSpacing( Concrete::Length::offtype( spacing_ ) );
+		}
+	else
+		{
+			newState->setWordSpacing( spacing_ );
+		}
 	(*sysBindings)->textState_ = RefCountPtr< const Kernel::TextState >( newState );
 }
 
@@ -1451,16 +1501,45 @@ Kernel::VariableHandle
 Kernel::CharacterSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
 	RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-	return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Length( textState->characterSpacing_ ) ) );
+	return Kernel::VariableHandle( new Kernel::Variable( textState->characterSpacing( ) ) );
 }
 
 void
 Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Length > spacing = val->getVal< const Lang::Length >( loc );
+	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
+
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( loc, spacing->get( ) ) ),
-									 evalState );
+
+	try
+		{
+			typedef const Lang::Length ArgType;
+			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( loc, spacing->get( ) ) ),
+											 evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	try
+		{
+			typedef const Lang::Float ArgType;
+			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( loc, spacing->val_ ) ),
+											 evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1475,16 +1554,45 @@ Kernel::VariableHandle
 Kernel::WordSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
 {
 	RefCountPtr< const Kernel::TextState > textState = dyn->getTextState( );
-	return Kernel::VariableHandle( Shapes::Helpers::newValHandle( new Lang::Length( textState->wordSpacing_ ) ) );
+	return Kernel::VariableHandle( new Kernel::Variable( textState->wordSpacing( ) ) );
 }
 
 void
 Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Length > spacing = val->getVal< const Lang::Length >( loc );
+	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
+
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( loc, spacing->get( ) ) ),
-									 evalState );
+
+	try
+		{
+			typedef const Lang::Length ArgType;
+			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( loc, spacing->get( ) ) ),
+											 evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	try
+		{
+			typedef const Lang::Float ArgType;
+			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( loc, spacing->val_ ) ),
+											 evalState );
+			return;
+		}
+	catch( const NonLocalExit::NotThisType & ball )
+		{
+			/* Wrong type; never mind!.. but see below!
+			 */
+		}
+
+	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1715,13 +1823,12 @@ Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::VariableHand
 
 
 Kernel::TextState::TextState( )
-	: characterSpacing_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
+	: relativeFlags_( 0 ),
+		characterSpacing_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
 		wordSpacing_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
 		horizontalScaling_( std::numeric_limits< double >::signaling_NaN( ) ),
 		leading_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
-		leadingIsRelative_( false ),
 		rise_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
-		riseIsRelative_( false ),
 		font_( NullPtr< const Lang::Font >( ) ),
 		size_( Concrete::Length( std::numeric_limits< double >::signaling_NaN( ) ) ),
 		mode_( Lang::TextRenderingMode::UNDEFINED ),
@@ -1729,13 +1836,12 @@ Kernel::TextState::TextState( )
 { }
 
 Kernel::TextState::TextState( const Kernel::TextState & orig )
-	: characterSpacing_( orig.characterSpacing_ ),
+	: relativeFlags_( orig.relativeFlags_ ),
+		characterSpacing_( orig.characterSpacing_ ),
 		wordSpacing_( orig.wordSpacing_ ),
 		horizontalScaling_( orig.horizontalScaling_ ),
 		leading_( orig.leading_ ),
-		leadingIsRelative_( orig.leadingIsRelative_ ),
 		rise_( orig.rise_ ),
-		riseIsRelative_( orig.riseIsRelative_ ),
 		font_( orig.font_ ),
 		size_( orig.size_ ),
 		mode_( orig.mode_ ),
@@ -1743,39 +1849,40 @@ Kernel::TextState::TextState( const Kernel::TextState & orig )
 { }
 
 Kernel::TextState::TextState( const Kernel::TextState & newValues, const Kernel::TextState & oldValues )
-	: characterSpacing_( oldValues.characterSpacing_ ),
+	: relativeFlags_( oldValues.relativeFlags_ ),
+		characterSpacing_( oldValues.characterSpacing_ ),
 		wordSpacing_( oldValues.wordSpacing_ ),
 		horizontalScaling_( oldValues.horizontalScaling_ ),
 		leading_( oldValues.leading_ ),
-		leadingIsRelative_( oldValues.leadingIsRelative_ ),
 		rise_( oldValues.rise_ ),
-		riseIsRelative_( oldValues.riseIsRelative_ ),
 		font_( oldValues.font_ ),
 		size_( oldValues.size_ ),
 		mode_( oldValues.mode_ ),
 		knockout_( oldValues.knockout_ )
 {
-	if( ! IS_NAN( newValues.characterSpacing_ ) )
+	if( newValues.hasCharacterSpacing( ) )
 		{
 			characterSpacing_ = newValues.characterSpacing_;
+			relativeFlags_ = ( newValues.characterSpacingIsRelative( ) ? ( relativeFlags_ | RELATIVE_CHARACTER_SPACING ) : ( relativeFlags_ & ~RELATIVE_CHARACTER_SPACING ) );
 		}
-	if( ! IS_NAN( newValues.wordSpacing_ ) )
+	if( newValues.hasWordSpacing( ) )
 		{
 			wordSpacing_ = newValues.wordSpacing_;
+			relativeFlags_ = ( newValues.wordSpacingIsRelative( ) ? ( relativeFlags_ | RELATIVE_WORD_SPACING ) : ( relativeFlags_ & ~RELATIVE_WORD_SPACING ) );
 		}
 	if( ! IS_NAN( newValues.horizontalScaling_ ) )
 		{
 			horizontalScaling_ = newValues.horizontalScaling_;
 		}
-	if( ! IS_NAN( newValues.leading_ ) )
+	if( newValues.hasLeading( ) )
 		{
 			leading_ = newValues.leading_;
-			leadingIsRelative_ = newValues.leadingIsRelative_;
+			relativeFlags_ = ( newValues.leadingIsRelative( ) ? ( relativeFlags_ | RELATIVE_LEADING ) : ( relativeFlags_ & ~RELATIVE_LEADING ) );
 		}
-	if( ! IS_NAN( newValues.rise_ ) )
+	if( newValues.hasRise( ) )
 		{
 			rise_ = newValues.rise_;
-			riseIsRelative_ = newValues.riseIsRelative_;
+			relativeFlags_ = ( newValues.riseIsRelative( ) ? ( relativeFlags_ | RELATIVE_RISE ) : ( relativeFlags_ & ~RELATIVE_RISE ) );
 		}
 	if( newValues.font_ != NullPtr< const Lang::Font >( ) )
 		{
@@ -1798,13 +1905,12 @@ Kernel::TextState::TextState( const Kernel::TextState & newValues, const Kernel:
 std::map< bool, RefCountPtr< SimplePDF::PDF_Object > > Kernel::TextState::knockoutNameMap_;
 
 Kernel::TextState::TextState( bool setDefaults )
-	: characterSpacing_( 0 ),
+	: relativeFlags_( RELATIVE_LEADING ),
+		characterSpacing_( 0 ),
 		wordSpacing_( 0 ),
 		horizontalScaling_( 1 ),
 		leading_( 1 ),
-		leadingIsRelative_( true ),
 		rise_( 0 ),
-		riseIsRelative_( false ),
 		font_( Lang::THE_FONT_HELVETICA ),
 		size_( Concrete::Length( 10 ) ),
 		mode_( Lang::TextRenderingMode::FILL ),
@@ -1823,21 +1929,21 @@ Kernel::TextState::~TextState( )
 void
 Kernel::TextState::setLeading( const Concrete::Length leading )
 {
-	leadingIsRelative_ = false;
+	relativeFlags_ &= ~ RELATIVE_LEADING;
 	leading_ = leading;
 }
 
 void
 Kernel::TextState::setLeading( const double relativeLeading )
 {
-	leadingIsRelative_ = true;
-	leading_ = Concrete::Length( relativeLeading );	// We must keep track of this type trick by always looking at leadingIsRelative_.
+	relativeFlags_ |= RELATIVE_LEADING;
+	leading_ = Concrete::Length( relativeLeading );	// We must keep track of this type trick by always looking at relativeFlags_ & RELATIVE_LEADING.
 }
 
 RefCountPtr< const Lang::Value >
 Kernel::TextState::leading( ) const
 {
-	if( leadingIsRelative_ )
+	if( leadingIsRelative( ) )
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( Concrete::Length::offtype( leading_ ) ) );
 		}
@@ -1847,7 +1953,7 @@ Kernel::TextState::leading( ) const
 Concrete::Length
 Kernel::TextState::leadingConcrete( ) const
 {
-	if( leadingIsRelative_ )
+	if( leadingIsRelative( ) )
 		{
 			return Concrete::Length::offtype( leading_ ) * size_;
 		}
@@ -1860,25 +1966,31 @@ Kernel::TextState::hasLeading( ) const
 	return ! IS_NAN( leading_ );
 }
 
+bool
+Kernel::TextState::leadingIsRelative( ) const
+{
+	return ( relativeFlags_ & RELATIVE_LEADING ) != 0;
+}
+
 
 void
 Kernel::TextState::setRise( const Concrete::Length rise )
 {
-	riseIsRelative_ = false;
+	relativeFlags_ &= ~ RELATIVE_RISE;
 	rise_ = rise;
 }
 
 void
 Kernel::TextState::setRise( const double relativeRise )
 {
-	riseIsRelative_ = true;
-	rise_ = Concrete::Length( relativeRise );	// We must keep track of this type trick by always looking at riseIsRelative_.
+	relativeFlags_ |= RELATIVE_RISE;
+	rise_ = Concrete::Length( relativeRise );	// We must keep track of this type trick by always looking at relativeFlags_ & RELATIVE_RISE.
 }
 
 RefCountPtr< const Lang::Value >
 Kernel::TextState::rise( ) const
 {
-	if( riseIsRelative_ )
+	if( riseIsRelative( ) )
 		{
 			return RefCountPtr< const Lang::Value >( new Lang::Float( Concrete::Length::offtype( rise_ ) ) );
 		}
@@ -1888,7 +2000,7 @@ Kernel::TextState::rise( ) const
 Concrete::Length
 Kernel::TextState::riseConcrete( ) const
 {
-	if( riseIsRelative_ )
+	if( riseIsRelative( ) )
 		{
 			return Concrete::Length::offtype( rise_ ) * size_;
 		}
@@ -1899,6 +2011,106 @@ bool
 Kernel::TextState::hasRise( ) const
 {
 	return ! IS_NAN( rise_ );
+}
+
+bool
+Kernel::TextState::riseIsRelative( ) const
+{
+	return ( relativeFlags_ & RELATIVE_RISE ) != 0;
+}
+
+
+void
+Kernel::TextState::setCharacterSpacing( const Concrete::Length spacing )
+{
+	relativeFlags_ &= ~ RELATIVE_CHARACTER_SPACING;
+	characterSpacing_ = spacing;
+}
+
+void
+Kernel::TextState::setCharacterSpacing( const double relativeSpacing )
+{
+	relativeFlags_ |= RELATIVE_CHARACTER_SPACING;
+	characterSpacing_ = Concrete::Length( relativeSpacing );	// We must keep track of this type trick by always looking at the relevant bit in relativeFlags_.
+}
+
+RefCountPtr< const Lang::Value >
+Kernel::TextState::characterSpacing( ) const
+{
+	if( characterSpacingIsRelative( ) )
+		{
+			return RefCountPtr< const Lang::Value >( new Lang::Float( Concrete::Length::offtype( characterSpacing_ ) ) );
+		}
+	return RefCountPtr< const Lang::Value >( new Lang::Length( characterSpacing_ ) );
+}
+
+Concrete::Length
+Kernel::TextState::characterSpacingConcrete( ) const
+{
+	if( characterSpacingIsRelative( ) )
+		{
+			return Concrete::Length::offtype( characterSpacing_ ) * size_;
+		}
+	return characterSpacing_;
+}
+
+bool
+Kernel::TextState::hasCharacterSpacing( ) const
+{
+	return ! IS_NAN( characterSpacing_ );
+}
+
+bool
+Kernel::TextState::characterSpacingIsRelative( ) const
+{
+	return ( relativeFlags_ & RELATIVE_CHARACTER_SPACING ) != 0;
+}
+
+
+void
+Kernel::TextState::setWordSpacing( const Concrete::Length spacing )
+{
+	relativeFlags_ &= ~ RELATIVE_WORD_SPACING;
+	wordSpacing_ = spacing;
+}
+
+void
+Kernel::TextState::setWordSpacing( const double relativeSpacing )
+{
+	relativeFlags_ |= RELATIVE_WORD_SPACING;
+	wordSpacing_ = Concrete::Length( relativeSpacing );	// We must keep track of this type trick by always looking at the relevant bit in relativeFlags_.
+}
+
+RefCountPtr< const Lang::Value >
+Kernel::TextState::wordSpacing( ) const
+{
+	if( wordSpacingIsRelative( ) )
+		{
+			return RefCountPtr< const Lang::Value >( new Lang::Float( Concrete::Length::offtype( wordSpacing_ ) ) );
+		}
+	return RefCountPtr< const Lang::Value >( new Lang::Length( wordSpacing_ ) );
+}
+
+Concrete::Length
+Kernel::TextState::wordSpacingConcrete( ) const
+{
+	if( wordSpacingIsRelative( ) )
+		{
+			return Concrete::Length::offtype( wordSpacing_ ) * size_;
+		}
+	return wordSpacing_;
+}
+
+bool
+Kernel::TextState::hasWordSpacing( ) const
+{
+	return ! IS_NAN( wordSpacing_ );
+}
+
+bool
+Kernel::TextState::wordSpacingIsRelative( ) const
+{
+	return ( relativeFlags_ & RELATIVE_WORD_SPACING ) != 0;
 }
 
 
@@ -1912,14 +2124,24 @@ Kernel::TextState::synchAssertKnockout( std::ostream & os, const Kernel::TextSta
 bool
 Kernel::TextState::synchCharacterSpacing( std::ostream & os, const Kernel::TextState * ref, SimplePDF::PDF_Resources * resources, bool force )
 {
-	if( force || characterSpacing_ != ref->characterSpacing_ )
+	if( force ||
+			characterSpacing_ != ref->characterSpacing_ ||
+			characterSpacingIsRelative( ) != ref->characterSpacingIsRelative( ) )
 		{
-			if( IS_NAN( ref->characterSpacing_ ) )
+			if( ! ref->hasCharacterSpacing( ) )
 				{
 					return false;
 				}
+			relativeFlags_ = ( ref->characterSpacingIsRelative( ) ? ( relativeFlags_ | RELATIVE_CHARACTER_SPACING ) : ( relativeFlags_ & ~RELATIVE_CHARACTER_SPACING ) );
 			characterSpacing_ = ref->characterSpacing_;
-			os << Concrete::Length::offtype( characterSpacing_ ) << " Tc " ;
+			if( characterSpacingIsRelative( ) )
+				{
+					os << Concrete::Length::offtype( characterSpacing_ ) * Concrete::Length::offtype( ref->size_ ) << " Tc " ;
+				}
+			else
+				{
+					os << Concrete::Length::offtype( characterSpacing_ ) << " Tc " ;
+				}
 			return true;
 		}
 	return false;
@@ -1928,14 +2150,24 @@ Kernel::TextState::synchCharacterSpacing( std::ostream & os, const Kernel::TextS
 bool
 Kernel::TextState::synchWordSpacing( std::ostream & os, const Kernel::TextState * ref, SimplePDF::PDF_Resources * resources, bool force )
 {
-	if( force || wordSpacing_ != ref->wordSpacing_ )
+	if( force ||
+			wordSpacing_ != ref->wordSpacing_ ||
+			wordSpacingIsRelative( ) != ref->wordSpacingIsRelative( ) )
 		{
-			if( IS_NAN( ref->wordSpacing_ ) )
+			if( ! ref->hasWordSpacing( ) )
 				{
 					return false;
 				}
+			relativeFlags_ = ( ref->wordSpacingIsRelative( ) ? ( relativeFlags_ | RELATIVE_WORD_SPACING ) : ( relativeFlags_ & ~RELATIVE_WORD_SPACING ) );
 			wordSpacing_ = ref->wordSpacing_;
-			os << Concrete::Length::offtype( wordSpacing_ ) << " Tw " ;
+			if( wordSpacingIsRelative( ) )
+				{
+					os << Concrete::Length::offtype( wordSpacing_ ) * Concrete::Length::offtype( ref->size_ ) << " Tw " ;
+				}
+			else
+				{
+					os << Concrete::Length::offtype( wordSpacing_ ) << " Tw " ;
+				}
 			return true;
 		}
 	return false;
@@ -1962,15 +2194,15 @@ Kernel::TextState::synchLeading( std::ostream & os, const Kernel::TextState * re
 {
 	if( force ||
 			leading_ != ref->leading_ ||
-			leadingIsRelative_ != ref->leadingIsRelative_ )
+			leadingIsRelative( ) != ref->leadingIsRelative( ) )
 		{
 			if( ! ref->hasLeading( ) )
 				{
 					return false;
 				}
-			leadingIsRelative_ = ref->leadingIsRelative_;
+			relativeFlags_ = ( ref->leadingIsRelative( ) ? ( relativeFlags_ | RELATIVE_LEADING ) : ( relativeFlags_ & ~RELATIVE_LEADING ) );
 			leading_ = ref->leading_;
-			if( leadingIsRelative_ )
+			if( leadingIsRelative( ) )
 				{
 					os << Concrete::Length::offtype( leading_ ) * Concrete::Length::offtype( ref->size_ ) << " TL " ;
 				}
@@ -2006,13 +2238,21 @@ Kernel::TextState::synchFontAndSize( std::ostream & os, const Kernel::TextState 
 			os << resources->nameofFont( font_->resource( ) ) << " " << Concrete::Length::offtype( size_ ) << " Tf " ;
 			if( sizeChanged )
 				{
-					if( ref->hasLeading( ) && ref->leadingIsRelative_ )
+					if( ref->hasLeading( ) && ref->leadingIsRelative( ) )
 						{
 							synchLeading( os, ref, resources, true );
 						}
-					if( ref->hasRise( ) && ref->riseIsRelative_ )
+					if( ref->hasRise( ) && ref->riseIsRelative( ) )
 						{
 							synchRise( os, ref, resources, true );
+						}
+					if( ref->hasCharacterSpacing( ) && ref->characterSpacingIsRelative( ) )
+						{
+							synchCharacterSpacing( os, ref, resources, true );
+						}
+					if( ref->hasWordSpacing( ) && ref->wordSpacingIsRelative( ) )
+						{
+							synchWordSpacing( os, ref, resources, true );
 						}
 				}
 			return true;
@@ -2041,15 +2281,15 @@ Kernel::TextState::synchRise( std::ostream & os, const Kernel::TextState * ref, 
 {
 	if( force ||
 			rise_ != ref->rise_ ||
-			riseIsRelative_ != ref->riseIsRelative_ )
+			riseIsRelative( ) != ref->riseIsRelative( ) )
 		{
 			if( ! ref->hasRise( ) )
 				{
 					return false;
 				}
-			riseIsRelative_ = ref->riseIsRelative_;
+			relativeFlags_ = ( ref->riseIsRelative( ) ? ( relativeFlags_ | RELATIVE_RISE ) : ( relativeFlags_ & ~RELATIVE_RISE ) );
 			rise_ = ref->rise_;
-			if( riseIsRelative_ )
+			if( riseIsRelative( ) )
 				{
 					os << Concrete::Length::offtype( rise_ ) * Concrete::Length::offtype( ref->size_ ) << " Ts " ;
 				}

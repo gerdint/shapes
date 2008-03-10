@@ -147,8 +147,10 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length spacing_;
+			bool isRelative_;
 		public:
 			CharacterSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing );
+			CharacterSpacingBinding( const Ast::SourceLocation & loc, const double r );
 			virtual ~CharacterSpacingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -158,8 +160,10 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length spacing_;
+			bool isRelative_;
 		public:
 			WordSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing );
+			WordSpacingBinding( const Ast::SourceLocation & loc, const double r );
 			virtual ~WordSpacingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -334,6 +338,14 @@ namespace Shapes
 
 		class TextState
 		{
+		private:
+			static const char RELATIVE_LEADING = 0x01;
+			static const char RELATIVE_RISE = 0x02;
+			static const char RELATIVE_CHARACTER_SPACING = 0x04;
+			static const char RELATIVE_WORD_SPACING = 0x08;
+		public:
+			unsigned char relativeFlags_;
+
 		public:
 			static const char KNOCKOUT_FLAG_BIT = 0x01;
 			static const char KNOCKOUT_UNDEFINED_BIT = 0x02;
@@ -361,14 +373,30 @@ namespace Shapes
 			void setLeading( const Concrete::Length leading );
 			void setLeading( const double relativeLeading );
 			bool hasLeading( ) const;
+			inline bool leadingIsRelative( ) const;
 			Concrete::Length leadingConcrete( ) const;
 			RefCountPtr< const Lang::Value > leading( ) const;
 
 			void setRise( const Concrete::Length rise );
 			void setRise( const double relativeRise );
 			bool hasRise( ) const;
+			bool riseIsRelative( ) const;
 			Concrete::Length riseConcrete( ) const;
 			RefCountPtr< const Lang::Value > rise( ) const;
+
+			void setCharacterSpacing( const Concrete::Length spacing );
+			void setCharacterSpacing( const double relativeSpacing );
+			bool hasCharacterSpacing( ) const;
+			bool characterSpacingIsRelative( ) const;
+			Concrete::Length characterSpacingConcrete( ) const;
+			RefCountPtr< const Lang::Value > characterSpacing( ) const;
+
+			void setWordSpacing( const Concrete::Length spacing );
+			void setWordSpacing( const double relativeSpacing );
+			bool hasWordSpacing( ) const;
+			bool wordSpacingIsRelative( ) const;
+			Concrete::Length wordSpacingConcrete( ) const;
+			RefCountPtr< const Lang::Value > wordSpacing( ) const;
 
 			bool synchKnockout( std::ostream & os, const Kernel::TextState * ref, SimplePDF::PDF_Resources * resources, bool force = false );
 			bool synchAssertKnockout( std::ostream & os, const Kernel::TextState * ref, SimplePDF::PDF_Resources * resources, bool force = false );

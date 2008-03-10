@@ -9,14 +9,10 @@ FILL IN DATE WHEN TAGGING
 
 Lots of new documentation, including substantial work on structure, crosslinks, and formatting.  So far the HTML format has been in focus.
 
-Many new features, including
-- Generalized core function <range>.
-- 3D graphics, including delay-until-view "facing functions", a color that only occludes lines in a z-sorter.
-- 
+New features of all kinds, ranging from additions to the scanner to new state types and functions.
 
-New application examples, in 3D.
+Also new application examples in 3D, code optimizations, and bugfixes.
 
-And bugfixes.
 
 
 ====( 0.3.5 )====
