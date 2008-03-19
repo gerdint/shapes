@@ -79,7 +79,7 @@ main( int argc, char ** argv )
 	std::string labelDBName;
 	std::string fontmetricsOutputName;
 
-	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM };
+	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM, FILENAME_TEXINPUTS };
 
 	std::list< int > filenameRequestList;
 	std::list< const char * > resourceRequestList;
@@ -107,27 +107,33 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--shapesdebug" ) == 0 )
+			else if( strcmp( *argv, "--shapes-debug" ) == 0 )
 				{
 					shapesdebug = 1;
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--systemdebug" ) == 0 )
+			else if( strcmp( *argv, "--system-debug" ) == 0 )
 				{
 					Interaction::debugSystem = true;
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--afmdebug" ) == 0 )
+			else if( strcmp( *argv, "--afm-debug" ) == 0 )
 				{
 					Interaction::fontMetricDebug = true;
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--afmmessages" ) == 0 )
+			else if( strcmp( *argv, "--afm-messages" ) == 0 )
 				{
 					Interaction::fontMetricMessages = true;
+					argv += 1;
+					argc -= 1;
+				}
+			else if( strcmp( *argv, "--tex-debug" ) == 0 )
+				{
+					Interaction::pdfLaTeXInteraction = "nonstopmode";
 					argv += 1;
 					argc -= 1;
 				}
@@ -657,6 +663,12 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
+			else if( strcmp( *argv, "--which-TEXINPUTS" ) == 0 )
+				{
+					filenameRequestList.push_back( FILENAME_TEXINPUTS );
+					argv += 1;
+					argc -= 1;
+				}
 			else if( strcmp( *argv, "--afmout" ) == 0 )
 				{
 					argcAssertion( *argv, argc, 2 );
@@ -1022,6 +1034,11 @@ main( int argc, char ** argv )
 							break;
 						case FILENAME_AFM:
 							std::cout << fontmetricsOutputName ;
+							break;
+						case FILENAME_TEXINPUTS:
+							{
+								std::cout << getenv( "TEXINPUTS" ) ;
+							}
 							break;
 						case FILENAME_RESOURCE:
 							{

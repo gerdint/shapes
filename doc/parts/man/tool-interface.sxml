@@ -320,7 +320,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--shapesdebug"></parameters>
+						<parameters flag="--shapes-debug"></parameters>
 						<description>
 							<p>Turn on debug prints in the <str-Shapes /> lexer.</p>
 						</description>
@@ -332,21 +332,27 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--systemdebug"></parameters>
+						<parameters flag="--system-debug"></parameters>
 						<description>
-							<p>Turn on system debug messages.  The messages are written to stderr.</p>
+							<p>Turn on system debug messages.  The messages are written to <filename>stderr</filename>.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--afmdebug"></parameters>
+						<parameters flag="--afm-debug"></parameters>
 						<description>
 							<p>Turn on debug prints in the font metrics scanner.  Primarily for development use.  See also --afmmessages.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--afmmessages"></parameters>
+						<parameters flag="--afm-messages"></parameters>
 						<description>
-							<p>Turn on font metrics debug messages.  The messages are written to stderr.</p>
+							<p>Turn on font metrics debug messages.  The messages are written to <filename>stderr</filename>.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
+						<parameters flag="--tex-debug"></parameters>
+						<description>
+							<p>Change the <em>interaction</em> mode of <str-pdfLaTeX /> from <em>batchmode</em> to <em>nonstopmode</em> (FIXME: the following period character is not a groff command).  The output from <str-pdfLaTeX /> goes to <filename>stdout</filename> in both cases.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -405,6 +411,12 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						<parameters flag="--which-afmout"/>
 						<description>
 							<p>Request the file where generated font metrics will be stored.</p>
+						</description>
+					</command-line-item>
+ 					<command-line-item>
+						<parameters flag="--which-TEXINPUTS"/>
+						<description>
+							<p>Request the environment variable TEXINPUTS after any modifications made by <str-Shapes />.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>

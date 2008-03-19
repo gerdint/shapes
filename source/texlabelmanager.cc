@@ -296,11 +296,11 @@ Kernel::TeXLabelManager::processRequests( )
 						}
 					extendedName = extendedName.substr( lastSlashPos + 1 );
 				}
-			execlp( "pdflatex", "pdflatex", "-interaction", "batchmode", extendedName.c_str( ), static_cast< const char * >( 0 ) );
+			execlp( "pdflatex", "pdflatex", "-interaction", Interaction::pdfLaTeXInteraction, extendedName.c_str( ), static_cast< const char * >( 0 ) );
 			if( errno != 0 )
 				{
 					ostringstream oss;
-					oss << "Recieved errno = " << errno << " from execlp call to pdfLaTeX." ; 
+					oss << "Recieved errno = " << errno << " from execlp call to pdfLaTeX." ;
 					throw Exceptions::InternalError( strrefdup( oss ) );
 				}
 			throw Exceptions::InternalError( strrefdup( "execlp call to pdfLaTeX returned with errno == 0." ) );
