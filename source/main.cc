@@ -932,7 +932,7 @@ main( int argc, char ** argv )
 	{
 		std::string inDir;
 		std::string inPath = inputName;
-		std::string::size_type slash = inPath.find( '/' );
+		std::string::size_type slash = inPath.rfind( '/' );
 		if( slash == std::string::npos )
 			{
 				inPath = "";
