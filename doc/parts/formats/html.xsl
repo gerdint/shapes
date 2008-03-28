@@ -67,6 +67,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:when test="$name='algo-tol'">algo-tol.html</xsl:when>
 		<xsl:when test="$name='man'">man.html</xsl:when>
 		<xsl:when test="$name='tutorial'">tutorial.html</xsl:when>
+		<xsl:when test="$name='extensions'">extensions/index.html</xsl:when>
 	</xsl:choose>
 </xsl:template>
 <xsl:template name="id-to-anchor-name">
