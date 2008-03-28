@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>blockdraw_wfo</title>
+	<description>
+		<p>General purpose layout tools originally developed for drawing of block diagrams.</p>
+	</description>
+	<meta-selflink><part-href name="extensions/blockdraw_wfo" /></meta-selflink>
+	<needs></needs>
+	<top>
+		<p>The name of this extension includes the mysterious <em>wfo</em>.  It stands for <em>waiting for objects</em>, and refers to the wish to deal with elements of block diagrams using objects of user-defined types rather than just relying on <named-type name="Drawable" />.  However, by relying on <named-type name="Drawable" /> as the representation, this extension is much more generally useful than it would otherwise be.</p>
+	</top>
+
+	<user-binding identifier="mspoint">
+		<function>
+			<case constructor-of="PathSlider">
+				<arguments>
+					<arg identifier="pth">
+						<type><named-type name="Path" /></type>
+					</arg>
+					<arg identifier="mediation">
+						<type><named-type name="Float" /></type>
+					</arg>
+					<arg identifier="slide">
+						<type><named-type name="Length" /></type>
+						<default><physical><scalar>0</scalar><unit>cm</unit></physical></default>
+					</arg>
+				</arguments>
+				<dynamic-references></dynamic-references>
+				<description>
+					<p>Interprets <arg name="mediation" /> as a length relative the total length of <arg name="pth" />, then adds <arg name="slide" /> to this length, and constructs a slider at the computed arc time.</p>
+					<p>For instance, a slider at the geometric midpoint of a path <inline>myPath</inline> is obtained as <inline>[mspoint myPath 0.5]</inline>.</p>
+				</description>
+			</case>
+		</function>
+	</user-binding>
+
+</book>

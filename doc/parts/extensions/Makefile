@@ -1,0 +1,21 @@
+POSTPROCDIR=../../tools/postproc
+SSIDIR=../../tools/ssi
+PRODUCED_FORMATS_DIR=../../formats
+PART_FORMATS_DIR=formats
+EXDIR=../../../examples
+EXOUTDIR=../../output
+
+HTMLDIR=$(PRODUCED_FORMATS_DIR)/html/extensions
+HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
+HTML_MORE_FORMATS=../formats/html.xsl
+
+PRODUCTS = $(HTMLDIR)/index.html $(HTMLDIR)/blowdraw_wfo.html
+DEPENDS = build/index.depend
+
+all: $(DEPENDS) $(PRODUCTS)
+
+$(HTMLDIR)/%.html: build/%.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+
+include ../Makefile
+-include $(wildcard build/*.depend)

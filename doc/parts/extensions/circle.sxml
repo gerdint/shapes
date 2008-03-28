@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>circle</title>
+	<description>
+		<p>Functions for construction of circles and circular arcs.</p>
+	</description>
+	<meta-selflink><part-href name="extensions/circle" /></meta-selflink>
+	<needs></needs>
+	<top>
+		<p>It may very well be argued that these bindings should be provided by the core.  Besides a wish to keep the core small (to ease maintenance), one reason not to include these in the core is to remind that constructing circular arcs in use code it really easy.</p>
+		<p>It should be reminded that circular arcs can only be approximated using cubic splines, so there is no way to define a path perfectly following a circle.</p>
+	</top>
+
+	<user-binding identifier="circle">
+		<function>
+			<case constructor-of="Path">
+				<arguments>
+					<arg identifier="r">
+						<type><named-type name="Length" /></type>
+					</arg>
+				</arguments>
+				<dynamic-references></dynamic-references>
+				<description>
+					<p>Construct circle in <str-2D /> space, of radius <arg name="r" />, centered at the origin.</p>
+					<p>The circle is approximated using four spline segments, and for positive radii, it encircles the origin counter-clockwise, starting on the positive x axis.</p>
+					<p>Use <binding name="immerse" /> and <binding name="rotate3D" /> to take the circle into <str-3D /> space.</p>
+				</description>
+			</case>
+		</function>
+	</user-binding>
+
+	<user-binding identifier="ccw_arc">
+		<function>
+			<case constructor-of="Path">
+				<arguments>
+					<arg identifier="z0">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="zStart">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="zEnd">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="r">
+						<type><named-type name="Length" /></type>
+					</arg>
+				</arguments>
+				<dynamic-references></dynamic-references>
+				<description>
+					<p>Construct circular arc with counter-clockwise direction.</p>
+					<p>The center point of the circle is <arg name="z0" />, and the radius of the arc is <arg name="r" />.  The arc starts on the ray from <arg name="z0" /> to <arg name="zStart" />, and ends on the ray from <arg name="z0" /> to <arg name="zEnd" />.</p>
+					<p>See also <binding extension="circle" name="cw_arc" />.</p>
+				</description>
+			</case>
+		</function>
+	</user-binding>
+
+	<user-binding identifier="cw_arc">
+		<function>
+			<case constructor-of="Path">
+				<arguments>
+					<arg identifier="z0">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="zStart">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="zEnd">
+						<type><named-type name="Coords" /></type>
+					</arg>
+					<arg identifier="r">
+						<type><named-type name="Length" /></type>
+					</arg>
+				</arguments>
+				<dynamic-references></dynamic-references>
+				<description>
+					<p>Like <binding extension="circle" name="ccw_arc" />, but creates arcs with clockwise direction.</p>
+				</description>
+			</case>
+		</function>
+	</user-binding>
+
+</book>

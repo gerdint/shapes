@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>Standard extensions</title>
+	<description>
+		<p>Descriptions of the <str-Shapes /> extension files included in standard installations.</p>
+	</description>
+	<meta-selflink><part-href name="extensions" /></meta-selflink>
+	<top>
+		<p></p>
+	</top>
+	<body>
+		<p>The following extensions are contained in the documentation:</p>
+		<index-of-books />
+	</body>
+
+	<external>
+		<!--#include virtual="circle.sxml" depth="0" -->
+		<!--#include virtual="centering.sxml" depth="0" -->
+		<!--#include virtual="blockdraw_wfo.sxml" depth="0" -->
+	</external>
+</book>
