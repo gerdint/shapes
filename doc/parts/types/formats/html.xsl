@@ -197,7 +197,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <table cellspacing="5">
     <tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
     <tr><td colspan="3"><hr /></td></tr>
-    <xsl:apply-templates select="field"/>
+    <xsl:apply-templates select="type-field"/>
   </table>
 </xsl:template>
 <xsl:template match="coretype/fields/type-field">

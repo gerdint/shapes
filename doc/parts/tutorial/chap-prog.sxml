@@ -179,7 +179,7 @@ picture: ( (TeX `Hello!´) &amp; [stroke (1cm,1cm)--(2cm,0cm)] )
 <title>Non-pure functions and procedures</title>
 <body>
 
-	<p>A <em>non-pure function</em> is like a pure function, except that it also takes state arguments by reference.  This means that the result of a non-pure function call cannot be cached for reuse, and that the side effects the function may have are limited to the states explicitly passes in the call.</p>
+	<p>A <em>non-pure function</em> is like a pure function, except that it also takes state arguments by reference.  This means that the result of a non-pure function call cannot be cached for reuse, and that the side effects the function may have are limited to the states explicitly passed in the call.</p>
 
 	<p>Non-pure functions are defined just like pure functions, and called the same way.  The only difference is that states appear among the formal parameters, and that states needs to be passed for these formal parameters.  The following example shows how a non-pure function is used to add a stroke to <state name="page" />:
 <pre>

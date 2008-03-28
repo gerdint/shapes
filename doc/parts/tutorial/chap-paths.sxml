@@ -4,10 +4,37 @@
 <p>In this chapter we'll explore some of the more powerful operations that can be performed on paths.</p>
 </top>
 
+<section id="paths/spline-arc-time">
+<title>Spline time and arc time</title>
+<body>
+	<p>Before discussing path sliders in the next section, we must introduce the concepts of <em>spline time</em> and <em>arc time</em>.  Recall that a path is a sequence of connected cubic splines, and that each spline segment can be parameterized by a scalar in the range 0 to 1.</p>
+
+	<p>First, a <em>spline time</em> is a real number used to refer to points on paths.  The integer part refers to a spline segment, with zero being the first segment, while the fractional part refers to a point on that segment.  Second, an <em>arc time</em> is a length used to refer to points on paths.  The length is simply the arc length from the beginning of the path to the point being referred to.</p>
+
+	<p>Note that spline time makes no sense from a geometric point of view.  To see this, note that any spline segment can be divided into several shorter spline segments, and that while this does not change the geometry of the path, it changes the interpretation of spline times along the path.  On the other hand, spline time is very natural from a computer representation point of view.  Therefore, all arc times are converted to spline times internally in <str-Shapes />, a procedure which relies on numeric integration.</p>
+
+	<p>While the numeric integration required to work with arc time may seem costly from a computational point of view, it is believed that working with features of geometry rather then representation is such an important tool that it is worth while the extra computation time.  While this argument may not have been feasible in the times when <str-MetaPost /> was designed, the computational power of personal computers has increased by huge amounts since then, and we think that computing arc lengths is a good use of this power.  Hence, users are recommended to avoid thinking in terms of spline time unless working explicitly with the underlying path representation.</p>
+
+	<p>Use the function <binding name="abs" /> to find the total length of a path, and <binding name="duration" /> to find the final spline time of a path.  Note that the duration of a closed path is 1 more than that of the corresponding open path.</p>
+
+</body>
+</section><!-- End of paths/spline-arc-time -->
+
+
 <section id="paths/sliders">
 <title>Sliders</title>
 <body>
-	<p>A <em>path slider</em>, generally referred to as just <em>slider</em>, is a location on a particular path.</p>
+	<p>A <em>path slider</em>, generally referred to as just <em>slider</em>, is a location on a particular path.  It is the natural result of any operation that selects a point on a path, and gives access to local characteristics of the path such as tangent its direction and curvature.  In <str-Shapes />, a sub-range of a path is constructed by <em>connecting</em> one slider at the beginning of the range with another slider at the end of the range.</p>
+
+<p>There are two types of sliders, depending on whether their paths are contained in <str-2D /> or <str-3D />, see <named-type name="PathSlider" /> and <named-type name="PathSlider3D" />, for details.</p>
+
+<p>As the name suggests, a slider can be used to move along the path.  By adding <named-type name="Float" /> or <named-type name="Length" /> values to a slider, one obtains a new slider at the given distance from the original slider; <named-type name="Float" /> values move in terms of spline time, while <named-type name="Length" /> values move in terms of arc length.</p>
+
+<p>The simplest operations that yield sliders on a path are either to access the fields <field name="begin" /> or <field name="end" />, or to <em>apply</em> the path like a function to a <named-type name="Float" /> value to construct a slider with the given spline time.  Similarly, if the path is applied to a <named-type name="Length" /> value, one obtains a slider at the given arc time.</p>
+
+<p>The function <binding extension="blockdraw_wfo" name="mspoint" /> (read it as <em>mediation-slide point</em>) is a convenient way to specify the arc time relative to the arc length of the path itself.</p>
+
+<p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.</p>
 
 </body>
 </section><!-- End of paths/sliders -->
