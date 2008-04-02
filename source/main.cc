@@ -955,6 +955,7 @@ main( int argc, char ** argv )
 			{
 				setupTEXINPUTS( inDir );
 			}
+		Ast::theShapesScanner.setSourceDir( inDir );
 	}
 
 	if( Computation::theTrixelizeSplicingTol >= Computation::theTrixelizeOverlapTol )

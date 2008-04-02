@@ -233,8 +233,8 @@ Exceptions::FreezingUndefined::display( std::ostream & os ) const
 }
 
 
-Exceptions::FileOpenError::FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::list< std::string > * searchPath, Type _type )
-	: loc( _loc ), filename( _filename ), type( _type ), searchPath_( searchPath )
+Exceptions::FileOpenError::FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type )
+	: loc( _loc ), filename( _filename ), type( _type ), sourceDir_( sourceDir ), searchPath_( searchPath )
 { }
 
 Exceptions::FileOpenError::~FileOpenError( )
@@ -263,6 +263,10 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 					if( i != searchPath_->begin( ) )
 						{
 							os << ":" ;
+						}
+					if( sourceDir_ != 0 && (*i)[0] != '/' )
+						{
+							os << *sourceDir_ << "/" ;
 						}
 					os << *i ;
 				}

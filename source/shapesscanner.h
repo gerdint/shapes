@@ -48,6 +48,7 @@ class ShapesScanner : public shapesFlexLexer
 	std::map< const char *, double, charPtrLess > unitTable;
 	const char * newUnitName;
 	std::set< FileID > neededFiles;
+	std::string sourceDir_;
 	std::list< std::string > needSearchPath;
 	bool showFiles;
 	bool randSeedSet;
@@ -58,6 +59,7 @@ class ShapesScanner : public shapesFlexLexer
 	virtual ~ShapesScanner( );
 	void setNameOf_yyin( const char * yyinName );
 	void prependStream( std::istream * is );
+	void setSourceDir( const std::string & sourceDir );
 	void push_backNeedPath( const char * path );
 	std::string searchFile( const std::string & suffix ) const;
 	void setShowFiles( bool _showFiles );

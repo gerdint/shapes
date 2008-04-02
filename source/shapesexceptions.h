@@ -188,9 +188,10 @@ namespace Shapes
 			Ast::SourceLocation loc;
 			RefCountPtr< const char > filename;
 			Type type;
+			const std::string * sourceDir_;
 			const std::list< std::string > * searchPath_;
 		public:
-			FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::list< std::string > * searchPath, Type _type = OPEN );
+			FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type = OPEN );
 			virtual ~FileOpenError( );
 			virtual void display( std::ostream & os ) const;
 		};
