@@ -152,7 +152,6 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 				{
 					res = sourceDir_ + "/" + *i + "/" + suffix;
 				}
-			std::cerr << "Stat " << res << std::endl ;
 
 			struct stat theStatDummy;
 			if( stat( res.c_str( ), & theStatDummy ) == 0 )
