@@ -67,8 +67,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:when test="$name='algo-tol'">algo-tol.html</xsl:when>
 		<xsl:when test="$name='man'">man.html</xsl:when>
 		<xsl:when test="$name='tutorial'">tutorial.html</xsl:when>
-		<xsl:when test="$name='extensions'">extensions/index.html</xsl:when>
+		<xsl:when test="$name='extensions'">extensions.html</xsl:when>
 	</xsl:choose>
+</xsl:template>
+<xsl:template name="extension-to-href">
+	<xsl:param name="name" />
+	<xsl:text>extensions-</xsl:text><xsl:value-of select="@name" /><xsl:text>.html</xsl:text>
 </xsl:template>
 <xsl:template name="id-to-anchor-name">
 	<xsl:param name="id" />
@@ -77,6 +81,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="part-href[@name]">
 	<xsl:call-template name="part-to-href">
+			<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+<xsl:template match="extension-href[@name]">
+	<xsl:call-template name="extension-to-href">
 			<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
@@ -166,8 +175,25 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</xsl:call-template>
 	</xsl:element>
 </xsl:template>
-<xsl:template match="binding[@name]">
+<xsl:template match="binding[@name and not(@extension)]">
 	<xsl:call-template name="name-to-linked-binding">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+<xsl:template name="extension-name-to-linked-binding">
+	<xsl:param name="extension" />
+	<xsl:param name="name" />
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href"><xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:call-template name="name-to-binding">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="binding[@name and @extension]">
+	<xsl:call-template name="extension-name-to-linked-binding">
+		<xsl:with-param name="extension"><xsl:value-of select="@extension" /></xsl:with-param>
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
