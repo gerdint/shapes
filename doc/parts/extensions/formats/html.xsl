@@ -5,63 +5,37 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
+<xsl:include href="../../formats/plain-book-html.xsl" />
 
-<xsl:template match="/book">
-  <html>
-    <head>
-      <title><xsl:value-of select="title" /></title>
-      <link rel="stylesheet" href="../../styles/html/shapes.css" />
-    </head>
-    <body>
-			<h1><xsl:value-of select="title" /></h1>
-			<hr class="thick"/>
-			<xsl:apply-templates select="top" />
-			<p><b>Sections:</b>
-				<xsl:for-each select="section">
-					  
-					<xsl:element name="a">
-					<xsl:attribute name="href">#<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-						<xsl:value-of select="title" />
-					</xsl:element>
-				</xsl:for-each>
-			</p>
+<xsl:template match="alphabetical-index">
+	<p class="center"><b>Alphabetical index</b></p>
+	<p class="center">
+		<xsl:for-each select="/book//system-binding[@identifier]">
+			<xsl:sort select="@identifier" />
+			<xsl:element name="a">
+				<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
+				<xsl:value-of select="@identifier" />
+			</xsl:element>
+			  
+		</xsl:for-each>
+	</p>
+	<hr class="thin"/>
+</xsl:template>
 
-			<hr class="thin"/>
-			<p class="center"><b>Alphabetical list</b></p>
-			<p class="center">
-				<xsl:for-each select="/book/section/system-binding[@identifier]">
-					<xsl:sort select="@identifier" />
-					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-						<xsl:value-of select="@identifier" />
-					</xsl:element>
-					  
-				</xsl:for-each>
-			</p>
-			<hr class="thin"/>
+<xsl:template match="index-of-books">
+	<ul>
+		<xsl:apply-templates select="/book/external/book | /book/external/man" />
+	</ul>
+</xsl:template>
 
-			<xsl:for-each select="section">
-				<h2>
-					<xsl:element name="a">
-						<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-						<xsl:value-of select="title" />
-					</xsl:element>
-				</h2>
-				<xsl:apply-templates select="top" />
-				<p class="center">
-					<xsl:for-each select="system-binding[@identifier]">
-						<xsl:sort select="@identifier" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-							<xsl:value-of select="@identifier" />
-						</xsl:element>
-						  
-					</xsl:for-each>
-				</p>
-				<xsl:apply-templates select="system-binding" />
-			</xsl:for-each>
-		</body>
-  </html>
+<xsl:template match="external/book">
+	<li>
+		<xsl:element name="a">
+			<xsl:attribute name="href">../<xsl:apply-templates select="meta-selflink" /></xsl:attribute>
+			<b><xsl:apply-templates select="title" /></b>
+		</xsl:element>:
+		<xsl:apply-templates select="description" />
+	</li>
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]">

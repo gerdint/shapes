@@ -8,12 +8,17 @@
 	</description>
 	<meta-selflink><part-href name="extensions" /></meta-selflink>
 	<top>
-		<p></p>
+		<p>A <str-Shapes /> <em>extension</em> is a <str-Shapes /> source that provides functionality that can be used in applications.  An extension should only introduce bindings, and not produce any output by modifying any program states.</p>
+		<p>Extensions are usually activated by loading the source using the <inline>##need</inline> scanner directive, see <a part="syntax" id="syntax/include/include" /> for more details.</p>
 	</top>
-	<body>
-		<p>The following extensions are contained in the documentation:</p>
-		<index-of-books />
-	</body>
+
+	<section id="extensions/index">
+		<title>Index</title>
+		<body>
+			<p>The following extensions are contained in the documentation:</p>
+			<index-of-books />
+		</body>
+	</section>
 
 	<external>
 		<!--#include virtual="circle.sxml" depth="0" -->

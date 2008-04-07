@@ -6,9 +6,10 @@
 	<description>
 		<p>General purpose layout tools originally developed for drawing of block diagrams.</p>
 	</description>
-	<meta-selflink><part-href name="extensions/blockdraw_wfo" /></meta-selflink>
+	<meta-selflink><extension-href name="blockdraw_wfo" /></meta-selflink>
 	<needs></needs>
 	<top>
+		<alphabetical-index/>
 		<p>The name of this extension includes the mysterious <em>wfo</em>.  It stands for <em>waiting for objects</em>, and refers to the wish to deal with elements of block diagrams using objects of user-defined types rather than just relying on <named-type name="Drawable" />.  However, by relying on <named-type name="Drawable" /> as the representation, this extension is much more generally useful than it would otherwise be.</p>
 	</top>
 

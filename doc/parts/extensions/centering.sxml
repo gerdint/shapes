@@ -6,9 +6,10 @@
 	<description>
 		<p>Elementary layout using bounding boxes.</p>
 	</description>
-	<meta-selflink><part-href name="extensions/centering" /></meta-selflink>
+	<meta-selflink><extension-href name="centering" /></meta-selflink>
 	<needs></needs>
 	<top>
+		<alphabetical-index/>
 		<p>The functions in this extension provide the basic means for layout.  The extension is named after the function <binding extension="centering" name="centerat" />.</p>
 	</top>
 
