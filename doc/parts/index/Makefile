@@ -4,12 +4,14 @@ PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=formats
 EXDIR=../../../examples
 EXOUTDIR=../../output
-SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
 
 SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
+HREF_BASE=.
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl
+
+SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE)
 
 JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
 JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar

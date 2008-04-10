@@ -174,12 +174,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:attribute name="href">
 			<xsl:choose>
 				<xsl:when test="$extension">
-					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#bind-<xsl:value-of select="$name" />
+					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#bind/<xsl:value-of select="$name" />
 				</xsl:when>
 				<xsl:when test="$extension-href">
-					<xsl:value-of select="$extension-href" />#bind-<xsl:value-of select="$name" />
+					<xsl:value-of select="$extension-href" />#bind/<xsl:value-of select="$name" />
 				</xsl:when>
-				<xsl:otherwise>bindings.html#<xsl:value-of select="$name" /></xsl:otherwise>
+				<xsl:otherwise>
+					<xsl:call-template name="part-to-href"><xsl:with-param name="name">bindings</xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" />
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
 		<xsl:call-template name="name-to-binding">
@@ -217,12 +219,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:attribute name="href">
 			<xsl:choose>
 				<xsl:when test="$extension">
-					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#dyn-<xsl:value-of select="$name" />
+					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#dyn/<xsl:value-of select="$name" />
 				</xsl:when>
 				<xsl:when test="$extension-href">
-					<xsl:value-of select="$extension-href" />#dyn-<xsl:value-of select="$name" />
+					<xsl:value-of select="$extension-href" />#dyn/<xsl:value-of select="$name" />
 				</xsl:when>
-				<xsl:otherwise>dynvars.html#<xsl:value-of select="$name" /></xsl:otherwise>
+				<xsl:otherwise>
+					<xsl:call-template name="part-to-href"><xsl:with-param name="name">dynamic</xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" />
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
 		<xsl:call-template name="name-to-dynvar">
@@ -250,7 +254,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">states.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:attribute name="href"><xsl:call-template name="part-to-href"><xsl:with-param name="name">states</xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" /></xsl:attribute>
 		<xsl:call-template name="name-to-state">
 			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
 		</xsl:call-template>
@@ -270,7 +274,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">types.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:attribute name="href"><xsl:call-template name="part-to-href"><xsl:with-param name="name">types</xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" /></xsl:attribute>
 		<xsl:call-template name="name-to-type">
 			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
 		</xsl:call-template>
@@ -305,7 +309,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">state-types.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:attribute name="href"><xsl:call-template name="part-to-href"><xsl:with-param name="name">state-types</xsl:with-param></xsl:call-template>#<xsl:value-of select="$name" /></xsl:attribute>
 		<xsl:call-template name="name-to-state-type">
 			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
 		</xsl:call-template>
@@ -328,7 +332,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="tol-param[@name and not(@link)]">
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">algo-tol.html#tol-<xsl:value-of select="@name" /></xsl:attribute>
+		<xsl:attribute name="href"><xsl:call-template name="part-to-href"><xsl:with-param name="name">algo-tol</xsl:with-param></xsl:call-template>#tol-<xsl:value-of select="@name" /></xsl:attribute>
 		<tolparam><xsl:value-of select="@name" /></tolparam>
 	</xsl:element>
 </xsl:template>
@@ -448,7 +452,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="syntax[@name and not(@class)]">
   <xsl:element name="a">
     <xsl:attribute name="class">discrete</xsl:attribute>
-    <xsl:attribute name="href">syntax.html#stx/<xsl:value-of select="@name" /></xsl:attribute>
+    <xsl:attribute name="href"><xsl:call-template name="part-to-href"><xsl:with-param name="name">syntax</xsl:with-param></xsl:call-template>#stx/<xsl:value-of select="@name" /></xsl:attribute>
     <syntaxname><xsl:value-of select="@name"/></syntaxname>
   </xsl:element>
 </xsl:template>

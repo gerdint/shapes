@@ -51,7 +51,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="system-binding[@identifier]">
 	<h3>
 		<xsl:element name="a">
-			<xsl:attribute name="name">bind-<xsl:value-of select="@identifier" /></xsl:attribute>
+			<xsl:attribute name="name">bind/<xsl:value-of select="@identifier" /></xsl:attribute>
 			<xsl:call-template name="name-to-binding"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 		</xsl:element>
 	</h3>
@@ -163,7 +163,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </xsl:variable>
 	<h3>
 		<xsl:element name="a">
-			<xsl:attribute name="name">dyn-<xsl:value-of select="@identifier" /></xsl:attribute>
+			<xsl:attribute name="name">dyn/<xsl:value-of select="@identifier" /></xsl:attribute>
 			<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 		</xsl:element>
 	</h3>
