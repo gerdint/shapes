@@ -12,10 +12,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<p class="center">
 		<xsl:for-each select="/book//system-binding[@identifier]">
 			<xsl:sort select="@identifier" />
-			<xsl:element name="a">
-				<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-				<xsl:value-of select="@identifier" />
-			</xsl:element>
+			<xsl:call-template name="name-to-linked-binding">
+				<xsl:with-param name="extension-href"><xsl:apply-templates select="/book/meta-selflink" /></xsl:with-param>
+				<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+			</xsl:call-template>
+			  
+		</xsl:for-each>
+	</p>
+	<p class="center">
+		<xsl:for-each select="/book//dynamic-variable[@identifier]">
+			<xsl:sort select="@identifier" />
+			<xsl:call-template name="name-to-linked-dynvar">
+				<xsl:with-param name="extension-href"><xsl:apply-templates select="/book/meta-selflink" /></xsl:with-param>
+				<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+			</xsl:call-template>
 			  
 		</xsl:for-each>
 	</p>

@@ -31,10 +31,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<p class="center">
 				<xsl:for-each select="/book/section/system-binding[@identifier]">
 					<xsl:sort select="@identifier" />
-					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-						<xsl:value-of select="@identifier" />
-					</xsl:element>
+					<xsl:call-template name="name-to-linked-binding">
+						<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+					</xsl:call-template>
 					  
 				</xsl:for-each>
 			</p>
@@ -51,10 +50,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<p class="center">
 					<xsl:for-each select="system-binding[@identifier]">
 						<xsl:sort select="@identifier" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-							<xsl:value-of select="@identifier" />
-						</xsl:element>
+						<xsl:call-template name="name-to-linked-binding">
+							<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+						</xsl:call-template>
 						  
 					</xsl:for-each>
 				</p>

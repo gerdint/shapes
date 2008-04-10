@@ -166,10 +166,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<varname><xsl:value-of select="$name" /></varname>
 </xsl:template>
 <xsl:template name="name-to-linked-binding">
+	<xsl:param name="extension" />
+	<xsl:param name="extension-href" />
 	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">bindings.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:attribute name="href">
+			<xsl:choose>
+				<xsl:when test="$extension">
+					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#bind-<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:when test="$extension-href">
+					<xsl:value-of select="$extension-href" />#bind-<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:otherwise>bindings.html#<xsl:value-of select="$name" /></xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
 		<xsl:call-template name="name-to-binding">
 			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
 		</xsl:call-template>
@@ -180,19 +192,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-<xsl:template name="extension-name-to-linked-binding">
-	<xsl:param name="extension" />
-	<xsl:param name="name" />
-	<xsl:element name="a">
-		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href"><xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#bind-<xsl:value-of select="$name" /></xsl:attribute>
-		<xsl:call-template name="name-to-binding">
-			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
-		</xsl:call-template>
-	</xsl:element>
-</xsl:template>
 <xsl:template match="binding[@name and @extension]">
-	<xsl:call-template name="extension-name-to-linked-binding">
+	<xsl:call-template name="name-to-linked-binding">
 		<xsl:with-param name="extension"><xsl:value-of select="@extension" /></xsl:with-param>
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
@@ -208,10 +209,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<varname>@<xsl:value-of select="$name" /></varname>
 </xsl:template>
 <xsl:template name="name-to-linked-dynvar">
+	<xsl:param name="extension" />
+	<xsl:param name="extension-href" />
 	<xsl:param name="name" />
 	<xsl:element name="a">
 		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href">dynvars.html#<xsl:value-of select="$name" /></xsl:attribute>
+		<xsl:attribute name="href">
+			<xsl:choose>
+				<xsl:when test="$extension">
+					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#dyn-<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:when test="$extension-href">
+					<xsl:value-of select="$extension-href" />#dyn-<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:otherwise>dynvars.html#<xsl:value-of select="$name" /></xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
 		<xsl:call-template name="name-to-dynvar">
 			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
 		</xsl:call-template>
@@ -222,19 +235,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-<xsl:template name="extension-name-to-linked-dynvar">
-	<xsl:param name="extension" />
-	<xsl:param name="name" />
-	<xsl:element name="a">
-		<xsl:attribute name="class">discrete</xsl:attribute>
-		<xsl:attribute name="href"><xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#dyn-<xsl:value-of select="$name" /></xsl:attribute>
-		<xsl:call-template name="name-to-dynvar">
-			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
-		</xsl:call-template>
-	</xsl:element>
-</xsl:template>
 <xsl:template match="dynvar[@name and @extension]">
-	<xsl:call-template name="extension-name-to-linked-dynvar">
+	<xsl:call-template name="name-to-linked-dynvar">
 		<xsl:with-param name="extension"><xsl:value-of select="@extension" /></xsl:with-param>
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 	</xsl:call-template>
