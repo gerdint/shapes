@@ -78,13 +78,23 @@ fun: \ a .>
  ** (although this situation would actually be quite easy to recognize during the
  ** analysis pass).
  **/
-|** globalProc: \ msg .> ! { •stdout << msg << `¢n´ }
+globalProc: \ msg .> ! { •stdout << msg << `¢n´ }
 |** badFun: \ a .>
 |** {
 |**   [!globalProc a]
 |** 	a + ` so bad!´
 |** }
 |** •stdout << [badFun `I'm bad!´] << `¢n´
+
+/** As a last example of procedures, the following program is legal!
+ ** Note that the difference is that goodProc is a procedure, so it should be OK
+ ** to modify •stdout from within its body.
+ **/
+goodProc: \ a .> !
+{
+  [!globalProc a]
+}
+[!globalProc `This program is OK.´]
 
 /** States may also be passed to functions.  Functions that take states as arguments are like
  ** macros in that their evaluation cannot be delayed.  However, since the states being modified
