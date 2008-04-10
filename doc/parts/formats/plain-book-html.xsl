@@ -6,10 +6,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <html>
     <head>
       <title><xsl:apply-templates select="title" /></title>
+			<xsl:if test="base/@href">
+				<xsl:element name="base"><xsl:attribute name="href"><xsl:value-of select="base/@href" /></xsl:attribute></xsl:element>
+			</xsl:if>
       <link rel="stylesheet" href="../../styles/html/shapes.css" />
     </head>
     <body>
-    <h1><xsl:apply-templates select="title" /></h1>
+			<h1><xsl:apply-templates select="title" /></h1>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
 

@@ -1,0 +1,1 @@
+build/index_.xml: circle.sxml centering.sxml blockdraw_wfo.sxml

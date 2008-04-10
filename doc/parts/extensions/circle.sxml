@@ -7,6 +7,7 @@
 		<p>Functions for construction of circles and circular arcs.</p>
 	</description>
 	<meta-selflink><extension-href name="circle" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<needs></needs>
 	<top>
 		<alphabetical-index/>

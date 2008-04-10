@@ -7,6 +7,7 @@
 		<p>Descriptions of the <str-Shapes /> extension files included in standard installations.</p>
 	</description>
 	<meta-selflink><part-href name="extensions" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<top>
 		<p>A <str-Shapes /> <em>extension</em> is a <str-Shapes /> source that provides functionality that can be used in applications.  An extension should only introduce bindings, and not produce any output by modifying any program states.</p>
 		<p>Extensions are usually activated by loading the source using the <inline>##need</inline> scanner directive, see <a part="syntax" id="syntax/include/include" /> for more details.</p>

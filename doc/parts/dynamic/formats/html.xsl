@@ -71,7 +71,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<h3>
 		<xsl:element name="a">
 			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
-			@<xsl:value-of select="@identifier" />
+			<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 		</xsl:element>
 	</h3>
 	<p><b>Used by: </b>
@@ -107,7 +107,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="dynamic-variable[@identifier]/constraint/self">
-	@<xsl:value-of select="../../@identifier" />
+	<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 </xsl:stylesheet>

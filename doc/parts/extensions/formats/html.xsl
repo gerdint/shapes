@@ -41,7 +41,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="system-binding[@identifier]">
 	<h3>
 		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
+			<xsl:attribute name="name">bind-<xsl:value-of select="@identifier" /></xsl:attribute>
 			<xsl:call-template name="name-to-binding"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 		</xsl:element>
 	</h3>
@@ -71,8 +71,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:otherwise>
 		</xsl:choose>
 	</h4>
+ 	<xsl:apply-templates select="type-templates"/>
  	<xsl:apply-templates select="dynamic-references"/>
  	<xsl:apply-templates select="description"/>
+</xsl:template>
+
+<xsl:template match="type-templates">
+	<table class="type-templates">
+		<xsl:apply-templates />
+	</table>
+</xsl:template>
+<xsl:template match="function/case/type-templates/template[@name]">
+	<tr>
+		<td align="right"><xsl:call-template name="name-to-template-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>  </td>
+		<td>
+			<xsl:apply-templates select="description"/>
+		</td>
+	</tr>
 </xsl:template>
 
 <xsl:template match="function/case/arguments/arg[@identifier]">
@@ -129,6 +144,45 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
 		</xsl:for-each>
 	</p>
+</xsl:template>
+
+
+<xsl:template match="dynamic-variable[@identifier]">
+  <xsl:variable name="self">
+    <xsl:value-of select="@identifier" />
+  </xsl:variable>
+	<h3>
+		<xsl:element name="a">
+			<xsl:attribute name="name">dyn-<xsl:value-of select="@identifier" /></xsl:attribute>
+			<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
+		</xsl:element>
+	</h3>
+	<p><b>Used by: </b>
+		<i>Not implemented!</i>
+	</p>
+	<xsl:apply-templates select="type" />
+	<xsl:apply-templates select="constraint" />
+	<xsl:apply-templates select="description" />
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/type">
+	<p>
+		<b>Type: </b><xsl:apply-templates />
+	</p>
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/constraint">
+	<p>
+		<b>Constraint: </b><xsl:apply-templates />
+	</p>
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/description">
+	<xsl:apply-templates />
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/constraint/self">
+	<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 

@@ -41,6 +41,7 @@ centeryatX:
 centerof: \ obj .> { thebb: [bbox obj]  (0.5*([xmin thebb]+[xmax thebb]),0.5*([ymin thebb]+[ymax thebb])) }
 
 mediate: \ r x1 x2 .> (1-r)*x1 + r*x2
+mspoint: \ pth mediation slide:0cm .> [pth mediation * [abs pth] + slide].p
 
 dynamic @labelmargin identity 1mm
 

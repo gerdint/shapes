@@ -7,36 +7,135 @@
 		<p>Elementary layout using bounding boxes.</p>
 	</description>
 	<meta-selflink><extension-href name="centering" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<needs></needs>
 	<top>
 		<alphabetical-index/>
 		<p>The functions in this extension provide the basic means for layout.  The extension is named after the function <binding extension="centering" name="centerat" />.</p>
 	</top>
 
-	<user-binding identifier="centerat">
-		<function>
-			<case constructor-of="Drawable">
-				<arguments>
-					<arg identifier="obj">
-						<type><named-type name="Drawable" /></type>
-					</arg>
-					<arg identifier="z">
-						<type><named-type name="FloatPair" /></type>
-					</arg>
-				</arguments>
-				<dynamic-references></dynamic-references>
-				<description>
-					<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
-				</description>
-			</case>
-		</function>
-	</user-binding>
+	<section id="extensions/centering/basic">
+		<title>Basic operations</title>
+		<body>
+			<p></p>
 
-	<dynamic-variable identifier="labelmargin">
-		<type><named-type name="Length" /></type>
-		<description>
-			<p>Distance to be used when placing labels relative to the point they label.</p>
-		</description>
-	</dynamic-variable>
+			<system-binding identifier="centerat">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="FloatPair" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/centering/labelmargin">
+		<title>Label margin</title>
+		<body>
+			<p>When positioning text relative to other elements, it often looks good if labels appear at a certain distance from the objects they label.  This idea is implemented as functions using a common dynamic variable.</p>
+
+			<dynamic-variable identifier="labelmargin">
+				<type><named-type name="Length" /></type>
+				<description>
+					<p>Distance to be used when placing labels relative to the point they label.</p>
+				</description>
+			</dynamic-variable>
+
+			<system-binding identifier="centeratwlm">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="FloatPair" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references><dynvar extension="centering" name="labelmargin" /></dynamic-references>
+						<description>
+							<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/blockdraw_wfo/mediation">
+		<title>Mediation</title>
+		<body>
+			<p>By <em>mediation</em> we refer to the specification of a value relative to a lower and upper bound.  The bounds can either be very general, or the beginning and end of a path.</p>
+
+			<system-binding identifier="mediate">
+				<function>
+					<case>
+						<type-templates>
+							<template name="L">
+								<description>
+									<p>Elements constitute a linear space, that is, they can be added and multiplied by scalars.</p>
+								</description>
+							</template>
+						</type-templates>
+						<result>
+							<type><template-type name="L" /></type>
+						</result>
+						<arguments>
+							<arg identifier="r">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="x1">
+								<type><template-type name="L" /></type>
+							</arg>
+							<arg identifier="x2">
+								<type><template-type name="L" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Simply computes (1-<arg name="r" />)*<arg name="x1" /> + <arg name="r" />*<arg name="x2" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="mspoint">
+				<function>
+					<case constructor-of="Coords">
+						<arguments>
+							<arg identifier="pth">
+								<type><named-type name="Path" /></type>
+							</arg>
+							<arg identifier="mediation">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="slide">
+								<type><named-type name="Length" /></type>
+								<default><physical><scalar>0</scalar><unit>cm</unit></physical></default>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Interprets <arg name="mediation" /> as a length relative the total length of <arg name="pth" />, then adds <arg name="slide" /> to this length, and finds the coordinates at the computed arc time.</p>
+							<p>For instance, the geometric midpoint of a path <inline>myPath</inline> is obtained as <inline>[mspoint myPath 0.5]</inline>.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+		</body>
+	</section>
 
 </book>

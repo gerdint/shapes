@@ -108,7 +108,7 @@ div.p pre {
 	margin-top:					0.5em;
 	margin-bottom:				0.5em;
 }
-div.p table.syntax, div.p table.tight, div.p table.loose {
+div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates {
 	margin-top:					0.1em;
 	margin-bottom:				0.1em;
 }
@@ -126,8 +126,10 @@ pre, inline, varname, lengthunit, lexerregexp, syntaxname, typename, bnf, progra
 }
 varname.replacable, typename.replacable, constname.replacable, filename.replacable, lengthunit.replacable, program-param.replacable
 { color: #CC6600; }
+typename.template
+{ color: #0000FF; }
 
-pre, table.syntax, table.tokens, table.tight, table.loose { margin-left: 1.5em; }
+pre, table.syntax, table.tokens, table.tight, table.loose, table.type-templates { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { color: #009; }
