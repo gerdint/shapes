@@ -249,6 +249,7 @@ namespace Shapes
 			virtual Kernel::ValueRef transformed( const Lang::Transform2D & tf, Kernel::ValueRef self ) const;
 			virtual bool isTransforming( ) const = 0;
 			virtual bool isProcedural( ) const;
+			virtual bool inScope( Kernel::PassedEnv env ) const;
 			virtual RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState ) const;
 			virtual RefCountPtr< Kernel::CallContInfo > newCallContInfo( const Ast::ArgListExprs * argList, const Kernel::EvalState & evalState, const Kernel::Arguments & curryArgs ) const;
 			virtual Kernel::Arguments newCurriedArguments( ) const;
@@ -306,6 +307,7 @@ namespace Shapes
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 			virtual bool isTransforming( ) const;
 			virtual bool isProcedural( ) const;
+			virtual bool inScope( Kernel::PassedEnv env ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 

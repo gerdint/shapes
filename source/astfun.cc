@@ -741,6 +741,10 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 							}
 						throw Exceptions::OutOfRange( traceLoc_, "Expected function." );
 					}
+				if( ! fun->inScope( env_ ) )
+					{
+						throw Exceptions::MiscellaneousRequirement( "Procedure application out of scope." );
+					}
 				evalState->env_ = env_;
 				evalState->dyn_ = dyn_;
 				evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, env_, dyn_, cont_, callLoc_ ) );

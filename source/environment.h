@@ -281,6 +281,7 @@ namespace Shapes
 			size_t recursivePrint( std::ostream & os, std::set< MapType::key_type > * shadowed ) const;
 
 			bool isBaseEnvironment( ) const { return parent_ == 0; };
+			bool isProceduralParentOf( Kernel::PassedEnv child ) const;
 
 			/* The following public methods shall only be unsed on the base environment immediately after it has been created.
 			 */

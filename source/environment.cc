@@ -1112,3 +1112,19 @@ Kernel::Environment::recursivePrint( std::ostream & os, std::set< MapType::key_t
 	return depth;
 }
 
+bool
+Kernel::Environment::isProceduralParentOf( Kernel::PassedEnv child ) const
+{
+	for( const Environment * current = child; current != 0; current = current->parent_ )
+		{
+			if( current == this )
+				{
+					return true;
+				}
+			if( current->functionBoundary_ )
+				{
+					return false;
+				}
+		}
+	return false;
+}

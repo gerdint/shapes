@@ -119,7 +119,7 @@ sumpicture: \ .> [roundblock (TeX `$\Sigma$´)]
 splitdot: \ .> ( @nonstroking:@stroking | [fill [circle 2.5 * @connectionlw]] )
 
 termcircle: \ .> ( @width:@connectionlw | [stroke [circle 3 * @connectionlw]] )
-  
+
 mspoint: \ pth mediation slide:0cm .> [pth mediation * [abs pth] + slide].p
 
 hhconnect: \ •dst pa pb mediation slide .>
@@ -130,20 +130,20 @@ hhconnect: \ •dst pa pb mediation slide .>
    respath
   }
 vvconnect: \ •dst pa pb mediation slide .>
-  { 
+  {
     mid: [mediate mediation pa.y pb.y] + [if pb.y > pa.y 1 ~1 ] * slide
     respath: pa--( pa.x, mid )--( pb.x, mid )--pb
     •dst << @width:@connectionlw | [@connectpainter respath]
     respath
   }
 hvconnect: \ •dst pa pb .>
-  { 
+  {
     respath: pa--( pb.x, pa.y )--pb
     •dst << @width:@connectionlw | [@connectpainter respath]
     respath
   }
 vhconnect: \ •dst pa pb .>
-  { 
+  {
     respath: pa--( pa.x, pb.y )--pb
     •dst << @width:@connectionlw | [@connectpainter respath]
     respath
@@ -176,7 +176,7 @@ blconnect: \ •dst pica picb .> [vhconnect •dst [bottompoint pica 1 1] [leftp
 brconnect: \ •dst pica picb .> [vhconnect •dst [bottompoint pica 1 1] [rightpoint picb 1 1]]
 
 connect: \ •dst pica picb .>
-{ 
+{
   bba: [bbox pica]
   bbb: [bbox picb]
   rxa: 0.5 * ( [xmax bba] - [xmin bba] )

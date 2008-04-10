@@ -70,6 +70,22 @@ fun: \ a .>
 |** }
 
 
+/** The following would also be illegal, since the procedure must be applied in
+ ** an environment being the same or a child to the procedure's environment.
+ ** However, while the illegal situation in the program above can always be detected
+ ** during the analysis pass, the problem here is basically something which needs to
+ **	be detected runtime.  Hence, just defining badFun may leave the error undetected
+ ** (although this situation would actually be quite easy to recognize during the
+ ** analysis pass).
+ **/
+|** globalProc: \ msg .> ! { •stdout << msg << `¢n´ }
+|** badFun: \ a .>
+|** {
+|**   [!globalProc a]
+|** 	a + ` so bad!´
+|** }
+|** •stdout << [badFun `I'm bad!´] << `¢n´
+
 /** States may also be passed to functions.  Functions that take states as arguments are like
  ** macros in that their evaluation cannot be delayed.  However, since the states being modified
  ** are explicitly passed to the function, the code is much easier to understand than code that

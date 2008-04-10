@@ -1224,6 +1224,12 @@ Lang::Function::isProcedural( ) const
 	return false;
 }
 
+bool
+Lang::Function::inScope( Kernel::PassedEnv env ) const
+{
+	return true;
+}
+
 void
 Lang::Function::call( Kernel::EvalState * evalState, const Kernel::ValueRef & arg1, const Ast::SourceLocation & callLoc ) const
 {
@@ -1613,6 +1619,13 @@ bool
 Lang::UserFunction::isProcedural( ) const
 {
 	return ( functionMode_ & Ast::FUNCTION_PROCEDURAL ) != 0;
+}
+
+bool
+Lang::UserFunction::inScope( Kernel::PassedEnv env ) const
+{
+	return ! isProcedural( )
+		|| env_->isProceduralParentOf( env );
 }
 
 void
