@@ -9,6 +9,7 @@ all-parts:
 	cd types; make
 	cd state-types; make
 	cd tutorial; make
+	cd extensions; make
 	cd index; make
 
 SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE)
@@ -29,7 +30,7 @@ else
 SAXON=java -jar $(JAR2)
 endif
 
-build/%.xml: %.sxml build/%.depend $(SSI)
+build/%.xml: %.sxml build/%.depend ../formats/html.xsl $(SSI)
 	cat $< | $(SSI) $(SSIFLAGS) > $@
 
 .PHONY: clean
