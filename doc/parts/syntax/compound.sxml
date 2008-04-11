@@ -192,7 +192,7 @@
 	</syntax-table>
 </p>
 
-<p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.</p>
+<p>The semantic difference between a procedure and a function is that the body expression of a procedure have access to states residing outside the body.  As a consequence, there are limitations on where a procedure may be applied, see <syntax name="proc-call" />.</p>
 
 <p>A function with a sink can take any number of arguments, and arguments by any name.  Everything that does not match the list of formals before the sink is placed in the sink, which is a <a id="syntax/compound/structures">structure</a>.</p>
 </body>

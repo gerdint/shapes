@@ -47,7 +47,7 @@
 	<syntax-table>
 		<tr> <td><syntax name="proc-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>[ ! <bnf>&lt;</bnf><named-type name="Procedure" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> ]</inline></td></tr>
 	</syntax-table>
-	Here, <syntax name="fun-expr" /> is simply an expression that evaluates to a procedure.  Recall that a procedure may access dynamic states, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  Besides this difference, the semantics are the same as that of a function application.
+	Recall that a procedure may access states outside its body, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  A procedure call is <em>out of scope</em> if the environment where the procedure was created cannot be reached from the environment of the call, without crossing any function boundaries.  Besides these difference, the semantics are the same as that of a function application.
 </p>
 </body>
 </section>
