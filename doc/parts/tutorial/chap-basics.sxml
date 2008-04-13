@@ -149,14 +149,14 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <section id="basics/path-painting">
 <title>Painting paths</title>
 <body>
-<p>You are already familiar with one of the path-painting functions, namely <binding name="stroke" />.  A similar function, <binding name="fill" />, will fill the path with paint instead of stroking it.  The following example also shows how to put an arrowhead on the path while stroking it.</p>
+<p>You are already familiar with one of the path-painting functions, namely <binding name="stroke" />.  A similar function, <binding name="fill" />, will fill the path with paint instead of stroking it, and <binding name="fillstroke" /> will do both.  The following example also shows how to put an arrowhead on the path while stroking it.</p>
 <example-with-output title="Path-painting" internal-id="example/path-painting">
 <image pdf="tutorial-path-painting_3.pdf" jpg="tutorial-path-painting_y_big.jpg" />
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-path-painting.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-path-painting.shape" -->]]>
 </source>
 <caption>
-	<p>Filling, stroking, and stroking a path with an arrow head.</p>
+	<p>Filling, stroking, filling-and-stroking, and stroking a path with an arrow head.</p>
 </caption>
 </example-with-output>
 <p>

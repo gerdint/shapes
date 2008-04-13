@@ -1,0 +1,183 @@
+##needs circle
+##needs arrowheads
+##needs blockdraw_wfo
+
+##preamble \usepackage[squaren]{SIunits}
+
+pathStyle: @width: 1bp
+labelStyle: @width: 0.3bp & @stroking:[gray 0.5] & @dash:[dashpattern 1mm 1mm]
+labelHead: [MetaPostArrow ahLength:3mm ...]
+onPathMark: @nonstroking:RGB_RED | [fill [circle 1mm]]
+dirStyle: @width: 0.7bp
+dirHead: [MetaPostArrow ahLength:3mm ...]
+dirLen: 1cm
+sourceFont: @text_size:9bp & @text_font:FONT_COURIER
+
+path: @defaultunit:1%C | (0cm,0cm)--(2cm,2cm)>(^)--(^)<(5cm,~2cm)>(^)--(^)<(7cm,~2cm)
+
+•page << pathStyle | [stroke path]
+
+/**
+ ** Here, the slider s0 "slides" by distance and arctime to yield the sliders s1 and s2.
+ **/
+s0: [locate [path 1.2]]
+s1: [locate s0+4.7cm]
+s2: [locate s0+1]
+
+•stdout << `s0: ´ << [sprintf `spline time: %.3g´ s0.time] << `, ´ << [sprintf `arc time: %.3gcm´ s0.length/1cm] << `¢n´
+•stdout << `s1: ´ << [sprintf `spline time: %.3g´ s1.time] << `, ´ << [sprintf `arc time: %.3gcm´ s1.length/1cm] << `¢n´
+•stdout << `s2: ´ << [sprintf `spline time: %.3g´ s2.time] << `, ´ << [sprintf `arc time: %.3gcm´ s2.length/1cm] << `¢n´
+
+/**
+ ** Annotate s0
+ **/
+{
+	/**
+   ** Mark the point where the slider sits, and label it.
+   **/
+	•page << [shift s0.p] [] onPathMark
+	lblPoint: s0.p+(1cm,0.5cm)
+	•page << [putlabelRight sourceFont | ( newText << `s0.p´ ) lblPoint ~1]
+	•page << labelStyle | [stroke lblPoint--s0.p head:labelHead]
+
+	/**
+	 ** Show the tangent direction, <T>.
+	 **/
+	Tend: s0.p + dirLen*s0.T
+	•page << dirStyle | [stroke s0.p--Tend head:dirHead]
+	•page << [putlabelRight sourceFont | ( newText << `s0.T´ ) Tend 0]
+
+	/**
+	 ** Show the normal direction, <N>.  Note that it does not depend on curvature, but is always counter-clockwise from the tangent.
+	 **/
+	Nend: s0.p + dirLen*s0.N
+	•page << dirStyle | [stroke s0.p--Nend head:dirHead]
+	•page << [putlabelAbove sourceFont | ( newText << `s0.N´ ) Nend 0]
+
+	/**
+	 ** To show the inverse curvature, <ik>, we draw a circle with this radius, centered in the normal direction.
+	 ** Note that the sign of <ik> is defined such that the center of the circle is shifted <N> * <ik> from <p>,
+	 ** even though the direction of the normal s0.N does not depend on curvature (as it sometomes does in mathematics).
+	 **/
+	center: s0.p + s0.N * s0.ik
+	•page << labelStyle | [stroke [shift center] [] [circle s0.ik]]
+	      << labelStyle | [stroke s0.p--center head:labelHead]
+				<< [putlabelBelow sourceFont | ( newText << `s0.N * s0.ik´ ) center 0]
+}
+
+/**
+ ** Annotate s1
+ **/
+{
+	•page << [shift s1.p] [] onPathMark
+	lblPoint: s1.p+(~1cm,0.5cm)
+	•page << [putlabelLeft sourceFont | ( newText << `s1.p´ ) lblPoint ~1]
+	•page << labelStyle | [stroke lblPoint--s1.p head:labelHead]
+
+	Tend: s1.p + dirLen*s1.T
+	•page << dirStyle | [stroke s1.p--Tend head:dirHead]
+	•page << [putlabelBelow sourceFont | ( newText << `s1.T´ ) Tend 0]
+
+	Nend: s1.p + dirLen*s1.N
+	•page << dirStyle | [stroke s1.p--Nend head:dirHead]
+	•page << [putlabelAbove sourceFont | ( newText << `s1.N´ ) Nend 1]
+
+	center: s1.p + s1.N * s1.ik
+	•page << labelStyle | [stroke [shift center] [] [circle s1.ik]]
+	      << labelStyle | [stroke s1.p--center head:labelHead]
+				<< [putlabelAbove sourceFont | ( newText << `s1.N * s1.ik´ ) center 0]
+}
+
+/**
+ ** Annotate s2
+ **/
+{
+	•page << [shift s2.p] [] onPathMark
+	lblPoint: s2.p+(1cm,~0.5cm)
+	•page << [putlabelRight sourceFont | ( newText << `s2.p´ ) lblPoint ~1]
+	•page << labelStyle | [stroke lblPoint--s2.p head:labelHead]
+}
+
+
+/**
+ ** We now illustrate that the veolcity is not a geometric property, since it is not constant along a circle.
+ ** This also illustrates how the field <looped> can be used to traverse closed paths.  The field <past> serves
+ ** a similar purpose for open paths.
+ **/
+{
+	center: (13cm,0)
+  circ: [shift center] [] [circle 2cm]
+	•page << pathStyle | [stroke circ]
+	      << [[range '0 '3].foldl \ p e .> ( p & [[shift [circ e*1].p] onPathMark] ) null]
+	upAngle: \ d .>
+  {
+	  a: [angle d]
+    [if ~90° <= a and a <= 90°
+		  a
+			a + 180°]
+  }
+	helper: \ sl .>
+    [if (not sl.looped)
+      {
+			  pth: sl.p--(sl.p+sl.T*sl.v)
+				slMid: (pth.end - 1cm)
+			  [stroke pth head:dirHead]
+				&
+				[[shift pth.begin.p] [stroke pth.begin.N*2bp--pth.begin.N*~2bp]]
+				&
+				[[shift slMid.p+1mm*[dir [upAngle slMid.T]+90°]]*[rotate [upAngle slMid.T]] [centerat ( TeX [sprintf `$\unit{%.3g}{\centi\metre}$´ sl.v/1cm] ) (0,~1)]]
+				&
+				[helper sl+1.5cm]
+      }
+			null]
+  •page << dirStyle | [helper circ.begin]
+	•page << [shift center] [] [centerat (TeX `The velocity $v$´) (0,0)]
+
+	/** While we are working with a closed path, we also illustrate the <mod> field.  It is a slider at the same location, but with a spline time in the range
+	 ** zero to the duration of the path.
+	 **/
+  sLoop: [circ 5.5]
+	sMod: sLoop.mod
+  •stdout << `sLoop: ´ << [sprintf `spline time: %.3g´ sLoop.time] << `, ´ << [sprintf `arc time: %.3gcm´ sLoop.length/1cm] << `¢n´
+  •stdout << `sMod: ´ << [sprintf `spline time: %.3g´ sMod.time] << `, ´ << [sprintf `arc time: %.3gcm´ sMod.length/1cm] << `¢n´
+}
+
+
+/**
+ ** Finally, we show very briefly the difference between normal and reverse fields by comparing <T> and <rT> at a corner.
+ **/
+{
+  pth: @defaultunit:1%C | [[shift (18cm,0)] (0cm,0cm)>(^90°)--(2cm^170°)<(2cm,2cm)>(2cm^~45°)--(^90°)<(4cm,0cm)]
+	•page << pathStyle | [stroke pth]
+	s: [pth 1]
+
+  •page << [shift s.p] [] onPathMark
+  lblPoint: s.p+(0cm,1.5cm)
+  •page << [putlabelAbove sourceFont | ( newText << `s.p´ ) lblPoint 0]
+  •page << labelStyle | [stroke lblPoint--s.p head:labelHead]
+
+	{
+    /** First the forward versions of tangent and normal.
+		 **/
+	Tend: s.p + dirLen*s.T
+	•page << dirStyle | [stroke s.p--Tend head:dirHead]
+	•page << [putlabelBelow sourceFont | ( newText << `s.T´ ) Tend 0]
+
+	Nend: s.p + dirLen*s.N
+	•page << dirStyle | [stroke s.p--Nend head:dirHead]
+	•page << [putlabelAbove sourceFont | ( newText << `s.N´ ) Nend ~1]
+	}
+
+	{
+    /** Then the reverse versions.
+		 **/
+	Tend: s.p + dirLen*s.rT
+	•page << dirStyle | [stroke s.p--Tend head:dirHead]
+	•page << [putlabelAbove sourceFont | ( newText << `s.rT´ ) Tend 1]
+
+	Nend: s.p + dirLen*s.rN
+	•page << dirStyle | [stroke s.p--Nend head:dirHead]
+	•page << [putlabelBelow sourceFont | ( newText << `s.rN´ ) Nend 1]
+  }
+
+}

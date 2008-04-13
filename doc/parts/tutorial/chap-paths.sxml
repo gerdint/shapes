@@ -34,7 +34,21 @@
 
 <p>The function <binding extension="blockdraw_wfo" name="mspoint" /> (read it as <em>mediation-slide point</em>) is a convenient way to specify the arc time relative to the arc length of the path itself.</p>
 
-<p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.</p>
+<p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.</p>
+
+<example-with-output title="Sliders" internal-id="example/slider-use">
+<image pdf="tutorial-slider-use_3.pdf" jpg="tutorial-slider-use_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-slider-use.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/tutorial-slider-use.stdout" -->]]>
+</stdout>
+<caption>
+	<p>Sliders.  Given a slider, other sliders can be specified relative to the first one, either in terms of distance or in terms of spline time.  Then, there are many fields to access to get both geometric and representation-related information about the particular point along the path.  The right part of the picture shows that the velocity field <field name="v" /> varies along a circle, so this is an example of a non-geometric field.</p>
+	<p>Note that arrows indicating direction have been given an arbitrary length.</p>
+</caption>
+</example-with-output>
 
 </body>
 </section><!-- End of paths/sliders -->
