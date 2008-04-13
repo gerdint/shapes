@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <errno.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -60,7 +61,7 @@ Kernel::TeXLabelManager::settexJobName( const std::string & _texJobName )
 
 
 void
-Kernel::TeXLabelManager::announce( const std::string & str )
+Kernel::TeXLabelManager::announce( const std::string & str, const Ast::SourceLocation & loc )
 {
 	if( isAllBlank( str.c_str( ) ) )
 		{
@@ -69,13 +70,14 @@ Kernel::TeXLabelManager::announce( const std::string & str )
 
 	if( availableLabels.find( safeSourceHash( str ) ) == availableLabels.end( ) )
 		{
-			currentRequests.insert( str );
+			typedef typeof currentRequests RequestMapType;
+			currentRequests.insert( RequestMapType::value_type( str, RequestLocation( true, loc ) ) );
 		}
 }
 
 
 RefCountPtr< const Lang::Value >
-Kernel::TeXLabelManager::request( const std::string & str, Kernel::PassedDyn dyn )
+Kernel::TeXLabelManager::request( const std::string & str, const Ast::SourceLocation & loc, Kernel::PassedDyn dyn )
 {
 	if( isAllBlank( str.c_str( ) ) )
 		{
@@ -89,7 +91,8 @@ Kernel::TeXLabelManager::request( const std::string & str, Kernel::PassedDyn dyn
 		{
 			++jobNumber;
 			anyLabelMiss = true;
-			currentRequests.insert( str );
+			typedef typeof currentRequests RequestMapType;
+			currentRequests.insert( RequestMapType::value_type( str, RequestLocation( false, loc ) ) );
 			processRequests( );
 			string extendedName = stringWithJobNumber( texJobName ) + ".pdf";
 			RefCountPtr< ifstream > iFile = RefCountPtr< ifstream >( new ifstream( extendedName.c_str( ) ) );
@@ -107,6 +110,21 @@ Kernel::TeXLabelManager::request( const std::string & str, Kernel::PassedDyn dyn
 	return static_cast< RefCountPtr< const Lang::Geometric2D > >( i->second->cloneWithState( dyn->getGraphicsState( ) ) );
 }
 
+namespace Shapes
+{
+	namespace Kernel
+	{
+		typedef std::pair< std::string, Kernel::TeXLabelManager::RequestLocation > T;
+		class RequestsOrder : public std::binary_function< T, T, bool >
+		{
+		public:
+			result_type operator () ( const first_argument_type & x1, const second_argument_type & x2 )
+			{
+				return x1.first < x2.first;
+			}
+		};
+	}
+}
 
 void
 Kernel::TeXLabelManager::iterativeStartup( RefCountPtr< std::istream > labelsFile )
@@ -123,7 +141,7 @@ Kernel::TeXLabelManager::iterativeStartup( RefCountPtr< std::istream > labelsFil
 			T removeSet;
 			for( T::iterator i = currentRequests.begin( ); i != currentRequests.end( ); ++i )
 				{
-					if( availableLabels.find( safeSourceHash( *i ) ) != availableLabels.end( ) )
+					if( availableLabels.find( safeSourceHash( i->first ) ) != availableLabels.end( ) )
 						{
 							removeSet.insert( *i );
 						}
@@ -131,7 +149,8 @@ Kernel::TeXLabelManager::iterativeStartup( RefCountPtr< std::istream > labelsFil
 			T tmp;
 			set_difference( currentRequests.begin( ), currentRequests.end( ),
 											removeSet.begin( ), removeSet.end( ),
-											insert_iterator< T >( tmp, tmp.begin( ) ) );
+											insert_iterator< T >( tmp, tmp.begin( ) ),
+											Kernel::RequestsOrder( ) );
 			currentRequests = tmp;
 		}
 	catch( const Exceptions::TeXSetupHasChanged & ball )
@@ -190,7 +209,8 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 			 i != allRequests.end( );
 			 ++i )
 		{
-			currentRequests.insert( *i );
+			typedef typeof currentRequests RequestMapType;
+			currentRequests.insert( RequestMapType::value_type( *i, RequestLocation( true, Ast::THE_UNKNOWN_LOCATION ) ) );
 		}
 	jobNumber = -1;
 	processRequests( );
@@ -222,6 +242,25 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 	}
 }
 
+namespace Shapes
+{
+	namespace Kernel
+	{
+		template< class T >
+		class ClearOnExit
+		{
+			T * container_;
+		public:
+			ClearOnExit( T * container )
+				: container_( container )
+			{	}
+			~ClearOnExit( )
+			{
+				container_->clear( );
+			}
+		};
+	}
+}
 
 void
 Kernel::TeXLabelManager::processRequests( )
@@ -239,15 +278,19 @@ Kernel::TeXLabelManager::processRequests( )
 		}
 
 	texFile << setupCode ;
-	texFile << "\\btexetexthing{" << "Shapes setup info" << "}{" << safeSourceHash( setupCode ) << "}" << endl ;
+	texFile << "\\btexetexthing{" << "Shapes setup info" << "}{" << safeSourceHash( setupCode ) << "}{-1}" << endl ;
 
-	for( std::set< std::string >::const_iterator i = currentRequests.begin( );
-			 i != currentRequests.end( );
-			 ++i )
-		{
-			texFile << "\\btexetexthing{" << *i << "}{" << safeSourceHash( *i ) << "}" << endl ;
-		}
-	currentRequests.clear( );
+	{
+		size_t labelIndex = 0;
+		typedef typeof currentRequests RequestMapType;
+		for( RequestMapType::const_iterator i = currentRequests.begin( );
+				 i != currentRequests.end( );
+				 ++i, ++labelIndex )
+			{
+				texFile << "\\btexetexthing{" << i->first << "}{" << safeSourceHash( i->first ) << "}{" << labelIndex << "}" << endl ;
+			}
+	}
+	ClearOnExit< typeof currentRequests > autoClear( & currentRequests );
 
 	texFile << "\\end{document}" << endl ;
 
@@ -296,7 +339,23 @@ Kernel::TeXLabelManager::processRequests( )
 						}
 					extendedName = extendedName.substr( lastSlashPos + 1 );
 				}
-			execlp( "pdflatex", "pdflatex", "-interaction", Interaction::pdfLaTeXInteraction, extendedName.c_str( ), static_cast< const char * >( 0 ) );
+			if( Interaction::pdfLaTeXInteractionTo_stderr )
+				{
+					dup2( 2, 1 );
+				}
+			else
+				{
+					std::string stdout_filename = ( extendedName + ".stdout" );
+					int stdout_file = open( stdout_filename.c_str( ), O_WRONLY | O_CREAT,
+																	S_IRUSR | S_IWUSR );
+					if( stdout_file == -1 )
+						{
+							throw Exceptions::ExternalError( strrefdup( "Failed to open file for what pdfLaTeX writes to stdout: " + stdout_filename ) );
+						}
+					dup2( stdout_file, 1 );
+					close( stdout_file );
+				}
+			execlp( "pdflatex", "pdflatex", "-interaction", "nonstopmode", extendedName.c_str( ), static_cast< const char * >( 0 ) );
 			if( errno != 0 )
 				{
 					ostringstream oss;
@@ -330,9 +389,18 @@ Kernel::TeXLabelManager::processRequests( )
 				{
 					if( WEXITSTATUS( status ) != 0 )
 						{
-							ostringstream oss;
-							oss << "pdfLaTeX returned with error code " << WEXITSTATUS( status ) << ".	Try running the pdfLaTeX job (available via the --which-texjob option) separately to find out more about the error." ;
-							throw Exceptions::TeXLabelError( strrefdup( oss ) );
+							if( Interaction::pdfLaTeXInteractionTo_stderr )
+								{
+									throw Exceptions::TeXLabelError( "(--tex-debug)", strrefdup( "The output from pdfLaTeX was written to stderr." ), strrefdup( "" ), Ast::THE_UNKNOWN_LOCATION );
+								}
+
+							std::string stdoutFilename = stringWithJobNumber( texJobName ) + ".stdout";
+							std::ifstream stdoutFile( stdoutFilename.c_str( ) );
+							if( ! stdoutFile.good( ) )
+								{
+									throw Exceptions::InternalError( strrefdup( "Failed to open the file where pdfLaTeX's output to stdout should have been saved: " + stdoutFilename ) );
+								}
+							parseTeXErrors( stdoutFile );
 						}
 					break;
 				}
@@ -482,7 +550,11 @@ Kernel::TeXLabelManager::compileSetupCode( )
 			res << "\\usepackage[utf8]{inputenc}" << endl ;
 		}
 	res << preamble.str( ) ;
-	res << "\\newcommand{\\btexetexthing}[2]{%" << endl ;
+	res << "\\newcounter{btexetexdepth}" << endl ;
+	res << "\\newcommand{\\btexetexthing}[3]{%" << endl ;
+	res << "  \\message{[SHAPES LABEL: #3]}" << endl ;
+	res << "  \\if \\thebtexetexdepth 1 \\ensuremath{$_$} \\fi" << endl ;
+	res << "  \\setcounter{btexetexdepth}{1}" << endl ;
 	res << "	\\immediate\\pdfobj stream {#2}" << endl ;
 	res << "	\\setbox0 = \\hbox{#1}%" << endl ;
 	res << "	\\pdfxform" << endl ;
@@ -490,6 +562,7 @@ Kernel::TeXLabelManager::compileSetupCode( )
 	res << "		resources{ }" << endl ;
 	res << "		0" << endl ;
 	res << "	\\shipout\\hbox{\\pdfrefxform\\pdflastxform}" << endl ;
+	res << "  \\setcounter{btexetexdepth}{0}" << endl ;
 	res << "}" << endl ;
 
 	res << "\\begin{document}" << endl ;
@@ -510,4 +583,105 @@ Kernel::TeXLabelManager::isAllBlank( const char * str )
 				}
 		}
 	return true;
+}
+
+void
+Kernel::TeXLabelManager::parseTeXErrors( std::istream & interaction )
+{
+	int lastLabel = -2;
+	const char KEY[] = "[SHAPES LABEL: ";
+	size_t KEY_LEN = strlen( KEY );
+	std::string line;
+	for( std::getline( interaction, line ); ! interaction.eof( ); std::getline( interaction, line ) )
+		{
+			if( line.compare( 0, 1, "!" ) == 0 )
+				{
+					line = line.substr( 2 );
+					goto found;
+				}
+			if( line.compare( 0, KEY_LEN, KEY ) == 0 )
+				{
+					char * endp;
+					lastLabel = strtol( line.c_str( ) + KEY_LEN, & endp, 10 );
+					if( *endp != ']' )
+						{
+							throw Exceptions::InternalError( strrefdup( "Failed to scan the label number in: " + line ) );
+						}
+				}
+		}
+	throw Exceptions::InternalError( "Failed to find an error message in the output from the failing call to pdfLaTeX." );
+
+ found:
+	std::ostringstream message;
+	{
+		std::string tmp;
+		size_t lineSize = 0;
+		for( std::getline( interaction, tmp ); ! interaction.eof( ); std::getline( interaction, tmp ) )
+			{
+				if( lineSize > 0 )
+					{
+						message << tmp.substr( lineSize ) << std::endl ;
+						break;
+					}
+				if( tmp.compare( 0, 1, "!" ) == 0 )
+					{
+						break;
+					}
+				if( tmp.compare( 0, KEY_LEN, KEY ) == 0 )
+					{
+						break;
+					}
+				if( tmp.compare( 0, 2, "l." ) == 0 )
+					{
+					char * endp;
+					//					int dummyLineNo =
+					strtol( tmp.c_str( ) + 2, & endp, 10 );
+					if( *endp != ' ' )
+						{
+							throw Exceptions::InternalError( "Expected a space after the line number specification in the output frmo pdfLaTeX." );
+						}
+					++endp;
+					lineSize = endp - tmp.c_str( );
+					message << endp << std::endl ;
+					continue;
+					}
+				message << tmp << std::endl ;
+			}
+	}
+
+	if( lastLabel == -2 )
+		{
+			throw Exceptions::StaticTeXLabelError( "preamble", strrefdup( line ), strrefdup( message ), Ast::THE_UNKNOWN_LOCATION );
+		}
+	if( lastLabel == -1 )
+		{
+			throw Exceptions::InternalError( strrefdup( "The TeX setup information caused an error: " + line ) );
+		}
+	{
+		int labelIndex = 0;
+		typedef typeof currentRequests RequestMapType;
+		for( RequestMapType::const_iterator i = currentRequests.begin( );
+				 i != currentRequests.end( );
+				 ++i, ++labelIndex )
+			{
+				if( labelIndex == lastLabel )
+					{
+						if( i->second.literal_ )
+							{
+								throw Exceptions::StaticTeXLabelError( "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
+							}
+						else
+							{
+								throw Exceptions::TeXLabelError( "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
+							}
+					}
+			}
+		{
+			/* Reaching here is an error.
+			 */
+			std::ostringstream msg;
+			msg << "The label index " << lastLabel << " was out of the range (" << currentRequests.size( ) << ")" ;
+			throw Exceptions::InternalError( strrefdup( msg ) );
+		}
+	}
 }

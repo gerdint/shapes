@@ -133,7 +133,7 @@ main( int argc, char ** argv )
 				}
 			else if( strcmp( *argv, "--tex-debug" ) == 0 )
 				{
-					Interaction::pdfLaTeXInteraction = "nonstopmode";
+					Interaction::pdfLaTeXInteractionTo_stderr = true;
 					argv += 1;
 					argc -= 1;
 				}
@@ -1204,6 +1204,13 @@ main( int argc, char ** argv )
 							Ast::Expression * expr = evalState.expr_;
 							expr->eval( & evalState );
 						}
+				}
+			catch( const Exceptions::StaticInconsistency & ball )
+				{
+					std::cout.flush( );
+					std::cerr << ball.loc( ) << ": " ;
+					ball.display( std::cerr );
+					abortProcedure( & oFile, outputName );
 				}
 			catch( Exceptions::Exception & ball )
 				{

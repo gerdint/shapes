@@ -32,7 +32,7 @@ namespace Shapes
 		extern bool fontMetricMessages;
 		extern bool fontMetricDebug;
 		extern bool characterColumnInBytes;
-		extern const char * pdfLaTeXInteraction;
+		extern bool pdfLaTeXInteractionTo_stderr;
 
 	}
 

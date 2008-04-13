@@ -59,7 +59,7 @@ double Interaction::displayUnitFactor = -1;
 bool Interaction::fontMetricMessages = false;
 bool Interaction::fontMetricDebug = false;
 bool Interaction::characterColumnInBytes = false;
-const char * Interaction::pdfLaTeXInteraction = "batchmode";
+bool Interaction::pdfLaTeXInteractionTo_stderr = false;
 
 RefCountPtr< const Lang::GroupNull2D > Lang::THE_NULL2D( new Lang::GroupNull2D( ) );
 RefCountPtr< const Lang::GroupNull3D > Lang::THE_NULL3D( new Lang::GroupNull3D( ) );

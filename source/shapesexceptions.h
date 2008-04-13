@@ -770,10 +770,24 @@ namespace Shapes
 
 		class TeXLabelError : public RuntimeError
 		{
-			RefCountPtr< const char > msg;
+			const Ast::SourceLocation strLoc_;
+			const char * region_;
+			RefCountPtr< const char > summary_;
+			RefCountPtr< const char > details_;
 		public:
-			TeXLabelError( RefCountPtr< const char > _msg );
+			TeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & strLoc );
 			virtual ~TeXLabelError( );
+			virtual void display( std::ostream & os ) const;
+		};
+
+		class StaticTeXLabelError : public StaticInconsistency
+		{
+			const char * region_;
+			RefCountPtr< const char > summary_;
+			RefCountPtr< const char > details_;
+		public:
+			StaticTeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & strLoc );
+			virtual ~StaticTeXLabelError( );
 			virtual void display( std::ostream & os ) const;
 		};
 

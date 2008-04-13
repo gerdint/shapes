@@ -32,7 +32,7 @@ namespace Shapes
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::theTeXLabelManager.request( std::string( arg->val_.getPtr( ) ), evalState->dyn_ ),
+				cont->takeValue( Kernel::theTeXLabelManager.request( std::string( arg->val_.getPtr( ) ), args.getLoc( 0 ), evalState->dyn_ ),
 												 evalState );
 			}
 		};

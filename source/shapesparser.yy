@@ -860,7 +860,7 @@ ExprExceptConstStrings
 }
 | '(' T_tex T_string ')'
 {
-	Kernel::theTeXLabelManager.announce( string( $3 ) );
+	Kernel::theTeXLabelManager.announce( string( $3 ), @3 );
 	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
 	args->orderedExprs_->push_back( new Ast::Constant( @3, new Lang::String( $3, false ) ) );
 	$$ = new Ast::CallExpr( @$,

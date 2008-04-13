@@ -127,7 +127,7 @@ s2: [locate s0+1]
 				&
 				[[shift slMid.p+1mm*[dir [upAngle slMid.T]+90°]]*[rotate [upAngle slMid.T]] [centerat ( TeX [sprintf `$\unit{%.3g}{\centi\metre}$´ sl.v/1cm] ) (0,~1)]]
 				&
-				[helper sl+1.5cm]
+				[helper sl+1.6cm]
       }
 			null]
   •page << dirStyle | [helper circ.begin]
@@ -141,7 +141,6 @@ s2: [locate s0+1]
   •stdout << `sLoop: ´ << [sprintf `spline time: %.3g´ sLoop.time] << `, ´ << [sprintf `arc time: %.3gcm´ sLoop.length/1cm] << `¢n´
   •stdout << `sMod: ´ << [sprintf `spline time: %.3g´ sMod.time] << `, ´ << [sprintf `arc time: %.3gcm´ sMod.length/1cm] << `¢n´
 }
-
 
 /**
  ** Finally, we show very briefly the difference between normal and reverse fields by comparing <T> and <rT> at a corner.

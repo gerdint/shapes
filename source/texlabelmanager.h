@@ -20,8 +20,19 @@ namespace Shapes
 
 	class TeXLabelManager
 	{
+	public:
+		class RequestLocation
+		{
+		public:
+			bool literal_;
+			Ast::SourceLocation loc_;
+			RequestLocation( bool literal, const Ast::SourceLocation & loc )
+				: literal_( literal ), loc_( loc )
+			{ }
+		};
+	private:
 		std::set< std::string > allRequests;
-		std::set< std::string > currentRequests;
+		std::map< std::string, RequestLocation > currentRequests;
 
 	public:
 		typedef std::map< std::string, RefCountPtr< const Lang::XObject > > MapType;
@@ -52,8 +63,8 @@ namespace Shapes
 
 		void settexJobName( const std::string & _texJobName );
 
-		void announce( const std::string & str );
-		RefCountPtr< const Lang::Value > request( const std::string & str, Kernel::PassedDyn dyn );
+		void announce( const std::string & str, const Ast::SourceLocation & loc );
+		RefCountPtr< const Lang::Value > request( const std::string & str, const Ast::SourceLocation & loc, Kernel::PassedDyn dyn );
 
 		void iterativeStartup( RefCountPtr< std::istream > labelsFile );
 		void iterativeFinish( const std::string & labelDBFilename );
@@ -72,6 +83,7 @@ namespace Shapes
 		static std::string safeSourceHash( const std::string & str );
 		void compileSetupCode( );
 		static bool isAllBlank( const char * str );
+		void parseTeXErrors( std::istream & interaction );
 	};
 
 	}

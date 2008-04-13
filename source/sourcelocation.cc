@@ -13,9 +13,10 @@
 
 using namespace Shapes;
 
+const char * Ast::SourceLocation::UNKNOWN_FILENAME = "*uninitialized*";
 
 Ast::SourceLocation::SourceLocation( )
-	: filename( "*uninitialized*" ), firstLine( 1 ), firstColumn( 0 ), lastLine( 1 ), lastColumn( 0 )
+	: filename( SourceLocation::UNKNOWN_FILENAME ), firstLine( 1 ), firstColumn( 0 ), lastLine( 1 ), lastColumn( 0 )
 { }
 
 Ast::SourceLocation::SourceLocation( const char * _filename )
@@ -29,6 +30,12 @@ Ast::SourceLocation::SourceLocation( const Ast::SourceLocation & orig )
 Ast::SourceLocation::SourceLocation( const Ast::SourceLocation & firstLoc, const Ast::SourceLocation & lastLoc )
 	: filename( firstLoc.filename ), firstLine( firstLoc.firstLine ), firstColumn( firstLoc.firstColumn ), lastLine( lastLoc.lastLine ), lastColumn( lastLoc.lastColumn )
 { }
+
+bool
+Ast::SourceLocation::isUnknown( ) const
+{
+	return filename == SourceLocation::UNKNOWN_FILENAME;
+}
 
 bool
 Ast::SourceLocation::contains( const Ast::SourceLocation & loc2 ) const

@@ -10,6 +10,7 @@ namespace Shapes
 	{
 		class SourceLocation
 		{
+			static const char * UNKNOWN_FILENAME;
 		public:
 			const char * filename;
 			size_t firstLine;
@@ -21,6 +22,7 @@ namespace Shapes
 			SourceLocation( const char * _filename );
 			SourceLocation( const SourceLocation & orig );
 			SourceLocation( const SourceLocation & firstLoc, const Ast::SourceLocation & lastLoc );
+			bool isUnknown( ) const;
 			bool contains( const SourceLocation & loc2 ) const;
 			friend std::ostream & operator << ( std::ostream & os, const SourceLocation & self );
 

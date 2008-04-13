@@ -1251,8 +1251,8 @@ Exceptions::CoreRequirement::display( std::ostream & os ) const
 }
 
 
-Exceptions::TeXLabelError::TeXLabelError( RefCountPtr< const char > _msg )
-	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), msg( _msg )
+Exceptions::TeXLabelError::TeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
+	: Exceptions::RuntimeError( loc ), strLoc_( loc ), region_( region ), summary_( summary ), details_( details )
 { }
 
 Exceptions::TeXLabelError::~TeXLabelError( )
@@ -1261,7 +1261,33 @@ Exceptions::TeXLabelError::~TeXLabelError( )
 void
 Exceptions::TeXLabelError::display( ostream & os ) const
 {
-	os << "TeX-related error: " << msg << std::endl ;
+	os << "TeX error in " << region_ ;
+	if( ! strLoc_.isUnknown( ) )
+		{
+			os << " at " << strLoc_ ;
+		}
+	os << ": " << summary_ << std::endl ;
+	os << "===( Additional output )===" << std::endl
+		 << details_
+		 << "===========================" << std::endl ;
+}
+
+
+Exceptions::StaticTeXLabelError::StaticTeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
+	: Exceptions::StaticInconsistency( loc ), region_( region ), summary_( summary ), details_( details )
+{ }
+
+Exceptions::StaticTeXLabelError::~StaticTeXLabelError( )
+{ }
+
+void
+Exceptions::StaticTeXLabelError::display( ostream & os ) const
+{
+	os << "TeX error in " << region_ ;
+	os << ": \"" << summary_ << "\"" << std::endl ;
+	os << "===( Additional output )===" << std::endl
+		 << details_
+		 << "===========================" << std::endl ;
 }
 
 
