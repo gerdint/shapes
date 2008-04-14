@@ -8,6 +8,17 @@ using namespace Shapes;
 using namespace std;
 
 
+const std::string Exceptions::additionalLinesPrefix = "| ";
+
+namespace Shapes
+{
+	namespace Exceptions
+	{
+		void prefixEachLine( const std::string & prefix, std::istream & src, std::ostream & dst );
+		void prefixEachLine( const std::string & prefix, const RefCountPtr< const char > & src, std::ostream & dst );
+	}
+}
+
 Exceptions::NotImplemented::NotImplemented( const char * _functionality )
 	: functionality( _functionality )
 { }
@@ -1267,9 +1278,7 @@ Exceptions::TeXLabelError::display( ostream & os ) const
 			os << " at " << strLoc_ ;
 		}
 	os << ": " << summary_ << std::endl ;
-	os << "===( Additional output )===" << std::endl
-		 << details_
-		 << "===========================" << std::endl ;
+	Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
 }
 
 
@@ -1285,9 +1294,7 @@ Exceptions::StaticTeXLabelError::display( ostream & os ) const
 {
 	os << "TeX error in " << region_ ;
 	os << ": \"" << summary_ << "\"" << std::endl ;
-	os << "===( Additional output )===" << std::endl
-		 << details_
-		 << "===========================" << std::endl ;
+	Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
 }
 
 
@@ -1650,4 +1657,22 @@ void
 Exceptions::UndefinedCrossRef::display( std::ostream & os ) const
 {
 	os << "The cross reference \"" << ref_ << "\" is not defined." << std::endl ;
+}
+
+
+void
+Exceptions::prefixEachLine( const std::string & prefix, std::istream & src, std::ostream & dst )
+{
+	std::string line;
+	for( std::getline( src, line ); ! src.eof( ); std::getline( src, line ) )
+		{
+			dst << prefix << line << std::endl ;
+		}
+}
+
+void
+Exceptions::prefixEachLine( const std::string & prefix, const RefCountPtr< const char > & src, std::ostream & dst )
+{
+	std::istringstream is( src.getPtr( ) );
+	Exceptions::prefixEachLine( prefix, is, dst );
 }

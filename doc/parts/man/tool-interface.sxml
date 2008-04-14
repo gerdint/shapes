@@ -58,15 +58,15 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
-						<description>
-							<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
-						</description>
-					</command-line-item>
-					<command-line-item>
 						<parameters flag="--outdir"> <replacable>dir</replacable></parameters>
 						<description>
 							<p>Specify directory for products.  Defaults to current working directory.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
+						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
+						<description>
+							<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -392,7 +392,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
  					<command-line-item>
 						<parameters flag="--which-out"/>
 						<description>
-							<p>Request the input source.</p>
+							<p>Request the name of the output file.</p>
 						</description>
 					</command-line-item>
  					<command-line-item>

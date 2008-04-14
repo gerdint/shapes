@@ -1,0 +1,52 @@
+##needs circle
+##needs arrowheads
+##needs blockdraw_wfo
+##needs golden
+
+r1: 25mm
+
+theta1: 12°
+
+rm1: 1.2mm
+
+armStyle: @width:1bp
+angleStyle: @width:0.3bp
+helperStyle: angleStyle & @dash:[dashpattern 2bp 2bp]
+forceStyle: @width:0.6bp
+
+angleHead: [MetaPostArrow ahLength:1.5mm ...]
+forceHead: [MetaPostArrow ahLength:2.5mm ...]
+
+/**
+ ** Of course, the hinge is at the origin.
+ **/
+hExtend: 0.9
+
+z0: (0mm,0mm) |**  Hinge
+z1: z0 + r1*[dir ~90°+theta1]  |** Center of first mass
+z1r: z0 + hExtend*r1*[dir ~90°]  |** Reference position of first mass
+
+|** Draw the ceiling
+•page << @width:1mm | [[shift (0,0.5*@width)] [stroke (~1cm,0)--(1cm,0)]]
+
+
+
+•page << armStyle | [stroke z0--z1]
+•page << helperStyle | [stroke z0--z1r]
+			<< armStyle & @nonstroking:GRAY_WHITE | [fillstroke [shift z1] [] [circle rm1]]
+
+{
+  p: z1--(+(0,~10mm))
+	•page << forceStyle | [stroke p head:angleHead]
+	•page << [putlabelLeft (TeX `$m g$´) p.end.p ~1]
+}
+
+  @abovelabelmargin:2mm
+& @leftrightlabelmargin:1.5mm
+|
+{
+  p: [shift (~1.5cm,~r1-5mm)] [] (0cm,1cm)--(0cm,0cm)--(1cm,0cm)
+	•page << forceStyle | [stroke p head:forceHead tail:forceHead]
+	•page << [putlabelAbove (TeX `$z_{1}$´) p.end.p 1]
+	•page << [putlabelRight (TeX `$z_{2}$´) p.begin.p 1]
+}

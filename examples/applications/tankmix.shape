@@ -22,12 +22,12 @@ inflow: \ •dst x1 x2 idx .>
   •dst << [stroke (x1,y1+@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1+@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2+d*@pipe_width/2,y1-@pipe_width/2-r)--(x2+d*@pipe_width/2,y2)]
   •dst << [stroke (x1,y1-@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1-@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2-d*@pipe_width/2,y1-@pipe_width/2-r)--(x2-d*@pipe_width/2,y2)]
   p: (x2-d*(r+7mm),y1)--(x2-d*(r+2mm),y1)
-  •dst << [stroke p head:metaPostArrow]
-  •dst << [shift [p 0.5].p+(0mm,@pipe_width/2+2mm)] [] [centerx [teX [sprintf `$q_{%g}$´ idx]]]
-  •dst << [shift (x1+d*3mm,y1-@pipe_width/2-2mm)] [] [centerat [teX `Inflow´] (0,1)]
+  •dst << [stroke p head:MetaPostArrow]
+  •dst << [shift [p 0.5].p+(0mm,@pipe_width/2+2mm)] [] [centerx (TeX [sprintf `$q_{%g}$´ idx])]
+  •dst << [shift (x1+d*3mm,y1-@pipe_width/2-2mm)] [] [centerat (TeX `Inflow´) (0,1)]
   v: [shift ([mediate 0.4 x1 x2],y1)]*[rotate 90°] [] [valve]
   •dst << v
-  •dst << [shift ([mediate 0.4 x1 x2]+0.5cm,[discrete_maximizer [bbox v] (0,1)].p.y)] [] [teX [sprintf `$u_{%g}$´ idx]]
+  •dst << [shift ([mediate 0.4 x1 x2]+0.5cm,[discrete_maximizer [bbox v] (0,1)].p.y)] [] (TeX [sprintf `$u_{%g}$´ idx])
 }
 
 [inflow •page ~2.5cm tank_W/3 1]
@@ -38,16 +38,16 @@ inflow: \ •dst x1 x2 idx .>
 •page << [stroke (0cm,tank_H)--(0cm,0cm)--(tank_W,0cm)--(tank_W,tank_H)]
 {
  p: (tank_W+5mm,0cm)--(tank_W+5mm,tank_L)
- •page << [stroke p head:metaPostArrow]
- •page << [shift [p 0.5].p+(1mm,0mm)] [] [teX `$h$´]
+ •page << [stroke p head:MetaPostArrow]
+ •page << [shift [p 0.5].p+(1mm,0mm)] [] (TeX `$h$´)
 }
-•page << @nonstroking:GRAY_WHITE | [[shift (tank_W/2, tank_L/2)] [centerlabel [teX `Tank´]]]
+•page << @nonstroking:GRAY_WHITE | [[shift (tank_W/2, tank_L/2)] [centerlabel (TeX `Tank´)]]
 •page << [stroke (tank_W/2,0cm)--(tank_W/2,~1.5cm)]
 •page << [stroke (tank_W/2+@pipe_width,0cm)--(tank_W/2+@pipe_width,~1.5cm)]
 {
  p: (tank_W/2+@pipe_width/2,~3mm)--(tank_W/2+@pipe_width/2,~13mm)
- •page << [stroke p head:metaPostArrow]
- •page << [shift [p 0.5].p + (@pipe_width/2+1mm,0mm)] [] [teX `$q$´]
+ •page << [stroke p head:MetaPostArrow]
+ •page << [shift [p 0.5].p + (@pipe_width/2+1mm,0mm)] [] (TeX `$q$´)
 }
 
 } |** end of book preferences

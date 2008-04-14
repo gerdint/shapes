@@ -514,7 +514,7 @@ Kernel::TeXLabelManager::safeSourceHash( const std::string & str )
 					oss << *src ;
 					continue;
 				}
-			sprintf( tmp, "%02x", *src );
+			sprintf( tmp, "%02x", *reinterpret_cast< const unsigned char * >( src ) );
 			oss << "Ex" << tmp ;
 		}
 	return oss.str( );

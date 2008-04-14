@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in `ls *.shape`; do
+  echo Fixing $i
+  cat extmp | ex -sC $i
+done

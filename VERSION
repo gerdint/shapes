@@ -9,10 +9,13 @@ FILL IN DATE WHEN TAGGING
 
 Lots of new documentation, including substantial work on structure, crosslinks, and formatting.  So far the HTML format has been in focus.
 
+Procedure application is limited to certain scoping rules to ensure that the function abstraction is not broken.
+
+Improved output to help finding errors i TeX label strings.
+
 New features of all kinds, ranging from additions to the scanner to new state types and functions.
 
 Also new application examples in 3D, code optimizations, and bugfixes.
-
 
 
 ====( 0.3.5 )====

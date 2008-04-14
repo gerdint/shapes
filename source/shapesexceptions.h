@@ -23,6 +23,7 @@ namespace Shapes
 {
 	namespace Exceptions
 	{
+		extern const std::string additionalLinesPrefix;
 
 		class Exception
 		{
