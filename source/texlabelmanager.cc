@@ -4,6 +4,7 @@
 #include "simplepdfi.h"
 #include "shapesexceptions.h"
 #include "globals.h"
+#include "texscanner.h"
 
 #include <fstream>
 #include <sstream>
@@ -287,6 +288,7 @@ Kernel::TeXLabelManager::processRequests( )
 				 i != currentRequests.end( );
 				 ++i, ++labelIndex )
 			{
+				assertBalanced( i->first, i->second );
 				texFile << "\\btexetexthing{" << i->first << "}{" << safeSourceHash( i->first ) << "}{" << labelIndex << "}" << endl ;
 			}
 	}
@@ -391,7 +393,7 @@ Kernel::TeXLabelManager::processRequests( )
 						{
 							if( Interaction::pdfLaTeXInteractionTo_stderr )
 								{
-									throw Exceptions::TeXLabelError( "(--tex-debug)", strrefdup( "The output from pdfLaTeX was written to stderr." ), strrefdup( "" ), Ast::THE_UNKNOWN_LOCATION );
+									throw Exceptions::TeXLabelError( false, "(--tex-debug)", strrefdup( "The output from pdfLaTeX was written to stderr." ), RefCountPtr< const char >( NullPtr< const char >( ) ), Ast::THE_UNKNOWN_LOCATION );
 								}
 
 							std::string stdoutFilename = stringWithJobNumber( texJobName ) + ".stdout";
@@ -550,11 +552,8 @@ Kernel::TeXLabelManager::compileSetupCode( )
 			res << "\\usepackage[utf8]{inputenc}" << endl ;
 		}
 	res << preamble.str( ) ;
-	res << "\\newcounter{btexetexdepth}" << endl ;
 	res << "\\newcommand{\\btexetexthing}[3]{%" << endl ;
 	res << "  \\message{[SHAPES LABEL: #3]}" << endl ;
-	res << "  \\if \\thebtexetexdepth 1 \\ensuremath{$_$} \\fi" << endl ;
-	res << "  \\setcounter{btexetexdepth}{1}" << endl ;
 	res << "	\\immediate\\pdfobj stream {#2}" << endl ;
 	res << "	\\setbox0 = \\hbox{#1}%" << endl ;
 	res << "	\\pdfxform" << endl ;
@@ -562,7 +561,6 @@ Kernel::TeXLabelManager::compileSetupCode( )
 	res << "		resources{ }" << endl ;
 	res << "		0" << endl ;
 	res << "	\\shipout\\hbox{\\pdfrefxform\\pdflastxform}" << endl ;
-	res << "  \\setcounter{btexetexdepth}{0}" << endl ;
 	res << "}" << endl ;
 
 	res << "\\begin{document}" << endl ;
@@ -583,6 +581,27 @@ Kernel::TeXLabelManager::isAllBlank( const char * str )
 				}
 		}
 	return true;
+}
+
+void
+Kernel::TeXLabelManager::assertBalanced( const std::string & str, const Kernel::TeXLabelManager::RequestLocation & loc ) const
+{
+	static TeXScanner scanner;
+	try
+		{
+			scanner.check( str );
+		}
+	catch( RefCountPtr< const char > msg )
+		{
+			if( loc.literal_ )
+				{
+					throw Exceptions::StaticTeXLabelError( false, "label", msg, RefCountPtr< const char >( NullPtr< const char >( ) ), loc.loc_ );
+				}
+			else
+				{
+					throw Exceptions::TeXLabelError( false, "label", msg, RefCountPtr< const char >( NullPtr< const char >( ) ), loc.loc_ );
+				}
+		}
 }
 
 void
@@ -651,7 +670,7 @@ Kernel::TeXLabelManager::parseTeXErrors( std::istream & interaction )
 
 	if( lastLabel == -2 )
 		{
-			throw Exceptions::StaticTeXLabelError( "preamble", strrefdup( line ), strrefdup( message ), Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::StaticTeXLabelError( true, "preamble", strrefdup( line ), strrefdup( message ), Ast::THE_UNKNOWN_LOCATION );
 		}
 	if( lastLabel == -1 )
 		{
@@ -668,11 +687,11 @@ Kernel::TeXLabelManager::parseTeXErrors( std::istream & interaction )
 					{
 						if( i->second.literal_ )
 							{
-								throw Exceptions::StaticTeXLabelError( "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
+								throw Exceptions::StaticTeXLabelError( true, "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
 							}
 						else
 							{
-								throw Exceptions::TeXLabelError( "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
+								throw Exceptions::TeXLabelError( true, "label", strrefdup( line ), strrefdup( message ), i->second.loc_ );
 							}
 					}
 			}

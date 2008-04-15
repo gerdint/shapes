@@ -1262,8 +1262,8 @@ Exceptions::CoreRequirement::display( std::ostream & os ) const
 }
 
 
-Exceptions::TeXLabelError::TeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
-	: Exceptions::RuntimeError( loc ), strLoc_( loc ), region_( region ), summary_( summary ), details_( details )
+Exceptions::TeXLabelError::TeXLabelError( bool quoted, const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
+	: Exceptions::RuntimeError( loc ), strLoc_( loc ), quoted_( quoted ), region_( region ), summary_( summary ), details_( details )
 { }
 
 Exceptions::TeXLabelError::~TeXLabelError( )
@@ -1272,18 +1272,38 @@ Exceptions::TeXLabelError::~TeXLabelError( )
 void
 Exceptions::TeXLabelError::display( ostream & os ) const
 {
-	os << "TeX error in " << region_ ;
+	if( quoted_ )
+		{
+			os << "TeX error in " << region_ ;
+		}
+	else
+		{
+			os << "Error in TeX " << region_ ;
+		}
 	if( ! strLoc_.isUnknown( ) )
 		{
 			os << " at " << strLoc_ ;
 		}
-	os << ": " << summary_ << std::endl ;
-	Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
+	os << ": " ;
+	if( quoted_ )
+		{
+			os << "\"" ;
+		}
+	os << summary_ ;
+	if( quoted_ )
+		{
+			os << "\"" ;
+		}
+	os << std::endl ;
+	if( details_ != NullPtr< const char >( ) )
+		{
+			Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
+		}
 }
 
 
-Exceptions::StaticTeXLabelError::StaticTeXLabelError( const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
-	: Exceptions::StaticInconsistency( loc ), region_( region ), summary_( summary ), details_( details )
+Exceptions::StaticTeXLabelError::StaticTeXLabelError( bool quoted, const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & loc )
+	: Exceptions::StaticInconsistency( loc ), quoted_( quoted ), region_( region ), summary_( summary ), details_( details )
 { }
 
 Exceptions::StaticTeXLabelError::~StaticTeXLabelError( )
@@ -1292,9 +1312,29 @@ Exceptions::StaticTeXLabelError::~StaticTeXLabelError( )
 void
 Exceptions::StaticTeXLabelError::display( ostream & os ) const
 {
-	os << "TeX error in " << region_ ;
-	os << ": \"" << summary_ << "\"" << std::endl ;
-	Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
+	if( quoted_ )
+		{
+			os << "TeX error in " << region_ ;
+		}
+	else
+		{
+			os << "Error in TeX " << region_ ;
+		}
+	os << ": " ;
+	if( quoted_ )
+		{
+			os << "\"" ;
+		}
+	os << summary_ ;
+	if( quoted_ )
+		{
+			os << "\"" ;
+		}
+	os << std::endl ;
+	if( details_ != NullPtr< const char >( ) )
+		{
+			Exceptions::prefixEachLine( additionalLinesPrefix, details_, os );
+		}
 }
 
 

@@ -83,6 +83,7 @@ namespace Shapes
 		static std::string safeSourceHash( const std::string & str );
 		void compileSetupCode( );
 		static bool isAllBlank( const char * str );
+		void assertBalanced( const std::string & str, const RequestLocation & loc ) const;
 		void parseTeXErrors( std::istream & interaction );
 	};
 

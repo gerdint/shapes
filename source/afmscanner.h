@@ -9,6 +9,7 @@
 #	define yyFlexLexer afmFlexLexer
 #	include <FlexLexer.h>
 #endif
+
 class AfmScanner : public afmFlexLexer
 {
 	FontMetrics::BaseFont * fontMetricsDst_;
