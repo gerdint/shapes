@@ -129,6 +129,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </xsl:variable>
   <xsl:apply-templates select="//section[@id=$dstid]/title" />
 </xsl:template>
+<xsl:template match="a[@extension]">
+	<xsl:element name="a">
+		<xsl:attribute name="href">
+			<xsl:call-template name="extension-to-href">
+				<xsl:with-param name="name"><xsl:value-of select="@extension" /></xsl:with-param>
+			</xsl:call-template>
+			<xsl:if test="@id">
+				<xsl:text>#</xsl:text>
+				<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template>
+			</xsl:if>
+		</xsl:attribute>
+		<filename><xsl:value-of select="@extension" /></filename>
+	</xsl:element>
+</xsl:template>
 
 <xsl:template match='a[@method="google-lucky" and @query]'>
 	<xsl:element name="a">

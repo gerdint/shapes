@@ -34,7 +34,7 @@
 
 <p>The function <binding extension="blockdraw_wfo" name="mspoint" /> (read it as <em>mediation-slide point</em>) is a convenient way to specify the arc time relative to the arc length of the path itself.</p>
 
-<p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.</p>
+<p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.  Note that there are additional fields in <str-3D />, and that it is not obvious how to best extend the definitions from <str-2D /> to <str-3D />.</p>
 
 <example-with-output title="Sliders" internal-id="example/slider-use">
 <image pdf="tutorial-slider-use_3.pdf" jpg="tutorial-slider-use_y_big.jpg" />
@@ -52,5 +52,43 @@
 
 </body>
 </section><!-- End of paths/sliders -->
+
+<section id="paths/point-references">
+	<title>Point references</title>
+	<body>
+		<p>In this section, we shall describe the powerful ways of referring to points (one at a time) on paths.  Although most of these methods are defined and implemented in terms of optimization and that this may seem expensive from a computational point of view, one should keep in mind that precise computation of curve lengths (arc times) can be rather expensive too.  Hence, try to use the powerful abstractions presented here whenever you think they are the best match for your thinking, and resort only to less expensive alternatives when too lengthy computations are a fact.</p>
+
+	</body>
+</section><!-- End of paths/point-references -->
+
+<section id="paths/upsampling">
+	<title>Upsampling</title>
+	<body>
+		<p>There are operations on paths that despite a seemingly simple abstraction turn out very complicated to implement to a reasonable degree of accuracy.  The design choice of <str-Shapes /> was not to provide lousy implementations of these abstractions, but to provide simpler operations that can be implemented accurately and that will allow users to make their own approximations of the difficult abstractions.  Basically, this comes down to means for folding over the discrete spline points defining a path, and means for generating a sufficiently dense <em>sampling</em> of the path.  Currently, there are only means for <em>upsampling</em>, that is, to generate a representation that uses more points to define the same geometric path.  The opposite, <em>downsampling</em> may be added in the future, but right now it is not even clear how the operation should be defined abstractly (note that downsampling will require the original path to be approximated somehow).</p>
+		<p>In this section, we shall discuss the available methods for upsampling.</p>
+
+<example-with-output title="Upsampling" internal-id="example/upsampling">
+<image pdf="upsample_3.pdf" jpg="upsample_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/upsample.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/upsample.shape" -->]]>
+</source>
+<caption>
+	<p>Various ways of upsampling a path.</p>
+</caption>
+</example-with-output>
+
+<p>The final example in this section shows an application of upsampling.  The seemingly simple abstraction is to compute a path, following a given path at a certain distance.  Basically, one would like to be able to compute one of the boundaries of a stroke along the path, but it is easy to also imagine more interesting generalizations.  The idea is easy as long as the path has a radius of curvature being larger than the distance between the original and the new path, but when it is not the situation gets much more involved, and it is for this reason the (very important) operation is not included in the kernel.</p>
+<example-with-output title="Sidepaths" internal-id="example/sidepaths">
+<image pdf="sidepaths_3.pdf" jpg="sidepaths_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/sidepaths.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/sidepaths.shape" -->]]>
+</source>
+<caption>
+	<p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p>
+</caption>
+</example-with-output>
+
+	</body>
+</section><!-- End of paths/upsampling -->
 
 </section><!-- End of chap-paths -->

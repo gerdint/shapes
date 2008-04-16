@@ -9,7 +9,7 @@ pathpoints:
 
 
 sstroke: \ pth .>
-( (@stroking:RGB_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.n*6*@width)--(sl.n*~5*@width) )] )  null  [pathpoints pth]])
+( (@stroking:RGB_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.N*6*@width)--(sl.N*~5*@width) )] )  null  [pathpoints pth]])
    &
    [stroke pth]
 )

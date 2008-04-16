@@ -5,7 +5,7 @@ pathmap:
        p2
        (escape_continuation cont
          @handler_NoIntersection: \ pth1 pth2 .>
-              (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rt)]))--((1%C^[angle (-pth2.begin.t)])<pth2.begin--pth2.end))
+              (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rT)]))--((1%C^[angle (-pth2.begin.T)])<pth2.begin--pth2.end))
          |
          {
            t: [debuglog_after `found´ ...][][debuglog_before `search...´ ...][][intersection p1 p2]
@@ -13,7 +13,7 @@ pathmap:
          }
        )
    ]
-  
+
   helper: \ f sl1 sl2 res .>
     [if sl2.looped
         res
@@ -21,7 +21,7 @@ pathmap:
 
   \ pth f .>
   {
-    tmp: [helper f [pth 0] [pth 1] emptypath2D]
+    tmp: [helper f [pth 0] [pth 1] emptypath]
     [if pth.closed?
         tmp--cycle
 	tmp]
@@ -34,16 +34,16 @@ sidepath: \ pth dst .>
   |
   [pathmap pth
     \ sl1 sl2 .>
-      (sl1.p + sl1.n*dst)>(^[angle sl1.t])--
-      (^[angle sl2.rt])<(sl2.p - sl2.rn*dst)]
+      (sl1.p + sl1.N*dst)>(^[angle sl1.T])--
+      (^[angle sl2.rT])<(sl2.p - sl2.rN*dst)]
  )
 
 sidepath2: \ pth dst .>
   [pathmap pth
     \ sl1 sl2 .>
     {
-      p0: sl1.p + sl1.n*dst
-      p3: sl2.p - sl2.rn*dst
-      p0 > ( (1/3)*sl1.v*( (sl1.t*p3) / (sl1.t*sl2.p) ) ^ [angle sl1.t] ) --
-      ( (1/3)*sl2.rv*( (sl2.rt*p0) / (sl2.rt*sl1.p) ) ^ [angle sl2.rt] ) < p3
+      p0: sl1.p + sl1.N*dst
+      p3: sl2.p - sl2.rN*dst
+      p0 > ( (1/3)*sl1.v*( (sl1.T*p3) / (sl1.T*sl2.p) ) ^ [angle sl1.T] ) --
+      ( (1/3)*sl2.rv*( (sl2.rT*p0) / (sl2.rT*sl1.p) ) ^ [angle sl2.rT] ) < p3
     }]
