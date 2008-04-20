@@ -41,10 +41,12 @@ namespace Shapes
 		bool anyLabelMiss;
 		int loadCount;
 
-		std::string texJobName;
+		std::string inDir_; /* Absolute path.  Change to this directory before running pdfLaTeX! */
+		std::string tmpDir_; /* Absolute path.  Specify this as -output-directory when running pdfLaTeX! */
+		std::string texJobName_; /* This is the jobname without the directory part. */
 
 		int jobNumber;
-		std::string stringWithJobNumber( const std::string & str ) const;
+		std::string stringWithJobNumber( const std::string & str, bool withDirectory = true ) const;
 
 		std::string documentclass;
 		std::list< std::string > documentoptions;
@@ -61,7 +63,7 @@ namespace Shapes
 		TeXLabelManager( );
 		~TeXLabelManager( );
 
-		void settexJobName( const std::string & _texJobName );
+		void setup( const std::string & inDir, const std::string & tmpDir, const std::string & texJobName );
 
 		void announce( const std::string & str, const Ast::SourceLocation & loc );
 		RefCountPtr< const Lang::Value > request( const std::string & str, const Ast::SourceLocation & loc, Kernel::PassedDyn dyn );

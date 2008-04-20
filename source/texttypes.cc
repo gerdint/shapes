@@ -24,9 +24,17 @@ std::map< RefCountPtr< const char >, RefCountPtr< const FontMetrics::BaseFont >,
 std::list< std::string > Lang::Font::theFontMetricsSearchPath_;
 
 void
-Lang::Font::push_backFontMetricsPath( const char * path )
+Lang::Font::push_backFontMetricsPath( const std::string & path )
 {
-	theFontMetricsSearchPath_.push_back( path );
+	if( path.empty( ) ||
+			path[ path.size( ) - 1 ] == '/' )
+		{
+			theFontMetricsSearchPath_.push_back( path );
+		}
+	else
+		{
+			theFontMetricsSearchPath_.push_back( path + "/" );
+		}
 }
 
 std::string
@@ -42,7 +50,7 @@ Lang::Font::searchGlyphList( )
 	typedef typeof theFontMetricsSearchPath_ ListType;
 	for( ListType::const_iterator i = theFontMetricsSearchPath_.begin( ); i != theFontMetricsSearchPath_.end( ); ++i )
 		{
-			res = *i + "/" + "glyphlist.txt";
+			res = *i + "glyphlist.txt";
 			struct stat theStatDummy;
 			if( stat( res.c_str( ), & theStatDummy ) == 0 )
 				{
@@ -75,7 +83,7 @@ Lang::Font::searchFontMetrics( RefCountPtr< const char > fontName )
 	typedef typeof theFontMetricsSearchPath_ ListType;
 	for( ListType::const_iterator i = theFontMetricsSearchPath_.begin( ); i != theFontMetricsSearchPath_.end( ); ++i )
 		{
-			res = *i + "/" + fontName.getPtr( ) + ".afm";
+			res = *i + fontName.getPtr( ) + ".afm";
 			struct stat theStatDummy;
 			if( stat( res.c_str( ), & theStatDummy ) == 0 )
 				{
@@ -98,7 +106,7 @@ Lang::Font::searchCharacterEncoding( const char * encodingName )
 	typedef typeof theFontMetricsSearchPath_ ListType;
 	for( ListType::const_iterator i = theFontMetricsSearchPath_.begin( ); i != theFontMetricsSearchPath_.end( ); ++i )
 		{
-			res = *i + "/" + encodingName + ".enc";
+			res = *i + encodingName + ".enc";
 			struct stat theStatDummy;
 			if( stat( res.c_str( ), & theStatDummy ) == 0 )
 				{

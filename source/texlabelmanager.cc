@@ -42,9 +42,13 @@ Kernel::TeXLabelManager::~TeXLabelManager( )
 
 
 std::string
-Kernel::TeXLabelManager::stringWithJobNumber( const std::string & str ) const
+Kernel::TeXLabelManager::stringWithJobNumber( const std::string & str, bool withDirectory ) const
 {
 	ostringstream res;
+	if( withDirectory )
+		{
+			res << tmpDir_ ;
+		}
 	res << str ;
 	if( jobNumber >= 0 )
 		{
@@ -55,9 +59,11 @@ Kernel::TeXLabelManager::stringWithJobNumber( const std::string & str ) const
 
 
 void
-Kernel::TeXLabelManager::settexJobName( const std::string & _texJobName )
+Kernel::TeXLabelManager::setup( const std::string & inDir, const std::string & tmpDir, const std::string & texJobName )
 {
-	texJobName = _texJobName;
+	inDir_ = inDir;
+	tmpDir_ = tmpDir;
+	texJobName_ = texJobName;
 }
 
 
@@ -95,7 +101,7 @@ Kernel::TeXLabelManager::request( const std::string & str, const Ast::SourceLoca
 			typedef typeof currentRequests RequestMapType;
 			currentRequests.insert( RequestMapType::value_type( str, RequestLocation( false, loc ) ) );
 			processRequests( );
-			string extendedName = stringWithJobNumber( texJobName ) + ".pdf";
+			string extendedName = stringWithJobNumber( texJobName_ ) + ".pdf";
 			RefCountPtr< ifstream > iFile = RefCountPtr< ifstream >( new ifstream( extendedName.c_str( ) ) );
 			if( ! iFile->good( ) )
 				{
@@ -177,7 +183,7 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 				}
 			// Otherwise, the only generated pdf file with labels is a good database.
 
-			string lastJobFilename = stringWithJobNumber( texJobName ) + ".pdf";
+			string lastJobFilename = stringWithJobNumber( texJobName_ ) + ".pdf";
 
 			{
 				ostringstream mvCommand;
@@ -217,7 +223,7 @@ Kernel::TeXLabelManager::iterativeFinish( const std::string & labelDBFilename )
 	processRequests( );
 
 	{
-		string finalJobFilename = stringWithJobNumber( texJobName ) + ".pdf";
+		string finalJobFilename = stringWithJobNumber( texJobName_ ) + ".pdf";
 		ostringstream mvCommand;
 		{
 			// Avoid invoking the mv command if the file does not exist.
@@ -266,7 +272,7 @@ namespace Shapes
 void
 Kernel::TeXLabelManager::processRequests( )
 {
-	string extendedName = stringWithJobNumber( texJobName ) + ".tex";
+	string extendedName = stringWithJobNumber( texJobName_ ) + ".tex";
 	ofstream texFile( extendedName.c_str( ) );
 	if( ! texFile.good( ) )
 		{
@@ -307,47 +313,33 @@ Kernel::TeXLabelManager::processRequests( )
 			/* The exec call below never returns, so the child process never leaves this if clause.
 			 * Hence, there is no need to create a special else clasuse below.
 			 */
-			string extendedName = stringWithJobNumber( texJobName );
-			const char * lastSlashPtr = strrchr( extendedName.c_str( ), '/' );
-			if( lastSlashPtr != 0 )
+			Interaction::systemDebugMessage( "cd " + inDir_ );
+			if( chdir( inDir_.c_str( ) ) != 0 )
 				{
-					size_t lastSlashPos = lastSlashPtr - extendedName.c_str( );
-					const char * filenameStart = lastSlashPtr + 1;
-					if( *filenameStart == '\0' )
+					switch( errno )
 						{
-							ostringstream oss;
-							oss << "The TeX jobname looks like a directory: " << extendedName;
-							throw Exceptions::InternalError( strrefdup( oss ) );
+						case ENOENT:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in the no-entry failure." ) );
+						case ENOTDIR:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in the not-a-directory failure." ) );
+						case EACCES:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in the no-search-permission failure." ) );
+						case ELOOP:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in the symbolic-link-loop failure." ) );
+						case EIO:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in the I/O failure." ) );
+						default:
+							throw Exceptions::InternalError( strrefdup( "Attempt to change to source directory resulted in an unclassified failure." ) );
 						}
-					string dirPart = extendedName.substr( 0, lastSlashPos );
-					Interaction::systemDebugMessage( "cd " + dirPart );
-					if( chdir( dirPart.c_str( ) ) != 0 )
-						{
-							switch( errno )
-								{
-								case ENOENT:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in the no-entry failure." ) );
-								case ENOTDIR:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in the not-a-directory failure." ) );
-								case EACCES:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in the no-search-permission failure." ) );
-								case ELOOP:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in the symbolic-link-loop failure." ) );
-								case EIO:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in the I/O failure." ) );
-								default:
-									throw Exceptions::InternalError( strrefdup( "Attempt to change to TeX-job directory resulted in an unclassified failure." ) );
-								}
-						}
-					extendedName = extendedName.substr( lastSlashPos + 1 );
 				}
+			string extendedName = stringWithJobNumber( texJobName_ );
 			if( Interaction::pdfLaTeXInteractionTo_stderr )
 				{
 					dup2( 2, 1 );
 				}
 			else
 				{
-					std::string stdout_filename = ( extendedName + ".stdout" );
+					std::string stdout_filename = extendedName + ".stdout";
 					int stdout_file = open( stdout_filename.c_str( ), O_WRONLY | O_CREAT,
 																	S_IRUSR | S_IWUSR );
 					if( stdout_file == -1 )
@@ -357,7 +349,7 @@ Kernel::TeXLabelManager::processRequests( )
 					dup2( stdout_file, 1 );
 					close( stdout_file );
 				}
-			execlp( "pdflatex", "pdflatex", "-interaction", "nonstopmode", extendedName.c_str( ), static_cast< const char * >( 0 ) );
+			execlp( "pdflatex", "pdflatex", "-output-directory", tmpDir_.c_str( ), "-interaction", "nonstopmode", extendedName.c_str( ), static_cast< const char * >( 0 ) );
 			if( errno != 0 )
 				{
 					ostringstream oss;
@@ -396,7 +388,7 @@ Kernel::TeXLabelManager::processRequests( )
 									throw Exceptions::TeXLabelError( false, "(--tex-debug)", strrefdup( "The output from pdfLaTeX was written to stderr." ), RefCountPtr< const char >( NullPtr< const char >( ) ), Ast::THE_UNKNOWN_LOCATION );
 								}
 
-							std::string stdoutFilename = stringWithJobNumber( texJobName ) + ".stdout";
+							std::string stdoutFilename = stringWithJobNumber( texJobName_ ) + ".stdout";
 							std::ifstream stdoutFile( stdoutFilename.c_str( ) );
 							if( ! stdoutFile.good( ) )
 								{

@@ -60,7 +60,7 @@ class ShapesScanner : public shapesFlexLexer
 	void setNameOf_yyin( const char * yyinName );
 	void prependStream( std::istream * is );
 	void setSourceDir( const std::string & sourceDir );
-	void push_backNeedPath( const char * path );
+	void push_backNeedPath( const std::string & path );
 	std::string searchFile( const std::string & suffix ) const;
 	void setShowFiles( bool _showFiles );
 	virtual int yylex( );
@@ -71,7 +71,7 @@ class ShapesScanner : public shapesFlexLexer
 	std::string currentNeedFile;
 	size_t currentNeedPushCount;
 	bool currentNeedIsNeed;
-	void push_frontNeedPath( const char * path );
+	void push_frontNeedPath( const std::string & path );
 	void pop_frontNeedPath( );
 	void doInclusion( );
 	void rinseString( );

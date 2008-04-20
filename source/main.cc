@@ -35,6 +35,11 @@ using namespace Shapes;
 using namespace SimplePDF;
 
 void argcAssertion( const char * optionSpecifier, int argc, int argcMin );
+bool strprefixcmp( char * str, const char * prefix, char ** endp );
+bool strtobool( const char * str, const char * containingString, const char * trueLabel = 0, const char * falseLabel = 0 );
+std::string callDir;
+std::string absoluteFilename( const char * filename );
+std::string absoluteDirectory( const char * filename );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
 void abortProcedure( std::ofstream * oFile, const std::string & outputName );
 void setupGlobals( );
@@ -43,7 +48,6 @@ void xpdfHelper( const std::string & filename, const std::string & server, const
 void openHelper( const std::string & filename, const char * application );
 void addDefaultNeedPath( );
 void addDefaultFontMetricsPath( );
-void setupTEXINPUTS( const std::string & inDir );
 void destroyGlobals( );
 
 namespace Shapes
@@ -69,6 +73,12 @@ main( int argc, char ** argv )
 
 	bool iterativeMode = true;
 	bool useResources = true;
+
+	{
+		char * cwd = getcwd( 0, 0 );
+		callDir = cwd + std::string( "/" );
+		free( cwd );
+	}
 
 	std::string outDir;
 	std::string tmpDir;
@@ -101,6 +111,7 @@ main( int argc, char ** argv )
 	argv += 1;
 	while( argc > 0 )
 		{
+			char * optionSuffix;
 			if( strcmp( *argv, "--yydebug" ) == 0 )
 				{
 					shapesdebug = 1;
@@ -200,27 +211,15 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-dtminerror" ) == 0 )
+			else if( strprefixcmp( *argv, "--dtminerror=", & optionSuffix ) )
 				{
-					Computation::dtMinIsError = false;
+					Computation::dtMinIsError = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--dtminerror" ) == 0 )
+			else if( strprefixcmp( *argv, "--fmguesserror=", & optionSuffix ) )
 				{
-					Computation::dtMinIsError = true;
-					argv += 1;
-					argc -= 1;
-				}
-			else if( strcmp( *argv, "--no-fmguesserror" ) == 0 )
-				{
-					Computation::fontMetricGuessIsError = false;
-					argv += 1;
-					argc -= 1;
-				}
-			else if( strcmp( *argv, "--fmguesserror" ) == 0 )
-				{
-					Computation::fontMetricGuessIsError = true;
+					Computation::fontMetricGuessIsError = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
@@ -237,45 +236,39 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-backtrace" ) == 0 )
+			else if( strprefixcmp( *argv, "--backtrace=", & optionSuffix ) )
 				{
-					Interaction::debugBacktrace = false;
+					Interaction::debugBacktrace = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-iteration" ) == 0 )
+			else if( strprefixcmp( *argv, "--iteration=", & optionSuffix ) )
 				{
-					iterativeMode = false;
+					iterativeMode = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-resources" ) == 0 )
+			else if( strprefixcmp( *argv, "--resources=", & optionSuffix ) )
 				{
-					useResources = false;
+					useResources = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--stats" ) == 0 )
+			else if( strprefixcmp( *argv, "--stats=", & optionSuffix ) )
 				{
-					memoryStats = true;
+					memoryStats = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-stats" ) == 0 )
+			else if( strprefixcmp( *argv, "--memclean=", & optionSuffix ) )
 				{
-					memoryStats = false;
+					cleanupMemory = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--no-memclean" ) == 0 )
+			else if( strprefixcmp( *argv, "--showfiles=", & optionSuffix ) )
 				{
-					cleanupMemory = false;
-					argv += 1;
-					argc -= 1;
-				}
-			else if( strcmp( *argv, "--showfiles" ) == 0 )
-				{
-					Ast::theShapesScanner.setShowFiles( true );
+					Ast::theShapesScanner.setShowFiles( strtobool( optionSuffix, *argv ) );
 					argv += 1;
 					argc -= 1;
 				}
@@ -430,7 +423,7 @@ main( int argc, char ** argv )
 
  					try
 						{
-							Ast::theShapesScanner.push_backNeedPath( pth );
+							Ast::theShapesScanner.push_backNeedPath( absoluteDirectory( pth ) );
 						}
 					catch( const Exceptions::Exception & ball )
 						{
@@ -488,7 +481,7 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 
-					Lang::Font::push_backFontMetricsPath( pth );
+					Lang::Font::push_backFontMetricsPath( absoluteDirectory( pth ) );
 
 					if( longForm )
 						{
@@ -599,7 +592,7 @@ main( int argc, char ** argv )
 							std::cerr << "The input file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					inputName = *( argv + 1 );
+					inputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -617,7 +610,7 @@ main( int argc, char ** argv )
 							std::cerr << "The output file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					outputName = *( argv + 1 );
+					outputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -636,6 +629,11 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 					texJobName = *( argv + 1 );
+					if( texJobName.find( "/" ) != std::string::npos )
+						{
+							std::cerr << "The tex job name may not include directory specification.  Please use --tmpdir to set the directory where the tex job is carried out." << std::endl ;
+							exit( 1 );
+						}
 					argv += 2;
 					argc -= 2;
 				}
@@ -653,7 +651,7 @@ main( int argc, char ** argv )
 							std::cerr << "The label database file is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					labelDBName = *( argv + 1 );
+					labelDBName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -677,7 +675,7 @@ main( int argc, char ** argv )
 							std::cerr << "The font metrics output name is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					fontmetricsOutputName = *( argv + 1 );
+					fontmetricsOutputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -689,11 +687,7 @@ main( int argc, char ** argv )
 							std::cerr << "The output directory is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					outDir = *( argv + 1 );
-					if( outDir[ outDir.length( ) - 1 ] != '/' )
-						{
-							outDir += '/';
-						}
+					outDir = absoluteDirectory( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -705,11 +699,7 @@ main( int argc, char ** argv )
 							std::cerr << "The temporaries directory is multiply specified." << std::endl ;
 							exit( 1 );
 						}
-					tmpDir = *( argv + 1 );
-					if( tmpDir[ tmpDir.length( ) - 1 ] != '/' )
-						{
-							tmpDir += '/';
-						}
+					tmpDir = absoluteDirectory( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
 				}
@@ -851,27 +841,18 @@ main( int argc, char ** argv )
 
 	if( outDir == "" )
 		{
-			outDir = "./";
+			outDir = absoluteDirectory( "" );
 		}
 	if( tmpDir == "" )
 		{
 			char * start = getenv( "SHAPESTMPDIR" );
 			if( start != 0 )
 				{
-					tmpDir = start;
-					if( tmpDir.length( ) == 0 )
-						{
-							std::cerr << "An empty string in ENV(SHAPESTMPDIR) is not a valid path." << std::endl ;
-							exit( 1 );
-						}
-					if( tmpDir[ tmpDir.length( ) - 1 ] != '/' )
-						{
-							tmpDir += '/';
-						}
+					tmpDir = absoluteDirectory( start );
 				}
 			else
 				{
-					tmpDir = "./";
+					tmpDir = absoluteDirectory( "" );
 				}
 		}
 
@@ -879,14 +860,14 @@ main( int argc, char ** argv )
 		{
 			if( texJobName == "" )
 				{
-					texJobName = tmpDir + "#shapes.labels";
+					texJobName = "#shapes.labels";
 				}
 		}
 	else
 		{
 			if( inputName == "" )
 				{
-					inputName = baseName + ".shape";
+					inputName = absoluteFilename( ( baseName + ".shape" ).c_str( ) );
 				}
 			if( outputName == "" )
 				{
@@ -894,7 +875,7 @@ main( int argc, char ** argv )
 				}
 			if( texJobName == "" )
 				{
-					texJobName = tmpDir + baseName + ".labels";
+					texJobName = baseName + ".labels";
 				}
 			if( labelDBName == "" )
 				{
@@ -935,27 +916,14 @@ main( int argc, char ** argv )
 		std::string::size_type slash = inPath.rfind( '/' );
 		if( slash == std::string::npos )
 			{
-				inPath = "";
+				inDir = absoluteDirectory( "" );
 			}
 		else
 			{
-				inPath = inPath.substr( 0, slash );
-			}
-		if( inPath[0] == '/' )
-			{
-				inDir = inPath;
-			}
-		else
-			{
-				char * cwd = getcwd( 0, 0 );
-				inDir = cwd + ( "/" + inPath );
-				free( cwd );
-			}
-		if( tmpDir != "./" )
-			{
-				setupTEXINPUTS( inDir );
+				inDir = absoluteDirectory( inPath.substr( 0, slash ).c_str( ) );
 			}
 		Ast::theShapesScanner.setSourceDir( inDir );
+		Kernel::theTeXLabelManager.setup( inDir, tmpDir, texJobName );
 	}
 
 	if( Computation::theTrixelizeSplicingTol >= Computation::theTrixelizeOverlapTol )
@@ -982,8 +950,8 @@ main( int argc, char ** argv )
 		{
 			try
 				{
-					Ast::theShapesScanner.push_backNeedPath( ( std::string( RESOURCES_DIR ) + "/extensions" ).c_str( ) );
-					Lang::Font::push_backFontMetricsPath( ( std::string( RESOURCES_DIR ) + "/fontmetrics" ).c_str( ) );
+					Ast::theShapesScanner.push_backNeedPath( std::string( RESOURCES_DIR ) + "/extensions/" );
+					Lang::Font::push_backFontMetricsPath( std::string( RESOURCES_DIR ) + "/fontmetrics/" );
 				}
 			catch( const Exceptions::Exception & ball )
 				{
@@ -1028,7 +996,7 @@ main( int argc, char ** argv )
 								}
 							break;
 						case FILENAME_TEXJOB:
-							std::cout << texJobName ;
+							std::cout << tmpDir << texJobName ;
 							break;
 						case FILENAME_LABELDB:
 							std::cout << labelDBName ;
@@ -1176,7 +1144,6 @@ main( int argc, char ** argv )
 					abortProcedure( & oFile, outputName );
 				}
 			labelDBFile = performIterativeStartup( labelDBName );
-			Kernel::theTeXLabelManager.settexJobName( texJobName );
 			RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
 			Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );
 
@@ -1354,6 +1321,44 @@ argcAssertion( const char * optionSpecifier, int argc, int argcMin )
 			std::cerr << "The command line option " << optionSpecifier << " requires " << argcMin - 1 << " parameters." << std::endl ;
 			exit( 1 );
 		}
+}
+
+bool
+strprefixcmp( char * str, const char * prefix, char ** endp )
+{
+	int len = strlen( prefix );
+	bool res = ( strncmp( str, prefix, len ) == 0 );
+	*endp = str + len;
+	return res;
+}
+
+bool
+strtobool( const char * str, const char * containingString, const char * trueLabel, const char * falseLabel )
+{
+	if( trueLabel != 0 &&
+			strcmp( str, trueLabel ) == 0 )
+		{
+			return true;
+		}
+	if( falseLabel != 0 &&
+			strcmp( str, falseLabel ) == 0 )
+		{
+			return false;
+		}
+	if( strcmp( str, "yes" ) == 0 ||
+			strcmp( str, "true" ) == 0 ||
+			strcmp( str, "on" ) == 0 )
+		{
+			return true;
+		}
+	if( strcmp( str, "no" ) == 0 ||
+			strcmp( str, "false" ) == 0 ||
+			strcmp( str, "off" ) == 0)
+		{
+			return false;
+		}
+	std::cerr << "The string \"" << str << "\" in the command line argument \"" << containingString << "\" was not recognized as a boolean value." << std::endl ;
+	exit( 1 );
 }
 
 
@@ -1641,7 +1646,7 @@ addDefaultNeedPath( )
 			char * start = getenv( "SHAPESINPUTS" );
 			if( start == 0 )
 				{
-					Ast::theShapesScanner.push_backNeedPath( "." );
+					Ast::theShapesScanner.push_backNeedPath( "./" );
 					return;
 				}
 			char * tok = strsep( & start, ":" );
@@ -1676,46 +1681,6 @@ addDefaultFontMetricsPath( )
 }
 
 void
-setupTEXINPUTS( const std::string & inDir )
-{
-	const char * NAME = "TEXINPUTS";
-	char * start = getenv( NAME );
-	if( start == 0 )
-		{
-			setenv( NAME, ( inDir + ":" ).c_str( ), 1 );
-			return;
-		}
-
-	{
-		std::ostringstream newPath;
-		char * tok = strsep( & start, ":" );
-		bool foundCurrent = false;
-		while( tok != 0 )
-			{
-				if( strcmp( tok, "." ) == 0 )
-					{
-						newPath << inDir ;
-						foundCurrent = true;
-					}
-				else
-					{
-						newPath << tok ;
-					}
-				tok = strsep( & start, ":" );
-				if( tok != 0 )
-					{
-						newPath << ":" ;
-					}
-			}
-		if( ! foundCurrent )
-			{
-				newPath << ":" << inDir ;
-			}
-		setenv( NAME, newPath.str( ).c_str( ), 1 );
-	}
-}
-
-void
 destroyGlobals( )
 {
 	Helpers::requireUTF8ToMacRomanConverter( true ); // true means "cleanup"
@@ -1727,3 +1692,36 @@ destroyGlobals( )
 	Helpers::requireGlyphList( true );	// true means "cleanup"
 	Helpers::requireMacRomanEncoding( true );	// true means "cleanup"
 }
+
+std::string
+absoluteFilename( const char * filename )
+{
+	if( *filename == '/' )
+		{
+			return filename;
+		}
+	return callDir + filename;
+}
+
+std::string
+absoluteDirectory( const char * filename )
+{
+	if( *filename == '\0' )
+		{
+			return callDir;
+		}
+	if( filename[ strlen( filename ) - 1 ] != '/' )
+		{
+			if( *filename == '/' )
+				{
+					return filename + std::string( "/" );
+				}
+			return callDir + filename + "/";
+		}
+	if( *filename == '/' )
+		{
+			return filename;
+		}
+	return callDir + filename;
+}
+

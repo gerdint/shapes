@@ -35,7 +35,7 @@ namespace Shapes
 			static std::list< std::string > theFontMetricsSearchPath_;
 
 		public:
-			static void push_backFontMetricsPath( const char * path );
+			static void push_backFontMetricsPath( const std::string & path );
 			static std::string searchGlyphList( );
 			static std::string searchCharacterEncoding( const char * encodingName );
 		private:

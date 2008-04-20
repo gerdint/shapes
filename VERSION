@@ -11,7 +11,9 @@ Lots of new documentation, including substantial work on structure, crosslinks, 
 
 Procedure application is limited to certain scoping rules to ensure that the function abstraction is not broken.
 
-Improved output to help finding errors i TeX label strings.
+Improved output to help finding errors i TeX label strings, and a bug with the --tmpdir feature was remedied.
+
+Changed command line syntax for boolean options changed; no more --no-someopt, instead we use --someopt=no (the "no" has some synonyms).
 
 New features of all kinds, ranging from additions to the scanner to new state types and functions.
 

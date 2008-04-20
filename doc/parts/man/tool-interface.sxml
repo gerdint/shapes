@@ -46,6 +46,7 @@
 		<title>Command line options</title>
 		<top>
 			<p>Command line options fall into two cathegories, most of which were referred to as <synatxname>option</synatxname> above.  The others, found in the last subsection below, are used to request which files would be used under given circumstances, and will cause the compiler to terminate without processing any files, these options were referred to as <synatxname>file-request</synatxname> above.</p>
+			<p>Options for setting or clearing flags are written as one entity, ending with <em>=bool</em>, where <em>bool</em> can be any of: <em>yes</em>, <em>true</em>, <em>on</em>, <em>no</em>, <em>false</em>, <em>off</em>.</p>
 		</top>
  		<section>
 			<title>Files</title>
@@ -120,15 +121,15 @@
 						</description>
 				</command-line-item>
 					<command-line-item>
-						<parameters flag="--no-resources"></parameters>
+						<parameters flag="--resources="><replacable>bool</replacable></parameters>
 						<description>
-							<p>Inhibit use of files installed with the <str-Shapes /> program.  This applies both to language extensions and font metric files.</p>
+							<p>Control access to files installed with the <str-Shapes /> program.  This applies both to language extensions and font metric files.  Defaults to true.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--no-iteration"></parameters>
+						<parameters flag="--iteration="><replacable>bool</replacable></parameters>
 						<description>
-							<p>Inhibit creation of the file with labels saved from one program run to another.  This behavior is implied if the label database filename is undefined.</p>
+							<p>If true, a file will labels will be created in the output directory, to be reused if the file is compiled again.  Defaults to true unless the label database filename is undefined.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -167,8 +168,7 @@
 					<command-line-tolparam name="arcdelta" />
 					<command-line-tolparam name="dtmin" />
 					<command-line-item>
-						<parameters flag="--dtminerror"></parameters>
-						<parameters flag="--no-dtminerror"></parameters>
+						<parameters flag="--dtminerror="><replacable>bool</replacable></parameters>
 						<description>
 							<p>Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.</p>
 							<p><b>Rationale:</b> By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.</p>
@@ -176,8 +176,7 @@
 					</command-line-item>
 					<command-line-tolparam-remaining />
 					<command-line-item>
-						<parameters flag="--fmguesserror"></parameters>
-						<parameters flag="--no-fmguesserror"></parameters>
+						<parameters flag="--fmguesserror="><replacable>bool</replacable></parameters>
 						<description>
 							<p>Control whether guessing font metrics for (more or less) strange characters shall be considered an error.</p>
 						</description>
@@ -202,14 +201,13 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--showfiles"></parameters>
+						<parameters flag="--showfiles="><replacable>bool</replacable></parameters>
 						<description>
 							<p>Print the chain of used sources.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--stats"></parameters>
-						<parameters flag="--no-stats"></parameters>
+						<parameters flag="--stats="><replacable>bool</replacable></parameters>
 						<description>
 							<p>Control printing of execution statistics, such as memory and time usage.</p>
 						</description>
@@ -295,9 +293,9 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--no-backtrace"></parameters>
+						<parameters flag="--backtrace="><replacable>bool</replacable></parameters>
 						<description>
-							<p>Turn off the backtrace printed when the program reports a runtime error.</p>
+							<p>Whether to print a backtrace when the program reports a runtime error.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -370,9 +368,9 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 				<p>In the end, when garbage collection is implemented, there will be options for controlling the gc behavior here.  At the moment, there is only a dummy option here.</p>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--no-memclean"></parameters>
+						<parameters flag="--memclean="><replacable>bool</replacable></parameters>
 						<description>
-							<p>Inhibit cleaning up memory before terminating the compilation process.</p>
+							<p>Attempt to clean up memory before terminating the compilation process?  Defaults to true.</p>
 							<p><b>Rationale:</b> If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.</p>
 						</description>
 					</command-line-item>
@@ -504,7 +502,7 @@ echo '&bullet;page &lt;&lt; (TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdi
 			<body>
 				<p>When testing the compiler on the bundled tests, the compiler is invoked something like this:</p>
 <command-line>
-shapes --no-resources --needpath ../../resources/extensions/ --fontmetricspath ../../resources/fontmetrics/ \
+shapes --resources=no --needpath ../../resources/extensions/ --fontmetricspath ../../resources/fontmetrics/ \
        --tmpdir tmp/ --outdir out/ hello.shape
 </command-line>
       <p>The first three options ensure that extension files and font metrics are not used from a previous installation.  This example assumes that environment variables are not used to provide search paths.</p>

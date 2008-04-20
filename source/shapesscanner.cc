@@ -47,23 +47,31 @@ ShapesScanner::setSourceDir( const std::string & sourceDir )
 }
 
 void
-ShapesScanner::push_backNeedPath( const char * path )
+ShapesScanner::push_backNeedPath( const std::string & path )
 {
-	if( path[ strlen( path ) - 1 ] == '/' )
+	if( path.empty( ) ||
+			path[ path.size( ) - 1 ] == '/' )
 		{
-			throw Exceptions::ScannerError( shapeslloc, strrefdup( "The entries in the search path must not include a trailing slash." ) );
+			needSearchPath.push_back( path );
 		}
-	needSearchPath.push_back( std::string( path ) );
+	else
+		{
+			needSearchPath.push_back( path + "/" );
+		}
 }
 
 void
-ShapesScanner::push_frontNeedPath( const char * path )
+ShapesScanner::push_frontNeedPath( const std::string & path )
 {
-	if( path[ strlen( path ) - 1 ] == '/' )
+	if( path.empty( ) ||
+			path[ path.size( ) - 1 ] == '/' )
 		{
-			throw Exceptions::ScannerError( shapeslloc, strrefdup( "The entries in the search path must not include a trailing slash." ) );
+			needSearchPath.push_front( path );
 		}
-	needSearchPath.push_front( std::string( path ) );
+	else
+		{
+			needSearchPath.push_front( path + "/" );
+		}
 }
 
 void
@@ -146,11 +154,11 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 		{
 			if( (*i)[0] == '/' )
 				{
-					res = *i + "/" + suffix;
+					res = *i + suffix;
 				}
 			else
 				{
-					res = sourceDir_ + "/" + *i + "/" + suffix;
+					res = sourceDir_ + "/" + *i + suffix;
 				}
 
 			struct stat theStatDummy;
