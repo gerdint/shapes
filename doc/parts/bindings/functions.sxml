@@ -388,5 +388,170 @@ facing: [../facing scale:true distort:true ...]
 	</function>
 </system-binding>
 
+<system-binding identifier="reverse">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Construct path where the order of pathpoints in the representation is reversed.  The constructed path looks identical to the original.</p>
+			</description>
+		</case>
+		<case constructor-of="Path3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="meetpaths">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Merge the two paths by merging the <field name="end" /> point of the first path with the <field name="begin" /> point of the second path.  It is not required for the two paths to intersect;  the merge operation is defined anyway by replacing the two merged points with one at the mean, taking one interpolation point form each path.  Use this to avoid vanishing spline segments when joining two consecutive paths.</p>
+				<p>Hopefully, the example below expresses the idea more clearly.</p>
+				<example-with-output title="Merging paths" internal-id="example/meetpaths">
+					<image pdf="mergepaths_3.pdf" jpg="mergepaths_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/showcase/mergepaths.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/showcase/mergepaths.shape" -->]]>
+</source>
+<caption>
+	<p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p>
+</caption>
+				</example-with-output>
+			</description>
+		</case>
+		<case constructor-of="Path3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="upsample_balance">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Divide each spline segment in two such that the velocity is continuous at the new path point.  This will make the distance to the two interpolation points at the new path point equal, hence the name.  It turns out that this happens at spline time 0.5, so the implementation is very cheap.</p>
+			</description>
+		</case>
+		<case constructor-of="Path3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="upsample_inflections">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Add samples at inflection points.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="upsample_bends">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg identifier="angle">
+					<type><named-type name="Float" /></type>
+				</arg>
+				<arg identifier="path">
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Add samples at inflection points, and so that each segment bends at most <arg name="angle" />.  Segments that need upsampling (after inflections have been removed) are sampled evenly with respect to direction.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="upsample_every">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg identifier="period">
+					<type><named-type name="Length" /></type>
+				</arg>
+				<arg identifier="path">
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Add sample points such that each segment is at most <arg name="period" /> long.  Segments that need upsampling are sampled evenly with respect to arc length.</p>
+			</description>
+		</case>
+		<case constructor-of="Path3D">
+			<arguments>
+				<arg identifier="period">
+					<type><named-type name="Length" /></type>
+				</arg>
+				<arg identifier="path">
+					<type><named-type name="Path3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 
 </section>

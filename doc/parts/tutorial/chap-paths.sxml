@@ -58,6 +58,10 @@
 	<body>
 		<p>In this section, we shall describe the powerful ways of referring to points (one at a time) on paths.  Although most of these methods are defined and implemented in terms of optimization and that this may seem expensive from a computational point of view, one should keep in mind that precise computation of curve lengths (arc times) can be rather expensive too.  Hence, try to use the powerful abstractions presented here whenever you think they are the best match for your thinking, and resort only to less expensive alternatives when too lengthy computations are a fact.</p>
 
+		<p>As usual, we concentrate on the methods in <str-2D />, and make at most minor comments regarding the <str-3D /> counterparts.</p>
+
+		<p>Let us begin with a concept which appears also in <str-MetaPost />, namely to find the first point on a path where the path has a certain direction.  In <str-Shape /> one does not specify the direction, but the desired normal direction of the path.</p>
+
 	</body>
 </section><!-- End of paths/point-references -->
 
@@ -65,7 +69,18 @@
 	<title>Upsampling</title>
 	<body>
 		<p>There are operations on paths that despite a seemingly simple abstraction turn out very complicated to implement to a reasonable degree of accuracy.  The design choice of <str-Shapes /> was not to provide lousy implementations of these abstractions, but to provide simpler operations that can be implemented accurately and that will allow users to make their own approximations of the difficult abstractions.  Basically, this comes down to means for folding over the discrete spline points defining a path, and means for generating a sufficiently dense <em>sampling</em> of the path.  Currently, there are only means for <em>upsampling</em>, that is, to generate a representation that uses more points to define the same geometric path.  The opposite, <em>downsampling</em> may be added in the future, but right now it is not even clear how the operation should be defined abstractly (note that downsampling will require the original path to be approximated somehow).</p>
-		<p>In this section, we shall discuss the available methods for upsampling.</p>
+
+		<p>In this section, we shall discuss the available methods for upsampling.  One of the methods refers to the Bezier spline representation of the new path, while the other methods have geometric meanings.</p>
+
+		<p>Beginning with the method which is not geometric, we have <binding name="updample_balace" />, which will divide each spline in two, such that the velocity is continuous through the new sample point.  This will imply that the the two interpolation points around the new sample point are at equal distance (and opposite), hence the <em>balance</em> part of the name.  It turns out that the sample point will be at spline time 0.5, so the operation is very cheap.  Use this method if you need speed more than good properties of the upsampled path.</p>
+
+		<p>The method <binding name="upsample_inflections" /> adds samples where there were inflections on the spline segments of the original path.  The new path will only have spline segments without inflections, which can be a useful thing when reasoning about the path in terms of its spline segment representation.</p>
+
+		<p>The method <binding name="upsample_bends" /> may be the most useful method of them all.  It begins sampling at inflections (see <binding name="upsample_inflections" />), and then it makes sure that each spline segment bends at most some given angle.  Since it is often the parts of a path where it bends most that are difficult to work with, this method often gives you samples where you need them most.</p>
+
+		<p>The last method, <binding name="upsample_every" />, simply ensures that each spline segment is shorter than some given length.  The idea is simple, but it is not clear to me when this is more useful than <binding name="upsample_bends" />.</p>
+
+		<p>The example below show the various methods applied to a variety of paths.</p>
 
 <example-with-output title="Upsampling" internal-id="example/upsampling">
 <image pdf="upsample_3.pdf" jpg="upsample_y_big.jpg" />
@@ -77,7 +92,7 @@
 </caption>
 </example-with-output>
 
-<p>The final example in this section shows an application of upsampling.  The seemingly simple abstraction is to compute a path, following a given path at a certain distance.  Basically, one would like to be able to compute one of the boundaries of a stroke along the path, but it is easy to also imagine more interesting generalizations.  The idea is easy as long as the path has a radius of curvature being larger than the distance between the original and the new path, but when it is not the situation gets much more involved, and it is for this reason the (very important) operation is not included in the kernel.</p>
+<p>We end this section with an example showing an application of upsampling.  The seemingly simple abstraction is to compute a path, following a given path at a certain distance.  Basically, one would like to be able to compute one of the boundaries of a stroke along the path, but it is easy to also imagine more interesting generalizations.  The idea is easy as long as the path has a radius of curvature being larger than the distance between the original and the new path, but when it is not the situation gets much more involved, and it is for this reason the (very important) operation is not included in the kernel.</p>
 <example-with-output title="Sidepaths" internal-id="example/sidepaths">
 <image pdf="sidepaths_3.pdf" jpg="sidepaths_y_big.jpg" />
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/features/sidepaths.shape">
@@ -90,5 +105,12 @@
 
 	</body>
 </section><!-- End of paths/upsampling -->
+
+<section id="paths/misc">
+	<title>Miscellaneous</title>
+	<body>
+		<p>This section is only meant to be a reminder of the two functions <binding name="reverse" /> (it does the obvious thing) and <binding name="meetpaths" /> (more intricate).</p>
+	</body>
+</section><!-- End of paths/misc -->
 
 </section><!-- End of chap-paths -->

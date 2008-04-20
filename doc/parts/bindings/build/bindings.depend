@@ -1,1 +1,1 @@
-build/bindings.xml: functions.sxml ../../../examples/features/facefun.shape ../../../examples/features/ranges.shape ../../output/ranges.stdout simple.sxml misc.sxml types.sxml hot.sxml syntax.sxml
+build/bindings.xml: functions.sxml ../../../examples/features/facefun.shape ../../../examples/features/ranges.shape ../../output/ranges.stdout ../../../examples/showcase/mergepaths.shape simple.sxml misc.sxml types.sxml hot.sxml syntax.sxml
