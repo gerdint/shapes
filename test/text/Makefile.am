@@ -16,7 +16,7 @@
 XFAIL_TESTS = test_bad
 
 SHAPES = ${top_builddir}/source/shapes
-SHAPESFLAGS = --no-resources \
+SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resourses/fontmetrics \
               --needpath ${top_srcdir}/resourses/extensions
 
