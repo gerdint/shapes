@@ -46,7 +46,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  Shapes_Lang_decls.h shapesscanner.h shapestypes.h \
                  shapesvalue.h SimplePDF_decls.h simplepdfi.h \
                  simplepdfo.h sourcelocation.h specialunits.h statetypes.h \
-                 strrefdup.h tagtypes.h texlabelmanager.h texttypes.h \
+                 strrefdup.h tagtypes.h texlabelmanager.h texscanner.h texttypes.h \
                  thunkimpl.h timetypes.h trianglefunctions.h upsamplers.h \
                  value.h yyltype.h zbufinternals.h utf8tools.h \
                  ../tools/include/autoonoff.h ../tools/include/isnan.h \
