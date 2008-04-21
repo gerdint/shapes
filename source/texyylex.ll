@@ -73,7 +73,7 @@ EnvironmentName [a-zA-Z0-9_]+
 	delimStack.pop_back( );
 }
 
-"\\{"|"\\}"|"\\["|"\\]"|. {
+"\\{"|"\\}"|"\\["|"\\]"|.|\n {
   // Do nothing
 }
 
