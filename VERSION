@@ -5,9 +5,9 @@ The first line of this file shall be the current version string.  It shall be in
 ===================
 
 ====( 0.3.7 )====
-FILL IN DATE WHEN TAGGING!
+2008-04-21
 
-(This version number is not expected to be tagged.  Expecting 0.4.0 to be the next real version.)
+The previous version was broken.  This version has been verified by running "make distcheck".
 
 
 ====( 0.3.6 )====
