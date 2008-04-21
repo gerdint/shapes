@@ -5,10 +5,9 @@
 <!ENTITY str-close "<char-str-close />">
 ]>
 <man>
-	<manhead>
-		<prog-name>shapes</prog-name>
-		<man-section>1</man-section>
-		<modification-date>2007-12-18</modification-date>
+	<manhead prog-name="shapes"
+					 section="1"
+					 modification-date=<!--#expand-next-string-->"$(MODIFICATION_DATE)">
 		<left-footer>Tiddes</left-footer>
 		<center-header>The Shapes language compiler</center-header>
 		<description>

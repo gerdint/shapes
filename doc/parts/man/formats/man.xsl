@@ -28,7 +28,7 @@ version of this page.</xsl:text>
 </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="manhead">.TH <xsl:value-of select="prog-name" /> <xsl:value-of select="man-section" /> &quot;<xsl:value-of select="modification-date" />&quot; &quot;<xsl:value-of select="left-footer" />&quot; &quot;<xsl:value-of select="center-header" />&quot;</xsl:template>
+<xsl:template match="manhead">.TH <xsl:value-of select="@prog-name" /> <xsl:value-of select="@section" /> &quot;<xsl:value-of select="@modification-date" />&quot; &quot;<xsl:value-of select="left-footer" />&quot; &quot;<xsl:value-of select="center-header" />&quot;</xsl:template>
 
 <xsl:template match="synopsis-table">
 <xsl:for-each select="synopsis-case"><xsl:apply-templates/><xsl:text>

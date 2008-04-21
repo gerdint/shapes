@@ -4,7 +4,8 @@ PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=formats
 EXDIR=../../../examples
 EXOUTDIR=../../output
-SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR)
+include ../../../source/SHAPES-VERSION-FILE
+MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo "$(VERSION_DATE)" | sed -e 's/\([^ ]*\).*/\1/' )
 
 SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
