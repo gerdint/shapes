@@ -62,7 +62,7 @@ version of this page.</xsl:text>
 <xsl:text>
 
 </xsl:text><xsl:apply-templates select="parameters" />
-<xsl:apply-templates select="short-parameter" />
+<xsl:apply-templates select="nosep-parameter" />
 <xsl:apply-templates select="description/*"/>
 </xsl:template>
 
@@ -89,8 +89,8 @@ version of this page.</xsl:text>
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
-<xsl:template match="command-line-item/short-parameter[@flag]"><xsl:text>
-.ensure-line-break.BI &quot;</xsl:text><xsl:value-of select="@flag" /><xsl:text>&quot; &quot;</xsl:text><xsl:value-of select="."/><xsl:text>
+<xsl:template match="command-line-item/nosep-parameter[@flag]"><xsl:text>
+.ensure-line-break.BI &quot;</xsl:text><xsl:value-of select="@flag" /><xsl:text>&quot; &quot;</xsl:text><xsl:value-of select="."/><xsl:text>&quot;
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
@@ -111,26 +111,26 @@ Default value: </xsl:text><xsl:apply-templates select="default" />
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><xsl:text>
-.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="synopsis-case/syntax-name"><xsl:text>
-.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="synopsis-case/bnf"><xsl:text>
 .ensure-line-break </xsl:text><xsl:value-of select="." /><xsl:text>
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="p/syntax-name"><xsl:text>
-.ensure-line-break.B </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.B "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="synopsis-case/replacable"><xsl:text>
 .ensure-line-break.I "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="parameters/replacable"><xsl:text>
-.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.I "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 <xsl:template match="command-line-option/replacable"><xsl:text>
-.ensure-line-break.I </xsl:text><xsl:value-of select="." /><xsl:text>
+.ensure-line-break.I "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break</xsl:text></xsl:template>
 
 <xsl:template match="p/em"><xsl:text>

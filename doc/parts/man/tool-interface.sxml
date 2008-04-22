@@ -58,75 +58,75 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--outdir"> <replacable>dir</replacable></parameters>
+						<parameters flag="--outdir"> <replacable>dir</replacable></parameters>
 						<description>
 							<p>Specify directory for products.  Defaults to current working directory.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
+						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 						<description>
 							<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
-						<short-parameter flag="-N">dir</short-parameter>
+						<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
+						<nosep-parameter flag="-N">dir</nosep-parameter>
 						<description>
 							<p>Add <replacable>dir</replacable> to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--base"> <replacable>filenamebase</replacable></parameters>
+						<parameters flag="--base"> <replacable>filenamebase</replacable></parameters>
 						<description>
 							<p>Specify the filename base to derive other filenames from.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--in"> <replacable>file</replacable></parameters>
+						<parameters flag="--in"> <replacable>file</replacable></parameters>
 						<description>
 							<p>Specify the input source.  Defaults to the basename with the suffix <filename>.shape</filename> in the current directory.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--prepend"> <replacable>str</replacable></parameters>
+						<parameters flag="--prepend"> <replacable>str</replacable></parameters>
 						<description>
 							<p>Prepend the given string to the input source.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--out"> <replacable>file</replacable></parameters>
+						<parameters flag="--out"> <replacable>file</replacable></parameters>
 						<description>
 							<p>Specify the destination file.  Defaults to the basename with the suffix <filename>.pdf</filename> in the output directory.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--labeldb"> <replacable>file</replacable></parameters>
+						<parameters flag="--labeldb"> <replacable>file</replacable></parameters>
 						<description>
 							<p>Specify the file where to store labels between iterations.  Defaults to the basename with the suffix <filename>.labels.pdf</filename> in the output directory.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--afmout"> <replacable>file</replacable></parameters>
+						<parameters flag="--afmout"> <replacable>file</replacable></parameters>
 						<description>
 							<p>Specify the file where to store generated font metrics, would there be any.  Defaults to the basename with the suffix <filename>.afm</filename> in the output directory.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--fontmetricspath"> <replacable>dir</replacable></parameters>
-						<short-parameter flag="-M">dir</short-parameter>
+						<parameters flag="--fontmetricspath"> <replacable>dir</replacable></parameters>
+						<nosep-parameter flag="-M">dir</nosep-parameter>
 						<description>
 							<p>Add <replacable>dir</replacable> to the end of the search path for font metrics.</p>
 						</description>
 				</command-line-item>
 					<command-line-item>
-						<parameters flag="--resources="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--resources=">bool</nosep-parameter>
 						<description>
 							<p>Control access to files installed with the <str-Shapes /> program.  This applies both to language extensions and font metric files.  Defaults to true.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--iteration="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--iteration=">bool</nosep-parameter>
 						<description>
 							<p>If true, a file will labels will be created in the output directory, to be reused if the file is compiled again.  Defaults to true unless the label database filename is undefined.</p>
 						</description>
@@ -144,7 +144,7 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--debuglog"> <replacable>file</replacable></parameters>
+						<parameters flag="--debuglog"> <replacable>file</replacable></parameters>
 						<parameters flag="--debuglog-stderr"></parameters>
 						<parameters flag="--debuglog-stdout"></parameters>
 						<description>
@@ -159,7 +159,7 @@
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--seed"> <replacable>s</replacable></parameters>
+						<parameters flag="--seed"> <replacable>s</replacable></parameters>
 						<description>
 							<p>Initializes the global random number generator by calling the srand function..</p>
 						</description>
@@ -167,7 +167,7 @@
 					<command-line-tolparam name="arcdelta" />
 					<command-line-tolparam name="dtmin" />
 					<command-line-item>
-						<parameters flag="--dtminerror="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--dtminerror=">bool</nosep-parameter>
 						<description>
 							<p>Control whether bumping up too short steplengths in integration along paths shall be considered an error.  See also --dtmin.</p>
 							<p><b>Rationale:</b> By default, it is considered an error if a length-measuring loop over one simple cubic spline requires too small steps.  The number of steps required depends on the arc-delta setting.  However, if changing arc-delta is not what one wants, and one cannot create the spline using more points, then a last resort is to inhibit the error using this option.  Note, however, that evaluating a program this way may be a process that does not terminate, practically speaking.</p>
@@ -175,7 +175,7 @@
 					</command-line-item>
 					<command-line-tolparam-remaining />
 					<command-line-item>
-						<parameters flag="--fmguesserror="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--fmguesserror=">bool</nosep-parameter>
 						<description>
 							<p>Control whether guessing font metrics for (more or less) strange characters shall be considered an error.</p>
 						</description>
@@ -194,19 +194,19 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--unit"> <replacable>unit-name</replacable></parameters>
+						<parameters flag="--unit"> <replacable>unit-name</replacable></parameters>
 						<description>
 							<p>Set the unit to use for textual representation of lengths.  Defaults to cm.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--showfiles="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--showfiles=">bool</nosep-parameter>
 						<description>
 							<p>Print the chain of used sources.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--stats="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--stats=">bool</nosep-parameter>
 						<description>
 							<p>Control printing of execution statistics, such as memory and time usage.</p>
 						</description>
@@ -219,8 +219,8 @@
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--v"> <replacable>mode-ver</replacable></parameters>
-						<short-parameter flag="-v">mode-ver</short-parameter>
+						<parameters flag="--v"> <replacable>mode-ver</replacable></parameters>
+						<nosep-parameter flag="-v">mode-ver</nosep-parameter>
 						<description>
 							<p>Set the highest <str-PDF /> version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters <quote>e</quote> (error), <quote>w</quote> (warning), or <quote>s</quote> (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a <str-PDF /> version shall follow.  Valid values are <quote>1.3</quote> and <quote>1.3</quote>.  Hence, for instance, <quote>w1.3</quote> is a valid <replacable>mode-ver</replacable> value.</p>
 						</description>
@@ -249,7 +249,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--open-a"> <replacable>program</replacable></parameters>
+						<parameters flag="--open-a"> <replacable>program</replacable></parameters>
 						<description>
 							<p>Like --open, but here the application to use is specified by the user.</p>
 						</description>
@@ -261,13 +261,13 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--xpdf-remote"> <replacable>name</replacable></parameters>
+						<parameters flag="--xpdf-remote"> <replacable>name</replacable></parameters>
 						<description>
 							<p>Set the name to use when running the xpdf program in remote mode.  Defaults to the output filename.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--xpdf-no-server"> <replacable>name</replacable></parameters>
+						<parameters flag="--xpdf-no-server"> <replacable>name</replacable></parameters>
 						<description>
 							<p>Inhibit use of the remote server mode.  A new xpdf window will appear each time.</p>
 						</description>
@@ -292,7 +292,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--backtrace="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--backtrace=">bool</nosep-parameter>
 						<description>
 							<p>Whether to print a backtrace when the program reports a runtime error.</p>
 						</description>
@@ -353,7 +353,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--debugstep"> <replacable>step</replacable></parameters>
+						<parameters flag="--debugstep"> <replacable>step</replacable></parameters>
 						<description>
 							<p>Set the debug step counter.  For compiler development only.</p>
 						</description>
@@ -367,7 +367,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 				<p>In the end, when garbage collection is implemented, there will be options for controlling the gc behavior here.  At the moment, there is only a dummy option here.</p>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--memclean="><replacable>bool</replacable></parameters>
+						<nosep-parameter flag="--memclean=">bool</nosep-parameter>
 						<description>
 							<p>Attempt to clean up memory before terminating the compilation process?  Defaults to true.</p>
 							<p><b>Rationale:</b> If the program seems to do stupid things after completing evaluation, it is possible that the cleaning-up process has caused a double free or access to freed memory.  While waiting for a fix, the problem can be handled by specifying this option, and thereby omitting the clean-up process entirely.</p>
@@ -390,6 +390,12 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						<parameters flag="--which-out"/>
 						<description>
 							<p>Request the name of the output file.</p>
+						</description>
+					</command-line-item>
+ 					<command-line-item>
+						<parameters flag="--which-tmp"/>
+						<description>
+							<p>Request the name of the directory for temporary files.</p>
 						</description>
 					</command-line-item>
  					<command-line-item>
@@ -417,7 +423,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--which"> <replacable>source</replacable></parameters>
+						<parameters flag="--which"> <replacable>source</replacable></parameters>
 						<description>
 							<p>Request a particular file.</p>
 						</description>

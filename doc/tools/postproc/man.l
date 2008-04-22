@@ -2,7 +2,7 @@
  */
 %%
 
-([\n]".ensure-line-break"[ ]*)+ { printf( "\n" ); }
+([\n]".ensure-line-break"([ \t]|" ")*)+ { printf( "\n" ); }
 "\\\n" { printf( "\\\\\n.br\n" ); }
 
 "&lt;" { printf( "<" ); }
