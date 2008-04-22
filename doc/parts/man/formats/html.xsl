@@ -63,7 +63,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="command-line-item">
 <li>
 <xsl:apply-templates select="parameters" />
-<xsl:apply-templates select="short-parameter" />
+<xsl:apply-templates select="nosep-parameter" />
 <xsl:apply-templates select="description/*"/>
 </li>
 </xsl:template>
@@ -88,7 +88,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<b><xsl:value-of select="@flag" /></b> <xsl:apply-templates /><br />
 </xsl:template>
 
-<xsl:template match="command-line-item/short-parameter[@flag]">
+<xsl:template match="command-line-item/nosep-parameter[@flag]">
 	<b><xsl:value-of select="@flag" /></b><program-param class="replacable"><xsl:value-of select="."/></program-param><br />
 </xsl:template>
 
