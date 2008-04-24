@@ -156,9 +156,13 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 				{
 					res = *i + suffix;
 				}
+			else if( *i == "./" )
+				{
+					res = sourceDir_ + suffix;
+				}
 			else
 				{
-					res = sourceDir_ + "/" + *i + suffix;
+					res = sourceDir_ + *i + suffix;
 				}
 
 			struct stat theStatDummy;
