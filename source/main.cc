@@ -40,7 +40,7 @@ bool strtobool( const char * str, const char * containingString, const char * tr
 std::string callDir;
 std::string absoluteFilename( const char * filename );
 std::string absoluteDirectory( const char * filename );
-void ensureTmpDirectoryExists( const std::string & dirname );
+void ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
 void abortProcedure( std::ofstream * oFile, const std::string & outputName );
 void setupGlobals( );
@@ -83,6 +83,7 @@ main( int argc, char ** argv )
 
 	std::string outDir;
 	std::string tmpDir;
+	bool allowCreateTmpDir = false;
 	std::string baseName;
 	std::string inputName;
 	std::string outputName;
@@ -272,8 +273,8 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strprefixcmp( *argv, "--pdf-version=", & optionSuffix ) == 0 || /* Note that we use that || shortcuts! */
-							 strprefixcmp( *argv, "-v", & optionSuffix ) == 0 )
+			else if( strprefixcmp( *argv, "--pdf-version=", & optionSuffix ) || /* Note that we use that || shortcuts! */
+							 strprefixcmp( *argv, "-v", & optionSuffix ) )
 				{
 					if( pdfVersion != SimplePDF::PDF_out::VERSION_UNDEFINED )
 						{
@@ -293,7 +294,7 @@ main( int argc, char ** argv )
 							pdfVersionAction = SimplePDF::PDF_out::SILENT;
 							break;
 						default:
-							std::cerr << "The only allowed action-characters in the pdf version specification are: \"e\" (error), \"w\" (warn), and \"s\" (silent)." << std::endl ;
+							std::cerr << "The only allowed action-characters in the pdf version specification are: \"e\" (error), \"w\" (warn), and \"s\" (silent).  You said \"" << *optionSuffix << "\", being the first character in \"" << optionSuffix << "\"." << std::endl ;
 							exit( 1 );
 						}
 					++optionSuffix;
@@ -596,7 +597,7 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 					texJobName = *( argv + 1 );
-					if( texJobName.find( "/" ) != std::string::npos )
+					if( texJobName.find( '/' ) != std::string::npos )
 						{
 							std::cerr << "The tex job name may not include directory specification.  Please use --tmpdir to set the directory where the tex job is carried out." << std::endl ;
 							exit( 1 );
@@ -657,6 +658,12 @@ main( int argc, char ** argv )
 					outDir = absoluteDirectory( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
+				}
+			else if( strprefixcmp( *argv, "--tmp*=", & optionSuffix ) )
+				{
+					allowCreateTmpDir = strtobool( optionSuffix, *argv );
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strcmp( *argv, "--tmpdir" ) == 0 )
 				{
@@ -828,7 +835,7 @@ main( int argc, char ** argv )
 					tmpDir = absoluteDirectory( "" );
 				}
 		}
-	ensureTmpDirectoryExists( tmpDir );
+	ensureTmpDirectoryExists( tmpDir, allowCreateTmpDir );
 
 	if( baseName == "" )
 		{
@@ -1702,26 +1709,56 @@ absoluteDirectory( const char * filename )
 	return callDir + filename;
 }
 
+#include <iomanip>
+
 void
-ensureTmpDirectoryExists( const std::string & dirname )
+ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 {
-	{
-		struct stat theStat;
-		if( stat( dirname.c_str( ), & theStat ) == 0 )
-			{
-				if( ( theStat.st_mode & S_IFDIR ) == 0 )
-					{
-						std::cerr << "The path " << dirname << " was expected to reference a directory." << std::endl ;
-						exit( 1 );
-					}
-				if( ( theStat.st_mode & S_IWOTH ) == 0 )
-					{
-						std::cerr << "The directory " << dirname << " was expected have write permission for others." << std::endl ;
-						exit( 1 );
-					}
-				return;
-			}
-	}
-	std::cerr << "The directory " << dirname << " does not exist." << std::endl ;
-	exit( 1 );
+	struct stat theStat;
+	if( stat( dirname.c_str( ), & theStat ) == 0 )
+		{
+			if( ( theStat.st_mode & S_IFDIR ) == 0 )
+				{
+					std::cerr << "The path " << dirname << " was expected to reference a directory." << std::endl ;
+					exit( 1 );
+				}
+			//				if( ( theStat.st_mode & S_IWOTH ) == 0 )
+			//					{
+			//						std::cerr << "The directory " << dirname << " was expected have write permission for others." << std::endl ;
+			//						exit( 1 );
+			//					}
+			return;
+		}
+
+	if( ! allowCreate )
+		{
+			std::cerr << "The directory for temporaries, " << dirname << ", does not exist and is not allowed to be created.  Consider using --tmpdir+ instead of --tmpdir ." << std::endl ;
+			exit( 1 );
+		}
+
+	size_t i2 = 0; /* We know there's a slash at the first position */
+	i2 = dirname.find( '/', i2 + 1 );
+	bool atRoot = true;
+	while( stat( dirname.substr( 0, i2 ).c_str( ), & theStat ) == 0 )
+		{
+			atRoot = false;
+			i2 = dirname.find( '/', i2 + 1 );
+		}
+	if( atRoot )
+		{
+			std::cerr << "Shapes will not create directories for temporary files at the root: " << dirname << std::endl ;
+			exit( 1 );
+		}
+
+	mode_t oldUmask = umask( 0 ); /* We want to be able to create directories with any permissions. */
+	while( i2 != std::string::npos )
+		{
+			if( mkdir( dirname.substr( 0, i2 ).c_str( ), theStat.st_mode & ( S_IRWXU | S_IRWXG | S_IRWXO ) ) != 0 )
+				{
+					std::cerr << "Failed to create directory for temporary files (errno=" << errno << "): " << dirname.substr( 0, i2 ) << std::endl ;
+					exit( 1 );
+				}
+			i2 = dirname.find( '/', i2 + 1 );
+		}
+	umask( oldUmask );
 }

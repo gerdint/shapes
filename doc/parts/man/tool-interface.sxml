@@ -66,7 +66,13 @@
 					<command-line-item>
 						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 						<description>
-							<p>Specify directory for temporary files.  See also the environment variable SHAPESTMPDIR.</p>
+							<p>Specify directory for temporary files.  See also --tmp*= and the environment variable SHAPESTMPDIR.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
+						<nosep-parameter flag="--tmp*=">bool</nosep-parameter>
+						<description>
+							<p>Permission to create directory for temporary files if it does not exist.  Defaults to no.  See also --tmpdir.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
