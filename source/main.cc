@@ -40,6 +40,7 @@ bool strtobool( const char * str, const char * containingString, const char * tr
 std::string callDir;
 std::string absoluteFilename( const char * filename );
 std::string absoluteDirectory( const char * filename );
+void ensureTmpDirectoryExists( const std::string & dirname );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
 void abortProcedure( std::ofstream * oFile, const std::string & outputName );
 void setupGlobals( );
@@ -89,7 +90,7 @@ main( int argc, char ** argv )
 	std::string labelDBName;
 	std::string fontmetricsOutputName;
 
-	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM, FILENAME_TEXINPUTS };
+	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TMP, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM, FILENAME_TEXINPUTS };
 
 	std::list< int > filenameRequestList;
 	std::list< const char * > resourceRequestList;
@@ -148,25 +149,24 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--bytecolumn" ) == 0 )
+			else if( strprefixcmp( *argv, "--bytecolumn=", & optionSuffix ) )
 				{
-					Interaction::characterColumnInBytes = true;
+					Interaction::characterColumnInBytes = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--debugstep" ) == 0 )
+			else if( strprefixcmp( *argv, "--debugstep=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
 					char * endp;
-					int tmp = strtol( *( argv + 1 ), & endp, 10 );
+					int tmp = strtol( optionSuffix, & endp, 10 );
 					if( tmp < 0 )
 						{
-							std::cerr << "The --debugstep value must be nonnegative: " << tmp << std::endl ;
+							std::cerr << "The --debugstep value must be nonnegative: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 					Interaction::debugStep = static_cast< size_t >( tmp );
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strcmp( *argv, "--debuglog" ) == 0 )
 				{
@@ -272,29 +272,16 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
-			else if( strcmp( *argv, "--v" ) == 0 ||
-							 strncmp( *argv, "-v", 2 ) == 0 )
+			else if( strprefixcmp( *argv, "--pdf-version=", & optionSuffix ) == 0 || /* Note that we use that || shortcuts! */
+							 strprefixcmp( *argv, "-v", & optionSuffix ) == 0 )
 				{
-					bool longForm = strncmp( *argv, "--", 2 ) == 0;
-
-					const char * tmp = 0;
-					if( longForm )
-						{
-							argcAssertion( *argv, argc, 2 );
-							tmp = *( argv + 1 );
-						}
-					else
-						{
-							tmp = (*argv) + 2;
-						}
-
 					if( pdfVersion != SimplePDF::PDF_out::VERSION_UNDEFINED )
 						{
 							std::cerr << "Multiply defined pdf version." << std::endl ;
 							exit( 1 );
 						}
 
-					switch( *tmp )
+					switch( *optionSuffix )
 						{
 						case 'e':
 							pdfVersionAction = SimplePDF::PDF_out::ERROR;
@@ -309,49 +296,37 @@ main( int argc, char ** argv )
 							std::cerr << "The only allowed action-characters in the pdf version specification are: \"e\" (error), \"w\" (warn), and \"s\" (silent)." << std::endl ;
 							exit( 1 );
 						}
-					++tmp;
-					if( strcmp( tmp, "1.3" ) == 0 )
+					++optionSuffix;
+					if( strcmp( optionSuffix, "1.3" ) == 0 )
 						{
 							pdfVersion = SimplePDF::PDF_out::PDF_1_3;
 						}
-					else if( strcmp( tmp, "1.4" ) == 0 )
+					else if( strcmp( optionSuffix, "1.4" ) == 0 )
 						{
 							pdfVersion = SimplePDF::PDF_out::PDF_1_4;
 						}
 					else
 						{
-							std::cerr << "Unsupported pdf version specification: " << tmp << std::endl ;
+							std::cerr << "Unsupported pdf version specification: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
-					if( longForm )
-						{
-							argv += 2;
-							argc -= 2;
-						}
-					else
-						{
-							argv += 1;
-							argc -= 1;
-						}
+					argv += 1;
+					argc -= 1;
 				}
-			else if( strcmp( *argv, "--unit" ) == 0 )
+			else if( strprefixcmp( *argv, "--unit=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
+					Interaction::displayUnitName = optionSuffix;
 
-					Interaction::displayUnitName = *( argv + 1 );
-
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
-			else if( strcmp( *argv, "--splicingtol" ) == 0 )
+			else if( strprefixcmp( *argv, "--splicingtol=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
-
 					char * endp;
-					Computation::theTrixelizeSplicingTol = strtod( *( argv + 1 ), &endp );
+					Computation::theTrixelizeSplicingTol = strtod( optionSuffix, &endp );
 					if( *endp != '\0' )
 						{
-							std::cerr << "Argument to --splicingtol was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --splicingtol= was not a float: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::theTrixelizeSplicingTol <= 0 )
@@ -360,18 +335,16 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
-			else if( strcmp( *argv, "--overlaptol" ) == 0 )
+			else if( strprefixcmp( *argv, "--overlaptol=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
-
 					char * endp;
-					Computation::theTrixelizeOverlapTol = strtod( *( argv + 1 ), &endp );
+					Computation::theTrixelizeOverlapTol = strtod( optionSuffix, &endp );
 					if( *endp != '\0' )
 						{
-							std::cerr << "Argument to --overlaptol was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --overlaptol was not a float: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::theTrixelizeOverlapTol <= 0 )
@@ -380,8 +353,8 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strcmp( *argv, "--needpath" ) == 0 ||
 							 strncmp( *argv, "-N", 2 ) == 0 )
@@ -494,62 +467,56 @@ main( int argc, char ** argv )
 							argc -= 1;
 						}
 				}
-			else if( strcmp( *argv, "--seed" ) == 0 )
+			else if( strprefixcmp( *argv, "--seed=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
-
 					char * endp;
-					long s = strtol( *( argv + 1 ), &endp, 10 );
+					long s = strtol( optionSuffix, &endp, 10 );
 					if( *endp != '\0' )
 						{
-							std::cerr << "Argument to --seed was not an integer: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --seed= was not an integer: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 
 					srand( s );
 
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
-			else if( strcmp( *argv, "--arcdelta" ) == 0 )
+			else if( strprefixcmp( *argv, "--arcdelta=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
-
 					char * endp;
-					Computation::the_arcdelta = strtod( *( argv + 1 ), &endp );
+					Computation::the_arcdelta = strtod( optionSuffix, &endp );
 					if( *endp != '\0' )
 						{
-							std::cerr << "Argument to --arcdelta was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --arcdelta= was not a float: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::the_arcdelta <= 0 )
 						{
-							std::cerr << "Argument to --arcdelta not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
+							std::cerr << "Argument to --arcdelta= not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
 							exit( 1 );
 						}
 
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
-			else if( strcmp( *argv, "--dtmin" ) == 0 )
+			else if( strprefixcmp( *argv, "--dtmin=", & optionSuffix ) )
 				{
-					argcAssertion( *argv, argc, 2 );
-
 					char * endp;
-					Computation::the_dtMin = strtod( *( argv + 1 ), &endp );
+					Computation::the_dtMin = strtod( optionSuffix, &endp );
 					if( *endp != '\0' )
 						{
-							std::cerr << "Argument to --dtmin was not a float: " << *( argv + 1 ) << std::endl ;
+							std::cerr << "Argument to --dtmin= was not a float: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
 					if( Computation::the_dtMin <= 0 )
 						{
-							std::cerr << "Argument to --dtmin not positive: " << Computation::the_dtMin << std::endl ;
+							std::cerr << "Argument to --dtmin= not positive: " << Computation::the_dtMin << std::endl ;
 							exit( 1 );
 						}
 
-					argv += 2;
-					argc -= 2;
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strcmp( *argv, "--prepend" ) == 0 )
 				{
@@ -703,6 +670,12 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
+			else if( strcmp( *argv, "--which-tmp" ) == 0 )
+				{
+					filenameRequestList.push_back( FILENAME_TMP );
+					argv += 1;
+					argc -= 1;
+				}
 			else if( strcmp( *argv, "--xpdf" ) == 0 )
 				{
 					launch_xpdf = true;
@@ -855,6 +828,7 @@ main( int argc, char ** argv )
 					tmpDir = absoluteDirectory( "" );
 				}
 		}
+	ensureTmpDirectoryExists( tmpDir );
 
 	if( baseName == "" )
 		{
@@ -994,6 +968,9 @@ main( int argc, char ** argv )
 								{
 									std::cout << outputName ;
 								}
+							break;
+						case FILENAME_TMP:
+							std::cout << tmpDir ;
 							break;
 						case FILENAME_TEXJOB:
 							std::cout << tmpDir << texJobName ;
@@ -1725,3 +1702,26 @@ absoluteDirectory( const char * filename )
 	return callDir + filename;
 }
 
+void
+ensureTmpDirectoryExists( const std::string & dirname )
+{
+	{
+		struct stat theStat;
+		if( stat( dirname.c_str( ), & theStat ) == 0 )
+			{
+				if( ( theStat.st_mode & S_IFDIR ) == 0 )
+					{
+						std::cerr << "The path " << dirname << " was expected to reference a directory." << std::endl ;
+						exit( 1 );
+					}
+				if( ( theStat.st_mode & S_IWOTH ) == 0 )
+					{
+						std::cerr << "The directory " << dirname << " was expected have write permission for others." << std::endl ;
+						exit( 1 );
+					}
+				return;
+			}
+	}
+	std::cerr << "The directory " << dirname << " does not exist." << std::endl ;
+	exit( 1 );
+}

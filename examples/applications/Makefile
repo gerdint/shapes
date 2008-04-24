@@ -1,6 +1,6 @@
 ALLSHAPE := $(patsubst %.shape,%.pdf, $(wildcard *.shape) )
 RTLOGOS := rtlogo_right.pdf rtlogo_left.pdf rtlogo_right_nobg.pdf rtlogo_left_nobg.pdf rtlogo_square.pdf
-SHAPESFLAGS = --v w1.3
+SHAPESFLAGS = --pdf-version=w1.3
 
 all: $(ALLSHAPE)
 

@@ -159,7 +159,7 @@
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--seed"> <replacable>s</replacable></parameters>
+						<nosep-parameter flag="--seed=">s</nosep-parameter>
 						<description>
 							<p>Initializes the global random number generator by calling the srand function..</p>
 						</description>
@@ -188,13 +188,13 @@
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--bytecolumn"></parameters>
+						<nosep-parameter flag="--bytecolumn=">bool</nosep-parameter>
 						<description>
-							<p>Report source file columns in bytes rather than complete UTF-8 characters.  By default, column indicates the character count from the beginning of the line.</p>
+							<p>When true, report source file columns in bytes rather than complete <str-UTF-8 /> characters.  Defaults to false.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--unit"> <replacable>unit-name</replacable></parameters>
+						<nosep-parameter flag="--unit=">unit-name</nosep-parameter>
 						<description>
 							<p>Set the unit to use for textual representation of lengths.  Defaults to cm.</p>
 						</description>
@@ -219,7 +219,7 @@
 			<body>
 				<command-line-option-list>
 					<command-line-item>
-						<parameters flag="--v"> <replacable>mode-ver</replacable></parameters>
+						<nosep-parameter flag="--pdf-version=">mode-ver</nosep-parameter>
 						<nosep-parameter flag="-v">mode-ver</nosep-parameter>
 						<description>
 							<p>Set the highest <str-PDF /> version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters <quote>e</quote> (error), <quote>w</quote> (warning), or <quote>s</quote> (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a <str-PDF /> version shall follow.  Valid values are <quote>1.3</quote> and <quote>1.3</quote>.  Hence, for instance, <quote>w1.3</quote> is a valid <replacable>mode-ver</replacable> value.</p>
@@ -267,7 +267,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--xpdf-no-server"> <replacable>name</replacable></parameters>
+						<parameters flag="--xpdf-no-server"></parameters>
 						<description>
 							<p>Inhibit use of the remote server mode.  A new xpdf window will appear each time.</p>
 						</description>
@@ -353,7 +353,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<parameters flag="--debugstep"> <replacable>step</replacable></parameters>
+						<nosep-parameter flag="--debugstep=">step</nosep-parameter>
 						<description>
 							<p>Set the debug step counter.  For compiler development only.</p>
 						</description>

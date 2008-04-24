@@ -94,6 +94,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="tolerance-parameter[@name]">
 	<li>
+		<xsl:apply-templates select="command-line-option-derived" />
 		<xsl:apply-templates select="command-line-option" />
 		<xsl:apply-templates select="description/*"/>
 		<p>Default value: <xsl:apply-templates select="default" /></p>
@@ -102,6 +103,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="tolerance-parameter/command-line-option[@flag]">
 	<b><xsl:value-of select="@flag" /></b> <xsl:apply-templates /><br />
+</xsl:template>
+<xsl:template match="tolerance-parameter[@name]/command-line-option-derived">
+	<b>--<xsl:value-of select="../@name" />=</b><program-param class="replacable"><xsl:value-of select="." /></program-param><br />
 </xsl:template>
 
 

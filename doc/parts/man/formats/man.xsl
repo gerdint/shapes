@@ -97,7 +97,9 @@ version of this page.</xsl:text>
 <xsl:template match="tolerance-parameter[@name]">
 <xsl:text>
 
-</xsl:text><xsl:apply-templates select="command-line-option" />
+</xsl:text>
+<xsl:apply-templates select="command-line-option-derived" />
+<xsl:apply-templates select="command-line-option" />
 <xsl:apply-templates select="description/*"/><xsl:text>
 .ensure-line-break.br
 Default value: </xsl:text><xsl:apply-templates select="default" />
@@ -106,6 +108,10 @@ Default value: </xsl:text><xsl:apply-templates select="default" />
 <xsl:template match="tolerance-parameter/command-line-option[@flag]"><xsl:text>
 .ensure-line-break.B "</xsl:text><xsl:value-of select="@flag" /><xsl:text>"
 .ensure-line-break</xsl:text><xsl:apply-templates /><xsl:text>
+.ensure-line-break.br
+.ensure-line-break</xsl:text></xsl:template>
+<xsl:template match="tolerance-parameter[@name]/command-line-option-derived"><xsl:text>
+.ensure-line-break.BI "--</xsl:text><xsl:value-of select="../@name" /><xsl:text>=" "</xsl:text><xsl:value-of select="." /><xsl:text>"
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 

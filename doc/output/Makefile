@@ -13,11 +13,11 @@ stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdou
 	shapes --in $< --out $*.pdf > $*.stdout
 
 %_3.pdf: ../../examples/features/%.shape
-	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
+	shapes --pdf-version=s1.3 --in $< --out $*_3.pdf > $*.stdout
 %_3.pdf: ../../examples/showcase/%.shape
-	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
+	shapes --pdf-version=s1.3 --in $< --out $*_3.pdf > $*.stdout
 %_3.pdf: ../../examples/doc/%.shape
-	shapes --v s1.3 --in $< --out $*_3.pdf > $*.stdout
+	shapes --pdf-version=s1.3 --in $< --out $*_3.pdf > $*.stdout
 
 %_y_big.jpg: %_3.pdf
 	convert -density 150 -resize x150 $< $@

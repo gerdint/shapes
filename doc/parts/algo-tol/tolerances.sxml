@@ -1,7 +1,7 @@
 <tolerance-parameter name="arcdelta">
 	<type><named-type name="Length" /></type>
 	<default><physical><scalar>0.1</scalar><unit>bp</unit></physical></default>
-	<command-line-option flag="--arcdelta"> <replacable>length</replacable></command-line-option>
+	<command-line-option-derived>length</command-line-option-derived>
 	<description>
 		<p>Set maximum integration step length to use when integrating along paths.  See also <tol-param name="dtmin" />.</p>
 	</description>
@@ -10,7 +10,7 @@
 <tolerance-parameter name="dtmin">
 	<type><named-type name="Float" /></type>
 	<default><sci-fmt mantissa="1" exp="-4" /></default>
-	<command-line-option flag="--dtmin"> <replacable>low</replacable></command-line-option>
+	<command-line-option-derived>low</command-line-option-derived>
 	<description>
 		<p>Set minimum integration step to use when integrating along paths.  See also <tol-param name="arcdelta" />.</p>
 	</description>
@@ -19,7 +19,7 @@
 <tolerance-parameter name="splicingtol">
 	<type><named-type name="Length" /></type>
 	<default><physical><scalar><sci-fmt mantissa="1" exp="-5" /></scalar><unit>bp</unit></physical></default>
-	<command-line-option flag="--splicingtol"> <replacable>tol</replacable></command-line-option>
+	<command-line-option-derived>tol</command-line-option-derived>
 	<description>
 		<p>Tolerance used when a <str-3D /> scene is viewed in <str-2D />.</p>
 	</description>
@@ -28,7 +28,7 @@
 <tolerance-parameter name="overlaptol">
 	<type><named-type name="Length" /></type>
 	<default><physical><scalar><sci-fmt mantissa="1" exp="-3" /></scalar><unit>bp</unit></physical></default>
-	<command-line-option flag="--overlaptol"> <replacable>tol</replacable></command-line-option>
+	<command-line-option-derived>tol</command-line-option-derived>
 	<description>
 		<p>Tolerance used when a <str-3D /> scene is viewed in <str-2D />.</p>
 	</description>
