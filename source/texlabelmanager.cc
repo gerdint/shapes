@@ -412,7 +412,7 @@ Kernel::TeXLabelManager::processRequests( )
 			else
 				{		/* Non-standard case -- may never happen */
 					ostringstream oss;
-					oss << "waitpid for the pdfLaTeX process resulted in the unexpected status 0x" << ios::hex << status << "." ;
+					oss << "waitpid for the pdfLaTeX process resulted in the unexpected status 0x" << std::hex << status << "." ;
 					throw Exceptions::InternalError( strrefdup( oss ) );
 				}
 		}
