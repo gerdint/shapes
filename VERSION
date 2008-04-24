@@ -9,6 +9,12 @@ FILL IN DATE WHEN TAGGING!
 
 (This version number is not expected to be tagged.  Expecting 0.4.0 to be the next real version.)
 
+Minor, but many, changes in the syntax of command line options.  Basically, all parameters but files and directories are given using the --param=val style.
+
+The directory for temporary files can be created automatically, if allowed.
+
+Bugfixes includes: Intersection of straight line segments.
+
 
 ====( 0.3.7 )====
 2008-04-21
