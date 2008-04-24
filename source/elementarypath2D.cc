@@ -777,7 +777,8 @@ Lang::ElementaryPath2D::boundingRectangle( Concrete::Coords2D * dstll, Concrete:
 bool
 Lang::ElementaryPath2D::lineSegmentIntersection( Concrete::Time * dst, const Concrete::Coords2D & l0, const Concrete::Coords2D & l1 ) const
 {
-	Concrete::Coords2D rInv = ( l1 - l0 ) * ( 1. / Concrete::innerScalar( l1 - l0, l1 - l0 ) );
+	Concrete::Coords2D r = l1 - l0;
+	Concrete::Coords2D rInv = r * ( 1. / Concrete::innerScalar( r, r ) );
 	Concrete::Coords2D n( l0.y_ - l1.y_, l1.x_ - l0.x_ );
 	double offset = Concrete::innerScalar( n, l0 );
 	const_iterator i1 = begin( );
@@ -801,32 +802,48 @@ Lang::ElementaryPath2D::lineSegmentIntersection( Concrete::Time * dst, const Con
 			if( (*i1)->front_ == (*i1)->mid_ &&
 					(*i2)->rear_ == (*i2)->mid_ )
 				{
-					Concrete::Coords2D n2( (*i1)->mid_->y_ - (*i2)->mid_->y_, (*i2)->mid_->x_ - (*i1)->mid_->x_ );
-					double offset2 = Concrete::innerScalar( n2, *(*i1)->mid_ );
-					Concrete::Coords2D intersection( 0, 0 ); // dummy initialization
-					double det = ( n.x_ * n2.y_ - n.y_ * n2.x_ ).offtype< 2, 0 >( );
-					if( fabs( det ) < 1e-14 )
+					Concrete::Coords2D r2 = *((*i2)->mid_) - *((*i1)->mid_);
+					Concrete::Coords2D d0 = *((*i1)->mid_) - l0;
+					Physical< 2, 0 > det = r.y_ * r2.x_ - r.x_ * r2.y_;
+					if( fabs( Physical< 2, 0 >::offtype( det ) ) < 1e-14 )
 						{
-							if( fabs( offset ) + fabs( offset2 ) < 1e-14 )
+							/* Parallel lines */
+							if( fabs( Concrete::innerScalar( d0, n.direction( ) ) ) > 1e-5 )
 								{
-									intersection = Concrete::Coords2D( 0, 0 );
-								}
-							else
-								{
+									/* The lines are separated in the normal direction */
 									continue;
 								}
-						}
-					else
-						{
-							intersection = (1. / det ) * Concrete::Coords2D( n2.y_ * offset - n.y_ * offset2, n.x_ * offset2 - n2.x_ * offset );
-						}
-					Concrete::Time t = Shapes::straightLineArcTime( Concrete::innerScalar( rInv, intersection - l0 ) );
-					if( Concrete::ZERO_TIME <= t && t <= Concrete::UNIT_TIME )
-						{
-							Concrete::Time t2( Concrete::innerScalar( rInv, *(*i1)->mid_ + t.offtype< 0, 1 >( ) * *(*i2)->mid_ - l0 ) );
-							if( Concrete::ZERO_TIME <= t2 && t2 <= Concrete::UNIT_TIME )
+							double ta = Concrete::innerScalar( rInv, *((*i1)->mid_) - l0 );
+							double tb = Concrete::innerScalar( rInv, *((*i2)->mid_) - l0 );
+							if( ta > tb ) /* Sort points ta <= tb */
 								{
-									res = min( res, t );
+									double tmp = ta;
+									ta = tb;
+									tb = tmp;
+								}
+							if( ta < 0 )
+								{
+									if( tb < 0 )
+										{
+											continue;
+										}
+									*dst = Concrete::Time( 0 );
+									return true;
+								}
+							if( ta <= 1 )
+								{
+									res = min( res, Shapes::straightLineArcTime( ta ) );
+								}
+							continue;
+						}
+
+					double t1 = ( d0.y_ * r2.x_ - d0.x_ * r2.y_ ) / det;
+					if( 0 <= t1 && t1 <= 1 )
+						{
+							double t2 = ( d0.y_ * r.x_ - d0.x_ * r.y_ ) / det;
+							if( 0 <= t2 && t2 <= 1 )
+								{
+									res = min( res, Shapes::straightLineArcTime( t1 ) );
 								}
 						}
 					continue;
