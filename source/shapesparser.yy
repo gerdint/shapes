@@ -125,7 +125,7 @@ void shapeserror( char * msg )
  * in the generated y.tab.h header file.
  */
 
-%token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle
+%token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle T_ampersandMore
 %token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_bangbrackets T_bangdddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
 %token <tokenID> T_let T_letstar T_letrec
 %token <tokenID> T_tex T_dynamic T_continuation T_continue T_esc_continuation T_esc_continue
@@ -182,6 +182,7 @@ void shapeserror( char * msg )
 %right '|'
 %right T_mapsto T_emptybrackets T_bangbrackets
 %left T_dddotbrackets T_bangdddotbrackets
+%left T_ampersandMore
 %left '&'
 %nonassoc T_dynamiccolon
 %left T_or T_xor
@@ -788,6 +789,10 @@ OperatorFunction
 {
 	$$ = new Ast::Constant( @$, static_cast< RefCountPtr< const Lang::Value > >( Lang::THE_OPERATOR_ANGLE ) );
 }
+| T_ampersandMore
+{
+	$$ = new Ast::Constant( @$, static_cast< RefCountPtr< const Lang::Value > >( Lang::THE_OPERATOR_AMPERSAND_MORE ) );
+}
 | '~'
 {
 	$$ = new Ast::Constant( @$, static_cast< RefCountPtr< const Lang::Value > >( Lang::THE_OPERATOR_NEG ) );
@@ -1013,6 +1018,10 @@ ExprExceptConstStrings
 | Expr T_angle Expr
 {
 	$$ = new Ast::AngleExpr( @2, $1, $3 );
+}
+| Expr T_ampersandMore Expr
+{
+	$$ = new Ast::AmpersandMoreExpr( @2, $1, $3 );
 }
 | Expr '*' Expr
 {

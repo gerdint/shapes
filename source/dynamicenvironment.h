@@ -25,7 +25,7 @@ namespace Shapes
 			SystemDynamicVariables( );
 			SystemDynamicVariables( const RefCountPtr< const Kernel::GraphicsState > & graphicsState );
 
-			void merge( const SystemDynamicVariables & other );
+			void addFrom( const SystemDynamicVariables & other ); /* Take those bindings from other that we don't already have in *this. */
 
 			RefCountPtr< const Kernel::GraphicsState > graphicsState_;
 			RefCountPtr< const Kernel::FacetState > facetState_;
@@ -111,17 +111,6 @@ namespace Shapes
 
 
 
-//		 class DefaultDestinationBinding : public Lang::DynamicBindings
-//		 {
-//			 Ast::SourceLocation loc_;
-//			 Kernel::VariableHandle val_;
-//		 public:
-//			 DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val );
-//			 virtual ~DefaultDestinationBinding( );
-//			 virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
-//			 virtual void gcMark( Kernel::GCMarkedSet & marked );
-//		 };
-
 		class EyeZBinding : public Lang::DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -159,16 +148,6 @@ namespace Shapes
 
 	namespace Kernel
 	{
-
-//		 class DefaultDestinationDynamicVariableProperties : public Kernel::DynamicVariableProperties
-//		 {
-//		 public:
-//			 DefaultDestinationDynamicVariableProperties( const char * name );
-//			 virtual ~DefaultDestinationDynamicVariableProperties( );
-//			 virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-//			 virtual bool forceValue( ) const { return false; };
-//			 virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
-//		 };
 
 		class EyeZDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{

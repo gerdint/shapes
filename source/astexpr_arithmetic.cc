@@ -422,6 +422,21 @@ Ast::AmpersandExpr::impl( DUMMYANDREF( const Lang::Group3D ) arg1, DUMMYANDREF( 
 
 
 RefCountPtr< const Lang::Value >
+Ast::AmpersandMoreExpr::impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2, const Kernel::PassedDyn & dyn ) const
+{
+	if( arg1 == Lang::THE_NULL_DYNAMIC_BINDINGS )
+		{
+			return arg2;
+		}
+	if( arg2 == Lang::THE_NULL_DYNAMIC_BINDINGS )
+		{
+			return arg1;
+		}
+	return RefCountPtr< Lang::DynamicBindings >( new Lang::DynamicBindingsPair( arg1, arg2, true ) ); /* True means "second overrides first" */
+}
+
+
+RefCountPtr< const Lang::Value >
 Ast::PlusExpr::impl( DUMMYANDREF( const Lang::Float ) arg1, DUMMYANDREF( const Lang::Float ) arg2, const Kernel::PassedDyn & dyn ) const
 {
 	return RefCountPtr< const Lang::Value >( new Lang::Float( arg1->val_ + arg2->val_ ) );

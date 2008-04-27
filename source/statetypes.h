@@ -46,10 +46,11 @@ namespace Shapes
 
 		class DynamicBindingsPair : public DynamicBindings
 		{
+			bool override_;
 			RefCountPtr< const Lang::DynamicBindings > car_;
 			RefCountPtr< const Lang::DynamicBindings > cdr_;
 		public:
-			DynamicBindingsPair( const RefCountPtr< const Lang::DynamicBindings > & car, const RefCountPtr< const Lang::DynamicBindings > & cdr );
+			DynamicBindingsPair( const RefCountPtr< const Lang::DynamicBindings > & car, const RefCountPtr< const Lang::DynamicBindings > & cdr, bool override = false );
 			virtual ~DynamicBindingsPair( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );

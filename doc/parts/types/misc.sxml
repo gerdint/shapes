@@ -4,4 +4,10 @@
 	<p>Here, various types that don't fit in the above cathegories are placed.</p>
 </top>
 
+  <coretype name="DynamicBindings">
+    <abstraction>
+			<p>Represents dynamic bindings that can be put in scope using the <syntax name="with-dynamic" /> syntax.</p>
+    </abstraction>
+  </coretype>
+
 </section>

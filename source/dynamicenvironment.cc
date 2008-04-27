@@ -123,7 +123,6 @@ Kernel::SystemDynamicVariables::SystemDynamicVariables( )
 	: graphicsState_( NullPtr< const Kernel::GraphicsState >( ) ),
 		eyez_( std::numeric_limits< double >::signaling_NaN( ) ),
 		defaultUnit_( NullPtr< const Kernel::PolarHandlePromise >( ) ),
-		//		defaultDestination_( NullPtr< Kernel::Variable >( ) ),
 		blendSpace_( NullPtr< const Lang::ColorSpace >( ) )
 { }
 
@@ -133,9 +132,57 @@ Kernel::SystemDynamicVariables::SystemDynamicVariables( const RefCountPtr< const
 		textState_( true ),
 		eyez_( 50 * 72 / 2.54 ), /* 50 cm */
 		defaultUnit_( new Kernel::PolarHandleEmptyPromise( ) ),
-		//		defaultDestination_( new Kernel::Variable( defaultDestination ) ),
 		blendSpace_( Lang::THE_INHERITED_COLOR_SPACE )
 { }
+
+void
+Kernel::SystemDynamicVariables::addFrom( const SystemDynamicVariables & other )
+{
+	if( graphicsState_ == NullPtr< const Kernel::GraphicsState >( ) )
+		{
+			graphicsState_ = other.graphicsState_;
+		}
+	else if( other.graphicsState_ != NullPtr< const Kernel::GraphicsState >( ) )
+		{
+			graphicsState_ = RefCountPtr< const Kernel::GraphicsState >( new Kernel::GraphicsState( *graphicsState_, *other.graphicsState_ ) );
+		}
+	/* In the remaining situation, there is nothing to merge, so we're done. */
+
+	if( facetState_ == NullPtr< const Kernel::FacetState >( ) )
+		{
+			facetState_ = other.facetState_;
+		}
+	else if( other.facetState_ != NullPtr< const Kernel::FacetState >( ) )
+		{
+			facetState_ = RefCountPtr< const Kernel::FacetState >( new Kernel::FacetState( *facetState_, *other.facetState_ ) );
+		}
+	/* In the remaining situation, there is nothing to merge, so we're done. */
+
+	if( textState_ == NullPtr< const Kernel::TextState >( ) )
+		{
+			textState_ = other.textState_;
+		}
+	else if( other.textState_ != NullPtr< const Kernel::TextState >( ) )
+		{
+			textState_ = RefCountPtr< const Kernel::TextState >( new Kernel::TextState( *textState_, *other.textState_ ) );
+		}
+	/* In the remaining situation, there is nothing to merge, so we're done. */
+
+	if( IS_NAN( eyez_ ) )
+		{
+			eyez_ = other.eyez_;
+		}
+
+	if( defaultUnit_ == NullPtr< const Kernel::PolarHandlePromise >( ) )
+		{
+			defaultUnit_ = other.defaultUnit_;
+		}
+
+	if( blendSpace_ == NullPtr< const Lang::ColorSpace >( ) )
+		{
+			blendSpace_ = other.blendSpace_;
+		}
+}
 
 Kernel::DynamicEnvironment::DynamicEnvironment( const RefCountPtr< const Kernel::GraphicsState > & graphicsState )
 	: parent_( NullPtr< Kernel::DynamicEnvironment >( ) ), sysBindings_( new Kernel::SystemDynamicVariables( graphicsState ) ), specialBindings_( 0 ),
@@ -368,22 +415,6 @@ Kernel::DynamicEnvironment::getDefaultUnit( ) const
 	return sysBindings_->defaultUnit_;
 }
 
-// Kernel::VariableHandle &
-// Kernel::DynamicEnvironment::getDefaultDestination( ) const
-// {
-//	 if( sysBindings_ == 0 ||
-//			 sysBindings_->defaultDestination_ == NullPtr< Kernel::Variable >( ) )
-//		 {
-//			 if( parent_ == NullPtr< Kernel::DynamicEnvironment >( ) )
-//				 {
-//					 throw Exceptions::InternalError( "The default destination should allways be defined." );
-//				 }
-//			 return parent_->getDefaultDestination( );
-//		 }
-
-//	 return sysBindings_->defaultDestination_;
-// }
-
 Kernel::ContRef
 Kernel::DynamicEnvironment::getEscapeContinuation( const char * id, const Ast::SourceLocation & loc ) const
 {
@@ -438,66 +469,6 @@ Kernel::DynamicEnvironment::isBaseEnvironment( ) const
 {
 	return parent_ == NullPtr< Kernel::DynamicEnvironment >( );
 }
-
-
-// Lang::DefaultDestinationBinding::DefaultDestinationBinding( const Ast::SourceLocation & loc, Kernel::VariableHandle & val )
-//	 : loc_( loc ), val_( val )
-// { }
-
-// Lang::DefaultDestinationBinding::~DefaultDestinationBinding( )
-// { }
-
-// void
-// Lang::DefaultDestinationBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const
-// {
-//	 if( *sysBindings == 0 )
-//		 {
-//			 *sysBindings = new Kernel::SystemDynamicVariables( );
-//			 (*sysBindings)->defaultDestination_ = val_;
-//			 return;
-//		 }
-
-//	 if( (*sysBindings)->defaultDestination_ != NullPtr< Kernel::Variable >( ) )
-//		 {
-//			 throw Exceptions::MultipleDynamicBind( "@<<", loc_, Ast::THE_UNKNOWN_LOCATION );
-//		 }
-
-//	 (*sysBindings)->defaultDestination_ = val_;
-// }
-
-// void
-// Lang::DefaultDestinationBinding::gcMark( Kernel::GCMarkedSet & marked )
-// {
-//	 val_->gcMark( marked );
-// }
-
-
-// Kernel::DefaultDestinationDynamicVariableProperties::DefaultDestinationDynamicVariableProperties( const char * name )
-//	 : Kernel::DynamicVariableProperties( name )
-// { }
-
-// Kernel::DefaultDestinationDynamicVariableProperties::~DefaultDestinationDynamicVariableProperties( )
-// { }
-
-// Kernel::VariableHandle
-// Kernel::DefaultDestinationDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
-// {
-//	 throw Exceptions::MiscellaneousRequirement( "The default destination cannot be evaluated as a variable." );
-// }
-
-// void
-// Kernel::DefaultDestinationDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
-// {
-//	 if( ! val->isWarm( ) )
-//		 {
-//			 throw Exceptions::InternalError( "The default destination was not warm." );
-//		 }
-
-//	 Kernel::ContRef cont = evalState->cont_;
-//	 cont->takeValue( Kernel::ValueRef( new Lang::DefaultDestinationBinding( loc, val ) ),
-//										evalState );
-//	 return;
-// }
 
 
 Lang::EyeZBinding::EyeZBinding( const Ast::SourceLocation & loc, Concrete::Length val )

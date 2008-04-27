@@ -193,6 +193,9 @@ RefCountPtr< const Lang::BinaryOperatorFunction >
 Lang::THE_OPERATOR_AMPERSAND( new Lang::BinaryOperatorFunction( new Ast::AmpersandExpr( Ast::SourceLocation( ), new Ast::DummyExpression, new Ast::DummyExpression ),
 																																"(&)" ) );
 RefCountPtr< const Lang::BinaryOperatorFunction >
+Lang::THE_OPERATOR_AMPERSAND_MORE( new Lang::BinaryOperatorFunction( new Ast::AmpersandMoreExpr( Ast::SourceLocation( ), new Ast::DummyExpression, new Ast::DummyExpression ),
+																																"(&|)" ) );
+RefCountPtr< const Lang::BinaryOperatorFunction >
 Lang::THE_OPERATOR_PLUS( new Lang::BinaryOperatorFunction( new Ast::PlusExpr( Ast::SourceLocation( ), new Ast::DummyExpression, new Ast::DummyExpression ),
 																													 "(+)" ) );
 RefCountPtr< const Lang::BinaryOperatorFunction >

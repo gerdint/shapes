@@ -114,6 +114,7 @@ namespace Shapes
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_MINUSMINUS;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_PLUSPLUS;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_AMPERSAND;
+		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_AMPERSAND_MORE;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_PLUS;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_MINUS;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_ANGLE;

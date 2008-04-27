@@ -1,8 +1,17 @@
+/**
+ ** First, let's have a look at some basic use of dynamic binding.
+ **/
+
 dynamic @a identity 8
 f: \ b .> @a + b
 •stdout << [f 2] << `¢n´
 •stdout << @a:6 | [f 2] << `¢n´
 •stdout << [f 2] << `¢n´
+
+
+/**
+ ** Next, we turn to dynamic expressions.
+ **/
 
 dynamic @c identity 10
 dynamic @b identity dynamic @a + 5
@@ -14,4 +23,52 @@ dynamic @b identity dynamic @a + 5
   •stdout << `@b: ´ << @b << `¢n´
 }
 
+
+/**
+ ** The rest of this file illustrates how to replace part of a dynamic bindings value by using the &| operator.
+ ** The typical application of this would be to define a set of bindings for the text state, and then define a variation
+ ** by changing just some of the parameters.  However, since this example is meant to be text-oriented we use a silly
+ ** mix of meaningless bindings instead.
+ **/
+b0: @width:3mm & @a:20 & @b:21 & @stroking:[gray 0.5]
+b1: @width:1mm & @b:11 & @c:12
+
+/**
+ ** Note that b0 & b1 would be illegal, since they both provide bindings for @width and @b.
+ **/
+
+/**
+ ** Combine b0 and b1 with priority to the bindings in b1:
+ **/
+b01: locate [] b0 &| b1
+
+b01
+|
+{
+  •stdout << [sourceof b01] << ` :¢n´
+  •stdout << `@a: ´ << @a << `¢n´
+  •stdout << `@b: ´ << @b << `¢n´
+  •stdout << `@c: ´ << @c << `¢n´
+  •stdout << `@width: ´ << @width << `¢n´
+  •stdout << `@stroking: ´ << @stroking << `¢n´
+}
+
+/**
+ ** Combine b0 and b1 with priority to the bindings in b0:
+ **/
+b10: locate [] b1 &| b0
+
+b10
+|
+{
+  •stdout << [sourceof b10] << ` :¢n´
+  •stdout << `@a: ´ << @a << `¢n´
+  •stdout << `@b: ´ << @b << `¢n´
+  •stdout << `@c: ´ << @c << `¢n´
+  •stdout << `@width: ´ << @width << `¢n´
+  •stdout << `@stroking: ´ << @stroking << `¢n´
+}
+
+
+/** Prevent empty output error. **/
 •page << [stroke (0cm,0cm)--(1cm,1cm)]

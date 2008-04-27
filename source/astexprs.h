@@ -263,6 +263,15 @@ namespace Shapes
 		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::Coords3D ) arg1, DUMMYANDREF( const Lang::Coords3D ) arg2, const Kernel::PassedDyn & dyn ) const;
 	};
 
+	class AmpersandMoreExpr : public BinaryInfixExpr
+	{
+	public:
+		AmpersandMoreExpr( const Ast::SourceLocation & _opLoc, Ast::Expression * _expr1, Ast::Expression * _expr2 ) : BinaryInfixExpr( _opLoc, _expr1, _expr2 ) { }
+		CALLIMPL( CLASSTREE1_DynamicBindings, CLASSTREE2_DynamicBindings );
+	private:
+		RefCountPtr< const Lang::Value > impl( DUMMYANDREF( const Lang::DynamicBindings ) arg1, DUMMYANDREF( const Lang::DynamicBindings ) arg2, const Kernel::PassedDyn & dyn ) const;
+	};
+
 	class StarExpr : public BinaryInfixExpr
 	{
 	public:

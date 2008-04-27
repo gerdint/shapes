@@ -501,6 +501,7 @@ Escape "¢"|"¤"
 
 "*/" { return T_projection; }
 "/_" { return T_angle; }
+"&|" { return T_ampersandMore; }
 
 "<=" { return T_lesseq; }
 ">=" { return T_greatereq; }

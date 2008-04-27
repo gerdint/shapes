@@ -13,6 +13,8 @@ Minor, but many, changes in the syntax of command line options.  Basically, all 
 
 The directory for temporary files can be created automatically, if allowed.
 
+New operator, &|, that combines dynamic bindings with priority to the second argument.
+
 Bugfixes includes: Intersection of straight line segments.
 
 

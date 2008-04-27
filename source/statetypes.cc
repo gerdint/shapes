@@ -33,8 +33,8 @@ TYPEINFOIMPL( DynamicBindings );
 DISPATCHIMPL( DynamicBindings );
 
 
-Lang::DynamicBindingsPair::DynamicBindingsPair( const RefCountPtr< const Lang::DynamicBindings > & car, const RefCountPtr< const Lang::DynamicBindings > & cdr )
-	: car_( car ), cdr_( cdr )
+Lang::DynamicBindingsPair::DynamicBindingsPair( const RefCountPtr< const Lang::DynamicBindings > & car, const RefCountPtr< const Lang::DynamicBindings > & cdr, bool override )
+	: override_( override ), car_( car ), cdr_( cdr )
 { }
 
 Lang::DynamicBindingsPair::~DynamicBindingsPair( )
@@ -43,8 +43,66 @@ Lang::DynamicBindingsPair::~DynamicBindingsPair( )
 void
 Lang::DynamicBindingsPair::bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const
 {
-	car_->bind( bindings, sysBindings );
-	cdr_->bind( bindings, sysBindings );
+	if( override_ )
+		{
+			cdr_->bind( bindings, sysBindings );
+			MapType carBindings;
+			Kernel::SystemDynamicVariables * carSysBindings = 0;
+			car_->bind( carBindings, & carSysBindings );
+			{
+				if( bindings.empty( ) )
+					{
+						bindings.swap( carBindings );
+					}
+				else
+					{
+						MapType::iterator dst = bindings.begin( );
+						/* Merge the MapType bindings */
+						for( MapType::const_iterator src = carBindings.begin( ); src != carBindings.end( ); )
+							{
+								if( src->first < dst->first )
+									{
+										bindings.insert( dst, *src );
+										++src;
+										continue;
+									}
+								if( src->first > dst->first )
+									{
+										dst = bindings.lower_bound( src->first );
+										if( dst == bindings.end( ) )
+											{
+												for( ; src != carBindings.end( ); ++src )
+													{
+														bindings.insert( bindings.end( ), *src );
+													}
+												break;
+											}
+										continue;  /* Should we do something more clever here? */
+									}
+								/* If we reach here, the bindings appeared in both maps, and we ignore that in the car part. */
+								++src;
+							}
+					}
+			}
+			if( carSysBindings != 0 )
+				{
+					if( *sysBindings == 0 )
+						{
+							*sysBindings = carSysBindings;
+						}
+					else
+						{
+							/* Merge the SystemDynamicVariables bindings */
+							(*sysBindings)->addFrom( *carSysBindings );
+							delete carSysBindings;
+						}
+				}
+		}
+	else
+		{
+			car_->bind( bindings, sysBindings );
+			cdr_->bind( bindings, sysBindings );
+		}
 }
 
 void

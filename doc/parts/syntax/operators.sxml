@@ -357,6 +357,17 @@ Graphics composition.  Second argument on top of first.
 
 </operator-binary> <!-- end of binary "&" -->
 
+<operator-binary op="&amp;|">
+
+<case first-type="DynamicBindings" second-type="DynamicBindings">
+<result><named-type name="DynamicBindings" /></result>
+<description>
+Asymmetric dynamic binding union.  Bindings to the right take precedence over bindings to the left.
+</description>
+</case>
+
+</operator-binary> <!-- end of binary "&|" -->
+
 
 <operator-binary op="+">
 
