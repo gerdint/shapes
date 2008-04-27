@@ -1,0 +1,26 @@
+/** Below we combine a set of dynamic bindings using the operator & .**/
+f0: @text_font:FONT_COURIER & @text_size:15bp & @text_horizontalscaling:1.4
+slim: @text_horizontalscaling:0.8
+
+/** Paint some text with the standard font f0. **/
+•page << f0 | [shift (0cm,0cm)] [] ( newText << `Standard font´ )
+
+/** Now we would like to change one of the text state parameters of f0.  Then we might to like this: **/
+•page << f0 | slim | [shift (0cm,~1cm)] [] ( newText << `Slim font using nested scopes´ )
+
+/**
+ ** But what if we would like to have a new binding for the text state bindings we just used?
+ ** The following would be an error:
+ **/
+|**f1: f0 & slim
+/**
+ ** The reason is that @text_horizontalscaling is bound in both arguments to & .
+ ** This is what we have to do:
+ **/
+f1: f0 &| slim
+•page << f1 | [shift (0cm,~2cm)] [] ( newText << `Slim font in one scope´ )
+
+/**
+ ** Note how the operator &| reminds of how the operator | could have been used unless we wanted a
+ ** single dynamic bindings value to hold all bindings.
+ **/

@@ -92,7 +92,17 @@ textGreaterThanEight: [textGreater y:8 ...]
 
 <p>Dynamic bindings, recognized by being prefixed with the at sign (@) differ from lexical bindings in that one cannot determine where they were bound by a lexical analysis of the code.  Instead, one must (conceptually) unwind the chain of function calls to find the closest point where the dynamic variable was bound.  We have already seen dynamic variables in use in <a id="basics/colors" />, although the examples seen there were very simple and did not really display the power of dynamic binding.  The main documentation is in  <a part="syntax" id="syntax/binding/dynamic" /> (the example below also appears there), but interested readers should also try <a method="google" query='"dynamic binding" lexical' /> for further in-depth discussions.  The thing to note about dynamic bindings in <str-Shapes /> is that a dynamic variable can be bound to an expression that is to be evaluated each time the dynamic variable is accessed.  This feature i called an <em>dynamic expression</em> (note that these can only be bound to dynamic variables).</p>
 
-<p>Since dynamic bindings and the way it is accomplished in <str-Shapes /> is a very important topic for this tutorial, study the following example carefully!  Pay special attention to the distinction between <operator name="&amp;" /> and <operator name="&amp;|" />.</p>
+<p>Since dynamic bindings and the way it is accomplished in <str-Shapes /> is a very important topic for this tutorial, study the following examples carefully!  The first example just motivates the notation used for one of the operators used to combine dynamic bindings, do not expect to understand this example completely until after reading the second example.</p>
+
+<example-with-output title="Notation of the asymmetric binding union operator" internal-id="example/asymmetric-notation">
+<image pdf="asymmetric-notation_3.pdf" jpg="asymmetric-notation_y_small.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/asymmetric-notation.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/asymmetric-notation.shape" -->]]>
+</source>
+<caption>
+	<p>The story behind the notation of the operator <operator name="&amp;|" />, and a typical application of it.</p>
+</caption>
+</example-with-output>
 
 <example-with-output title="Dynamic binding" internal-id="example/dynamic-binding">
 <source file=<!--#expand-next-string-->"$(EXAMPLES)/features/dynamic.shape">

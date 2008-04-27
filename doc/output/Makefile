@@ -1,6 +1,6 @@
 all: jpg stdout
 
-jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg tutorial-transforms_y_big.jpg tutorial-path-painting_y_big.jpg tutorial-graphics-params_y_big.jpg facefun_y_big.jpg tutorial-one-segment_y_big.jpg tutorial-bezier-connected_y_big.jpg tutorial-slider-use_y_big.jpg upsample_y_big.jpg sidepaths_y_big.jpg mergepaths_y_big.jpg
+jpg: pathconstruction_y_small.jpg boxedeq_y_small.jpg cornerpoint_y_big.jpg tutorial-transforms_y_big.jpg tutorial-path-painting_y_big.jpg tutorial-graphics-params_y_big.jpg facefun_y_big.jpg tutorial-one-segment_y_big.jpg tutorial-bezier-connected_y_big.jpg tutorial-slider-use_y_big.jpg upsample_y_big.jpg sidepaths_y_big.jpg mergepaths_y_big.jpg asymmetric-notation_y_small.jpg
 stdout: dynamic.stdout escape.stdout evalorder.stdout scopes.stdout values.stdout states.stdout curry.stdout ranges.stdout
 
 .PRECIOUS: %.pdf %_3.pdf %.labels.pdf
