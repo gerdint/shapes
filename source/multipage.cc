@@ -9,6 +9,8 @@
 #include "globals.h"
 #include "shapesexceptions.h"
 
+#include <algorithm>
+
 
 using namespace Shapes;
 
@@ -214,8 +216,38 @@ Lang::DocumentDestination::getOutlineItem( const RefCountPtr< SimplePDF::PDF_Ind
 																	outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_ ) );
 }
 
+Kernel::WarmCatalog::BoundingRectangle::BoundingRectangle( )
+	: xmin_( Concrete::HUGE_LENGTH ), ymin_( Concrete::HUGE_LENGTH ),
+		xmax_( -Concrete::HUGE_LENGTH ), ymax_( -Concrete::HUGE_LENGTH ),
+		modified_( true ), pdfVec_( RefCountPtr< SimplePDF::PDF_Vector >( NullPtr< SimplePDF::PDF_Vector >( ) ) )
+{ }
 
-Kernel::WarmCatalog::Page::Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox )
+void
+Kernel::WarmCatalog::BoundingRectangle::growToContain( const Concrete::Coords2D & ll, const Concrete::Coords2D & ur )
+{
+	xmin_ = std::min( xmin_, ll.x_ );
+	ymin_ = std::min( ymin_, ll.y_ );
+	xmax_ = std::max( xmax_, ur.x_ );
+	ymax_ = std::max( ymax_, ur.y_ );
+	modified_ = true;
+}
+
+RefCountPtr< SimplePDF::PDF_Vector >
+Kernel::WarmCatalog::BoundingRectangle::pdfVector( ) const
+{
+	if( modified_ )
+		{
+			modified_ = false;
+		}
+	pdfVec_ = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( xmin_.offtype< 1, 0 >( ),
+																																						 ymin_.offtype< 1, 0 >( ),
+																																						 xmax_.offtype< 1, 0 >( ),
+																																						 ymax_.offtype< 1, 0 >( ) ) );
+	return pdfVec_;
+}
+
+
+Kernel::WarmCatalog::Page::Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< Kernel::WarmCatalog::BoundingRectangle > & mediabox )
 	: index_( index ), resources_( resources ), contents_( contents ), mediabox_( mediabox )
 { }
 
@@ -232,6 +264,7 @@ Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 
 
 Kernel::WarmCatalog::WarmCatalog( )
+	: bboxGroup_( RefCountPtr< const Lang::Symbol >( NullPtr< const Lang::Symbol >( ) ) )
 {
 	labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, strrefdup( "" ), PageLabelEntry::DECIMAL, 1 ) );
 }
@@ -528,6 +561,12 @@ Kernel::WarmCatalog::getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * e
 	return strrefdup( oss );
 }
 
+void
+Kernel::WarmCatalog::setBBoxGroup( const RefCountPtr< const Lang::Symbol > & group )
+{
+	bboxGroup_ = group;
+}
+
 bool
 Kernel::WarmCatalog::isEmpty( ) const
 {
@@ -557,10 +596,16 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 	Concrete::Coords2D llcorner( 0, 0 );
 	Concrete::Coords2D urcorner( 0, 0 );
 	theBBox->boundingRectangle( & llcorner, & urcorner );
-	RefCountPtr< SimplePDF::PDF_Vector > mediabox( new SimplePDF::PDF_Vector( llcorner.x_.offtype< 1, 0 >( ),
-																																						llcorner.y_.offtype< 1, 0 >( ),
-																																						urcorner.x_.offtype< 1, 0 >( ),
-																																						urcorner.y_.offtype< 1, 0 >( ) ) );
+	RefCountPtr< BoundingRectangle > mediabox = RefCountPtr< BoundingRectangle >( NullPtr< BoundingRectangle >( ) );
+	if( bboxGroup_ == NullPtr< const Lang::Symbol >( ) )
+		{
+			mediabox = RefCountPtr< BoundingRectangle >( );
+		}
+	else
+		{
+			mediabox = mediaBoxes_[ bboxGroup_->getKey( ) ];
+		}
+	mediabox->growToContain( llcorner, urcorner );
 	Page * newPage( new Page( pages_.size( ), resources, contents, mediabox ) );
 	pages_.push_back( newPage );
 
@@ -629,7 +674,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 				pagesKids->vec.push_back( i_newPage );
 				newPage->dic[ "Type" ] = SimplePDF::PDF_out::newName( "Page" );
 				newPage->dic[ "Parent" ] = i_pages;
-				newPage->dic[ "MediaBox" ] = (*i)->mediabox_;
+				newPage->dic[ "MediaBox" ] = (*i)->mediabox_->pdfVector( );
 				newPage->dic[ "Contents" ] = doc->indirect( (*i)->contents_ );
 				newPage->dic[ "Resources" ] = doc->indirect( (*i)->resources_ );
 				/* The UserUnit entry appears in PDF 1.6, and cannot be relyed on */

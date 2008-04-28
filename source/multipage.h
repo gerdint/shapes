@@ -70,17 +70,30 @@ namespace Shapes
 		class WarmCatalog : public Kernel::State
 		{
 		public:
+			class BoundingRectangle
+			{
+				Concrete::Length xmin_;
+				Concrete::Length ymin_;
+				Concrete::Length xmax_;
+				Concrete::Length ymax_;
+				mutable bool modified_;
+				mutable RefCountPtr< SimplePDF::PDF_Vector > pdfVec_;
+			public:
+				BoundingRectangle( );
+				void growToContain( const Concrete::Coords2D & ll, const Concrete::Coords2D & ur );
+				RefCountPtr< SimplePDF::PDF_Vector > pdfVector( ) const;
+			};
 			class Page
 			{
 			public:
 				size_t index_;
 				RefCountPtr< SimplePDF::PDF_Resources > resources_;
 				RefCountPtr< SimplePDF::PDF_Stream_out > contents_;
-				RefCountPtr< SimplePDF::PDF_Vector > mediabox_;
+				RefCountPtr< BoundingRectangle > mediabox_;
 				std::vector< RefCountPtr< const Lang::DocumentDestination > > destinations_;
 				std::vector< RefCountPtr< const Lang::AnnotationBase > > annotations_;
 
-				Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< SimplePDF::PDF_Vector > & mediabox );
+				Page( size_t index, const RefCountPtr< SimplePDF::PDF_Resources > & resources, const RefCountPtr< SimplePDF::PDF_Stream_out > & contents, const RefCountPtr< Kernel::WarmCatalog::BoundingRectangle > & mediabox );
 				~Page( );
 			};
 			class PageLabelEntry
@@ -98,6 +111,8 @@ namespace Shapes
 		private:
 			PtrOwner_back_Access< std::list< const Page * > > pages_;
 			PtrOwner_back_Access< std::list< const PageLabelEntry * > > labelEntries_;
+			std::map< Lang::Symbol::KeyType, RefCountPtr< BoundingRectangle > > mediaBoxes_;
+			RefCountPtr< const Lang::Symbol > bboxGroup_;
 		public:
 			WarmCatalog( );
 			virtual ~WarmCatalog( );
@@ -112,6 +127,8 @@ namespace Shapes
 			RefCountPtr< const char > getNextPagePrefix( ) const;
 			RefCountPtr< const char > getNextPageLabel( ) const;
 			RefCountPtr< const char > getPageLabel( size_t index ) const;
+
+			void setBBoxGroup( const RefCountPtr< const Lang::Symbol > & group );
 
 			bool isEmpty( ) const;
 			void tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc );

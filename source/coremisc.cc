@@ -444,6 +444,33 @@ namespace Shapes
 			}
 		};
 
+		class Core_setbboxgroup : public Lang::CoreFunction
+		{
+		public:
+			Core_setbboxgroup( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendCoreStateFormal( "catalog" );
+
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_VOID_VARIABLE );
+			}
+
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef Kernel::WarmCatalog StateType;
+				StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+
+				state->setBBoxGroup( Helpers::down_cast_CoreArgument< const Lang::Symbol >( title_, args, 0, callLoc, true ) );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+													evalState );
+			}
+		};
+
 		class Core_locate : public Lang::CoreFunction
 		{
 		public:
@@ -520,6 +547,7 @@ Kernel::registerCore_misc( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_nextpagenumber( "nextpagenumber" ) );
 	env->initDefineCoreFunction( new Lang::Core_nextpagelabel( "nextpagelabel" ) );
 	env->initDefineCoreFunction( new Lang::Core_setpagelabel( "setpagelabel" ) );
+	env->initDefineCoreFunction( new Lang::Core_setbboxgroup( "setbboxgroup" ) );
 
 	env->initDefineCoreFunction( new Lang::Core_locate( "locate" ) );
 	env->initDefineCoreFunction( new Lang::Core_sourceof( "sourceof" ) );
