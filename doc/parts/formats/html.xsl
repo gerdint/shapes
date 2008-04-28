@@ -442,6 +442,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template name="name-to-state-argument">
+	<xsl:param name="name" />
+	<xsl:param name="class" />
+	<xsl:element name="varname">
+		<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
+		<xsl:call-template name="name-to-state">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="state-arg[@name]">
+	<xsl:call-template name="name-to-state-argument">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+		<xsl:with-param name="class"><xsl:value-of select="@class" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="state-arg[@name and not(@class)]">
   <varname>•<xsl:value-of select="@name" /></varname>
 </xsl:template>
