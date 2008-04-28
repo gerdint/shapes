@@ -68,9 +68,9 @@ Lang::AnnotationSite::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 RefCountPtr< SimplePDF::PDF_Dictionary >
-Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc ) const
+Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page ) const
 {
-	const SimplePDF::PDF_out::Version FANCY_VERSION = SimplePDF::PDF_out::PDF_1_2;
+	const SimplePDF::PDF_Version::Version FANCY_VERSION = SimplePDF::PDF_Version::PDF_1_2;
 
 	RefCountPtr< SimplePDF::PDF_Dictionary > res = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 
@@ -98,14 +98,14 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 	res->dic[ "P" ] = i_page;
 	if( identifier_ != NullPtr< const char >( ) )
 		{
-			const SimplePDF::PDF_out::Version ELEMENT_NAME_VERSION = SimplePDF::PDF_out::PDF_1_4;
-			if( doc->versionGreaterOrEqual( ELEMENT_NAME_VERSION ) )
+			const SimplePDF::PDF_Version::Version ELEMENT_NAME_VERSION = SimplePDF::PDF_Version::PDF_1_4;
+			if( Kernel::the_PDF_version.greaterOrEqual( ELEMENT_NAME_VERSION ) )
 				{
 					res->dic[ "NM" ] = SimplePDF::PDF_out::newString( identifier_.getPtr( ) );
 				}
 			else
 				{
-					doc->versionMessage( ELEMENT_NAME_VERSION, "Annotation identifiier was ignored." );
+					Kernel::the_PDF_version.message( ELEMENT_NAME_VERSION, "Annotation identifiier was ignored." );
 				}
 		}
 	res->dic[ "F" ] = SimplePDF::PDF_out::newInt( flags_ );
@@ -137,13 +137,13 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 
 		if( ! bs->dic.empty( ) )
 			{
-				if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
+				if( Kernel::the_PDF_version.greaterOrEqual( FANCY_VERSION ) )
 					{
 						res->dic[ "BS" ] = bs;
 					}
 				else
 					{
-						doc->versionMessage( FANCY_VERSION, "Annotation border style was ignored." );
+						Kernel::the_PDF_version.message( FANCY_VERSION, "Annotation border style was ignored." );
 					}
 			}
 	}
@@ -166,26 +166,26 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 
 		if( ! ap->dic.empty( ) )
 			{
-				if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
+				if( Kernel::the_PDF_version.greaterOrEqual( FANCY_VERSION ) )
 					{
 						res->dic[ "AP" ] = ap;
 					}
 				else
 					{
-						doc->versionMessage( FANCY_VERSION, "Annotation appearance was ignored." );
+						Kernel::the_PDF_version.message( FANCY_VERSION, "Annotation appearance was ignored." );
 					}
 			}
 	}
 
 	if( color_.mean( ) > 0 )
 		{
-			if( doc->versionGreaterOrEqual( FANCY_VERSION ) )
+			if( Kernel::the_PDF_version.greaterOrEqual( FANCY_VERSION ) )
 				{
 					res->dic[ "C"	] = color_.componentVector( );
 				}
 			else
 				{
-					doc->versionMessage( FANCY_VERSION, "Annotation color was ignored." );
+					Kernel::the_PDF_version.message( FANCY_VERSION, "Annotation color was ignored." );
 				}
 		}
 
@@ -234,9 +234,9 @@ Lang::TextAnnotation::transformed( const Lang::Transform2D & transform, const Re
 }
 
 RefCountPtr< SimplePDF::PDF_Dictionary >
-Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
+Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
 {
-	RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Text", i_page, doc );
+	RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Text", i_page );
 	if( title_ != NullPtr< const char >( ) )
 		{
 			res->dic[ "T" ] = SimplePDF::PDF_out::newString( title_.getPtr( ) );
@@ -276,9 +276,9 @@ Lang::LinkAnnotation::transformed( const Lang::Transform2D & transform, const Re
 }
 
 RefCountPtr< SimplePDF::PDF_Dictionary >
-Lang::LinkAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, SimplePDF::PDF_out * doc, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
+Lang::LinkAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_page, const std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > & namedDestinations ) const
 {
-	RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Link", i_page, doc );
+	RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Link", i_page );
 	if( highlight_ != 'I' )
 		{
 			char buf[2];

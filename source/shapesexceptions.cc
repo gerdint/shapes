@@ -343,11 +343,11 @@ Exceptions::TypeMismatch::display( std::ostream & os ) const
 	os << "Expected " << expectedType << ", got a " << valueType << std::endl ;
 }
 
-Exceptions::PDFVersionError::PDFVersionError( SimplePDF::PDF_out::Version version, SimplePDF::PDF_out::Version required, const RefCountPtr< const char > & msg )
+Exceptions::PDFVersionError::PDFVersionError( SimplePDF::PDF_Version::Version version, SimplePDF::PDF_Version::Version required, const RefCountPtr< const char > & msg )
 	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), version_( version ), required_( required ), msgMem_( msg ), msg_( msgMem_.getPtr( ) )
 { }
 
-Exceptions::PDFVersionError::PDFVersionError( SimplePDF::PDF_out::Version version, SimplePDF::PDF_out::Version required, const char * msg )
+Exceptions::PDFVersionError::PDFVersionError( SimplePDF::PDF_Version::Version version, SimplePDF::PDF_Version::Version required, const char * msg )
 	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), version_( version ), required_( required ), msgMem_( NullPtr< const char >( ) ), msg_( msg )
 { }
 
@@ -357,7 +357,7 @@ Exceptions::PDFVersionError::~PDFVersionError( )
 void
 Exceptions::PDFVersionError::display( std::ostream & os ) const
 {
-	os << SimplePDF::PDF_out::toString( required_ ) << " error: " << msg_ << std::endl ;
+	os << SimplePDF::PDF_Version::toString( required_ ) << " error: " << msg_ << std::endl ;
 }
 
 

@@ -54,16 +54,6 @@ namespace SimplePDF
 	class PDF_out
 	{
 	public:
-		enum Version { PDF_X = 0, PDF_1_1, PDF_1_2, PDF_1_3, PDF_1_4, PDF_1_5, PDF_1_6, VERSION_UNDEFINED };
-		enum VersionAction { ERROR = 0, WARN, SILENT };
-	private:
-		Version version_;
-		VersionAction versionAction_;
-
-		std::ostream * os;
-		std::streamoff os_start;
-
-	public:
 		RefCountPtr< PDF_Dictionary > root_;
 		RefCountPtr< PDF_Dictionary > info_;
 		std::list< std::string > extensionAuthorStrings;
@@ -75,18 +65,11 @@ namespace SimplePDF
 		static double pdfNameToDouble( RefCountPtr< PDF_Object > nameObject );
 		std::list< RefCountPtr< PDF_in > > importSources;
 	public:
-		PDF_out( std::ostream * _os );
+		PDF_out( );
 		~PDF_out( );
-		void writeData( );
+		void writeData( std::ostream & os, const SimplePDF::PDF_Version & pdfVersion );
 
-		void setOutputStream( std::ostream * _os );
 		void abort( );
-
-		void setVersion( Version version ){ version_ = version; }
-		void setVersionAction( VersionAction action ){ versionAction_ = action; }
-		bool versionGreaterOrEqual( Version required ) const { return version_ >= required; }
-		bool versionGreaterOrEqualOrX( Version required ) const { return version_ >= required || version_ == PDF_X; }
-		void versionMessage( Version required, const char * message );
 
 		RefCountPtr< PDF_Indirect_out > indirect( RefCountPtr< PDF_Object > obj, size_t v = 0 );
 
@@ -98,8 +81,6 @@ namespace SimplePDF
 		static RefCountPtr<PDF_Object> newInt( PDF_Int::ValueType val );
 		static RefCountPtr<PDF_Object> newBoolean( PDF_Boolean::ValueType val );
 		static RefCountPtr<PDF_Object> newFloat( PDF_Float::ValueType val );
-
-		static const char * toString( Version version );
 	};
 
 	extern RefCountPtr<PDF_Object> theTrue;
@@ -121,8 +102,8 @@ namespace SimplePDF
 		void addKid( const RefCountPtr< OutlineItem > & kid );
 
 		bool hasKids( ) const;
-		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc ) const;
-		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc ) const;
+		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const;
+		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const;
 	};
 
 }

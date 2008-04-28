@@ -64,6 +64,12 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
+						<nosep-parameter flag="--split=">bool</nosep-parameter>
+						<description>
+							<p>Create one output file per page in the catalog.  The file name extension will be changed from <filename>.pdf</filename> to <filename>-n.pdf</filename>, where <em>n</em> is the physical page number.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
 						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 						<description>
 							<p>Specify directory for temporary files.  See also --tmp*= and the environment variable SHAPESTMPDIR.</p>

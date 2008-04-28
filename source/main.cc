@@ -101,13 +101,14 @@ main( int argc, char ** argv )
 	bool cleanupMemory = true;
 	bool memoryStats = false;
 	bool launch_xpdf = false;
-	SimplePDF::PDF_out::Version pdfVersion = SimplePDF::PDF_out::VERSION_UNDEFINED;
-	SimplePDF::PDF_out::VersionAction pdfVersionAction = SimplePDF::PDF_out::WARN;
+	SimplePDF::PDF_Version::Version pdfVersion = SimplePDF::PDF_Version::VERSION_UNDEFINED;
+	SimplePDF::PDF_Version::Action pdfVersionAction = SimplePDF::PDF_Version::WARN;
 	XpdfAction xpdfAction = XPDF_DEFAULT;
 	std::string xpdfServer;
 	bool do_open = false;
 	const char * do_open_application = 0;
 	std::ostringstream prependStreamOut;
+	bool splitCatalog = false;
 
 	argc -= 1;
 	argv += 1;
@@ -276,7 +277,7 @@ main( int argc, char ** argv )
 			else if( strprefixcmp( *argv, "--pdf-version=", & optionSuffix ) || /* Note that we use that || shortcuts! */
 							 strprefixcmp( *argv, "-v", & optionSuffix ) )
 				{
-					if( pdfVersion != SimplePDF::PDF_out::VERSION_UNDEFINED )
+					if( pdfVersion != SimplePDF::PDF_Version::VERSION_UNDEFINED )
 						{
 							std::cerr << "Multiply defined pdf version." << std::endl ;
 							exit( 1 );
@@ -285,13 +286,13 @@ main( int argc, char ** argv )
 					switch( *optionSuffix )
 						{
 						case 'e':
-							pdfVersionAction = SimplePDF::PDF_out::ERROR;
+							pdfVersionAction = SimplePDF::PDF_Version::ERROR;
 							break;
 						case 'w':
-							pdfVersionAction = SimplePDF::PDF_out::WARN;
+							pdfVersionAction = SimplePDF::PDF_Version::WARN;
 							break;
 						case 's':
-							pdfVersionAction = SimplePDF::PDF_out::SILENT;
+							pdfVersionAction = SimplePDF::PDF_Version::SILENT;
 							break;
 						default:
 							std::cerr << "The only allowed action-characters in the pdf version specification are: \"e\" (error), \"w\" (warn), and \"s\" (silent).  You said \"" << *optionSuffix << "\", being the first character in \"" << optionSuffix << "\"." << std::endl ;
@@ -300,11 +301,11 @@ main( int argc, char ** argv )
 					++optionSuffix;
 					if( strcmp( optionSuffix, "1.3" ) == 0 )
 						{
-							pdfVersion = SimplePDF::PDF_out::PDF_1_3;
+							pdfVersion = SimplePDF::PDF_Version::PDF_1_3;
 						}
 					else if( strcmp( optionSuffix, "1.4" ) == 0 )
 						{
-							pdfVersion = SimplePDF::PDF_out::PDF_1_4;
+							pdfVersion = SimplePDF::PDF_Version::PDF_1_4;
 						}
 					else
 						{
@@ -683,6 +684,12 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
+			else if( strprefixcmp( *argv, "--split=", & optionSuffix ) )
+				{
+					splitCatalog = strtobool( optionSuffix, *argv );
+					argv += 1;
+					argc -= 1;
+				}
 			else if( strcmp( *argv, "--xpdf" ) == 0 )
 				{
 					launch_xpdf = true;
@@ -1016,13 +1023,13 @@ main( int argc, char ** argv )
 			exit( 0 );
 		}
 
-	if( pdfVersion == SimplePDF::PDF_out::VERSION_UNDEFINED )
+	if( pdfVersion == SimplePDF::PDF_Version::VERSION_UNDEFINED )
 		{
-			pdfVersion = SimplePDF::PDF_out::PDF_1_5;
+			pdfVersion = SimplePDF::PDF_Version::PDF_1_5;
 		}
 
-	Kernel::the_pdfo->setVersion( pdfVersion );
-	Kernel::the_pdfo->setVersionAction( pdfVersionAction );
+	Kernel::the_PDF_version.setVersion( pdfVersion );
+	Kernel::the_PDF_version.setAction( pdfVersionAction );
 
 	{
 		std::ostringstream oss;
@@ -1075,7 +1082,6 @@ main( int argc, char ** argv )
 			std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
 			exit( 1 );
 		}
-	Kernel::the_pdfo->setOutputStream( & oFile );
 
 	RefCountPtr< std::ifstream > labelDBFile = RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
 
@@ -1265,7 +1271,7 @@ main( int argc, char ** argv )
 	 * To make sure it is not in use when we close it, we do the_pdfo->writeData( ) first.
 	 */
 
-	Kernel::the_pdfo->writeData( );
+	Kernel::the_pdfo->writeData( oFile, Kernel::the_PDF_version );
 
 	if( labelDBFile != NullPtr< std::ifstream >( ) )
 		{

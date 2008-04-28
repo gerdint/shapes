@@ -352,9 +352,9 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 	RefCountPtr< SimplePDF::PDF_Resources > resources;
 	(*form)[ "Resources" ] = Kernel::the_pdfo->indirect( resources );
 
-	if( ! Kernel::the_pdfo->versionGreaterOrEqual( SimplePDF::PDF_out::PDF_1_4 ) )
+	if( ! Kernel::the_PDF_version.greaterOrEqual( SimplePDF::PDF_Version::PDF_1_4 ) )
 		{
-			Kernel::the_pdfo->versionMessage( SimplePDF::PDF_out::PDF_1_4, "A transparency group was replaced by a plain XObject." );
+			Kernel::the_PDF_version.message( SimplePDF::PDF_Version::PDF_1_4, "A transparency group was replaced by a plain XObject." );
 		}
 	else
 		{
@@ -789,8 +789,8 @@ Lang::SoftMasked2D::~SoftMasked2D( )
 void
 Lang::SoftMasked2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const
 {
-	const SimplePDF::PDF_out::Version SOFTMASK_VERSION = SimplePDF::PDF_out::PDF_1_4;
-	if( Kernel::the_pdfo->versionGreaterOrEqual( SOFTMASK_VERSION ) )
+	const SimplePDF::PDF_Version::Version SOFTMASK_VERSION = SimplePDF::PDF_Version::PDF_1_4;
+	if( Kernel::the_PDF_version.greaterOrEqual( SOFTMASK_VERSION ) )
 		{
 			Kernel::Auto_qQ auto_qQ( & pdfState->graphics_, os );
 			if( ! tf.isIdentity( ) )
@@ -803,7 +803,7 @@ Lang::SoftMasked2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfS
 		}
 	else
 		{
-			Kernel::the_pdfo->versionMessage( SOFTMASK_VERSION, "A soft mask was ignored." );
+			Kernel::the_PDF_version.message( SOFTMASK_VERSION, "A soft mask was ignored." );
 			element_->shipout( os, pdfState, tf );
 		}
 }

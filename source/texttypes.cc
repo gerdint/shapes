@@ -2319,10 +2319,10 @@ Kernel::TextState::synchKnockout( std::ostream & os, const Kernel::TextState * r
 				{
 					return false;
 				}
-			const SimplePDF::PDF_out::Version KNOCKOUT_VERSION = SimplePDF::PDF_out::PDF_1_4;
-			if( ! Kernel::the_pdfo->versionGreaterOrEqual( KNOCKOUT_VERSION ) )
+			const SimplePDF::PDF_Version::Version KNOCKOUT_VERSION = SimplePDF::PDF_Version::PDF_1_4;
+			if( ! Kernel::the_PDF_version.greaterOrEqual( KNOCKOUT_VERSION ) )
 				{
-					Kernel::the_pdfo->versionMessage( KNOCKOUT_VERSION, "The text state knockout mode setting was ignored." );
+					Kernel::the_PDF_version.message( KNOCKOUT_VERSION, "The text state knockout mode setting was ignored." );
 				}
 			knockout_ = ref->knockout_;
 			typedef typeof knockoutNameMap_ MapType;

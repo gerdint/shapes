@@ -55,6 +55,7 @@ namespace Shapes
 		extern Kernel::PassedEnv theGlobalEnvironment; // Useful for functions in the core refering to their home environment.
 		extern std::list< Kernel::Environment * > theEnvironmentList;
 		extern Kernel::TeXLabelManager theTeXLabelManager;
+		extern SimplePDF::PDF_Version the_PDF_version;
 		extern SimplePDF::PDF_out * the_pdfo;
 		extern Kernel::DebugLog theDebugLog;
 

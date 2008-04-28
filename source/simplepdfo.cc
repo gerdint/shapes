@@ -2,6 +2,7 @@
 
 #include "simplepdfo.h"
 #include "simplepdfi.h"
+#include "pdfversion.h"
 #include "shapesexceptions.h"
 #include "texlabelmanager.h"
 #include "shapestypes.h"
@@ -133,22 +134,70 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 		}
 }
 
+SimplePDF::PDF_Version::PDF_Version( )
+	: version_( SimplePDF::PDF_Version::PDF_1_4 ),
+		versionAction_( SimplePDF::PDF_Version::WARN )
+{ }
+
+const char *
+SimplePDF::PDF_Version::string( ) const
+{
+	return toString( version_ );
+}
 
 
-SimplePDF::PDF_out::PDF_out( ostream * _os )
-	: version_( SimplePDF::PDF_out::PDF_1_4 ),
-		versionAction_( SimplePDF::PDF_out::WARN ),
-		os( _os ), os_start( static_cast< streamoff >( 0 ) ),
-		root_( new PDF_Dictionary ),
+void
+SimplePDF::PDF_Version::message( Version required, const char * message ) const
+{
+	using namespace Shapes;
+
+	switch( versionAction_ )
+		{
+		case ERROR:
+			throw Exceptions::PDFVersionError( version_, required, message );
+			break;
+		case WARN:
+			std::cerr << toString( version_ ) << " warning: " << message << std::endl ;
+			break;
+		case SILENT:
+			// Just be quiet.
+			break;
+		default:
+			throw Exceptions::InternalError( "PDF_out versionAction_ out of range." );
+		}
+}
+
+const char *
+SimplePDF::PDF_Version::toString( SimplePDF::PDF_Version::Version version )
+{
+	switch( version )
+		{
+		case PDF_X:
+			return "PDF-X" ;
+		case PDF_1_1:
+			return "PDF-1.1" ;
+		case PDF_1_2:
+			return "PDF-1.2" ;
+		case PDF_1_3:
+			return "PDF-1.3" ;
+		case PDF_1_4:
+			return "PDF-1.4" ;
+		case PDF_1_5:
+			return "PDF-1.5" ;
+		case PDF_1_6:
+			return "PDF-1.6" ;
+		default:
+			throw Shapes::Exceptions::InternalError( "PDF version out of range." );
+		}
+}
+
+
+SimplePDF::PDF_out::PDF_out( )
+	: root_( new PDF_Dictionary ),
 		info_( new PDF_Dictionary ),
 		i_root( NullPtr< PDF_Object >( ) ),
 		objCount( 0 )
 {
-	if( os != 0 )
-		{
-			os_start = static_cast< streamoff >( os->tellp( ) );
-		}
-
 	indirect( RefCountPtr< PDF_Int >( new PDF_Int( 0 ) ), 65535 );
 	indirectQueue.back( )->inUse = false;
 
@@ -164,19 +213,15 @@ SimplePDF::PDF_out::~PDF_out( )
 { }
 
 void
-SimplePDF::PDF_out::writeData( )
+SimplePDF::PDF_out::writeData( std::ostream & os, const SimplePDF::PDF_Version & pdfVersion )
 {
-	if( os == 0 )
-		{
-			std::cerr << "SimplePDF::PDF_out::writeData: The output file has not been assigned." << std::endl ;
-			exit( 1 );
-		}
+	std::streamoff os_start = static_cast< streamoff >( os.tellp( ) );
 
 	RefCountPtr< PDF_Object > i_info;
 	try
 		{
-	(*os) << std::fixed ;
-	(*os) << "%" << toString( version_ ) << endl
+	os << std::fixed ;
+	os << "%" << pdfVersion.string( ) << endl
 		 << "%"
 		 << static_cast< char >( 129 ) << static_cast< char >( 130 )
 		 << static_cast< char >( 131 ) << static_cast< char >( 132 )
@@ -202,34 +247,34 @@ SimplePDF::PDF_out::writeData( )
 		typedef IndirectQueueType::iterator I;
 		for( I i( indirectQueue.begin( ) ); i != indirectQueue.end( ); ++i )
 			{
-				(*i)->byteOffset = static_cast< streamoff >( os->tellp( ) ) - os_start;
-				(*i)->writeObject( *os );
+				(*i)->byteOffset = static_cast< streamoff >( os.tellp( ) ) - os_start;
+				(*i)->writeObject( os );
 			}
 	}
-	streamoff xref( static_cast< streamoff >( os->tellp( ) ) );
+	streamoff xref( static_cast< streamoff >( os.tellp( ) ) );
 	{
-		(*os) << setfill( '0' ) ;
-		(*os) << "xref" << endl
+		os << setfill( '0' ) ;
+		os << "xref" << endl
 			 << 0 << " " << indirectQueue.size( ) << endl ;
 		typedef IndirectQueueType::iterator I;
 		for( I i( indirectQueue.begin( ) ); i != indirectQueue.end( ); ++i )
 			{
-				(*os) << setw( 10 ) << (*i)->byteOffset << ' ' << setw( 5 ) << (*i)->v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
+				os << setw( 10 ) << (*i)->byteOffset << ' ' << setw( 5 ) << (*i)->v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
 			}
 	}
-	(*os) << "trailer" << endl ;
+	os << "trailer" << endl ;
 	{
 		PDF_Dictionary trailer;
 		trailer.dic[ "Size" ] = newInt( indirectQueue.size( ) );
 		trailer.dic[ "Root" ] = i_root;
 		trailer.dic[ "Info" ] = i_info;
-		trailer.writeTo( *os );
+		trailer.writeTo( os );
 	}
-	(*os) << endl << "startxref" << endl ;
-	(*os) << xref - os_start << endl ;
+	os << endl << "startxref" << endl ;
+	os << xref - os_start << endl ;
 	ostringstream tmps;
 	tmps << endl ;
-	(*os) << "%%EOF" << endl ;
+	os << "%%EOF" << endl ;
 		}
 	catch( const char * ball )
 		{
@@ -253,18 +298,6 @@ SimplePDF::PDF_out::writeData( )
 		{
 			importSources.pop_back( );
 		}
-}
-
-void
-SimplePDF::PDF_out::setOutputStream( ostream * _os )
-{
-	if( os != 0 )
-		{
-			std::cerr << "The output file has already been set." << std::endl ;
-			exit( 1 );
-		}
-	os = _os;
-	os_start = static_cast< streamoff >( os->tellp( ) );
 }
 
 
@@ -500,50 +533,6 @@ SimplePDF::PDF_out::newFloat( PDF_Float::ValueType val )
 	return RefCountPtr<PDF_Float>( new PDF_Float( val ) );
 }
 
-void
-SimplePDF::PDF_out::versionMessage( Version required, const char * message )
-{
-	using namespace Shapes;
-
-	switch( versionAction_ )
-		{
-		case ERROR:
-			throw Exceptions::PDFVersionError( version_, required, message );
-			break;
-		case WARN:
-			std::cerr << toString( version_ ) << " warning: " << message << std::endl ;
-			break;
-		case SILENT:
-			// Just be quiet.
-			break;
-		default:
-			throw Exceptions::InternalError( "PDF_out versionAction_ out of range." );
-		}
-}
-
-const char *
-SimplePDF::PDF_out::toString( SimplePDF::PDF_out::Version version )
-{
-	switch( version )
-		{
-		case PDF_X:
-			return "PDF-X" ;
-		case PDF_1_1:
-			return "PDF-1.1" ;
-		case PDF_1_2:
-			return "PDF-1.2" ;
-		case PDF_1_3:
-			return "PDF-1.3" ;
-		case PDF_1_4:
-			return "PDF-1.4" ;
-		case PDF_1_5:
-			return "PDF-1.5" ;
-		case PDF_1_6:
-			return "PDF-1.6" ;
-		default:
-			throw Shapes::Exceptions::InternalError( "PDF version out of range." );
-		}
-}
 
 RefCountPtr<PDF_Object> SimplePDF::theTrue( new PDF_Boolean( true ) );
 RefCountPtr<PDF_Object> SimplePDF::theFalse( new PDF_Boolean( false ) );
@@ -569,11 +558,11 @@ SimplePDF::OutlineItem::hasKids( ) const
 }
 
 RefCountPtr< SimplePDF::PDF_Indirect_out >
-SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) const 
+SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const
 {
 	RefCountPtr< SimplePDF::PDF_Dictionary > res( new SimplePDF::PDF_Dictionary );
 	RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = doc->indirect( res );
-	res->dic[ "Type"	] = doc->newName( "Outlines" );
+	res->dic[ "Type"	] = SimplePDF::PDF_out::newName( "Outlines" );
 
 	if( ! kids_.empty( ) )
 		{
@@ -585,7 +574,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 			RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
 			newKid->dic[ "Parent" ] = i_res;
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
-			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
 
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
@@ -598,7 +587,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 					i_newKid = doc->indirect( newKid );
 					lastKid->dic[ "Next" ] = i_newKid;
 					newKid->dic[ "Parent" ] = i_res;
-					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
 				}
 
 			res->dic[ "First"	] = i_first;
@@ -606,7 +595,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 
 			if( openCount > 0 )
 				{
-					res->dic[ "Count"	] = doc->newInt( openCount );
+					res->dic[ "Count"	] = SimplePDF::PDF_out::newInt( openCount );
 				}
 		}
 
@@ -614,31 +603,31 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc ) con
 }
 
 size_t
-SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc ) const
+SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const
 {
-	dstDic->dic[ "Title"	] = doc->newString( title_.getPtr( ) );
+	dstDic->dic[ "Title"	] = SimplePDF::PDF_out::newString( title_.getPtr( ) );
 	dstDic->dic[ "Dest"	] = destination_;
-	const SimplePDF::PDF_out::Version FANCY_OUTLINE_VERSION = SimplePDF::PDF_out::PDF_1_3;
+	const SimplePDF::PDF_Version::Version FANCY_OUTLINE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
 	if( fontBold_ || fontItalic_ )
 		{
-			if( doc->versionGreaterOrEqual( FANCY_OUTLINE_VERSION ) )
+			if( pdfVersion.greaterOrEqual( FANCY_OUTLINE_VERSION ) )
 				{
-					dstDic->dic[ "F"	] = doc->newInt( ( fontBold_ ? 2 : 0 ) + ( fontItalic_ ? 1 : 0 ) );
+					dstDic->dic[ "F"	] = SimplePDF::PDF_out::newInt( ( fontBold_ ? 2 : 0 ) + ( fontItalic_ ? 1 : 0 ) );
 				}
 			else
 				{
-					doc->versionMessage( FANCY_OUTLINE_VERSION, "The outline item font flags were ignored." );
+					pdfVersion.message( FANCY_OUTLINE_VERSION, "The outline item font flags were ignored." );
 				}
 		}
 	if( color_.mean( ) > 0 )
 		{
-			if( doc->versionGreaterOrEqual( FANCY_OUTLINE_VERSION ) )
+			if( pdfVersion.greaterOrEqual( FANCY_OUTLINE_VERSION ) )
 				{
 					dstDic->dic[ "C"	] = color_.componentVector( );
 				}
 			else
 				{
-					doc->versionMessage( FANCY_OUTLINE_VERSION, "The outline item color was ignored." );
+					pdfVersion.message( FANCY_OUTLINE_VERSION, "The outline item color was ignored." );
 				}
 		}
 
@@ -653,7 +642,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 			RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
 			newKid->dic[ "Parent" ] = i_dstDic;
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
-			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
 
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
@@ -666,7 +655,7 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 					i_newKid = doc->indirect( newKid );
 					lastKid->dic[ "Next" ] = i_newKid;
 					newKid->dic[ "Parent" ] = i_dstDic;
-					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc );
+					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
 				}
 
 			dstDic->dic[ "First"	] = i_first;
@@ -678,11 +667,11 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 		{
 			if( isOpen_ )
 				{
-					dstDic->dic[ "Count"	] = doc->newInt( openCount );
+					dstDic->dic[ "Count"	] = SimplePDF::PDF_out::newInt( openCount );
 				}
 			else
 				{
-					dstDic->dic[ "Count"	] = doc->newInt( -openCount );
+					dstDic->dic[ "Count"	] = SimplePDF::PDF_out::newInt( -openCount );
 				}
 		}
 

@@ -72,27 +72,27 @@ Computation::SingleSidedPolygon3DGray::polygon_to2D( const Kernel::PassedDyn & d
 			return render0( eyez, tf, lights, & lattice );
 		case 1:
 			{
-				const SimplePDF::PDF_out::Version SHADE_VERSION = SimplePDF::PDF_out::PDF_1_3;
-				if( Kernel::the_pdfo->versionGreaterOrEqual( SHADE_VERSION ) )
+				const SimplePDF::PDF_Version::Version SHADE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+				if( Kernel::the_PDF_version.greaterOrEqual( SHADE_VERSION ) )
 					{
 						return render1( eyez, tf, lights, & lattice );
 					}
 				else
 					{
-						Kernel::the_pdfo->versionMessage( SHADE_VERSION, "Replacing shade order 1 by 0." );
+						Kernel::the_PDF_version.message( SHADE_VERSION, "Replacing shade order 1 by 0." );
 						return render0( eyez, tf, lights, & lattice );
 					}
 			}
 		case 2:
 			{
-				const SimplePDF::PDF_out::Version SHADE_VERSION = SimplePDF::PDF_out::PDF_1_3;
-				if( Kernel::the_pdfo->versionGreaterOrEqual( SHADE_VERSION ) )
+				const SimplePDF::PDF_Version::Version SHADE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+				if( Kernel::the_PDF_version.greaterOrEqual( SHADE_VERSION ) )
 					{
 						return render2( eyez, tf, lights, & lattice, vertexMem );
 					}
 				else
 					{
-						Kernel::the_pdfo->versionMessage( SHADE_VERSION, "Replacing shade order 2 by 0." );
+						Kernel::the_PDF_version.message( SHADE_VERSION, "Replacing shade order 2 by 0." );
 						return render0( eyez, tf, lights, & lattice );
 					}
 			}
@@ -487,27 +487,27 @@ Computation::SingleSidedPolygon3DRGB::polygon_to2D( const Kernel::PassedDyn & dy
 			return render0( eyez, tf, lights, & lattice );
 		case 1:
 			{
-				const SimplePDF::PDF_out::Version SHADE_VERSION = SimplePDF::PDF_out::PDF_1_3;
-				if( Kernel::the_pdfo->versionGreaterOrEqual( SHADE_VERSION ) )
+				const SimplePDF::PDF_Version::Version SHADE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+				if( Kernel::the_PDF_version.greaterOrEqual( SHADE_VERSION ) )
 					{
 						return render1( eyez, tf, lights, & lattice );
 					}
 				else
 					{
-						Kernel::the_pdfo->versionMessage( SHADE_VERSION, "Replacing shade order 1 by 0." );
+						Kernel::the_PDF_version.message( SHADE_VERSION, "Replacing shade order 1 by 0." );
 						return render0( eyez, tf, lights, & lattice );
 					}
 			}
 		case 2:
 			{
-				const SimplePDF::PDF_out::Version SHADE_VERSION = SimplePDF::PDF_out::PDF_1_3;
-				if( Kernel::the_pdfo->versionGreaterOrEqual( SHADE_VERSION ) )
+				const SimplePDF::PDF_Version::Version SHADE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+				if( Kernel::the_PDF_version.greaterOrEqual( SHADE_VERSION ) )
 					{
 						return render2( eyez, tf, lights, & lattice, vertexMem );
 					}
 				else
 					{
-						Kernel::the_pdfo->versionMessage( SHADE_VERSION, "Replacing shade order 2 by 0." );
+						Kernel::the_PDF_version.message( SHADE_VERSION, "Replacing shade order 2 by 0." );
 						return render0( eyez, tf, lights, & lattice );
 					}
 			}

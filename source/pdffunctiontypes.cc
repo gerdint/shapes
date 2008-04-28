@@ -43,7 +43,7 @@ Lang::PDF_Function::~PDF_Function( )
 void
 Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 {
-	(*dst)[ "FunctionType" ] = Kernel::the_pdfo->newInt( subType_ );
+	(*dst)[ "FunctionType" ] = SimplePDF::PDF_out::newInt( subType_ );
 
 	if( domain_.size( ) != inputDimension_ )
 		{

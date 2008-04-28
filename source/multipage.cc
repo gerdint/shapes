@@ -307,10 +307,10 @@ Kernel::WarmCatalog::gcMark( Kernel::GCMarkedSet & marked )
 void
 Kernel::WarmCatalog::setLabel( RefCountPtr< const char > prefix, PageLabelEntry::Style style, size_t start )
 {
-	const SimplePDF::PDF_out::Version PAGELABEL_VERSION = SimplePDF::PDF_out::PDF_1_3;
-	if( ! Kernel::the_pdfo->versionGreaterOrEqual( PAGELABEL_VERSION ) )
+	const SimplePDF::PDF_Version::Version PAGELABEL_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+	if( ! Kernel::the_PDF_version.greaterOrEqual( PAGELABEL_VERSION ) )
 		{
-			Kernel::the_pdfo->versionMessage( PAGELABEL_VERSION, "The page label setting was ignored." );
+			Kernel::the_PDF_version.message( PAGELABEL_VERSION, "The page label setting was ignored." );
 			return;
 		}
 
@@ -751,14 +751,14 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 				for( AnnotListType::const_iterator j = i->annotations_.begin( ); j != i->annotations_.end( ); ++j )
 					{
 						RefCountPtr< const Lang::AnnotationBase > annot = *j;
-						annots->vec.push_back( doc->indirect( annot->getDictionary( i_newPage, doc, namedDestinations ) ) );
+						annots->vec.push_back( doc->indirect( annot->getDictionary( i_newPage, namedDestinations ) ) );
 					}
 			}
 
 	}
 
-	const SimplePDF::PDF_out::Version PAGELABELS_VERSION = SimplePDF::PDF_out::PDF_1_3;
-	if( Kernel::the_pdfo->versionGreaterOrEqual( PAGELABELS_VERSION ) )
+	const SimplePDF::PDF_Version::Version PAGELABELS_VERSION = SimplePDF::PDF_Version::PDF_1_3;
+	if( Kernel::the_PDF_version.greaterOrEqual( PAGELABELS_VERSION ) )
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > pageLabels( new SimplePDF::PDF_Dictionary );
 			doc->root_->dic[ "PageLabels" ] = doc->indirect( pageLabels );
@@ -820,7 +820,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 
 	if( outlineStack.front( )->hasKids( ) )
 		{
-			doc->root_->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( doc );
+			doc->root_->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( doc, Kernel::the_PDF_version );
 		}
 	if( ! namedDestinations.empty( ) )
 		{

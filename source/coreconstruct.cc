@@ -1871,14 +1871,14 @@ namespace Shapes
 				RefCountPtr< const char > name = RefCountPtr< const char >( NullPtr< const char >( ) );
 				if( nameVal != NullPtr< NameType >( ) )
 					{
-						const SimplePDF::PDF_out::Version STRINGDESTS_VERSION = SimplePDF::PDF_out::PDF_1_2;
-						if( Kernel::the_pdfo->versionGreaterOrEqual( STRINGDESTS_VERSION ) )
+						const SimplePDF::PDF_Version::Version STRINGDESTS_VERSION = SimplePDF::PDF_Version::PDF_1_2;
+						if( Kernel::the_PDF_version.greaterOrEqual( STRINGDESTS_VERSION ) )
 							{
 								name = nameVal->val_;
 							}
 						else
 							{
-								Kernel::the_pdfo->versionMessage( STRINGDESTS_VERSION, "The naming of a destination was ignored." );
+								Kernel::the_PDF_version.message( STRINGDESTS_VERSION, "The naming of a destination was ignored." );
 								// Note that this will leave name being null, and hence generate further errors if remote_.
 							}
 					}

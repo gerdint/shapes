@@ -10,6 +10,7 @@
 #include "methodid.h"
 #include "simplepdfo.h"
 #include "strrefdup.h" // this is not needed in this file, but it is convenient to get these declarations for users of this file.
+#include "pdfversion.h"
 
 #include <exception>
 #include <iostream>
@@ -289,13 +290,13 @@ namespace Shapes
 
 		class PDFVersionError : public RuntimeError
 		{
-			SimplePDF::PDF_out::Version version_;
-			SimplePDF::PDF_out::Version required_;
+			SimplePDF::PDF_Version::Version version_;
+			SimplePDF::PDF_Version::Version required_;
 			RefCountPtr< const char > msgMem_;
 			const char * msg_;
 		public:
-			PDFVersionError( SimplePDF::PDF_out::Version version, SimplePDF::PDF_out::Version required, const RefCountPtr< const char > & msg );
-			PDFVersionError( SimplePDF::PDF_out::Version version, SimplePDF::PDF_out::Version required, const char * msg );
+			PDFVersionError( SimplePDF::PDF_Version::Version version, SimplePDF::PDF_Version::Version required, const RefCountPtr< const char > & msg );
+			PDFVersionError( SimplePDF::PDF_Version::Version version, SimplePDF::PDF_Version::Version required, const char * msg );
 			virtual ~PDFVersionError( );
 			virtual void display( std::ostream & os ) const;
 		};
