@@ -15,6 +15,8 @@ The directory for temporary files can be created automatically, if allowed.
 
 New operator, &|, that combines dynamic bindings with priority to the second argument.
 
+Pages can be grouped to have equal media boxes.  At the moment, the media box will be the smallest that contains the bounding boxes of all pages in the group.  See the non-pure function setbboxgroup for more details.
+
 Bugfixes includes: Intersection of straight line segments.
 
 
