@@ -824,7 +824,7 @@ namespace Shapes
 			Core_erase( const char * title )
 				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 			{
-				formals_->appendCoreStateFormal( "dst" );
+				formals_->appendCoreStateFormal( "group" );
 			}
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
