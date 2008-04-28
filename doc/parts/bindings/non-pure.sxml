@@ -1,0 +1,58 @@
+<section id="bindings/non-pure-functions">
+<title>Non-pure functions</title>
+<top>
+<p>This section contains non-pure functions that are used to modify states.</p>
+</top>
+
+<system-binding identifier="erase">
+	<function>
+		<case>
+			<arguments>
+				<state identifier="group">
+					<type><named-state-type name="Group" /></type>
+				</state>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Erase the contents.</p>
+				<p>A common application of this is when <state name="page" /> has been used to define the contents of the pages in <state name="catalog" />.  Then, when <state name="catalog" /> is non-empty at the end of the program, it is an error if <state name="page" /> is also non-tmpty.  All you have to do then is to write
+<pre>
+[erase •page]
+</pre>
+at the end of the program.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="setbboxgroup">
+	<function>
+		<case>
+			<arguments>
+				<state identifier="catalog">
+					<type><named-state-type name="Catalog" /></type>
+				</state>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Define the bounding box key to be used for pages subsequently tacked on to the catalog.  These pages will get equal media boxes in the end, being the smallest that contains all the bounding boxes of the pages in the group.</p>
+			</description>
+		</case>
+		<case>
+			<arguments>
+				<state identifier="catalog">
+					<type><named-state-type name="Catalog" /></type>
+				</state>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Clear the bounding box key to be used for pages subsequently tacked on to the catalog.  Pages will get a media box equal to their own bounding box.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+</section>
