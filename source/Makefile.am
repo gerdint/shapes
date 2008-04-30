@@ -38,7 +38,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  functiontypes.h globals.h glyphlist.h hottypes.h \
                  lighttypes.h methodid.h multipage.h operatorside.h \
                  operatorside_none.h pagecontentstates.h pathtypes.h \
-                 pdffunctiontypes.h pdfscanner.h pdfstructure.h \
+                 pdffunctiontypes.h pdfscanner.h pdfstructure.h pdfversion.h \
                  shadingtypes.h Shapes_Ast_decls.h \
                  Shapes_Computation_decls.h Shapes_Concrete_decls.h \
                  shapescore.h Shapes_Exceptions_decls.h shapesexceptions.h \
