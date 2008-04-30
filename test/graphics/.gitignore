@@ -1,0 +1,6 @@
+/Makefile.in
+/Makefile
+/*.png
+/*.log
+/*.labels.pdf
+/test_*

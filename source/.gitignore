@@ -1,0 +1,10 @@
+/*yylex.cc
+/*parser.h
+/*parser.cc
+/*parser.output
+/Makefile
+/Makefile.in
+/shapes
+/.deps
+/.libs
+/SHAPES-VERSION-FILE
