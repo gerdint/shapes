@@ -1,5 +1,7 @@
 #!/bin/sh
 
+LF='
+'
 if test $# -lt 1
 then
 	DIR='..'
@@ -11,81 +13,41 @@ SVF=SHAPES-VERSION-FILE
 SVF_DEF=$DIR/VERSION
 SVF_DIST=version
 VN=$(sed -e '2,$ d' < $SVF_DEF)
-
-if test -d $DIR/.svn
-then
-	CMS=svn
-else
-	CMS="git svn"
-fi
+VD=$(date -R)
 
 if test -f $SVF_DIST
 then
 	VN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF_DIST)
-	VR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //' < $SVF_DIST)
 	VD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF_DIST)
-elif test -d $DIR/.svn -o -d $DIR/.git &&
-     SVN_INFO=$(cd $DIR && $CMS info 2> /dev/null)
-then
-	if VR=$(echo "$SVN_INFO" | \
-			sed -e '/Last Changed Rev/! d' -e 's/Last Changed Rev: //') &&
-			case "$VR" in
-					[0-9]*) : ;;
-					*) (exit 1) ;;
-			esac
-	then
-		:
-	else
-		VR='---'
-	fi
-
-	if VD=$(echo "$SVN_INFO" | \
-			sed -e '/Last Changed Date/! d' -e 's/Last Changed Date: //') &&
-			case "$VD" in
-					[12]*) : ;;
-					*) (exit 1) ;;
-			esac
-	then
-		:
-	else
-		VD='---'
-	fi
-
-	if test -d $DIR/.svn
-	then
-		dirty=$(cd $DIR && svn status 2> /dev/null) || dirty=
-	else
-		dirty=$(git diff --quiet git-svn || echo dirty='YES') || dirty=
-	fi
-	case "$dirty" in
-  '')
-		;;
-	*)
-		VR="$VR-DIRTY" ;;
+elif test -d $DIR/.git &&
+	VN=$(cd $DIR && git describe --abbrev=4 HEAD 2>/dev/null) &&
+	case "$VN" in
+	*$LF*) (exit 1) ;;
+	[0-9]*) : ;;
 	esac
-else
-	VR='---'
-	VD='---'
+then
+	if test -z "$(git diff-index --name-only HEAD)"
+	then
+		VD=$(git show --quiet --pretty="format:%cD" HEAD)
+	else
+		VN="$VN-dirty"
+	fi
 fi
 
 if test -r $SVF
 then
 	FVN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF)
-	FVR=$(sed -e '/REVISION/! d' -e 's/VERSION_REVISION := //'  < $SVF)
 	FVD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF)
 else
 	FVN=undef
-	FVR=undef
 	FVD=undef
 fi
 
-test "$VR" = "$FVR"  -a "$VD" = "$FVD" -a "$VN" = "$FVN" || {
+test "$VD" = "$FVD" -a "$VN" = "$FVN" || {
 	echo >&2 "\
 VERSION_NUMBER := ${VN}
-VERSION_REVISION := ${VR}
 VERSION_DATE := ${VD}"
 	echo "\
 VERSION_NUMBER := ${VN}
-VERSION_REVISION := ${VR}
 VERSION_DATE := ${VD}" > $SVF
 }

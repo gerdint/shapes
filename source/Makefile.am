@@ -94,5 +94,4 @@ classtree2.h : classtree1.h
 
 version.o : version.cc SHAPES-VERSION-FILE
 	${COMPILE} -D'VERSION_DATE="${VERSION_DATE}"' \
-	           -D'VERSION_REVISION="${VERSION_REVISION}"' \
 	           -D'VERSION_NUMBER="${VERSION_NUMBER}"' -c $< -o $@
