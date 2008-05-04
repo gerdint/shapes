@@ -74,6 +74,17 @@ namespace Shapes
 			void setStroking( std::ostream & os ) const;
 			void setNonStroking( std::ostream & os ) const;
 			RefCountPtr< SimplePDF::PDF_Vector > componentVector( ) const;
+
+			CMYK add( const CMYK & col2, const Ast::SourceLocation & callLoc ) const;
+			CMYK mul( double factor, const Ast::SourceLocation & factorLoc ) const;
+			CMYK addNoCheck( const CMYK & col2 ) const
+			{
+				return CMYK( c_ + col2.c_, m_ + col2.m_, y_ + col2.y_, k_ + col2.k_ );
+			}
+			CMYK mulNoCheck( double factor ) const
+			{
+				return CMYK( factor * c_, factor * m_, factor * y_, factor * k_ );
+			}
 		};
 
 	}
