@@ -1,3 +1,5 @@
+.deps
+.libs
 /configure
 /config.log
 /config.status
@@ -5,8 +7,8 @@
 /config.h
 /config.h.in
 /autom4te.cache
-/config
 /aclocal.m4
-/Makefile
-/Makefile.in
+/config
+Makefile
+Makefile.in
 /libtool

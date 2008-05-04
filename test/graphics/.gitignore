@@ -1,6 +1,5 @@
-/Makefile.in
-/Makefile
-/*.png
-/*.log
-/*.labels.pdf
-/test_*
+!*.correct.pdf
+*.aux
+*.png
+*.tex
+
