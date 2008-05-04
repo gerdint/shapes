@@ -303,12 +303,22 @@ namespace Shapes
 
 		class WarmColorInterpolator : public Kernel::State
 		{
-			typedef std::vector< double > KeyContainer;
-			typedef std::vector< Concrete::RGB > RGBContainer;
+		public:
+			typedef Lang::ColorInterpolator::KeyContainer KeyContainer;
+			typedef Lang::ColorInterpolator::RGBContainer RGBContainer;
+			typedef Lang::ColorInterpolator::GrayContainer GrayContainer;
+			typedef Lang::ColorInterpolator::CMYKContainer CMYKContainer;
+			typedef Lang::ColorInterpolator::ColorType ColorType;
 
+		private:
 			RefCountPtr< KeyContainer > key_;
 			RefCountPtr< RGBContainer > RGBcolor_;
+			RefCountPtr< GrayContainer > graycolor_;
+			RefCountPtr< CMYKContainer > CMYKcolor_;
 			bool hasKey_;
+
+			ColorType colorType_;
+
 		public:
 			WarmColorInterpolator( );
 			virtual ~WarmColorInterpolator( );

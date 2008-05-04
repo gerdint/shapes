@@ -1749,9 +1749,13 @@ Lang::VectorFunction::getNumeric( const Ast::SourceLocation & callLoc ) const
 
 const char * Lang::ColorInterpolator::title_ = "<color-interpolator>";
 
-Lang::ColorInterpolator::ColorInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< RGBContainer > & RGBcolor )
+Lang::ColorInterpolator::ColorInterpolator( const RefCountPtr< KeyContainer > & key,
+                                            const RefCountPtr< RGBContainer > & RGBcolor,
+                                            const RefCountPtr< GrayContainer > & graycolor,
+                                            const RefCountPtr< CMYKContainer > & CMYKcolor,
+                                            ColorType colorType)
 	: Lang::Function( new Kernel::EvaluatedFormals( Lang::ColorInterpolator::title_, true ) ),
-	  key_( key ), RGBcolor_ ( RGBcolor )
+	  key_( key ), RGBcolor_ ( RGBcolor ), graycolor_ ( graycolor ), CMYKcolor_ ( CMYKcolor ), colorType_(colorType)
 {
 	formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 }
@@ -1773,6 +1777,42 @@ Lang::ColorInterpolator::getField( const char * fieldID, const RefCountPtr< cons
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
+
+template <class COLOR_TYPE, class COLOR_CONTAINER>
+void
+Lang::ColorInterpolator::callHelper( Kernel::EvalState * evalState,
+																		 const RefCountPtr< COLOR_CONTAINER > & colorContainer,
+																		 double key, KeyContainer::const_iterator keyHi ) const
+{
+	if( keyHi == key_->end( ) )
+		{
+			Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( RefCountPtr< const::Lang::Value >( new COLOR_TYPE( colorContainer->back( ) ) ),
+						                 evalState );
+			return;
+		}
+
+	if( keyHi == key_->begin( ) )
+		{
+			Kernel::ContRef cont = evalState->cont_;
+			cont->takeValue( RefCountPtr< const::Lang::Value >( new COLOR_TYPE( colorContainer->front( ) ) ),
+											 evalState );
+			return;
+		}
+
+	KeyContainer::const_iterator keyLo = keyHi - 1;
+	double rem = ( key - *keyLo ) / ( *keyHi  - *keyLo );
+
+	Kernel::ContRef cont = evalState->cont_;
+
+	typename COLOR_CONTAINER::const_iterator colorHi = colorContainer->begin( ) + ( keyHi - key_->begin( ) );
+	typename COLOR_CONTAINER::const_iterator colorLo = colorHi - 1;
+
+	cont->takeValue( RefCountPtr< const::Lang::Value >( new COLOR_TYPE( colorLo->mulNoCheck( 1 - rem ).addNoCheck( colorHi->mulNoCheck( rem ) ) ) ),
+					                 evalState );
+}
+
+
 void
 Lang::ColorInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
@@ -1786,31 +1826,20 @@ Lang::ColorInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments 
 	double key = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc )->val_;
 
 	KeyContainer::const_iterator keyHi = lower_bound( key_->begin( ), key_->end( ), key );
-	if( keyHi == key_->end( ) )
+	switch( colorType_ )
 		{
-			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( RGBcolor_->back( ) ) ),
-											 evalState );
-			return;
+			case RGB:
+				callHelper< Lang::RGB >( evalState, RGBcolor_, key, keyHi );
+				break;
+			case GRAY:
+				callHelper< Lang::Gray >( evalState, graycolor_, key, keyHi );
+				break;
+			case CMYK:
+				callHelper< Lang::CMYK >( evalState, CMYKcolor_, key, keyHi );
+				break;
+			case UNDEFINED:
+				throw Exceptions::InternalError( "ColorInterpolator::call: Did not expect UNDEFINED in ennum switch." );
 		}
-
-	if( keyHi == key_->begin( ) )
-		{
-			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( RGBcolor_->front( ) ) ),
-											 evalState );
-			return;
-		}
-
-	KeyContainer::const_iterator keyLo = keyHi - 1;
-	RGBContainer::const_iterator colorHi = RGBcolor_->begin( ) + ( keyHi - key_->begin( ) );
-	RGBContainer::const_iterator colorLo = colorHi - 1;
-
-	double rem = ( key - *keyLo ) / ( *keyHi  - *keyLo );
-
-	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( colorLo->mulNoCheck( 1 - rem ).addNoCheck( colorHi->mulNoCheck( rem ) ) ) ),
-									 evalState );
 }
 
 bool

@@ -340,19 +340,38 @@ namespace Shapes
 
 		class ColorInterpolator : public Lang::Function
 		{
-			typedef const std::vector< double > KeyContainer;
-			typedef const std::vector< Concrete::RGB > RGBContainer;
-
-			RefCountPtr< KeyContainer > key_;
-			RefCountPtr< RGBContainer > RGBcolor_;
-			static const char * title_;
 		public:
-			ColorInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< RGBContainer > & RGBcolor );
+			typedef std::vector< double > KeyContainer;
+			typedef std::vector< Concrete::RGB > RGBContainer;
+			typedef std::vector< Concrete::Gray > GrayContainer;
+			typedef std::vector< Concrete::CMYK > CMYKContainer;
+			enum ColorType { UNDEFINED, RGB, GRAY, CMYK };
+
+		private:
+			RefCountPtr< const KeyContainer > key_;
+			RefCountPtr< const RGBContainer > RGBcolor_;
+			RefCountPtr< const GrayContainer > graycolor_;
+			RefCountPtr< const CMYKContainer > CMYKcolor_;
+			static const char * title_;
+			ColorType colorType_;
+
+		public:
+			ColorInterpolator( const RefCountPtr< KeyContainer > & key,
+			                   const RefCountPtr< RGBContainer > & RGBcolor,
+			                   const RefCountPtr< GrayContainer > & graycolor,
+			                   const RefCountPtr< CMYKContainer > & CMYKcolor,
+			                   ColorType colorType );
 			virtual ~ColorInterpolator( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 			virtual bool isTransforming( ) const;
+
+		private:
+			template <class COLOR_TYPE, class COLOR_CONTAINER>
+			void callHelper( Kernel::EvalState * evalState, const RefCountPtr< COLOR_CONTAINER > & colorContainer,
+											 double key, KeyContainer::const_iterator keyHi ) const;
+
 		};
 
 		class BinaryOperatorFunction : public Lang::Function

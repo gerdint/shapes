@@ -1611,7 +1611,7 @@ Kernel::WarmRandomState::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Kernel::WarmColorInterpolator::WarmColorInterpolator( )
-	: hasKey_( false )
+	: hasKey_( false ), colorType_( Lang::ColorInterpolator::UNDEFINED )
 { }
 
 Kernel::WarmColorInterpolator::~WarmColorInterpolator( )
@@ -1625,8 +1625,49 @@ Kernel::WarmColorInterpolator::tackOnImpl( Kernel::EvalState * evalState, const 
 {
 	if( hasKey_ )
 		{
-			typedef const Lang::RGB ArgType;
-			RGBcolor_->push_back( Helpers::down_cast< ArgType >( piece, callLoc )->components( ) );
+			switch( colorType_ )
+				{
+				case Lang::ColorInterpolator::UNDEFINED:
+					try
+						{
+							RGBcolor_->push_back( Helpers::down_cast< const Lang::RGB >( piece, callLoc )->components( ) );
+							colorType_ = Lang::ColorInterpolator::RGB;
+							break;
+						}
+					catch( const Exceptions::TypeMismatch & )
+						{
+						}
+					try
+						{
+							graycolor_->push_back( Helpers::down_cast< const Lang::Gray >( piece, callLoc )->components( ) );
+							colorType_ = Lang::ColorInterpolator::GRAY;
+							break;
+						}
+					catch( const Exceptions::TypeMismatch & )
+						{
+						}
+					try
+						{
+							CMYKcolor_->push_back( Helpers::down_cast< const Lang::CMYK >( piece, callLoc )->components( ) );
+							colorType_ = Lang::ColorInterpolator::CMYK;
+							break;
+						}
+					catch( const Exceptions::TypeMismatch & )
+						{
+							throw Exceptions::MiscellaneousRequirement( strrefdup( "Only colors can be passed to an interpolator." ) );
+						}
+				case Lang::ColorInterpolator::RGB:
+					RGBcolor_->push_back( Helpers::down_cast< const Lang::RGB >( piece, callLoc )->components( ) );
+					break;
+
+				case Lang::ColorInterpolator::GRAY:
+					graycolor_->push_back( Helpers::down_cast< const Lang::Gray >( piece, callLoc )->components( ) );
+					break;
+
+				case Lang::ColorInterpolator::CMYK:
+					CMYKcolor_->push_back( Helpers::down_cast< const Lang::CMYK >( piece, callLoc )->components( ) );
+					break;
+				}
 		}
 	else
 		{
@@ -1662,7 +1703,7 @@ Kernel::WarmColorInterpolator::freezeImpl( Kernel::EvalState * evalState, const 
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ColorInterpolator( key_, RGBcolor_ ) ),
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ColorInterpolator( key_, RGBcolor_, graycolor_, CMYKcolor_,  colorType_ ) ),
 									 evalState );
 }
 
