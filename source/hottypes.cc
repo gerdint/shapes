@@ -1610,23 +1610,23 @@ Kernel::WarmRandomState::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Kernel::WarmRGBInterpolator::WarmRGBInterpolator( )
+Kernel::WarmColorInterpolator::WarmColorInterpolator( )
 	: hasKey_( false )
 { }
 
-Kernel::WarmRGBInterpolator::~WarmRGBInterpolator( )
+Kernel::WarmColorInterpolator::~WarmColorInterpolator( )
 { }
 
-RefCountPtr< const Lang::Class > Kernel::WarmRGBInterpolator::TypeID( new Lang::SystemFinalClass( strrefdup( "#RGBInterpolator" ) ) );
-TYPEINFOIMPL_STATE( WarmRGBInterpolator );
+RefCountPtr< const Lang::Class > Kernel::WarmColorInterpolator::TypeID( new Lang::SystemFinalClass( strrefdup( "#ColorInterpolator" ) ) );
+TYPEINFOIMPL_STATE( WarmColorInterpolator );
 
 void
-Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmColorInterpolator::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
 {
 	if( hasKey_ )
 		{
 			typedef const Lang::RGB ArgType;
-			color_->push_back( Helpers::down_cast< ArgType >( piece, callLoc )->components( ) );
+			RGBcolor_->push_back( Helpers::down_cast< ArgType >( piece, callLoc )->components( ) );
 		}
 	else
 		{
@@ -1650,7 +1650,7 @@ Kernel::WarmRGBInterpolator::tackOnImpl( Kernel::EvalState * evalState, const Re
 }
 
 void
-Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmColorInterpolator::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
 	if( key_->empty( ) )
 		{
@@ -1662,18 +1662,18 @@ Kernel::WarmRGBInterpolator::freezeImpl( Kernel::EvalState * evalState, const As
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::RGBInterpolator( key_, color_ ) ),
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::ColorInterpolator( key_, RGBcolor_ ) ),
 									 evalState );
 }
 
 void
-Kernel::WarmRGBInterpolator::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
+Kernel::WarmColorInterpolator::peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc )
 {
-	throw Exceptions::MiscellaneousRequirement( strrefdup( "An RGB interpolator cannot be peeked." ) );
+	throw Exceptions::MiscellaneousRequirement( strrefdup( "An interpolator cannot be peeked." ) );
 }
 
 void
-Kernel::WarmRGBInterpolator::gcMark( Kernel::GCMarkedSet & marked )
+Kernel::WarmColorInterpolator::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
@@ -1699,5 +1699,5 @@ Kernel::registerHot( Kernel::Environment * env )
 	env->initDefine( "newTimer", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmTimer > ) );
 	env->initDefine( "newText", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmText > ) );
 	env->initDefine( "newFont", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmType3Font > ) );
-	env->initDefine( "newRGBInterpolator", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmRGBInterpolator > ) );
+	env->initDefine( "newColorInterpolator", Kernel::ValueRef( new Lang::HotDefault< Kernel::WarmColorInterpolator > ) );
 }

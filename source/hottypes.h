@@ -301,17 +301,17 @@ namespace Shapes
 			TYPEINFODECL;
 		};
 
-		class WarmRGBInterpolator : public Kernel::State
+		class WarmColorInterpolator : public Kernel::State
 		{
 			typedef std::vector< double > KeyContainer;
-			typedef std::vector< Concrete::RGB > ColorContainer;
+			typedef std::vector< Concrete::RGB > RGBContainer;
 
 			RefCountPtr< KeyContainer > key_;
-			RefCountPtr< ColorContainer > color_;
+			RefCountPtr< RGBContainer > RGBcolor_;
 			bool hasKey_;
 		public:
-			WarmRGBInterpolator( );
-			virtual ~WarmRGBInterpolator( );
+			WarmColorInterpolator( );
+			virtual ~WarmColorInterpolator( );
 			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );

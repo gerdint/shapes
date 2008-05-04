@@ -1747,22 +1747,20 @@ Lang::VectorFunction::getNumeric( const Ast::SourceLocation & callLoc ) const
 }
 
 
-const char * Lang::RGBInterpolator::title_ = "<RGB-interpolator>";
+const char * Lang::ColorInterpolator::title_ = "<color-interpolator>";
 
-Lang::RGBInterpolator::RGBInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< ColorContainer > & color )
-	: Lang::Function( new Kernel::EvaluatedFormals( Lang::RGBInterpolator::title_, true ) ),
-	  key_( key ), color_ ( color ),
-		lowCol_( new Lang::RGB( color_->front( ) ) ), highCol_( new Lang::RGB( color_->back( ) ) )
-
+Lang::ColorInterpolator::ColorInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< RGBContainer > & RGBcolor )
+	: Lang::Function( new Kernel::EvaluatedFormals( Lang::ColorInterpolator::title_, true ) ),
+	  key_( key ), RGBcolor_ ( RGBcolor )
 {
 	formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 }
 
-Lang::RGBInterpolator::~RGBInterpolator( )
+Lang::ColorInterpolator::~ColorInterpolator( )
 { }
 
 Kernel::VariableHandle
-Lang::RGBInterpolator::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+Lang::ColorInterpolator::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
 	if( strcmp( fieldID, "low" ) == 0 )
 		{
@@ -1776,7 +1774,7 @@ Lang::RGBInterpolator::getField( const char * fieldID, const RefCountPtr< const 
 }
 
 void
-Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+Lang::ColorInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 {
 	const size_t ARITY = 1;
 	if( args.size( ) != ARITY )
@@ -1791,7 +1789,7 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 	if( keyHi == key_->end( ) )
 		{
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( highCol_,
+			cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( RGBcolor_->back( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1799,14 +1797,14 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 	if( keyHi == key_->begin( ) )
 		{
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( lowCol_,
+			cont->takeValue( RefCountPtr< const::Lang::Value >( new Lang::RGB( RGBcolor_->front( ) ) ),
 											 evalState );
 			return;
 		}
 
 	KeyContainer::const_iterator keyLo = keyHi - 1;
-	ColorContainer::const_iterator colorHi = color_->begin( ) + ( keyHi - key_->begin( ) );
-	ColorContainer::const_iterator colorLo = colorHi - 1;
+	RGBContainer::const_iterator colorHi = RGBcolor_->begin( ) + ( keyHi - key_->begin( ) );
+	RGBContainer::const_iterator colorLo = colorHi - 1;
 
 	double rem = ( key - *keyLo ) / ( *keyHi  - *keyLo );
 
@@ -1816,13 +1814,13 @@ Lang::RGBInterpolator::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 }
 
 bool
-Lang::RGBInterpolator::isTransforming( ) const
+Lang::ColorInterpolator::isTransforming( ) const
 {
 	return false;
 }
 
 void
-Lang::RGBInterpolator::gcMark( Kernel::GCMarkedSet & marked )
+Lang::ColorInterpolator::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
