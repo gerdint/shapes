@@ -67,7 +67,7 @@ namespace SimplePDF
 	public:
 		PDF_out( );
 		~PDF_out( );
-		void writeData( std::ostream & os, const SimplePDF::PDF_Version & pdfVersion );
+		void writeData( std::ostream & os, SimplePDF::PDF_Version & pdfVersion );
 
 		void abort( );
 
@@ -102,8 +102,8 @@ namespace SimplePDF
 		void addKid( const RefCountPtr< OutlineItem > & kid );
 
 		bool hasKids( ) const;
-		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const;
-		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const;
+		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const;
+		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const;
 	};
 
 }

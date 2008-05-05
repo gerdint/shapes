@@ -299,19 +299,27 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 					++optionSuffix;
-					if( strcmp( optionSuffix, "1.3" ) == 0 )
+					if( strncmp( optionSuffix, "1.", 2 ) == 0 &&
+							'1' <= optionSuffix[2] && optionSuffix[2] <= '6' )
 						{
-							pdfVersion = SimplePDF::PDF_Version::PDF_1_3;
+							SimplePDF::PDF_Version::Version versions[] = { SimplePDF::PDF_Version::PDF_1_1, SimplePDF::PDF_Version::PDF_1_2, SimplePDF::PDF_Version::PDF_1_3, SimplePDF::PDF_Version::PDF_1_4, SimplePDF::PDF_Version::PDF_1_5, SimplePDF::PDF_Version::PDF_1_6 };
+							pdfVersion = versions[ optionSuffix[2] - '1' ];
 						}
-					else if( strcmp( optionSuffix, "1.4" ) == 0 )
+					else if( strcmp( optionSuffix, "X" ) == 0 )
 						{
-							pdfVersion = SimplePDF::PDF_Version::PDF_1_4;
+							std::cerr << "Restriction to PDF-X is not implemented, please try using a low version number, such as 1.1 instead." << std::endl ;
 						}
 					else
 						{
 							std::cerr << "Unsupported pdf version specification: " << optionSuffix << std::endl ;
 							exit( 1 );
 						}
+					argv += 1;
+					argc -= 1;
+				}
+			else if( strprefixcmp( *argv, "--tp=", & optionSuffix ) )
+				{
+					Kernel::allowTransparency = strtobool( optionSuffix, *argv );
 					argv += 1;
 					argc -= 1;
 				}
@@ -1025,7 +1033,7 @@ main( int argc, char ** argv )
 
 	if( pdfVersion == SimplePDF::PDF_Version::VERSION_UNDEFINED )
 		{
-			pdfVersion = SimplePDF::PDF_Version::PDF_1_5;
+			pdfVersion = SimplePDF::PDF_Version::PDF_1_4;
 		}
 
 	Kernel::the_PDF_version.setVersion( pdfVersion );

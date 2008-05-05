@@ -234,7 +234,17 @@
 						<nosep-parameter flag="--pdf-version=">mode-ver</nosep-parameter>
 						<nosep-parameter flag="-v">mode-ver</nosep-parameter>
 						<description>
-							<p>Set the highest <str-PDF /> version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters <quote>e</quote> (error), <quote>w</quote> (warning), or <quote>s</quote> (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a <str-PDF /> version shall follow.  Valid values are <quote>1.3</quote> and <quote>1.3</quote>.  Hence, for instance, <quote>w1.3</quote> is a valid <replacable>mode-ver</replacable> value.</p>
+							<p>Set the highest <str-PDF /> version to use in output.  The <replacable>mode-ver</replacable> parameter shall begin with either of the letters <quote>e</quote> (error), <quote>w</quote> (warning), or <quote>s</quote> (silent).  The letter tells how the compiler shall react when it is not allowed to use a requested feature in the output, and must consider using a simpler replacement.  After the letter, a <str-PDF /> version, such as <quote>1.3</quote> shall follow.  Hence, for instance, <quote>w1.3</quote> is a valid <replacable>mode-ver</replacable> value.</p>
+							<p>Note that this setting affects the <em>highest</em> version to be used; <str-Shapes /> will mark the produced file with the lowest version number providing the features used.  Also note that the most common need for version 1.4 stems from the transparency groups used to merge a stroke with its arrowhead.</p>
+							<p>By default, the <str-PDF /> version is limited to 1.4, but this is likely to change in the future.</p>
+							<p>See also --tp.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
+						<nosep-parameter flag="--tp=">bool</nosep-parameter>
+						<description>
+							<p>Whether to allow the Kernel to use the transparent imaging model (requires <str-PDF /> version 1.4).  At the moment, this only affects whether to use a transparency group to merge an arrowhead with its stroke.  In many cases, disallowing this will effektively reduce the <str-PDF /> version of the output to 1.3 or below.  However, the main reason for this option to exist is that the <str-PDF /> viewer Adobe Reader prior to version 8 had a bug that caused a failure when printing.  Defaults to true.</p>
+							<p>See also --pdf-version.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>

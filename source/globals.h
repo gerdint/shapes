@@ -56,6 +56,7 @@ namespace Shapes
 		extern std::list< Kernel::Environment * > theEnvironmentList;
 		extern Kernel::TeXLabelManager theTeXLabelManager;
 		extern SimplePDF::PDF_Version the_PDF_version;
+		extern bool allowTransparency;
 		extern SimplePDF::PDF_out * the_pdfo;
 		extern Kernel::DebugLog theDebugLog;
 

@@ -134,63 +134,6 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 		}
 }
 
-SimplePDF::PDF_Version::PDF_Version( )
-	: version_( SimplePDF::PDF_Version::PDF_1_4 ),
-		versionAction_( SimplePDF::PDF_Version::WARN )
-{ }
-
-const char *
-SimplePDF::PDF_Version::string( ) const
-{
-	return toString( version_ );
-}
-
-
-void
-SimplePDF::PDF_Version::message( Version required, const char * message ) const
-{
-	using namespace Shapes;
-
-	switch( versionAction_ )
-		{
-		case ERROR:
-			throw Exceptions::PDFVersionError( version_, required, message );
-			break;
-		case WARN:
-			std::cerr << toString( version_ ) << " warning: " << message << std::endl ;
-			break;
-		case SILENT:
-			// Just be quiet.
-			break;
-		default:
-			throw Exceptions::InternalError( "PDF_out versionAction_ out of range." );
-		}
-}
-
-const char *
-SimplePDF::PDF_Version::toString( SimplePDF::PDF_Version::Version version )
-{
-	switch( version )
-		{
-		case PDF_X:
-			return "PDF-X" ;
-		case PDF_1_1:
-			return "PDF-1.1" ;
-		case PDF_1_2:
-			return "PDF-1.2" ;
-		case PDF_1_3:
-			return "PDF-1.3" ;
-		case PDF_1_4:
-			return "PDF-1.4" ;
-		case PDF_1_5:
-			return "PDF-1.5" ;
-		case PDF_1_6:
-			return "PDF-1.6" ;
-		default:
-			throw Shapes::Exceptions::InternalError( "PDF version out of range." );
-		}
-}
-
 
 SimplePDF::PDF_out::PDF_out( )
 	: root_( new PDF_Dictionary ),
@@ -213,7 +156,7 @@ SimplePDF::PDF_out::~PDF_out( )
 { }
 
 void
-SimplePDF::PDF_out::writeData( std::ostream & os, const SimplePDF::PDF_Version & pdfVersion )
+SimplePDF::PDF_out::writeData( std::ostream & os, SimplePDF::PDF_Version & pdfVersion )
 {
 	std::streamoff os_start = static_cast< streamoff >( os.tellp( ) );
 
@@ -221,7 +164,7 @@ SimplePDF::PDF_out::writeData( std::ostream & os, const SimplePDF::PDF_Version &
 	try
 		{
 	os << std::fixed ;
-	os << "%" << pdfVersion.string( ) << endl
+	os << "%" << pdfVersion.maxRequestVersionString( ) << endl
 		 << "%"
 		 << static_cast< char >( 129 ) << static_cast< char >( 130 )
 		 << static_cast< char >( 131 ) << static_cast< char >( 132 )
@@ -558,7 +501,7 @@ SimplePDF::OutlineItem::hasKids( ) const
 }
 
 RefCountPtr< SimplePDF::PDF_Indirect_out >
-SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const
+SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const
 {
 	RefCountPtr< SimplePDF::PDF_Dictionary > res( new SimplePDF::PDF_Dictionary );
 	RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = doc->indirect( res );
@@ -603,7 +546,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, cons
 }
 
 size_t
-SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, const SimplePDF::PDF_Version & pdfVersion ) const
+SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const
 {
 	dstDic->dic[ "Title"	] = SimplePDF::PDF_out::newString( title_.getPtr( ) );
 	dstDic->dic[ "Dest"	] = destination_;

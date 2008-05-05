@@ -14,16 +14,17 @@ namespace SimplePDF
 		enum Action { ERROR = 0, WARN, SILENT };
 	private:
 		Version version_;
+		Version maxRequestVersion_;
 		Action versionAction_;
 
 	public:
 		PDF_Version( );
-		const char * string( ) const;
+		const char * maxRequestVersionString( ) const;
 
-		void setVersion( Version version ){ version_ = version; }
-		void setAction( Action action ){ versionAction_ = action; }
-		bool greaterOrEqual( Version required ) const { return version_ >= required; }
-		bool greaterOrEqualOrX( Version required ) const { return version_ >= required || version_ == PDF_X; }
+		void setVersion( Version version );
+		void setAction( Action action );
+		bool greaterOrEqual( Version required, bool justCurious = false );
+		bool greaterOrEqualOrX( Version required, bool justCurious = false );
 		void message( Version required, const char * message ) const;
 
 		static const char * toString( Version version );

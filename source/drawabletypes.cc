@@ -352,7 +352,11 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 	RefCountPtr< SimplePDF::PDF_Resources > resources;
 	(*form)[ "Resources" ] = Kernel::the_pdfo->indirect( resources );
 
-	if( ! Kernel::the_PDF_version.greaterOrEqual( SimplePDF::PDF_Version::PDF_1_4 ) )
+	if( ! Kernel::allowTransparency )
+		{
+			/* OK, fine. */
+		}
+	else if( ! Kernel::the_PDF_version.greaterOrEqual( SimplePDF::PDF_Version::PDF_1_4 ) )
 		{
 			Kernel::the_PDF_version.message( SimplePDF::PDF_Version::PDF_1_4, "A transparency group was replaced by a plain XObject." );
 		}

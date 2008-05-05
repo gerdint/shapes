@@ -363,6 +363,7 @@ SimplePDF::PDF_Vector::writeTo( ostream & os ) const
 		}
 	os << " ]" ;
 }
+
 RefCountPtr< PDF_Object >
 SimplePDF::PDF_Vector::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
 {
@@ -578,6 +579,7 @@ SimplePDF::PDF_Stream::writeTo( ostream & os ) const
 {
 	throw( "Internal error: PDF_Stream::writeTo called" );
 }
+
 RefCountPtr< PDF_Object >
 SimplePDF::PDF_Stream::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
 {

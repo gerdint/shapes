@@ -54,7 +54,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  ../tools/include/ptrowner.h ../tools/include/refcount.h
 
 shapes_SOURCES = shapesyylex.ll \
-                pdfstructure.cc pdfscanner.cc pdfyylex.ll simplepdfo.cc \
+                pdfstructure.cc pdfscanner.cc pdfyylex.ll simplepdfo.cc pdfversion.cc \
 		simplepdfi.cc consts.cc \
 		../tools/source/autoonoff.cc \
 		../tools/source/physical.cc \

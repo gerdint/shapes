@@ -111,6 +111,7 @@ namespace Shapes
 		private:
 			PtrOwner_back_Access< std::list< const Page * > > pages_;
 			PtrOwner_back_Access< std::list< const PageLabelEntry * > > labelEntries_;
+			bool pageLabelsActivated_;
 			std::map< Lang::Symbol::KeyType, RefCountPtr< BoundingRectangle > > mediaBoxes_;
 			RefCountPtr< const Lang::Symbol > bboxGroup_;
 		public:

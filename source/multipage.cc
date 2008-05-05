@@ -264,7 +264,8 @@ Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 
 
 Kernel::WarmCatalog::WarmCatalog( )
-	: bboxGroup_( RefCountPtr< const Lang::Symbol >( NullPtr< const Lang::Symbol >( ) ) )
+	: pageLabelsActivated_( false ),
+		bboxGroup_( RefCountPtr< const Lang::Symbol >( NullPtr< const Lang::Symbol >( ) ) )
 {
 	labelEntries_.push_back( new Kernel::WarmCatalog::PageLabelEntry( 0, strrefdup( "" ), PageLabelEntry::DECIMAL, 1 ) );
 }
@@ -313,6 +314,8 @@ Kernel::WarmCatalog::setLabel( RefCountPtr< const char > prefix, PageLabelEntry:
 			Kernel::the_PDF_version.message( PAGELABEL_VERSION, "The page label setting was ignored." );
 			return;
 		}
+
+	pageLabelsActivated_ = true;
 
 	if( labelEntries_.back( )->pageIndex_ == pages_.size( ) )
 		{
@@ -758,7 +761,8 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	}
 
 	const SimplePDF::PDF_Version::Version PAGELABELS_VERSION = SimplePDF::PDF_Version::PDF_1_3;
-	if( Kernel::the_PDF_version.greaterOrEqual( PAGELABELS_VERSION ) )
+	if( pageLabelsActivated_ &&
+			Kernel::the_PDF_version.greaterOrEqual( PAGELABELS_VERSION ) )
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > pageLabels( new SimplePDF::PDF_Dictionary );
 			doc->root_->dic[ "PageLabels" ] = doc->indirect( pageLabels );
