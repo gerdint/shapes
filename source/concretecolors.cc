@@ -158,3 +158,77 @@ Concrete::CMYK::componentVector( ) const
 {
 	return RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( c_, m_, y_, k_ ) );
 }
+
+
+Concrete::CMYK
+Concrete::CMYK::add( const CMYK & col2, const Ast::SourceLocation & callLoc ) const
+{
+	double res_c = c_ + col2.c_;
+	double res_m = m_ + col2.m_;
+	double res_y = y_ + col2.y_;
+	double res_k = k_ + col2.k_;
+	if( res_k > 1 )
+		{
+			if( res_k - 1 > theFloatTol )
+				{
+					throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the black component." ) );
+				}
+			else
+				{
+					res_c = res_m = res_y = 0;
+					res_k = 1;
+				}
+		}
+	else
+		{
+			if( double tmp = res_c + res_k > 1 )
+				{
+					if( tmp - 1 > theFloatTol )
+						{
+							throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the cyan component." ) );
+						}
+					else
+						{
+							res_c = 1 - res_k;
+						}
+				}
+			if( double tmp = res_m + res_k > 1 )
+				{
+					if( tmp - 1 > theFloatTol )
+						{
+							throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the magenta component." ) );
+						}
+					else
+						{
+							res_m = 1 - res_k;
+						}
+				}
+			if( double tmp = res_y + res_k > 1 )
+				{
+					if( tmp - 1 > theFloatTol )
+						{
+							throw Exceptions::OutOfRange( callLoc, strrefdup( "The sum is greater than 1 in the yellow component." ) );
+						}
+					else
+						{
+							res_y = 1 - res_k;
+						}
+				}
+		}
+	return Concrete::CMYK( res_c, res_m, res_y, res_k );
+}
+
+
+Concrete::CMYK
+Concrete::CMYK::mul( double factor, const Ast::SourceLocation & factorLoc ) const
+{
+	if( factor < 0 )
+		{
+			throw Exceptions::OutOfRange( factorLoc, strrefdup( "The scalar is less than 0." ) );
+		}
+	if( factor > 1 )
+		{
+			throw Exceptions::OutOfRange( factorLoc, strrefdup( "The scalar is greater than 1." ) );
+		}
+	return Concrete::CMYK( factor * c_, factor * m_, factor * y_, factor * k_ );
+}

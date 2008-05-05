@@ -338,23 +338,40 @@ namespace Shapes
 			RefCountPtr< const std::vector< double > > getNumeric( const Ast::SourceLocation & callLoc ) const;
 		};
 
-		class RGBInterpolator : public Lang::Function
+		class ColorInterpolator : public Lang::Function
 		{
-			typedef const std::vector< double > KeyContainer;
-			typedef const std::vector< Concrete::RGB > ColorContainer;
-
-			RefCountPtr< KeyContainer > key_;
-			RefCountPtr< ColorContainer > color_;
-			RefCountPtr< const Lang::RGB > lowCol_;
-			RefCountPtr< const Lang::RGB > highCol_;
-			static const char * title_;
 		public:
-			RGBInterpolator( const RefCountPtr< KeyContainer > & key, const RefCountPtr< ColorContainer > & color );
-			virtual ~RGBInterpolator( );
+			typedef std::vector< double > KeyContainer;
+			typedef std::vector< Concrete::RGB > RGBContainer;
+			typedef std::vector< Concrete::Gray > GrayContainer;
+			typedef std::vector< Concrete::CMYK > CMYKContainer;
+			enum ColorType { UNDEFINED, RGB, GRAY, CMYK };
+
+		private:
+			RefCountPtr< const KeyContainer > key_;
+			RefCountPtr< const RGBContainer > RGBcolor_;
+			RefCountPtr< const GrayContainer > graycolor_;
+			RefCountPtr< const CMYKContainer > CMYKcolor_;
+			static const char * title_;
+			ColorType colorType_;
+
+		public:
+			ColorInterpolator( const RefCountPtr< KeyContainer > & key,
+			                   const RefCountPtr< RGBContainer > & RGBcolor,
+			                   const RefCountPtr< GrayContainer > & graycolor,
+			                   const RefCountPtr< CMYKContainer > & CMYKcolor,
+			                   ColorType colorType );
+			virtual ~ColorInterpolator( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 			virtual bool isTransforming( ) const;
+
+		private:
+			template <class COLOR_TYPE, class COLOR_CONTAINER>
+			void callHelper( Kernel::EvalState * evalState, const RefCountPtr< COLOR_CONTAINER > & colorContainer,
+											 double key, KeyContainer::const_iterator keyHi ) const;
+
 		};
 
 		class BinaryOperatorFunction : public Lang::Function

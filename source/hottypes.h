@@ -301,17 +301,27 @@ namespace Shapes
 			TYPEINFODECL;
 		};
 
-		class WarmRGBInterpolator : public Kernel::State
+		class WarmColorInterpolator : public Kernel::State
 		{
-			typedef std::vector< double > KeyContainer;
-			typedef std::vector< Concrete::RGB > ColorContainer;
-
-			RefCountPtr< KeyContainer > key_;
-			RefCountPtr< ColorContainer > color_;
-			bool hasKey_;
 		public:
-			WarmRGBInterpolator( );
-			virtual ~WarmRGBInterpolator( );
+			typedef Lang::ColorInterpolator::KeyContainer KeyContainer;
+			typedef Lang::ColorInterpolator::RGBContainer RGBContainer;
+			typedef Lang::ColorInterpolator::GrayContainer GrayContainer;
+			typedef Lang::ColorInterpolator::CMYKContainer CMYKContainer;
+			typedef Lang::ColorInterpolator::ColorType ColorType;
+
+		private:
+			RefCountPtr< KeyContainer > key_;
+			RefCountPtr< RGBContainer > RGBcolor_;
+			RefCountPtr< GrayContainer > graycolor_;
+			RefCountPtr< CMYKContainer > CMYKcolor_;
+			bool hasKey_;
+
+			ColorType colorType_;
+
+		public:
+			WarmColorInterpolator( );
+			virtual ~WarmColorInterpolator( );
 			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
