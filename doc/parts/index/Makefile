@@ -4,22 +4,13 @@ PRODUCED_FORMATS_DIR=../../formats
 PART_FORMATS_DIR=formats
 EXDIR=../../../examples
 EXOUTDIR=../../output
+include ../../../source/SHAPES-VERSION-FILE
+MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo "$(VERSION_DATE)" | sed -e 's/\([^ ]*\).*/\1/' )
 
-SSI=$(SSIDIR)/ssipp
 HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HREF_BASE=.
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl
-
-SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE)
-
-JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-ifneq ($(strip $(wildcard $(JAR1))),)
-SAXON=java -jar $(JAR1)
-else
-SAXON=java -jar $(JAR2)
-endif
 
 PRODUCTS = $(HTMLDIR)/index.html
 DEPENDS = build/index.depend
@@ -32,19 +23,9 @@ build/%.xml: %.sxml build/%.depend $(SSI)
 $(HTMLDIR)/index.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
 
-$(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
-	cd $(POSTPROCDIR); make
-$(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
-	cd $(POSTPROCDIR); make
-$(SSI): $(SSIDIR)/main.cc $(SSIDIR)/ssiyylex.ll $(SSIDIR)/ssiscanner.h $(SSIDIR)/ssiscanner.cc
-	cd $(SSIDIR); make
-
-.PHONY: clean
-clean:
-	-rm $(PRODUCTS)
-
 .PRECIOUS: build/*.depend
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
 	cat $*.sxml | $(SSI) $(SSIFLAGS) --head build/$*.xml --deps > $@
 
+include ../Makefile
 -include $(wildcard build/*.depend)
