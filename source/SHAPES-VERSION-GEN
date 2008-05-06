@@ -13,7 +13,7 @@ SVF=SHAPES-VERSION-FILE
 SVF_DEF=$DIR/VERSION
 SVF_DIST=version
 VN=$(sed -e '2,$ d' < $SVF_DEF)
-VD=$(date -R)
+VD=$(date +"%a,%e %b %Y %T %z")
 
 if test -f $SVF_DIST
 then
