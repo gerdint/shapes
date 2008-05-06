@@ -20,15 +20,15 @@ then
 	VN=$(sed -e '/NUMBER/! d' -e 's/VERSION_NUMBER := //' < $SVF_DIST)
 	VD=$(sed -e '/DATE/! d' -e 's/VERSION_DATE := //' < $SVF_DIST)
 elif test -d $DIR/.git &&
-	VN=$(cd $DIR && git describe --abbrev=4 HEAD 2>/dev/null) &&
+	VN=$(cd ${DIR} && git describe --abbrev=4 HEAD 2>/dev/null) &&
 	case "$VN" in
 	*$LF*) (exit 1) ;;
 	[0-9]*) : ;;
 	esac
 then
-	if test -z "$(git diff-index --name-only HEAD)"
+	if test -z "$(cd ${DIR} && git diff-index --name-only HEAD)"
 	then
-		VD=$(git show --quiet --pretty="format:%cD" HEAD)
+		VD=$(cd ${DIR} && git show --quiet --pretty="format:%cD" HEAD)
 	else
 		VN="$VN-dirty"
 	fi
