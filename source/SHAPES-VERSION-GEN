@@ -43,7 +43,9 @@ else
 	FVD=undef
 fi
 
-test "$VD" = "$FVD" -a "$VN" = "$FVN" || {
+VDcmp=$(echo "$VD" | sed -e 's/\([0-9]\{2\}:[0-9]\{2\}\):[0-9.]*/\1/g')
+FVDcmp=$(echo "$FVD" | sed -e 's/\([0-9]\{2\}:[0-9]\{2\}\):[0-9.]*/\1/g')
+test "$VDcmp" = "$FVDcmp" -a "$VN" = "$FVN" || {
 	echo >&2 "\
 VERSION_NUMBER := ${VN}
 VERSION_DATE := ${VD}"
