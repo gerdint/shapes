@@ -1,5 +1,3 @@
-!*.correct.pdf
-*.aux
-*.png
-*.tex
-
+*.out
+*.log
+test_*
