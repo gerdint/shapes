@@ -45,7 +45,7 @@ version of this page.</xsl:text>
 </xsl:template>
 
 <xsl:template match="env-variable-list">
-<apply-templates />
+<xsl:apply-templates />
 </xsl:template>
 <xsl:template match="env-variable-item">
 <xsl:text>
