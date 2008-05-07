@@ -14,8 +14,8 @@ DEPENDS = build/bindings.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(HTMLDIR)/bindings.html: build/bindings.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/bindings.html: build/bindings.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile
 -include $(wildcard build/*.depend)

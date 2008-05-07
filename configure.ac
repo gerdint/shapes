@@ -60,7 +60,9 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([floor memchr memset pow rint sqrt strchr strdup strrchr strtol])
 
 AC_CONFIG_FILES([Makefile source/Makefile doc/Makefile resources/Makefile
-                 test/Makefile test/text/Makefile test/graphics/Makefile])
+                 test/Makefile test/text/Makefile test/graphics/Makefile
+                 doc/tools/Makefile
+                 doc/tools/ssi/Makefile doc/tools/postproc/Makefile ])
 AC_OUTPUT
 
 if test "X$COMPARE" != "Xyes"

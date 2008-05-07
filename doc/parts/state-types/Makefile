@@ -16,8 +16,8 @@ DEPENDS = build/index.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(HTMLDIR)/state-types.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/state-types.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile
 -include $(wildcard build/*.depend)

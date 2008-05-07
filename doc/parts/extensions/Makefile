@@ -21,11 +21,11 @@ all: $(DEPENDS) $(PRODUCTS)
 $(HTMLDIR):
 	mkdir $@
 
-$(HTMLDIR)/%.html: build/%.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/%.html: build/%.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-$(HTMLDIR)/index_.html: build/index_.xml $(INDEX_HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(INDEX_HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/index_.html: build/index_.xml $(INDEX_HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(INDEX_HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile
 -include $(wildcard build/*.depend)

@@ -16,8 +16,8 @@ DEPENDS = build/dynvars.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(HTMLDIR)/dynvars.html: build/dynvars.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/dynvars.html: build/dynvars.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile
 -include $(wildcard build/*.depend)
