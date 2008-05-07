@@ -22,13 +22,7 @@ $(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
 $(SSI): $(SSIDIR)/main.cc $(SSIDIR)/ssiyylex.ll $(SSIDIR)/ssiscanner.h $(SSIDIR)/ssiscanner.cc
 	cd $(SSIDIR); make
 
-JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-ifneq ($(strip $(wildcard $(JAR1))),)
-SAXON=java -jar $(JAR1)
-else
-SAXON=java -jar $(JAR2)
-endif
+SAXON=@SAXON@
 
 build/%.xml: %.sxml build/%.depend ../formats/html.xsl $(SSI)
 	cat $< | $(SSI) $(SSIFLAGS) > $@
