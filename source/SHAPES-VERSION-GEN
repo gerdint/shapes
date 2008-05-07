@@ -13,7 +13,7 @@ SVF=SHAPES-VERSION-FILE
 SVF_DEF=$DIR/VERSION
 SVF_DIST=version
 VN=$(sed -e '2,$ d' < $SVF_DEF)
-VD=$(date +"%a,%e %b %Y %T %z")
+VD=$(date +"%Y-%m-%d %T %z")
 
 if test -f $SVF_DIST
 then
@@ -28,7 +28,7 @@ elif test -d $DIR/.git &&
 then
 	if test -z "$(cd ${DIR} && git diff-index --name-only HEAD)"
 	then
-		VD=$(cd ${DIR} && git show --quiet --pretty="format:%cD" HEAD)
+		VD=$(cd ${DIR} && git show --quiet --pretty="format:%ci" HEAD)
 	else
 		VN="$VN-dirty"
 	fi
