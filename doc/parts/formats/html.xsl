@@ -459,18 +459,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="state-arg[@name and not(@class)]">
-  <varname>•<xsl:value-of select="@name" /></varname>
-</xsl:template>
-<xsl:template match="state-arg[@name and @class='replacable']">
-  <varname class="replacable">•<xsl:value-of select="@name" /></varname>
-</xsl:template>
 <xsl:template match="field[@name and not(@class)]">
   <varname><xsl:value-of select="@name" /></varname>
 </xsl:template>
 <xsl:template match="field[@name and @class='replacable']">
   <varname class="replacable"><xsl:value-of select="@name" /></varname>
 </xsl:template>
+
 <xsl:template match="lexerregexp">
   <lexerregexp><xsl:apply-templates/></lexerregexp>
 </xsl:template>
