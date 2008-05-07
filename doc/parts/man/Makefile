@@ -25,5 +25,5 @@ $(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) ../formats/man.xsl $(
 $(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

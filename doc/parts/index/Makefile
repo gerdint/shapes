@@ -27,5 +27,5 @@ $(HTMLDIR)/index.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POST
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
 	cat $*.sxml | $(SSI) $(SSIFLAGS) --head build/$*.xml --deps > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

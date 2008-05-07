@@ -17,5 +17,5 @@ all: $(DEPENDS) $(PRODUCTS)
 $(HTMLDIR)/syntax.html: build/syntax.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

@@ -27,5 +27,5 @@ $(HTMLDIR)/%.html: build/%.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)
 $(HTMLDIR)/index_.html: build/index_.xml $(INDEX_HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(INDEX_HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

@@ -19,5 +19,5 @@ all: $(DEPENDS) $(PRODUCTS)
 $(HTMLDIR)/dynvars.html: build/dynvars.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

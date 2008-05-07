@@ -64,7 +64,7 @@ AC_CONFIG_FILES([Makefile source/Makefile resources/Makefile
                  test/Makefile test/text/Makefile test/graphics/Makefile
                  doc/Makefile doc/output/Makefile doc/tools/Makefile
                  doc/tools/ssi/Makefile doc/tools/postproc/Makefile
-                 doc/parts/Makefile])
+                 doc/parts/Makefile.incl])
 AC_OUTPUT
 
 if test "X$COMPARE" != "Xyes"
