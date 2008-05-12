@@ -33,9 +33,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:text></xsl:template>
 
 <xsl:template match="command-line"><xsl:text>
-.br  </xsl:text><xsl:apply-templates/><xsl:text>
-
 .br
+.ensure-line-break</xsl:text><xsl:apply-templates/><xsl:text>
+
 </xsl:text></xsl:template>
 
 </xsl:stylesheet>
