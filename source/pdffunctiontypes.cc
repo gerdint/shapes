@@ -43,7 +43,7 @@ Lang::PDF_Function::~PDF_Function( )
 void
 Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 {
-	(*dst)[ "FunctionType" ] = SimplePDF::PDF_out::newInt( subType_ );
+	(*dst)[ "FunctionType" ] = SimplePDF::newInt( subType_ );
 
 	if( domain_.size( ) != inputDimension_ )
 		{
@@ -56,8 +56,8 @@ Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 		typedef typeof domain_ ListType;
 		for( ListType::const_iterator i = domain_.begin( ); i != domain_.end( ); ++i )
 			{
-				dstRef.push_back( SimplePDF::PDF_out::newFloat( i->first ) );
-				dstRef.push_back( SimplePDF::PDF_out::newFloat( i->second ) );
+				dstRef.push_back( SimplePDF::newFloat( i->first ) );
+				dstRef.push_back( SimplePDF::newFloat( i->second ) );
 			}
 		(*dst)[ "Domain" ] = tmpVector;
 	}
@@ -75,8 +75,8 @@ Lang::PDF_Function::addCommonFields( SimplePDF::PDF_Dictionary * dst ) const
 				typedef typeof range_ ListType;
 				for( ListType::const_iterator i = range_.begin( ); i != range_.end( ); ++i )
 					{
-						dstRef.push_back( SimplePDF::PDF_out::newFloat( i->first ) );
-						dstRef.push_back( SimplePDF::PDF_out::newFloat( i->second ) );
+						dstRef.push_back( SimplePDF::newFloat( i->first ) );
+						dstRef.push_back( SimplePDF::newFloat( i->second ) );
 					}
 				(*dst)[ "Range" ] = tmpVector;
 			}

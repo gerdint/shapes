@@ -11,6 +11,8 @@ using namespace std;
 
 using namespace SimplePDF;
 
+SimplePDF::PDF_xref * thexref = 0;
+
 /****************/
 
 SimplePDF::PDF_Object::PDF_Object( )
@@ -19,13 +21,13 @@ SimplePDF::PDF_Object::PDF_Object( )
 SimplePDF::PDF_Object::~PDF_Object( )
 { }
 void
-SimplePDF::PDF_Object::writeTo( ostream & os ) const
+SimplePDF::PDF_Object::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	cerr << "This function, PDF_Object::writeTo, must not be called.	It is practically purely virtual." << endl ;
 	exit( 1 );
 }
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Object::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Object::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	return self;
 }
@@ -98,7 +100,7 @@ SimplePDF::PDF_Null::~PDF_Null( )
 { }
 
 void
-SimplePDF::PDF_Null::writeTo( ostream & os ) const
+SimplePDF::PDF_Null::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "null" ;
 }
@@ -118,7 +120,7 @@ SimplePDF::PDF_Boolean::value( ) const
 }
 
 void
-SimplePDF::PDF_Boolean::writeTo( ostream & os ) const
+SimplePDF::PDF_Boolean::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	if( my_value )
 		{
@@ -156,7 +158,7 @@ SimplePDF::PDF_Int::value( ) const
 }
 
 void
-SimplePDF::PDF_Int::writeTo( ostream & os ) const
+SimplePDF::PDF_Int::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << my_value ;
 }
@@ -186,7 +188,7 @@ SimplePDF::PDF_Float::ValueType PDF_Float::value( ) const
 }
 
 void
-SimplePDF::PDF_Float::writeTo( ostream & os ) const
+SimplePDF::PDF_Float::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << my_value ;
 }
@@ -234,7 +236,7 @@ SimplePDF::PDF_LiteralString::str( ) const
 }
 
 void
-SimplePDF::PDF_LiteralString::writeTo( ostream & os ) const
+SimplePDF::PDF_LiteralString::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "(" ;
 	for( const char * src = my_str.c_str( ); *src != '\0'; ++src )
@@ -272,7 +274,7 @@ SimplePDF::PDF_HexString::hexstr( ) const
 }
 
 void
-SimplePDF::PDF_HexString::writeTo( ostream & os ) const
+SimplePDF::PDF_HexString::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "<" << my_hexstr << ">" ;
 }
@@ -292,13 +294,13 @@ SimplePDF::PDF_Name::name( ) const
 }
 
 void
-SimplePDF::PDF_Name::writeTo( ostream & os ) const
+SimplePDF::PDF_Name::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "/" << my_name ;
 }
 
-ostream & SimplePDF::operator << ( ostream & os, const PDF_Name & self )
-{ 
+ostream & SimplePDF::operator << ( std::ostream & os, const PDF_Name & self )
+{
 	return os << "/" << self.my_name ;
 }
 
@@ -309,70 +311,70 @@ SimplePDF::PDF_Vector::PDF_Vector( )
 { }
 SimplePDF::PDF_Vector::PDF_Vector( PDF_Float::ValueType c )
 {
-	vec.push_back( PDF_out::newFloat( c ) );
+	vec.push_back( SimplePDF::newFloat( c ) );
 }
 SimplePDF::PDF_Vector::PDF_Vector( PDF_Float::ValueType c1, PDF_Float::ValueType c2 )
 {
-	vec.push_back( PDF_out::newFloat( c1 ) );
-	vec.push_back( PDF_out::newFloat( c2 ) );
+	vec.push_back( SimplePDF::newFloat( c1 ) );
+	vec.push_back( SimplePDF::newFloat( c2 ) );
 }
 SimplePDF::PDF_Vector::PDF_Vector( PDF_Float::ValueType c1, PDF_Float::ValueType c2, PDF_Float::ValueType c3 )
 {
-	vec.push_back( PDF_out::newFloat( c1 ) );
-	vec.push_back( PDF_out::newFloat( c2 ) );
-	vec.push_back( PDF_out::newFloat( c3 ) );
+	vec.push_back( SimplePDF::newFloat( c1 ) );
+	vec.push_back( SimplePDF::newFloat( c2 ) );
+	vec.push_back( SimplePDF::newFloat( c3 ) );
 }
 SimplePDF::PDF_Vector::PDF_Vector( PDF_Float::ValueType x1, PDF_Float::ValueType y1,
 																	 PDF_Float::ValueType x2, PDF_Float::ValueType y2 )
 {
-	vec.push_back( PDF_out::newFloat( x1 ) );
-	vec.push_back( PDF_out::newFloat( y1 ) );
-	vec.push_back( PDF_out::newFloat( x2 ) );
-	vec.push_back( PDF_out::newFloat( y2 ) );
+	vec.push_back( SimplePDF::newFloat( x1 ) );
+	vec.push_back( SimplePDF::newFloat( y1 ) );
+	vec.push_back( SimplePDF::newFloat( x2 ) );
+	vec.push_back( SimplePDF::newFloat( y2 ) );
 }
 SimplePDF::PDF_Vector::PDF_Vector( PDF_Float::ValueType a, PDF_Float::ValueType b,
 																	 PDF_Float::ValueType c, PDF_Float::ValueType d,
 																	 PDF_Float::ValueType e, PDF_Float::ValueType f )
 {
-	vec.push_back( PDF_out::newFloat( a ) );
-	vec.push_back( PDF_out::newFloat( b ) );
-	vec.push_back( PDF_out::newFloat( c ) );
-	vec.push_back( PDF_out::newFloat( d ) );
-	vec.push_back( PDF_out::newFloat( e ) );
-	vec.push_back( PDF_out::newFloat( f ) );
+	vec.push_back( SimplePDF::newFloat( a ) );
+	vec.push_back( SimplePDF::newFloat( b ) );
+	vec.push_back( SimplePDF::newFloat( c ) );
+	vec.push_back( SimplePDF::newFloat( d ) );
+	vec.push_back( SimplePDF::newFloat( e ) );
+	vec.push_back( SimplePDF::newFloat( f ) );
 }
-SimplePDF::PDF_Vector::PDF_Vector( PDF_Int::ValueType x1, PDF_Int::ValueType y1, 
+SimplePDF::PDF_Vector::PDF_Vector( PDF_Int::ValueType x1, PDF_Int::ValueType y1,
 																	 PDF_Int::ValueType x2, PDF_Int::ValueType y2 )
 {
-	vec.push_back( PDF_out::newInt( x1 ) );
-	vec.push_back( PDF_out::newInt( y1 ) );
-	vec.push_back( PDF_out::newInt( x2 ) );
-	vec.push_back( PDF_out::newInt( y2 ) );
+	vec.push_back( SimplePDF::newInt( x1 ) );
+	vec.push_back( SimplePDF::newInt( y1 ) );
+	vec.push_back( SimplePDF::newInt( x2 ) );
+	vec.push_back( SimplePDF::newInt( y2 ) );
 }
 SimplePDF::PDF_Vector::~PDF_Vector( )
 { }
 
 void
-SimplePDF::PDF_Vector::writeTo( ostream & os ) const
+SimplePDF::PDF_Vector::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "[" ;
 	for( VecType::const_iterator i( vec.begin( ) ); i != vec.end( ); ++i )
 		{
 			os << " " ;
-			(*i)->writeTo( os );
+			(*i)->writeTo( os, xref, *i );
 		}
 	os << " ]" ;
 }
 
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Vector::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Vector::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	bool allSame( true );
 	RefCountPtr< PDF_Vector > res( new PDF_Vector );
 	res->vec.reserve( vec.size( ) );
 	for( VecType::iterator i( vec.begin( ) ); i != vec.end( ); ++i )
 		{
-			RefCountPtr< PDF_Object > copy( ::deepCopy( *i, pdfo, remap ) );
+			RefCountPtr< PDF_Object > copy( ::deepCopy( *i, indirectObjectCounter, remap ) );
 			res->vec.push_back( copy );
 			if( allSame && copy != *i )
 				{
@@ -431,27 +433,27 @@ SimplePDF::PDF_Dictionary::~PDF_Dictionary( )
 { }
 
 void
-SimplePDF::PDF_Dictionary::writeTo( ostream & os ) const
+SimplePDF::PDF_Dictionary::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << "<< " ;
 	for( DicType::const_iterator i( dic.begin( ) ); i != dic.end( ); ++i )
 		{
 			os << "/" << (i->first) << " " ;
-			(i->second)->writeTo( os );
+			(i->second)->writeTo( os, xref, i->second );
 			os << endl ;
 		}
 	os << ">>" ;
 }
 
 void
-SimplePDF::PDF_Dictionary::writeToWithLength( std::ostream & os, size_t len ) const
+SimplePDF::PDF_Dictionary::writeToWithLength( std::ostream & os, SimplePDF::PDF_xref * xref, size_t len ) const
 {
 	os << "<< " ;
 	os << "/Length " << len << endl ;
 	for( DicType::const_iterator i( dic.begin( ) ); i != dic.end( ); ++i )
 		{
 			os << "/" << (i->first) << " " ;
-			(i->second)->writeTo( os );
+			(i->second)->writeTo( os, xref, i->second );
 			os << endl ;
 		}
 	os << ">>" ;
@@ -544,13 +546,13 @@ SimplePDF::PDF_Dictionary::hasKey( const char * key ) const
 }
 
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Dictionary::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Dictionary::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	bool allSame( true );
 	RefCountPtr< PDF_Dictionary > res( new PDF_Dictionary );
 	for( DicType::iterator i( dic.begin( ) ); i != dic.end( ); ++i )
 		{
-			RefCountPtr< PDF_Object > copy( ::deepCopy( i->second, pdfo, remap ) );
+			RefCountPtr< PDF_Object > copy( ::deepCopy( i->second, indirectObjectCounter, remap ) );
 			res->dic[ i->first ] = copy;
 			if( allSame && copy != i->second )
 				{
@@ -575,13 +577,13 @@ SimplePDF::PDF_Stream::~PDF_Stream( )
 { }
 
 void
-SimplePDF::PDF_Stream::writeTo( ostream & os ) const
+SimplePDF::PDF_Stream::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	throw( "Internal error: PDF_Stream::writeTo called" );
 }
 
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Stream::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Stream::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	cerr << "PDF_Stream::deepCopy must not be called.	(However PDF_Stream_in::deepCopy may be called.)" << endl ;
 	exit( 1 );
@@ -596,10 +598,10 @@ SimplePDF::PDF_Stream_out::~PDF_Stream_out( )
 { }
 
 void
-SimplePDF::PDF_Stream_out::writeTo( ostream & os ) const
+SimplePDF::PDF_Stream_out::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	const string & dataStr( data.str( ) );
-	PDF_Dictionary::writeToWithLength( os, dataStr.size( ) );
+	PDF_Dictionary::writeToWithLength( os, xref, dataStr.size( ) );
 	os << endl << "stream" << endl ;
 	os << dataStr << endl ;
 	os << "endstream " ;
@@ -617,10 +619,10 @@ SimplePDF::PDF_Stream_in::~PDF_Stream_in( )
 { }
 
 void
-SimplePDF::PDF_Stream_in::writeTo( ostream & os ) const
+SimplePDF::PDF_Stream_in::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	size_t length( PDF_Dictionary::getLength( ) );
-	PDF_Dictionary::writeTo( os );
+	PDF_Dictionary::writeTo( os, xref, self );
 	os << endl << "stream" << endl ;
 	RefCountPtr< char > buf( new char[ length ] );
 	is->seekg( dataStart, ios::beg );
@@ -724,9 +726,9 @@ SimplePDF::PDF_Stream_in::writeDataDefilteredTo( std::ostream & os ) const
 }
 
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Stream_in::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Stream_in::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
-	RefCountPtr< PDF_Object > dicCopy( PDF_Dictionary::deepCopy( self, pdfo, remap ) );
+	RefCountPtr< PDF_Object > dicCopy( PDF_Dictionary::deepCopy( self, indirectObjectCounter, remap ) );
 	if( dicCopy.getPtr( ) == this )
 		{
 			return self;
@@ -750,7 +752,7 @@ SimplePDF::PDF_Indirect::PDF_Indirect( size_t _i, size_t _v )
 SimplePDF::PDF_Indirect::~PDF_Indirect( )
 { }
 void
-SimplePDF::PDF_Indirect::writeTo( std::ostream & os ) const
+SimplePDF::PDF_Indirect_in::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	os << i << " " << v << " R" ;
 }
@@ -771,7 +773,7 @@ bool SimplePDF::operator < ( const PDF_Indirect & o1, const PDF_Indirect & o2 )
 	return false;
 }
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Indirect::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Indirect::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	cerr << "PDF_Indirect::deepCopy must not be called.	(However PDF_Indirect_in::deepCopy may be called.)" << endl ;
 	exit( 1 );
@@ -781,19 +783,21 @@ SimplePDF::PDF_Indirect::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdf
 SimplePDF::PDF_Indirect_out::PDF_Indirect_out( RefCountPtr<PDF_Object> _obj, size_t _i, size_t _v )
 	: PDF_Indirect( _i, _v ), inUse( true ), obj( _obj )
 { }
-SimplePDF::PDF_Indirect_out::PDF_Indirect_out( PDF_Object * _obj, size_t _i, size_t _v )
-	: PDF_Indirect( _i, _v ), inUse( false ), obj( _obj )
-{ }
 SimplePDF::PDF_Indirect_out::~PDF_Indirect_out( )
 { }
-
 void
-SimplePDF::PDF_Indirect_out::writeObject( ostream & os ) const
+SimplePDF::PDF_Indirect_out::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
+{
+	xref->enqueue( self.down_cast< const PDF_Indirect_out >( ) );  /* This shall not fail! */
+	os << i << " " << v << " R" ;
+}
+void
+SimplePDF::PDF_Indirect_out::writeObject( std::ostream & os, SimplePDF::PDF_xref * xref ) const
 {
 	if( inUse )
 		{
 			os << i << " " << v << " obj" << endl ;
-			obj->writeTo( os );
+			obj->writeTo( os, xref, obj );
 			os << endl << "endobj" << endl ;
 		}
 }
@@ -815,7 +819,7 @@ SimplePDF::PDF_Indirect_in::deref( )
 	return PDFin->readObjectNumbered( i, v );
 }
 RefCountPtr< PDF_Object >
-SimplePDF::PDF_Indirect_in::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_Indirect_in::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
 	{
 		IndirectRemapType::iterator i( remap->find( *this ) );
@@ -824,13 +828,126 @@ SimplePDF::PDF_Indirect_in::deepCopy( RefCountPtr< PDF_Object > self, PDF_out * 
 				return i->second;
 			}
 	}
-	return remap->insert( IndirectRemapType::value_type( *this, pdfo->indirect( ::deepCopy( deref( ), pdfo, remap ) ) ) ).first->second;
+	return remap->insert( IndirectRemapType::value_type( *this, SimplePDF::indirect( ::deepCopy( deref( ), indirectObjectCounter, remap ),
+																																									 indirectObjectCounter ) ) ).first->second;
 }
 
 /**************/
 
-RefCountPtr< PDF_Object >
-SimplePDF::deepCopy( RefCountPtr< PDF_Object > obj, PDF_out * pdfo, IndirectRemapType * remap )
+SimplePDF::PDF_xref::PDF_xref( )
+	: size_( 0 )
 {
-	return obj->deepCopy( obj, pdfo, remap );
+	/* The first position in the xref table is special. */
+	byteOffsets_.push_back( 0 ); /* This is interpreted as "not in use" */
+	generations_.push_back( 65535 );
+}
+
+void
+SimplePDF::PDF_xref::enqueue( const RefCountPtr< const::PDF_Indirect_out > & obj )
+{
+	thexref = this;
+	/* Grow big enough */
+	while( byteOffsets_.size( ) <= obj->i )
+		{
+			byteOffsets_.push_back( 0 );
+			generations_.push_back( 0 );
+		}
+
+	if( byteOffsets_[ obj->i ] == 0 )
+		{
+			indirectQueue_.push_back( obj );
+			byteOffsets_[ obj->i ] = 1; /* We will change this later, this just indicates that the object has been put in queue. */
+		}
+	typedef typeof indirectQueue_ QType;
+}
+
+void
+SimplePDF::PDF_xref::writeRecursive( std::ostream & os )
+{
+	std::streamoff os_start;
+	{
+		std::streamoff tmp = static_cast< streamoff >( os.tellp( ) );
+		os.seekp( 0 );
+		os_start = static_cast< streamoff >( os.tellp( ) ); /* Will this always be some kind of zero value? */
+		os.seekp( tmp );
+	}
+	while( ! indirectQueue_.empty( ) )
+		{
+			RefCountPtr< const SimplePDF::PDF_Indirect_out > i_obj = indirectQueue_.front( );
+			indirectQueue_.pop_front( );
+			byteOffsets_[ i_obj->i ] = static_cast< streamoff >( os.tellp( ) ) - os_start;
+			generations_[ i_obj->i ] = i_obj->v;
+			i_obj->writeObject( os, this );
+		}
+}
+
+void
+SimplePDF::PDF_xref::writeTable( std::ostream & os ) const
+{
+	if( size_ > 0 )
+		{
+			std::cerr << "Internal error: PDF_xref::writeTable: This table has already been written." << std::endl ;
+			exit( 1 );
+		}
+	size_ = byteOffsets_.size( );
+
+	os << setfill( '0' ) ;
+	os << "xref" << endl
+		 << 0 << " " << size_ << endl ;
+	typedef typeof byteOffsets_ ListType;
+	size_t objNumber = 0;
+	ListType::const_iterator v = generations_.begin( );
+	for( ListType::const_iterator i = byteOffsets_.begin( ); i != byteOffsets_.end( ); ++i, ++v, ++objNumber )
+		{
+			if( *i == 1 )
+				{
+					std::cerr << "Internal error: Object " << objNumber << " has not been written to the file." << std::endl ;
+				}
+			else if( *i > 0 )
+				{
+					os << setw( 10 ) << *i << ' ' << setw( 5 ) << *v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
+				}
+			else
+				{
+					size_t nextFree = 0;
+					size_t tmpNumber = objNumber + 1;
+					ListType::const_iterator i2 = i;
+					++i2;
+					for( ; i2 != byteOffsets_.end( ); ++i2, ++tmpNumber )
+						{
+							if( *i2 == 0 )
+								{
+									nextFree = tmpNumber;
+									break;
+								}
+						}
+					os << setw( 10 ) << nextFree << ' ' << setw( 5 ) << *v << ' ' << 'f' << ' ' << static_cast< char >( 10 ) ;
+				}
+		}
+}
+
+size_t
+SimplePDF::PDF_xref::size( ) const
+{
+	if( size_ == 0 )
+		{
+			std::cerr << "Internal error: PDF_xref::size: The size of the table is not determined yet.  Call writeTable first." << std::endl ;
+			exit( 1 );
+		}
+	return size_;
+}
+
+
+/**************/
+
+RefCountPtr< PDF_Indirect_out >
+SimplePDF::indirect( RefCountPtr< PDF_Object > obj, size_t * i, size_t v )
+{
+	return RefCountPtr< PDF_Indirect_out >( new PDF_Indirect_out( obj, (*i)++, v ) );
+}
+
+RefCountPtr< PDF_Object >
+SimplePDF::deepCopy( RefCountPtr< PDF_Object > obj, size_t * indirectObjectCounter, IndirectRemapType * remap )
+{
+	return obj->deepCopy( obj, indirectObjectCounter, remap );
 }

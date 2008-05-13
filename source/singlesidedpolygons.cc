@@ -212,10 +212,10 @@ Computation::SingleSidedPolygon3DGray::render2( const Concrete::Length eyez, con
 
 	RefCountPtr< SimplePDF::PDF_Stream_out > form;
 
-	RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( form );
+	RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( form, & Kernel::theIndirectObjectCount );
 
-	(*form)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Shading" );
-	(*form)[ "ShadingType" ] = SimplePDF::PDF_out::newInt( 4 );
+	(*form)[ "Subtype" ] = SimplePDF::newName( "Shading" );
+	(*form)[ "ShadingType" ] = SimplePDF::newInt( 4 );
 	(*form)[ "ColorSpace" ] = colorSpace->name( );
 	//	(*form)[ "BBox" ] =
 	//	(*form)[ "AntiAlias" ] =
@@ -231,9 +231,9 @@ Computation::SingleSidedPolygon3DGray::render2( const Concrete::Length eyez, con
 			throw Exceptions::InternalError( "The sizes of thins don't add upp to a whole number of bytes!" );
 		}
 
-	(*form)[ "BitsPerCoordinate" ] = SimplePDF::PDF_out::newInt( BITS_PER_COORDINATE );
-	(*form)[ "BitsPerComponent" ] = SimplePDF::PDF_out::newInt( BITS_PER_COMPONENT );
-	(*form)[ "BitsPerFlag" ] = SimplePDF::PDF_out::newInt( BITS_PER_FLAG );
+	(*form)[ "BitsPerCoordinate" ] = SimplePDF::newInt( BITS_PER_COORDINATE );
+	(*form)[ "BitsPerComponent" ] = SimplePDF::newInt( BITS_PER_COMPONENT );
+	(*form)[ "BitsPerFlag" ] = SimplePDF::newInt( BITS_PER_FLAG );
 
 	Concrete::Coords2D x0y0( 0, 0 );
 	Concrete::Coords2D x1y1( 0, 0 );
@@ -249,14 +249,14 @@ Computation::SingleSidedPolygon3DGray::render2( const Concrete::Length eyez, con
 
 	(*form)[ "Decode" ] = decodeArray;
 
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x0y0.x_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x1y1.x_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x0y0.y_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x1y1.y_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x0y0.x_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x1y1.x_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x0y0.y_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x1y1.y_ ) ) );
 	for( size_t i = 0; i < NUMBER_OF_COMPONENTS; ++i )
 		{
-			decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( 0. ) );
-			decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( 1. ) );
+			decodeArray->vec.push_back( SimplePDF::newFloat( 0. ) );
+			decodeArray->vec.push_back( SimplePDF::newFloat( 1. ) );
 		}
 
 	const Computation::FacetLatticeVertex * va = 0;
@@ -627,10 +627,10 @@ Computation::SingleSidedPolygon3DRGB::render2( const Concrete::Length eyez, cons
 
 	RefCountPtr< SimplePDF::PDF_Stream_out > form;
 
-	RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( form );
+	RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( form, & Kernel::theIndirectObjectCount );
 
-	(*form)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Shading" );
-	(*form)[ "ShadingType" ] = SimplePDF::PDF_out::newInt( 4 );
+	(*form)[ "Subtype" ] = SimplePDF::newName( "Shading" );
+	(*form)[ "ShadingType" ] = SimplePDF::newInt( 4 );
 	(*form)[ "ColorSpace" ] = colorSpace->name( );
 	//	(*form)[ "BBox" ] =
 	//	(*form)[ "AntiAlias" ] =
@@ -646,9 +646,9 @@ Computation::SingleSidedPolygon3DRGB::render2( const Concrete::Length eyez, cons
 			throw Exceptions::InternalError( "The sizes of thins don't add upp to a whole number of bytes!" );
 		}
 
-	(*form)[ "BitsPerCoordinate" ] = SimplePDF::PDF_out::newInt( BITS_PER_COORDINATE );
-	(*form)[ "BitsPerComponent" ] = SimplePDF::PDF_out::newInt( BITS_PER_COMPONENT );
-	(*form)[ "BitsPerFlag" ] = SimplePDF::PDF_out::newInt( BITS_PER_FLAG );
+	(*form)[ "BitsPerCoordinate" ] = SimplePDF::newInt( BITS_PER_COORDINATE );
+	(*form)[ "BitsPerComponent" ] = SimplePDF::newInt( BITS_PER_COMPONENT );
+	(*form)[ "BitsPerFlag" ] = SimplePDF::newInt( BITS_PER_FLAG );
 
 	Concrete::Coords2D x0y0( 0, 0 );
 	Concrete::Coords2D x1y1( 0, 0 );
@@ -664,14 +664,14 @@ Computation::SingleSidedPolygon3DRGB::render2( const Concrete::Length eyez, cons
 
 	(*form)[ "Decode" ] = decodeArray;
 
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x0y0.x_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x1y1.x_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x0y0.y_ ) ) );
-	decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( x1y1.y_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x0y0.x_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x1y1.x_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x0y0.y_ ) ) );
+	decodeArray->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( x1y1.y_ ) ) );
 	for( size_t i = 0; i < NUMBER_OF_COMPONENTS; ++i )
 		{
-			decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( 0. ) );
-			decodeArray->vec.push_back( SimplePDF::PDF_out::newFloat( 1. ) );
+			decodeArray->vec.push_back( SimplePDF::newFloat( 0. ) );
+			decodeArray->vec.push_back( SimplePDF::newFloat( 1. ) );
 		}
 
 	const Computation::FacetLatticeVertex * va = 0;

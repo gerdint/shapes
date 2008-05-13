@@ -486,59 +486,59 @@ Lang::BlendMode::applyGraphicsState( std::ostream & os, SimplePDF::PDF_Resources
 	else
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-			(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
+			(*dic)[ "Type" ] = SimplePDF::newName( "ExtGState" );
 
-			RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( dic );
+			RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
 			resourceMap.insert( MapType::value_type( mode, indirection ) );
 			switch( mode )
 				{
 				case NORMAL:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Normal" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Normal" );
 					break;
 				case MULTIPLY:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Multiply" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Multiply" );
 					break;
 				case SCREEN:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Screen" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Screen" );
 					break;
 				case OVERLAY:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Overlay" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Overlay" );
 					break;
 				case DARKEN:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Darken" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Darken" );
 					break;
 				case LIGHTEN:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Lighten" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Lighten" );
 					break;
 				case COLOR_DODGE:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "ColorDodge" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "ColorDodge" );
 					break;
 				case COLOR_BURN:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "ColorBurn" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "ColorBurn" );
 					break;
 				case HARD_LIGHT:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "HardLight" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "HardLight" );
 					break;
 				case SOFT_LIGHT:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "SoftLight" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "SoftLight" );
 					break;
 				case DIFFERENCE:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Difference" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Difference" );
 					break;
 				case EXCLUSION:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Exclusion" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Exclusion" );
 					break;
 				case HUE:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Hue" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Hue" );
 					break;
 				case SATURATION:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Saturation" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Saturation" );
 					break;
 				case COLOR:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Color" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Color" );
 					break;
 				case LUMINOSITY:
-					(*dic)[ "BM" ] = SimplePDF::PDF_out::newName( "Luminosity" );
+					(*dic)[ "BM" ] = SimplePDF::newName( "Luminosity" );
 					break;
 				case BLEND_SAME:
 					// We leave the graphics state dictionary empty!
@@ -951,20 +951,20 @@ Lang::Alpha::applyGraphicsState( std::ostream & os, SimplePDF::PDF_Resources * r
 	else
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-			(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
-			RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( dic );
+			(*dic)[ "Type" ] = SimplePDF::newName( "ExtGState" );
+			RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
 
 			resourceMap->insert( MapType::value_type( self.a_, indirection ) );
 			if( self.a_ >= 0 )
 				{
-					(*dic)[ "AIS" ] = SimplePDF::PDF_out::newBoolean( self.isShape_ );
+					(*dic)[ "AIS" ] = SimplePDF::newBoolean( self.isShape_ );
 					if( isStroking )
 						{
-							(*dic)[ "CA" ] = SimplePDF::PDF_out::newFloat( self.a_ );
+							(*dic)[ "CA" ] = SimplePDF::newFloat( self.a_ );
 						}
 					else
 						{
-							(*dic)[ "ca" ] = SimplePDF::PDF_out::newFloat( self.a_ );
+							(*dic)[ "ca" ] = SimplePDF::newFloat( self.a_ );
 						}
 				}
 			// If self.a_ < 0 we just leave the graphics state dictionary empty
@@ -1113,21 +1113,21 @@ Lang::SoftMask::SoftMask( )
 		}
 
 	RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-	graphicsStateResource_ = Kernel::the_pdfo->indirect( dic );
+	graphicsStateResource_ = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
 
-	(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
-	(*dic)[ "SMask" ] = SimplePDF::PDF_out::newName( "None" );
+	(*dic)[ "Type" ] = SimplePDF::newName( "ExtGState" );
+	(*dic)[ "SMask" ] = SimplePDF::newName( "None" );
 }
 
 Lang::SoftMask::SoftMask( SubType subType, const RefCountPtr< const Lang::TransparencyGroup > & tpGroup, const RefCountPtr< const Lang::Color > & background, const RefCountPtr< const Lang::PDF_Function > & transfer )
 	: graphicsStateResource_( NullPtr< SimplePDF::PDF_Object >( ) )
 {
 	RefCountPtr< SimplePDF::PDF_Dictionary > gsDic;
-	graphicsStateResource_ = Kernel::the_pdfo->indirect( gsDic );
+	graphicsStateResource_ = SimplePDF::indirect( gsDic, & Kernel::theIndirectObjectCount );
 
 	RefCountPtr< SimplePDF::PDF_Dictionary > smDic;
 
-	(*gsDic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
+	(*gsDic)[ "Type" ] = SimplePDF::newName( "ExtGState" );
 	(*gsDic)[ "SMask" ] = smDic;
 	(*smDic)[ "G" ] = tpGroup->getPDF_Object( );
 
@@ -1135,7 +1135,7 @@ Lang::SoftMask::SoftMask( SubType subType, const RefCountPtr< const Lang::Transp
 	{
 	case ALPHA:
 		{
-			(*smDic)[ "S" ] = SimplePDF::PDF_out::newName( "Alpha" );
+			(*smDic)[ "S" ] = SimplePDF::newName( "Alpha" );
 			if( background != NullPtr< const Lang::Color >( ) )
 				{
 					throw Exceptions::InternalError( strrefdup( "Attempt to create Alpha soft mask with BC." ) );
@@ -1144,7 +1144,7 @@ Lang::SoftMask::SoftMask( SubType subType, const RefCountPtr< const Lang::Transp
 		break;
 	case LUMINOSITY:
 		{
-			(*smDic)[ "S" ] = SimplePDF::PDF_out::newName( "Luminosity" );
+			(*smDic)[ "S" ] = SimplePDF::newName( "Luminosity" );
 			if( background != NullPtr< const Lang::Color >( ) )
 				{
 					(*smDic)[ "BC" ] = background->componentVector( );
@@ -1263,7 +1263,7 @@ Lang::Dash::getDashArray( ) const
 	RefCountPtr< SimplePDF::PDF_Vector > res = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector );
 	for( list< Concrete::Length >::const_iterator i = pattern_->begin( ); i != pattern_->end( ); ++i )
 		{
-			res->vec.push_back( SimplePDF::PDF_out::newFloat( Concrete::Length::offtype( *i ) * scale_ ) );
+			res->vec.push_back( SimplePDF::newFloat( Concrete::Length::offtype( *i ) * scale_ ) );
 		}
 
 	return res;

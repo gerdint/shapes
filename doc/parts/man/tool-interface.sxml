@@ -64,9 +64,14 @@
 						</description>
 					</command-line-item>
 					<command-line-item>
-						<nosep-parameter flag="--split=">bool</nosep-parameter>
+						<nosep-parameter flag="--split=">no/flat/dir</nosep-parameter>
 						<description>
-							<p>Create one output file per page in the catalog.  The file name extension will be changed from <filename>.pdf</filename> to <filename>-n.pdf</filename>, where <em>n</em> is the physical page number.</p>
+							<p>Determines how to store the pages of the produced document catalog.</p>
+							<p>When <em>no</em>:  One file with many pages is created.</p>
+							<p>When <em>flat</em>:  One output file per page in the catalog is created.  The file names are deduced from the output file name (see --out) which should not have any extension, by adding the extension <filename>-n.pdf</filename>, where <em>n</em> is the physical page number.  <em>All files that have names similar to the ones created will be deleted to avoid confusion!</em></p>
+							<p>When <em>dir</em>:  The output filename will denote a directory where each page in the catalog is stored as a separate file.  The name of each file will be <filename>n.pdf</filename> where <em>n</em> is the physical page number.  <em>All files that have names similar to the ones created will be deleted to avoid confusion!</em>  It is an error if the output filename references an existing file.</p>
+							<p>Defaults to <em>no</em>.</p>
+							<p>Splitting and file naming based on page labels is not supported at the moment, but please make a request for implementation if you would need it.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -109,7 +114,7 @@
 					<command-line-item>
 						<parameters flag="--out"> <replacable>file</replacable></parameters>
 						<description>
-							<p>Specify the destination file.  Defaults to the basename with the suffix <filename>.pdf</filename> in the output directory.</p>
+							<p>Specify the destination file.  If the document <em>is not</em> split, this defaults to the basename with the suffix <filename>.pdf</filename> in the output directory.  If the document <em>is</em> split, this defaults to only the basename, as the suffix must be deduced automatically.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>

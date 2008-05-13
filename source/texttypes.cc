@@ -179,11 +179,11 @@ Lang::Font::resource( ) const
 
 	{
 		RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-		resource_ = Kernel::the_pdfo->indirect( dic );
-		(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "Font" );
-		(*dic)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Type1" );
-		(*dic)[ "Encoding" ] = SimplePDF::PDF_out::newName( "MacRomanEncoding" );
-		(*dic)[ "BaseFont" ] = SimplePDF::PDF_out::newName( fontName_.getPtr( ) );	// Here, it is crucial that this is really a build-in font!
+		resource_ = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
+		(*dic)[ "Type" ] = SimplePDF::newName( "Font" );
+		(*dic)[ "Subtype" ] = SimplePDF::newName( "Type1" );
+		(*dic)[ "Encoding" ] = SimplePDF::newName( "MacRomanEncoding" );
+		(*dic)[ "BaseFont" ] = SimplePDF::newName( fontName_.getPtr( ) );	// Here, it is crucial that this is really a build-in font!
 	}
 	return resource_;
 }
@@ -2334,10 +2334,10 @@ Kernel::TextState::synchKnockout( std::ostream & os, const Kernel::TextState * r
 			else
 				{
 					RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-					(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "ExtGState" );
-					(*dic)[ "TK" ] = SimplePDF::PDF_out::newBoolean( knockout_ );
+					(*dic)[ "Type" ] = SimplePDF::newName( "ExtGState" );
+					(*dic)[ "TK" ] = SimplePDF::newBoolean( knockout_ );
 
-					RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( dic );
+					RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
 					knockoutNameMap_.insert( MapType::value_type( knockout_, indirection ) );
 
 					os << resources->nameofGraphicsState( indirection ) << " gs " ;

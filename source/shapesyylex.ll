@@ -709,16 +709,14 @@ Escape "¢"|"¤"
 <Author>.* {
 	if( ! stateStack.empty( ) )
 		{
-			Kernel::the_pdfo->extensionAuthorStrings.push_back( shapeslloc.filename + std::string( " by " ) + yytext );
+			Kernel::theDocInfo.addExtensionAuthorString( shapeslloc.filename + std::string( " by " ) + yytext );
 		}
 	else
 		{
-			const char * key = "Author";
-			if( Kernel::the_pdfo->info_->hasKey( key ) )
+			if( ! Kernel::theDocInfo.addInfo( "Author", SimplePDF::newString( yytext ) ) )
 				{
 					Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Multiply specified #author." ) ) );
 				}
-			(*Kernel::the_pdfo->info_)[ key ] = SimplePDF::PDF_out::newString( yytext );
 		}
 	BEGIN( INITIAL );
 }
