@@ -128,55 +128,55 @@ Lang::DocumentDestination::getDirectDestination( const RefCountPtr< SimplePDF::P
 			{
 				if( fittobbox_ )
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "FitB" ) );
+						res->vec.push_back( SimplePDF::newName( "FitB" ) );
 					}
 				else
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "Fit" ) );
+						res->vec.push_back( SimplePDF::newName( "Fit" ) );
 					}
 			}
 			break;
 		case TOPLEFT:
 			{
-				res->vec.push_back( SimplePDF::PDF_out::newName( "XYZ" ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( zoom_ ) );
+				res->vec.push_back( SimplePDF::newName( "XYZ" ) );
+				res->vec.push_back( SimplePDF::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( zoom_ ) );
 			}
 			break;
 		case TOP:
 			{
 				if( fittobbox_ )
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "FitH" ) );
+						res->vec.push_back( SimplePDF::newName( "FitH" ) );
 					}
 				else
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "FitBH" ) );
+						res->vec.push_back( SimplePDF::newName( "FitBH" ) );
 					}
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
 			}
 			break;
 		case LEFT:
 			{
 				if( fittobbox_ )
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "FitV" ) );
+						res->vec.push_back( SimplePDF::newName( "FitV" ) );
 					}
 				else
 					{
-						res->vec.push_back( SimplePDF::PDF_out::newName( "FitBV" ) );
+						res->vec.push_back( SimplePDF::newName( "FitBV" ) );
 					}
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
 			}
 			break;
 		case RECTANGLE:
 			{
-				res->vec.push_back( SimplePDF::PDF_out::newName( "FitR" ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( llcorner.y_.offtype< 1, 0 >( ) ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( urcorner.x_.offtype< 1, 0 >( ) ) );
-				res->vec.push_back( SimplePDF::PDF_out::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newName( "FitR" ) );
+				res->vec.push_back( SimplePDF::newFloat( llcorner.x_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( llcorner.y_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( urcorner.x_.offtype< 1, 0 >( ) ) );
+				res->vec.push_back( SimplePDF::newFloat( urcorner.y_.offtype< 1, 0 >( ) ) );
 			}
 			break;
 		default:
@@ -191,7 +191,7 @@ Lang::DocumentDestination::getDestination( const RefCountPtr< SimplePDF::PDF_Ind
 {
 	if( remote_ )
 		{
-			return SimplePDF::PDF_out::newString( name_.getPtr( ) );
+			return SimplePDF::newString( name_.getPtr( ) );
 		}
 	return getDirectDestination( i_page );
 }
@@ -208,7 +208,7 @@ Lang::DocumentDestination::getOutlineItem( const RefCountPtr< SimplePDF::PDF_Ind
 	if( name_ != NullPtr< const char >( ) )
 		{
 			return RefCountPtr< SimplePDF::OutlineItem >
-				( new SimplePDF::OutlineItem( SimplePDF::PDF_out::newString( name_.getPtr( ) ), theText,
+				( new SimplePDF::OutlineItem( SimplePDF::newString( name_.getPtr( ) ), theText,
 																			outlineOpen_, outlineFontBold_, outlineFontItalic_, outlineColor_ ) );
 		}
 	return RefCountPtr< SimplePDF::OutlineItem >
@@ -648,8 +648,31 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 }
 
 void
-Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
+Kernel::WarmCatalog::shipout( bool split, ShipoutList * docs )
 {
+	RefCountPtr< SimplePDF::PDF_Indirect_out > i_info = Kernel::theDocInfo.getIndirect( & Kernel::theIndirectObjectCount );
+
+	if( split )
+		{
+			for( size_t pageNo = 0; pageNo < pages_.size( ); ++pageNo )
+				{
+					docs->push_back( shipoutOne( i_info, pageNo ) );
+				}
+		}
+	else
+		{
+			docs->push_back( shipoutOne( i_info, -1 ) );
+		}
+
+}
+
+SimplePDF::PDF_out
+Kernel::WarmCatalog::shipoutOne( RefCountPtr< SimplePDF::PDF_Indirect_out > i_info, int pageNo )
+{
+	RefCountPtr< SimplePDF::PDF_Dictionary > root = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
+	RefCountPtr< SimplePDF::PDF_Indirect_out > i_root = SimplePDF::indirect( root, & Kernel::theIndirectObjectCount );
+	root->dic[ "Type" ] = SimplePDF::newName( "Catalog" );
+
 	std::map< RefCountPtr< const char >, RefCountPtr< SimplePDF::PDF_Vector >, charRefPtrLess > namedDestinations;
 	std::vector< RefCountPtr< SimplePDF::OutlineItem > > outlineStack;
 	outlineStack.reserve( 10 );
@@ -661,27 +684,32 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 	RefCountPtr< SimplePDF::PDF_Dictionary > pages( new SimplePDF::PDF_Dictionary );
 	RefCountPtr< SimplePDF::PDF_Dictionary > names( new SimplePDF::PDF_Dictionary );
 
-	RefCountPtr< SimplePDF::PDF_Object > i_pages( doc->indirect( pages ) );
-	doc->root_->dic[ "Pages" ] = i_pages;
+	RefCountPtr< SimplePDF::PDF_Object > i_pages( SimplePDF::indirect( pages, & Kernel::theIndirectObjectCount ) );
+	root->dic[ "Pages" ] = i_pages;
 
 	std::list< std::pair< const Page *, std::pair< RefCountPtr< SimplePDF::PDF_Dictionary >, RefCountPtr< SimplePDF::PDF_Indirect_out > > > > annotations;
 
-	pages->dic[ "Type"	] = SimplePDF::PDF_out::newName( "Pages" );
+	pages->dic[ "Type"	] = SimplePDF::newName( "Pages" );
 	RefCountPtr< SimplePDF::PDF_Vector > pagesKids( new SimplePDF::PDF_Vector );
 	{
+		int currentPage = 0;
 		typedef typeof pages_ ListType;
-		for( ListType::const_iterator i = pages_.begin( ); i != pages_.end( ); ++i )
+		for( ListType::const_iterator i = pages_.begin( ); i != pages_.end( ); ++i, ++currentPage )
 			{
+				if( pageNo >= 0 && currentPage != pageNo )
+					{
+						continue;
+					}
 				RefCountPtr< SimplePDF::PDF_Dictionary > newPage( new SimplePDF::PDF_Dictionary );
-				RefCountPtr< SimplePDF::PDF_Indirect_out > i_newPage = doc->indirect( newPage );
+				RefCountPtr< SimplePDF::PDF_Indirect_out > i_newPage = SimplePDF::indirect( newPage, & Kernel::theIndirectObjectCount );
 				pagesKids->vec.push_back( i_newPage );
-				newPage->dic[ "Type" ] = SimplePDF::PDF_out::newName( "Page" );
+				newPage->dic[ "Type" ] = SimplePDF::newName( "Page" );
 				newPage->dic[ "Parent" ] = i_pages;
 				newPage->dic[ "MediaBox" ] = (*i)->mediabox_->pdfVector( );
-				newPage->dic[ "Contents" ] = doc->indirect( (*i)->contents_ );
-				newPage->dic[ "Resources" ] = doc->indirect( (*i)->resources_ );
+				newPage->dic[ "Contents" ] = SimplePDF::indirect( (*i)->contents_, & Kernel::theIndirectObjectCount );
+				newPage->dic[ "Resources" ] = SimplePDF::indirect( (*i)->resources_, & Kernel::theIndirectObjectCount );
 				/* The UserUnit entry appears in PDF 1.6, and cannot be relyed on */
-				//	newPage->dic[ "UserUnit" ] = RefCountPtr< PDF_Object >( new PDF_Float( 72 / 2.52 ) );
+				//	newPage->dic[ "UserUnit" ] = RefCountPtr< SimplePDF::PDF_Object >( new SimplePDF::PDF_Float( 72 / 2.52 ) );
 
 				typedef typeof (*i)->destinations_ DestListType;
 				for( DestListType::const_iterator j = (*i)->destinations_.begin( ); j != (*i)->destinations_.end( ); ++j )
@@ -737,7 +765,7 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 			}
 	}
 	pages->dic[ "Kids" ] = pagesKids;
-	pages->dic[ "Count" ] = SimplePDF::PDF_out::newInt( pagesKids->vec.size( ) );
+	pages->dic[ "Count" ] = SimplePDF::newInt( pagesKids->vec.size( ) );
 
 	{
 		typedef std::list< std::pair< const Page *, std::pair< RefCountPtr< SimplePDF::PDF_Dictionary >, RefCountPtr< SimplePDF::PDF_Indirect_out > > > > ListType;
@@ -747,14 +775,29 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 				RefCountPtr< SimplePDF::PDF_Dictionary > newPage = h->second.first;
 				RefCountPtr< SimplePDF::PDF_Indirect_out > i_newPage = h->second.second;
 				RefCountPtr< SimplePDF::PDF_Vector > annots( new SimplePDF::PDF_Vector );
-				newPage->dic[ "Annots" ] = doc->indirect( annots );
+				newPage->dic[ "Annots" ] = SimplePDF::indirect( annots, & Kernel::theIndirectObjectCount );
 				annots->vec.reserve( i->annotations_.size( ) );
 
 				typedef typeof i->annotations_ AnnotListType;
 				for( AnnotListType::const_iterator j = i->annotations_.begin( ); j != i->annotations_.end( ); ++j )
 					{
 						RefCountPtr< const Lang::AnnotationBase > annot = *j;
-						annots->vec.push_back( doc->indirect( annot->getDictionary( i_newPage, namedDestinations ) ) );
+						try
+							{
+								annots->vec.push_back( SimplePDF::indirect( annot->getDictionary( i_newPage, namedDestinations ), & Kernel::theIndirectObjectCount ) );
+							}
+						catch( Exceptions::UndefinedCrossRef * ball )
+							{
+								if( pageNo >= 0 )
+									{
+										/* If this is just one page in the document, we expect cross links in the document to be broken, so we just ignore this. */
+										delete ball;
+									}
+								else
+									{
+										Kernel::thePostCheckErrorsList.push_back( ball );
+									}
+							}
 					}
 			}
 
@@ -765,15 +808,25 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 			Kernel::the_PDF_version.greaterOrEqual( PAGELABELS_VERSION ) )
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > pageLabels( new SimplePDF::PDF_Dictionary );
-			doc->root_->dic[ "PageLabels" ] = doc->indirect( pageLabels );
-			pageLabels->dic[ "Type"	] = SimplePDF::PDF_out::newName( "PageLabels" );
+			root->dic[ "PageLabels" ] = SimplePDF::indirect( pageLabels, & Kernel::theIndirectObjectCount );
+			pageLabels->dic[ "Type"	] = SimplePDF::newName( "PageLabels" );
 			RefCountPtr< SimplePDF::PDF_Vector > nums( new SimplePDF::PDF_Vector );
 			pageLabels->dic[ "Nums"	] = nums;
 			typedef typeof labelEntries_ ListType;
 			for( ListType::const_iterator i = labelEntries_.begin( ); i != labelEntries_.end( ); ++i )
 				{
+					if( pageNo >= 0 )
+						{
+							size_t signedPageNo = static_cast< size_t >( pageNo );
+							ListType::const_iterator next = i;
+							++next;
+							if( next != labelEntries_.end( ) && (*next)->pageIndex_ <= signedPageNo )
+								{
+									continue;
+								}
+						}
 					RefCountPtr< SimplePDF::PDF_Dictionary > newEntry( new SimplePDF::PDF_Dictionary );
-					nums->vec.push_back( SimplePDF::PDF_out::newInt( (*i)->pageIndex_ ) );
+					nums->vec.push_back( SimplePDF::newInt( ( pageNo >= 0 ) ? 0 : (*i)->pageIndex_ ) );
 					nums->vec.push_back( newEntry );
 
 					switch( (*i)->style_ )
@@ -783,27 +836,27 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 							break;
 						case Kernel::WarmCatalog::PageLabelEntry::DECIMAL:
 							{
-								newEntry->dic[ "S" ] = SimplePDF::PDF_out::newName( "D" );
+								newEntry->dic[ "S" ] = SimplePDF::newName( "D" );
 							}
 							break;
 						case Kernel::WarmCatalog::PageLabelEntry::ROMAN:
 							{
-								newEntry->dic[ "S" ] = SimplePDF::PDF_out::newName( "R" );
+								newEntry->dic[ "S" ] = SimplePDF::newName( "R" );
 							}
 							break;
 						case Kernel::WarmCatalog::PageLabelEntry::rOMAN:
 							{
-								newEntry->dic[ "S" ] = SimplePDF::PDF_out::newName( "r" );
+								newEntry->dic[ "S" ] = SimplePDF::newName( "r" );
 							}
 							break;
 						case Kernel::WarmCatalog::PageLabelEntry::ALPHABET:
 							{
-								newEntry->dic[ "S" ] = SimplePDF::PDF_out::newName( "A" );
+								newEntry->dic[ "S" ] = SimplePDF::newName( "A" );
 							}
 							break;
 						case Kernel::WarmCatalog::PageLabelEntry::aLPHABET:
 							{
-								newEntry->dic[ "S" ] = SimplePDF::PDF_out::newName( "a" );
+								newEntry->dic[ "S" ] = SimplePDF::newName( "a" );
 							}
 							break;
 						default:
@@ -812,42 +865,38 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 
 					if( strlen( (*i)->prefix_.getPtr( ) ) > 0 )
 						{
-							newEntry->dic[ "P" ] = SimplePDF::PDF_out::newString( (*i)->prefix_.getPtr( ) );
+							newEntry->dic[ "P" ] = SimplePDF::newString( (*i)->prefix_.getPtr( ) );
 						}
 
 					if( (*i)->startNumber_ != 1 )
 						{
-							newEntry->dic[ "St" ] = SimplePDF::PDF_out::newInt( (*i)->startNumber_ );
+							newEntry->dic[ "St" ] = SimplePDF::newInt( (*i)->startNumber_ + ( ( pageNo >= 0 ) ? ( pageNo - (*i)->pageIndex_ ) : 0 ) );
+						}
+
+					if( pageNo >= 0 )
+						{
+							break;
 						}
 				}
 		}
 
-	if( outlineStack.front( )->hasKids( ) )
+	if( outlineStack.front( )->hasKids( ) &&
+			pageNo == -1 ) /* The outline will just be a mess unless we include all pages in the document. */
 		{
-			doc->root_->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( doc, Kernel::the_PDF_version );
+			root->dic[ "Outlines" ] = outlineStack.front( )->getTopIndirectDictionary( Kernel::the_PDF_version );
 		}
 	if( ! namedDestinations.empty( ) )
 		{
 			// If there are named destinations, the PDF version is already checked to be high enough.
 			RefCountPtr< SimplePDF::PDF_Dictionary > dests( new SimplePDF::PDF_Dictionary );
-			names->dic[ "Dests" ] = doc->indirect( dests );
-//			 RefCountPtr< SimplePDF::PDF_Vector > kids( new SimplePDF::PDF_Vector );
-//			 dests->dic[ "Kids" ] = kids;
-//			 RefCountPtr< SimplePDF::PDF_Dictionary > kid( new SimplePDF::PDF_Dictionary );
-//			 kids->vec.push_back( kid );
-//			 {
-//							 RefCountPtr< SimplePDF::PDF_Vector > limits( new SimplePDF::PDF_Vector );
-//							 limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.begin( )->first.getPtr( ) ) );
-//							 limits->vec.push_back( SimplePDF::PDF_out::newString( namedDestinations.rbegin( )->first.getPtr( ) ) );
-//							 kid->dic[ "Limits"	] = limits;
-//			 }
+			names->dic[ "Dests" ] = SimplePDF::indirect( dests, & Kernel::theIndirectObjectCount );
 			{
 				RefCountPtr< SimplePDF::PDF_Vector > names( new SimplePDF::PDF_Vector );
 				typedef typeof namedDestinations Maptype;
 				for( Maptype::const_iterator i = namedDestinations.begin( ); i != namedDestinations.end( ); ++i )
 					{
 						RefCountPtr< SimplePDF::PDF_Dictionary > newEntry( new SimplePDF::PDF_Dictionary );
-						names->vec.push_back( SimplePDF::PDF_out::newString( i->first.getPtr( ) ) );
+						names->vec.push_back( SimplePDF::newString( i->first.getPtr( ) ) );
 						names->vec.push_back( i->second );
 					}
 				dests->dic[ "Names"	] = names;
@@ -856,6 +905,8 @@ Kernel::WarmCatalog::shipout( SimplePDF::PDF_out * doc )
 
 	if( ! names->dic.empty( ) )
 		{
-			doc->root_->dic[ "Names" ] = doc->indirect( names );
+			root->dic[ "Names" ] = SimplePDF::indirect( names, & Kernel::theIndirectObjectCount );
 		}
+
+	return SimplePDF::PDF_out( i_root, i_info, getPageLabel( std::max( 0, pageNo ) ) );
 }

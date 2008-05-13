@@ -42,7 +42,7 @@ std::string absoluteFilename( const char * filename );
 std::string absoluteDirectory( const char * filename );
 void ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
-void abortProcedure( std::ofstream * oFile, const std::string & outputName );
+void abortProcedure( );
 void setupGlobals( );
 enum XpdfAction{ XPDF_DEFAULT, XPDF_RAISE, XPDF_RELOAD, XPDF_QUIT, XPDF_NOSERVER };
 void xpdfHelper( const std::string & filename, const std::string & server, const XpdfAction & action );
@@ -50,6 +50,7 @@ void openHelper( const std::string & filename, const char * application );
 void addDefaultNeedPath( );
 void addDefaultFontMetricsPath( );
 void destroyGlobals( );
+void escapeExtGlobChars( const std::string & str, std::ostream & dst );
 
 namespace Shapes
 {
@@ -102,7 +103,9 @@ main( int argc, char ** argv )
 	bool do_open = false;
 	const char * do_open_application = 0;
 	std::ostringstream prependStreamOut;
-	bool splitCatalog = false;
+
+	enum SplitMode{ SPLIT_NO, SPLIT_FLAT, SPLIT_DIR };
+	SplitMode splitMode = SPLIT_NO;
 
 	argc -= 1;
 	argv += 1;
@@ -694,7 +697,22 @@ main( int argc, char ** argv )
 				}
 			else if( strprefixcmp( *argv, "--split=", & optionSuffix ) )
 				{
-					splitCatalog = strtobool( optionSuffix, *argv );
+					if( strcmp( optionSuffix, "no" ) == 0 )
+						{
+							splitMode = SPLIT_NO;
+						}
+					else if( strcmp( optionSuffix, "flat" ) == 0 )
+						{
+							splitMode = SPLIT_FLAT;
+						}
+					else if( strcmp( optionSuffix, "dir" ) == 0 )
+						{
+							splitMode = SPLIT_DIR;
+						}
+					else
+						{
+							std::cerr << "The string \"" << optionSuffix << "\" in the command line argument \"" << *argv << "\" was not any of { 'no', 'flat', 'dir' }." << std::endl ;
+						}
 					argv += 1;
 					argc -= 1;
 				}
@@ -867,7 +885,14 @@ main( int argc, char ** argv )
 				}
 			if( outputName == "" )
 				{
-					outputName = outDir + baseName + ".pdf";
+					if( splitMode == SPLIT_NO )
+						{
+							outputName = outDir + baseName + ".pdf";
+						}
+					else
+						{
+							outputName = outDir + baseName;
+						}
 				}
 			if( texJobName == "" )
 				{
@@ -991,14 +1016,7 @@ main( int argc, char ** argv )
 								}
 							break;
 						case FILENAME_OUT:
-							if( outputName == "" )
-								{
-									std::cout << "<stdout>" ;
-								}
-							else
-								{
-									std::cout << outputName ;
-								}
+							std::cout << outputName ;
 							break;
 						case FILENAME_TMP:
 							std::cout << tmpDir ;
@@ -1062,19 +1080,19 @@ main( int argc, char ** argv )
 				<< std::setw(2) << now->tm_min
 				<< std::setw(2) << now->tm_sec
 				<< "+0000" ;
-		(*Kernel::the_pdfo->info_)[ "CreationDate" ] = SimplePDF::PDF_out::newString( oss.str( ).c_str( ) );
+		Kernel::theDocInfo.addInfo( "CreationDate", SimplePDF::newString( oss.str( ).c_str( ) ) );
 	}
 
 	std::ifstream iFile;
 	if( inputName == "" )
 		{
-			(*Kernel::the_pdfo->info_)[ "Title" ] = SimplePDF::PDF_out::newString( "<stdin>" );
+			Kernel::theDocInfo.addInfo( "Title", SimplePDF::newString( "<stdin>" ) );
 			Ast::theShapesScanner.switch_streams( & std::cin, & std::cerr );
 			Ast::theShapesScanner.setNameOf_yyin( "stdin" );
 		}
 	else
 		{
-			(*Kernel::the_pdfo->info_)[ "Title" ] = SimplePDF::PDF_out::newString( inputName.c_str( ) );
+			Kernel::theDocInfo.addInfo( "Title", SimplePDF::newString( inputName.c_str( ) ) );
 			iFile.open( inputName.c_str( ) );
 			if( ! iFile.good( ) || ! iFile.is_open( ) )
 				{
@@ -1092,15 +1110,8 @@ main( int argc, char ** argv )
 			Ast::theShapesScanner.prependStream( & prependStreamIn );
 		}
 
-	std::ofstream oFile;
-	oFile.open( outputName.c_str( ) );
-	if( ! oFile.good( ) )
-		{
-			std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
-			exit( 1 );
-		}
-
 	RefCountPtr< std::ifstream > labelDBFile = RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
+	Kernel::WarmCatalog::ShipoutList documents;
 
 	try
 		{
@@ -1140,7 +1151,7 @@ main( int argc, char ** argv )
 							std::cerr << "(Bad exception type)" << ": " ;
 							(*i)->display( std::cerr );
 						}
-					abortProcedure( & oFile, outputName );
+					abortProcedure( );
 				}
 
 			// The display unit is looked up after the input is scanned, so the user may use her own units
@@ -1148,7 +1159,7 @@ main( int argc, char ** argv )
 			if( Interaction::displayUnitFactor <= 0 )
 				{
 					std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
-					abortProcedure( & oFile, outputName );
+					abortProcedure( );
 				}
 			labelDBFile = performIterativeStartup( labelDBName );
 			RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
@@ -1184,7 +1195,7 @@ main( int argc, char ** argv )
 					std::cout.flush( );
 					std::cerr << ball.loc( ) << ": " ;
 					ball.display( std::cerr );
-					abortProcedure( & oFile, outputName );
+					abortProcedure( );
 				}
 			catch( Exceptions::Exception & ball )
 				{
@@ -1196,7 +1207,7 @@ main( int argc, char ** argv )
 
 					std::cerr << evalState.cont_->traceLoc( ) << Exceptions::Exception::locsep ;
 					ball.display( std::cerr );
-					abortProcedure( & oFile, outputName );
+					abortProcedure( );
 				}
 
 			Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
@@ -1210,7 +1221,7 @@ main( int argc, char ** argv )
 					catalog->tackOnPage( baseDyn, finalPicture, Ast::THE_UNKNOWN_LOCATION );
 				}
 
-			catalog->shipout( Kernel::the_pdfo );
+			catalog->shipout( splitMode != SPLIT_NO, & documents );
 
 			if( cleanupMemory )
 				{
@@ -1225,13 +1236,13 @@ main( int argc, char ** argv )
 			std::cout.flush( );
 			std::cerr << ball.loc( ) << ": " ;
 			ball.display( std::cerr );
-			abortProcedure( & oFile, outputName );
+			abortProcedure( );
 		}
 	catch( const Exceptions::Exception & ball )
 		{
 			std::cout.flush( );
 			ball.display( std::cerr );
-			abortProcedure( & oFile, outputName );
+			abortProcedure( );
 		}
 	catch( const NonLocalExit::DynamicBindingNotFound & ball )
 		{
@@ -1274,7 +1285,7 @@ main( int argc, char ** argv )
 
 	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
-			abortProcedure( & oFile, outputName );
+			abortProcedure( );
 		}
 
 	if( memoryStats )
@@ -1284,11 +1295,100 @@ main( int argc, char ** argv )
 					 << "	(" << 100 * static_cast< double >( Kernel::Environment::liveCount ) / static_cast< double >( Kernel::Environment::createdCount ) << "%)" << std::endl ;
 		}
 
-	/* The iterativeFinish must be allowed to write to the labels database file, so the file must be closed.
-	 * To make sure it is not in use when we close it, we do the_pdfo->writeData( ) first.
-	 */
+	switch( splitMode )
+		{
+		case SPLIT_NO:
+			{
+				if( documents.size( ) != 1 )
+					{
+						std::cerr << "Internal error: Failed to produce exactly one document of output although --split=no." << std::endl ;
+					}
+				std::ofstream oFile;
+				oFile.open( outputName.c_str( ) );
+				if( ! oFile.good( ) )
+					{
+						std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
+						exit( 1 );
+					}
+				documents.front( ).writeFile( oFile, Kernel::the_PDF_version );
+			}
+			break;
+		case SPLIT_FLAT:
+			{
+				std::ostringstream rmCommand;
+				rmCommand << "sh -O extglob -c 'rm -f " ;
+				escapeExtGlobChars( outputName, rmCommand );
+				rmCommand << "-+([0-9]).pdf'" ;
+				Interaction::systemDebugMessage( rmCommand.str( ) );
+				if( system( rmCommand.str( ).c_str( ) ) != 0 )
+					{
+						/* Never mind; we made a try, and this probably means that there were no files to remove. */
+					}
+				size_t physicalPageNo = 1;
+				for( Kernel::WarmCatalog::ShipoutList::iterator i = documents.begin( ); i != documents.end( ); ++i, ++physicalPageNo )
+					{
+						std::ostringstream tmpFilename;
+						tmpFilename << outputName << "-" << physicalPageNo << ".pdf" ;
+						std::ofstream oFile;
+						oFile.open( tmpFilename.str( ).c_str( ) );
+						if( ! oFile.good( ) )
+							{
+								std::cerr << "Failed to open " << tmpFilename.str( ) << " for output." << std::endl ;
+								exit( 1 );
+							}
+						i->writeFile( oFile, Kernel::the_PDF_version );
+					}
+			}
+			break;
+		case SPLIT_DIR:
+			{
+				struct stat theStat;
+				if( stat( outputName.c_str( ), & theStat ) == 0 )
+					{
+						if( ( theStat.st_mode & S_IFDIR ) == 0 )
+							{
+								std::cerr << "The path " << outputName << " was expected to reference a directory." << std::endl ;
+								exit( 1 );
+							}
+					}
+				else
+					{
+						if( mkdir( outputName.c_str( ), S_IRWXU | S_IRWXG | S_IRWXO ) != 0 )
+							{
+								std::cerr << "Failed to create directory for split document files (errno=" << errno << "): " << outputName << std::endl ;
+								exit( 1 );
+							}
+					}
+				std::ostringstream rmCommand;
+				rmCommand << "sh -O extglob -c 'rm -f " ;
+				escapeExtGlobChars( outputName, rmCommand );
+				rmCommand << "/+([0-9]).pdf'" ;
+				Interaction::systemDebugMessage( rmCommand.str( ) );
+				if( system( rmCommand.str( ).c_str( ) ) != 0 )
+					{
+						/* Never mind; we made a try, and this probably means that there were no files to remove. */
+					}
+				size_t physicalPageNo = 1;
+				for( Kernel::WarmCatalog::ShipoutList::iterator i = documents.begin( ); i != documents.end( ); ++i, ++physicalPageNo )
+					{
+						std::ostringstream tmpFilename;
+						tmpFilename << outputName << "/" << physicalPageNo << ".pdf" ;
+						std::ofstream oFile;
+						oFile.open( tmpFilename.str( ).c_str( ) );
+						if( ! oFile.good( ) )
+							{
+								std::cerr << "Failed to open " << tmpFilename.str( ) << " for output." << std::endl ;
+								exit( 1 );
+							}
+						i->writeFile( oFile, Kernel::the_PDF_version );
+					}
+			}
+			break;
+		}
 
-	Kernel::the_pdfo->writeData( oFile, Kernel::the_PDF_version );
+	/* This must be done after the output has been written, and before iterativeFinish writes to the labels database file.
+	 */
+	Kernel::thePDFImporter.free( );
 
 	if( labelDBFile != NullPtr< std::ifstream >( ) )
 		{
@@ -1306,12 +1406,26 @@ main( int argc, char ** argv )
 
 	if( launch_xpdf )
 		{
-			xpdfHelper( outputName, xpdfServer, xpdfAction );
+			if( splitMode != SPLIT_NO )
+				{
+					std::cerr << "Warning: not launching viewer since the documet was split" << std::endl ;
+				}
+			else
+				{
+					xpdfHelper( outputName, xpdfServer, xpdfAction );
+				}
 		}
 
 	if( do_open )
 		{
-			openHelper( outputName, do_open_application );
+			if( splitMode != SPLIT_NO )
+				{
+					std::cerr << "Warning: not launching viewer since the documet was split" << std::endl ;
+				}
+			else
+				{
+					openHelper( outputName, do_open_application );
+				}
 		}
 
 	destroyGlobals( );
@@ -1424,7 +1538,7 @@ performIterativeStartup( const std::string & labelDBName )
 
 
 void
-abortProcedure( std::ofstream * oFile, const std::string & outputName )
+abortProcedure( )
 {
 	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
@@ -1457,24 +1571,7 @@ abortProcedure( std::ofstream * oFile, const std::string & outputName )
 					e->display( std::cerr );
 				}
 		}
-	std::cerr << "Aborting job.	Deleting output file." << std::endl ;
-	if( outputName != "" )
-		{
-			oFile->close( );
-		}
-	{
-		std::ifstream tmpFile( outputName.c_str( ) );
-		if( tmpFile.good( ) )
-			{
-				tmpFile.close( );
-				std::string rmCommand = "rm '" + outputName + "'";
-				Interaction::systemDebugMessage( rmCommand );
-				if( system( rmCommand.c_str( ) ) != 0 )
-					{
-						/* Never mind; we made a try. */
-					}
-			}
-	}
+	std::cerr << "Aborting job.	 Output files are left unchanged." << std::endl ;
 	exit( 1 );
 }
 
@@ -1784,4 +1881,18 @@ ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 			i2 = dirname.find( '/', i2 + 1 );
 		}
 	umask( oldUmask );
+}
+
+void
+escapeExtGlobChars( const std::string & str, std::ostream & dst )
+{
+	const char * special = "*?[+@!";
+	for( std::string::const_iterator i = str.begin( ); i != str.end( ); ++i )
+		{
+			if( strchr( special, *i ) != 0 )
+				{
+					dst << '\\' ;
+				}
+			dst << *i ;
+		}
 }

@@ -9,6 +9,7 @@
 
 #include "hottypes.h"
 #include "tagtypes.h"
+#include "pdfstructure.h"
 
 namespace Shapes
 {
@@ -108,6 +109,7 @@ namespace Shapes
 				PageLabelEntry( size_t pageIndex, const RefCountPtr< const char > & prefix, Style style, size_t startNumber );
 				~PageLabelEntry( );
 			};
+			typedef std::vector< SimplePDF::PDF_out > ShipoutList;
 		private:
 			PtrOwner_back_Access< std::list< const Page * > > pages_;
 			PtrOwner_back_Access< std::list< const PageLabelEntry * > > labelEntries_;
@@ -133,12 +135,13 @@ namespace Shapes
 
 			bool isEmpty( ) const;
 			void tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Drawable2D > & pageContents, const Ast::SourceLocation & callLoc );
-			void shipout( SimplePDF::PDF_out * doc );
+			void shipout( bool split, ShipoutList * docs );
 
 			TYPEINFODECL;
 
 		private:
 			RefCountPtr< const char > getPageLabel( const Kernel::WarmCatalog::PageLabelEntry * entry, size_t index ) const;
+			SimplePDF::PDF_out shipoutOne( RefCountPtr< SimplePDF::PDF_Indirect_out > i_info, int pageNo = 0 ); /* Use pageNo == -1 for all pages. */
 		};
 
 	}

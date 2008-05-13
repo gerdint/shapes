@@ -27,7 +27,9 @@ std::list< Kernel::Environment * > Kernel::theEnvironmentList;
 SimplePDF::PDF_Version Kernel::the_PDF_version;
 bool Kernel::allowTransparency = true;
 bool Kernel::allowSingletonPaths = true;
-SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( );
+size_t Kernel::theIndirectObjectCount = 1; /* Never use 0! */
+SimplePDF::DocumentInfo Kernel::theDocInfo;
+Kernel::Import Kernel::thePDFImporter;
 Kernel::DebugLog Kernel::theDebugLog;
 Kernel::TeXLabelManager Kernel::theTeXLabelManager;
 RefCountPtr< const Kernel::GraphicsState > Kernel::THE_NO_STATE = NullPtr< const Kernel::GraphicsState >( );

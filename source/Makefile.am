@@ -44,7 +44,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  shapescore.h Shapes_Exceptions_decls.h shapesexceptions.h \
                  Shapes_Helpers_decls.h Shapes_Kernel_decls.h \
                  Shapes_Lang_decls.h shapesscanner.h shapestypes.h \
-                 shapesvalue.h SimplePDF_decls.h simplepdfi.h \
+                 shapesvalue.h SimplePDF_decls.h simplepdfi.h pdfimport.h \
                  simplepdfo.h sourcelocation.h specialunits.h statetypes.h \
                  strrefdup.h tagtypes.h texlabelmanager.h texscanner.h texttypes.h \
                  thunkimpl.h timetypes.h trianglefunctions.h upsamplers.h \
@@ -55,7 +55,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
 
 shapes_SOURCES = shapesyylex.ll \
                 pdfstructure.cc pdfscanner.cc pdfyylex.ll simplepdfo.cc pdfversion.cc \
-		simplepdfi.cc consts.cc \
+		simplepdfi.cc pdfimport.cc consts.cc \
 		../tools/source/autoonoff.cc \
 		../tools/source/physical.cc \
 		continuations.cc \

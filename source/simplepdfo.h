@@ -45,46 +45,47 @@ namespace SimplePDF
 		const PDF_Name & nameofShading( const RefCountPtr< PDF_Object > & obj );
 		void requireProcedureSet( ProcSet procSet );
 
-		virtual void writeTo( std::ostream & os ) const;
+		virtual void writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const;
 
 	private:
 		static const PDF_Name & nameof( const RefCountPtr< PDF_Object > & obj, ReverseMap * reverseMap, RefCountPtr< PDF_Dictionary > * dic, const char * prefix, size_t * counter );
 	};
 
-	class PDF_out
+	class DocumentInfo
 	{
-	public:
-		RefCountPtr< PDF_Dictionary > root_;
+		bool finalized_;
 		RefCountPtr< PDF_Dictionary > info_;
 		std::list< std::string > extensionAuthorStrings;
-	private:
-		RefCountPtr< PDF_Object > i_root;
-		size_t objCount;
-		typedef std::list< RefCountPtr< PDF_Indirect_out > > IndirectQueueType;
-		IndirectQueueType indirectQueue;
-		static double pdfNameToDouble( RefCountPtr< PDF_Object > nameObject );
-		std::list< RefCountPtr< PDF_in > > importSources;
+		RefCountPtr< PDF_Indirect_out > i_info_;
 	public:
-		PDF_out( );
+		DocumentInfo( );
+		void addExtensionAuthorString( const std::string & str );
+		bool addInfo( const char * key, const RefCountPtr< PDF_Object > & datum );
+		RefCountPtr< PDF_Indirect_out > getIndirect( size_t * indirectObjectCounter );
+	};
+
+	class PDF_out
+	{
+	private:
+		RefCountPtr< SimplePDF::PDF_Indirect_out > i_root_;
+		RefCountPtr< SimplePDF::PDF_Indirect_out > i_info_;
+		RefCountPtr< const char > firstPageLabel_;
+
+	public:
+		PDF_out( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_root, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_info, const RefCountPtr< const char > & firstPageLabel );
 		~PDF_out( );
-		void writeData( std::ostream & os, SimplePDF::PDF_Version & pdfVersion );
-
-		void abort( );
-
-		RefCountPtr< PDF_Indirect_out > indirect( RefCountPtr< PDF_Object > obj, size_t v = 0 );
-
-		RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > > addPagesAsXObjects( RefCountPtr< PDF_in > pdfi );
-		void importBtexEtexThings( RefCountPtr< PDF_in > pdfi, std::map< std::string, RefCountPtr< const Shapes::Lang::XObject > > * dstMap, const std::string & setupCodeHash );
-
-		static RefCountPtr<PDF_Object> newName( const char * str );
-		static RefCountPtr<PDF_Object> newString( const char * str );
-		static RefCountPtr<PDF_Object> newInt( PDF_Int::ValueType val );
-		static RefCountPtr<PDF_Object> newBoolean( PDF_Boolean::ValueType val );
-		static RefCountPtr<PDF_Object> newFloat( PDF_Float::ValueType val );
+		void writeFile( std::ostream & os, SimplePDF::PDF_Version & pdfVersion );
+		RefCountPtr< const char > getFirstPageLabel( ) const;
 	};
 
 	extern RefCountPtr<PDF_Object> theTrue;
 	extern RefCountPtr<PDF_Object> theFalse;
+	RefCountPtr<PDF_Object> newName( const char * str );
+	RefCountPtr<PDF_Object> newString( const char * str );
+	RefCountPtr<PDF_Object> newInt( PDF_Int::ValueType val );
+	RefCountPtr<PDF_Object> newBoolean( PDF_Boolean::ValueType val );
+	RefCountPtr<PDF_Object> newFloat( PDF_Float::ValueType val );
+
 
 	class OutlineItem
 	{
@@ -102,8 +103,8 @@ namespace SimplePDF
 		void addKid( const RefCountPtr< OutlineItem > & kid );
 
 		bool hasKids( ) const;
-		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const;
-		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const;
+		RefCountPtr< SimplePDF::PDF_Indirect_out > getTopIndirectDictionary( SimplePDF::PDF_Version & pdfVersion ) const;
+		size_t fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_Version & pdfVersion ) const;
 	};
 
 }

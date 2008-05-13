@@ -74,8 +74,8 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 
 	RefCountPtr< SimplePDF::PDF_Dictionary > res = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 
-	res->dic[ "Type" ] = SimplePDF::PDF_out::newName( "Annot" );
-	res->dic[ "Subtype" ] = SimplePDF::PDF_out::newName( subtype );
+	res->dic[ "Type" ] = SimplePDF::newName( "Annot" );
+	res->dic[ "Subtype" ] = SimplePDF::newName( subtype );
 	{
 		Concrete::Coords2D llcorner( 0, 0 );
 		Concrete::Coords2D urcorner( 0, 0 );
@@ -93,7 +93,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 	}
 	if( contentText_ != NullPtr< const char >( ) )
 		{
-			res->dic[ "Contents" ] = SimplePDF::PDF_out::newString( contentText_.getPtr( ) );
+			res->dic[ "Contents" ] = SimplePDF::newString( contentText_.getPtr( ) );
 		}
 	res->dic[ "P" ] = i_page;
 	if( identifier_ != NullPtr< const char >( ) )
@@ -101,27 +101,27 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 			const SimplePDF::PDF_Version::Version ELEMENT_NAME_VERSION = SimplePDF::PDF_Version::PDF_1_4;
 			if( Kernel::the_PDF_version.greaterOrEqual( ELEMENT_NAME_VERSION ) )
 				{
-					res->dic[ "NM" ] = SimplePDF::PDF_out::newString( identifier_.getPtr( ) );
+					res->dic[ "NM" ] = SimplePDF::newString( identifier_.getPtr( ) );
 				}
 			else
 				{
 					Kernel::the_PDF_version.message( ELEMENT_NAME_VERSION, "Annotation identifiier was ignored." );
 				}
 		}
-	res->dic[ "F" ] = SimplePDF::PDF_out::newInt( flags_ );
+	res->dic[ "F" ] = SimplePDF::newInt( flags_ );
 	{
 		RefCountPtr< SimplePDF::PDF_Dictionary > bs = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 
 		if( static_cast< double >( borderWidth_.offtype< 1, 0 >( ) ) != 1 )
 			{
-				bs->dic[ "W" ] = SimplePDF::PDF_out::newFloat( borderWidth_.offtype< 1, 0 >( ) );
+				bs->dic[ "W" ] = SimplePDF::newFloat( borderWidth_.offtype< 1, 0 >( ) );
 			}
 		if( borderStyle_ != 'S' )
 			{
 				char buf[2];
 				buf[0] = borderStyle_;
 				buf[1] = '\0';
-				bs->dic[ "S" ] = SimplePDF::PDF_out::newName( buf );
+				bs->dic[ "S" ] = SimplePDF::newName( buf );
 			}
 		if( borderDash_ != NullPtr< const Lang::Dash >( ) )
 			{
@@ -130,8 +130,8 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 		if( borderCloudy_ >= 0 )
 			{
 				RefCountPtr< SimplePDF::PDF_Dictionary > be = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
-				be->dic[ "S" ] = SimplePDF::PDF_out::newName( "C" );
-				be->dic[ "I" ] = SimplePDF::PDF_out::newFloat( borderCloudy_ );
+				be->dic[ "S" ] = SimplePDF::newName( "C" );
+				be->dic[ "I" ] = SimplePDF::newFloat( borderCloudy_ );
 				bs->dic[ "BE" ] = be;
 			}
 
@@ -239,7 +239,7 @@ Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_
 	RefCountPtr< SimplePDF::PDF_Dictionary > res = site_->getDictionary( "Text", i_page );
 	if( title_ != NullPtr< const char >( ) )
 		{
-			res->dic[ "T" ] = SimplePDF::PDF_out::newString( title_.getPtr( ) );
+			res->dic[ "T" ] = SimplePDF::newString( title_.getPtr( ) );
 		}
 	if( open_ )
 		{
@@ -247,7 +247,7 @@ Lang::TextAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_
 		}
 	if( icon_ != NullPtr< const char >( ) )
 		{
-			res->dic[ "Name" ] = SimplePDF::PDF_out::newString( icon_.getPtr( ) );
+			res->dic[ "Name" ] = SimplePDF::newString( icon_.getPtr( ) );
 		}
 
 	return res;
@@ -284,7 +284,7 @@ Lang::LinkAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_
 			char buf[2];
 			buf[0] = highlight_;
 			buf[1] = '\0';
-			res->dic[ "H" ] = SimplePDF::PDF_out::newName( buf );
+			res->dic[ "H" ] = SimplePDF::newName( buf );
 		}
 
 	switch( kind_ )
@@ -293,29 +293,29 @@ Lang::LinkAnnotation::getDictionary( const RefCountPtr< SimplePDF::PDF_Indirect_
 			{
 				RefCountPtr< SimplePDF::PDF_Dictionary > action = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 				res->dic[ "A" ] = action;
-				action->dic[ "S" ] = SimplePDF::PDF_out::newName( "Launch" );
-				action->dic[ "F" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+				action->dic[ "S" ] = SimplePDF::newName( "Launch" );
+				action->dic[ "F" ] = SimplePDF::newString( destination_.getPtr( ) );
 			}
 			break;
 		case LAUNCH_URI:
 			{
 				RefCountPtr< SimplePDF::PDF_Dictionary > action = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 				res->dic[ "A" ] = action;
-				action->dic[ "S" ] = SimplePDF::PDF_out::newName( "URI" );
-				action->dic[ "URI" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+				action->dic[ "S" ] = SimplePDF::newName( "URI" );
+				action->dic[ "URI" ] = SimplePDF::newString( destination_.getPtr( ) );
 				//			RefCountPtr< SimplePDF::PDF_Dictionary > filespec = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 				//			action->dic[ "F" ] = filespec;
-				//			filespec->dic[ "FS" ] = SimplePDF::PDF_out::newName( "URI" );
-				//			filespec->dic[ "F" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+				//			filespec->dic[ "FS" ] = SimplePDF::newName( "URI" );
+				//			filespec->dic[ "F" ] = SimplePDF::newString( destination_.getPtr( ) );
 			}
 			break;
 		case DOC_LINK:
 			{
 				if( namedDestinations.find( destination_ ) == namedDestinations.end( ) )
 					{
-						Kernel::thePostCheckErrorsList.push_back( new Exceptions::UndefinedCrossRef( loc_, destination_ ) );
+						throw new Exceptions::UndefinedCrossRef( loc_, destination_ );
 					}
-				res->dic[ "Dest" ] = SimplePDF::PDF_out::newString( destination_.getPtr( ) );
+				res->dic[ "Dest" ] = SimplePDF::newString( destination_.getPtr( ) );
 			}
 			break;
 		default:

@@ -345,12 +345,12 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 
 	RefCountPtr< SimplePDF::PDF_Stream_out > form;
 
-	(*form)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Form" );
-	(*form)[ "FormType" ] = SimplePDF::PDF_out::newInt( 1 );
+	(*form)[ "Subtype" ] = SimplePDF::newName( "Form" );
+	(*form)[ "FormType" ] = SimplePDF::newInt( 1 );
 	(*form)[ "BBox" ] = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( llcorner.x_.offtype< 1, 0 >( ), llcorner.y_.offtype< 1, 0 >( ),
 																																											 urcorner.x_.offtype< 1, 0 >( ), urcorner.y_.offtype< 1, 0 >( ) ) );
 	RefCountPtr< SimplePDF::PDF_Resources > resources;
-	(*form)[ "Resources" ] = Kernel::the_pdfo->indirect( resources );
+	(*form)[ "Resources" ] = SimplePDF::indirect( resources, & Kernel::theIndirectObjectCount );
 
 	if( ! Kernel::allowTransparency )
 		{
@@ -364,18 +364,18 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 		{
 			RefCountPtr< SimplePDF::PDF_Dictionary > groupDic;
 			(*form)[ "Group" ] = groupDic;
-			(*groupDic)[ "S" ] = SimplePDF::PDF_out::newName( "Transparency" );
+			(*groupDic)[ "S" ] = SimplePDF::newName( "Transparency" );
 			if( ! blendSpace->isInherent( ) )
 				{
 					(*groupDic)[ "CS" ] = blendSpace->name( );
 				}
 			if( isolated )
 				{
-					(*groupDic)[ "I" ] = SimplePDF::PDF_out::newBoolean( true );
+					(*groupDic)[ "I" ] = SimplePDF::newBoolean( true );
 				}
 			if( knockout )
 				{
-					(*groupDic)[ "K" ] = SimplePDF::PDF_out::newBoolean( true );
+					(*groupDic)[ "K" ] = SimplePDF::newBoolean( true );
 				}
 		}
 
@@ -387,7 +387,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 	Kernel::PageContentStates pdfState( resources );
 	content->shipout( form->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH ) );
 
-	Lang::TransparencyGroup * res = new Lang::TransparencyGroup( Kernel::the_pdfo->indirect( form ),
+	Lang::TransparencyGroup * res = new Lang::TransparencyGroup( SimplePDF::indirect( form, & Kernel::theIndirectObjectCount ),
 																															 content->bbox( ),
 																															 blendSpace );
 	res->setDebugStr( "transparency group" );

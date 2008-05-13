@@ -429,7 +429,7 @@ Kernel::TeXLabelManager::loadLabels( RefCountPtr< std::istream > labelsFile )
 	++loadCount;
 	RefCountPtr< SimplePDF::PDF_in > pdfi = RefCountPtr< SimplePDF::PDF_in >( new SimplePDF::PDF_in( labelsFile ) );
 
-	Kernel::the_pdfo->importBtexEtexThings( pdfi, & availableLabels, setupCodeHash );
+	Kernel::thePDFImporter.importBtexEtexThings( pdfi, & availableLabels, setupCodeHash );
 }
 
 void

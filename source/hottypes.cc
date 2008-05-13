@@ -1289,7 +1289,7 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 
 	RefCountPtr< SimplePDF::PDF_Vector > widths;
 	{
-		RefCountPtr< SimplePDF::PDF_Object > stdWidth = SimplePDF::PDF_out::newFloat( 0 );
+		RefCountPtr< SimplePDF::PDF_Object > stdWidth = SimplePDF::newFloat( 0 );
 		widths->vec.resize( lastChar - firstChar + 1, stdWidth );
 	}
 	RefCountPtr< SimplePDF::PDF_Dictionary > charProcs;
@@ -1307,12 +1307,12 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 				size_t code = (*i)->code( );
 				if( code > 0 )
 					{
-						widths->vec[ code - firstChar ] = SimplePDF::PDF_out::newFloat( (*i)->widthX( ) );
+						widths->vec[ code - firstChar ] = SimplePDF::newFloat( (*i)->widthX( ) );
 					}
 
 				RefCountPtr< SimplePDF::PDF_Stream_out > glyphStream;
 				(*i)->shipout( glyphStream->data, resources );
-				charProcs->dic[ (*i)->name( ).getPtr( ) ] = Kernel::the_pdfo->indirect( glyphStream );
+				charProcs->dic[ (*i)->name( ).getPtr( ) ] = SimplePDF::indirect( glyphStream, & Kernel::theIndirectObjectCount );
 
 				size_t pos = horizontal->charData_.size( );
 				FontMetrics::CharacterMetrics * glyphMetrics = new FontMetrics::CharacterMetrics( pos );
@@ -1334,27 +1334,27 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 	RefCountPtr< SimplePDF::PDF_Vector > fontBBox( new SimplePDF::PDF_Vector( metrics_->fontBBoxXMin_, metrics_->fontBBoxYMin_,
 																																						metrics_->fontBBoxXMax_, metrics_->fontBBoxYMax_ ) );
 	RefCountPtr< SimplePDF::PDF_Dictionary > fontDescriptor;
-	(*fontDescriptor)[ "Type" ] = SimplePDF::PDF_out::newName( "FontDescriptor" );
-	(*fontDescriptor)[ "FontName" ] = SimplePDF::PDF_out::newName( metrics_->fontName_.getPtr( ) );
+	(*fontDescriptor)[ "Type" ] = SimplePDF::newName( "FontDescriptor" );
+	(*fontDescriptor)[ "FontName" ] = SimplePDF::newName( metrics_->fontName_.getPtr( ) );
 	if( metrics_->familyName_.getPtr( ) != NullPtr< const char >( ) )
 		{
-			(*fontDescriptor)[ "FontFamily" ] = SimplePDF::PDF_out::newName( metrics_->familyName_.getPtr( ) );
+			(*fontDescriptor)[ "FontFamily" ] = SimplePDF::newName( metrics_->familyName_.getPtr( ) );
 		}
 	if( metrics_->weight_.getPtr( ) != NullPtr< const char >( ) )
 		{
 			// It has already been asserted that this value is legal.
-			(*fontDescriptor)[ "FontStretch" ] = SimplePDF::PDF_out::newName( metrics_->weight_.getPtr( ) );
+			(*fontDescriptor)[ "FontStretch" ] = SimplePDF::newName( metrics_->weight_.getPtr( ) );
 		}
 	if( metrics_->weightNumber_ > 0 )
 		{
 			// It has already been asserted that this value is legal.
-			(*fontDescriptor)[ "FontWeight" ] = SimplePDF::PDF_out::newInt( metrics_->weightNumber_ );
+			(*fontDescriptor)[ "FontWeight" ] = SimplePDF::newInt( metrics_->weightNumber_ );
 		}
-	(*fontDescriptor)[ "Flags" ] = SimplePDF::PDF_out::newInt( (size_t)(1) << ( 6 - 1 ) ); // This is just the "Nonsymbolic" flag.
+	(*fontDescriptor)[ "Flags" ] = SimplePDF::newInt( (size_t)(1) << ( 6 - 1 ) ); // This is just the "Nonsymbolic" flag.
 	(*fontDescriptor)[ "FontBBox" ] = fontBBox;
 	if( ! IS_NAN( horizontal->italicAngleRadians_ ) )
 		{
-			(*fontDescriptor)[ "ItalicAngle" ] = SimplePDF::PDF_out::newFloat( ( 180 / M_PI ) * horizontal->italicAngleRadians_ );
+			(*fontDescriptor)[ "ItalicAngle" ] = SimplePDF::newFloat( ( 180 / M_PI ) * horizontal->italicAngleRadians_ );
 		}
 	else
 		{
@@ -1362,48 +1362,48 @@ Kernel::WarmType3Font::freezeImpl( Kernel::EvalState * evalState, const Ast::Sou
 		}
 	if( ! IS_NAN( metrics_->ascender_ ) )
 		{
-			(*fontDescriptor)[ "Ascent" ] = SimplePDF::PDF_out::newFloat( metrics_->ascender_ );
+			(*fontDescriptor)[ "Ascent" ] = SimplePDF::newFloat( metrics_->ascender_ );
 		}
 	if( ! IS_NAN( metrics_->descender_ ) )
 		{
-			(*fontDescriptor)[ "Descent" ] = SimplePDF::PDF_out::newFloat( metrics_->descender_ );
+			(*fontDescriptor)[ "Descent" ] = SimplePDF::newFloat( metrics_->descender_ );
 		}
 	if( ! IS_NAN( metrics_->leading_ ) )
 		{
-			(*fontDescriptor)[ "Leading" ] = SimplePDF::PDF_out::newFloat( metrics_->leading_ );
+			(*fontDescriptor)[ "Leading" ] = SimplePDF::newFloat( metrics_->leading_ );
 		}
 	if( ! IS_NAN( metrics_->capHeight_ ) )
 		{
-			(*fontDescriptor)[ "CapHeight" ] = SimplePDF::PDF_out::newFloat( metrics_->capHeight_ );
+			(*fontDescriptor)[ "CapHeight" ] = SimplePDF::newFloat( metrics_->capHeight_ );
 		}
 	if( ! IS_NAN( metrics_->xHeight_ ) )
 		{
-			(*fontDescriptor)[ "XHeight" ] = SimplePDF::PDF_out::newFloat( metrics_->xHeight_ );
+			(*fontDescriptor)[ "XHeight" ] = SimplePDF::newFloat( metrics_->xHeight_ );
 		}
 	if( ! IS_NAN( metrics_->stdHW_ ) )
 		{
-			(*fontDescriptor)[ "StemH" ] = SimplePDF::PDF_out::newFloat( metrics_->stdHW_ );
+			(*fontDescriptor)[ "StemH" ] = SimplePDF::newFloat( metrics_->stdHW_ );
 		}
 	if( ! IS_NAN( metrics_->stdVW_ ) )
 		{
-			(*fontDescriptor)[ "StemV" ] = SimplePDF::PDF_out::newFloat( metrics_->stdVW_ );
+			(*fontDescriptor)[ "StemV" ] = SimplePDF::newFloat( metrics_->stdVW_ );
 		}
 
 	Concrete::Length the1bp( 1 );
 
 	RefCountPtr< SimplePDF::PDF_Dictionary > dic;
-	RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( dic );
-	(*dic)[ "Type" ] = SimplePDF::PDF_out::newName( "Font" );
-	(*dic)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Type3" );
-	(*dic)[ "Encoding" ] = SimplePDF::PDF_out::newName( "MacRomanEncoding" );
+	RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( dic, & Kernel::theIndirectObjectCount );
+	(*dic)[ "Type" ] = SimplePDF::newName( "Font" );
+	(*dic)[ "Subtype" ] = SimplePDF::newName( "Type3" );
+	(*dic)[ "Encoding" ] = SimplePDF::newName( "MacRomanEncoding" );
 	(*dic)[ "FontBBox" ] = fontBBox;
 	(*dic)[ "FontMatrix" ] = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( the1bp * invSize, 0, 0, the1bp * invSize, 0, 0 ) );
 	(*dic)[ "CharProcs" ] = charProcs;
-	(*dic)[ "FirstChar" ] = SimplePDF::PDF_out::newInt( firstChar );
-	(*dic)[ "LastChar" ] = SimplePDF::PDF_out::newInt( lastChar );
+	(*dic)[ "FirstChar" ] = SimplePDF::newInt( firstChar );
+	(*dic)[ "LastChar" ] = SimplePDF::newInt( lastChar );
 	(*dic)[ "Widths" ] = widths;
 	(*dic)[ "FontDescriptor" ] = fontDescriptor;
-	(*dic)[ "Resources" ] = Kernel::the_pdfo->indirect( resources );
+	(*dic)[ "Resources" ] = SimplePDF::indirect( resources, & Kernel::theIndirectObjectCount );
 
 //	 {
 //		 static bool shown = false;
