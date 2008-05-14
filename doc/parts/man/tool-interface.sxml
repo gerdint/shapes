@@ -29,7 +29,7 @@
 			<synopsis-table>
 				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf> <replacable>source</replacable></synopsis-case>
 				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf></synopsis-case>
-				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <synatxname>options</synatxname> <bnf>|</bnf> <synatxname>file-request</synatxname> <bnf>)*</bnf> </synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <synatxname>options</synatxname> <bnf>|</bnf> <synatxname>file-request</synatxname> <bnf>)*</bnf></synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>

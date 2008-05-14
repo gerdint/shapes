@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #echo "You don't want to use this script.  You meant to use fixnoncompiled"
 #exit

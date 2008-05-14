@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 for i in `ls *.h *.cc *.ll *.yy`; do
   echo Fixing $i

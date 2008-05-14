@@ -9,7 +9,7 @@ xmlns:fn="http://www.w3.org/2005/02/xpath-functions">
 <xsl:template match="/man">
 <xsl:apply-templates select="manhead" />
 <xsl:text>
-.ensure-newline.TP
+.ensure-line-break.TP
 .B Note:
 Due to limitations in the character encoding used for this page, some characters in the examples have been replaced by legacy substitutions.  These issues are not present in the
 .SM HTML
@@ -45,7 +45,7 @@ version of this page.</xsl:text>
 </xsl:template>
 
 <xsl:template match="env-variable-list">
-<xsl:apply-templates />
+<xsl:apply-templates select="./*" />
 </xsl:template>
 <xsl:template match="env-variable-item">
 <xsl:text>
@@ -56,7 +56,7 @@ version of this page.</xsl:text>
 </xsl:template>
 
 <xsl:template match="command-line-option-list">
-<xsl:apply-templates />
+<xsl:apply-templates select="./*" />
 </xsl:template>
 <xsl:template match="command-line-item">
 <xsl:text>
@@ -70,17 +70,17 @@ version of this page.</xsl:text>
   <xsl:variable name="tolname">
     <xsl:value-of select="@name" />
   </xsl:variable>
-	<xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolname]" />
+  <xsl:apply-templates select="/man/external/tolerance-parameter[@name=$tolname]" />
 </xsl:template>
 <xsl:template match="command-line-tolparam-remaining">
-	<xsl:for-each select="/man/external/tolerance-parameter">
-		<xsl:variable name="tolname">
-			<xsl:value-of select="@name" />
-		</xsl:variable>
-		<xsl:if test="not(//command-line-tolparam[@name=$tolname])">
-			<xsl:apply-templates select="." />
-		</xsl:if>
-	</xsl:for-each>
+  <xsl:for-each select="/man/external/tolerance-parameter">
+    <xsl:variable name="tolname">
+      <xsl:value-of select="@name" />
+    </xsl:variable>
+    <xsl:if test="not(//command-line-tolparam[@name=$tolname])">
+      <xsl:apply-templates select="." />
+    </xsl:if>
+  </xsl:for-each>
 </xsl:template>
 
 <xsl:template match="command-line-item/parameters[@flag]"><xsl:text>
