@@ -36,6 +36,20 @@
 	</token-example-table>
 </p>
 
+<note>
+	<p>Many users complain that they cannot type the degree character, but this useful character has been present on all keyboard layouts that I (Henrik) has encountered.  To you Emacs users, note that you must type <em>ctrl-q</em> (that is, pressing the <em>q</em> key while holding down the <em>control</em> key), before you can use the <em>meta</em> key as a modifier.  The following table gives a few examples of where the degree character can be found:
+		<loose-table>
+			<tr> <th>OS</th> <th>Keyboard layout</th> <th>Key sequence</th> </tr>
+			<tr> <td>Mac OS X</td> <td>U.S.</td> <td>alt-shift-8</td> </tr>
+			<tr> <td>Cent OS</td> <td>U.S.</td> <td>alt-0</td> </tr>
+			<tr> <td>Mac OS X</td> <td>Swedish — Pro</td> <td>shift-§</td> </tr>
+			<tr> <td>Mac OS X</td> <td>Tiddish (see below)</td> <td>shift-§</td> </tr>
+		</loose-table>
+	</p>
+	<p>Note that, on the Mac OS U.S. layout, the key sequence <em>alt-0</em> yields the <em>masculine ordinal indicator</em> (º) which looks very similar to the degree sign (°) — don't confuse the two!</p>
+	<p>The Tiddish layout is my own keyboard layout, giving at the same time convenient access to Swedish characters on a Swedish keyboard, convenient access to frequent characters used in programming, and big set of logically organized dead key sequences for access to accented characters and more.</p>
+</note>
+
 <p>An alternative way to create negative numbers is to use the unary negation expression, for example: <inline>(-3.1)</inline>.  However, note that the parentheses are mandatory, thus reducing readability compared to the tilde sign alternative.</p>
 </body>
 </section>
