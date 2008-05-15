@@ -26,6 +26,7 @@ Kernel::PassedEnv Kernel::theGlobalEnvironment = 0;
 std::list< Kernel::Environment * > Kernel::theEnvironmentList;
 SimplePDF::PDF_Version Kernel::the_PDF_version;
 bool Kernel::allowTransparency = true;
+bool Kernel::allowSingletonPaths = true;
 SimplePDF::PDF_out * Kernel::the_pdfo = new SimplePDF::PDF_out( );
 Kernel::DebugLog Kernel::theDebugLog;
 Kernel::TeXLabelManager Kernel::theTeXLabelManager;

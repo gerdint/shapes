@@ -38,6 +38,43 @@ namespace Shapes
 {
 	namespace Lang
 	{
+
+		class Core_spot : public Lang::CoreFunction
+		{
+		public:
+			Core_spot( const char * title ) : CoreFunction( title ) { }
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				const size_t ARITY = 1;
+				CHECK_ARITY( args, ARITY, title_ );
+
+				typedef const Lang::Coords2D ArgType;
+				RefCountPtr< ArgType > p = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
+
+				ElementaryPath2D * pth = new ElementaryPath2D;
+				pth->push_back( new Concrete::PathPoint2D( p->x_.get( ), p->y_.get( ) ) );
+				if( Kernel::allowSingletonPaths )
+					{
+						pth->close( );
+					}
+				else
+					{
+						pth->push_back( new Concrete::PathPoint2D( p->x_.get( ), p->y_.get( ) ) );
+					}
+
+				Kernel::GraphicsState * capState( new Kernel::GraphicsState( *evalState->dyn_->getGraphicsState( ) ) );
+				capState->cap_ = Lang::CapStyle::CAP_ROUND;
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Kernel::ValueRef( new Lang::PaintedPath2D
+																					 ( RefCountPtr< const Kernel::GraphicsState >( capState ),
+																						 RefCountPtr< const Lang::ElementaryPath2D >( pth ),
+																						 "S" ) ),
+												 evalState );
+			}
+		};
+
 		class Core_stroke : public Lang::CoreFunction
 		{
 			bool fill_;
@@ -1666,6 +1703,7 @@ Helpers::stroke_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< con
 void
 Kernel::registerCore_draw( Kernel::Environment * env )
 {
+	env->initDefineCoreFunction( new Lang::Core_spot( "spot" ) );
 	env->initDefineCoreFunction( new Lang::Core_stroke( "stroke", false ) );
 	env->initDefineCoreFunction( new Lang::Core_stroke( "fillstroke", true ) );
 	env->initDefineCoreFunction( new Lang::Core_fill( "fill" ) );
