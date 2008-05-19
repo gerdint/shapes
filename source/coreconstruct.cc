@@ -1078,13 +1078,13 @@ namespace Shapes
 
 
 				RefCountPtr< SimplePDF::PDF_Stream_out > form;
-				RefCountPtr< SimplePDF::PDF_Object > indirection = Kernel::the_pdfo->indirect( form );
+				RefCountPtr< SimplePDF::PDF_Object > indirection = SimplePDF::indirect( form, & Kernel::theIndirectObjectCount );
 
 				RefCountPtr< SimplePDF::PDF_Resources > resources;
-				(*form)[ "Resources" ] = Kernel::the_pdfo->indirect( resources );
+				(*form)[ "Resources" ] = SimplePDF::indirect( resources, & Kernel::theIndirectObjectCount );
 
-				(*form)[ "Subtype" ] = SimplePDF::PDF_out::newName( "Form" );
-				(*form)[ "FormType" ] = SimplePDF::PDF_out::newInt( 1 );
+				(*form)[ "Subtype" ] = SimplePDF::newName( "Form" );
+				(*form)[ "FormType" ] = SimplePDF::newInt( 1 );
 				(*form)[ "BBox" ] = RefCountPtr< SimplePDF::PDF_Vector >( new SimplePDF::PDF_Vector( llcorner.x_.offtype< 1, 0 >( ), llcorner.y_.offtype< 1, 0 >( ),
 																																														 urcorner.x_.offtype< 1, 0 >( ), urcorner.y_.offtype< 1, 0 >( ) ) );
 
@@ -1204,7 +1204,7 @@ namespace Shapes
 				RefCountPtr< const std::vector< RefCountPtr< const Lang::XObject > > > typedRes = RefCountPtr< const std::vector< RefCountPtr< const Lang::XObject > > >( NullPtr< std::vector< RefCountPtr< const Lang::XObject > > >( ) );
 				try
 					{
-						typedRes = Kernel::the_pdfo->addPagesAsXObjects( pdfi );
+						typedRes = Kernel::thePDFImporter.addPagesAsXObjects( pdfi );
 					}
 				catch( const char * ball )
 					{

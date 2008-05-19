@@ -10,9 +10,11 @@
 #include "SimplePDF_decls.h"
 #include "FontMetrics_decls.h"
 
-#include "elementarylength.h"
 #include "refcount.h"
 #include "ptrowner.h"
+#include "elementarylength.h"
+#include "simplepdfo.h"
+#include "pdfimport.h"
 
 // The following types do not belong to any particular namespace for some reason, and are therefore declared like this:
 class ShapesScanner;
@@ -57,7 +59,9 @@ namespace Shapes
 		extern Kernel::TeXLabelManager theTeXLabelManager;
 		extern SimplePDF::PDF_Version the_PDF_version;
 		extern bool allowTransparency;
-		extern SimplePDF::PDF_out * the_pdfo;
+		extern size_t theIndirectObjectCount;
+		extern SimplePDF::DocumentInfo theDocInfo;
+		extern Kernel::Import thePDFImporter;
 		extern Kernel::DebugLog theDebugLog;
 
 		extern RefCountPtr< const Kernel::GraphicsState > THE_NO_STATE;

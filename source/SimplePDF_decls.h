@@ -4,6 +4,8 @@
 namespace SimplePDF
 {
 
+	class PDF_xref;
+
 	class PDF_Dictionary;
 	class PDF_in;
 	class PDF_Indirect_out;

@@ -58,7 +58,6 @@ namespace SimplePDF
 		RefCountPtr< PDF_Dictionary > getPage( size_t pageNo );
 	};
 
-
 	template< class S >
 		RefCountPtr< S > PDF_in::follow( RefCountPtr< PDF_Object > maybeIndirect )
 		{

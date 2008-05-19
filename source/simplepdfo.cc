@@ -19,41 +19,41 @@ PDF_Resources::PDF_Resources( )
 		colorSpaces( new PDF_Dictionary ),
 		fonts( new PDF_Dictionary ),
 		shadings( new PDF_Dictionary ),
-		procSetsVector( new PDF_Vector( ) )
+		procSetsVector( new PDF_Vector )
 { }
 
 PDF_Resources::~PDF_Resources( )
 { }
 
 void
-PDF_Resources::writeTo( std::ostream & os ) const
+PDF_Resources::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
-	PDF_Dictionary dic;
+	RefCountPtr< PDF_Dictionary > dic( new PDF_Dictionary );
 	if( ! xobject->dic.empty( ) )
 		{
-			dic[ "XObject" ] = Shapes::Kernel::the_pdfo->indirect( xobject );
+			(*dic)[ "XObject" ] = SimplePDF::indirect( xobject, & Shapes::Kernel::theIndirectObjectCount );
 		}
 	if( ! graphicsStates->dic.empty( ) )
 		{
-			dic[ "ExtGState" ] = Shapes::Kernel::the_pdfo->indirect( graphicsStates );
+			(*dic)[ "ExtGState" ] = SimplePDF::indirect( graphicsStates, & Shapes::Kernel::theIndirectObjectCount );
 		}
 	if( ! colorSpaces->dic.empty( ) )
 		{
-			dic[ "ColorSpaces" ] = Shapes::Kernel::the_pdfo->indirect( colorSpaces );
+			(*dic)[ "ColorSpaces" ] = SimplePDF::indirect( colorSpaces, & Shapes::Kernel::theIndirectObjectCount );
 		}
 	if( !fonts->dic.empty( ) )
 		{
-			dic[ "Font" ] = Shapes::Kernel::the_pdfo->indirect( fonts );
+			(*dic)[ "Font" ] = SimplePDF::indirect( fonts, & Shapes::Kernel::theIndirectObjectCount );
 		}
 	if( ! procSetsVector->vec.empty( ) )
 		{
-			dic[ "ProcSet" ] = procSetsVector;
+			(*dic)[ "ProcSet" ] = procSetsVector;
 		}
 	if( ! shadings->dic.empty( ) )
 		{
-			dic[ "Shading" ] = Shapes::Kernel::the_pdfo->indirect( shadings );
+			(*dic)[ "Shading" ] = SimplePDF::indirect( shadings, & Shapes::Kernel::theIndirectObjectCount );
 		}
-	dic.writeTo( os );
+	dic->writeTo( os, xref, dic );
 }
 
 const SimplePDF::PDF_Name &
@@ -112,19 +112,19 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 			switch( procSet )
 				{
 				case PROC_SET_PDF:
-					procSetsVector->vec.push_back( SimplePDF::PDF_out::newName( "PDF" ) );
+					procSetsVector->vec.push_back( SimplePDF::newName( "PDF" ) );
 					break;
 				case PROC_SET_TEXT:
-					procSetsVector->vec.push_back( SimplePDF::PDF_out::newName( "Text" ) );
+					procSetsVector->vec.push_back( SimplePDF::newName( "Text" ) );
 					break;
 				case PROC_SET_IMAGE_GRAY:
-					procSetsVector->vec.push_back( SimplePDF::PDF_out::newName( "ImageB" ) );
+					procSetsVector->vec.push_back( SimplePDF::newName( "ImageB" ) );
 					break;
 				case PROC_SET_IMAGE_COLOR:
-					procSetsVector->vec.push_back( SimplePDF::PDF_out::newName( "ImageC" ) );
+					procSetsVector->vec.push_back( SimplePDF::newName( "ImageC" ) );
 					break;
 				case PROC_SET_IMAGE_INDEXED:
-					procSetsVector->vec.push_back( SimplePDF::PDF_out::newName( "ImageI" ) );
+					procSetsVector->vec.push_back( SimplePDF::newName( "ImageI" ) );
 					break;
 				default:
 					std::cerr << "Internal error: An unexpected procedure set was requested." << std::endl ;
@@ -134,90 +134,116 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 		}
 }
 
-
-SimplePDF::PDF_out::PDF_out( )
-	: root_( new PDF_Dictionary ),
+SimplePDF::DocumentInfo::DocumentInfo( )
+	: finalized_( false ),
 		info_( new PDF_Dictionary ),
-		i_root( NullPtr< PDF_Object >( ) ),
-		objCount( 0 )
+		i_info_( NullPtr< PDF_Indirect_out >( ) )
 {
-	indirect( RefCountPtr< PDF_Int >( new PDF_Int( 0 ) ), 65535 );
-	indirectQueue.back( )->inUse = false;
-
-	i_root = indirect( root_ );
-
 	(*info_)[ "Producer" ] = newString( "Shapes" );
+}
 
-	root_->dic[ "Type" ] = newName( "Catalog" );
+void
+SimplePDF::DocumentInfo::addExtensionAuthorString( const std::string & str )
+{
+	if( finalized_ )
+		{
+			std::cerr << "Internal error: DocumentInfo::addExtensionAuthorString: Already finalized." << std::endl ;
+			exit( 1 );
+		}
+	extensionAuthorStrings.push_back( str );
+}
+
+bool
+SimplePDF::DocumentInfo::addInfo( const char * key, const RefCountPtr< PDF_Object > & datum )
+{
+	if( finalized_ )
+		{
+			std::cerr << "Internal error: DocumentInfo::addInfo: Already finalized." << std::endl ;
+			exit( 1 );
+		}
+
+	if( info_->hasKey( key ) )
+		{
+			return false;
+		}
+	(*info_)[ key ] = datum;
+	return true;
 
 }
+
+RefCountPtr< SimplePDF::PDF_Indirect_out >
+SimplePDF::DocumentInfo::getIndirect( size_t * indirectObjectCounter )
+{
+	if( ! finalized_ )
+		{
+			if( ! extensionAuthorStrings.empty( ) )
+				{
+					std::ostringstream oss;
+					typedef typeof extensionAuthorStrings ListType;
+					ListType::const_iterator i = extensionAuthorStrings.begin( );
+					oss << *i ;
+					++i;
+					for( ; i != extensionAuthorStrings.end( ); ++i )
+						{
+							oss << "; " << *i ;
+						}
+					(*info_)[ "ExtensionAuthors" ] = newString( oss.str( ).c_str( ) );
+				}
+			finalized_ = true;
+			i_info_ = SimplePDF::indirect( info_, indirectObjectCounter );
+		}
+	return i_info_;
+}
+
+
+
+SimplePDF::PDF_out::PDF_out( const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_root, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_info, const RefCountPtr< const char > & firstPageLabel )
+	: i_root_( i_root ),
+		i_info_( i_info ),
+		firstPageLabel_( firstPageLabel )
+{ }
 
 SimplePDF::PDF_out::~PDF_out( )
 { }
 
+RefCountPtr< const char >
+SimplePDF::PDF_out::getFirstPageLabel( ) const
+{
+	return firstPageLabel_;
+}
+
 void
-SimplePDF::PDF_out::writeData( std::ostream & os, SimplePDF::PDF_Version & pdfVersion )
+SimplePDF::PDF_out::writeFile( std::ostream & os, SimplePDF::PDF_Version & pdfVersion )
 {
 	std::streamoff os_start = static_cast< streamoff >( os.tellp( ) );
+	SimplePDF::PDF_xref my_xref;
 
-	RefCountPtr< PDF_Object > i_info;
 	try
 		{
-	os << std::fixed ;
-	os << "%" << pdfVersion.maxRequestVersionString( ) << endl
-		 << "%"
-		 << static_cast< char >( 129 ) << static_cast< char >( 130 )
-		 << static_cast< char >( 131 ) << static_cast< char >( 132 )
-		 << " Treat as binary" << endl ;
+			os << std::fixed ;
+			os << "%" << pdfVersion.maxRequestVersionString( ) << endl
+				 << "%"
+				 << static_cast< char >( 129 ) << static_cast< char >( 130 )
+				 << static_cast< char >( 131 ) << static_cast< char >( 132 )
+				 << " Treat as binary" << endl ;
 
-	i_info = indirect( info_ );
+			my_xref.enqueue( i_root_ );
+			my_xref.enqueue( i_info_ );
+			my_xref.writeRecursive( os );
 
-	if( ! extensionAuthorStrings.empty( ) )
-		{
-			std::ostringstream oss;
-			typedef typeof extensionAuthorStrings ListType;
-			ListType::const_iterator i = extensionAuthorStrings.begin( );
-			oss << *i ;
-			++i;
-			for( ; i != extensionAuthorStrings.end( ); ++i )
-				{
-					oss << "; " << *i ;
-				}
-			(*info_)[ "ExtensionAuthors" ] = newString( oss.str( ).c_str( ) );
-		}
-
-	{
-		typedef IndirectQueueType::iterator I;
-		for( I i( indirectQueue.begin( ) ); i != indirectQueue.end( ); ++i )
+			streamoff xref( static_cast< streamoff >( os.tellp( ) ) );
+			my_xref.writeTable( os );
+			os << "trailer" << endl ;
 			{
-				(*i)->byteOffset = static_cast< streamoff >( os.tellp( ) ) - os_start;
-				(*i)->writeObject( os );
+				RefCountPtr< PDF_Dictionary > trailer( new PDF_Dictionary );
+				trailer->dic[ "Size" ] = newInt( my_xref.size( ) );
+				trailer->dic[ "Root" ] = i_root_;
+				trailer->dic[ "Info" ] = i_info_;
+				trailer->writeTo( os, & my_xref, trailer ); /* This will not affect the xref, since the indirect objects were put in queue before calling writeTable. */
 			}
-	}
-	streamoff xref( static_cast< streamoff >( os.tellp( ) ) );
-	{
-		os << setfill( '0' ) ;
-		os << "xref" << endl
-			 << 0 << " " << indirectQueue.size( ) << endl ;
-		typedef IndirectQueueType::iterator I;
-		for( I i( indirectQueue.begin( ) ); i != indirectQueue.end( ); ++i )
-			{
-				os << setw( 10 ) << (*i)->byteOffset << ' ' << setw( 5 ) << (*i)->v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
-			}
-	}
-	os << "trailer" << endl ;
-	{
-		PDF_Dictionary trailer;
-		trailer.dic[ "Size" ] = newInt( indirectQueue.size( ) );
-		trailer.dic[ "Root" ] = i_root;
-		trailer.dic[ "Info" ] = i_info;
-		trailer.writeTo( os );
-	}
-	os << endl << "startxref" << endl ;
-	os << xref - os_start << endl ;
-	ostringstream tmps;
-	tmps << endl ;
-	os << "%%EOF" << endl ;
+			os << endl << "startxref" << endl ;
+			os << xref - os_start << endl ;
+			os << "%%EOF" << endl ;
 		}
 	catch( const char * ball )
 		{
@@ -236,232 +262,29 @@ SimplePDF::PDF_out::writeData( std::ostream & os, SimplePDF::PDF_Version & pdfVe
 			cerr << "Caught (...) ball at top level." << endl ;
 			exit( 1 );
 		}
-
-	while( ! importSources.empty( ) )
-		{
-			importSources.pop_back( );
-		}
-}
-
-
-RefCountPtr< PDF_Indirect_out >
-SimplePDF::PDF_out::indirect( RefCountPtr<PDF_Object> obj, size_t v )
-{
-	indirectQueue.push_back( RefCountPtr< PDF_Indirect_out >( new PDF_Indirect_out( obj, objCount, v ) ) );
-	++objCount;
-	return indirectQueue.back( );
-}
-
-RefCountPtr< const std::vector< RefCountPtr< const Shapes::Lang::XObject > > >
-SimplePDF::PDF_out::addPagesAsXObjects( RefCountPtr< PDF_in > pdfi )
-{
-	using namespace Shapes;
-
-	importSources.push_back( pdfi ); // Keep the source alive so that it can be used when finally producing output
-	IndirectRemapType indirectRemap;
-	vector< RefCountPtr< const Lang::XObject > > * res = new vector< RefCountPtr< const Lang::XObject > >;
-	for( size_t pageNumber( 0 ); pageNumber < pdfi->getPageCount( ); ++pageNumber )
-		{
-			RefCountPtr< PDF_Dictionary > pageDic( pdfi->getPage( pageNumber ) );
-			RefCountPtr< PDF_Vector > cropBox = SimplePDF::down_cast_follow< SimplePDF::PDF_Vector >( pageDic->getInheritable( "CropBox" ) );
-			if( cropBox == NullPtr< PDF_Vector >( ) )
-				{
-					cropBox = SimplePDF::down_cast_follow< SimplePDF::PDF_Vector >( pageDic->getInheritable( "MediaBox" ) );
-				}
-			if( cropBox == NullPtr< PDF_Vector >( ) )
-				{
-					throw Exceptions::InternalError( strrefdup( "Failed to find crop box of imported page.	(Searched to the page tree root.)" ) );
-				}
-			RefCountPtr< PDF_Stream_in > original( pdfi->follow< PDF_Stream_in >( (*pageDic)[ "Contents" ] ) );
-
-//			 RefCountPtr< PDF_Dictionary > xobjectDic( pdfi->follow< PDF_Dictionary >( (*pdfi->follow< PDF_Dictionary >( (*pageDic)[ "Resources" ] ))[ "XObject" ] ) );
-//			 if( xobjectDic->dic.size( ) != 1 )
-//				 {
-//					 throw Exceptions::InternalError( strrefdup( "Expected exactly 1 XObject on a TeX label input page" ) );
-//				 }
-//			 RefCountPtr< PDF_Stream_in > original( pdfi->follow< PDF_Stream_in >( xobjectDic->dic.begin( )->second ) );
-			RefCountPtr< PDF_Stream_in > newObj( new PDF_Stream_in( original->is, original->dataStart ) );
-			(*newObj)[ "Subtype" ] = newName( "Form" );
-			(*newObj)[ "FormType" ] = newInt( 1 );
-			(*newObj)[ "BBox" ] = cropBox;							 // ->rectangleIntersection( SimplePDF::down_cast_follow< SimplePDF::PDF_Vector >( (*original)[ "BBox" ] ) );
-			(*newObj)[ "Matrix" ] = RefCountPtr< PDF_Object >( new PDF_Vector( 1, 0, 0, 1, 0, 0 ) );
-			(*newObj)[ "Filter" ] = (*original)[ "Filter" ];
-			(*newObj)[ "Length" ] = RefCountPtr< PDF_Object >( new PDF_Int( pdfi->follow< PDF_Int >( (*original)[ "Length" ] )->value( ) ) );
-			(*newObj)[ "Resources" ] = deepCopy( (*pageDic)[ "Resources" ], this, & indirectRemap );
-
-			Concrete::Length xmin;
-			Concrete::Length xmax;
-			Concrete::Length ymin;
-			Concrete::Length ymax;
-			try
-				{
-					RefCountPtr< PDF_Vector > bboxTyped = pdfi->follow< PDF_Vector >( (*newObj)[ "BBox" ] );
-					if( bboxTyped->vec.size( ) != 4 )
-						{
-							throw Exceptions::InternalError( strrefdup( "The bbox of the imported page was not of size 4." ) );
-						}
-					xmin = Concrete::Length( pdfi->follow< PDF_Float >( bboxTyped->vec[ 0 ] )->value( ) );
-					xmax = Concrete::Length( pdfi->follow< PDF_Float >( bboxTyped->vec[ 2 ] )->value( ) );
-					ymin = Concrete::Length( pdfi->follow< PDF_Float >( bboxTyped->vec[ 1 ] )->value( ) );
-					ymax = Concrete::Length( pdfi->follow< PDF_Float >( bboxTyped->vec[ 3 ] )->value( ) );
-				}
-			catch( Exceptions::Exception & ball )
-				{
-					throw;
-				}
-			catch( const char * ball )
-				{
-					std::ostringstream oss;
-					oss << "An error occurred while evaluating the bbox of the imported page: " << ball ;
-					throw Exceptions::InternalError( strrefdup( oss.str( ).c_str( ) ) );
-				}
-			catch( ... )
-				{
-					throw Exceptions::InternalError( strrefdup( "An error occurred while evaluating the bbox of the imported page." ) );
-				}
-			Lang::ElementaryPath2D * bboxpath = new Lang::ElementaryPath2D;
-			bboxpath->push_back( new Concrete::PathPoint2D( xmin, ymin ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmin, ymax ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmax, ymax ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmax, ymin ) );
-			bboxpath->close( );
-
-			RefCountPtr< PDF_Object > indirection = indirect( newObj );
-			res->push_back( RefCountPtr< Lang::XObject >( new Lang::XObject( indirection, RefCountPtr< const Lang::ElementaryPath2D >( bboxpath ) ) ) );
-		}
-	return RefCountPtr< const std::vector< RefCountPtr< const Lang::XObject > > >( res );
-}
-
-void
-SimplePDF::PDF_out::importBtexEtexThings( RefCountPtr< PDF_in > pdfi, Shapes::Kernel::TeXLabelManager::MapType * dstMap, const std::string & setupCodeHash )
-{
-	using namespace Shapes;
-
-	importSources.push_back( pdfi ); // Keep the source alive so that it can be used when finally producing output
-	IndirectRemapType indirectRemap;
-
-	SimplePDF::PDF_in::PageIterator theEnd = pdfi->endPages( );
-	for( SimplePDF::PDF_in::PageIterator i = pdfi->beginPages( ); i != theEnd; ++i )
-		{
-			RefCountPtr< PDF_Dictionary > xobjectDic( pdfi->follow< PDF_Dictionary >( (*pdfi->follow< PDF_Dictionary >( (**i)[ "Resources" ] ))[ "XObject" ] ) );
-			if( xobjectDic->dic.size( ) != 1 )
-				{
-					throw Exceptions::InternalError( strrefdup( "Expected exactly 1 XObject on a TeX label input page" ) );
-				}
-			RefCountPtr< PDF_Stream_in > original( pdfi->follow< PDF_Stream_in >( xobjectDic->dic.begin( )->second ) );
-
-			string texStr;
-			{
-				RefCountPtr< PDF_Stream_in > texStream( pdfi->follow< PDF_Stream_in >( (*original)[ "TeXsrc" ] ) );
-				ostringstream tmp;
-				texStream->writeDataDefilteredTo( tmp );
-				texStr = tmp.str( );
-			}
-			if( i == pdfi->beginPages( ) )
-				{
-					/* This page only contains information about the TeX context */
-					if( texStr != setupCodeHash )
-						{
-							throw Exceptions::TeXSetupHasChanged( );
-						}
-					continue;
-				}
-			Concrete::Length height( pdfNameToDouble( (*original)[ "TeXht" ] ) );
-			Concrete::Length depth( pdfNameToDouble( (*original)[ "TeXdp" ] ) );
-			Concrete::Length width( pdfNameToDouble( (*original)[ "TeXwd" ] ) );
-
-			const Concrete::Length bboxAddY = 0.08 * ( depth + height );
-			const Concrete::Length xmin = Concrete::ZERO_LENGTH;
-			const Concrete::Length xmax = width;
-			const Concrete::Length ymin = -depth - bboxAddY;
-			const Concrete::Length ymax = height + bboxAddY;
-
-			/* The bbox we get from pdfLaTeX is too small!
-				 It has to be grown a little.
-				 (*newObj)[ "BBox" ] = (*original)[ "BBox" ];
-			*/
-			/*
-			cerr << "minmax: " << xmin << " " << ymin << " " << xmax << " " << ymax << endl ;
-
-			cerr << "texbbox: " ;
-			RefCountPtr< PDF_Vector > texbboxref = pdfi->follow< PDF_Vector >( (*original)[ "BBox" ] );
-			double texbbox[ 4 ];
-			for( size_t i = 0; i < 4; ++i )
-				{
-					texbbox[ i ] = pdfi->follow< PDF_Float >( texbboxref->vec[ i ] )->value( );
-					cerr << texbbox[i] << " " ;
-				}
-			cerr << endl ;
-			*/
-			RefCountPtr< PDF_Stream_in > newObj( new PDF_Stream_in( original->is, original->dataStart ) );
-			(*newObj)[ "Subtype" ] = newName( "Form" );
-			(*newObj)[ "FormType" ] = newInt( 1 );
-			(*newObj)[ "BBox" ] = RefCountPtr< PDF_Object >( new PDF_Vector( 0.0,
-																																			 - bboxAddY.offtype< 1, 0 >( ),
-																																			 ( xmax - xmin ).offtype< 1, 0 >( ),
-																																			 ( ymax - ymin ).offtype< 1, 0 >( ) ) );
-			//			(*newObj)[ "BBox" ] = (*original)[ "BBox" ];
-			(*newObj)[ "Matrix" ] = RefCountPtr< PDF_Object >( new PDF_Vector( 1, 0, 0, 1, 0, - depth.offtype< 1, 0 >( ) ) );
-			(*newObj)[ "Filter" ] = (*original)[ "Filter" ];
-			(*newObj)[ "Length" ] = RefCountPtr< PDF_Object >( new PDF_Int( pdfi->follow< PDF_Int >( (*original)[ "Length" ] )->value( ) ) );
-			(*newObj)[ "Resources" ] = deepCopy( (*original)[ "Resources" ], this, & indirectRemap );
-
-			Lang::ElementaryPath2D * bboxpath = new Lang::ElementaryPath2D;
-			bboxpath->push_back( new Concrete::PathPoint2D( xmin, ymin ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmin, ymax ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmax, ymax ) );
-			bboxpath->push_back( new Concrete::PathPoint2D( xmax, ymin ) );
-			bboxpath->close( );
-
-			if( dstMap->find( texStr ) != dstMap->end( ) )
-				{
-					throw Exceptions::InternalError( strrefdup( "Multiply generated TeX label: " + texStr ) );
-				}
-
-			RefCountPtr< PDF_Object > indirection = indirect( newObj );
-			dstMap->insert( Shapes::Kernel::TeXLabelManager::MapType::value_type( texStr, RefCountPtr< const Lang::XObject >( new Lang::XObject( indirection, RefCountPtr< const Lang::ElementaryPath2D >( bboxpath ) ) ) ) );
-		}
-}
-
-double
-SimplePDF::PDF_out::pdfNameToDouble( RefCountPtr< PDF_Object > nameObject )
-{
-	RefCountPtr< PDF_Name > name( nameObject.down_cast< PDF_Name >( ) );
-	if( name == NullPtr< PDF_Name >( ) )
-		{
-			throw( "PDF_out::pdfNameToDouble: The object was not a name" );
-		}
-	const double pointToBigPointFactor = 72 / 72.27;
-	char * end;
-	double res = pointToBigPointFactor * strtod( name->name( ).c_str( ), & end );
-	if( strcmp( end, "pt" ) != 0 )
-		{
-			throw( "PDF_out::pdfNameToDouble: Expected \"pt\" to follow length number" );
-		}
-	return res;
 }
 
 
 RefCountPtr<PDF_Object>
-SimplePDF::PDF_out::newName( const char * str )
+SimplePDF::newName( const char * str )
 {
 	return RefCountPtr<PDF_Name>( new PDF_Name( str ) );
 }
 
 RefCountPtr<PDF_Object>
-SimplePDF::PDF_out::newString( const char * str )
+SimplePDF::newString( const char * str )
 {
 	return RefCountPtr< PDF_String >( new PDF_LiteralString( str ) );
 }
 
 RefCountPtr<PDF_Object>
-SimplePDF::PDF_out::newInt( PDF_Int::ValueType val )
+SimplePDF::newInt( PDF_Int::ValueType val )
 {
 	return RefCountPtr<PDF_Int>( new PDF_Int( val ) );
 }
 
 RefCountPtr<PDF_Object>
-SimplePDF::PDF_out::newBoolean( PDF_Boolean::ValueType val )
+SimplePDF::newBoolean( PDF_Boolean::ValueType val )
 {
 	if( val )
 		{
@@ -471,7 +294,7 @@ SimplePDF::PDF_out::newBoolean( PDF_Boolean::ValueType val )
 }
 
 RefCountPtr<PDF_Object>
-SimplePDF::PDF_out::newFloat( PDF_Float::ValueType val )
+SimplePDF::newFloat( PDF_Float::ValueType val )
 {
 	return RefCountPtr<PDF_Float>( new PDF_Float( val ) );
 }
@@ -501,11 +324,11 @@ SimplePDF::OutlineItem::hasKids( ) const
 }
 
 RefCountPtr< SimplePDF::PDF_Indirect_out >
-SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const
+SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_Version & pdfVersion ) const
 {
 	RefCountPtr< SimplePDF::PDF_Dictionary > res( new SimplePDF::PDF_Dictionary );
-	RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = doc->indirect( res );
-	res->dic[ "Type"	] = SimplePDF::PDF_out::newName( "Outlines" );
+	RefCountPtr< SimplePDF::PDF_Indirect_out > i_res = SimplePDF::indirect( res, & Shapes::Kernel::theIndirectObjectCount );
+	res->dic[ "Type"	] = SimplePDF::newName( "Outlines" );
 
 	if( ! kids_.empty( ) )
 		{
@@ -516,8 +339,8 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, Simp
 
 			RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
 			newKid->dic[ "Parent" ] = i_res;
-			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
-			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
+			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = SimplePDF::indirect( newKid, & Shapes::Kernel::theIndirectObjectCount );
+			openCount += (*i)->fillInDictionary( newKid, i_newKid, pdfVersion );
 
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
@@ -527,10 +350,10 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, Simp
 					RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
 					newKid = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 					newKid->dic[ "Prev" ] = i_newKid;
-					i_newKid = doc->indirect( newKid );
+					i_newKid = SimplePDF::indirect( newKid, & Shapes::Kernel::theIndirectObjectCount );
 					lastKid->dic[ "Next" ] = i_newKid;
 					newKid->dic[ "Parent" ] = i_res;
-					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
+					openCount += (*i)->fillInDictionary( newKid, i_newKid, pdfVersion );
 				}
 
 			res->dic[ "First"	] = i_first;
@@ -538,7 +361,7 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, Simp
 
 			if( openCount > 0 )
 				{
-					res->dic[ "Count"	] = SimplePDF::PDF_out::newInt( openCount );
+					res->dic[ "Count"	] = SimplePDF::newInt( openCount );
 				}
 		}
 
@@ -546,16 +369,16 @@ SimplePDF::OutlineItem::getTopIndirectDictionary( SimplePDF::PDF_out * doc, Simp
 }
 
 size_t
-SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_out * doc, SimplePDF::PDF_Version & pdfVersion ) const
+SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary > dstDic, const RefCountPtr< SimplePDF::PDF_Indirect_out > & i_dstDic, SimplePDF::PDF_Version & pdfVersion ) const
 {
-	dstDic->dic[ "Title"	] = SimplePDF::PDF_out::newString( title_.getPtr( ) );
+	dstDic->dic[ "Title"	] = SimplePDF::newString( title_.getPtr( ) );
 	dstDic->dic[ "Dest"	] = destination_;
 	const SimplePDF::PDF_Version::Version FANCY_OUTLINE_VERSION = SimplePDF::PDF_Version::PDF_1_3;
 	if( fontBold_ || fontItalic_ )
 		{
 			if( pdfVersion.greaterOrEqual( FANCY_OUTLINE_VERSION ) )
 				{
-					dstDic->dic[ "F"	] = SimplePDF::PDF_out::newInt( ( fontBold_ ? 2 : 0 ) + ( fontItalic_ ? 1 : 0 ) );
+					dstDic->dic[ "F"	] = SimplePDF::newInt( ( fontBold_ ? 2 : 0 ) + ( fontItalic_ ? 1 : 0 ) );
 				}
 			else
 				{
@@ -584,8 +407,8 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 
 			RefCountPtr< SimplePDF::PDF_Dictionary > newKid( new SimplePDF::PDF_Dictionary );
 			newKid->dic[ "Parent" ] = i_dstDic;
-			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = doc->indirect( newKid );
-			openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
+			RefCountPtr< SimplePDF::PDF_Indirect_out > i_newKid = SimplePDF::indirect( newKid, & Shapes::Kernel::theIndirectObjectCount );
+			openCount += (*i)->fillInDictionary( newKid, i_newKid, pdfVersion );
 
 			RefCountPtr< SimplePDF::PDF_Indirect_out > i_first = i_newKid;
 
@@ -595,10 +418,10 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 					RefCountPtr< SimplePDF::PDF_Dictionary > lastKid = newKid;
 					newKid = RefCountPtr< SimplePDF::PDF_Dictionary >( new SimplePDF::PDF_Dictionary );
 					newKid->dic[ "Prev" ] = i_newKid;
-					i_newKid = doc->indirect( newKid );
+					i_newKid = SimplePDF::indirect( newKid, & Shapes::Kernel::theIndirectObjectCount );
 					lastKid->dic[ "Next" ] = i_newKid;
 					newKid->dic[ "Parent" ] = i_dstDic;
-					openCount += (*i)->fillInDictionary( newKid, i_newKid, doc, pdfVersion );
+					openCount += (*i)->fillInDictionary( newKid, i_newKid, pdfVersion );
 				}
 
 			dstDic->dic[ "First"	] = i_first;
@@ -610,11 +433,11 @@ SimplePDF::OutlineItem::fillInDictionary( RefCountPtr< SimplePDF::PDF_Dictionary
 		{
 			if( isOpen_ )
 				{
-					dstDic->dic[ "Count"	] = SimplePDF::PDF_out::newInt( openCount );
+					dstDic->dic[ "Count"	] = SimplePDF::newInt( openCount );
 				}
 			else
 				{
-					dstDic->dic[ "Count"	] = SimplePDF::PDF_out::newInt( -openCount );
+					dstDic->dic[ "Count"	] = SimplePDF::newInt( -openCount );
 				}
 		}
 
