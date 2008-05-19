@@ -240,12 +240,15 @@ namespace SimplePDF
 	private:
 		mutable size_t size_;
 		std::list< RefCountPtr< const PDF_Indirect_out > > indirectQueue_;
+		std::list< size_t > localOrder_; /* This list gives the order in which local numbers were assigned. */
+		std::deque< size_t > localNumbers_;
 		std::deque< size_t > byteOffsets_;
 		std::deque< size_t > generations_;
 	public:
 		PDF_xref( );
 		void enqueue( const RefCountPtr< const PDF_Indirect_out > & obj );
 		void writeRecursive( std::ostream & os );
+		size_t local( size_t i ) const; /* Return local object number for the global object number i.  Allows the xref table to be compact. */
 
 		void writeTable( std::ostream & os ) const;
 		size_t size( ) const;
