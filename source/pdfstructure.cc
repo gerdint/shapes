@@ -11,8 +11,6 @@ using namespace std;
 
 using namespace SimplePDF;
 
-SimplePDF::PDF_xref * thexref = 0;
-
 /****************/
 
 SimplePDF::PDF_Object::PDF_Object( )
@@ -754,7 +752,9 @@ SimplePDF::PDF_Indirect::~PDF_Indirect( )
 void
 SimplePDF::PDF_Indirect_in::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
-	os << i << " " << v << " R" ;
+	std::cerr << "Internal error: PDF_Indirect_in::writeTo: This object is only good for reading, not for writing!" << std::endl ;
+	exit( 1 );
+	//	os << i << " " << v << " R" ;
 }
 bool SimplePDF::operator < ( const PDF_Indirect & o1, const PDF_Indirect & o2 )
 {
@@ -789,14 +789,14 @@ void
 SimplePDF::PDF_Indirect_out::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
 	xref->enqueue( self.down_cast< const PDF_Indirect_out >( ) );  /* This shall not fail! */
-	os << i << " " << v << " R" ;
+	os << xref->local( i ) << " " << v << " R" ;  /* We must not call xref->local before xref->enqueue ! */
 }
 void
 SimplePDF::PDF_Indirect_out::writeObject( std::ostream & os, SimplePDF::PDF_xref * xref ) const
 {
 	if( inUse )
 		{
-			os << i << " " << v << " obj" << endl ;
+			os << xref->local( i ) << " " << v << " obj" << endl ;
 			obj->writeTo( os, xref, obj );
 			os << endl << "endobj" << endl ;
 		}
@@ -838,6 +838,8 @@ SimplePDF::PDF_xref::PDF_xref( )
 	: size_( 0 )
 {
 	/* The first position in the xref table is special. */
+	localOrder_.push_back( 0 ); /* The first object shall appear in the xref table. */
+	localNumbers_.push_back( 0 ); /* It has number 0. */
 	byteOffsets_.push_back( 0 ); /* This is interpreted as "not in use" */
 	generations_.push_back( 65535 );
 }
@@ -845,10 +847,10 @@ SimplePDF::PDF_xref::PDF_xref( )
 void
 SimplePDF::PDF_xref::enqueue( const RefCountPtr< const::PDF_Indirect_out > & obj )
 {
-	thexref = this;
 	/* Grow big enough */
 	while( byteOffsets_.size( ) <= obj->i )
 		{
+			localNumbers_.push_back( 0 );
 			byteOffsets_.push_back( 0 );
 			generations_.push_back( 0 );
 		}
@@ -856,9 +858,10 @@ SimplePDF::PDF_xref::enqueue( const RefCountPtr< const::PDF_Indirect_out > & obj
 	if( byteOffsets_[ obj->i ] == 0 )
 		{
 			indirectQueue_.push_back( obj );
+			localNumbers_[ obj->i ] = localOrder_.size( );
 			byteOffsets_[ obj->i ] = 1; /* We will change this later, this just indicates that the object has been put in queue. */
+			localOrder_.push_back( obj->i );
 		}
-	typedef typeof indirectQueue_ QType;
 }
 
 void
@@ -881,6 +884,12 @@ SimplePDF::PDF_xref::writeRecursive( std::ostream & os )
 		}
 }
 
+size_t
+SimplePDF::PDF_xref::local( size_t i ) const
+{
+	return localNumbers_[ i ];
+}
+
 void
 SimplePDF::PDF_xref::writeTable( std::ostream & os ) const
 {
@@ -889,40 +898,17 @@ SimplePDF::PDF_xref::writeTable( std::ostream & os ) const
 			std::cerr << "Internal error: PDF_xref::writeTable: This table has already been written." << std::endl ;
 			exit( 1 );
 		}
-	size_ = byteOffsets_.size( );
+	size_ = localOrder_.size( );
 
 	os << setfill( '0' ) ;
 	os << "xref" << endl
 		 << 0 << " " << size_ << endl ;
-	typedef typeof byteOffsets_ ListType;
-	size_t objNumber = 0;
-	ListType::const_iterator v = generations_.begin( );
-	for( ListType::const_iterator i = byteOffsets_.begin( ); i != byteOffsets_.end( ); ++i, ++v, ++objNumber )
+	typedef typeof localOrder_ ListType;
+	for( ListType::const_iterator i = localOrder_.begin( ); i != localOrder_.end( ); ++i )
 		{
-			if( *i == 1 )
-				{
-					std::cerr << "Internal error: Object " << objNumber << " has not been written to the file." << std::endl ;
-				}
-			else if( *i > 0 )
-				{
-					os << setw( 10 ) << *i << ' ' << setw( 5 ) << *v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
-				}
-			else
-				{
-					size_t nextFree = 0;
-					size_t tmpNumber = objNumber + 1;
-					ListType::const_iterator i2 = i;
-					++i2;
-					for( ; i2 != byteOffsets_.end( ); ++i2, ++tmpNumber )
-						{
-							if( *i2 == 0 )
-								{
-									nextFree = tmpNumber;
-									break;
-								}
-						}
-					os << setw( 10 ) << nextFree << ' ' << setw( 5 ) << *v << ' ' << 'f' << ' ' << static_cast< char >( 10 ) ;
-				}
+			size_t v = generations_[ *i ];
+			size_t o = byteOffsets_[ *i ];
+			os << setw( 10 ) << o << ' ' << setw( 5 ) << v << ' ' << 'n' << ' ' << static_cast< char >( 10 ) ;
 		}
 }
 
