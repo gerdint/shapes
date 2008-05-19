@@ -794,7 +794,8 @@ main( int argc, char ** argv )
 							exit( 1 );
 						}
 					struct stat theStat;
-					if( stat( *argv, & theStat ) == 0 )
+					if( stat( *argv, & theStat ) == 0 &&
+							( theStat.st_mode & S_IFDIR ) == 0 ) /* We are not interested in directories here. */
 						{
 							inputName = *argv;
 							char * ext = *argv + strlen( *argv ) - 6;
