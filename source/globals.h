@@ -59,6 +59,7 @@ namespace Shapes
 		extern Kernel::TeXLabelManager theTeXLabelManager;
 		extern SimplePDF::PDF_Version the_PDF_version;
 		extern bool allowTransparency;
+		extern bool allowSingletonPaths;
 		extern size_t theIndirectObjectCount;
 		extern SimplePDF::DocumentInfo theDocInfo;
 		extern Kernel::Import thePDFImporter;

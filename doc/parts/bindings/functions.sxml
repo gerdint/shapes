@@ -182,6 +182,37 @@ facing: [../facing scale:true distort:true ...]
 	</function>
 </system-binding>
 
+<system-binding identifier="spot">
+	<function>
+		<case constructor-of="Drawable">
+			<arguments>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="width" /> <dynvar name="stroking" /></dynamic-references>
+			<description>
+				<p>Paints a round spot at the given coordinates.  The width and color of the spot is as if the spot was a stroke, see <binding name="stroke" />.</p>
+				<p>Note that spots can also be made by stroking a closed singelton path with a round cap style.  That is,
+<pre>
+[spot pt]
+</pre>
+is equivalent to
+<pre>
+@cap:CAP_ROUND | [stroke emptypath--pt--cycle]
+</pre>
+				</p>
+				<p>Also note that using <binding name="spot" /> is much more efficient than using <binding name="fill" /> on a circular path.</p>
+				<p>Some <str-PDF /> viewers fail to do the obvious thing when a singleton path is painted with a stroke, and if you are targeting such viewers you could either change the implementation of <binding name="spot" /> using the command line option <a part="man" id="AllowSingletonPaths">--spot-pair=yes</a>, or use <binding name="stroke" /> on a path between two points at the same location instead of using <binding name="spot" />, like so:
+<pre>
+@cap:CAP_ROUND | [stroke pt--(+(0m,0m))]
+</pre>
+</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 <system-binding identifier="stroke">
 	<function>
 		<case constructor-of="Drawable">

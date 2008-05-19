@@ -326,6 +326,12 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
+			else if( strprefixcmp( *argv, "--spot-pair=", & optionSuffix ) )
+				{
+					Kernel::allowSingletonPaths = ! strtobool( optionSuffix, *argv );
+					argv += 1;
+					argc -= 1;
+				}
 			else if( strprefixcmp( *argv, "--unit=", & optionSuffix ) )
 				{
 					Interaction::displayUnitName = optionSuffix;

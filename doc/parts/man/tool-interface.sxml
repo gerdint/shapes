@@ -252,6 +252,12 @@
 							<p>See also --pdf-version.</p>
 						</description>
 					</command-line-item>
+					<command-line-item id="AllowSingletonPaths">
+						<nosep-parameter flag="--spot-pair=">bool</nosep-parameter>
+						<description>
+							<p>Not really being a version-related option, this at least affects the compatibility with some PDF-interpreting applications.  Determines whether the function <binding name="spot" /> should generate closed singleton paths (more efficient) or paths between a pair of points at the same location (more compatible).  Defaults to false (that is, singleton).</p>
+						</description>
+					</command-line-item>
 					<command-line-item>
 						<parameters flag="--version"></parameters>
 						<description>

@@ -62,6 +62,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="command-line-item">
 <li>
+<xsl:if test="./@id">
+	<xsl:element name="a">
+		<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+	</xsl:element>
+</xsl:if>
 <xsl:apply-templates select="parameters" />
 <xsl:apply-templates select="nosep-parameter" />
 <xsl:apply-templates select="description/*"/>
