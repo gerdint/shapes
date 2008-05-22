@@ -27,7 +27,7 @@ inflow: \ •dst x1 x2 idx .>
   •dst << [shift (x1+d*3mm,y1-@pipe_width/2-2mm)] [] [centerat (TeX `Inflow´) (0,1)]
   v: [shift ([mediate 0.4 x1 x2],y1)]*[rotate 90°] [] [valve]
   •dst << v
-  •dst << [shift ([mediate 0.4 x1 x2]+0.5cm,[discrete_maximizer [bbox v] (0,1)].p.y)] [] (TeX [sprintf `$u_{%g}$´ idx])
+  •dst << [shift ([mediate 0.4 x1 x2]+0.5cm,[pathpoint_maximizer [bbox v] (0,1)].p.y)] [] (TeX [sprintf `$u_{%g}$´ idx])
 }
 
 [inflow •page ~2.5cm tank_W/3 1]

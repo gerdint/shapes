@@ -20,6 +20,6 @@ sPos: [putblockVeryNearBelow •page pointpicture fusion]
 [ignore [connect •page fusion pos]]
 [ignore [hvconnect •page [leftpoint sPos] [bottompoint vision 3 3]]]
 
-•page << [shift [discrete_mean [bbox pos]]] [] [centerat [teX `\parbox{2cm}{\centering Position orientation}´] (0,0)]
+•page << [shift [pathpoint_mean [bbox pos]]] [] [centerat [teX `\parbox{2cm}{\centering Position orientation}´] (0,0)]
 
 }

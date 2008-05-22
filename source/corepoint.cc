@@ -547,11 +547,11 @@ Kernel::registerCore_point( Kernel::Environment * env )
 {
 	env->initDefineCoreFunction( new Lang::Core_duration( "duration" ) );
 	env->initDefineCoreFunction( new Lang::Core_controlling_maximizer( "controlling_maximizer" ) );
-	env->initDefineCoreFunction( new Lang::Core_discrete_mean( "discrete_mean" ) );
-	env->initDefineCoreFunction( new Lang::Core_discrete_maximizer( "discrete_maximizer" ) );
-	env->initDefineCoreFunction( new Lang::Core_discrete_approximator( "discrete_approximator" ) );
-	env->initDefineCoreFunction( new Lang::Core_continuous_mean( "continuous_mean" ) );
-	env->initDefineCoreFunction( new Lang::Core_continuous_maximizer( "continuous_maximizer" ) );
-	env->initDefineCoreFunction( new Lang::Core_continuous_approximator( "continuous_approximator" ) );
+	env->initDefineCoreFunction( new Lang::Core_discrete_mean( "pathpoint_mean" ) );
+	env->initDefineCoreFunction( new Lang::Core_discrete_maximizer( "pathpoint_maximizer" ) );
+	env->initDefineCoreFunction( new Lang::Core_discrete_approximator( "pathpoint_approximator" ) );
+	env->initDefineCoreFunction( new Lang::Core_continuous_mean( "mean" ) );
+	env->initDefineCoreFunction( new Lang::Core_continuous_maximizer( "maximizer" ) );
+	env->initDefineCoreFunction( new Lang::Core_continuous_approximator( "approximator" ) );
 	env->initDefineCoreFunction( new Lang::Core_intersection( "intersection" ) );
 }

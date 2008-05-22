@@ -181,8 +181,8 @@ connect: \ •dst pica picb .>
   rxb: 0.5 * ( [xmax bbb] - [xmin bbb] )
   rya: 0.5 * ( [ymax bba] - [ymin bba] )
   ryb: 0.5 * ( [ymax bbb] - [ymin bbb] )
-  ca: [discrete_mean bba]
-  cb: [discrete_mean bbb]
+  ca: [pathpoint_mean bba]
+  cb: [pathpoint_mean bbb]
   [if ca.x < cb.x - ( rxa + rxb )
       [if ca.y < cb.y - ( rya + ryb )
       	[rbconnect •dst pica picb]
