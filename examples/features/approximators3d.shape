@@ -25,7 +25,7 @@ nIter: '40
    {
     p: 1.4cm * [random3D •randstate]
 |**    tim: newTimer <<
-    sl: [continuous_approximator pth p]
+    sl: [approximator pth p]
 |**    tim;
     a: (p - sl.p) /_ sl.T
     [debuglog_before
@@ -61,7 +61,7 @@ randPath: \ n •randstate .>
    {
     p: sh [] 1.4cm * [random3D •randstate]
 |**    tim: newTimer
-    sl: [continuous_approximator pth p]
+    sl: [approximator pth p]
 |**    tim;
     a: (p - sl.p) /_ sl.T
     [debuglog_before

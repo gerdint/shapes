@@ -3,7 +3,7 @@
 linkpaths: \ p1 p2 .>
 {
   t: [intersection p1 p2]
-  [meetpaths [p1 0]--t [continuous_approximator p2 t.p]--[p2 ∞]]
+  [meetpaths [p1 0]--t [approximator p2 t.p]--[p2 ∞]]
 }
 
 buildchain: \ pthList .>
@@ -14,6 +14,6 @@ buildchain: \ pthList .>
   tmp: [foldl (\ p e .> [linkpaths p e]) l2 lr]
   t1: [intersection l1 tmp]
   ttmp: [intersection tmp l1]
-  [meetpaths t1--[continuous_approximator l1 ttmp.p]
-             ttmp--[continuous_approximator tmp t1.p]]
+  [meetpaths t1--[approximator l1 ttmp.p]
+             ttmp--[approximator tmp t1.p]]
 }
