@@ -2957,7 +2957,7 @@ namespace Shapes
 		Concrete::Speed maxSpeed_b_;
 	public:
 		IntersectionPolys2D( const Bezier::ControlPoints< Concrete::Coords2D > & seg_a, const Bezier::ControlPoints< Concrete::Coords2D > & seg_b );
-		void splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_alow, const Concrete::Time t_ahigh, const Concrete::Time t_atol, const Concrete::Time t_blow, const Concrete::Time t_bhigh, const Concrete::Time t_btol ) const;
+		bool splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_alow, const Concrete::Time t_ahigh, const Concrete::Time t_atol, const Concrete::Time t_blow, const Concrete::Time t_bhigh, const Concrete::Time t_btol, Concrete::Length distance_tol ) const; /* Return true if intersection is found. */
 		Concrete::Length distanceAt( Concrete::Time ta, Concrete::Time tb ) const;
 		Physical< 2, 0 > squaredDistanceAt( Concrete::Time ta, Concrete::Time tb ) const;
 		Concrete::Speed maxSpeed_a( ) const { return maxSpeed_a_; }
@@ -2983,7 +2983,7 @@ namespace Shapes
 		IntersectionSegmentSections2D * cutBeforeAfter( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const;
 		IntersectionSegmentSections2D * cutBeforeBefore( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const;
 
-		void splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_tol_a, const Concrete::Time t_tol_b ) const;
+		bool splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_tol_a, const Concrete::Time t_tol_b, Concrete::Length distance_tol ) const; /* True if intersection was found. */
 		Concrete::Time globalTime_a( Concrete::Time t ) const;
 		Concrete::Length distanceAt( Concrete::Time ta, Concrete::Time tb ) const;
 		Concrete::Speed maxSpeed_a( ) const;
@@ -3159,11 +3159,12 @@ Lang::ElementaryPath2D::intersection( const Lang::ElementaryPath2D & p2 ) const
 
 					Concrete::Time t1;
 					Concrete::Time t2;
-					workItem->splitTimes( & t1, & t2, 0.001 * t_tol_1, 0.001 * t_tol_2 );	// too low precision gives erraneous results!
-					if( workItem->distanceAt( t1, t2 ) < DISTANCE_TOL )
+					if( workItem->splitTimes( & t1, & t2, 0.001 * t_tol_1, 0.001 * t_tol_2, DISTANCE_TOL )	// too low precision gives erraneous results!
+							|| workItem->distanceAt( t1, t2 ) < DISTANCE_TOL )
 						{
 							t = min( t, t1 );
 							// We have an intersection; only two children to consider
+							/* When splitTimes returned true, DO WE HAVE TO convergence by ourselves? */
 							pushOverlappingDeleteOther( work, workItem->cutAfterBefore( t1, t2, CUT_LOSS * t_tol_1, CUT_LOSS * t_tol_2 ) );
 							pushOverlappingDeleteOther( work, workItem->cutAfterAfter( t1, t2, CUT_LOSS * t_tol_1, CUT_LOSS * t_tol_2 ) );
 						}
@@ -3264,8 +3265,8 @@ Computation::IntersectionPolys2D::IntersectionPolys2D( const Bezier::ControlPoin
 	}
 }
 
-void
-Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_alow, const Concrete::Time t_ahigh, const Concrete::Time t_atol, const Concrete::Time t_blow, const Concrete::Time t_bhigh, const Concrete::Time t_btol ) const
+bool
+Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_alow, const Concrete::Time t_ahigh, const Concrete::Time t_atol, const Concrete::Time t_blow, const Concrete::Time t_bhigh, const Concrete::Time t_btol, Concrete::Length distance_tol ) const
 {
 	Concrete::Time ta;
 	Concrete::Time tb;
@@ -3415,6 +3416,7 @@ Computation::IntersectionPolys2D::splitTimes( Concrete::Time * dst_a, Concrete::
 
 	*dst_a = ta;
 	*dst_b = tb;
+	return distanceAt( ta, tb ) < distance_tol;
 }
 
 Physical< 2, 0 >
@@ -3452,7 +3454,7 @@ Computation::IntersectionPolys2D::getControls_b( const Concrete::Time t_low, con
 {
 	return Bezier::ControlPoints< Concrete::Coords2D >( polyCoeffs_b.subSection( t_low.offtype< 0, 1 >( ), t_high.offtype< 0, 1 >( ) ) );
 }
- 
+
 Computation::IntersectionSegmentSections2D::IntersectionSegmentSections2D( const IntersectionPolys2D * _baseSegs, Concrete::Time _steps_a, Concrete::Time _t_a0, Concrete::Time _t_a1, Concrete::Time _t_b0, Concrete::Time _t_b1 )
 	: controls_a( _baseSegs->getControls_a( _t_a0, _t_a1 ) ), controls_b( _baseSegs->getControls_b( _t_b0, _t_b1 ) ),
 		baseSegs( _baseSegs ), steps_a( _steps_a ), t_a0( _t_a0 ), t_a1( _t_a1 ), t_b0( _t_b0 ), t_b1( _t_b1 )
@@ -3461,35 +3463,42 @@ Computation::IntersectionSegmentSections2D::IntersectionSegmentSections2D( const
 Computation::IntersectionSegmentSections2D *
 Computation::IntersectionSegmentSections2D::cutAfterAfter( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const
 {
-	return new IntersectionSegmentSections2D( baseSegs, steps_a, t_a0, ta - tol_a, t_b0, tb - tol_a );
+	return new IntersectionSegmentSections2D( baseSegs, steps_a, t_a0, ta - tol_a, t_b0, tb - tol_b );
 }
 
 Computation::IntersectionSegmentSections2D *
 Computation::IntersectionSegmentSections2D::cutAfterBefore( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const
 {
-	return new IntersectionSegmentSections2D( baseSegs, steps_a, t_a0, ta - tol_a, tb + tol_a, t_b1 );
+	return new IntersectionSegmentSections2D( baseSegs, steps_a, t_a0, ta - tol_a, tb + tol_b, t_b1 );
 }
 
 Computation::IntersectionSegmentSections2D *
 Computation::IntersectionSegmentSections2D::cutBeforeAfter( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const
 {
-	return new IntersectionSegmentSections2D( baseSegs, steps_a, ta + tol_a, t_a1, t_b0, tb - tol_a );
+	return new IntersectionSegmentSections2D( baseSegs, steps_a, ta + tol_a, t_a1, t_b0, tb - tol_b );
 }
 
 Computation::IntersectionSegmentSections2D *
 Computation::IntersectionSegmentSections2D::cutBeforeBefore( Concrete::Time ta, Concrete::Time tb, Concrete::Time tol_a, Concrete::Time tol_b ) const
 {
-	return new IntersectionSegmentSections2D( baseSegs, steps_a, ta + tol_a, t_a1, tb + tol_a, t_b1 );
+	return new IntersectionSegmentSections2D( baseSegs, steps_a, ta + tol_a, t_a1, tb + tol_b, t_b1 );
 }
 
-void
-Computation::IntersectionSegmentSections2D::splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_tol_a, const Concrete::Time t_tol_b ) const
+bool
+Computation::IntersectionSegmentSections2D::splitTimes( Concrete::Time * dst_a, Concrete::Time * dst_b, const Concrete::Time t_tol_a, const Concrete::Time t_tol_b, Concrete::Length distance_tol ) const
 {
 	Concrete::Time da = 0.01 * ( t_a1 - t_a0 );
 	Concrete::Time db = 0.01 * ( t_b1 - t_b0 );
-	baseSegs->splitTimes( dst_a, dst_b,
-												t_a0, t_a1, t_tol_a,
-												t_b0, t_b1, t_tol_b );
+	if( baseSegs->splitTimes( dst_a, dst_b,
+														t_a0, t_a1, t_tol_a,
+														t_b0, t_b1, t_tol_b,
+														distance_tol ) )
+		{
+			/* An intersection was found to withing tolerances.  Do not adjust for robust convergence! */
+			return true;
+		}
+
+	/* For robust convergence, make sure we don't return split times that are too close to the corners of these sections. */
 	if( *dst_a < t_a0 + da && *dst_b < t_b0 + db )
 		{
 			*dst_a = t_a0 + da;
@@ -3510,6 +3519,7 @@ Computation::IntersectionSegmentSections2D::splitTimes( Concrete::Time * dst_a, 
 			*dst_a = t_a1 - da;
 			*dst_b = t_b1 - db;
 		}
+	return false;
 }
 
 Concrete::Time
