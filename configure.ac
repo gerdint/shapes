@@ -33,6 +33,8 @@ AC_CHECK_LIB([c], [close])
 AM_PATH_GSL([1.8],, AC_MSG_ERROR(GSL not found))
 AC_CHECK_LIB([m], [cos])
 AM_PATH_ZLIB()
+AC_CHECK_NANSIGNAL()
+
 
 # Checks for header files.
 AC_FUNC_ALLOCA

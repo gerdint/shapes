@@ -63,12 +63,6 @@ namespace Shapes
 int
 main( int argc, char ** argv )
 {
-	if( ! std::numeric_limits< double >::has_signaling_NaN )
-		{
-			std::cerr << "The program was built on a platform where double does not have a NaN representative.	Too bad.	Bye." << std::endl ;
-			exit( 1 );
-		}
-
 	srand( time(NULL) );
 
 	setupGlobals( );
