@@ -683,5 +683,91 @@ is equivalent to
 	</function>
 </system-binding>
 
+<system-binding identifier="approximator">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first point on the path where the global minimum in distance to the given point is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="pathpoint_approximator">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first path point on the path where the global minimum in distance to the given point is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="intersection">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="handler_NoIntersection" /></dynamic-references>
+			<description>
+				<p>Finds the first point on the first path where it intersects with the second path.</p>
+				<p>If no intersection is found, the error handler <dynvar name="handler_NoIntersection" /> is called with the two paths as argumets.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 
 </section>

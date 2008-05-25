@@ -1,0 +1,34 @@
+##needs arrowheads
+##needs circle
+
+a: (1.5cm,4.5cm)
+
+pth: @defaultunit:1%C | (0cm,0cm)>(^20°)--(1cm,2cm)--(^)<(2.5cm,2cm)>(^)--(2cm^)<(4cm,5cm)>(^~30°)--(^)<(5cm,4cm)
+
+circMark: @width:0.5bp | [stroke [circle 4bp]]
+crossMark: @width:0.5bp | [stroke (~4bp,~4bp)--(4bp,4bp) & (~4bp,4bp)--(4bp,~4bp)]
+
+helper: \ pth2 .>
+{
+	( @width:0.5bp & @stroking:RGB_BLUE & @dash:[dashpattern 2bp 1bp] | [stroke pth2] )
+	&
+	( @width:0.5bp | [stroke pth] )
+	&
+	( @width:0.0bp | [stroke [pth 0.5cm]--[pth 1cm] head:[MetaPostArrow ahLength:3mm ...]] )
+  &
+	(escape_continuation cont
+	/** The two options for @handler_NoIntersection below deal with the situation in quite different ways.
+	 ** The first uses an escape continuation to replace the usual spot with nothing (null).
+	 ** The second makes the intersection return the beginning of the path, although there is no intersection there.
+   **/
+      @handler_NoIntersection: ( \ pth1 pth2 .> (escape_continue cont null) )
+|**      @handler_NoIntersection: ( \ pth1 pth2 .> pth.begin )
+    &	@width:5bp
+	  & @stroking:RGB_RED
+		| [spot [intersection pth pth2].p] )
+}
+
+•page << [helper [shift (1.3cm,4cm)][][circle 0.5cm]]
+			<< [shift (6cm,0cm)] [] [helper [shift (1cm,2.5cm)][][circle 1.5cm]]
+			<< [shift (12cm,0cm)] [] [helper [shift (2cm,2cm)][][circle 3cm]]
+

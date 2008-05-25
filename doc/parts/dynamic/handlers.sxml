@@ -8,6 +8,7 @@
 	<type><named-type name="Function" /></type>
 	<description>
 		<p>To be called when the intersection between two paths cannot be found.</p>
+		<p>Shall take the two <named-type name="Path" /> objects as arguments.</p>
 	</description>
 </dynamic-variable>
 
