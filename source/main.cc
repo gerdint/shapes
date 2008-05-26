@@ -154,6 +154,12 @@ main( int argc, char ** argv )
 					argv += 1;
 					argc -= 1;
 				}
+			else if( strcmp( *argv, "--log-globals" ) == 0 )
+				{
+					Interaction::logGlobals = true;
+					argv += 1;
+					argc -= 1;
+				}
 			else if( strprefixcmp( *argv, "--bytecolumn=", & optionSuffix ) )
 				{
 					Interaction::characterColumnInBytes = strtobool( optionSuffix, *argv );
