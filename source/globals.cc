@@ -65,6 +65,7 @@ bool Interaction::fontMetricMessages = false;
 bool Interaction::fontMetricDebug = false;
 bool Interaction::characterColumnInBytes = false;
 bool Interaction::pdfLaTeXInteractionTo_stderr = false;
+bool Interaction::logGlobals = false;
 
 RefCountPtr< const Lang::GroupNull2D > Lang::THE_NULL2D( new Lang::GroupNull2D( ) );
 RefCountPtr< const Lang::GroupNull3D > Lang::THE_NULL3D( new Lang::GroupNull3D( ) );

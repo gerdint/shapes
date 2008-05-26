@@ -12,6 +12,7 @@
 #include "statetypes.h"
 #include "multipage.h"
 #include "errorhandlers.h"
+#include "debuglog.h"
 
 using namespace Shapes;
 using namespace std;
@@ -270,6 +271,10 @@ Kernel::Environment::initDefineCoreFunction( RefCountPtr< const Lang::CoreFuncti
 void
 Kernel::Environment::initDefineHandle( const char * id, const Kernel::VariableHandle & val )
 {
+	if( Interaction::logGlobals )
+		{
+			Kernel::theDebugLog.os( ) << "--log-globals> variable: " << id << std::endl ;
+		}
 	if( bindings_->find( id ) != bindings_->end( ) )
 		{
 			throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< Initialization >" ), id );
@@ -289,6 +294,10 @@ Kernel::Environment::initDefine( const char * id, const RefCountPtr< const Lang:
 void
 Kernel::Environment::initDefine( const char * id, Kernel::StateHandle state )
 {
+	if( Interaction::logGlobals )
+		{
+			Kernel::theDebugLog.os( ) << "--log-globals> state: " << id << std::endl ;
+		}
 	if( stateBindings_->find( id ) != stateBindings_->end( ) )
 		{
 			throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< Initialization >" ), id );
@@ -311,6 +320,10 @@ Kernel::Environment::initDefineClass( const RefCountPtr< const Lang::Class > & c
 void
 Kernel::Environment::initDefineDynamic( DynamicVariableProperties * dynProps )
 {
+	if( Interaction::logGlobals )
+		{
+			Kernel::theDebugLog.os( ) << "--log-globals> dynamic: " << dynProps->getName( ) << std::endl ;
+		}
 	if( dynamicKeyBindings_->find( dynProps->getName( ) ) != dynamicKeyBindings_->end( ) )
 		{
 			throw Exceptions::IntroducingExisting( Ast::SourceLocation( "< System dynamic variable initialization >" ), dynProps->getName( ) );

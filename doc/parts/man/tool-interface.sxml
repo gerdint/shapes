@@ -386,6 +386,12 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						</description>
 					</command-line-item>
 					<command-line-item>
+						<parameters flag="--log-globals"></parameters>
+						<description>
+							<p>List content of the global environment (variable bindings, dynamic variables, and states) in the debug log file.  Every item in this list should be explained in the documentation.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
 						<nosep-parameter flag="--debugstep=">step</nosep-parameter>
 						<description>
 							<p>Set the debug step counter.  For compiler development only.</p>
