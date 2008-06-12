@@ -152,10 +152,18 @@
 	</body>
 </section><!-- End of paths/upsampling -->
 
-<section id="paths/misc">
-	<title>Miscellaneous</title>
+<section id="paths/join">
+	<title>Joining paths</title>
 	<body>
-		<p>This section is only meant to be a reminder of the two functions <binding name="reverse" /> (it does the obvious thing) and <binding name="meetpaths" /> (more intricate).</p>
+		<p>It is possible to join two paths to create a longer path (which can then be joined with a third path, and so on).  This is done using the connection operator <operator name="--" />, which will connect the end of the first path with the beginning of the second path.  If these are not the ends one intends to join, one may have to reverse one of the paths, so that its beginning becomes its end, and vice versa.  To reverse a path, use the function <binding name="reverse" />.  (At the time of writing, this is implemented by constructing a new path with everything reversed, but this may be changed with the help of a more efficient path representation in the future.)</p>
+
+		<p>When paths are joined using the connection operator <operator name="--" />, one must be able to specify the interpolation points of the spline filling the gap from the first to the second path.  <str-Shapes /> does not provide an operation to attach an interpolation point on the outside of a path end, although this can be achieved using a technique to be described soon.</p>
+
+		<p>For paths being constructed by joining path points, this is straight forward; even if the interpolation points on the outside of the first and last path point on an (open) path have no meaning when the path is stroked, the interpolation points still exist and will be used when the path is joined with more path points or other paths.</p>
+
+		<p>However, when creating a path from a sub-range of another path, the basic operation of connecting two sliders will create a path without interpolation points on the outsides.  To specify interpolation points on the outside of the new path, one may attach interpolation points to the sliders before connecting them.  (By using this technique with the end point sliders of a path, one can thus attach or replace interpolation points on the outside end of a complete path.)</p>
+
+		<p>Yet another way to join paths is to merge the end of the first path with the beginning of the second path, see <binding name="meetpaths" /> for more details and an example.</p>
 	</body>
 </section><!-- End of paths/misc -->
 

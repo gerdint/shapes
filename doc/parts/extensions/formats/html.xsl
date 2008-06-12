@@ -30,6 +30,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</xsl:for-each>
 	</p>
 	<hr class="thin"/>
+	<xsl:if test="/book/needs/a[@extension]">
+		<p>
+			<b>Dependencies:</b>
+			<xsl:for-each select="/book/needs/a[@extension]">
+				  
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</p>
+		<hr class="thin"/>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="index-of-books">
