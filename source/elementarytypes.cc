@@ -567,14 +567,13 @@ Lang::Coords3D::transformed( const Lang::Transform3D & tf, const RefCountPtr< co
 RefCountPtr< const Lang::Coords2D >
 Lang::Coords3D::make2D( Concrete::Length eyez ) const
 {
-	if( isinf( eyez.offtype< 1, 0 >( ) ) )
+	if( eyez < Concrete::HUGE_LENGTH )
 		{
-			return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( x_.get( ),
-																																						y_.get( ) ) );
+			return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( x_.get( ) * ( eyez / ( eyez - z_.get( ) ) ),
+																																			y_.get( ) * ( eyez / ( eyez - z_.get( ) ) ) ) );
 		}
-
-	return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( x_.get( ) * ( eyez / ( eyez - z_.get( ) ) ),
-																																				y_.get( ) * ( eyez / ( eyez - z_.get( ) ) ) ) );
+	return RefCountPtr< const Lang::Coords2D >( new Lang::Coords2D( x_.get( ),
+																																	y_.get( ) ) );
 }
 
 
