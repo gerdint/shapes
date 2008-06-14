@@ -99,31 +99,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
  	<xsl:apply-templates select="description"/>
 </xsl:template>
 
-<xsl:template match="function/case/arguments/arg[@identifier]">
-	<xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-	<xsl:apply-templates select="default"/>
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/arg[not(@identifier)]">
-	<xsl:apply-templates select="default"/>
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
-<xsl:template match="function/case/arguments/arg/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
-
-<xsl:template match="function/case/arguments/state[@identifier]">
-	<xsl:call-template name="name-to-state-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/state[not(@identifier)]">
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/state/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
-
 <xsl:template match="dynamic-references[not(dynvar | dynstate)]">
 	<p><b>Dynamic references:</b><xsl:text> </xsl:text><em>none</em></p>
 </xsl:template>

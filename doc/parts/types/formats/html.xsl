@@ -4,6 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
+<xsl:include href="../../formats/examplecode-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -127,6 +128,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</p>
 	</xsl:if>
 	<h4>Fields</h4>
+	<xsl:apply-templates select="type-templates" />
 	<xsl:apply-templates select="fields" />
 	<xsl:if test="not(fields)">
 		<p>A value of type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template> has no fields.</p>
@@ -154,6 +156,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:apply-templates select="/book/external//operator-binary/case[@first-type!=$self and @second-type=$self]" />
     <tr><td colspan="5"><hr class="thick"/></td></tr>
   </table>
+	<xsl:if test="see-also">
+		<p>
+			<b>See also:</b>
+			<xsl:for-each select="see-also/*">
+				<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</p>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="coretype[@name and definition]">

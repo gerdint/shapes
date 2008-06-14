@@ -19,6 +19,7 @@
 	<!--#include virtual="points-paths.sxml" -->
 	<!--#include virtual="graphics-2d.sxml" -->
 	<!--#include virtual="functions.sxml" -->
+	<!--#include virtual="containers.sxml" -->
 	<!--#include virtual="misc.sxml" -->
 	<!--#include virtual="graphics-3d.sxml" -->
 	<!--#include virtual="composite.sxml" -->

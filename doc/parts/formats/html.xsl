@@ -340,6 +340,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template name="name-to-template-state-type">
+	<xsl:param name="name" />
+	<typename class="template">§•<xsl:value-of select="$name" /></typename>
+</xsl:template>
+<xsl:template match="template-state-type[@name]">
+	<xsl:call-template name="name-to-template-state-type">
+		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="tol-param[@name and @link='no']">
 	<tolparam><xsl:value-of select="@name" /></tolparam>
 </xsl:template>
@@ -388,10 +398,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<typename><xsl:text>(&gt; </xsl:text></typename>
 	<xsl:for-each select="field">
 		<xsl:if test="@name">
-			<xsl:value-of select="@name" />::
+			<xsl:value-of select="@name" /><xsl:text>::</xsl:text>
 		</xsl:if>
 		<xsl:if test="not(@name)">
-			<xsl:value-of select="position( )" />::
+			<xsl:value-of select="position( )" /><xsl:text>::</xsl:text>
 		</xsl:if>
 		<xsl:if test="not(type)">
 			<typename>Any-Type</typename>
@@ -405,16 +415,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template match="function-type">
 	<typename><xsl:text>( </xsl:text></typename>
-	<xsl:for-each select="arguments/arg">
-		<xsl:if test="position() > 1">
-			<typename><xsl:text>| </xsl:text></typename>
-		</xsl:if>
-		<xsl:apply-templates select="." />
-		<xsl:text> </xsl:text>
-	</xsl:for-each>
-	<xsl:if test="arguments/sink[@name]">
-		<xsl:text>&lt;&gt;</xsl:text><varname><xsl:value-of select="@name" /></varname>
-	</xsl:if>
+	<xsl:apply-templates select="arguments" />
 	<xsl:text> → </xsl:text>
 	<xsl:apply-templates select="result" />
 	<typename><xsl:text> )</xsl:text></typename>
@@ -435,7 +436,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:value-of select="$name" />
 	</xsl:element>
 </xsl:template>
-<xsl:template match="arg[@name]">
+<xsl:template match="p/arg[@name]">
 	<xsl:call-template name="name-to-argument">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 		<xsl:with-param name="class"><xsl:value-of select="@class" /></xsl:with-param>
@@ -532,5 +533,67 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:attribute name="alt"><xsl:value-of select="@alt" /></xsl:attribute>
   </xsl:element>
 </xsl:template>
+
+<xsl:template match="arguments">
+	<xsl:apply-templates select="arg | state"/>
+	<xsl:apply-templates select="sink"/>
+</xsl:template>
+
+<xsl:template match="arguments/arg">
+	<xsl:if test="@identifier">
+		<xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
+	</xsl:if>
+	<xsl:apply-templates select="default"/>
+	<xsl:apply-templates select="type"/>
+	<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="arguments/arg/default">:<xsl:apply-templates /></xsl:template>
+<xsl:template match="arguments/arg/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
+
+<xsl:template match="arguments/state[@identifier]">
+	<xsl:call-template name="name-to-state-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
+	<xsl:apply-templates select="type"/>
+	<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="arguments/state[not(@identifier)]">
+	<xsl:apply-templates select="type"/>
+	<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="arguments/state/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
+
+<xsl:template match="arguments/sink[@identifier]">
+	<xsl:text>&lt;&gt;</xsl:text><xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
+	<xsl:apply-templates select="type"/>
+	<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="arguments/sink[not(@identifier)]">
+	<xsl:text>&lt;&gt;</xsl:text>
+	<xsl:apply-templates select="type"/>
+	<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="arguments/sink/type"><xsl:text>::{</xsl:text><xsl:apply-templates /><xsl:text>}</xsl:text></xsl:template>
+
+<xsl:template match="type-templates">
+	<table class="type-templates">
+		<xsl:apply-templates />
+	</table>
+</xsl:template>
+<xsl:template match="type-templates/template[@name]">
+	<tr>
+		<td align="right"><xsl:call-template name="name-to-template-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>  </td>
+		<td>
+			<xsl:apply-templates select="description"/>
+		</td>
+	</tr>
+</xsl:template>
+<xsl:template match="type-templates/template-state[@name]">
+	<tr>
+		<td align="right"><xsl:call-template name="name-to-template-state-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>  </td>
+		<td>
+			<xsl:apply-templates select="description"/>
+		</td>
+	</tr>
+</xsl:template>
+
 
 </xsl:stylesheet>

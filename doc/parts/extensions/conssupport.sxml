@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>conssupport</title>
+	<description>
+		<p>Tools for working with cons-style lists (à la Scheme, for instance).</p>
+	</description>
+	<meta-selflink><extension-href name="conssupport" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<needs></needs>
+	<top>
+		<alphabetical-index/>
+		<p>Currently, <str-Shapes /> provides both a dedicated type for singly linked lists, <named-type name="SingleList" />, as well as the two-value-container <named-type name="ConsPair" /> which can also be used to build singly linked lists.  The <str-Shapes /> kernel does not provide any functions that operate on <named-type name="ConsPair" /> lists, but basic operations are defined in this extension.</p>
+		<p>Note that <named-type name="ConsPair" /> lists are by definition terminated by the empty <named-type name="SingleList" />, recognized by <binding name="null?" /> — or else they are just arbitrary <named-type name="ConsPair" /> structures.</p>
+		<p>There is an example with some relevance to this package which appears under <named-type name="ConsPair" />.</p>
+	</top>
+
+	<section id="extensions/conssupport/folds">
+		<title>Folds</title>
+		<body>
+			<p>Recall the fold operations that are accessed as fields of <named-type name="SingleList" /> values.  This extension defines these for <named-type name="ConsPair" /> lists.</p>
+
+		<system-binding identifier="foldl">
+			<function>
+				<case>
+					<type-templates>
+						<template name="T">
+							<description>
+								<p>Type of fold pile.</p>
+							</description>
+						</template>
+						<template name="E">
+							<description>
+								<p>Type of list elements.</p>
+							</description>
+						</template>
+					</type-templates>
+					<arguments>
+						<arg identifier="op">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><type><template-type name="T" /></type></arg>
+										<arg><type><template-type name="E" /></type></arg>
+									</arguments>
+									<result>
+										<type><template-type name="T" /></type>
+									</result>
+								</function-type>
+							</type>
+						</arg>
+						<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						<arg identifier="lst"><type><named-type name="ConsPair" /></type></arg>
+					</arguments>
+					<result>
+						<type><template-type name="T" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Left fold.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="foldr">
+			<function>
+				<case>
+					<type-templates>
+						<template name="T">
+							<description>
+								<p>Type of fold pile.</p>
+							</description>
+						</template>
+						<template name="E">
+							<description>
+								<p>Type of list elements.</p>
+							</description>
+						</template>
+					</type-templates>
+					<arguments>
+						<arg identifier="op">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><type><template-type name="T" /></type></arg>
+										<arg><type><template-type name="E" /></type></arg>
+									</arguments>
+									<result>
+										<type><template-type name="T" /></type>
+									</result>
+								</function-type>
+							</type>
+						</arg>
+						<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						<arg identifier="lst"><type><named-type name="ConsPair" /></type></arg>
+					</arguments>
+					<result>
+						<type><template-type name="T" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Right fold.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="foldsl">
+			<function>
+				<case>
+					<type-templates>
+						<template name="T">
+							<description>
+								<p>Type of fold pile.</p>
+							</description>
+						</template>
+						<template name="E">
+							<description>
+								<p>Type of list elements.</p>
+							</description>
+						</template>
+						<template-state name="S">
+							<description>
+								<p>Type of state.</p>
+							</description>
+						</template-state>
+					</type-templates>
+					<arguments>
+						<arg identifier="op">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><type><template-type name="T" /></type></arg>
+										<arg><type><template-type name="E" /></type></arg>
+										<state><type><template-state-type name="S" /></type></state>
+									</arguments>
+									<result>
+										<type><template-type name="T" /></type>
+									</result>
+								</function-type>
+							</type>
+						</arg>
+						<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						<state identifier="state"><type><template-state-type name="S" /></type></state>
+						<arg identifier="lst"><type><named-type name="ConsPair" /></type></arg>
+					</arguments>
+					<result>
+						<type><template-type name="T" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Left fold with state.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="foldsr">
+			<function>
+				<case>
+					<type-templates>
+						<template name="T">
+							<description>
+								<p>Type of fold pile.</p>
+							</description>
+						</template>
+						<template name="E">
+							<description>
+								<p>Type of list elements.</p>
+							</description>
+						</template>
+						<template-state name="S">
+							<description>
+								<p>Type of state.</p>
+							</description>
+						</template-state>
+					</type-templates>
+					<arguments>
+						<arg identifier="op">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><type><template-type name="T" /></type></arg>
+										<arg><type><template-type name="E" /></type></arg>
+										<state><type><template-state-type name="S" /></type></state>
+									</arguments>
+									<result>
+										<type><template-type name="T" /></type>
+									</result>
+								</function-type>
+							</type>
+						</arg>
+						<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						<state identifier="state"><type><template-state-type name="S" /></type></state>
+						<arg identifier="lst"><type><named-type name="ConsPair" /></type></arg>
+					</arguments>
+					<result>
+						<type><template-type name="T" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Right fold with state.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		</body>
+	</section> <!-- End of  -->
+
+	<section id="extensions/conssupport/misc">
+		<title>Miscellaneous</title>
+		<body>
+			<p>Here are the functions that have no corresponding function for <named-type name="SingleList" /> in the kernel.</p>
+
+		<system-binding identifier="consify">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="lst">
+							<type><named-type name="SingleList" /></type>
+						</arg>
+					</arguments>
+					<result>
+						<type><named-type name="ConsPair" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Convert from of type of list to the other.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="map">
+			<function>
+				<case>
+					<type-templates>
+						<template name="E">
+							<description>
+								<p>Type of original list elements.</p>
+							</description>
+						</template>
+						<template name="T">
+							<description>
+								<p>Type of new list elements.</p>
+							</description>
+						</template>
+					</type-templates>
+					<arguments>
+						<arg identifier="f">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><type><template-type name="E" /></type></arg>
+									</arguments>
+									<result>
+										<type><template-type name="T" /></type>
+									</result>
+								</function-type>
+							</type>
+						</arg>
+						<arg identifier="lst"><type><named-type name="ConsPair" /></type></arg>
+					</arguments>
+					<result>
+						<type><named-type name="ConsPair" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Construct new list with elements obtained by applying <arg name="f" /> to the corresponding element in <arg name="lst" />.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="sublist">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="lst">
+							<type><named-type name="SingleList" /></type>
+						</arg>
+						<arg identifier="n">
+							<type><named-type name="Integer" /></type>
+						</arg>
+					</arguments>
+					<result>
+						<type><named-type name="ConsPair" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Construct list with just the first <arg name="n" /> elements in <arg name="lst" /> (or all of <arg name="lst" /> if <arg name="n" /> exceeds the length of the list).  Obviously, <arg name="n" /> shall be non-negative.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+
+		</body>
+	</section> <!-- End of  -->
+
+</book>

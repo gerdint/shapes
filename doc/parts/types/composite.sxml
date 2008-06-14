@@ -11,7 +11,7 @@
     <definition>
 			<function-type>
 				<arguments>
-					<arg><named-type name="Path" /></arg>
+					<arg><type><named-type name="Path" /></type></arg>
 				</arguments>
 				<result>
 					<structure-type>
@@ -22,7 +22,7 @@
 			</function-type>
     </definition>
 		<see-also>
-			<named-type name="ArrowHead" />
+			<named-type name="ArrowHead3D" />
 		</see-also>
   </coretype>
 
@@ -33,7 +33,7 @@
     <definition>
 			<function-type>
 				<arguments>
-					<arg><named-type name="Path3D" /></arg>
+					<arg><type><named-type name="Path3D" /></type></arg>
 				</arguments>
 				<result>
 					<structure-type>

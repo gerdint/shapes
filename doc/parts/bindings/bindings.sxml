@@ -13,6 +13,7 @@
 	<body>
 		<alphabetical-list-of-bindings />
 	</body>
+	<!--#include virtual="predicates.sxml" -->
 	<!--#include virtual="functions.sxml" -->
 	<!--#include virtual="simple.sxml" -->
 	<!--#include virtual="misc.sxml" -->

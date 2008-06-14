@@ -344,78 +344,32 @@ is equivalent to
 	</function>
 </system-binding>
 
-<system-binding identifier="range">
+<system-binding identifier="list">
 	<function>
 		<case constructor-of="SingleList">
 			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
+				<sink>
+				</sink>
 			</arguments>
 			<description>
-				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to provide <arg name="begin" />, <arg name="end" />, and <arg name="count" /> at the same time.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
-				<p>See the float case for the semantics of the various argument combinations.</p>
+				<p>Constructs a list of the arguments.</p>
+				<p>The value created when called with no arguments is recognized by <binding name="null?" />, and should be used as a null marker for <named-type name="ConsPair" /> lists.</p>
 			</description>
 		</case>
-		<case constructor-of="SingleList">
+	</function>
+</system-binding>
+
+<system-binding identifier="cons">
+	<function>
+		<case constructor-of="ConsPair">
 			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
+				<arg identifier="car"></arg>
+				<arg identifier="cdr"></arg>
 			</arguments>
 			<description>
-				<p>Constructs a range of real numbers.  One of the arguments must be omitted.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
-				<p>If <arg name="step" /> is provided, it determines the step length.  If <arg name="count" /> is provided, it must be at least 2, and determines the number of elements in the constructed range, which will begin at <arg name="begin" /> if <arg name="begin" /> is provided, and end at <arg name="end" /> if <arg name="end" /> is provided (note that achieving this using <arg name="step" /> may be inconvenient or even difficult due to problems with numeric precision).  If neither <arg name="step" /> nor <arg name="count" /> is provided, <arg name="step" /> defaults to 1.</p>
+				<p>Constructs a cons pair.  The arguments are not forced, which allows infinite data structures to be defined.</p>
 			</description>
 		</case>
-		<case constructor-of="SingleList">
-			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
-			</arguments>
-			<description>
-				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to omit both <arg name="step" /> and <arg name="count" />.</p>
-				<p>See the float case for the semantics of the various argument combinations.</p>
-			</description>
-		</case>
-		<body>
-			<example-with-output title="Range construction" internal-id="example/ranges">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/ranges.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/ranges.shape" -->]]>
-</source>
-<stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/ranges.stdout" -->]]>
-</stdout>
-			</example-with-output>
-		</body>
 	</function>
 </system-binding>
 

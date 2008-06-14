@@ -1,8 +1,5 @@
 foldl: \ op nullRes lst .> [if [null? lst] nullRes [foldl op [op nullRes lst.car] lst.cdr]]
 foldr: \ op nullRes lst .> [if [null? lst] nullRes [op [foldr op nullRes lst.cdr] lst.car]]
-/**
- foreach: \ op lst .> ! [if [null? lst] void { [!op lst.car] [!foreach op lst.cdr]}]
-**/
 
 foldsl: \ op nullRes •st lst .> [if [null? lst] nullRes [foldsl op [op nullRes lst.car •st] •st lst.cdr]]
 foldsr: \ op nullRes •st lst .> [if [null? lst] nullRes [op [foldsr op nullRes •st lst.cdr] lst.car •st]]
@@ -13,7 +10,7 @@ map: \ f lst .> [foldr (\ p e .> [cons [f e] p]) [list] lst]
 sublist:
 {
   helper: \ lst i n .> [if [null? lst] lst
-											 		[if i == n
+											 		[if i >= n          /** Avoid trouble for negative n by using >= instead of == .**/
 											 		  [cons lst.car [helper lst.cdr '1 n]]
 													  [helper lst.cdr i+'1 n]]]
   \ lst n .> [helper lst n n]

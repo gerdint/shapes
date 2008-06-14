@@ -1,0 +1,178 @@
+<section id="types/containers">
+<title>Container types</title>
+<top>
+	<p>Values of types in this section hold values of other types.</p>
+</top>
+
+  <coretype name="SingleList">
+    <abstraction>
+      <p>The <self /> type is a singly linked list.  It is more efficient than lists based on <named-type name="ConsPair" />.</p>
+    </abstraction>
+		<see-also>
+			<binding name="null?" />
+		</see-also>
+    <construction>
+    </construction>
+		<type-templates>
+			<template name="T">
+				<description>
+					<p>Type of fold pile.</p>
+				</description>
+			</template>
+			<template name="E">
+				<description>
+					<p>Type of list elements.</p>
+				</description>
+			</template>
+			<template-state name="S">
+				<description>
+					<p>State type.</p>
+				</description>
+			</template-state>
+		</type-templates>
+		<fields>
+			<type-field name="foldl">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="op">
+								<type>
+									<function-type>
+										<arguments>
+											<arg><type><template-type name="T" /></type></arg>
+											<arg><type><template-type name="E" /></type></arg>
+										</arguments>
+										<result>
+											<type><template-type name="T" /></type>
+										</result>
+									</function-type>
+								</type>
+							</arg>
+							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						</arguments>
+						<result>
+							<type><template-type name="T" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description>Function that performs a left fold over the list.</description>
+			</type-field>
+			<type-field name="foldr">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="op">
+								<type>
+									<function-type>
+										<arguments>
+											<arg><type><template-type name="T" /></type></arg>
+											<arg><type><template-type name="E" /></type></arg>
+										</arguments>
+										<result>
+											<type><template-type name="T" /></type>
+										</result>
+									</function-type>
+								</type>
+							</arg>
+							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+						</arguments>
+						<result>
+							<type><template-type name="T" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description>Function that performs a right fold over the list.</description>
+			</type-field>
+			<type-field name="foldsl">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="op">
+								<type>
+									<function-type>
+										<arguments>
+											<arg><type><template-type name="T" /></type></arg>
+											<arg><type><template-type name="E" /></type></arg>
+											<state><type><template-state-type name="S" /></type></state>
+										</arguments>
+										<result>
+											<type><template-type name="T" /></type>
+										</result>
+									</function-type>
+								</type>
+							</arg>
+							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+							<state identifier="state"><type><template-state-type name="S" /></type></state>
+						</arguments>
+						<result>
+							<type><template-type name="T" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description>Function that performs a left fold with state over the list.</description>
+			</type-field>
+			<type-field name="foldsr">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="op">
+								<type>
+									<function-type>
+										<arguments>
+											<arg><type><template-type name="T" /></type></arg>
+											<arg><type><template-type name="E" /></type></arg>
+											<state><type><template-state-type name="S" /></type></state>
+										</arguments>
+										<result>
+											<type><template-type name="T" /></type>
+										</result>
+									</function-type>
+								</type>
+							</arg>
+							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+							<state identifier="state"><type><template-state-type name="S" /></type></state>
+						</arguments>
+						<result>
+							<type><template-type name="T" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description><p>Function that performs a right fold with state over the list.</p></description>
+			</type-field>
+		</fields>
+  </coretype>
+
+  <coretype name="ConsPair">
+    <abstraction>
+      <p>Container for two values.  Often used to form linked lists and trees.</p>
+    </abstraction>
+    <construction>
+    </construction>
+		<fields>
+			<type-field name="car">
+				<description>First element.</description>
+			</type-field>
+			<type-field name="cdr">
+				<description>Second element.</description>
+			</type-field>
+		</fields>
+		<description>
+			<p>When used to build linked lists, one shall use the empty <named-type name="SingleList" /> (created by calling <binding name="list" /> with no arguments) as null element.  Recall that this value is recognized by <binding name="null?" />.</p>
+			<p>The following example illustrates the extension <a extension="conssupport" /> and how the laziness of <binding name="cons" /> allows infinite streams to be defined.</p>
+
+<example-with-output title="Folds" internal-id="example/folds">
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/folds.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/features/folds.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/folds.stdout" -->]]>
+</stdout>
+<caption>
+	<p>Folds over lists come in two flavors — left and right.  <named-type name="ConsPair" /> can hold thunks, but infinite streams cannot be folded.</p>
+</caption>
+</example-with-output>
+
+		</description>
+	</coretype>
+
+</section>
