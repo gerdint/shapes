@@ -1,3 +1,6 @@
+p { font-family: "Times New Roman", serif;
+}
+
 tt { font-size: 1.3em;
      font-weight: normal;
 }
@@ -232,4 +235,26 @@ a:hover.discrete
 		text-decoration: none;
 		color: black;
 		background-color: #CCCCCC;
+}
+
+eq { font-style: italic;
+		 font-family:	"Georgia", serif;
+		 font-size: 0.95em;
+     font-weight: normal;
+}
+eq span.text { /* Peek at the definition of the <p> style! */
+		font-style: normal;
+		font-family: "Times New Roman", serif;
+ }
+eq span.rm {
+  font-style: normal;
+	font-famil: "Verdana", sans-serif;
+}
+eq span.sub {
+  vertical-align: -0.5ex;
+  font-size: 0.7em;
+}
+eq span.sup {
+  vertical-align: 0.5ex;
+  font-size: 0.7em;
 }

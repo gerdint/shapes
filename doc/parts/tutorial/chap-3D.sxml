@@ -1,0 +1,26 @@
+<section id="chap-3D">
+<title><str-3D /> graphics</title>
+<top>
+<p>This chapter basic ideas and tools for <str-3D /> graphics in <str-Shapes />.  A primary design goal has been to make a tight integration of <str-3D /> with <str-2D />.  With the ability to define surfaces in <str-3D /> comes a need to use light models to enhance the <str-3D /> experience, and we will look briefly at this towards the end of the chapter.</p>
+</top>
+
+<section id="3D/basic-model">
+<title>Basic ideas</title>
+<body>
+	<p>As was said above, tight integration of <str-3D /> with <str-2D /> has been a main design goal.  The model used is that the <str-2D /> world is the image plane of a pin-hole camera, and coincides with the plane <eq>z = 0</eq>.  When the <str-3D /> world is projected onto the image plane of the camera, the position of the eye (that is, the pin-hole of the camera) is <eq>( 0, 0, z<sub><rm>eye</rm></sub> )</eq>, which the user can affect by binding <dynvar name="eyez" />, see the figure below.</p>
+<example-with-output title="Geometry of the view projection" internal-id="example/view">
+<image pdf="tutorial-view.pdf" jpg="tutorial-view_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-view.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-view.shape" -->]]>
+</source>
+<caption>
+	<p>The relation between the <str-3D /> scene and the <str-2D /> image plane where the <str-3D /> scene is projected by <binding name="view" />.  The source is not meant to be instructive.</p>
+</caption>
+</example-with-output>
+	<p>The projection is performed by applying the function <binding name="view" />.  The reverse, to take an object in the <str-2D /> world and equip it with a <eq>z = 0</eq> coordinate, is performed by the function <binding name="immerse" />.</p>
+	<p>An alternative to <binding name="immerse" /> is <binding name="facing" />, which is useful to position things as labels in a <str-3D /> scene.</p>
+	<p>One very important tool for the interaction between <str-3D /> and <str-2D /> is the use of tags.  When tags in a <str-3D /> scene are viewed, they will be converted to <str-2D /> tags and reference the viewed version of the tagged objects.  It is particularly useful to tag points in a <str-3D /> scene.</p>
+</body>
+</section><!-- End of 3D/basic-model -->
+
+</section><!-- End of chap-3D -->

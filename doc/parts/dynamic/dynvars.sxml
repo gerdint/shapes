@@ -19,5 +19,6 @@
 	<!--#include virtual="misc.sxml" -->
 	<external>
 		<!--#include virtual="../bindings/functions.sxml" -->
+		<!--#include virtual="../bindings/3D.sxml" -->
 	</external>
 </book>

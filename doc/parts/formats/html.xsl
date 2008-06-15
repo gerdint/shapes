@@ -55,6 +55,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   </table>
 </xsl:template>
 
+<xsl:template match="see-also">
+	<p>
+		<b>See also:</b>
+		<xsl:for-each select="*">
+			<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+		</xsl:for-each>
+	</p>
+</xsl:template>
+
+
 <xsl:template name="part-to-href">
 	<xsl:param name="name" />
 	<xsl:choose>
@@ -382,6 +392,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="inline"><inline><xsl:apply-templates/></inline></xsl:template>
 <xsl:template match="em"><em><xsl:apply-templates/></em></xsl:template>
+<xsl:template match="b"><b><xsl:apply-templates/></b></xsl:template>
 <xsl:template match="bnf"><bnf><xsl:apply-templates/></bnf></xsl:template>
 <xsl:template match="union-type">
 	<typename><xsl:text>( </xsl:text></typename>
@@ -595,5 +606,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</tr>
 </xsl:template>
 
+<xsl:template match="eq"><eq><xsl:apply-templates/></eq></xsl:template>
+<xsl:template match="eq//op"><span class="rm"><xsl:apply-templates/></span></xsl:template>
+<xsl:template match="eq//rm"><span class="rm"><xsl:apply-templates/></span></xsl:template>
+<xsl:template match="eq//text"><span class="text"><xsl:apply-templates/></span></xsl:template>
+<xsl:template match="eq//sub"><span class="sub"><xsl:apply-templates/></span></xsl:template>
+<xsl:template match="eq//sup"><span class="sup"><xsl:apply-templates/></span></xsl:template>
 
 </xsl:stylesheet>

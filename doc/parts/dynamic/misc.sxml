@@ -4,4 +4,13 @@
 	<p>Any dynamic variable not mentioned so far goes here.</p>
 </top>
 
+<dynamic-variable identifier="eyez">
+	<type><named-type name="Length" /></type>
+	<constraint><self /> > <physical><scalar>0</scalar><unit>bp</unit></physical> <b>or</b> <self /> = <eq>∞</eq></constraint>
+	<default><physical><scalar>50</scalar><unit>cm</unit></physical></default>
+	<description>
+		<p>When a <str-3D /> world is viewed through a pin-hole camera to obtain <str-2D /> image, the pin-hole camera (the eye) is located at <eq>( 0, 0, z<sub><rm>eye</rm></sub> )</eq>, and the image plane is <eq>z = 0</eq>.  The special float value <eq>∞</eq> can be used to place the eye at infinity, which will make the projection independent of <eq>z</eq> coordinates.</p>
+	</description>
+</dynamic-variable>
+
 </section>

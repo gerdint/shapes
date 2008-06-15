@@ -4,7 +4,7 @@ SHAPESFLAGS = --resources=no \
               --needpath ${top_srcdir}/resources/extensions \
               --tp=no --spot-pair=yes
 
-IMG_OBJS = pathconstruction_y_small boxedeq_y_small cornerpoint_y_big tutorial-transforms_y_big tutorial-path-painting_y_big tutorial-graphics-params_y_big facefun_y_big tutorial-one-segment_y_big tutorial-bezier-connected_y_big tutorial-slider-use_y_big upsample_y_big sidepaths_y_big mergepaths_y_big asymmetric-notation_y_small tutorial-maximizer_y_big tutorial-approximator_y_big tutorial-intersection_y_big tutorial-subpath-intersection_y_big
+IMG_OBJS = pathconstruction_y_small boxedeq_y_small cornerpoint_y_big tutorial-transforms_y_big tutorial-path-painting_y_big tutorial-graphics-params_y_big facefun_y_big tutorial-one-segment_y_big tutorial-bezier-connected_y_big tutorial-slider-use_y_big upsample_y_big sidepaths_y_big mergepaths_y_big asymmetric-notation_y_small tutorial-maximizer_y_big tutorial-approximator_y_big tutorial-intersection_y_big tutorial-subpath-intersection_y_big tutorial-view_y_big
 TXT_OBJS = dynamic escape evalorder scopes values states curry ranges folds
 
 dist_noinst_DATA = $(patsubst %, %.stdout, $(TXT_OBJS) ) \
