@@ -60,7 +60,7 @@ T2: [rotate 25°]
 <p>
 	Note:
 	<ol>
-		<li><p>The angle argument is basically interpreted as radians, but angles may be entered in degrees if immediately followed by the degree sign (°).  In fact, <inline>25°</inline> is just a way of entering the number 25⋅π/180.  For the full syntax of floats and a note on how to type degree sign, see <syntax name="float" />.</p></li>
+		<li><p>The angle argument is basically interpreted as radians, but angles may be entered in degrees if immediately followed by the degree sign (°).  In fact, <inline>25°</inline> is just a way of entering the number 25⋅π/180.  For the full syntax of floats and a note on how to type the degree sign, see <syntax name="float" />.</p></li>
 	</ol>
 </p>
 <p>
