@@ -241,6 +241,7 @@ eq { font-style: italic;
 		 font-family:	"Georgia", serif;
 		 font-size: 0.95em;
      font-weight: normal;
+		 color:	#000;
 }
 eq span.text { /* Peek at the definition of the <p> style! */
 		font-style: normal;

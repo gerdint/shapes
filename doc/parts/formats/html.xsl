@@ -20,6 +20,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="char-str-open">`</xsl:template>
 <xsl:template match="char-str-close">´</xsl:template>
 
+<xsl:template match="const-false"><rm>false</rm></xsl:template>
+<xsl:template match="const-true"><rm>true</rm></xsl:template>
+
 <xsl:template match="physical"><span class="nowrap"><xsl:apply-templates select="scalar" /><span class="xx-small"> </span><xsl:apply-templates select="unit" /></span></xsl:template>
 <xsl:template match="sci-fmt[@mantissa,@exp]"><span class="nowrap"><xsl:value-of select="@mantissa" /><span class="small-caps">e</span><xsl:value-of select="@exp" /></span></xsl:template>
 <xsl:template match="quote">“<xsl:apply-templates />”</xsl:template>
@@ -556,7 +559,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:if>
 	<xsl:apply-templates select="default"/>
 	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
+	<xsl:text>   </xsl:text>
 </xsl:template>
 <xsl:template match="arguments/arg/default">:<xsl:apply-templates /></xsl:template>
 <xsl:template match="arguments/arg/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
@@ -564,23 +567,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="arguments/state[@identifier]">
 	<xsl:call-template name="name-to-state-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
+	<xsl:text>   </xsl:text>
 </xsl:template>
 <xsl:template match="arguments/state[not(@identifier)]">
 	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
+	<xsl:text>   </xsl:text>
 </xsl:template>
 <xsl:template match="arguments/state/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
 
 <xsl:template match="arguments/sink[@identifier]">
 	<xsl:text>&lt;&gt;</xsl:text><xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
+	<xsl:text>   </xsl:text>
 </xsl:template>
 <xsl:template match="arguments/sink[not(@identifier)]">
 	<xsl:text>&lt;&gt;</xsl:text>
 	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
+	<xsl:text>   </xsl:text>
 </xsl:template>
 <xsl:template match="arguments/sink/type"><xsl:text>::{</xsl:text><xsl:apply-templates /><xsl:text>}</xsl:text></xsl:template>
 

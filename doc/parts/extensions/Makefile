@@ -11,7 +11,7 @@ HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl ../formats/plain-book-html.xsl
 INDEX_HTMLFORMAT=../index/formats/html.xsl
 
-JOBS = circle centering conssupport blockdraw_wfo linkpaths
+JOBS = circle centering arrowheads conssupport blockdraw_wfo linkpaths
 
 PRODUCTS = $(HTMLDIR) $(HTMLDIR)/index_.html $(patsubst %,$(HTMLDIR)/%.html,$(JOBS))
 DEPENDS = build/index_.depend $(patsubst %,build/%.depend,$(JOBS))
