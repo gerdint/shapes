@@ -144,7 +144,7 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 			</function>
 		</system-binding>
 
-		<system-binding identifier="MetaPostArrow">
+		<system-binding identifier="MetaPostArrow3D">
 			<function>
 				<case>
 					<arguments>
@@ -181,7 +181,7 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 			</function>
 		</system-binding>
 
-		<system-binding identifier="triangleArrow">
+		<system-binding identifier="triangleArrow3D">
 			<function>
 				<case>
 					<arguments>
