@@ -58,10 +58,12 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 						</arg>
 					</arguments>
 					<result>
-						<structure-type>
-							<field name="picture"><type><named-type name="Drawable" /></type></field>
-							<field name="cut"><type><named-type name="Length" /></type></field>
-						</structure-type>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
 					</result>
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
@@ -92,10 +94,12 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 						</arg>
 					</arguments>
 					<result>
-						<structure-type>
-							<field name="picture"><type><named-type name="Drawable" /></type></field>
-							<field name="cut"><type><named-type name="Length" /></type></field>
-						</structure-type>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
 					</result>
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
@@ -131,10 +135,12 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 						</arg>
 					</arguments>
 					<result>
-						<structure-type>
-							<field name="picture"><type><named-type name="Drawable3D" /></type></field>
-							<field name="cut"><type><named-type name="Length" /></type></field>
-						</structure-type>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
 					</result>
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
@@ -168,10 +174,12 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 						</arg>
 					</arguments>
 					<result>
-						<structure-type>
-							<field name="picture"><type><named-type name="Drawable3D" /></type></field>
-							<field name="cut"><type><named-type name="Length" /></type></field>
-						</structure-type>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
 					</result>
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
@@ -206,10 +214,12 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 						</arg>
 					</arguments>
 					<result>
-						<structure-type>
-							<field name="picture"><type><named-type name="Drawable3D" /></type></field>
-							<field name="cut"><type><named-type name="Length" /></type></field>
-						</structure-type>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
 					</result>
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
