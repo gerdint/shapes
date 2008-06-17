@@ -95,6 +95,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:otherwise>
 		</xsl:choose>
 	</h4>
+	<xsl:apply-templates select="type-templates" />
  	<xsl:apply-templates select="dynamic-references"/>
  	<xsl:apply-templates select="description"/>
 </xsl:template>

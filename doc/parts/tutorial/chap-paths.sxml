@@ -118,7 +118,7 @@
 
 		<p>In this section, we shall discuss the available methods for upsampling.  One of the methods refers to the Bezier spline representation of the new path, while the other methods have geometric meanings.</p>
 
-		<p>Beginning with the method which is not geometric, we have <binding name="updample_balace" />, which will divide each spline in two, such that the velocity is continuous through the new sample point.  This will imply that the the two interpolation points around the new sample point are at equal distance (and opposite), hence the <em>balance</em> part of the name.  It turns out that the sample point will be at spline time 0.5, so the operation is very cheap.  Use this method if you need speed more than good properties of the upsampled path.</p>
+		<p>Beginning with the method which is not geometric, we have <binding name="upsample_balace" />, which will divide each spline in two, such that the velocity is continuous through the new sample point.  This will imply that the the two interpolation points around the new sample point are at equal distance (and opposite), hence the <em>balance</em> part of the name.  It turns out that the sample point will be at spline time 0.5, so the operation is very cheap.  Use this method if you need speed more than good properties of the upsampled path.</p>
 
 		<p>The method <binding name="upsample_inflections" /> adds samples where there were inflections on the spline segments of the original path.  The new path will only have spline segments without inflections, which can be a useful thing when reasoning about the path in terms of its spline segment representation.</p>
 

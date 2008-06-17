@@ -668,5 +668,46 @@ is equivalent to
 	</function>
 </system-binding>
 
+<system-binding identifier="facet">
+	<function>
+		<case constructor-of="Drawable3D">
+			<arguments>
+				<arg identifier="path">
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg identifier="n1">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="n2">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="n3">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="tiebreaker">
+					<type><named-type name="Length" /></type>
+					<default>0</default>
+				</arg>
+				<arg identifier="double">
+					<type><named-type name="Boolean" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="nonstroking" /> <dynvar name="reflections" /> <dynvar name="autointensity" /> <dynvar name="autoscattering" /> <dynvar name="viewresolution" /> <dynvar name="shadeorder" /></dynamic-references>
+			<type-templates>
+				<template name="N">
+					<description>
+						<p>Type of surface normal.  Should either be <named-type name="SurfaceNormalGray" /> or <named-type name="SurfaceNormalRGB" />.</p>
+					</description>
+				</template>
+			</type-templates>
+			<description>
+				<p>The only required argument is <arg name="path" />, which must be a flat polygon.  The three arguments of type <template-type name="N" /> will be described shortly.  The parameter <arg name="tiebreaker" /> has the same meaning as for <binding name="fill" />, and <arg name="double" /> tells whether the surface should be visible when viewed from the back.  Surfaces that are not visisble when viewed from the back allow more efficient rendering when they cover a solid body, so that one knows that the inside of the body surface should never be visible.  The default value for <arg name="double" /> depends on the presence of surface normals; if there are none, it defaults to true, otherwise it defaults to false unless the surface normals disagree on which is the visible side.</p>
+				<p>Up to three surface normals may be provided (provide <arg name="n1" /> before <arg name="n2" /> and so forth).  A surface normal has a location on the surface and specifies both a normal direction to be used in light computations (although the surface is physically flat, it can be treated as if curved in the light model), and a color.  See <binding name="facetnormal" /> for more details on how to construct surface normals.  If no facet normal is provided, one is computed by using the physical normal direction of <arg name="path" />, with color determined by <dynvar name="nonstroking" />.  If just one facet normal is provided, it defines a constant normal direction and color over the whole facet.  If more than one is provided, normal direction and color are interpolated over the facet.</p>
+				<p>Please refer to the documentation on the many dynamic variables accessed by this function, to learn how these affect the light computations.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 
 </section>
