@@ -128,7 +128,7 @@ Computation::ZBufLine::overlaps( const ZBufTriangle & other ) const
 
 	// Beginning with this line:
 	{
-		Concrete::UnitFloatPair normal = p0_.normalizedOrthogonal( p1_ );
+		Concrete::UnitFloatPair normal = p0_.normalizedOrthogonalNoFail( p1_ );
 
 		Concrete::Length l0 = Concrete::inner( other.points_[ 0 ], normal );
 		Concrete::Length m = Concrete::inner( p0_, normal );
@@ -231,7 +231,7 @@ Computation::ZBufLine::overlaps( const ZBufLine & other ) const
 
 	// Currently, the tolerance in this test is used to ensure that a true result really indicates an intersection.
 	{
-		Concrete::UnitFloatPair normal = p0_.normalizedOrthogonal( p1_ );
+		Concrete::UnitFloatPair normal = p0_.normalizedOrthogonalNoFail( p1_ );
 		Concrete::Length m = Concrete::inner( normal, p0_ );
 		const ZBufLine & tmpLine = other;
 
@@ -246,7 +246,7 @@ Computation::ZBufLine::overlaps( const ZBufLine & other ) const
 			}
 	}
 	{
-		Concrete::UnitFloatPair normal = other.p0_.normalizedOrthogonal( other.p1_ );
+		Concrete::UnitFloatPair normal = other.p0_.normalizedOrthogonalNoFail( other.p1_ );
 		Concrete::Length m = Concrete::inner( normal, other.p0_ );
 		const ZBufLine & tmpLine = *this;
 

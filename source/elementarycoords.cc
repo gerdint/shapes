@@ -242,6 +242,19 @@ Concrete::Coords3D::direction( ) const
 }
 
 Concrete::UnitFloatTriple
+Concrete::Coords3D::directionNoFail( ) const
+{
+	try
+		{
+			return direction( );
+		}
+	catch( Exceptions::InternalError & ball )
+		{
+			return UnitFloatTriple( bool( ) );
+		}
+}
+
+Concrete::UnitFloatTriple
 Concrete::Coords3D::direction( Concrete::Length precomputedLength ) const
 {
 	return Concrete::UnitFloatTriple( x_.offtype< 1, 0 >( ), y_.offtype< 1, 0 >( ), z_.offtype< 1, 0 >( ), precomputedLength.offtype< 1, 0 >( ) );

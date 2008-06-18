@@ -84,6 +84,18 @@ namespace Shapes
 				return UnitFloatPair( y_.offtype< 1, 0 >( ) - b.y_.offtype< 1, 0 >( ),
 															b.x_.offtype< 1, 0 >( ) - x_.offtype< 1, 0 >( ) );
 			}
+			Concrete::UnitFloatPair normalizedOrthogonalNoFail( const Coords2D & b ) const
+			{
+				// We return the counter-clockwise orthogonal to the normalized vector from ourselves to b
+				try
+					{
+						return normalizedOrthogonal( b );
+					}
+				catch( Exceptions::InternalError & ball )
+					{
+						return UnitFloatPair( bool( ) );
+					}
+			}
 			Concrete::UnitFloatPair unNormalizedOrthogonal( const Coords2D & b ) const
 			{
 				// Warning!	This is the same as normalizedOrthogonal, but the result is really not normalized!
@@ -229,6 +241,7 @@ namespace Shapes
 			Concrete::Length norm( ) const;
 			double normScalar( ) const;
 			UnitFloatTriple direction( ) const;
+			UnitFloatTriple directionNoFail( ) const; /* This function returns an arbitrary direction when direction would fail. */
 			Concrete::UnitFloatTriple direction( Concrete::Length precomputedNorm ) const;
 		};
 
