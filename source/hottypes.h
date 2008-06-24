@@ -167,6 +167,7 @@ namespace Shapes
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
+			void erase( );
 			TYPEINFODECL;
 		};
 

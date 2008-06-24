@@ -350,6 +350,12 @@ Kernel::WarmGroup3D::peekImpl( Kernel::EvalState * evalState, const Ast::SourceL
 }
 
 void
+Kernel::WarmGroup3D::erase( )
+{
+	pile_ = Lang::THE_NULL3D;
+}
+
+void
 Kernel::WarmGroup3D::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Group3D * >( pile_.getPtr( ) )->gcMark( marked );

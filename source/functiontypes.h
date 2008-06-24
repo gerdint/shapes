@@ -139,7 +139,7 @@ namespace Shapes
 
 		template< class T >
 		T *
-		down_cast_CoreState( const char * coreTitle, Kernel::Arguments & args, size_t i, const Ast::SourceLocation & callLoc, bool voidIsNull = false )
+		down_cast_CoreState( const char * coreTitle, Kernel::Arguments & args, size_t i, const Ast::SourceLocation & callLoc )
 		{
 			Kernel::StateHandle st = args.getState( i );
 			T * res = dynamic_cast< T * >( st );
@@ -174,6 +174,18 @@ namespace Shapes
 						{
 							throw NonLocalExit::NotThisType( );
 						}
+				}
+			return res;
+		}
+
+		template< class T >
+		T *
+		try_cast_CoreState( Kernel::StateHandle st )
+		{
+			T * res = dynamic_cast< T * >( st );
+			if( res == NullPtr< T >( ) )
+				{
+					throw NonLocalExit::NotThisType( );
 				}
 			return res;
 		}

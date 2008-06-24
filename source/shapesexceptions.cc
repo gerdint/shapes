@@ -1137,8 +1137,8 @@ Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocat
 	: Exceptions::RuntimeError( callLoc ),
 		title_( title ),
 		titleMem_( NullPtr< const char >( ) ),
-		argLoc_( args.getLoc( argNo ) ),
-		valueType_( args.getValue( argNo )->getTypeName( ) ),
+		argLoc_( args.getStateLoc( argNo ) ),
+		valueType_( args.getState( argNo )->getTypeName( ) ),
 		expectedType_( expectedType )
 { }
 
@@ -1150,8 +1150,8 @@ Exceptions::CoreStateTypeMismatch::CoreStateTypeMismatch( const Ast::SourceLocat
 	: Exceptions::RuntimeError( callLoc ),
 		title_( title.getPtr( ) ),
 		titleMem_( title ),
-		argLoc_( args.getLoc( argNo ) ),
-		valueType_( args.getValue( argNo )->getTypeName( ) ),
+		argLoc_( args.getStateLoc( argNo ) ),
+		valueType_( args.getState( argNo )->getTypeName( ) ),
 		expectedType_( expectedType )
 { }
 
