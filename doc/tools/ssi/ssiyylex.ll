@@ -74,8 +74,13 @@ bool strtobool( const char * str, const char * attribute );
 
 <INCLUDE_FILENAME>[\"][^\"]*[\"] |
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
-	yytext[ strlen( yytext ) - 1 ] = '\0';
-	includeFilename_ = expandDefines( yytext + 1 );
+	size_t len = strlen( yytext ) ;
+	yytext[ len - 1 ] = '\0';
+	char * buf = new char[ strlen( includebase_ ) + len - 2 + 1];
+	strcpy( buf, includebase_ );
+	strcat( buf, yytext + 1 );
+	includeFilename_ = expandDefines( buf );
+	delete [] buf;
 	BEGIN( INCLUDE );
 }
 
