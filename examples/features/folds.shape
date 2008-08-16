@@ -2,30 +2,56 @@
 
 lst: [range begin:'4 end:'10]
 
-stderr << `OK¢n´
+/**
+ ** We can measure the length of a list by folding a function that adds one for each element.
+ **/
+•stdout << `Length: ´ << [lst.foldl (\ p e .> '1+p) '0] << `¢n´
 
-stderr << `Length: ´ << [lst.foldl (\ p e .> '1+p) 0] << `¢n´
-stderr << [lst.foldl \ p e .> { stderr << e   p } VOID]
-stderr << [lst.foldr \ p e .> { stderr << e   p } VOID]
-stderr << `¢n´
+/**
+ ** This is to show the order in which the state is modified when folding with state from left and right.
+ **/
+[lst.foldsl \ p e •dst .> { •dst << e   p } void •stdout]
+[lst.foldsr \ p e •dst .> { •dst << e   p } void •stdout]
+•stdout << `¢n´
 
-streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
-Fib: [cons '0 [cons '1 [streamadd Fib Fib.cdr]]]
+/**
+ ** To show how the laziness of the cons-pair allows us to define infinite streams, we
+ ** define some basic stream operations...
+ **
+ ** To add two streams is easy.
+ **/
+stream_add: \ s1 s2 .> [cons s1.car+s2.car [stream_add s1.cdr s2.cdr]]
+/**
+ ** To map infinite streams require some care.  Note that the usual map defined in terms
+ ** of a right fold cannot be used on infinite lists.  Instead, we must define the operation
+ ** from scratch.
+ **/
+stream_map: \ f lst .> [if [null? lst] [list] [cons [f lst.car] [stream_map f lst.cdr]]]
 
-map: \ f lst .> [if [null? lst] [list] [cons [f lst.car] [map f lst.cdr]]]
-Fib2: [map (\ x .> x*x) Fib]
+/**
+ ** A classic stream example -- the Fibonacci numbers.
+ **/
+Fib: [cons '0 [cons '1 [stream_add Fib Fib.cdr]]]
+
+/**
+ ** We square each number in the stream.
+ **/
+Fib2: [stream_map (\ x .> x*x) Fib]
 
 
 nth: \ lst n .> [if n == '0 lst.car [nth lst.cdr n-'1]]
 
-stderr << `Check C¢n´
+•stdout << `A short sequence of Fibonacci numbers:¢n´
 
-stderr << [nth Fib '0] << `¢n´
+•stdout << [nth Fib '4] << `¢n´
+•stdout << [nth Fib '5] << `¢n´
+•stdout << [nth Fib '6] << `¢n´
 
-stderr << `Check¢n´
+•stdout << `... and the same sequence squared:¢n´
 
-stderr << [nth Fib2 '1] << `¢n´
-stderr << [nth Fib2 '2] << `¢n´
-stderr << [nth Fib2 '3] << `¢n´
-stderr << [nth Fib2 '4] << `¢n´
+•stdout << [nth Fib2 '4] << `¢n´
+•stdout << [nth Fib2 '5] << `¢n´
+•stdout << [nth Fib2 '6] << `¢n´
 
+|** Avoid empty output error
+•page << [stroke (0cm,0cm)--(1cm,1cm)]

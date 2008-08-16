@@ -1,1 +1,1 @@
-build/dynvars.xml: graphic.sxml text.sxml handlers.sxml misc.sxml ../bindings/functions.sxml ../../../examples/features/facefun.shape ../../../examples/features/ranges.shape ../../output/ranges.stdout ../../../examples/showcase/mergepaths.shape
+build/dynvars.xml: graphic.sxml text.sxml handlers.sxml misc.sxml ../bindings/functions.sxml ../../../examples/features/facefun.shape ../../../examples/showcase/mergepaths.shape ../bindings/3D.sxml

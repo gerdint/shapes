@@ -21,7 +21,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				  
 				<xsl:element name="a">
 					<xsl:attribute name="href">#<xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-					<xsl:value-of select="title" />
+					<xsl:apply-templates select="title" />
 				</xsl:element>
 			</xsl:for-each>
 		</p>

@@ -30,6 +30,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</xsl:for-each>
 	</p>
 	<hr class="thin"/>
+	<xsl:if test="/book/needs/a[@extension]">
+		<p>
+			<b>Dependencies:</b>
+			<xsl:for-each select="/book/needs/a[@extension]">
+				  
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</p>
+		<hr class="thin"/>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="index-of-books">
@@ -85,34 +95,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
  	<xsl:apply-templates select="dynamic-references"/>
  	<xsl:apply-templates select="description"/>
 </xsl:template>
-
-<xsl:template match="type-templates">
-	<table class="type-templates">
-		<xsl:apply-templates />
-	</table>
-</xsl:template>
-<xsl:template match="function/case/type-templates/template[@name]">
-	<tr>
-		<td align="right"><xsl:call-template name="name-to-template-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>  </td>
-		<td>
-			<xsl:apply-templates select="description"/>
-		</td>
-	</tr>
-</xsl:template>
-
-<xsl:template match="function/case/arguments/arg[@identifier]">
-	<xsl:call-template name="name-to-argument"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-	<xsl:apply-templates select="default"/>
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/arg[not(@identifier)]">
-	<xsl:apply-templates select="default"/>
-	<xsl:apply-templates select="type"/>
-	<xsl:text> </xsl:text>
-</xsl:template>
-<xsl:template match="function/case/arguments/arg/default">:<xsl:apply-templates /></xsl:template>
-<xsl:template match="function/case/arguments/arg/type"><xsl:text>::</xsl:text><xsl:apply-templates /></xsl:template>
 
 <xsl:template match="dynamic-references[not(dynvar | dynstate)]">
 	<p><b>Dynamic references:</b><xsl:text> </xsl:text><em>none</em></p>

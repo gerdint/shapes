@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>arrowheads</title>
+	<description>
+		<p>Functions that define arrowheads for use with <binding name="stroke" />.</p>
+	</description>
+	<meta-selflink><extension-href name="arrowheads" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<needs></needs>
+	<top>
+		<alphabetical-index/>
+		<p>Arrowheads can be added when a path is stroked by <binding name="stroke" />.  The type of an arrowhead function is either <named-type name="ArrowHead" /> or <named-type name="ArrowHead3D" />, depending on which space the path belongs to.  The types are completely analogous, so we will not discuss the <str-3D /> case further.  As the signature shows, the only argument is a path, and the function shall create the arrowhead at the <em>beginning</em> of the path (<binding name="stroke" /> will ensure that the path is reversed if it is actually the head which is being created).  The arrowhead construction consists of two parts, first the actual drawable object that will be added to the stroke, and then a length telling how much the stroke shall be shortened to avoid obtuse arrowheads.  It is not always easy to determine how much the stroke needs to be shortened, but one must give it a try!</p>
+		<p>The alternative approach, to draw strokes with arrowheads as a single filled region would both be complicated to implement (for the user defining an arrowhead, as well as the part of the job that would then be the responsibility of the kernel), and lead to inefficient use of resources in many common situations where the current solution works fine.  Perhaps, this approach can be supported by an extension in the future, using techniques like those <a part="tutorial" id="paths/upsampling">here</a> to find the two paths on each side of the original path, and then letting the arrowhead function join the two however it likes.</p>
+		<p>All the arrowhead functions have more parameters (with default values) than are required by the signature.  The natural way to alter these parameters is to use an evaluated cut, like so:
+<pre>
+•page &lt;&lt; [stroke somePath head:[MetaPostArrow ahLength:4mm ...]]
+</pre>
+and note that it will often be a good idea to bind the arrowhead to a variable so that it can be used several times:
+<pre>
+myHead: [MetaPostArrow ahLength:4mm ...]
+•page &lt;&lt; [stroke somePath1 head:myHead]
+•page &lt;&lt; [stroke somePath2 head:myHead]
+</pre>
+or like this:
+<pre>
+headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
+•page &lt;&lt; [headStroke somePath1]
+•page &lt;&lt; [headStroke somePath2]
+</pre>
+</p>
+	</top>
+
+	<section id="extensions/arrowheads/2D">
+		<title>Arrowheads in <str-2D /></title>
+		<body>
+			<p>These arrowheads are provided for use in <str-2D />.</p>
+
+		<system-binding identifier="MetaPostArrow">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="p">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><binding name="void" /></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><eq>30°</eq></default>
+						</arg>
+						<arg identifier="fillAsStrokeing">
+							<type><named-type name="Boolean" /></type>
+							<default><eq><const-true /></eq></default>
+						</arg>
+					</arguments>
+					<result>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
+					</result>
+					<dynamic-references>Whole graphics state</dynamic-references>
+					<description>
+						<p>As the name of this function indicates, this arrowhead design is borrowed from <str-MetaPost />, although there are differences.  The main idea with the design is that the arrowhead should bend with the path, please refer to the canonical illustration on the <str-MetaPost /> <a href="http://plan9.bell-labs.com/who/hobby/MetaPost.html">home page</a>. The argument <arg name="ahLength" /> suggests how long the arrowhead should be (this will only be overridden in exceptional cases when the path is too short).  If it is not provided, its value will be computed based on the width of the stroke and <arg name="ahAngle" /> — exactly how will remain subject to change for some time.  <arg name="ahAngle" /> is the angle at the tip of the arrowhead.  When <arg name="fillAsStroking" /> is true, the fill color of the arrowhead will be <dynvar name="stroking" /> instead of <dynvar name="nonstroking" />.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="triangleArrow">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="p">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><binding name="void" /></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><eq>30°</eq></default>
+						</arg>
+						<arg identifier="fillAsStrokeing">
+							<type><named-type name="Boolean" /></type>
+							<default><eq><const-true /></eq></default>
+						</arg>
+					</arguments>
+					<result>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
+					</result>
+					<dynamic-references>Whole graphics state</dynamic-references>
+					<description>
+						<p>The arguments have similar interpretation to their meaning in <binding name="MetaPostArrow" />.  The difference is that the arrowhead will <em>not</em> bend with the path.  (This means that there is never a need to override <arg name="ahLength" />.)</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		</body>
+		</section> <!-- End of  -->
+
+
+	<section id="extensions/arrowheads/3D">
+		<title>Arrowheads in <str-3D /></title>
+		<body>
+			<p>Now we turn to the considerably trickier <str-3D /> arrowheads.  The reason things become tricky is that flat arrowheads in <str-3D /> must have the surface normal pointing more or less towards the viewer in order for the arrowhead to be visible, and it is not always that easy to see what is a good normal direction, possibly after the objects has been transformed.  Sometimes, the same object will be drawn from different angles, and then it may even be impossible to find a normal direction that suits both viewing angles.  In these situations one can either use multiple arrowheads with different normals, or more general non-flat arrowheads, or resort to using <binding name="facing" /> (see related documentation for examples).</p>
+
+		<system-binding identifier="twoCircles3DArrow">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="p">
+							<type><named-type name="Path3D" /></type>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><binding name="void" /></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><eq>30°</eq></default>
+						</arg>
+					</arguments>
+					<result>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
+					</result>
+					<dynamic-references>Whole graphics state</dynamic-references>
+					<description>
+						<p>This arrowhead is the only attempt so far to make an arrowhead in <str-3D /> completely without need to specify a normal direction.  The arrowhead will be constructed as two circles to remind of a cone.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="MetaPostArrow3D">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="normal">
+							<type><named-type name="FloatTriple" /></type>
+						</arg>
+						<arg identifier="p">
+							<type><named-type name="Path3D" /></type>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><binding name="void" /></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><eq>30°</eq></default>
+						</arg>
+						<arg identifier="fillAsStrokeing">
+							<type><named-type name="Boolean" /></type>
+							<default><eq><const-true /></eq></default>
+						</arg>
+					</arguments>
+					<result>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
+					</result>
+					<dynamic-references>Whole graphics state</dynamic-references>
+					<description>
+						<p>This is a generalization of <binding name="MetaPostArrow" /> to <str-3D /> (let us not look closer at what this really means).  Note that the mandatory <arg name="normal" /> means that this function is not a <named-type name="ArrowHead3D" /> until this argument has been bound.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="triangleArrow3D">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="p">
+							<type><named-type name="Path3D" /></type>
+						</arg>
+						<arg identifier="normal">
+							<type><named-type name="FloatTriple" /></type>
+							<default><eq>(0,0,1)</eq></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><binding name="void" /></default>
+						</arg>
+						<arg identifier="ahLength">
+							<type><named-type name="Length" /></type>
+							<default><eq>30°</eq></default>
+						</arg>
+						<arg identifier="fillAsStrokeing">
+							<type><named-type name="Boolean" /></type>
+							<default><eq><const-true /></eq></default>
+						</arg>
+					</arguments>
+					<result>
+						<type>
+							<structure-type>
+								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
+								<field name="cut"><type><named-type name="Length" /></type></field>
+							</structure-type>
+						</type>
+					</result>
+					<dynamic-references>Whole graphics state</dynamic-references>
+					<description>
+						<p>The arguments have similar interpretation to their meaning in <binding name="MetaPostArrow3D" />.  The arrowhead will not bend with the path, compare <binding name="triangleArrow" />, but another important difference to <binding name="MetaPostArrow3D" /> is that this arrowhead consists of two perpendicular flat arrowheads instead of just one.  This makes it less important to find a good normal direction, but the result will often not look as clean.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		</body>
+	</section> <!-- End of  -->
+
+</book>

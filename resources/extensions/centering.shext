@@ -1,7 +1,7 @@
-xmax: \ p .> [continuous_maximizer p (1,0)].p.x
-xmin: \ p .> [continuous_maximizer p (~1,0)].p.x
-ymax: \ p .> [continuous_maximizer p (0,1)].p.y
-ymin: \ p .> [continuous_maximizer p (0,~1)].p.y
+xmax: \ p .> [maximizer p (1,0)].p.x
+xmin: \ p .> [maximizer p (~1,0)].p.x
+ymax: \ p .> [maximizer p (0,1)].p.y
+ymin: \ p .> [maximizer p (0,~1)].p.y
 centerat: \ obj z .>
  {
   thebb: [bbox obj]
