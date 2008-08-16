@@ -6,11 +6,12 @@
 using namespace std;
 
 
-SSIScanner::SSIScanner( bool onlyDependencies, istream * yyin, ostream * yyout )
-	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies )
+SSIScanner::SSIScanner( bool onlyDependencies, istream * yyin, ostream * yyout, const char* includebase )
+	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies ), includebase_( new char[ strlen( includebase ) + 1 ] )
 {
 	depthLimitStack_.push( std::numeric_limits< size_t >::max( ) );
 	metaInclusionStack_.push( true );
+	strcpy( includebase_, includebase );
 }
 
 SSIScanner::~SSIScanner( )

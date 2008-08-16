@@ -10,6 +10,7 @@ main( int argc, char ** argv )
 {
 	bool onlyDependencies = false;
 	bool doEndl = false;
+	char* includebase = "";
 
 	--argc;
 	++argv;
@@ -42,6 +43,19 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
+			else if( strcmp( *argv, "--includebase" ) == 0 )
+				{
+					size_t len = strlen( argv[ 1 ] );
+					includebase = new char[ len + 2 ];
+					strcpy( includebase, argv [ 1 ] );
+					if ( includebase[ len - 1 ] != '/' )
+						{
+							includebase[ len ] = '/';
+							includebase[ len + 1 ] = '\0';
+						}
+					argv += 2;
+					argc -= 2;
+				}
 			else
 				{
 					std::cerr << "Illegal command line option: " << *argv << std::endl ;
@@ -49,7 +63,7 @@ main( int argc, char ** argv )
 				}
 		}
 
-	SSIScanner scanner( onlyDependencies, & std::cin, & std::cout );
+	SSIScanner scanner( onlyDependencies, & std::cin, & std::cout, includebase );
 	scanner.yylex( );
 
 	if( doEndl )
