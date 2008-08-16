@@ -35,25 +35,7 @@ bool strtobool( const char * str, const char * attribute );
 	 BEGIN( INCLUDE );
 }
 
-<INITIAL>"<?xml"[^?]*"?>" {
-	if( onlyDependencies_ )
-		{
-			// Do nothing
-		}
-	else
-		{
-			if( metaInclusionStack_.top( ) )
-				{
-					ECHO;
-				}
-			else
-				{
-					*yyout << "<!--SSI comment: " ;
-					ECHO;
-					*yyout << "-->" ;
-				}
-		}
-}
+<INITIAL>"<?xml"[^?]*"?>" |
 <INITIAL>"<!DOCTYPE"[ \t\n]+[^ \t\n]+[ \t\n]*"["[^\]]*"]>" {
 	if( onlyDependencies_ )
 		{
@@ -90,36 +72,14 @@ bool strtobool( const char * str, const char * attribute );
 		}
  }
 
-<INCLUDE_FILENAME>[\"][^\"]*[\"] {
-	yytext[ strlen( yytext ) - 1 ] = '\0';
-	includeFilename_ = expandDefines( yytext + 1 );
-	BEGIN( INCLUDE );
-}
+<INCLUDE_FILENAME>[\"][^\"]*[\"] |
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	includeFilename_ = expandDefines( yytext + 1 );
 	BEGIN( INCLUDE );
 }
 
-<INCLUDE_DEPTH>[\"][^\"]*[\"] {
-	yytext[ strlen( yytext ) - 1 ] = '\0';
-	char * endp;
-	int depthSigned = strtol( yytext + 1, &endp, 10 );
-	if( *endp != '\0' )
-		{
-			std::cerr << "Invalid depth string in SSI file inclusion: " << ( yytext + 1 ) << std::endl ;
-		}
-	size_t depthTmp = 0;
-	if( depthSigned > 0 )
-		{
-			depthTmp = depthSigned;
-		}
-	if( depthTmp < currentDepthLimit_ )
-		{
-			currentDepthLimit_ = depthTmp;
-		}
-	BEGIN( INCLUDE );
-}
+<INCLUDE_DEPTH>[\"][^\"]*[\"] |
 <INCLUDE_DEPTH>[\'][^\']*[\'] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	char * endp;
@@ -141,25 +101,14 @@ bool strtobool( const char * str, const char * attribute );
 	BEGIN( INCLUDE );
 }
 
-<INCLUDE_META>[\"][^\"]*[\"] {
-	yytext[ strlen( yytext ) - 1 ] = '\0';
-	currentMeta_ = strtobool( yytext + 1, "meta" );
-	BEGIN( INCLUDE );
-}
+<INCLUDE_META>[\"][^\"]*[\"] |
 <INCLUDE_META>[\'][^\']*[\'] {
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	currentMeta_ = strtobool( yytext + 1, "meta" );
 	BEGIN( INCLUDE );
 }
 
-<EXPAND>[\"][^\"]*[\"] {
-	char stringDelim = yytext[ 0 ];
-	yytext[ strlen( yytext ) - 1 ] = '\0';
-	const char * expanded = expandDefines( yytext + 1 );
-	*yyout << stringDelim << expanded << stringDelim ;
-	delete( expanded );
-	BEGIN( INITIAL );
-}
+<EXPAND>[\"][^\"]*[\"] |
 <EXPAND>[\'][^\']*[\'] {
 	char stringDelim = yytext[ 0 ];
 	yytext[ strlen( yytext ) - 1 ] = '\0';
