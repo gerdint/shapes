@@ -1819,7 +1819,7 @@ Computation::StrokedLine3D::push_zBufLine( const Lang::Transform3D & tf, const C
 	if( tf.isIdentity( ) )
 		{
 			Concrete::Coords3D d = p1_ - p0_;
-			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.direction( ), eyez ) );
+			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.directionNoFail( ), eyez ) );
 			lineQueue->push_back( new Computation::ZBufLine( this, zMap, nullView, p0_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) );
 		}
 	else
@@ -1827,7 +1827,7 @@ Computation::StrokedLine3D::push_zBufLine( const Lang::Transform3D & tf, const C
 			Concrete::Coords3D tfp0 = p0_.transformed( tf );
 			Concrete::Coords3D tfp1 = p1_.transformed( tf );
 			Concrete::Coords3D d = tfp1 - tfp0;
-			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.direction( ), eyez ) );
+			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.directionNoFail( ), eyez ) );
 			lineQueue->push_back( new Computation::ZBufLine( this, zMap, nullView, tfp0.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) );
 		}
 }
@@ -1850,7 +1850,7 @@ Computation::StrokedSplineSegment3D::push_zBufLine( const Lang::Transform3D & tf
 	if( tf.isIdentity( ) )
 		{
 			Concrete::Coords3D d = p1_ - p0_;
-			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.direction( ), eyez ) );
+			RefCountPtr< const ZMapType > zMap( new ZMapType( p0_, d.directionNoFail( ), eyez ) );
 			RefCountPtr< ViewType > bezierView = RefCountPtr< ViewType >( new ViewType( Bezier::ControlPoints< Concrete::Coords2D >( p0_.make2DAutomatic( eyez ), p0front_.make2DAutomatic( eyez ), p1rear_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) ) );
 			lineQueue->push_back( new Computation::ZBufLine( this, zMap, bezierView, p0_.make2DAutomatic( eyez ), p1_.make2DAutomatic( eyez ) ) );
 		}
@@ -1861,7 +1861,7 @@ Computation::StrokedSplineSegment3D::push_zBufLine( const Lang::Transform3D & tf
 			Concrete::Coords3D tfp1rear = p1rear_.transformed( tf );
 			Concrete::Coords3D tfp1 = p1_.transformed( tf );
 			Concrete::Coords3D d = tfp1 - tfp0;
-			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.direction( ), eyez ) );
+			RefCountPtr< const ZMapType > zMap( new ZMapType( tfp0, d.directionNoFail( ), eyez ) );
 			RefCountPtr< ViewType > bezierView = RefCountPtr< ViewType >( new ViewType( Bezier::ControlPoints< Concrete::Coords2D >( tfp0.make2DAutomatic( eyez ), tfp0front.make2DAutomatic( eyez ), tfp1rear.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) ) );
 			lineQueue->push_back( new Computation::ZBufLine( this, zMap, bezierView, tfp0.make2DAutomatic( eyez ), tfp1.make2DAutomatic( eyez ) ) );
 		}

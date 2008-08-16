@@ -868,14 +868,41 @@ namespace Shapes
 			{
 				args.applyDefaults( );
 
-				typedef Kernel::WarmGroup2D StateType;
-				StateType * state = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
+				try
+					{
+						typedef Kernel::WarmGroup2D StateType;
+						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
+						state->erase( );
 
-				state->erase( );
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( Lang::THE_VOID,
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
 
-				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Lang::THE_VOID,
-												 evalState );
+				try
+					{
+						typedef Kernel::WarmGroup3D StateType;
+						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
+						state->erase( );
+
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( Lang::THE_VOID,
+														 evalState );
+						return;
+					}
+				catch( const NonLocalExit::NotThisType & ball )
+					{
+						/* Wrong type; never mind!.. but see below!
+						 */
+					}
+
+				throw Exceptions::CoreStateTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Kernel::WarmGroup2D::staticTypeName( ), Kernel::WarmGroup3D::staticTypeName( ) ) );
 			}
 		};
 

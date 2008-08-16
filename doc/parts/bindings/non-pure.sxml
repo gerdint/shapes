@@ -22,6 +22,17 @@
 at the end of the program.</p>
 			</description>
 		</case>
+		<case>
+			<arguments>
+				<state identifier="group">
+					<type><named-state-type name="Group3D" /></type>
+				</state>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Erase the contents.</p>
+			</description>
+		</case>
 	</function>
 </system-binding>
 
