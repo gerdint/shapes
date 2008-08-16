@@ -1,7 +1,7 @@
 <section id="chap-3D">
 <title><str-3D /> graphics</title>
 <top>
-<p>This chapter basic ideas and tools for <str-3D /> graphics in <str-Shapes />.  A primary design goal has been to make a tight integration of <str-3D /> with <str-2D />.  With the ability to define surfaces in <str-3D /> comes a need to use light models to enhance the <str-3D /> experience, and we will look briefly at this towards the end of the chapter.</p>
+<p>This chapter presents basic ideas and tools for <str-3D /> graphics in <str-Shapes />.  A primary design goal has been to make a tight integration of <str-3D /> with <str-2D />.  With the ability to define surfaces in <str-3D /> comes a need to use light models to enhance the <str-3D /> experience, and we will look briefly at this towards the end of the chapter.</p>
 </top>
 
 <section id="3D/geometry">
@@ -71,7 +71,9 @@
 <section id="3D/light">
 <title>Light modeling</title>
 <body>
-	<p>Surfaces whose color is affected by the light model are created using <binding name="facet" />.</p>
+	<p>Surfaces whose color is affected by the light model are created using <binding name="facet" />.  Light sources are created using any of <binding name="ambient_light" />, <binding name="specular_light" />, or <binding name="distant_light" />.  When surfaces and light sources are combined in a <named-type name="ZBuf" /> or a <named-type name="ZSorter" />, the light computations will be executed when <binding name="view" /> is applied.  The rest of this section will be devoted to discussing the many options that exist for these objects.</p>
+
+	<p></p>
 </body>
 </section><!-- End of 3D/light -->
 

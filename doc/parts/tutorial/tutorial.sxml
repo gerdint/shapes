@@ -17,4 +17,5 @@
 	<!--#include virtual="chap-prog.sxml" -->
 	<!--#include virtual="chap-paths.sxml" -->
 	<!--#include virtual="chap-3D.sxml" -->
+	<!--#include virtual="chap-text.sxml" -->
 </book>
