@@ -27,7 +27,7 @@
 <!--#include virtual="../dynamic/dynvars.sxml" depth="0" -->
 <!--#include virtual="../types/index.sxml" depth="0" -->
 <!--#include virtual="../state-types/index.sxml" depth="0" -->
-<!--#include virtual="../man/tool-interface.sxml" depth="0" -->
+<!--#include virtual="../man/index.sxml" depth="0" -->
 <!--#include virtual="../algo-tol/algo-tol.sxml" depth="0" -->
 <!--#include virtual="../extensions/index_.sxml" depth="0" -->
 </external>
