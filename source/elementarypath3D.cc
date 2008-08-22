@@ -25,7 +25,7 @@ squareSum( Physical< L, T > d1, Physical< L, T > d2, Physical< L, T > d3 )
 }
 
 Physical< 3, -6 >
-tripleInner( Concrete::Speed vx, Concrete::Speed vy, Concrete::Speed vz, 
+tripleInner( Concrete::Speed vx, Concrete::Speed vy, Concrete::Speed vz,
 						 Concrete::Acceleration ax, Concrete::Acceleration ay, Concrete::Acceleration az,
 						 Concrete::Jerk jx, Concrete::Jerk jy, Concrete::Jerk jz )
 {
@@ -107,6 +107,7 @@ Lang::ElementaryPath3D::elementaryJob( std::stack< const Lang::Path3D * > * node
 		{
 			pth->push_back( new Concrete::PathPoint3D( **i ) );
 		}
+	*basePoint = *(back( )->mid_);
 }
 
 Concrete::Time
