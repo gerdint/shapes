@@ -1,0 +1,9 @@
+This tool is used to extract a list of local files that are referenced by an xhtml file.
+
+The reason the input must be xhtml is that we use xml tools to do the job.
+
+The xslt file may be applied using Saxon, like this (say we want to find dependencies in the file <tutorial.html>, which in fact is an xml file)
+
+  java -jar your-path-to-Saxon/saxon9.jar tutorial.html your-path-to-here/filter.xsl
+
+The list of dependencies will then be written on stdout.
