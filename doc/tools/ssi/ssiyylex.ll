@@ -124,7 +124,10 @@ bool strtobool( const char * str, const char * attribute );
 	char stringDelim = yytext[ 0 ];
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	const char * expanded = expandDefines( yytext + 1 );
-	*yyout << stringDelim << expanded << stringDelim ;
+	if( ! onlyDependencies_ )
+		{
+			*yyout << stringDelim << expanded << stringDelim ;
+		}
 	delete( expanded );
 	BEGIN( INITIAL );
 }
@@ -227,6 +230,15 @@ SSIScanner::doInclusion( )
 	std::ifstream * iFile = new std::ifstream( includeFilename_.c_str( ) );
 	if( ! iFile->good( ) )
 		{
+			if( onlyDependencies_ )
+				{
+					if( currentDepthLimit_ == 0 )
+						{
+							return;
+						}
+					std::cerr << "Missing #include file is included with depth greater than zero: " << includeFilename_ << std::endl ;
+					exit( 1 );
+				}
 			std::cerr << "Failed to open included file: " << includeFilename_ << std::endl ;
 			exit( 1 );
 		}

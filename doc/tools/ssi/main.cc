@@ -5,13 +5,15 @@
 #include <cstdlib>
 
 
+bool strprefixcmp( char * str, const char * prefix, char ** endp );
+
+
 int
 main( int argc, char ** argv )
 {
 	bool onlyDependencies = false;
 	bool doEndl = false;
 	char * inputFilename = 0;
-	char * refbase = "";
 
 	--argc;
 	++argv;
@@ -108,4 +110,14 @@ main( int argc, char ** argv )
 		}
 
 	return 0;
+}
+
+
+bool
+strprefixcmp( char * str, const char * prefix, char ** endp )
+{
+	int len = strlen( prefix );
+	bool res = ( strncmp( str, prefix, len ) == 0 );
+	*endp = str + len;
+	return res;
 }

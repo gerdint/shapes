@@ -7,7 +7,8 @@ using namespace std;
 
 
 SSIScanner::SSIScanner( bool onlyDependencies, const std::string & initDir, istream * yyin, ostream * yyout )
-	: yyFlexLexer( yyin, yyout ), onlyDependencies_( onlyDependencies )
+	: yyFlexLexer( yyin, yyout ),
+		onlyDependencies_( onlyDependencies )
 {
 	depthLimitStack_.push( std::numeric_limits< size_t >::max( ) );
 	metaInclusionStack_.push( true );
