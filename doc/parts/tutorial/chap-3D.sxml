@@ -1,0 +1,80 @@
+<section id="chap-3D">
+<title><str-3D /> graphics</title>
+<top>
+<p>This chapter presents basic ideas and tools for <str-3D /> graphics in <str-Shapes />.  A primary design goal has been to make a tight integration of <str-3D /> with <str-2D />.  With the ability to define surfaces in <str-3D /> comes a need to use light models to enhance the <str-3D /> experience, and we will look briefly at this towards the end of the chapter.</p>
+</top>
+
+<section id="3D/geometry">
+<title>Geometry</title>
+<body>
+	<p>As was said above, tight integration of <str-3D /> with <str-2D /> has been a main design goal.  The model used is that the <str-2D /> world is the image plane of a pin-hole camera, and coincides with the plane <eq>z = 0</eq>.  When the <str-3D /> world is projected onto the image plane of the camera, the position of the eye (that is, the pin-hole of the camera) is <eq>( 0, 0, z<sub><rm>eye</rm></sub> )</eq>, which the user can affect by binding <dynvar name="eyez" />, see the figure below.</p>
+<example-with-output title="Geometry of the view projection" internal-id="example/view">
+<image pdf="tutorial-view.pdf" jpg="tutorial-view_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-view.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-view.shape" -->]]>
+</source>
+<caption>
+	<p>The relation between the <str-3D /> scene and the <str-2D /> image plane where the <str-3D /> scene is projected by <binding name="view" />.  The source is not meant to be instructive.</p>
+</caption>
+</example-with-output>
+	<p>The projection is performed by applying the function <binding name="view" />.  The reverse, to take an object in the <str-2D /> world and equip it with a <eq>z = 0</eq> coordinate, is performed by the function <binding name="immerse" />.</p>
+	<p>An alternative to <binding name="immerse" /> is <binding name="facing" />, which is useful to position things as labels in a <str-3D /> scene.</p>
+	<p>One very important tool for the interaction between <str-3D /> and <str-2D /> is the use of tags.  When tags in a <str-3D /> scene are viewed, they will be converted to <str-2D /> tags and reference the viewed version of the tagged objects.  It is particularly useful to tag points in a <str-3D /> scene.</p>
+</body>
+</section><!-- End of 3D/geometry -->
+
+<section id="3D/coord-paths">
+<title>Coordinates and paths</title>
+<body>
+	<p>Coordinates in <str-3D /> are entered according to <syntax name="coords-3D" />, for instance <inline>( 3mm, 7mm, 1cm )</inline>.</p>
+	<p>At the time of writing, path construction in <str-3D /> is very limited compared to <str-2D />, as there are no automatic choices of angles or distances to interpolation points.  One can use both absolute and relative coordinates, though.  An example of a path in <str-3D /> can be found in the straight stereo projection example below.</p>
+	<p>Fortunately many of the paths used in <str-3D /> lie in a plane, and can be constructed by creating them in <str-2D /> first, and then immerse and transform to get it in the right position.</p>
+</body>
+</section><!-- End of 3D/coord-paths -->
+
+<section id="3D/basic-drawing">
+<title>Basic drawing</title>
+<body>
+	<p>The functions <binding name="stroke" />, <binding name="fill" />, and <binding name="fillstroke" /> are applicable to paths in <str-3D />.  The operations are defined to generate objects that, when viewed, the corresponding <str-2D /> operations are applied to the view of the path.  This means that filling and fill-stroking paths which are not contained in a plane may not be entirely wise.  Surfaces that can be painted in the light model, described below, are basically limited to be flat and are not created by <binding name="fill" />.</p>
+	<p>Arrowheads in <str-3D /> can be tricky to get right.  See <a extension="arrowheads" /> for details.  Also note the approach illustrated under <binding name="facing" />.</p>
+</body>
+</section><!-- End of 3D/basic-drawing -->
+
+<section id="3D/stereo">
+<title>Stereo images</title>
+<body>
+	<p>Sometimes the pin-hole view of a <str-3D /> scene fails to give a good impression of a <str-3D /> scene, and then it may help to draw a the image in <em>stereo</em>.  This means that one draws one picture for each human eye, and put the images side by side so that one can see both at the same time, and this often greatly enhance the illusion of a <str-3D /> scene if done correctly.  There is no special support for drawing images in stereo in <str-Shapes />, but this section shows that there is no need for that; it is merely a question about applying the right transforms.</p>
+	<p>There are two approaches to stereo projections; to put the left eye's image to the left of the right eye's image, or vice versa.  In the first case, one must look towards a point at infinity (or very far away, or beyond infinity…), and in the second case one must look towards a point between the image plane and the eyes.  It is both a matter of personal comfort and taste, and technical reasons, which approach to choose.  Since it is extremely difficult to look towards a point beyond infinity the first approach is limited to objects of smaller width than the distance between the eyes.  This limitation is not present in the other approach, but at least for me it is very difficult to get the eyes to focus in this case (the brain thinks the object is much closer than the distance to the paper, and apparently this is more disturbing than when the brain thinks the object is at infinity even though the paper much closer than so.).  The first approach is referred to as a <em>straight stereo projection</em>, while the other is referred to as a <em>cross stereo projection</em>.</p>
+	<p>To make a straight stereo projection, for the distance <inline>eyew</inline> between the eyes we shall make two projections of the scene, differing by a <eq>x</eq> shift of this length.  Note that the scene is shifted to the left for the right eye, and vice versa, and hence the images have to be swapped before drawn.  The following example shows this technique.</p>
+<example-with-output title="Straight stereo projection" internal-id="example/straight">
+<image pdf="spacebase.pdf" jpg="spacebase_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/applications/spacebase.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/applications/spacebase.shape" -->]]>
+</source>
+<caption>
+	<p>A straight stereo projection, that is, the left eye's view to the left of the right eye's view.  The simple geometry behind this is described in the text.</p>
+</caption>
+</example-with-output>
+<p>The next example shows the same application, but with a cross stereo projection.</p>
+<example-with-output title="Cross stereo projection" internal-id="example/cross">
+<image pdf="spacebase-cross.pdf" jpg="spacebase-cross_y_big.jpg" />
+<source file=<!--#expand-next-string-->"$(EXAMPLES)/applications/spacebase-cross.shape">
+<![CDATA[<!--#include virtual="$(EXAMPLES)/applications/spacebase-cross.shape" -->]]>
+</source>
+<caption>
+	<p>A cross stereo projection, that is, the left eye's view to the right of the right eye's view.  The simple geometry behind this is <em>not</em> described in the text.</p>
+</caption>
+</example-with-output>
+</body>
+</section><!-- End of 3D/stereo -->
+
+<section id="3D/light">
+<title>Light modeling</title>
+<body>
+	<p>Surfaces whose color is affected by the light model are created using <binding name="facet" />.  Light sources are created using any of <binding name="ambient_light" />, <binding name="specular_light" />, or <binding name="distant_light" />.  When surfaces and light sources are combined in a <named-type name="ZBuf" /> or a <named-type name="ZSorter" />, the light computations will be executed when <binding name="view" /> is applied.  The rest of this section will be devoted to discussing the many options that exist for these objects.</p>
+
+	<p></p>
+</body>
+</section><!-- End of 3D/light -->
+
+</section><!-- End of chap-3D -->

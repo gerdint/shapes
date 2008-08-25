@@ -35,6 +35,7 @@ namespace Shapes
 		extern bool fontMetricDebug;
 		extern bool characterColumnInBytes;
 		extern bool pdfLaTeXInteractionTo_stderr;
+		extern bool logGlobals;
 
 	}
 

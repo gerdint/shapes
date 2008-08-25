@@ -1,0 +1,23 @@
+##needs circle
+
+a: (1.5cm,4.5cm)
+
+pth: @defaultunit:1%C | (0cm,0cm)>(^20°)--(1cm,2cm)--(^)<(2.5cm,2cm)>(^)--(2cm^)<(4cm,5cm)>(^~30°)--(^)<(5cm,4cm)
+
+circMark: @width:0.5bp | [stroke [circle 4bp]]
+crossMark: @width:0.5bp | [stroke (~4bp,~4bp)--(4bp,4bp) & (~4bp,4bp)--(4bp,~4bp)]
+
+helper: \ pth .>
+{
+  [[shift a] crossMark]
+	&
+	( @width:0.5bp | [stroke pth] )
+	&
+	( @width:5bp & @stroking:RGB_RED | [spot [approximator pth a].p] )
+	&
+	( [shift [pathpoint_approximator pth a].p] [] circMark )
+}
+
+•page << [helper pth.begin--[pth 1.5]]
+			<< [shift (4cm,0cm)] [] [helper pth.begin--[pth 2.5]]
+			<< [shift (8cm,0cm)] [] [helper pth]

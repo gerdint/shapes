@@ -1,0 +1,24 @@
+<section id="bindings/predicates">
+<title>Predicates</title>
+<top>
+<p>Predicates are simple functions that test certain conditions.</p>
+</top>
+
+<system-binding identifier="null?">
+	<function>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="SingleList" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Boolean" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>True if the list is empty.</p></description>
+		</case>
+	</function>
+</system-binding>
+
+</section>

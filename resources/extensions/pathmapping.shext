@@ -9,7 +9,7 @@ pathmap:
          |
          {
            t: [debuglog_after `found´ ...][][debuglog_before `search...´ ...][][intersection p1 p2]
-           [meetpaths [p1 0]--t [continuous_approximator p2 t.p]--[p2 ∞]]
+           [meetpaths [p1 0]--t [approximator p2 t.p]--[p2 ∞]]
          }
        )
    ]

@@ -13,8 +13,8 @@ genericBrace: \ p0 p1 height aEnd rEndFactor aMid rMidFactor extendLimitFactor .
         tmp: p0>(rEnd^a0-aEnd)--(rMid^180°+a0-aMid)<(p0+0.5*r+n)>(rMid^a0+aMid)--(rEnd^180°+a0+aEnd)<(p0+r)
 	tmp1: tmp.begin--[tmp 1]
 	slmid: [tmp1 0.5*[abs tmp1]]
-	l1: [continuous_maximizer tmp1.begin--slmid [normalized n]].length
-	l2: slmid.length + [continuous_maximizer slmid--tmp1.end ~[normalized n]].length
+	l1: [maximizer tmp1.begin--slmid [normalized n]].length
+	l2: slmid.length + [maximizer slmid--tmp1.end ~[normalized n]].length
 	sl1: tmp.begin + l1
 	sl2: tmp.begin + l2
 	sl3: tmp.end - l2

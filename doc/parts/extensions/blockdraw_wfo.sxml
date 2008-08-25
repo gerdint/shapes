@@ -8,7 +8,12 @@
 	</description>
 	<meta-selflink><extension-href name="blockdraw_wfo" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
-	<needs></needs>
+	<needs>
+		<a extension="shiftoff" />
+		<a extension="centering" />
+		<a extension="circle" />
+		<a extension="arrowheads" />
+	</needs>
 	<top>
 		<alphabetical-index/>
 		<p>The name of this extension includes the mysterious <em>wfo</em>.  It stands for <em>waiting for objects</em>, and refers to the wish to deal with elements of block diagrams using objects of user-defined types rather than just relying on <named-type name="Drawable" />.  However, by relying on <named-type name="Drawable" /> as the representation, this extension is much more generally useful than it would otherwise be.</p>

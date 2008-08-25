@@ -9,10 +9,10 @@
 <body>
 <p>In order to build the <str-Shapes /> compiler, the following software need to be installed on your system:</p>
 <ol>
-<li><p><em>zLib</em>, the compression library</p></li>
-<li><p>The <em>iconv</em> library, for conversions between virous character encodings</p></li>
-<li><p>The Gnu Scientific Library, <em>gsl</em>, for mathematical algorithms</p></li>
-<li><p><str-LaTeX /> (not required), for typesetting labels in your figures</p></li>
+<li><p><em>zLib</em>, the compression library</p>.</li>
+<li><p>The <em>iconv</em> library, for conversions between various character encodings</p>.</li>
+<li><p>The Gnu Scientific Library, <em>gsl</em>, for mathematical algorithms</p>.</li>
+<li><p><str-LaTeX /> (not required), for typesetting labels in your figures</p>.</li>
 </ol>
 </body>
 </section><!-- End of install-depend -->

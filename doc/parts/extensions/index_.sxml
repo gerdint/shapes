@@ -24,6 +24,9 @@
 	<external>
 		<!--#include virtual="circle.sxml" depth="0" -->
 		<!--#include virtual="centering.sxml" depth="0" -->
+		<!--#include virtual="arrowheads.sxml" depth="0" -->
+		<!--#include virtual="conssupport.sxml" depth="0" -->
+		<!--#include virtual="linkpaths.sxml" depth="0" -->
 		<!--#include virtual="blockdraw_wfo.sxml" depth="0" -->
 	</external>
 </book>

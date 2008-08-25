@@ -15,7 +15,7 @@
   \ pile e •randstate .>
   {
    p: 1.4cm * [random2D •randstate]
-   pile & [stroke p--[continuous_approximator pth p].p ]
+   pile & [stroke p--[approximator pth p].p ]
   }
   null
 	•rand
@@ -43,7 +43,7 @@ randPath: \ n •rand .>
   \ pile e •randstate .>
   {
    p: sh [] 1.4cm * [random2D •randstate]
-   pile & [stroke p--[continuous_approximator pth p].p ]
+   pile & [stroke p--[approximator pth p].p ]
   }
   null
 	•rand

@@ -289,133 +289,32 @@ is equivalent to
 	</function>
 </system-binding>
 
-<system-binding identifier="facing">
+<system-binding identifier="list">
 	<function>
-		<case constructor-of="Drawable3D">
+		<case constructor-of="SingleList">
 			<arguments>
-				<arg identifier="obj">
-					<type><named-type name="Drawable" /></type>
-				</arg>
-				<arg identifier="scale">
-					<type><named-type name="Boolean" /></type>
-					<default>false</default>
-				</arg>
-				<arg identifier="distort">
-					<type><named-type name="Boolean" /></type>
-					<default>false</default>
-				</arg>
+				<sink>
+				</sink>
 			</arguments>
 			<description>
-				<p>Creates an object in <str-3D /> which is always facing the viewer.  It is useful for labels and other <str-2D /> annotations that need to be positioned in terms of objects in a <str-3D /> world.  The <arg name="scale" /> and <arg name="distort" /> arguments control how to interpret the <str-3D /> transform when the object is being viewed.</p>
-			</description>
-		</case>
-		<case constructor-of="Drawable3D">
-			<arguments>
-				<arg identifier="obj">
-					<type>
-						<function-type>
-							<arguments>
-								<arg><named-type name="Transform3D" /></arg>
-							</arguments>
-							<result><named-type name="Drawable" /></result>
-						</function-type>
-					</type>
-				</arg>
-			</arguments>
-			<dynamic-references><dynstate name="all" /></dynamic-references>
-			<description>
-				<p>Gives the user full control of how to display the object when being viewed through a <str-3D /> transform.  The dynamic state is captured, and will be in scope later when the embedded function is invoked.</p>
-
-				<note>
-					<p>The evaluation order is quite non-standard for the objects created here.  Viewing an object is generally an atomic operation from a continuation passing point of view.  Hence, when the function is applied to the transform to obtain the <str-2D /> result, this will take place in an evaluation loop of its own.  This is very likely to render generated error messages rather useless when it comes to localizing the problem.</p>
-					<p>Since the object created here only has a meaning when being viewed, it cannot be searched (see <binding name="tag" /> and <binding name="find" />) for tags as long as it remains in <str-3D />.</p>
-				</note>
-
-				<p>If you ever considered solving the intricate problem of generating nice arrowheads for paths in <str-3D /> by simply treating the path as if it was in <str-2D />, think again, as the example below shows!</p>
-
-				<example-with-output title="Example" internal-id="example/facing-function">
-					<image pdf="facefun_3.pdf" jpg="facefun_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/facefun.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/facefun.shape" -->]]>
-</source>
-				</example-with-output>
+				<p>Constructs a list of the arguments.</p>
+				<p>The value created when called with no arguments is recognized by <binding name="null?" />, and should be used as a null marker for <named-type name="ConsPair" /> lists.</p>
 			</description>
 		</case>
 	</function>
 </system-binding>
 
-<system-binding identifier="range">
+<system-binding identifier="cons">
 	<function>
-		<case constructor-of="SingleList">
+		<case constructor-of="ConsPair">
 			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Integer" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
+				<arg identifier="car"></arg>
+				<arg identifier="cdr"></arg>
 			</arguments>
 			<description>
-				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to provide <arg name="begin" />, <arg name="end" />, and <arg name="count" /> at the same time.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
-				<p>See the float case for the semantics of the various argument combinations.</p>
+				<p>Constructs a cons pair.  The arguments are not forced, which allows infinite data structures to be defined.</p>
 			</description>
 		</case>
-		<case constructor-of="SingleList">
-			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Float" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
-			</arguments>
-			<description>
-				<p>Constructs a range of real numbers.  One of the arguments must be omitted.  It is allowed to omit both <arg name="step" /> and <arg name="count" />, in which case <arg name="step" /> defaults to (a positive) 1.</p>
-				<p>If <arg name="step" /> is provided, it determines the step length.  If <arg name="count" /> is provided, it must be at least 2, and determines the number of elements in the constructed range, which will begin at <arg name="begin" /> if <arg name="begin" /> is provided, and end at <arg name="end" /> if <arg name="end" /> is provided (note that achieving this using <arg name="step" /> may be inconvenient or even difficult due to problems with numeric precision).  If neither <arg name="step" /> nor <arg name="count" /> is provided, <arg name="step" /> defaults to 1.</p>
-			</description>
-		</case>
-		<case constructor-of="SingleList">
-			<arguments>
-				<arg identifier="begin">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="end">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="step">
-					<type><named-type name="Length" /></type>
-				</arg>
-				<arg identifier="count">
-					<type><named-type name="Integer" /></type>
-				</arg>
-			</arguments>
-			<description>
-				<p>Constructs a range of integers.  One of the arguments must be omitted, and it is forbidden to omit both <arg name="step" /> and <arg name="count" />.</p>
-				<p>See the float case for the semantics of the various argument combinations.</p>
-			</description>
-		</case>
-		<body>
-			<example-with-output title="Range construction" internal-id="example/ranges">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/ranges.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/ranges.shape" -->]]>
-</source>
-<stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/ranges.stdout" -->]]>
-</stdout>
-			</example-with-output>
-		</body>
 	</function>
 </system-binding>
 
@@ -579,6 +478,232 @@ is equivalent to
 			<dynamic-references></dynamic-references>
 			<description>
 				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="maximizer">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatPair" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first point on the path where the global maximum in the given direction is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatTriple" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="pathpoint_maximizer">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatPair" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first path point on the path where the global maximum in the given direction is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatTriple" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="controlling_maximizer">
+	<function>
+		<case constructor-of="Coords">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatPair" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the a point among the control points of the path, where the global maximum in the given direction is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="Coords3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="FloatTriple" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="approximator">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first point on the path where the global minimum in distance to the given point is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="pathpoint_approximator">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Finds the first path point on the path where the global minimum in distance to the given point is attained.</p>
+			</description>
+		</case>
+		<case constructor-of="PathSlider3D">
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Coords3D" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Analogous to the the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="intersection">
+	<function>
+		<case constructor-of="PathSlider">
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="handler_NoIntersection" /></dynamic-references>
+			<description>
+				<p>Finds the first point on the first path where it intersects with the second path.</p>
+				<p>If no intersection is found, the error handler <dynvar name="handler_NoIntersection" /> is called with the two paths as argumets.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="facet">
+	<function>
+		<case constructor-of="Drawable3D">
+			<arguments>
+				<arg identifier="path">
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg identifier="n1">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="n2">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="n3">
+					<type><template-type name="N" /></type>
+				</arg>
+				<arg identifier="tiebreaker">
+					<type><named-type name="Length" /></type>
+					<default>0</default>
+				</arg>
+				<arg identifier="double">
+					<type><named-type name="Boolean" /></type>
+				</arg>
+			</arguments>
+			<dynamic-references><dynvar name="nonstroking" /> <dynvar name="reflections" /> <dynvar name="autointensity" /> <dynvar name="autoscattering" /> <dynvar name="viewresolution" /> <dynvar name="shadeorder" /></dynamic-references>
+			<type-templates>
+				<template name="N">
+					<description>
+						<p>Type of surface normal.  Should either be <named-type name="SurfaceNormalGray" /> or <named-type name="SurfaceNormalRGB" />.</p>
+					</description>
+				</template>
+			</type-templates>
+			<description>
+				<p>The only required argument is <arg name="path" />, which must be a flat polygon.  The three arguments of type <template-type name="N" /> will be described shortly.  The parameter <arg name="tiebreaker" /> has the same meaning as for <binding name="fill" />, and <arg name="double" /> tells whether the surface should be visible when viewed from the back.  Surfaces that are not visisble when viewed from the back allow more efficient rendering when they cover a solid body, so that one knows that the inside of the body surface should never be visible.  The default value for <arg name="double" /> depends on the presence of surface normals; if there are none, it defaults to true, otherwise it defaults to false unless the surface normals disagree on which is the visible side.</p>
+				<p>Up to three surface normals may be provided (provide <arg name="n1" /> before <arg name="n2" /> and so forth).  A surface normal has a location on the surface and specifies both a normal direction to be used in light computations (although the surface is physically flat, it can be treated as if curved in the light model), and a color.  See <binding name="facetnormal" /> for more details on how to construct surface normals.  If no facet normal is provided, one is computed by using the physical normal direction of <arg name="path" />, with color determined by <dynvar name="nonstroking" />.  If just one facet normal is provided, it defines a constant normal direction and color over the whole facet.  If more than one is provided, normal direction and color are interpolated over the facet.</p>
+				<p>Please refer to the documentation on the many dynamic variables accessed by this function, to learn how these affect the light computations.</p>
 			</description>
 		</case>
 	</function>

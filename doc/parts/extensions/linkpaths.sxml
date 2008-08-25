@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>linkpaths</title>
+	<description>
+		<p>Functions for joining paths at their intersection.</p>
+	</description>
+	<meta-selflink><extension-href name="linkpaths" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<needs>
+		<a extension="conssupport" />
+	</needs>
+	<top>
+		<alphabetical-index/>
+		<p>The functions provided by this extension are simple applications of <binding name="intersection" /> and <binding name="meetpaths" />.  Given two paths that intersect, the first is cut after the intersection, the second is cut before the intersection, and the resulting paths may be joined seamlessly.</p>
+	</top>
+
+	<section id="extensions/linkpaths/bindings">
+		<title>Bindings</title>
+		<body>
+			<p>The extentsion consists of just a few bindings, and we turn directly to the details of each.</p>
+
+		<system-binding identifier="linkpaths">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="p1">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="p2">
+							<type><named-type name="Path" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Find intersection, cut <arg name="p1" /> after the intersection, cut <arg name="p2" /> before the intersection, and merge the result.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="buildchain">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="pthList">
+							<type><named-type name="ConsList" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Like, <binding extension="linkpaths" name="linkpaths" />, but with more than two paths to join.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		</body>
+		</section> <!-- End of  -->
+</book>

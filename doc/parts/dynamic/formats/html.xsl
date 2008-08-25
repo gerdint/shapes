@@ -83,6 +83,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</xsl:for-each>
 	</p>
 	<xsl:apply-templates select="type" />
+	<xsl:apply-templates select="default" />
 	<xsl:apply-templates select="constraint" />
 	<xsl:apply-templates select="description" />
 </xsl:template>
@@ -90,6 +91,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="dynamic-variable[@identifier]/type">
 	<p>
 		<b>Type: </b><xsl:apply-templates />
+	</p>
+</xsl:template>
+
+<xsl:template match="dynamic-variable[@identifier]/default">
+	<p>
+		<b>Default binding: </b><xsl:apply-templates />
 	</p>
 </xsl:template>
 
