@@ -13,7 +13,7 @@ SSIFLAGS=--includebase ${top_srcdir}/doc/parts/man -dEXAMPLES=$(EXDIR) -dEXAMPLE
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 CLEANFILES = man.1
-DISTCLEANFILES = shapes.1 .deps/man.dep .deps/man.xml
+DISTCLEANFILES = shapes.1 ${DEPDIR}/man.dep ${DEPDIR}/man.xml
 
 dist_man1_MANS = shapes.1
 
@@ -26,27 +26,27 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
-.deps/%.xml : ${docdir}/%/index.sxml .deps/%.dep ${docdir}/formats/html.xsl
-	if cat $< | ${SSI} ${SSIFLAGS} > .deps/$*.Txml; \
+${DEPDIR}/%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.dep ${docdir}/formats/html.xsl
+	if cat $< | ${SSI} ${SSIFLAGS} > ${DEPDIR}/$*.Txml; \
 	then \
-		mv .deps/$*.Txml $@; \
+		mv ${DEPDIR}/$*.Txml $@; \
 	else \
-		${RM} .deps/$*.Txml; \
+		${RM} ${DEPDIR}/$*.Txml; \
 	fi
 
-.deps/%.dep : ${docdir}/%/index.sxml
-	install -d .deps
-	if cat $< | $(SSI) $(SSIFLAGS) --head $< --deps > .deps/$*.Tdep; \
+${DEPDIR}/%.dep : ${docdir}/%/index.sxml
+	install -d ${DEPDIR}
+	if cat $< | $(SSI) $(SSIFLAGS) --head $< --deps > ${DEPDIR}/$*.Tdep; \
 	then \
-		mv .deps/$*.Tdep $@; \
+		mv ${DEPDIR}/$*.Tdep $@; \
 	else \
-		${RM} .deps/$*.Tdep; \
+		${RM} ${DEPDIR}/$*.Tdep; \
 	fi
 
--include .deps/man.dep
+-include ${DEPDIR}/man.dep
 
-%.1 : .deps/%.xml ${docdir}/%/formats/man.xsl ${docdir}/formats/man.xsl
+%.1 : ${DEPDIR}/%.xml ${docdir}/%/formats/man.xsl ${docdir}/formats/man.xsl
 	$(SAXON) $< ${docdir}/$*/formats/man.xsl | \
 	  ${top_builddir}/doc/tools/postproc/postproc-man > $@
 
-.PRECIOUS : .deps/man.dep .deps/man.xml
+.PRECIOUS : ${DEPDIR}/man.dep ${DEPDIR}/man.xml
