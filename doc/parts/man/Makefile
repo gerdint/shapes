@@ -19,10 +19,10 @@ DEPENDS = build/tool-interface.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) ../formats/man.xsl $(POSTPROCDIR)/postproc-man
+$(MAN1DIR)/shapes.1: build/index.xml $(MANFORMAT) ../formats/man.xsl $(POSTPROCDIR)/postproc-man
 	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/postproc-man > $@
 
-$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+$(HTMLDIR)/man.html: build/index.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile.incl

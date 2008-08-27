@@ -10,11 +10,11 @@ HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl ../formats/examplecode-html.xsl ../formats/plain-book-html.xsl
 
 PRODUCTS = $(HTMLDIR)/tutorial.html
-DEPENDS = build/tutorial.depend
+DEPENDS = build/index.depend
 
 all: $(PRODUCTS)
 
-$(HTMLDIR)/tutorial.html: build/tutorial.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+$(HTMLDIR)/tutorial.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile.incl

@@ -14,7 +14,7 @@ INDEX_HTMLFORMAT=../index/formats/html.xsl
 JOBS = circle centering blockdraw_wfo
 
 PRODUCTS = $(HTMLDIR) $(HTMLDIR)/index_.html $(patsubst %,$(HTMLDIR)/%.html,$(JOBS))
-DEPENDS = build/index_.depend $(patsubst %,build/%.depend,$(JOBS))
+DEPENDS = build/index.depend $(patsubst %,build/%.depend,$(JOBS))
 
 all: $(DEPENDS) $(PRODUCTS)
 
@@ -24,7 +24,7 @@ $(HTMLDIR):
 $(HTMLDIR)/%.html: build/%.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-$(HTMLDIR)/index_.html: build/index_.xml $(INDEX_HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+$(HTMLDIR)/index.html: build/index_.xml $(INDEX_HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(INDEX_HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile.incl

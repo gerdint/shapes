@@ -11,12 +11,12 @@ HTMLDIR=$(PRODUCED_FORMATS_DIR)/html
 HTMLFORMAT=$(PART_FORMATS_DIR)/html.xsl
 HTML_MORE_FORMATS=../formats/html.xsl
 
-PRODUCTS = $(HTMLDIR)/dynvars.html
-DEPENDS = build/dynvars.depend
+PRODUCTS = $(HTMLDIR)/dynamic.html
+DEPENDS = build/index.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(HTMLDIR)/dynvars.html: build/dynvars.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+$(HTMLDIR)/dynamic.html: build/index.xml $(HTMLFORMAT) $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
 	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
 include ../Makefile.incl

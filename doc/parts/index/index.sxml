@@ -20,16 +20,16 @@
 <!--#include virtual="chap-notation.sxml" -->
 
 <external>
-<!--#include virtual="../tutorial/tutorial.sxml" depth="0" -->
-<!--#include virtual="../syntax/syntax.sxml" depth="0" -->
-<!--#include virtual="../bindings/bindings.sxml" depth="0" -->
-<!--#include virtual="../states/states.sxml" depth="0" -->
-<!--#include virtual="../dynamic/dynvars.sxml" depth="0" -->
+<!--#include virtual="../tutorial/index.sxml" depth="0" -->
+<!--#include virtual="../syntax/index.sxml" depth="0" -->
+<!--#include virtual="../bindings/index.sxml" depth="0" -->
+<!--#include virtual="../states/index.sxml" depth="0" -->
+<!--#include virtual="../dynamic/index.sxml" depth="0" -->
 <!--#include virtual="../types/index.sxml" depth="0" -->
 <!--#include virtual="../state-types/index.sxml" depth="0" -->
-<!--#include virtual="../man/tool-interface.sxml" depth="0" -->
-<!--#include virtual="../algo-tol/algo-tol.sxml" depth="0" -->
-<!--#include virtual="../extensions/index_.sxml" depth="0" -->
+<!--#include virtual="../man/index.sxml" depth="0" -->
+<!--#include virtual="../algo-tol/index.sxml" depth="0" -->
+<!--#include virtual="../extensions/index.sxml" depth="0" -->
 </external>
 
 </book>

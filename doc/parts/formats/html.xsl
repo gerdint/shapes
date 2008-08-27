@@ -61,13 +61,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:when test="$name='syntax'">syntax.html</xsl:when>
 		<xsl:when test="$name='bindings'">bindings.html</xsl:when>
 		<xsl:when test="$name='states'">states.html</xsl:when>
-		<xsl:when test="$name='dynamic'">dynvars.html</xsl:when>
+		<xsl:when test="$name='dynamic'">dynamic.html</xsl:when>
 		<xsl:when test="$name='types'">types.html</xsl:when>
 		<xsl:when test="$name='state-types'">state-types.html</xsl:when>
 		<xsl:when test="$name='algo-tol'">algo-tol.html</xsl:when>
 		<xsl:when test="$name='man'">man.html</xsl:when>
 		<xsl:when test="$name='tutorial'">tutorial.html</xsl:when>
-		<xsl:when test="$name='extensions'">extensions/index_.html</xsl:when>
+		<xsl:when test="$name='extensions'">extensions/index.html</xsl:when>
 	</xsl:choose>
 </xsl:template>
 <xsl:template name="extension-to-href">
