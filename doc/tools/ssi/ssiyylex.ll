@@ -211,8 +211,6 @@ SSIScanner::doInclusion( )
 		{
 			return;
 		}
-	depthLimitStack_.push( currentDepthLimit_ );
-	metaInclusionStack_.push( currentMeta_ );
 
 	if( onlyDependencies_ )
 		{
@@ -225,6 +223,9 @@ SSIScanner::doInclusion( )
 			std::cerr << "Failed to open included file: " << includeFilename_ << std::endl ;
 			exit( 1 );
 		}
+
+	depthLimitStack_.push( currentDepthLimit_ );
+	metaInclusionStack_.push( currentMeta_ );
 
 	stateStack_.push( YY_CURRENT_BUFFER );
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
