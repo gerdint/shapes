@@ -74,13 +74,10 @@ bool strtobool( const char * str, const char * attribute );
 
 <INCLUDE_FILENAME>[\"][^\"]*[\"] |
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
-	size_t len = strlen( yytext ) ;
-	yytext[ len - 1 ] = '\0';
-	char * buf = new char[ strlen( includebase_ ) + len - 2 + 1];
-	strcpy( buf, includebase_ );
-	strcat( buf, yytext + 1 );
-	includeFilename_ = expandDefines( buf );
-	delete [] buf;
+	yytext[ strlen( yytext ) - 1 ] = '\0'; /* Remove trailing delimiter. */
+	std::string buf = dirStack_.top( ) + ( yytext + 1 );  /* Skip leading delimiter. */
+	/* Here, we could compact away outward directory references, but we're too lazy at the moment. */
+	includeFilename_ = expandDefines( buf.c_str( ) );
 	BEGIN( INCLUDE );
 }
 
@@ -138,6 +135,7 @@ bool strtobool( const char * str, const char * attribute );
 		stateStack_.pop( );
 		depthLimitStack_.pop( );
 		metaInclusionStack_.pop( );
+		dirStack_.pop( );
 	}
 }
 

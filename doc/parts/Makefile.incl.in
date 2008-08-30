@@ -11,7 +11,7 @@ $(SSI): $(SSIDIR)/main.cc $(SSIDIR)/ssiyylex.ll $(SSIDIR)/ssiscanner.h $(SSIDIR)
 	cd $(SSIDIR); make
 
 build/%.xml: %.sxml build/%.depend ../formats/html.xsl $(SSI)
-	cat $< | $(SSI) $(SSIFLAGS) > $@
+	$(SSI) --in $< $(SSIFLAGS) > $@
 
 .PHONY: clean
 clean:
@@ -19,4 +19,4 @@ clean:
 
 .PRECIOUS: build/*.depend
 build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
-	cat $*.sxml | $(SSI) $(SSIFLAGS) --head build/$*.xml --deps > $@
+	$(SSI) --in $*.sxml $(SSIFLAGS) --head build/$*.xml --deps > $@

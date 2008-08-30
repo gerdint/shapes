@@ -9,7 +9,7 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- )
 
-SSIFLAGS=--includebase ${top_srcdir}/doc/parts/man -dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE) $(MORE_SSIFLAGS)
+SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE) $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 CLEANFILES = man.1
@@ -27,7 +27,7 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
 ${DEPDIR}/%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.dep ${docdir}/formats/html.xsl
-	if cat $< | ${SSI} ${SSIFLAGS} > ${DEPDIR}/$*.Txml; \
+	if ${SSI} --in $< ${SSIFLAGS} > ${DEPDIR}/$*.Txml; \
 	then \
 		mv ${DEPDIR}/$*.Txml $@; \
 	else \
@@ -36,7 +36,7 @@ ${DEPDIR}/%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.dep ${docdir}/formats/html.
 
 ${DEPDIR}/%.dep : ${docdir}/%/index.sxml
 	install -d ${DEPDIR}
-	if cat $< | $(SSI) $(SSIFLAGS) --head $< --deps > ${DEPDIR}/$*.Tdep; \
+	if $(SSI) --in $< $(SSIFLAGS) --head $< --deps > ${DEPDIR}/$*.Tdep; \
 	then \
 		mv ${DEPDIR}/$*.Tdep $@; \
 	else \
