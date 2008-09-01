@@ -74,10 +74,19 @@ bool strtobool( const char * str, const char * attribute );
 
 <INCLUDE_FILENAME>[\"][^\"]*[\"] |
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
+	const char * filearg = yytext + 1;  /* Skip leading delimiter. */
 	yytext[ strlen( yytext ) - 1 ] = '\0'; /* Remove trailing delimiter. */
-	std::string buf = dirStack_.top( ) + ( yytext + 1 );  /* Skip leading delimiter. */
+	if( filearg[0] == '\0' )
+		{
+			std::cerr << "Found empty file name in #include directive." << std::endl ;
+			exit( 1 );
+		}
+	includeFilename_ = expandDefines( filearg );
+	if( includeFilename_[0] != '/' )
+		{
+			includeFilename_ = dirStack_.top( ) + includeFilename_;
+		}
 	/* Here, we could compact away outward directory references, but we're too lazy at the moment. */
-	includeFilename_ = expandDefines( buf.c_str( ) );
 	BEGIN( INCLUDE );
 }
 
@@ -215,7 +224,7 @@ SSIScanner::doInclusion( )
 			*yyout << " " << includeFilename_ ;
 		}
 
-	std::ifstream * iFile = new std::ifstream( includeFilename_ );
+	std::ifstream * iFile = new std::ifstream( includeFilename_.c_str( ) );
 	if( ! iFile->good( ) )
 		{
 			std::cerr << "Failed to open included file: " << includeFilename_ << std::endl ;
@@ -224,7 +233,10 @@ SSIScanner::doInclusion( )
 
 	depthLimitStack_.push( currentDepthLimit_ );
 	metaInclusionStack_.push( currentMeta_ );
-
+	/* Here, we know that the filename is an absolute path, so we just discard what's after the
+	 * last slash, and we get the directory.
+	 */
+	dirStack_.push( includeFilename_.substr( 0, includeFilename_.rfind( '/' ) + 1 ) );
 	stateStack_.push( YY_CURRENT_BUFFER );
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
 }

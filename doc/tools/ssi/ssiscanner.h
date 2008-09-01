@@ -35,7 +35,7 @@ class SSIScanner : public ssiFlexLexer
 	bool onlyDependencies_;
 	std::stack< yy_buffer_state * > stateStack_;
 	std::stack< std::string > dirStack_;
-	char * includeFilename_;
+	std::string includeFilename_;
 	std::stack< size_t > depthLimitStack_;
 	size_t currentDepthLimit_;
 	std::stack< bool > metaInclusionStack_;
