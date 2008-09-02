@@ -39,10 +39,10 @@
 <example-with-output title="Sliders" internal-id="example/slider-use">
 <image pdf="doc/tutorial-slider-use_3.pdf" jpg="doc/tutorial-slider-use_y_big.jpg" />
 <source file="doc/tutorial-slider-use.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/tutorial-slider-use.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Sliders.  Given a slider, other sliders can be specified relative to the first one, either in terms of distance or in terms of spline time.  Then, there are many fields to access to get both geometric and representation-related information about the particular point along the path.  The right part of the picture shows that the velocity field <field name="v" /> varies along a circle, so this is an example of a non-geometric field.</p>
@@ -85,7 +85,7 @@
 <example-with-output title="Upsampling" internal-id="example/upsampling">
 <image pdf="features/upsample_3.pdf" jpg="features/upsample_y_big.jpg" />
 <source file="features/upsample.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/upsample.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/upsample.shape" -->]]>
 </source>
 <caption>
 	<p>Various ways of upsampling a path.</p>
@@ -96,7 +96,7 @@
 <example-with-output title="Sidepaths" internal-id="example/sidepaths">
 <image pdf="features/sidepaths_3.pdf" jpg="features/sidepaths_y_big.jpg" />
 <source file="features/sidepaths.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/sidepaths.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/sidepaths.shape" -->]]>
 </source>
 <caption>
 	<p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p>

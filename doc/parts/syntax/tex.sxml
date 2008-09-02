@@ -41,7 +41,7 @@
 <example-with-output title="Example" internal-id="example-boxedeq">
 <image pdf="features/boxedeq.pdf" jpg="features/boxedeq_y_small.jpg" />
 <source file="features/boxedeq.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/boxedeq.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/boxedeq.shape" -->]]>
 </source>
 </example-with-output>
 

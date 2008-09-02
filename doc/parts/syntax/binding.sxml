@@ -83,10 +83,10 @@ inc: [addn '1]
 
 <example-with-output title="Example" internal-id="example-lex-scopes">
 <source file="features/scopes.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/scopes.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/scopes.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/scopes.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/scopes.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Mutually recursive function definitions and reach-outs.</p>
@@ -159,10 +159,10 @@ or, if there are several paths to be stroked with the same pen:
 
 <example-with-output title="Example" internal-id="example-dyn-scopes">
 <source file="features/dynamic.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/dynamic.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/dynamic.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/dynamic.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/dynamic.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Dynamic variables, dynamic expressions, and dynamic bindings.</p>
