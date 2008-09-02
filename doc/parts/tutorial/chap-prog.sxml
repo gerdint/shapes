@@ -63,7 +63,7 @@ textGreaterThanEight: [textGreater y:8 ...]
 	</p>
 
 <example-with-output title="Evaluated cuts" internal-id="example/cute">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/curry.shape">
+<source file="features/curry.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/curry.shape" -->]]>
 </source>
 <stdout>
@@ -79,7 +79,7 @@ textGreaterThanEight: [textGreater y:8 ...]
 	<p>The lexical scope is the set of bindings which can be “seen” from a particular point in the code.  This is a very common concept, explained in more detail in <a part="syntax" id="syntax/binding/lexical" /> (where the reader will also find the example included below), and the reader is referred to <a method="google" query='"lexical binding"'/> for further in-depth discussions.  One thing to note about the lexical scope in <str-Shapes />, though, is that when a new binding is introduced, the scope where the binding is introduced is in scope where the right hand side expression is evaluated.  That is, defining (mutually) recursive functions is trivial.</p>
 
 <example-with-output title="Lexical binding" internal-id="example/lexical-binding">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/scopes.shape">
+<source file="features/scopes.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/scopes.shape" -->]]>
 </source>
 <stdout>
@@ -95,8 +95,8 @@ textGreaterThanEight: [textGreater y:8 ...]
 <p>Since dynamic bindings and the way it is accomplished in <str-Shapes /> is a very important topic for this tutorial, study the following examples carefully!  The first example just motivates the notation used for one of the operators used to combine dynamic bindings, do not expect to understand this example completely until after reading the second example.</p>
 
 <example-with-output title="Notation of the asymmetric binding union operator" internal-id="example/asymmetric-notation">
-<image pdf="asymmetric-notation_3.pdf" jpg="asymmetric-notation_y_small.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/asymmetric-notation.shape">
+<image pdf="features/asymmetric-notation_3.pdf" jpg="features/asymmetric-notation_y_small.jpg" />
+<source file="features/asymmetric-notation.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/asymmetric-notation.shape" -->]]>
 </source>
 <caption>
@@ -105,7 +105,7 @@ textGreaterThanEight: [textGreater y:8 ...]
 </example-with-output>
 
 <example-with-output title="Dynamic binding" internal-id="example/dynamic-binding">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/dynamic.shape">
+<source file="features/dynamic.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/dynamic.shape" -->]]>
 </source>
 <stdout>
@@ -173,7 +173,7 @@ picture: ( (TeX `Hello!´) &amp; [stroke (1cm,1cm)--(2cm,0cm)] )
 	<p>We end this section with an example.</p>
 
 <example-with-output title="States" internal-id="example/states">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/states.shape">
+<source file="features/states.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/states.shape" -->]]>
 </source>
 <stdout>

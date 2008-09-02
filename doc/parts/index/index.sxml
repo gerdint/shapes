@@ -8,6 +8,7 @@
 	<p>Without a reference documentation, the lanugage would not be defined. On the other hand, the structure of a reference documentation may not suit new users of the language, but writing an instructional text will be postponed until the program is ready for public use.</p>
 	<p>Here you will find descriptions of the various parts of the documetation, along with links taking you there.  You will also find a section describing the notation used thourghout the documentation.</p>
 </top>
+<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
 
 <section id="index/index">
 	<title>Index</title>

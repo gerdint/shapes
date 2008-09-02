@@ -303,8 +303,8 @@ facing: [../facing scale:true distort:true ...]
 				<p>If you ever considered solving the intricate problem of generating nice arrowheads for paths in <str-3D /> by simply treating the path as if it was in <str-2D />, think again, as the example below shows!</p>
 
 				<example-with-output title="Example" internal-id="example/facing-function">
-					<image pdf="facefun_3.pdf" jpg="facefun_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/facefun.shape">
+					<image pdf="features/facefun_3.pdf" jpg="features/facefun_y_big.jpg" />
+<source file="features/facefun.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/facefun.shape" -->]]>
 </source>
 				</example-with-output>
@@ -377,7 +377,7 @@ facing: [../facing scale:true distort:true ...]
 		</case>
 		<body>
 			<example-with-output title="Range construction" internal-id="example/ranges">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/ranges.shape">
+<source file="features/ranges.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/ranges.shape" -->]]>
 </source>
 <stdout>
@@ -431,8 +431,8 @@ facing: [../facing scale:true distort:true ...]
 				<p>Merge the two paths by merging the <field name="end" /> point of the first path with the <field name="begin" /> point of the second path.  It is not required for the two paths to intersect;  the merge operation is defined anyway by replacing the two merged points with one at the mean, taking one interpolation point form each path.  Use this to avoid vanishing spline segments when joining two consecutive paths.</p>
 				<p>Hopefully, the example below expresses the idea more clearly.</p>
 				<example-with-output title="Merging paths" internal-id="example/meetpaths">
-					<image pdf="mergepaths_3.pdf" jpg="mergepaths_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/showcase/mergepaths.shape">
+					<image pdf="showcase/mergepaths_3.pdf" jpg="showcase/mergepaths_y_big.jpg" />
+<source file="showcase/mergepaths.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/showcase/mergepaths.shape" -->]]>
 </source>
 <caption>

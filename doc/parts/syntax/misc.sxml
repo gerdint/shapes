@@ -98,8 +98,8 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 </remark>
 
 <example-with-output title="Example" internal-id="example-pathconstruction">
-<image pdf="pathconstruction.pdf" jpg="pathconstruction_y_small.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/pathconstruction.shape">
+<image pdf="features/pathconstruction.pdf" jpg="features/pathconstruction_y_small.jpg" />
+<source file="features/pathconstruction.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/pathconstruction.shape" -->]]>
 </source>
 </example-with-output>
@@ -126,7 +126,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
 <example-with-output title="Example" internal-id="example-evalorder">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/evalorder.shape">
+<source file="features/evalorder.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/evalorder.shape" -->]]>
 </source>
 <stdout>

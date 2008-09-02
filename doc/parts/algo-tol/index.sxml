@@ -7,6 +7,7 @@
 		<p>Advanced topics.</p>
 	</description>
 	<meta-selflink><part-href name="algo-tol" /></meta-selflink>
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
 	<top>
 		<p>Some of the operations conveniently accessible via <str-Shapes /> functions have non-trivial algorithms implementing them under the hood.  Often, these algorithms cannot be expressed without reference to tolerance values, values that often determine tradeoffs that the user may have an interest in controlling.  This part of the documentation begins by providing a guide to the various tolerace settings, and then follows descriptions of selected algorithms.</p>
 	</top>

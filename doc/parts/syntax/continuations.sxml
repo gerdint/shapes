@@ -18,7 +18,7 @@
 </remark>
 
 <example-with-output title="Example" internal-id="example-escape">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/escape.shape">
+<source file="features/escape.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/escape.shape" -->]]>
 </source>
 <stdout>

@@ -37,8 +37,8 @@
 <p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.  Note that there are additional fields in <str-3D />, and that it is not obvious how to best extend the definitions from <str-2D /> to <str-3D />.</p>
 
 <example-with-output title="Sliders" internal-id="example/slider-use">
-<image pdf="tutorial-slider-use_3.pdf" jpg="tutorial-slider-use_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-slider-use.shape">
+<image pdf="doc/tutorial-slider-use_3.pdf" jpg="doc/tutorial-slider-use_y_big.jpg" />
+<source file="doc/tutorial-slider-use.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
 </source>
 <stdout>
@@ -83,8 +83,8 @@
 		<p>The example below show the various methods applied to a variety of paths.</p>
 
 <example-with-output title="Upsampling" internal-id="example/upsampling">
-<image pdf="upsample_3.pdf" jpg="upsample_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/upsample.shape">
+<image pdf="features/upsample_3.pdf" jpg="features/upsample_y_big.jpg" />
+<source file="features/upsample.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/upsample.shape" -->]]>
 </source>
 <caption>
@@ -94,8 +94,8 @@
 
 <p>We end this section with an example showing an application of upsampling.  The seemingly simple abstraction is to compute a path, following a given path at a certain distance.  Basically, one would like to be able to compute one of the boundaries of a stroke along the path, but it is easy to also imagine more interesting generalizations.  The idea is easy as long as the path has a radius of curvature being larger than the distance between the original and the new path, but when it is not the situation gets much more involved, and it is for this reason the (very important) operation is not included in the kernel.</p>
 <example-with-output title="Sidepaths" internal-id="example/sidepaths">
-<image pdf="sidepaths_3.pdf" jpg="sidepaths_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/sidepaths.shape">
+<image pdf="features/sidepaths_3.pdf" jpg="features/sidepaths_y_big.jpg" />
+<source file="features/sidepaths.shape">
 <![CDATA[<!--#include virtual="$(EXAMPLES)/features/sidepaths.shape" -->]]>
 </source>
 <caption>
