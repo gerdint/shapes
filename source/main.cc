@@ -896,13 +896,22 @@ main( int argc, char ** argv )
 
 	if( ! Kernel::theDebugLog.initialized( ) )
 		{
-			if( baseName == "" )
+			std::string::size_type suffixSep = outputName.rfind( '.' );
+			if( suffixSep != std::string::npos && outputName.find( '/', suffixSep ) == std::string::npos )
 				{
-					Kernel::theDebugLog.setFilename( "#shapes.log" );
+					/* If there would have been a slash after the '.', the dot would have been part of a directory name.
+					 * Otherwise, we conclude that we have found the extension of a filename, and replace that extension
+					 * by ".log".
+					 */
+					Kernel::theDebugLog.setFilename( outputName.substr( 0, suffixSep ) + ".log" );
+				}
+			else if( baseName != "" )
+				{
+					Kernel::theDebugLog.setFilename( outDir + baseName + ".log" );
 				}
 			else
 				{
-					Kernel::theDebugLog.setFilename( outDir + baseName + ".log" );
+					Kernel::theDebugLog.setFilename( outDir + "#shapes.log" );
 				}
 		}
 
