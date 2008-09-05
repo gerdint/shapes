@@ -19,11 +19,11 @@ DEPENDS = build/tool-interface.depend
 
 all: $(DEPENDS) $(PRODUCTS)
 
-$(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) ../formats/man.xsl $(POSTPROCDIR)/man
-	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/man > $@
+$(MAN1DIR)/shapes.1: build/tool-interface.xml $(MANFORMAT) ../formats/man.xsl $(POSTPROCDIR)/postproc-man
+	$(SAXON) $< $(MANFORMAT) | $(POSTPROCDIR)/postproc-man > $@
 
-$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/html
-	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/html > $@
+$(HTMLDIR)/man.html: build/tool-interface.xml $(HTMLFORMAT) ../formats/html.xsl $(HTML_MORE_FORMATS) $(POSTPROCDIR)/postproc-html
+	$(SAXON) $< $(HTMLFORMAT) | $(POSTPROCDIR)/postproc-html > $@
 
-include ../Makefile
+include ../Makefile.incl
 -include $(wildcard build/*.depend)

@@ -1,42 +1,20 @@
 ## Please make sure that index is made last, since making the parts will ensure that meta data about file locations is generated.
 
-all-parts:
-	cd man; make
-	cd syntax; make
-	cd bindings; make
-	cd states; make
-	cd dynamic; make
-	cd types; make
-	cd state-types; make
-	cd tutorial; make
-	cd extensions; make
-	cd index; make
+DIRS = man syntax bindings states dynamic types state-types tutorial extensions index
 
-SSIFLAGS=-dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE) $(MORE_SSIFLAGS)
-SSI=$(SSIDIR)/ssipp
+all:
+	for d in $(DIRS); \
+	do \
+		make -C $$d all ; \
+	done
 
-$(POSTPROCDIR)/html: $(POSTPROCDIR)/html.l
-	cd $(POSTPROCDIR); make
-$(POSTPROCDIR)/man: $(POSTPROCDIR)/man.l
-	cd $(POSTPROCDIR); make
-$(SSI): $(SSIDIR)/main.cc $(SSIDIR)/ssiyylex.ll $(SSIDIR)/ssiscanner.h $(SSIDIR)/ssiscanner.cc
-	cd $(SSIDIR); make
+install:
 
-JAR1=/Library/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-JAR2=/home/rt/tidefelt/sw/Java/Extensions/saxonb9-0-0-2j/saxon9.jar
-ifneq ($(strip $(wildcard $(JAR1))),)
-SAXON=java -jar $(JAR1)
-else
-SAXON=java -jar $(JAR2)
-endif
+check:
 
-build/%.xml: %.sxml build/%.depend ../formats/html.xsl $(SSI)
-	cat $< | $(SSI) $(SSIFLAGS) > $@
-
-.PHONY: clean
+.PHONY: clean install all check
 clean:
-	-rm $(PRODUCTS)
+	for d in $(DIRS); do \
+		make -C $$d clean ; \
+	done
 
-.PRECIOUS: build/*.depend
-build/%.depend: %.sxml $(wildcard *.sxml) $(SSI)
-	cat $*.sxml | $(SSI) $(SSIFLAGS) --head build/$*.xml --deps > $@

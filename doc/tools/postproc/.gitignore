@@ -1,3 +1,5 @@
-/man
-/html
-/yylex.c
+html.c
+man.c
+postproc-html
+postproc-man
+yylex.c

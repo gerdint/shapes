@@ -12,3 +12,5 @@
 Makefile
 Makefile.in
 /libtool
+shapes-*/
+shapes-*.tar.gz

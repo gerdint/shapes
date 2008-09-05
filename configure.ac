@@ -14,6 +14,7 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_FLEX(2.5.33)
 AC_PROG_BISON(2.3)
+AM_PATH_SAXON(9)
 AC_PROG_LIBTOOL
 
 # Set compiler options
@@ -61,8 +62,11 @@ AC_FUNC_STRFTIME
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([floor memchr memset pow rint sqrt strchr strdup strrchr strtol])
 
-AC_CONFIG_FILES([Makefile source/Makefile doc/Makefile resources/Makefile
-                 test/Makefile test/text/Makefile test/graphics/Makefile])
+AC_CONFIG_FILES([Makefile source/Makefile resources/Makefile
+                 test/Makefile test/text/Makefile test/graphics/Makefile
+                 doc/Makefile doc/output/Makefile doc/tools/Makefile
+                 doc/tools/ssi/Makefile doc/tools/postproc/Makefile
+                 doc/build/Makefile doc/build/man/Makefile])
 AC_OUTPUT
 
 if test "X$COMPARE" != "Xyes"
@@ -70,4 +74,11 @@ then
   echo "\
 WARNING: The program \`compare' was not found, without it installed
          the tests are likely to fail."
+fi
+
+if test "X$HAVE_SAXON" != "X1"
+then
+  echo "\
+WARNING: The program \`Saxon' was not found, without it installed
+         the documentation cannot be rebuilt."
 fi

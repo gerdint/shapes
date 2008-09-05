@@ -39,9 +39,10 @@ class SSIScanner : public ssiFlexLexer
 	size_t currentDepthLimit_;
 	std::stack< bool > metaInclusionStack_;
 	bool currentMeta_;
+	char * includebase_;
 	void more( );
 public:
-	SSIScanner( bool onlyDependencies, std::istream * yyin = 0, std::ostream * yyout = 0 );
+	SSIScanner( bool onlyDependencies, std::istream * yyin = 0, std::ostream * yyout = 0, const char * includebase = "" );
 	virtual ~SSIScanner( );
 	virtual int yylex( );
  private:
