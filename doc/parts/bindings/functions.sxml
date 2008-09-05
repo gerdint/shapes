@@ -436,7 +436,7 @@ facing: [../facing scale:true distort:true ...]
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/showcase/mergepaths.shape" -->]]>
 </source>
 <caption>
-	<p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p>
+<!--	FIXME: <p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p> -->
 </caption>
 				</example-with-output>
 			</description>
