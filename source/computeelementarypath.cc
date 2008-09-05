@@ -202,7 +202,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 				SINGLELOOP1( CLASSTREE1_Path2D, QUICKTYPECASE )
 					{
 						const Lang::Path2D * subPath = reinterpret_cast< const Lang::Path2D * >( node );
-						subPath->elementaryJob( & nodeStack, pth );
+						subPath->elementaryJob( & nodeStack, pth, & basePoint );
 					}
 					break;
 				default:

@@ -197,12 +197,13 @@ Lang::ElementaryPath2D::typed_transformed( const Lang::Transform2D & tf ) const
 }
 
 void
-Lang::ElementaryPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::ElementaryPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
 	for( const_iterator i = begin( ); i != end( ); ++i )
 		{
 			pth->push_back( new Concrete::PathPoint2D( **i ) );
 		}
+	*basePoint = *(back( )->mid_);
 }
 
 Concrete::Time

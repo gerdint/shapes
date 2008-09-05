@@ -705,9 +705,13 @@ Lang::ClosedPath2D::~ClosedPath2D( )
 DISPATCHIMPL( ClosedPath2D );
 
 void
-Lang::ClosedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::ClosedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
-	openPath_->elementaryJob( nodeStack, pth );
+	openPath_->elementaryJob( nodeStack, pth, basePoint );
+	/*
+	 * Although this seems incorrect, as the fact that this path is closed will not be respected,
+	 * this should not be a problem since it is not allowed to connect closed paths with anything.
+	 */
 }
 
 void
@@ -727,7 +731,7 @@ Lang::Connection2D::~Connection2D( )
 { }
 
 void
-Lang::Connection2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::Connection2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
 	nodeStack->push( front_.getPtr( ) );
 	nodeStack->push( rear_.getPtr( ) );
@@ -751,7 +755,7 @@ Lang::SinglePointPath2D::~SinglePointPath2D( )
 { }
 
 void
-Lang::SinglePointPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::SinglePointPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
 	nodeStack->push( thePoint_.getPtr( ) );
 }
@@ -816,7 +820,7 @@ Lang::HeadedPath2D::~HeadedPath2D( )
 { }
 
 void
-Lang::HeadedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::HeadedPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
 	if( frontPathPoint_ == NullPtr< const Lang::Value >( ) )
 		{
@@ -850,7 +854,7 @@ Lang::HeadedPath2D_helper::~HeadedPath2D_helper( )
 { }
 
 void
-Lang::HeadedPath2D_helper::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const
+Lang::HeadedPath2D_helper::elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const
 {
 	if( bodyPath_->size( ) <= 1 )
 		{
@@ -865,6 +869,9 @@ Lang::HeadedPath2D_helper::elementaryJob( std::stack< const Lang::Value * > * no
 		{
 			pth->push_back( new Concrete::PathPoint2D( **i ) );
 		}
+
+	--i; /* Go back to the last point added to pth. */
+	*basePoint = *((*i)->mid_);
 }
 
 void
@@ -1082,6 +1089,7 @@ Lang::Path2Din3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack,
 		{
 			pth->push_back( (*i)->typed_to3D( ) );
 		}
+	*basePoint = *(elementaryPath2D_->back( )->mid_);
 }
 
 void
@@ -1107,6 +1115,10 @@ void
 Lang::ClosedPath3D::elementaryJob( std::stack< const Lang::Path3D * > * nodeStack, Lang::ElementaryPath3D * pth, Concrete::Coords3D * basePoint ) const
 {
 	openPath_->elementaryJob( nodeStack, pth, basePoint );
+	/*
+	 * Although this seems incorrect, as the fact that this path is closed will not be respected,
+	 * this should not be a problem since it is not allowed to connect closed paths with anything.
+	 */
 }
 
 void
@@ -1343,6 +1355,9 @@ Lang::HeadedPath3D_helper::elementaryJob( std::stack< const Lang::Path3D * > * n
 		{
 			pth->push_back( new Concrete::PathPoint3D( **i ) );
 		}
+
+	--i; /* Go back to the last point added to pth. */
+	*basePoint = *((*i)->mid_);
 }
 
 void

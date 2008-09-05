@@ -116,7 +116,7 @@ namespace Shapes
 		virtual RefCountPtr< const Lang::Path2D > typed_transformed( const Lang::Transform2D & tf ) const = 0;
 		virtual RefCountPtr< const Lang::Path3D > typed_to3D( const RefCountPtr< const Lang::Path2D > & self ) const = 0;
 		virtual void writePath( std::ostream & os ) const = 0;
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const = 0;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const = 0;
 		TYPEINFODECL;
 		DISPATCHDECL;
 	};
@@ -145,7 +145,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Path2D > openPath_;
 		ClosedPath2D( RefCountPtr< const Lang::Path2D > openPath );
 		virtual ~ClosedPath2D( );
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -165,7 +165,7 @@ namespace Shapes
 		virtual RefCountPtr< const Lang::Path2D > typed_transformed( const Lang::Transform2D & tf ) const;
 		virtual RefCountPtr< const Lang::Path3D > typed_to3D( const RefCountPtr< const Lang::Path2D > & self ) const;
 		virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 
 		size_t duration( ) const;
 		bool controllingMaximizer( const Lang::FloatPair & d, Lang::Coords2D * dst ) const;
@@ -277,7 +277,7 @@ namespace Shapes
 		Kernel::ValueRef front_;
 		Connection2D( Kernel::ValueRef rear, Kernel::ValueRef front );
 		~Connection2D( );
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -287,7 +287,7 @@ namespace Shapes
 		Kernel::ValueRef thePoint_;
 		SinglePointPath2D( Kernel::ValueRef thePoint );
 		~SinglePointPath2D( );
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -297,7 +297,7 @@ namespace Shapes
 	public:
 		HeadedPath2D_helper( const RefCountPtr< const Lang::ElementaryPath2D > & bodyPath );
 		~HeadedPath2D_helper( );
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -309,7 +309,7 @@ namespace Shapes
 	public:
 		HeadedPath2D( Kernel::ValueRef rear, const RefCountPtr< const Lang::ElementaryPath2D > & bodyPath, Kernel::ValueRef front );
 		~HeadedPath2D( );
-		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth ) const;
+		virtual void elementaryJob( std::stack< const Lang::Value * > * nodeStack, Lang::ElementaryPath2D * pth, Concrete::Coords2D * basePoint ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -356,7 +356,7 @@ namespace Shapes
 		virtual ~Path3D( );
 
 		void close( );
-		bool isClosed( ) const; 
+		bool isClosed( ) const;
 		virtual RefCountPtr< const Lang::Geometric3D > transformed( const Lang::Transform3D & tf, const RefCountPtr< const Lang::Geometric3D > & self ) const;
 		virtual RefCountPtr< const Lang::Path3D > typed_transformed( const Lang::Transform3D & tf ) const = 0;
 		virtual RefCountPtr< const Lang::Geometric2D > to2D( const Kernel::PassedDyn & dyn, const RefCountPtr< const Lang::Geometric3D > & self ) const;
