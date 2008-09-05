@@ -4,7 +4,10 @@ SAXON = @SAXON@
 
 EXDIR=${top_srcdir}/examples
 EXOUTDIR=${top_srcdir}/doc/output
-MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell date -d"$(VERSION_DATE)" +%F || echo ---)
+DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
+MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
+	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
+               grep -e ${DATE_PATTERN} 2> /dev/null || echo --- )
 
 SSIFLAGS=--includebase ${top_srcdir}/doc/parts/man -dEXAMPLES=$(EXDIR) -dEXAMPLES_OUTPUT=$(EXOUTDIR) -dBASE=$(HREF_BASE) $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
