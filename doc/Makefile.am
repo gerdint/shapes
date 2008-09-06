@@ -1,1 +1,1 @@
-SUBDIRS = tools output build
+SUBDIRS = tools build
