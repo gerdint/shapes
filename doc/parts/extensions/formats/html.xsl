@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" indent="no" />
+<xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
@@ -41,7 +41,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="external/book">
 	<li>
 		<xsl:element name="a">
-			<xsl:attribute name="href">../<xsl:apply-templates select="meta-selflink" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
 			<b><xsl:apply-templates select="title" /></b>
 		</xsl:element>:
 		<xsl:apply-templates select="description" />

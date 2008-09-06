@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" indent="no" />
+<xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
 
@@ -9,7 +9,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <html>
     <head>
       <title><xsl:apply-templates select="title" /></title>
-      <link rel="stylesheet" href="../../styles/html/shapes.css" />
+			<xsl:element name="link">
+				<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />shapes.css</xsl:attribute>
+			</xsl:element>
     </head>
     <body>
 			<h1><xsl:apply-templates select="title" /></h1>
@@ -117,12 +120,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<p>
 			<b>See also:</b>
 			<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
-				<xsl:text>  </xsl:text>
-				<xsl:element name="a">
-					<xsl:attribute name="class">discrete</xsl:attribute>
-					<xsl:attribute name="href">bindings.html#<xsl:value-of select="../../@identifier" /></xsl:attribute>
-					<varname><xsl:value-of select="../../@identifier" /></varname>
-				</xsl:element>
+				<xsl:text>  </xsl:text>
+				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
 			</xsl:for-each>
 		</p>
 	</xsl:if>
@@ -177,11 +176,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:for-each>
 			<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
 				<xsl:text>  </xsl:text>
-				<xsl:element name="a">
-					<xsl:attribute name="class">discrete</xsl:attribute>
-					<xsl:attribute name="href">bindings.html#<xsl:value-of select="../../@identifier" /></xsl:attribute>
-					<varname><xsl:value-of select="../../@identifier" /></varname>
-				</xsl:element>
+				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
 			</xsl:for-each>
 		</p>
 	</xsl:if>

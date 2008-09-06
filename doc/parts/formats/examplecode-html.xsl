@@ -25,9 +25,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="example-with-output/image[@*]">
   <tr align="center"><td>
       <xsl:element name="a">
-	<xsl:attribute name="href">../../output/<xsl:value-of select="@pdf" /></xsl:attribute>
+	<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:value-of select="/book/examples-home/@href" /><xsl:value-of select="@pdf" /></xsl:attribute>
 	<xsl:element name="img">
-	  <xsl:attribute name="src">../../output/<xsl:value-of select="@jpg" /></xsl:attribute>
+	  <xsl:attribute name="src"><xsl:value-of select="/book/base/@href" /><xsl:value-of select="/book/examples-home/@href" /><xsl:value-of select="@jpg" /></xsl:attribute>
 	  <xsl:attribute name="alt">Angry</xsl:attribute>
 	</xsl:element>
       </xsl:element>
@@ -49,7 +49,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
       </xsl:element>
       — 
       <xsl:element name="a">
-				<xsl:attribute name="href"><xsl:value-of select="@file" /></xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:value-of select="/book/examples-home/@href" /><xsl:value-of select="@file" /></xsl:attribute>
 				visit
       </xsl:element>
   </td></tr>

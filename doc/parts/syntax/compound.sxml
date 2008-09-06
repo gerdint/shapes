@@ -156,9 +156,9 @@
 </p>
 
 <example-with-output title="Example" internal-id="example-cornerpoint">
-<image pdf="cornerpoint.pdf" jpg="cornerpoint_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/cornerpoint.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/cornerpoint.shape" -->]]>
+<image pdf="features/cornerpoint.pdf" jpg="features/cornerpoint_y_big.jpg" />
+<source file="features/cornerpoint.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/cornerpoint.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -250,11 +250,11 @@ Unlike a function application, ordered and named items do not interact; a named 
 </p>
 
 <example-with-output title="Example" internal-id="example-values">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/values.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/values.shape" -->]]>
+<source file="features/values.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/values.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/values.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/values.stdout" -->]]>
 </stdout>
 </example-with-output>
 

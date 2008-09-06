@@ -73,9 +73,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 
 <p>The complete example with output is given below.</p>
 <example-with-output title="Transforms" internal-id="example/transforms">
-<image pdf="tutorial-transforms_3.pdf" jpg="tutorial-transforms_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-transforms.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-transforms.shape" -->]]>
+<image pdf="doc/tutorial-transforms_3.pdf" jpg="doc/tutorial-transforms_y_big.jpg" />
+<source file="doc/tutorial-transforms.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-transforms.shape" -->]]>
 </source>
 <caption>
 	<p>A label painted once in its original location, once after a rotation, and once after a shift.</p>
@@ -102,9 +102,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 
 <p>Basically, path construction is about entering coordinates in a convenient way.  The cubic splines (often referred to as <em>Bezier splines</em>) that <str-Shapes /> uses for paths (which is the obvious choice since this is was is supported by <str-PDF />) consist both of points <em>on</em> the path and interpolation points that control the shape of the path between the points that are on the path.  Basically each path segment between two points on the path have one interpolation point associated with the starting point, and one associated with the final point.  Each of the interpolation points may be omitted, which corresponds to the limiting case when the interpolation point approaches the associated point on the path.  The following example tries to illustrate the roles of points on the path and of the interpolation points.</p>
 <example-with-output title="Single Bezier spline" internal-id="example/one-segment">
-<image pdf="tutorial-one-segment_3.pdf" jpg="tutorial-one-segment_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-one-segment.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-one-segment.shape" -->]]>
+<image pdf="doc/tutorial-one-segment_3.pdf" jpg="doc/tutorial-one-segment_y_big.jpg" />
+<source file="doc/tutorial-one-segment.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-one-segment.shape" -->]]>
 </source>
 <caption>
 	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.  Absence of an interpolation point — that is, an interpolation point which is logically coinciding with the terminal point it is associated with — is simply represented by not marking the interpolation point at all.  Note that the absence of an interpolation point is the limiting case as the interpolation point approaches the terminal point.</p>
@@ -114,9 +114,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <p>In the next example we will see how to connect spline segments, and how offsets are interpreted.</p>
 
 <example-with-output title="Connected Bezier splines" internal-id="example/bezier-connected">
-<image pdf="tutorial-bezier-connected_3.pdf" jpg="tutorial-bezier-connected_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-bezier-connected.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-bezier-connected.shape" -->]]>
+<image pdf="doc/tutorial-bezier-connected_3.pdf" jpg="doc/tutorial-bezier-connected_y_big.jpg" />
+<source file="doc/tutorial-bezier-connected.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-bezier-connected.shape" -->]]>
 </source>
 <caption>
 	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.  Solid lines with arrowhead indicates how offset coordinates are interpreted during path construction.</p>
@@ -151,9 +151,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <body>
 <p>You are already familiar with one of the path-painting functions, namely <binding name="stroke" />.  A similar function, <binding name="fill" />, will fill the path with paint instead of stroking it, and <binding name="fillstroke" /> will do both.  The following example also shows how to put an arrowhead on the path while stroking it.  Besides, it also shows how <binding name="spot" /> is used to make a round spot at a given point.</p>
 <example-with-output title="Path-painting" internal-id="example/path-painting">
-<image pdf="tutorial-path-painting_3.pdf" jpg="tutorial-path-painting_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-path-painting.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-path-painting.shape" -->]]>
+<image pdf="doc/tutorial-path-painting_3.pdf" jpg="doc/tutorial-path-painting_y_big.jpg" />
+<source file="doc/tutorial-path-painting.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-path-painting.shape" -->]]>
 </source>
 <caption>
 	<p>Filling, stroking, filling-and-stroking, and stroking a path with an arrow head.  Spotting a point can be seen as a special case of stroking a singleton path.</p>
@@ -176,9 +176,9 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <p>Until now, all our drawings have been black on white, and all strokes of the default width <physical><scalar>1</scalar><unit>bp</unit></physical>.  In <str-PDF /> such properties are part of the <em>graphics state</em>, and <str-Shapes /> gives you control over these parameters via dynamic variables (see <a id="prog/functions" /> below); just like <dynvar name="defaultunit" /> has an impact on how smooth paths come out, <dynvar name="width" /> controls how thick the lines coming from <binding name="stroke" /> are.</p>
 <p>As usual, we use an example to show what the most important parameters are called, and how to set them.</p>
 <example-with-output title="Graphics-params" internal-id="example/graphics-params">
-<image pdf="tutorial-graphic-params_3.pdf" jpg="tutorial-graphics-params_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-graphics-params.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-graphics-params.shape" -->]]>
+<image pdf="doc/tutorial-graphics-params_3.pdf" jpg="doc/tutorial-graphics-params_y_big.jpg" />
+<source file="doc/tutorial-graphics-params.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-graphics-params.shape" -->]]>
 </source>
 <caption>
 	<p>Changing parameters in the <str-PDF /> graphics state, such as stroking and non-stroking (that is, fill) color, dashpattern, <abbr-etc />.</p>
