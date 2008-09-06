@@ -203,7 +203,10 @@ Lang::ElementaryPath2D::elementaryJob( std::stack< const Lang::Value * > * nodeS
 		{
 			pth->push_back( new Concrete::PathPoint2D( **i ) );
 		}
-	*basePoint = *(back( )->mid_);
+	if( ! empty( ) )
+		{
+			*basePoint = *(back( )->mid_);
+		}
 }
 
 Concrete::Time
