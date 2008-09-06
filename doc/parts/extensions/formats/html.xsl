@@ -41,7 +41,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="external/book">
 	<li>
 		<xsl:element name="a">
-			<xsl:attribute name="href">../<xsl:apply-templates select="meta-selflink" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
 			<b><xsl:apply-templates select="title" /></b>
 		</xsl:element>:
 		<xsl:apply-templates select="description" />

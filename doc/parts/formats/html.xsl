@@ -57,7 +57,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template name="part-to-href">
 	<xsl:param name="name" />
-	<xsl:choose>
+	<xsl:value-of select="/book/base/@href" /><xsl:choose>
 		<xsl:when test="$name='syntax'">syntax.html</xsl:when>
 		<xsl:when test="$name='bindings'">bindings.html</xsl:when>
 		<xsl:when test="$name='states'">states.html</xsl:when>
@@ -72,7 +72,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 <xsl:template name="extension-to-href">
 	<xsl:param name="name" />
-	<xsl:text>extensions/</xsl:text><xsl:value-of select="$name" /><xsl:text>.html</xsl:text>
+	<xsl:value-of select="/book/base/@href" /><xsl:text>extensions/</xsl:text><xsl:value-of select="$name" /><xsl:text>.html</xsl:text>
 </xsl:template>
 <xsl:template name="id-to-anchor-name">
 	<xsl:param name="id" />

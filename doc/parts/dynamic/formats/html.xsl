@@ -75,10 +75,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<p><b>Used by: </b>
 		<xsl:for-each select="/book/external/section/system-binding[@identifier]">
 			<xsl:if test="function/case/dynamic-references/dynvar[@name=$self]">
-				<xsl:element name="a">
-					<xsl:attribute name="href">bindings.html#<xsl:value-of select="@identifier" /></xsl:attribute>
-					<varname><xsl:value-of select="@identifier" /></varname>
-				</xsl:element>
+				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
 			</xsl:if>
 		</xsl:for-each>
 	</p>
