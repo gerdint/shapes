@@ -107,7 +107,10 @@ Lang::ElementaryPath3D::elementaryJob( std::stack< const Lang::Path3D * > * node
 		{
 			pth->push_back( new Concrete::PathPoint3D( **i ) );
 		}
-	*basePoint = *(back( )->mid_);
+	if( ! empty( ) )
+		{
+			*basePoint = *(back( )->mid_);
+		}
 }
 
 Concrete::Time
