@@ -3,3 +3,5 @@ man.c
 postproc-html
 postproc-man
 yylex.c
+*.o
+
