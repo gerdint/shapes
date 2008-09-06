@@ -145,7 +145,7 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/sidepaths.shape" -->]]>
 </source>
 <caption>
-	<!-- <p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p> -->
+	<p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p>
 </caption>
 </example-with-output>
 

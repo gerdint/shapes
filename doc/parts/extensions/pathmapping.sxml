@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>pathmapping</title>
+	<description>
+		<p>Functions for some non-affine path transforms.</p>
+	</description>
+	<meta-selflink><extension-href name="pathmapping" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<needs>
+	</needs>
+	<top>
+		<alphabetical-index/>
+		<p>The typical example of a non-affine path transform is to compute a path the follows the original path at a certain distance.</p>
+	</top>
+
+	<section id="extensions/pathmapping/bindings">
+		<title>Bindings</title>
+		<body>
+			<p>The extentsion consists of just a few bindings, and we turn directly to the details of each.</p>
+
+		<system-binding identifier="pathmap">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="pth">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="f">
+							<type>
+								<function-type>
+									<arguments>
+										<arg><named-type name="Slider" /></arg>
+										<arg><named-type name="Slider" /></arg>
+									</arguments>
+									<result><named-type name="Path" /></result>
+								</function-type>
+							</type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Construct new path by mapping each pair of consecutive path sliders (at integer spline times) to a new path segment.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="sidepath">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="pth">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="dst">
+							<type><named-type name="Length" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Construct path that follows the given path at the specified distance.  Uses default radii to interpolation points.</p>
+						<p>The implementation is an application of <binding extension="pathmapping" name="pathmap" />.</p>
+					</description>
+				</case>
+				<see-also><binding extension="pathmapping" name="sidepath2" /></see-also>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="sidepath2">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="pth">
+							<type><named-type name="Path" /></type>
+						</arg>
+						<arg identifier="dst">
+							<type><named-type name="Length" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Construct path that follows the given path at the specified distance.  Determines radii to interpolation points using information from the given path.</p>
+						<p>The implementation is an application of <binding extension="pathmapping" name="pathmap" />.</p>
+					</description>
+				</case>
+			</function>
+			<see-also><binding extension="pathmapping" name="sidepath" /></see-also>
+		</system-binding>
+
+		</body>
+		</section> <!-- End of  -->
+</book>

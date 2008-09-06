@@ -496,7 +496,7 @@ is equivalent to
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/showcase/mergepaths.shape" -->]]>
 </source>
 <caption>
-<!--	FIXME: <p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p> -->
+	<p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p>
 </caption>
 				</example-with-output>
 			</description>
