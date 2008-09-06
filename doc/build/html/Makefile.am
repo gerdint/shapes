@@ -102,7 +102,7 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD : $$( sed  -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL : $$( sed  -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -114,7 +114,7 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $*.html
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
@@ -138,3 +138,13 @@ all-am : html-am
 html-am : ${html_DATA} shapes.css
 	${MAKE} html-BUILD
 
+install-am : html-am
+	${MAKE} html-INSTALL
+
+html-INSTALL : ${html_DATA} shapes.css
+	for f in $^; \
+	do \
+		dir="${htmldir}/$$( dirname $$f )" ; \
+		test -d  $$dir || install -d -m755 $$dir ; \
+		install -m444 $$f $$dir ; \
+	done
