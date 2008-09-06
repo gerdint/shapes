@@ -37,12 +37,12 @@
 <p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.  Note that there are additional fields in <str-3D />, and that it is not obvious how to best extend the definitions from <str-2D /> to <str-3D />.</p>
 
 <example-with-output title="Sliders" internal-id="example/slider-use">
-<image pdf="tutorial-slider-use_3.pdf" jpg="tutorial-slider-use_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-slider-use.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
+<image pdf="doc/tutorial-slider-use_3.pdf" jpg="doc/tutorial-slider-use_y_big.jpg" />
+<source file="doc/tutorial-slider-use.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/tutorial-slider-use.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Sliders.  Given a slider, other sliders can be specified relative to the first one, either in terms of distance or in terms of spline time.  Then, there are many fields to access to get both geometric and representation-related information about the particular point along the path.  The right part of the picture shows that the velocity field <field name="v" /> varies along a circle, so this is an example of a non-geometric field.</p>
@@ -63,9 +63,9 @@
 		<p>Let us begin with a concept which appears also in <str-MetaPost />, namely to find the first point on a path where the path has a certain direction.  In <str-Shape /> one does not specify the direction, but maximize the function in an orthogonal direction.  This avoids undefined results when the given direction is never attained, and generalizes immediately to <str-3D />.  The function that does the job is <binding name="maximizer" />.  Sometimes, one is only interested in a coarse maximization, looking only at the points where the path goes through a path point, in which case <binding name="pathpoint_maximizer" /> does the job.  A third option is to maximize over all the control points of the path (the convex hull of which is known to contain the path).  Note, though, that while <binding name="maximizer" /> and <binding name="pathpoint_maximizer" /> yield a <named-type name="PathSlider" />, <binding name="controlling_maximizer" /> cannot do this but returns a <named-type name="Coords" /> since the maximizing point is not on the path in general.</p>
 
 <example-with-output title="Maximizers" internal-id="example/maximizer">
-<image pdf="tutorial-maximizer_3.pdf" jpg="tutorial-maximizer_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-maximizer.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-maximizer.shape" -->]]>
+<image pdf="doc/tutorial-maximizer_3.pdf" jpg="doc/tutorial-maximizer_y_big.jpg" />
+<source file="doc/tutorial-maximizer.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-maximizer.shape" -->]]>
 </source>
 <caption>
 	<p>Maximizing in the direction indicated by the arrow.  Control points of the path are marked by connecting them with blue lines to the path point they belong to.  The first maximizing point on the path is marked with a red spot, the first maximizing point through a path point is marked with a small circle, and the maximizing point among all the control points is marked with a cross.</p>
@@ -75,9 +75,9 @@
   <p>The next concept for point references is to minimize the distance to a given point.  This is done using <binding name="approximator" />, and analogous to the maximization suite, there is also a <binding name="pathpoint_approximator" />.  The next example gives an illustration in <str-2D />, but the concept makes sense and is implemented also in <str-3D />.</p>
 
 <example-with-output title="Point approximators" internal-id="example/approximator">
-<image pdf="tutorial-approximator_3.pdf" jpg="tutorial-approximator_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-approximator.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-approximator.shape" -->]]>
+<image pdf="doc/tutorial-approximator_3.pdf" jpg="doc/tutorial-approximator_y_big.jpg" />
+<source file="doc/tutorial-approximator.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-approximator.shape" -->]]>
 </source>
 <caption>
 	<p>Minimizing the distance to the point marked with a cross.  The first maximizing point on the path is marked with a red spot, and the first maximizing point through a path point is marked with a small circle.</p>
@@ -87,9 +87,9 @@
   <p>Another concept for point references is that of intersection points.  This has only been implemented in <str-2D /> as the function <binding name="intersection" /> (where the intersection with another path can be found), since <str-Shapes /> does not support the abstraction of a general surface in <str-3D />.  There is a generalization of intersection of paths which generalizes to any <str-3D /> and that is to find the point where the path is closest to the other path, however, this it not implemented at the moment.  Note that there may be no intersection at all, in which case <binding name="intersection" /> will invoke an error handler, see the following example.</p>
 
 <example-with-output title="Path intersection" internal-id="example/intersection">
-<image pdf="tutorial-intersection_3.pdf" jpg="tutorial-intersection_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-intersection.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-intersection.shape" -->]]>
+<image pdf="doc/tutorial-intersection_3.pdf" jpg="doc/tutorial-intersection_y_big.jpg" />
+<source file="doc/tutorial-intersection.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-intersection.shape" -->]]>
 </source>
 <caption>
 	<p>Finding the first point on the solid black path (direction indicated by the arrow) where it intersects with the dashed blue path (direction not important).  The intersection is marked with a red spot, and an error handler is used to treat the case when there is no intersection.</p>
@@ -99,9 +99,9 @@
   <p>OK, that's pretty much all for now; more point references may be added in the future.  However, it should be mentioned here that there is no built in support for evaluating the point references on anything smaller than the whole path.  The last example in this section shows how this can be done manually.</p>
 
 <example-with-output title="Subpath intersection" internal-id="example/subpath-intersection">
-<image pdf="tutorial-subpath-intersection_3.pdf" jpg="tutorial-subpath-intersection_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/doc/tutorial-subpath-intersection.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/doc/tutorial-subpath-intersection.shape" -->]]>
+<image pdf="doc/tutorial-subpath-intersection_3.pdf" jpg="doc/tutorial-subpath-intersection_y_big.jpg" />
+<source file="doc/tutorial-subpath-intersection.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-subpath-intersection.shape" -->]]>
 </source>
 <caption>
 	<p>Finding the first point on the solid black path (direction indicated by the arrow), between the two circles, where it intersects with the dashed blue path (direction not important).  The intersection is marked with a red spot.  Note that one must make use of arc length rather than spline time to relate the slider on the sub path to a slider on the whole path (which makes this a bit more expensive and inaccurate compared to what a built-in solution could offer).</p>
@@ -129,9 +129,9 @@
 		<p>The example below show the various methods applied to a variety of paths.</p>
 
 <example-with-output title="Upsampling" internal-id="example/upsampling">
-<image pdf="upsample_3.pdf" jpg="upsample_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/upsample.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/upsample.shape" -->]]>
+<image pdf="features/upsample_3.pdf" jpg="features/upsample_y_big.jpg" />
+<source file="features/upsample.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/upsample.shape" -->]]>
 </source>
 <caption>
 	<p>Various ways of upsampling a path.</p>
@@ -140,12 +140,12 @@
 
 <p>We end this section with an example showing an application of upsampling.  The seemingly simple abstraction is to compute a path, following a given path at a certain distance.  Basically, one would like to be able to compute one of the boundaries of a stroke along the path, but it is easy to also imagine more interesting generalizations.  The idea is easy as long as the path has a radius of curvature being larger than the distance between the original and the new path, but when it is not the situation gets much more involved, and it is for this reason the (very important) operation is not included in the kernel.</p>
 <example-with-output title="Sidepaths" internal-id="example/sidepaths">
-<image pdf="sidepaths_3.pdf" jpg="sidepaths_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/sidepaths.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/sidepaths.shape" -->]]>
+<image pdf="features/sidepaths_3.pdf" jpg="features/sidepaths_y_big.jpg" />
+<source file="features/sidepaths.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/sidepaths.shape" -->]]>
 </source>
 <caption>
-	<p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p>
+	<!-- <p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p> -->
 </caption>
 </example-with-output>
 

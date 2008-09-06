@@ -18,11 +18,11 @@
 </remark>
 
 <example-with-output title="Example" internal-id="example-escape">
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/escape.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/escape.shape" -->]]>
+<source file="features/escape.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/escape.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include virtual="$(EXAMPLES_OUTPUT)/escape.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/escape.stdout" -->]]>
 </stdout>
 </example-with-output>
 

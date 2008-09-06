@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" indent="no" />
+<xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
@@ -10,7 +10,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <html>
     <head>
       <title><xsl:value-of select="title" /></title>
-      <link rel="stylesheet" href="../../styles/html/shapes.css" />
+			<xsl:element name="link">
+				<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />shapes.css</xsl:attribute>
+			</xsl:element>
     </head>
     <body>
 			<h1><xsl:value-of select="title" /></h1>

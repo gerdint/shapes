@@ -1,1 +1,0 @@
-build/bindings.xml: predicates.sxml functions.sxml ../../../examples/showcase/mergepaths.shape simple.sxml misc.sxml types.sxml hot.sxml non-pure.sxml syntax.sxml 3D.sxml ../../../examples/features/facefun.shape

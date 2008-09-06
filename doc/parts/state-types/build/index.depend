@@ -1,1 +1,0 @@
-build/index.xml: containers.sxml streams.sxml misc.sxml ../bindings/functions.sxml ../../../examples/features/facefun.shape ../../../examples/features/ranges.shape ../../output/ranges.stdout ../../../examples/showcase/mergepaths.shape ../syntax/operators.sxml

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" indent="no" />
+<xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
 
@@ -9,10 +9,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <html>
     <head>
       <title><xsl:apply-templates select="title" /></title>
-			<xsl:if test="base/@href">
-				<xsl:element name="base"><xsl:attribute name="href"><xsl:value-of select="base/@href" /></xsl:attribute></xsl:element>
-			</xsl:if>
-      <link rel="stylesheet" href="../../styles/html/shapes.css" />
+			<xsl:element name="link">
+				<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />shapes.css</xsl:attribute>
+			</xsl:element>
     </head>
     <body>
 			<h0><xsl:apply-templates select="title" /></h0>
@@ -47,7 +47,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="external/book">
 	<li>
 		<xsl:element name="a">
-			<xsl:attribute name="href"><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
 			<b><xsl:apply-templates select="title" /></b>
 		</xsl:element>:
 		<xsl:apply-templates select="description" />
@@ -57,7 +57,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="external/man">
 	<li>
 		<xsl:element name="a">
-			<xsl:attribute name="href"><xsl:apply-templates select="manhead/meta-selflink" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:apply-templates select="manhead/meta-selflink" /></xsl:attribute>
 			<b><xsl:apply-templates select="manhead/center-header" /></b>
 		</xsl:element>:
 		<xsl:apply-templates select="manhead/description" />

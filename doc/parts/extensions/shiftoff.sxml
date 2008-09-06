@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>shiftoff</title>
+	<description>
+		<p>Very basic layout tools that mimic <str-MetaPost /> suffix placement syntax.</p>
+	</description>
+	<meta-selflink><extension-href name="shiftoff" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<needs>
+		<a extension="centering" />
+	</needs>
+	<top>
+		<alphabetical-index/>
+		<p>The name of this extension includes the mysterious <em>wfo</em>.  It stands for <em>waiting for objects</em>, and refers to the wish to deal with elements of block diagrams using objects of user-defined types rather than just relying on <named-type name="Drawable" />.  However, by relying on <named-type name="Drawable" /> as the representation, this extension is much more generally useful than it would otherwise be.</p>
+	</top>
+
+	<section id="extensions/shiftoff/constants">
+		<title>Constants</title>
+		<body>
+			<p>The constants defined here give numeric values to directions.  This is preferred over using symbols, since a miss-spelled symbol won't be detected by static analysis of the program.  Note, though, that the numeric values should never be used as such; they could equally well have been defined as unique symbols.</p>
+
+			<system-binding identifier="to_lft">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>left</em>.</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_llft">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>down and left</em> (“lower left”).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_bot">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>down</em> (“bottom”).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_lrt">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>down and right</em> (“lower right”).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_rt">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>right</em>.</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_urt">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>up and right</em> (“upper right“).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_top">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>up</em> (“top”).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_ulft">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for the direction <em>up ad left</em> (“upper left”).</p>
+					</description>
+				</simple-value>
+			</system-binding>
+			<system-binding identifier="to_center">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>Constant for centered placement.</p>
+					</description>
+				</simple-value>
+			</system-binding>
+		</body>
+	</section>
+
+	<section id="extensions/shiftoff/functions">
+		<title>Functions</title>
+		<body>
+			<p>Functions for working with directions in terms of the constants defined by this extension.</p>
+
+			<system-binding identifier="dirtopoint">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="d">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="FloatPair" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Converts a direction constant (which must have one of the values held by the constants defined by this extension) to a relative point to center at.  The returned value can be used with <binding extension="centering" name="centerat" />.</p>
+						</description>
+					</case>
+					<see-also><binding extension="shiftoff" name="to_dir" /></see-also>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="to_dir">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="z">
+								<type><named-type name="FloatPair" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Float" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>This generalizes the inverse of <binding extension="shiftoff" name="dirtopoint" />.  It converts any relative point (see <binding extension="centering" name="centerat" />) to the closest direction constant defined by this extension.  It always returns a directional value, never <binding extension="shiftoff" name="to_center" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="dir_to">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="d">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="FloatPair" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p><b>This function might be removed in the future!</b></p>
+							<p>This generalizes <binding extension="shiftoff" name="dirtopoint" /> by being applicable to any float value.  This makes ugly use of the numerical values held by the constants defined by this extension.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="shiftoff">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable2D" /></type>
+							</arg>
+							<arg identifier="d">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable2D" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Provides <str-MetaPost />-like layout.</p>
+							<p>For instance, to place a label below a point, say <inline>lblPoint</inline>, one may write:
+<pre>
+•page &lt;&lt; [shift lblPoint] [] [shiftoff (TeX `$x_{1}$´) to_bot]
+</pre></p>
+						</description>
+					</case>
+					<see-also><binding extension="shiftoff" name="shiftoffwlm" /></see-also>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="shiftoffwlm">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable2D" /></type>
+							</arg>
+							<arg identifier="d">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable2D" /></type>
+						</result>
+						<dynamic-references><dynvar extension="centering" name="labelmargin" /></dynamic-references>
+						<description>
+							<p>Provides <str-MetaPost />-like layout.</p>
+							<p>This function is like <binding extension="shiftoff" name="shiftoff" />, but treats the obeject as if it was slightly bigger than it really is.  The implementation uses <binding extension="centering" name="centeratwlm" /> instead of <binding extension="centering" name="centerat" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+</book>

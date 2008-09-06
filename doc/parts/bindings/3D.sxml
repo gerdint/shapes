@@ -85,9 +85,9 @@
 				<p>If you ever considered solving the intricate problem of generating nice arrowheads for paths in <str-3D /> by simply treating the path as if it was in <str-2D />, think again, as the example below shows!</p>
 
 				<example-with-output title="Example" internal-id="example/facing-function">
-					<image pdf="facefun_3.pdf" jpg="facefun_y_big.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/facefun.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/facefun.shape" -->]]>
+					<image pdf="features/facefun_3.pdf" jpg="features/facefun_y_big.jpg" />
+<source file="features/facefun.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/facefun.shape" -->]]>
 </source>
 				</example-with-output>
 			</description>

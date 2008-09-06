@@ -39,9 +39,9 @@
 <p>If the expression is a string literal, it is handled more efficiently than if the string must be obtained by evaluation.  The origin of the produced label is the same as in LaTeX; at the leftmost point of the baseline.  Unfortunately, fonts lie about their bounding boxes to make them look smaller, and this will cause the produced label to be slightly cropped when imported.  At the moment, I can't think of a good way to get around this problem, since a tight bounding box is important for layout purposes.</p>
 
 <example-with-output title="Example" internal-id="example-boxedeq">
-<image pdf="boxedeq.pdf" jpg="boxedeq_y_small.jpg" />
-<source file=<!--#expand-next-string-->"$(EXAMPLES)/features/boxedeq.shape">
-<![CDATA[<!--#include virtual="$(EXAMPLES)/features/boxedeq.shape" -->]]>
+<image pdf="features/boxedeq.pdf" jpg="features/boxedeq_y_small.jpg" />
+<source file="features/boxedeq.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/boxedeq.shape" -->]]>
 </source>
 </example-with-output>
 

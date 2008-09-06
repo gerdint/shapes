@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>Standard extensions</title>
+	<description>
+		<p>Descriptions of the <str-Shapes /> extension files included in standard installations.</p>
+	</description>
+	<meta-selflink><part-href name="extensions" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<top>
+		<p>A <str-Shapes /> <em>extension</em> is a <str-Shapes /> source that provides functionality that can be used in applications.  An extension should only introduce bindings, and not produce any output by modifying any program states.</p>
+		<p>Extensions are usually activated by loading the source using the <inline>##need</inline> scanner directive, see <a part="syntax" id="syntax/include/include" /> for more details.</p>
+	</top>
+
+	<section id="extensions/index">
+		<title>Index</title>
+		<body>
+			<p>The following extensions are contained in the documentation:</p>
+			<index-of-books />
+		</body>
+	</section>
+
+	<external>
+		<!--#include virtual="circle.sxml" depth="0" -->
+		<!--#include virtual="centering.sxml" depth="0" -->
+		<!--#include virtual="shiftoff.sxml" depth="0" -->
+		<!--#include virtual="arrowheads.sxml" depth="0" -->
+		<!--#include virtual="conssupport.sxml" depth="0" -->
+		<!--#include virtual="linkpaths.sxml" depth="0" -->
+		<!--#include virtual="blockdraw_wfo.sxml" depth="0" -->
+	</external>
+</book>

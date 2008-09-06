@@ -74,13 +74,19 @@ bool strtobool( const char * str, const char * attribute );
 
 <INCLUDE_FILENAME>[\"][^\"]*[\"] |
 <INCLUDE_FILENAME>[\'][^\']*[\'] {
-	size_t len = strlen( yytext ) ;
-	yytext[ len - 1 ] = '\0';
-	char * buf = new char[ strlen( includebase_ ) + len - 2 + 1];
-	strcpy( buf, includebase_ );
-	strcat( buf, yytext + 1 );
-	includeFilename_ = expandDefines( buf );
-	delete [] buf;
+	const char * filearg = yytext + 1;  /* Skip leading delimiter. */
+	yytext[ strlen( yytext ) - 1 ] = '\0'; /* Remove trailing delimiter. */
+	if( filearg[0] == '\0' )
+		{
+			std::cerr << "Found empty file name in #include directive." << std::endl ;
+			exit( 1 );
+		}
+	includeFilename_ = expandDefines( filearg );
+	if( includeFilename_[0] != '/' )
+		{
+			includeFilename_ = dirStack_.top( ) + includeFilename_;
+		}
+	/* Here, we could compact away outward directory references, but we're too lazy at the moment. */
 	BEGIN( INCLUDE );
 }
 
@@ -118,7 +124,10 @@ bool strtobool( const char * str, const char * attribute );
 	char stringDelim = yytext[ 0 ];
 	yytext[ strlen( yytext ) - 1 ] = '\0';
 	const char * expanded = expandDefines( yytext + 1 );
-	*yyout << stringDelim << expanded << stringDelim ;
+	if( ! onlyDependencies_ )
+		{
+			*yyout << stringDelim << expanded << stringDelim ;
+		}
 	delete( expanded );
 	BEGIN( INITIAL );
 }
@@ -138,6 +147,7 @@ bool strtobool( const char * str, const char * attribute );
 		stateStack_.pop( );
 		depthLimitStack_.pop( );
 		metaInclusionStack_.pop( );
+		dirStack_.pop( );
 	}
 }
 
@@ -211,21 +221,34 @@ SSIScanner::doInclusion( )
 		{
 			return;
 		}
-	depthLimitStack_.push( currentDepthLimit_ );
-	metaInclusionStack_.push( currentMeta_ );
 
 	if( onlyDependencies_ )
 		{
 			*yyout << " " << includeFilename_ ;
 		}
 
-	std::ifstream * iFile = new std::ifstream( includeFilename_ );
+	std::ifstream * iFile = new std::ifstream( includeFilename_.c_str( ) );
 	if( ! iFile->good( ) )
 		{
+			if( onlyDependencies_ )
+				{
+					if( currentDepthLimit_ == 0 )
+						{
+							return;
+						}
+					std::cerr << "Missing #include file is included with depth greater than zero: " << includeFilename_ << std::endl ;
+					exit( 1 );
+				}
 			std::cerr << "Failed to open included file: " << includeFilename_ << std::endl ;
 			exit( 1 );
 		}
 
+	depthLimitStack_.push( currentDepthLimit_ );
+	metaInclusionStack_.push( currentMeta_ );
+	/* Here, we know that the filename is an absolute path, so we just discard what's after the
+	 * last slash, and we get the directory.
+	 */
+	dirStack_.push( includeFilename_.substr( 0, includeFilename_.rfind( '/' ) + 1 ) );
 	stateStack_.push( YY_CURRENT_BUFFER );
 	yy_switch_to_buffer( yy_create_buffer( iFile, YY_BUF_SIZE ) );
 }

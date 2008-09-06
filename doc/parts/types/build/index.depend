@@ -1,1 +1,0 @@
-build/index.xml: simple.sxml tuples.sxml points-paths.sxml graphics-2d.sxml functions.sxml containers.sxml ../../../examples/features/folds.shape ../../output/folds.stdout misc.sxml graphics-3d.sxml composite.sxml ../bindings/functions.sxml ../../../examples/features/facefun.shape ../../../examples/showcase/mergepaths.shape ../syntax/operators.sxml
