@@ -10,7 +10,7 @@ pth: @defaultunit:1%c | (0cm,0cm)>(^90°)--(^90°)<(2cm,0cm)
    \ pile i .>!
      {
        p: (~2cm+i*0.5cm,0.6cm)
-       pile & [stroke p--[continuous_approximator pth p].p ]
+       pile & [stroke p--[approximator pth p].p ]
      }
    null]
 )
