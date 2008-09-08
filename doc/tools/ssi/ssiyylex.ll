@@ -82,7 +82,11 @@ bool strtobool( const char * str, const char * attribute );
 			exit( 1 );
 		}
 	includeFilename_ = expandDefines( filearg );
-	if( includeFilename_[0] != '/' )
+	if( includeFilename_.compare( 0, 2, "^/" ) == 0 )
+		{
+			includeFilename_ = includeFilename_.substr( 2 );
+		}
+	else if( includeFilename_[0] != '/' )
 		{
 			includeFilename_ = dirStack_.top( ) + includeFilename_;
 		}

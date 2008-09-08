@@ -6,12 +6,14 @@
 
 
 bool strprefixcmp( char * str, const char * prefix, char ** endp );
+bool strtobool( const char * str, const char * containingString, const char * trueLabel = 0, const char * falseLabel = 0 );
 
 
 int
 main( int argc, char ** argv )
 {
 	bool onlyDependencies = false;
+	bool absolutePath = false;
 	bool doEndl = false;
 	char * inputFilename = 0;
 
@@ -19,6 +21,7 @@ main( int argc, char ** argv )
 	++argv;
 	while( argc > 0 )
 		{
+			char * optionSuffix;
 			if( strncmp( *argv, "-d", 2 ) == 0 )
 				{
 					char * name = *argv + 2;
@@ -51,6 +54,12 @@ main( int argc, char ** argv )
 					inputFilename = argv[ 1 ];
 					argv += 2;
 					argc -= 2;
+				}
+			else if( strprefixcmp( *argv, "--absolute=", & optionSuffix ) )
+				{
+					absolutePath = strtobool( optionSuffix, *argv );
+					argv += 1;
+					argc -= 1;
 				}
 			else
 				{
@@ -88,7 +97,7 @@ main( int argc, char ** argv )
 				++slash;
 			}
 		*slash = '\0';
-		if( tmp[ 0 ] == '/' )
+		if( tmp[ 0 ] == '/' || ! absolutePath )
 			{
 				initDir = tmp;
 			}
@@ -120,4 +129,33 @@ strprefixcmp( char * str, const char * prefix, char ** endp )
 	bool res = ( strncmp( str, prefix, len ) == 0 );
 	*endp = str + len;
 	return res;
+}
+
+bool
+strtobool( const char * str, const char * containingString, const char * trueLabel, const char * falseLabel )
+{
+	if( trueLabel != 0 &&
+			strcmp( str, trueLabel ) == 0 )
+		{
+			return true;
+		}
+	if( falseLabel != 0 &&
+			strcmp( str, falseLabel ) == 0 )
+		{
+			return false;
+		}
+	if( strcmp( str, "yes" ) == 0 ||
+			strcmp( str, "true" ) == 0 ||
+			strcmp( str, "on" ) == 0 )
+		{
+			return true;
+		}
+	if( strcmp( str, "no" ) == 0 ||
+			strcmp( str, "false" ) == 0 ||
+			strcmp( str, "off" ) == 0)
+		{
+			return false;
+		}
+	std::cerr << "The string \"" << str << "\" in the command line argument \"" << containingString << "\" was not recognized as a boolean value." << std::endl ;
+	exit( 1 );
 }

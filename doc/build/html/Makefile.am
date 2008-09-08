@@ -14,8 +14,9 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- )
 
-SSIFLAGS=-dEXAMPLES=example -dBASE= -dBUILDDIR=$(abspath .) $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=../example -dBASE=../ -dBUILDDIR=$(abspath .) $(MORE_SSIFLAGS)
+# Setting BUILDDIR=^ means that paths will be relative to the current working directory.
+SSIFLAGS=-dEXAMPLES=example -dBASE= -dBUILDDIR=^ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=../example -dBASE=../ -dBUILDDIR=^ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
@@ -67,10 +68,6 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 		${RM} ${DEPDIR}/$*.Tssidep; \
 		exit 1; \
 	fi
-
-$(abspath .)/example/%.shape : ${top_srcdir}/examples/%.shape
-	install -d $(@D)
-	install -m 444 $< $@
 
 example/%.shape : ${top_srcdir}/examples/%.shape
 	install -d $(@D)
