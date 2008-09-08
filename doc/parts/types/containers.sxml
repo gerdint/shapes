@@ -162,10 +162,10 @@
 
 <example-with-output title="Folds" internal-id="example/folds">
 <source file="features/folds.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/folds.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/folds.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/folds.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/folds.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Folds over lists come in two flavors — left and right.  <named-type name="ConsPair" /> can hold thunks, but infinite streams cannot be folded.</p>

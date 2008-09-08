@@ -39,10 +39,10 @@
 <example-with-output title="Sliders" internal-id="example/slider-use">
 <image pdf="doc/tutorial-slider-use_3.pdf" jpg="doc/tutorial-slider-use_y_big.jpg" />
 <source file="doc/tutorial-slider-use.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-slider-use.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-slider-use.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-slider-use.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Sliders.  Given a slider, other sliders can be specified relative to the first one, either in terms of distance or in terms of spline time.  Then, there are many fields to access to get both geometric and representation-related information about the particular point along the path.  The right part of the picture shows that the velocity field <field name="v" /> varies along a circle, so this is an example of a non-geometric field.</p>
@@ -65,7 +65,7 @@
 <example-with-output title="Maximizers" internal-id="example/maximizer">
 <image pdf="doc/tutorial-maximizer_3.pdf" jpg="doc/tutorial-maximizer_y_big.jpg" />
 <source file="doc/tutorial-maximizer.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-maximizer.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-maximizer.shape" -->]]>
 </source>
 <caption>
 	<p>Maximizing in the direction indicated by the arrow.  Control points of the path are marked by connecting them with blue lines to the path point they belong to.  The first maximizing point on the path is marked with a red spot, the first maximizing point through a path point is marked with a small circle, and the maximizing point among all the control points is marked with a cross.</p>
@@ -77,7 +77,7 @@
 <example-with-output title="Point approximators" internal-id="example/approximator">
 <image pdf="doc/tutorial-approximator_3.pdf" jpg="doc/tutorial-approximator_y_big.jpg" />
 <source file="doc/tutorial-approximator.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-approximator.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-approximator.shape" -->]]>
 </source>
 <caption>
 	<p>Minimizing the distance to the point marked with a cross.  The first maximizing point on the path is marked with a red spot, and the first maximizing point through a path point is marked with a small circle.</p>
@@ -89,7 +89,7 @@
 <example-with-output title="Path intersection" internal-id="example/intersection">
 <image pdf="doc/tutorial-intersection_3.pdf" jpg="doc/tutorial-intersection_y_big.jpg" />
 <source file="doc/tutorial-intersection.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-intersection.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-intersection.shape" -->]]>
 </source>
 <caption>
 	<p>Finding the first point on the solid black path (direction indicated by the arrow) where it intersects with the dashed blue path (direction not important).  The intersection is marked with a red spot, and an error handler is used to treat the case when there is no intersection.</p>
@@ -101,7 +101,7 @@
 <example-with-output title="Subpath intersection" internal-id="example/subpath-intersection">
 <image pdf="doc/tutorial-subpath-intersection_3.pdf" jpg="doc/tutorial-subpath-intersection_y_big.jpg" />
 <source file="doc/tutorial-subpath-intersection.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-subpath-intersection.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-subpath-intersection.shape" -->]]>
 </source>
 <caption>
 	<p>Finding the first point on the solid black path (direction indicated by the arrow), between the two circles, where it intersects with the dashed blue path (direction not important).  The intersection is marked with a red spot.  Note that one must make use of arc length rather than spline time to relate the slider on the sub path to a slider on the whole path (which makes this a bit more expensive and inaccurate compared to what a built-in solution could offer).</p>
@@ -131,7 +131,7 @@
 <example-with-output title="Upsampling" internal-id="example/upsampling">
 <image pdf="features/upsample_3.pdf" jpg="features/upsample_y_big.jpg" />
 <source file="features/upsample.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/upsample.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/upsample.shape" -->]]>
 </source>
 <caption>
 	<p>Various ways of upsampling a path.</p>
@@ -142,7 +142,7 @@
 <example-with-output title="Sidepaths" internal-id="example/sidepaths">
 <image pdf="features/sidepaths_3.pdf" jpg="features/sidepaths_y_big.jpg" />
 <source file="features/sidepaths.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/sidepaths.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/sidepaths.shape" -->]]>
 </source>
 <caption>
 	<p>Application of upsampling:  Computing <em>side paths</em>.  Note that much of the interesting source code for this example is located in the extension <a extension="pathmapping" />.</p>

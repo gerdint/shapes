@@ -336,7 +336,7 @@ is equivalent to
 				<example-with-output title="Example" internal-id="example/facing-function">
 					<image pdf="features/facefun_3.pdf" jpg="features/facefun_y_big.jpg" />
 <source file="features/facefun.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/facefun.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/facefun.shape" -->]]>
 </source>
 				</example-with-output>
 			</description>
@@ -438,10 +438,10 @@ is equivalent to
 		<body>
 			<example-with-output title="Range construction" internal-id="example/ranges">
 <source file="features/ranges.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/ranges.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/ranges.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/ranges.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/ranges.stdout" -->]]>
 </stdout>
 			</example-with-output>
 		</body>
@@ -493,7 +493,7 @@ is equivalent to
 				<example-with-output title="Merging paths" internal-id="example/meetpaths">
 					<image pdf="showcase/mergepaths_3.pdf" jpg="showcase/mergepaths_y_big.jpg" />
 <source file="showcase/mergepaths.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/showcase/mergepaths.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)showcase/mergepaths.shape" -->]]>
 </source>
 <caption>
 	<p>Application of <binding name="meetpaths" />.  Note that the interesting stuff is found in <a extension="linkpaths" />.</p>

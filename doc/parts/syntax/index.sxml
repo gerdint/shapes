@@ -7,7 +7,7 @@
 		<p>The laguage syntax, including lexer directives.</p>
 	</description>
 	<meta-selflink><part-href name="syntax" /></meta-selflink>
-	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<top>
 		<p>Here, term <em>syntax</em> basically refers to everything that does not have to do with the values bound to variables in the initial environments.  Most importantly, the library functions (or <em>preamble</em>, or <em>standard procedures</em>, et c) are not included here.</p>
 		<p>It might be confusing, though, to find that many of the composite expression syntaxes are implemented as function calls, which the user may become aware of when encoutering certain error messages.</p>

@@ -14,7 +14,7 @@
 			<p>The man page descripting the commad line interface of the compiler.</p>
 		</description>
 		<meta-selflink><part-href name="man" /></meta-selflink>
-		<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+		<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	</manhead>
 
 	<section>

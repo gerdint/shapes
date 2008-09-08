@@ -11,7 +11,7 @@
 <example-with-output title="Geometry of the view projection" internal-id="example/view">
 <image pdf="doc/tutorial-view.pdf" jpg="doc/tutorial-view_y_big.jpg" />
 <source file="doc/tutorial-view.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-view.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-view.shape" -->]]>
 </source>
 <caption>
 	<p>The relation between the <str-3D /> scene and the <str-2D /> image plane where the <str-3D /> scene is projected by <binding name="view" />.  The source is not meant to be instructive.</p>
@@ -49,7 +49,7 @@
 <example-with-output title="Straight stereo projection" internal-id="example/straight">
 <image pdf="applications/spacebase.pdf" jpg="applications/spacebase_y_big.jpg" />
 <source file="applications/spacebase.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/applications/spacebase.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)applications/spacebase.shape" -->]]>
 </source>
 <caption>
 	<p>A straight stereo projection, that is, the left eye's view to the left of the right eye's view.  The simple geometry behind this is described in the text.</p>
@@ -59,7 +59,7 @@
 <example-with-output title="Cross stereo projection" internal-id="example/cross">
 <image pdf="applications/spacebase-cross.pdf" jpg="applications/spacebase-cross_y_big.jpg" />
 <source file="applications/spacebase-cross.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/applications/spacebase-cross.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)applications/spacebase-cross.shape" -->]]>
 </source>
 <caption>
 	<p>A cross stereo projection, that is, the left eye's view to the right of the right eye's view.  The simple geometry behind this is <em>not</em> described in the text.</p>

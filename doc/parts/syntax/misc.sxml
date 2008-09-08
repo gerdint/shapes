@@ -100,7 +100,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <example-with-output title="Example" internal-id="example-pathconstruction">
 <image pdf="features/pathconstruction.pdf" jpg="features/pathconstruction_y_small.jpg" />
 <source file="features/pathconstruction.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/pathconstruction.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/pathconstruction.shape" -->]]>
 </source>
 </example-with-output>
 
@@ -127,10 +127,10 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 
 <example-with-output title="Example" internal-id="example-evalorder">
 <source file="features/evalorder.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/evalorder.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/evalorder.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/evalorder.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/evalorder.stdout" -->]]>
 </stdout>
 </example-with-output>
 

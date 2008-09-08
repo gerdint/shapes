@@ -8,7 +8,7 @@
 	</description>
 	<meta-selflink><extension-href name="arrowheads" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
-	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<needs></needs>
 	<top>
 		<alphabetical-index/>

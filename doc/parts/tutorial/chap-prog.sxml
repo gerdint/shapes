@@ -64,10 +64,10 @@ textGreaterThanEight: [textGreater y:8 ...]
 
 <example-with-output title="Evaluated cuts" internal-id="example/cute">
 <source file="features/curry.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/curry.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/curry.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/curry.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/curry.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Evaluated cuts may take some time to grok.  Use this example as an exercise!</p>
@@ -80,10 +80,10 @@ textGreaterThanEight: [textGreater y:8 ...]
 
 <example-with-output title="Lexical binding" internal-id="example/lexical-binding">
 <source file="features/scopes.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/scopes.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/scopes.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/scopes.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/scopes.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Lexical scoping rules in <str-Shapes /> make it easy to define (mutually) recursive functions.  To access bindings shadowed in the current scope, one can <em>reach out</em> by using the <inline>../</inline> construct.</p>
@@ -97,7 +97,7 @@ textGreaterThanEight: [textGreater y:8 ...]
 <example-with-output title="Notation of the asymmetric binding union operator" internal-id="example/asymmetric-notation">
 <image pdf="features/asymmetric-notation_3.pdf" jpg="features/asymmetric-notation_y_small.jpg" />
 <source file="features/asymmetric-notation.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/asymmetric-notation.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/asymmetric-notation.shape" -->]]>
 </source>
 <caption>
 	<p>The story behind the notation of the operator <operator name="&amp;|" />, and a typical application of it.</p>
@@ -106,10 +106,10 @@ textGreaterThanEight: [textGreater y:8 ...]
 
 <example-with-output title="Dynamic binding" internal-id="example/dynamic-binding">
 <source file="features/dynamic.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/dynamic.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/dynamic.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/dynamic.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/dynamic.stdout" -->]]>
 </stdout>
 <caption>
 	<p>Dynamic scoping in <str-Shapes /> allows for both dynamically bound variables and dynamically evaluated expressions.  The keyword <inline>dynamic</inline> is used both for introducing new dynamic bindings and to indicate that an expression is to be evaluated dynamically.</p>
@@ -174,10 +174,10 @@ picture: ( (TeX `Hello!´) &amp; [stroke (1cm,1cm)--(2cm,0cm)] )
 
 <example-with-output title="States" internal-id="example/states">
 <source file="features/states.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/states.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/states.shape" -->]]>
 </source>
 <stdout>
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/features/states.stdout" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)features/states.stdout" -->]]>
 </stdout>
 <caption>
 	<p>States allow imperative style programming to some extent in <str-Shapes />.  This example also illustrates non-pure functions and procedures, which have not yet been discussed.</p>

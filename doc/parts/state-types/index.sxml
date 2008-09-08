@@ -7,7 +7,7 @@
 		<p>Presentation of the variable types of states defined by the core language.</p>
 	</description>
 	<meta-selflink><part-href name="state-types" /></meta-selflink>
-	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<top>
 		<p>The most important core states are designed to be really easy to use; they have a simple tack-on operation, treating all types of pieces similarly, and may often be frozen to harvest the goods being piled up.  There is almost nothing one has to know about these states.  Then, however, there are also state types defining more complex behaviors, and some states interact in special ways with core functions.  This part of the documentation will be useful when it comes to these types of states.</p>
 	</top>

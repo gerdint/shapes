@@ -7,7 +7,7 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- )
 
-SSIFLAGS=-dBASE=$(HREF_BASE) -dEXAMPLES=example $(MORE_SSIFLAGS)
+SSIFLAGS=-dBASE=$(HREF_BASE) -dEXAMPLES=example/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 CLEANFILES = man.1

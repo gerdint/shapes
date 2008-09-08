@@ -7,7 +7,7 @@
 		<p>A tutorial that will introduce you to the core concepts of the language, without getting into details.  Plenty of examples.</p>
 	</description>
 	<meta-selflink><part-href name="tutorial" /></meta-selflink>
-	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<top>
 		<p>Welcome to this tutorial on Shapes!</p>
 		<p>This document is meant to serve as a short introduction to the Shapes language and related tools.  It assumes you have already got a reason for being curious about Shapes.  Likewise, being a short tutorial it will not waste your time telling about the history and background of Shapes; interested readers will find such information elsewhere.</p>

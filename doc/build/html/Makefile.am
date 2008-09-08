@@ -15,8 +15,8 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- )
 
 # Setting BUILDDIR=^ means that paths will be relative to the current working directory.
-SSIFLAGS=-dEXAMPLES=example -dBASE= -dBUILDDIR=^ $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=../example -dBASE=../ -dBUILDDIR=^ $(MORE_SSIFLAGS)
+SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=../example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \

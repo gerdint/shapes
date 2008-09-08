@@ -75,7 +75,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <example-with-output title="Transforms" internal-id="example/transforms">
 <image pdf="doc/tutorial-transforms_3.pdf" jpg="doc/tutorial-transforms_y_big.jpg" />
 <source file="doc/tutorial-transforms.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-transforms.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-transforms.shape" -->]]>
 </source>
 <caption>
 	<p>A label painted once in its original location, once after a rotation, and once after a shift.</p>
@@ -104,7 +104,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <example-with-output title="Single Bezier spline" internal-id="example/one-segment">
 <image pdf="doc/tutorial-one-segment_3.pdf" jpg="doc/tutorial-one-segment_y_big.jpg" />
 <source file="doc/tutorial-one-segment.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-one-segment.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-one-segment.shape" -->]]>
 </source>
 <caption>
 	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.  Absence of an interpolation point — that is, an interpolation point which is logically coinciding with the terminal point it is associated with — is simply represented by not marking the interpolation point at all.  Note that the absence of an interpolation point is the limiting case as the interpolation point approaches the terminal point.</p>
@@ -116,7 +116,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <example-with-output title="Connected Bezier splines" internal-id="example/bezier-connected">
 <image pdf="doc/tutorial-bezier-connected_3.pdf" jpg="doc/tutorial-bezier-connected_y_big.jpg" />
 <source file="doc/tutorial-bezier-connected.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-bezier-connected.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-bezier-connected.shape" -->]]>
 </source>
 <caption>
 	<p>Bezier splines.  Points on the path are marked with circles, and interpolation points are marked with a cross and a dashed line showing which terminal point it belongs to.  Solid lines with arrowhead indicates how offset coordinates are interpreted during path construction.</p>
@@ -153,7 +153,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <example-with-output title="Path-painting" internal-id="example/path-painting">
 <image pdf="doc/tutorial-path-painting_3.pdf" jpg="doc/tutorial-path-painting_y_big.jpg" />
 <source file="doc/tutorial-path-painting.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-path-painting.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-path-painting.shape" -->]]>
 </source>
 <caption>
 	<p>Filling, stroking, filling-and-stroking, and stroking a path with an arrow head.  Spotting a point can be seen as a special case of stroking a singleton path.</p>
@@ -178,7 +178,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 <example-with-output title="Graphics-params" internal-id="example/graphics-params">
 <image pdf="doc/tutorial-graphics-params_3.pdf" jpg="doc/tutorial-graphics-params_y_big.jpg" />
 <source file="doc/tutorial-graphics-params.shape">
-<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)/$(EXAMPLES)/doc/tutorial-graphics-params.shape" -->]]>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tutorial-graphics-params.shape" -->]]>
 </source>
 <caption>
 	<p>Changing parameters in the <str-PDF /> graphics state, such as stroking and non-stroking (that is, fill) color, dashpattern, <abbr-etc />.</p>
