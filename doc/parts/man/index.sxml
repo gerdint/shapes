@@ -15,6 +15,7 @@
 		</description>
 		<meta-selflink><part-href name="man" /></meta-selflink>
 		<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)/" />
+		<html-doc-index href=<!--#expand-next-string-->"$(HTML_DOC_DIR)/index.html" />
 	</manhead>
 
 	<section>
@@ -419,6 +420,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
  		<section>
 			<title>File requests</title>
 			<body>
+				<p>Several file requests may be issued.  The answer to each will be written on a separate line on <filename>stdout</filename>, in the order of the requests.  After having answered to all requests, the program exits without compiling any input.  If the output filename is undefined in the presence of file requests, a dummy name will be used.</p>
 				<command-line-option-list>
  					<command-line-item>
 						<parameters flag="--which-in"/>
@@ -460,6 +462,12 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 						<parameters flag="--which-TEXINPUTS"/>
 						<description>
 							<p>Request the environment variable TEXINPUTS after any modifications made by <str-Shapes />.</p>
+						</description>
+					</command-line-item>
+ 					<command-line-item>
+						<parameters flag="--which-doc"/>
+						<description>
+							<p>Request the top index file of the locally installed <str-HTML /> documentation.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -566,6 +574,9 @@ shapes --resources=no --needpath ../../resources/extensions/ --fontmetricspath .
 	<section>
 		<title>See also</title>
 		<body>
+			<man-only>
+				<p>Documentation of the <str-Shapes /> language should be possible to find on the web, but may also be installed here for local access:<expand-html-doc-index /></p>
+			</man-only>
 			<see-also-items>
 				<see-also><manpage tool="xpdf" section="1" /></see-also>
 				<see-also><manpage tool="open" section="1" /></see-also>

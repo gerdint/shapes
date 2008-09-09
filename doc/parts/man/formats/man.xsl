@@ -44,6 +44,15 @@ version of this page.</xsl:text>
 .ensure-line-break</xsl:text>
 </xsl:template>
 
+<xsl:template match="man-only">
+	<xsl:apply-templates select="*"/>
+</xsl:template>
+
+<xsl:template match="expand-html-doc-index">
+.ensure-line-break.br
+  <xsl:value-of select="/man/manhead/html-doc-index/@href" />
+</xsl:template>
+
 <xsl:template match="env-variable-list">
 <xsl:apply-templates select="./*" />
 </xsl:template>
