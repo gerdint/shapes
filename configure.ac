@@ -14,6 +14,7 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_FLEX(2.5.33)
 AC_PROG_BISON(2.3)
+AC_PROG_COMPARE(6.4.0)
 AM_PATH_SAXON(9)
 AC_PROG_LIBTOOL
 
@@ -21,7 +22,6 @@ AC_PROG_LIBTOOL
 AC_DEBUG
 AC_PROFILE
 AC_OPTIMIZATION
-AC_CHECK_PROG([COMPARE], [compare], [yes], [no])
 
 # Checks for libraries.
 AM_ICONV()
@@ -73,13 +73,11 @@ AC_OUTPUT
 if test "X$COMPARE" != "Xyes"
 then
   echo "\
-WARNING: The program \`compare' was not found, without it installed
-         the tests are likely to fail."
+WARNING:  The program \`compare' was not found, or its version too low.  Without it, errors in the tests are less likely to be detected."
 fi
 
 if test "X$HAVE_SAXON" != "X1"
 then
   echo "\
-WARNING: The program \`Saxon' was not found, without it installed
-         the documentation cannot be rebuilt."
+WARNING: The program \`Saxon' was not found, without it installed the documentation cannot be rebuilt."
 fi
