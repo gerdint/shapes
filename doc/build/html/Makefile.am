@@ -13,7 +13,7 @@ DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
 MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- ) \
-               -dHTML_DOC_DIR=$(pkgdatadir)/doc/html
+               -dHTML_DOC_DIR=$(htmldir)
 
 # Setting BUILDDIR=^ means that paths will be relative to the current working directory.
 SSIFLAGS=-dEXAMPLES=example -dBASE= -dBUILDDIR=^ $(MORE_SSIFLAGS)
@@ -22,8 +22,6 @@ SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
 extensions/index.html extensions/blockdraw_wfo.html  extensions/centering.html  extensions/circle.html
-
-htmldir = ${pkgdatadir}/doc/html
 
 docdir=${top_srcdir}/doc/parts
 

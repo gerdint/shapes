@@ -1055,7 +1055,7 @@ main( int argc, char ** argv )
 							break;
 						case FILENAME_HTMLDOC:
 							{
-								std::cout << RESOURCES_DIR << "/doc/html/index.html" ;
+								std::cout << HTMLDIR << "/index.html" ;
 							}
 							break;
 						case FILENAME_RESOURCE:

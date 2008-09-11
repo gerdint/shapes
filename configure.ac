@@ -62,6 +62,11 @@ AC_FUNC_STRFTIME
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([floor memchr memset pow rint sqrt strchr strdup strrchr strtol])
 
+
+htmldir='${pkgdatadir}/doc/html'
+AC_SUBST(htmldir)
+
+
 AC_CONFIG_FILES([Makefile source/Makefile resources/Makefile
                  test/Makefile test/text/Makefile test/graphics/Makefile
                  doc/Makefile doc/tools/Makefile
