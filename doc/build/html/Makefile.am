@@ -36,7 +36,7 @@ SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
 html-INSTALL: $(SHEXT_FILES)
 
 extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
-	install -d $(@D)
+	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
 		mv extensions/$*.Txml $@; \
@@ -55,7 +55,7 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 	fi
 
 ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
-	install -d ${@D}
+	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
@@ -65,7 +65,7 @@ ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
 	fi
 
 ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
-	install -d ${@D}
+	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
 	then \
 		mv ${DEPDIR}/$*.Tssidep $@; \
@@ -75,21 +75,24 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 	fi
 
 example/%.shape : ${top_srcdir}/examples/%.shape
-	install -d $(@D)
-	install -m 444 $< $@
+	test -d  $(@D) || ${mkdir_p} $(@D)
+	${INSTALL_DATA} $< $@
 
 example/%.shext : ${top_srcdir}/examples/%.shext
-	install -d $(@D)
-	install -m 444 $< $@
+	test -d  $(@D) || ${mkdir_p} $(@D)
+	${INSTALL_DATA} $< $@
 
 %.css : ${top_srcdir}/doc/styles/html/%.css
-	install -m 444 $< $@
+	test -d  $(@D) || ${mkdir_p} $(@D)
+	${INSTALL_DATA} $< $@
 
 %.pdf %.stdout: %.shape $(SHEXT_FILES)
-	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
+	test -d  $(@D) || ${mkdir_p} $(@D)
+	$(SHAPES) $(SHAPESFLAGS) --in $(test -f $< || echo '${srcdir}/')$< --out $*.pdf > $*.stdout
 
 %_3.pdf %.stdout: %.shape $(SHEXT_FILES)
-	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
+	test -d  $(@D) || ${mkdir_p} $(@D)
+	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $(test -f $< || echo '${srcdir}/')$< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_70%.jpg: %.pdf
@@ -141,24 +144,24 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 .PRECIOUS : $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep)) $(html_DATA:.html=.xml)
 .PHONY : html-tmp
 
-clean :
-	-rm -rf *.xml *.html .deps extensions example \#*
+clean-local :
+	${RM} -r *.xml *.html .deps extensions example \#*
 
 include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep))
-include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
+-include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
 
-all-am : html-am
+all-local : html-local
 
-html-am : ${html_DATA} shapes.css
-	${MAKE} html-BUILD
+html-local : ${html_DATA} shapes.css
+	${MAKE} ${AM_MAKEFLAGS} html-BUILD
 
-install-am : html-am
-	${MAKE} html-INSTALL
+install-data-local : html-local
+	${MAKE} ${AM_MAKEFLAGS} html-INSTALL
 
 html-INSTALL : ${html_DATA} shapes.css
 	for f in $^; \
 	do \
 		dir="${htmldir}/$$( dirname $$f )" ; \
-		test -d  $$dir || install -d -m755 $$dir ; \
-		install -m444 $$f $$dir ; \
+		test -z  $$dir || ${mkdir_p} $(DESTDIR)$$dir ; \
+		${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
 	done
