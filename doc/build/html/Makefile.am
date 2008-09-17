@@ -16,11 +16,11 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 
 # Setting BUILDDIR=^ means that paths will be relative to the current working directory.
 SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=../example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
-extensions/index.html extensions/blockdraw_wfo.html  extensions/centering.html  extensions/circle.html
+extensions/index.html extensions/centering.html extensions/circle.html extensions/blockdraw_wfo.html extensions/bondgraph.html
 
 htmldir = ${pkgdatadir}/doc/html
 
@@ -30,8 +30,9 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
+
 extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
-	install -d extensions
+	install -d $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
 		mv extensions/$*.Txml $@; \
@@ -51,7 +52,7 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 
 ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
 	install -d ${@D}
-	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head $*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
+	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
@@ -82,17 +83,18 @@ example/%.shape : ${top_srcdir}/examples/%.shape
 %_3.pdf %.stdout: %.shape
 	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
+# Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_y_big.jpg: %.pdf
-	convert -density 150 -resize x150 $< $@
+	-convert -density 150 -resize x150 $< $@
 
 %_y_small.jpg: %.pdf
-	convert -density 50 -resize x50 $< $@
+	-convert -density 50 -resize x50 $< $@
 
 %_x_big.jpg: %.pdf
-	convert -density 150 -resize 150x $< $@
+	-convert -density 150 -resize 150x $< $@
 
 %_x_small.jpg: %.pdf
-	convert -density 50 -resize 50x $< $@
+	-convert -density 50 -resize 50x $< $@
 
 extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
 	$(SAXON) $< ${docdir}/extensions/formats/html.xsl | \

@@ -8,6 +8,7 @@
 	</description>
 	<meta-selflink><extension-href name="blockdraw_wfo" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<needs>
 		<a extension="shiftoff" />
 		<a extension="centering" />
