@@ -48,7 +48,6 @@ tfjunction: \ arrowdir lbl .> [junctionlbl (TeX `TF´) arrowdir lbl true]
 gyjunction: \ arrowdir lbl .> [junctionlbl (TeX `GY´) arrowdir lbl false]
 
 
-	      
 
 putblockTerminal: \ •dst newBlock z oldBlock .>
 {
@@ -77,16 +76,16 @@ bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true
     hook:
     {
       sl: [p theLength]
-      z: sl.p - sl.n * theLength * [sin ahAngle]
+      z: sl.p - sl.N * theLength * [sin ahAngle]
       @nonstroking:[if fillAsStroking @stroking @nonstroking]
       |
-      [fill [[shift sl.n * 0.5 * @width] [p 0]--sl]--z--cycle]
+      [fill [[shift sl.N * 0.5 * @width] [p 0]--sl]--z--cycle]
     }
     causal:
     {
       sl: [p 0]
-      z: sl.p + sl.rt * @width
-      r: sl.n * theLength * [sin ahAngle]
+      z: sl.p + sl.rT * @width
+      r: sl.N * theLength * [sin ahAngle]
       @width: 1.5*@width
       |
       [stroke (z-r)--(z+r)]
@@ -135,4 +134,3 @@ terminalto: \ •dst oldBlock pos newBlock .>
   t: [putblockTerminal •dst newBlock pos oldBlock]
   [bgconnect t oldBlock]
 }
-
