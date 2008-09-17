@@ -1,0 +1,26 @@
+##needs bondgraph
+
+##unit dx = 4cm
+##unit dy = 5cm
+dc: (1.4cm,0)
+
+helper: \ pos dc fun lbl .>
+[[shift pos]
+{
+  p: (0cm,0cm)--dc
+  [ubond p]
+  &
+  [fun p]
+  &
+  [[shift (0,~2cm)] [shiftoffwlm lbl to_bot]]
+}]
+
+•page << [helper (1dx,2dy) [rotate   0°][]dc [flowlabel lbl:(TeX `$f_{1}$´) ...] (TeX `\texttt{flowlabel}´)]
+•page << [helper (2dx,2dy) [rotate  90°][]dc [flowlabel lbl:(TeX `$f_{1}$´) ...] (TeX `\texttt{flowlabel}´)]
+•page << [helper (3dx,2dy) [rotate 180°][]dc [flowlabel lbl:(TeX `$f_{1}$´) ...] (TeX `\texttt{flowlabel}´)]
+•page << [helper (4dx,2dy) [rotate 270°][]dc [flowlabel lbl:(TeX `$f_{1}$´) ...] (TeX `\texttt{flowlabel}´)]
+
+•page << [helper (1dx,1dy) [rotate   0°][]dc [effortlabel lbl:(TeX `$e_{1}$´) ...] (TeX `\texttt{effortlabel}´)]
+•page << [helper (2dx,1dy) [rotate  90°][]dc [effortlabel lbl:(TeX `$e_{1}$´) ...] (TeX `\texttt{effortlabel}´)]
+•page << [helper (3dx,1dy) [rotate 180°][]dc [effortlabel lbl:(TeX `$e_{1}$´) ...] (TeX `\texttt{effortlabel}´)]
+•page << [helper (4dx,1dy) [rotate 270°][]dc [effortlabel lbl:(TeX `$e_{1}$´) ...] (TeX `\texttt{effortlabel}´)]

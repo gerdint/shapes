@@ -1,0 +1,21 @@
+##needs bondgraph
+
+##unit dx = 4cm
+##unit dy = 3.5cm
+
+centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
+
+helper: \ pos obj lbl .> [[shift pos] ( centermark & obj & [[shift (0,~1.2cm)] [shiftoffwlm lbl to_bot]] )]
+
+•page << [helper (1dx,3dy) sjunction (TeX `serial (type 1)´)]
+•page << [helper (2dx,3dy) pjunction (TeX `parallel (type 0)´)]
+
+•page << [helper (1dx,2dy) [tfjunction to_rt (TeX `$r$´)] (TeX `transformer, \texttt{to\_rt}´)]
+•page << [helper (2dx,2dy) [tfjunction to_top (TeX `$r$´)] (TeX `transformer, \texttt{to\_top}´)]
+•page << [helper (3dx,2dy) [tfjunction to_lft (TeX `$r$´)] (TeX `transformer, \texttt{to\_lft}´)]
+•page << [helper (4dx,2dy) [tfjunction to_bot (TeX `$r$´)] (TeX `transformer, \texttt{to\_bot}´)]
+
+•page << [helper (1dx,1dy) [gyjunction to_rt (TeX `$\mu$´)] (TeX `gyrator, \texttt{to\_rt}´)]
+•page << [helper (2dx,1dy) [gyjunction to_top (TeX `$\mu$´)] (TeX `gyrator, \texttt{to\_top}´)]
+•page << [helper (3dx,1dy) [gyjunction to_lft (TeX `$\mu$´)] (TeX `gyrator, \texttt{to\_lft}´)]
+•page << [helper (4dx,1dy) [gyjunction to_bot (TeX `$\mu$´)] (TeX `gyrator, \texttt{to\_bot}´)]
