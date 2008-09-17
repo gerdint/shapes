@@ -5,17 +5,8 @@
 
 junction: \ txt .> [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
 
-pjunction:
-{
-  res: [junction (TeX `p´)]
-  \ .> res
-}
-
-sjunction:
-{
-  res: [junction (TeX `s´)]
-  \ .> res
-}
+pjunction: [junction (TeX `p´)]
+sjunction: [junction (TeX `s´)]
 
 junctionlbl: \ txt arrowdir lbl doArrow .>
 {
@@ -49,11 +40,10 @@ gyjunction: \ arrowdir lbl .> [junctionlbl (TeX `GY´) arrowdir lbl false]
 
 
 
-putblockTerminal: \ •dst newBlock z oldBlock .>
+putblockTerminal: \ newBlock pos oldBlock .>
 {
-  r: [normalized z - [centerof oldBlock]]
-  res: [[shift z] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
-  •dst << res
+  r: [normalized pos - [centerof oldBlock]]
+  res: [[shift pos] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
   res
 }
 
@@ -107,6 +97,7 @@ bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true
   }
  )
 
+ubond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...]] )
 hbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true doCausal:true ...]] )
 tbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...] tail:[bondgraphArrow doCausal:true ...]] )
 
@@ -114,11 +105,11 @@ tbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:tru
 |**  draw( conlabel( to_dir( dir( angle( direction (0.5*length(p)) of p ) - 90 ) ), txt, mspoint( p, 0.5, 0 ) ) )
 |**  Actually, the above comment is a relic from the MetaPost implementation, and I no longer understand it as I
 |**  think that bond graph connections are _typically_ just straight lines.
-flowlabel: \ p txt .>
-  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] - 90°]] txt [mspoint p 0.5]]
+flowlabel: \ p lbl .>
+  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] - 90°]] lbl [mspoint p 0.5]]
 
-effortlabel: \ p txt .>
-  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] + 90°]] txt [mspoint p 0.5]]
+effortlabel: \ p lbl .>
+  [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] + 90°]] lbl [mspoint p 0.5]]
 
 
 /** The following two functions are conventience functions that factors out the oldBlock which appears at two places.
@@ -126,11 +117,13 @@ effortlabel: \ p txt .>
  **/
 terminalfrom: \ •dst oldBlock pos newBlock  .>
 {
-  t: [putblockTerminal •dst newBlock pos oldBlock]
+  t: [putblockTerminal newBlock pos oldBlock]
+	 •dst << t
   [bgconnect oldBlock t]
 }
 terminalto: \ •dst oldBlock pos newBlock .>
 {
-  t: [putblockTerminal •dst newBlock pos oldBlock]
+  t: [putblockTerminal newBlock pos oldBlock]
+	 •dst << t
   [bgconnect t oldBlock]
 }

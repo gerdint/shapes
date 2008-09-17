@@ -5,13 +5,13 @@
 @connectionlw: 0.6bp
 |
 {
-  j1: [putblockOrigin •page [shift (1u,1u)] [] [sjunction]]
+  j1: [putblockOrigin •page [shift (1u,1u)] [] sjunction]
   j2: [putblockOrigin •page [shift (2u,1u)] [] [gyjunction to_rt (TeX `$\mu$´)]]
-  j3: [putblockOrigin •page [shift (3u,1u)] [] [sjunction]]
+  j3: [putblockOrigin •page [shift (3u,1u)] [] sjunction]
   j4: [putblockOrigin •page [shift (4u,1u)] [] [tfjunction to_rt (TeX `$r$´)]]
-  j5: [putblockOrigin •page [shift (5u,1u)] [] [pjunction]]
-  j6: [putblockOrigin •page [shift (5u,~0.5u)][] [sjunction]]
-  j7: [putblockOrigin •page [shift (5u,2u)] [] [sjunction]]
+  j5: [putblockOrigin •page [shift (5u,1u)] [] pjunction]
+  j6: [putblockOrigin •page [shift (5u,~0.5u)][] sjunction]
+  j7: [putblockOrigin •page [shift (5u,2u)] [] sjunction]
 
   •page << tbond [] [bgconnect j1 j2]
   •page << hbond [] [bgconnect j2 j3]
