@@ -84,6 +84,9 @@ example/%.shape : ${top_srcdir}/examples/%.shape
 	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
+%_70%.jpg: %.pdf
+	-convert -density 100 -resize $(shell echo $@ | sed -e 's!.*_\([^._]*\).jpg!\1!') $< $@
+
 %_y_big.jpg: %.pdf
 	-convert -density 150 -resize x150 $< $@
 

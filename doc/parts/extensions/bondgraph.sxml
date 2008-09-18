@@ -18,7 +18,7 @@
 		<alphabetical-index/>
 		<p>A <em>bond graph</em> is graphical representation of a dynamic model in one of several analogous physical domains.  What they look like is best explained by an example.</p>
 <example-with-output title="Bond graph example" internal-id="bondgraph/intro">
-<image pdf="showcase/bonddemo_3.pdf" jpg="showcase/bonddemo_y_big.jpg" />
+<image pdf="showcase/bonddemo_3.pdf" jpg="showcase/bonddemo_70%.jpg" />
 <source file="showcase/bonddemo.shape">
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)showcase/bonddemo.shape" -->]]>
 </source>
@@ -34,7 +34,7 @@
 		<title>Junctions</title>
 		<body>
 <example-with-output title="Junctions" internal-id="bondgraph/junctions">
-<image pdf="doc/bondgraph-junctions_3.pdf" jpg="doc/bondgraph-junctions_y_big.jpg" />
+<image pdf="doc/bondgraph-junctions_3.pdf" jpg="doc/bondgraph-junctions_70%.jpg" />
 <source file="doc/bondgraph-junctions.shape">
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-junctions.shape" -->]]>
 </source>
@@ -186,7 +186,7 @@
 		<title>Terminals</title>
 		<body>
 <example-with-output title="Terminals" internal-id="bondgraph/terminals">
-<image pdf="doc/bondgraph-termbonds_3.pdf" jpg="doc/bondgraph-termbonds_y_big.jpg" />
+<image pdf="doc/bondgraph-termbonds_3.pdf" jpg="doc/bondgraph-termbonds_70%.jpg" />
 <source file="doc/bondgraph-termbonds.shape">
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-termbonds.shape" -->]]>
 </source>
@@ -287,7 +287,7 @@
 		<title>Bonds</title>
 		<body>
 <example-with-output title="Painting bonds" internal-id="bondgraph/bonds">
-<image pdf="doc/bondgraph-bonds_3.pdf" jpg="doc/bondgraph-bonds_y_big.jpg" />
+<image pdf="doc/bondgraph-bonds_3.pdf" jpg="doc/bondgraph-bonds_70%.jpg" />
 <source file="doc/bondgraph-bonds.shape">
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-bonds.shape" -->]]>
 </source>
@@ -438,7 +438,7 @@
 		<title>Effort and flow labels</title>
 		<body>
 <example-with-output title="Positioning labels" internal-id="bondgraph/labels">
-<image pdf="doc/bondgraph-labels_3.pdf" jpg="doc/bondgraph-labels_y_big.jpg" />
+<image pdf="doc/bondgraph-labels_3.pdf" jpg="doc/bondgraph-labels_70%.jpg" />
 <source file="doc/bondgraph-labels.shape">
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-labels.shape" -->]]>
 </source>
