@@ -40,6 +40,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <li><xsl:apply-templates/></li>
 </xsl:template>
 
+<xsl:template match="ul">
+  <ul><xsl:apply-templates/></ul>
+</xsl:template>
+<xsl:template match="ul/li">
+  <li><xsl:apply-templates/></li>
+</xsl:template>
+
 <xsl:template match="pre">
 <pre>
 <xsl:apply-templates/>
