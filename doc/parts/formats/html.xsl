@@ -74,6 +74,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</p>
 </xsl:template>
 
+<xsl:template name="head-navigation" >
+	<p>
+		<xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />index.html</xsl:attribute><xsl:text>To top.</xsl:text></xsl:element>
+		<xsl:if test="/book/up-link">
+			<xsl:text>  Up: </xsl:text><xsl:apply-templates select="/book/up-link" />
+		</xsl:if>
+	</p>
+</xsl:template>
 
 <xsl:template name="part-to-href">
 	<xsl:param name="name" />

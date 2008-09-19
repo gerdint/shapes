@@ -9,6 +9,7 @@
 	<meta-selflink><extension-href name="centering" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
 	<needs></needs>
 	<top>
 		<alphabetical-index/>

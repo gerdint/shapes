@@ -16,6 +16,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:element>
     </head>
     <body>
+			<xsl:call-template name="head-navigation" />
 			<h1><xsl:value-of select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />

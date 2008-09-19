@@ -9,6 +9,7 @@
 	<meta-selflink><extension-href name="bondgraph" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
 	<needs>
 		<a extension="blockdraw_wfo" />
 		<a extension="shiftoff" />

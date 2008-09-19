@@ -15,6 +15,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:element>
     </head>
     <body>
+			<xsl:call-template name="head-navigation" />
 			<xsl:apply-templates select="manhead" />
 			<hr class="thick"/>
 			<xsl:for-each select="section">
