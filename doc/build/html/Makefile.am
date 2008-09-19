@@ -19,6 +19,8 @@ SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
+SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
+
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
 extensions/index.html extensions/centering.html extensions/circle.html extensions/blockdraw_wfo.html extensions/bondgraph.html
 
@@ -30,6 +32,8 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
+SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
+html-INSTALL: $(SHEXT_FILES)
 
 extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 	install -d $(@D)
@@ -74,13 +78,17 @@ example/%.shape : ${top_srcdir}/examples/%.shape
 	install -d $(@D)
 	install -m 444 $< $@
 
+example/%.shext : ${top_srcdir}/examples/%.shext
+	install -d $(@D)
+	install -m 444 $< $@
+
 %.css : ${top_srcdir}/doc/styles/html/%.css
 	install -m 444 $< $@
 
-%.pdf %.stdout: %.shape
+%.pdf %.stdout: %.shape $(SHEXT_FILES)
 	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
 
-%_3.pdf %.stdout: %.shape
+%_3.pdf %.stdout: %.shape $(SHEXT_FILES)
 	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
