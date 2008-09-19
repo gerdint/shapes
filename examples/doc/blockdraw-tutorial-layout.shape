@@ -1,0 +1,65 @@
+##needs blockdraw_wfo
+##needs blockdraw-tutorial-tut-prefs
+
+tut_prefs
+|
+{ |** Tutorial preferences activated.
+
+SF: [putblockOrigin •page [sumpicture]]
+F: [putblockNearRight •page [longblock (TeX `$F$´)] SF]
+S1: [putblockNearRight •page [sumpicture] F]
+G1: [putblockFarRight •page [longblock (TeX `$G_{1}$´)] S1]
+S2: [putblockNearRight •page [sumpicture] G1]
+G2: [putblockNearRight •page [longblock (TeX `$G_{2}$´)] S2]
+H: [putblockNearAbove •page [longblock (TeX `$H$´)] S2]
+sn: [putblockNearAbove •page [splitdot] H]
+Ff: [putblockVeryFarLeft •page [longblock (TeX `$F_{\mathrm{f}}$´)] sn]
+Neg: [putblockNearBelow •page [squareblock (TeX `$-1$´)] G1]
+
+tr: [putblockFarLeft •page pointpicture SF]
+tn: [putblockFarAbove •page pointpicture H]
+sy: [putblockVeryNearRight •page [splitdot] G2]
+ty: [putblockFarRight •page pointpicture G2]
+
+ignore [] [connect •page tr SF]
+•page << [leftpointsign SF `+´]
+
+ignore [] [connect •page SF F]
+
+ignore [] [connect •page F S1]
+•page << [leftpointsign S1 `+´]
+
+ignore [] [connect •page S1 G1]
+
+ignore [] [connect •page G1 S2]
+•page << [leftpointsign S2 `+´]
+
+ignore [] [connect •page S2 G2]
+ignore [] [connect •page G2 ty]
+
+ignore [] [brconnect •page sy Neg]
+ignore [] [connect •page Neg SF]
+•page << [bottompointsign SF `+´]
+
+ignore [] [connect •page tn H]
+ignore [] [connect •page sn Ff]
+ignore [] [connect •page Ff S1]
+•page << [toppointsign S1 `+´]
+ignore [] [connect •page H S2]
+•page << [toppointsign S2 `+´]
+
+{
+  dashboxmargin: 4mm
+
+  x1: [leftpoint SF].x - dashboxmargin
+  x2: [rightpoint S1].x + dashboxmargin
+  x3: [rightpoint Ff].x + dashboxmargin
+  y1: [bottompoint F].y - dashboxmargin
+  y2: [bottompoint Ff].y - dashboxmargin
+  y3: [toppoint Ff].y + dashboxmargin
+
+  •page << hstyle1 | [stroke (x1,y1)--(x1,y3)--(x3,y3)--(x3,y2)--(x2,y2)--(x2,y1)--cycle]
+	      << [shift (x1+10mm,y3-5mm)] [] [centeratwlm (TeX `Regulator´) (~1,1)]
+}
+
+} |** End of tutorial preferences.

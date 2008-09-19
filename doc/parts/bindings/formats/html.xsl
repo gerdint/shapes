@@ -5,6 +5,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
+<xsl:include href="../../formats/language-elements-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -65,77 +66,5 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</body>
   </html>
 </xsl:template>
-
-<xsl:template match="system-binding[@identifier]">
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
-			<xsl:call-template name="name-to-binding"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<xsl:apply-templates />
-</xsl:template>
-
-<xsl:template match="system-binding[@identifier]/function">
- 	<xsl:apply-templates select="top"/>
- 	<xsl:apply-templates select="case"/>
- 	<xsl:apply-templates select="body"/>
-</xsl:template>
-
-<xsl:template match="system-binding[@identifier]/function/case">
-	<h4 class="plain">
-		<b>Case</b>  
- 		<xsl:apply-templates select="arguments"/>
-		<xsl:text>→ </xsl:text>
-		<xsl:choose>
-			<xsl:when test="@constructor-of">
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@constructor-of" /></xsl:with-param></xsl:call-template>
-			</xsl:when>
-			<xsl:when test="result">
-				<xsl:apply-templates select="result/type" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name">Void</xsl:with-param></xsl:call-template>
-			</xsl:otherwise>
-		</xsl:choose>
-	</h4>
-	<xsl:apply-templates select="type-templates" />
- 	<xsl:apply-templates select="dynamic-references"/>
- 	<xsl:apply-templates select="description"/>
-</xsl:template>
-
-<xsl:template match="dynamic-references[not(dynvar | dynstate)]">
-	<p><b>Dynamic references:</b><xsl:text> </xsl:text><em>none</em></p>
-</xsl:template>
-<xsl:template match="dynamic-references[dynvar | dynstate]">
-	<p><b>Dynamic references:</b><xsl:text> </xsl:text>
-		<xsl:apply-templates />
-	</p>
-</xsl:template>
-<xsl:template match="dynamic-references/dynstate[@name='all']">
-	<xsl:text>The entire dynamic state</xsl:text>
-</xsl:template>
-
-<xsl:template match="system-binding[@identifier]/hot">
-	<p><b>Hot value</b></p>
-	<p>Spawns states of type <xsl:apply-templates select="constructor-of" />.</p>
-</xsl:template>
-
-<xsl:template match="system-binding[@identifier]/simple-value">
-	<p><b>Type:</b><xsl:text> </xsl:text><xsl:apply-templates select="type"/></p>
-	<xsl:apply-templates select="description"/>
-	<xsl:if test="type/named-type">
-		<xsl:variable name="self"><xsl:value-of select="../@identifier" /></xsl:variable>
-		<xsl:variable name="t"><xsl:value-of select="type/named-type/@name" /></xsl:variable>
- 		<p>
-			<b>Related by type:</b>
-			<xsl:for-each select="//system-binding[@identifier!=$self]/simple-value/type/named-type[@name=$t]">
-				<xsl:text>  </xsl:text><xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../../@identifier" /></xsl:with-param></xsl:call-template>
-			</xsl:for-each>
-		</p>
-	</xsl:if>
-	<xsl:apply-templates select="see-also"/>
-</xsl:template>
-
 
 </xsl:stylesheet>

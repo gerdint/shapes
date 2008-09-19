@@ -4,6 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
+<xsl:include href="../../formats/language-elements-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -64,56 +65,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 		</body>
   </html>
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]">
-  <xsl:variable name="self">
-    <xsl:value-of select="@identifier" />
-  </xsl:variable>
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
-			<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<p><b>Used by: </b>
-		<xsl:for-each select="/book/external/section/system-binding[@identifier]">
-			<xsl:if test="function/case/dynamic-references/dynvar[@name=$self]">
-				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-			</xsl:if>
-		</xsl:for-each>
-	</p>
-	<xsl:apply-templates select="type" />
-	<xsl:apply-templates select="default" />
-	<xsl:apply-templates select="constraint" />
-	<xsl:apply-templates select="description" />
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]/type">
-	<p>
-		<b>Type: </b><xsl:apply-templates />
-	</p>
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]/default">
-	<p>
-		<b>Default binding: </b><xsl:apply-templates />
-	</p>
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]/constraint">
-	<p>
-		<b>Constraint: </b><xsl:apply-templates />
-	</p>
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]/description">
-	<h4>Description</h4>
-	<xsl:apply-templates />
-</xsl:template>
-
-<xsl:template match="dynamic-variable[@identifier]/constraint/self">
-	<xsl:call-template name="name-to-dynvar"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 </xsl:stylesheet>

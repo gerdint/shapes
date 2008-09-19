@@ -1,0 +1,48 @@
+##needs blockdraw_wfo
+
+##unit dx = 8cm
+##unit dy = 5cm
+
+from: [longblock (TeX `From´)]
+to: [longblock (TeX `To´)]
+
+dynamic @from identity from
+dynamic @to identity to
+
+helper: \ pth .>
+(
+@text_font:FONT_COURIER
+|
+(@from & @to
+ & [[shift [bottompoint @to & @from]+(1cm,~0.5cm)] [shiftoffwlm (newText << [sourceof pth]) to_bot]])
+)
+
+dynShift1: \ pos .> ( @from:[[shift pos+(~1cm,0.5cm)] from] & @to:[[shift pos+(1cm,2cm)] to] )
+dynShift2: \ pos .> ( @from:[[shift pos+(1cm,2cm)] from] & @to:[[shift pos+(~1cm,0.5cm)] to] )
+dynShift3: \ pos .> ( @from:[[shift pos+(1cm,0.5cm)] from] & @to:[[shift pos+(~1cm,2cm)] to] )
+dynShift4: \ pos .> ( @from:[[shift pos+(~1cm,2cm)] from] & @to:[[shift pos+(1cm,0.5cm)] to] )
+
+r: 0.8
+
+[dynShift1 (~0.7dx,0dy)] | { •page << [helper [locate [llconnect •page @from @to ~1mm]]] }
+[dynShift1 (0dx,~0.7dy)] | { •page << [helper [locate [bbconnect •page @from @to ~3mm]]] }
+[dynShift1 (0dx,0.7dy)] | { •page << [helper [locate [ttconnect •page @from @to 5mm]]] }
+[dynShift1 (0.7dx,0dy)] | { •page << [helper [locate [rrconnect •page @from @to 7mm]]] }
+
+[dynShift3 (~r*1dx,1.7dy)] | { •page << [helper [locate [trconnect •page @from @to]]] }
+[dynShift1 (0dx,1.7dy)] | { •page << [helper [locate [tbconnect •page @from @to]]] }
+[dynShift1 (r*1dx,1.7dy)] | { •page << [helper [locate [tlconnect •page @from @to]]] }
+
+[dynShift1 (1.7dx,r*1dy)] | { •page << [helper [locate [rbconnect •page @from @to]]] }
+[dynShift1 (1.7dx,0dy)] | { •page << [helper [locate [rlconnect •page @from @to]]] }
+[dynShift4 (1.7dx,~r*1dy)] | { •page << [helper [locate [rtconnect •page @from @to]]] }
+
+[dynShift4 (~r*1dx,~1.7dy)] | { •page << [helper [locate [blconnect •page @from @to]]] }
+[dynShift2 (0dx,~1.7dy)] | { •page << [helper [locate [btconnect •page @from @to]]] }
+[dynShift2 (r*1dx,~1.7dy)] | { •page << [helper [locate [brconnect •page @from @to]]] }
+
+[dynShift2 (~1.7dx,r*1dy)] | { •page << [helper [locate [ltconnect •page @from @to]]] }
+[dynShift2 (~1.7dx,0dy)] | { •page << [helper [locate [lrconnect •page @from @to]]] }
+[dynShift3 (~1.7dx,~r*1dy)] | { •page << [helper [locate [lbconnect •page @from @to]]] }
+
+

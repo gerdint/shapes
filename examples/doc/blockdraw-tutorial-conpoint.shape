@@ -1,0 +1,33 @@
+##needs blockdraw_wfo
+
+/**
+ ** This block just serve as something to select connection point on.
+ ** A connection point is a point on the boundary of the object where connection paths should attach.
+ **/
+F: [putblockOrigin •page [longblock (TeX `$F_{\mathrm{y}}(s)$´)]]
+
+/**
+ ** In the first two examples, the connection point is bound to a variable called "z" before we use it,
+ ** just to make clear what is the important part of this example; how this point is indicated in the
+ ** figure is non-standard in this example as we usually would connect the point with a point on another block.
+ **/
+{
+  z: [leftpoint F 2 2]
+  •page << [@connectpainter [reverse z--(+(~1cm,0))]]
+}
+{
+  z: [rightpoint F 2 1]
+  •page << [@connectpainter z--(+(1cm,0))]
+}
+
+/**
+ ** The number of points on a side defaults to 1, as does the index of the point on that side.
+ **/
+•page << [@connectpainter [reverse [bottompoint F]--(+(0,~1cm))]]
+
+/**
+ ** OK, we've seen the pattern now, binding the connection point to a variable before using it seems unncessary.
+ **/
+•page << [@connectpainter [toppoint F 3 1]--(+(0,5mm))]
+      << [@connectpainter [toppoint F 3 2]--(+(0,7mm))]
+      << [@connectpainter [toppoint F 3 3]--(+(0,9mm))]

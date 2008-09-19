@@ -93,23 +93,23 @@ putblockVeryFarAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlo
 putblockLabelSpaceAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @blockspacelabelspace]
 putblockLabelMarginAbove: \ •dst newBlock oldBlock .> [putblockAbove •dst newBlock oldBlock @abovelabelmargin]
 
-sizedblock: \ txt rx ry .>
+sizedblock: \ lbl rx ry .>
  (
-   [centerlabel [@textscaling txt]]
+   [centerlabel [@textscaling lbl]]
    &
    ( @width:@blocklw | [stroke (~rx,~ry)--(~rx,ry)--(rx,ry)--(rx,~ry)--cycle] )
  )
 
-longblock: \ txt .> [sizedblock txt @longblockrx @longblockry]
-squareblock: \ txt .> [sizedblock txt @smallblockr @smallblockr]
-fracblock: \ txt .> [sizedblock txt @longblockrx @fracblockry]
+longblock: \ lbl .> [sizedblock lbl @longblockrx @longblockry]
+squareblock: \ lbl .> [sizedblock lbl @smallblockr @smallblockr]
+fracblock: \ lbl .> [sizedblock lbl @longblockrx @fracblockry]
 
-longenoughblock: \ txt .> [sizedblock txt [max @longblockrx 1mm+0.5*([xmax [bbox txt]]-[xmin [bbox txt]])] @longblockry]
-longenoughfracblock: \ txt .> [sizedblock txt [max @longblockrx 1mm+0.5*([xmax [bbox txt]]-[xmin [bbox txt]])] @fracblockry]
+longenoughblock: \ lbl .> [sizedblock lbl [max @longblockrx 1mm+0.5*([xmax [bbox lbl]]-[xmin [bbox lbl]])] @longblockry]
+longenoughfracblock: \ lbl .> [sizedblock lbl [max @longblockrx 1mm+0.5*([xmax [bbox lbl]]-[xmin [bbox lbl]])] @fracblockry]
 
-roundblock: \ txt .>
+roundblock: \ lbl .>
   (
-    [centerat [@textscaling txt] (0,0)]
+    [centerat [@textscaling lbl] (0,0)]
     &
     ( @width:@blocklw | [stroke [circle @smallblockr]] )
   )
@@ -147,7 +147,7 @@ vhconnect: \ •dst pa pb .>
     respath
   }
 
-conlabel: \ shiftdir txt z .> [[shift z] [shiftoffwlm txt shiftdir]]
+conlabel: \ shiftdir lbl z .> [[shift z] [shiftoffwlm lbl shiftdir]]
 
 leftpoint:   \ pic n:1 i:1 .> { bb: [bbox pic] ([xmin bb], [mediate i/(n+1) [ymin bb] [ymax bb]])}
 rightpoint:  \ pic n:1 i:1 .> { bb: [bbox pic] ([xmax bb], [mediate i/(n+1) [ymin bb] [ymax bb]])}

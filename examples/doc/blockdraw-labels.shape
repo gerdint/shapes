@@ -1,0 +1,38 @@
+##needs blockdraw_wfo
+
+##unit dx = 8cm
+##unit dy = 2.5cm
+
+z: (0cm,0cm)
+
+helper: \ pos lbl .>
+[[shift pos]
+ ( @width:2bp & @stroking:RGB_RED | [spot z] )
+ & lbl
+ & [putlabelBelow @text_font:FONT_COURIER | (newText << [sourceof lbl]) z+(0,~5mm) 0]
+]
+
+•page << [helper (1dx,0dy) [locate [putlabelLeft (TeX `$z$´) z ~1]]]
+•page << [helper (2dx,0dy) [locate [putlabelLeft (TeX `$z$´) z 0]]]
+•page << [helper (3dx,0dy) [locate [putlabelLeft (TeX `$z$´) z 1]]]
+
+•page << [helper (1dx,~1dy) [locate [putlabelBelow (TeX `$z$´) z ~1]]]
+•page << [helper (2dx,~1dy) [locate [putlabelBelow (TeX `$z$´) z 0]]]
+•page << [helper (3dx,~1dy) [locate [putlabelBelow (TeX `$z$´) z 1]]]
+
+•page << [helper (1dx,~2dy) [locate [putlabelRight (TeX `$z$´) z ~1]]]
+•page << [helper (2dx,~2dy) [locate [putlabelRight (TeX `$z$´) z 0]]]
+•page << [helper (3dx,~2dy) [locate [putlabelRight (TeX `$z$´) z 1]]]
+
+•page << [helper (1dx,~3dy) [locate [putlabelAbove (TeX `$z$´) z ~1]]]
+•page << [helper (2dx,~3dy) [locate [putlabelAbove (TeX `$z$´) z 0]]]
+•page << [helper (3dx,~3dy) [locate [putlabelAbove (TeX `$z$´) z 1]]]
+
+{
+ tf: [shift (2dx,~4dy)]
+ p: [hhconnect •page [tf (~1cm,0cm)] [tf (1cm,0cm)] 0.5 0cm]
+ •page << [putlabelAbove (TeX `$g$´) p.begin.p ~1]
+ •page << [putlabelAbove (TeX `$G$´) p.end.p 1]
+ •page << [putlabelBelow (TeX `$x$´) p.begin.p ~1]
+ •page << [putlabelBelow (TeX `$X$´) p.end.p 1]
+}

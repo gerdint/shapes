@@ -4,6 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="xml" indent="no" />
 
 <xsl:include href="../../formats/html.xsl" />
+<xsl:include href="../../formats/language-elements-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -34,10 +35,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<p class="center">
 				<xsl:for-each select="/book/section/core-state-type[@name]">
 					<xsl:sort select="@name" />
-					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@name" /></xsl:attribute>
-						<xsl:call-template name="name-to-state-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-					</xsl:element>
+					<xsl:call-template name="name-to-linked-state-type">
+						<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+					</xsl:call-template>
 					  
 				</xsl:for-each>
 			</p>
@@ -54,10 +54,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<p class="center">
 					<xsl:for-each select="core-state-type[@name]">
 						<xsl:sort select="@name" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@name" /></xsl:attribute>
-							<xsl:call-template name="name-to-state-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-						</xsl:element>
+						<xsl:call-template name="name-to-linked-state-type">
+							<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+						</xsl:call-template>
 						  
 					</xsl:for-each>
 				</p>
@@ -66,42 +65,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 		</body>
   </html>
-</xsl:template>
-
-<xsl:template match="core-state-type[@name]">
-  <xsl:variable name="self">
-    <xsl:value-of select="@name" />
-  </xsl:variable>
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
-			State type <xsl:call-template name="name-to-state-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<xsl:apply-templates select="abstraction" />
-	<h4>Construction</h4>
-	<xsl:apply-templates select="description" />
-</xsl:template>
-
-<xsl:template match="core-state-type[@name]/abstraction">
-	<h4>Abstraction</h4>
-	<xsl:apply-templates />
-</xsl:template>
-
-<xsl:template match="core-state-type[@name]/description">
-	<h4>Description</h4>
-	<xsl:apply-templates />
-</xsl:template>
-
-<xsl:template match="core-state-type[@name]/abstraction/p/self">
-	<xsl:call-template name="name-to-state-type">
-		<xsl:with-param name="name"><xsl:value-of select="../../../@name" /></xsl:with-param>
-	</xsl:call-template>
-</xsl:template>
-<xsl:template match="core-state-type[@name]/description/p/self">
-	<xsl:call-template name="name-to-state-type">
-		<xsl:with-param name="name"><xsl:value-of select="../../../@name" /></xsl:with-param>
-	</xsl:call-template>
 </xsl:template>
 
 </xsl:stylesheet>

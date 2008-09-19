@@ -1,0 +1,39 @@
+##needs blockdraw_wfo
+
+##unit dx = 6cm
+##unit dy = 3cm
+helper:
+{
+  F0: [longblock (TeX `Old´)]
+  G0: [longblock (TeX `New´)]
+  \ •dst pos fun obj:G0 .>
+  {
+    F: [putblockOrigin •dst [[shift pos] F0]]
+		G: [fun •dst obj F]
+		•dst << [shift pos+(0,~0.5dy)] [] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
+  }
+}
+
+[helper •page (1dx,0dy) [locate putblockVeryNearRight]]
+[helper •page (1dx,~1dy) [locate putblockNearRight]]
+[helper •page (1dx,~2dy) [locate putblockLabelSpaceRight]]
+[helper •page (1dx,~3dy) [locate putblockFarRight]]
+[helper •page (1dx,~4dy) [locate putblockVeryFarRight]]
+
+[helper •page (2dx,0dy) [locate putblockVeryNearAbove]]
+[helper •page (3dx,0dy) [locate putblockVeryNearLeft]]
+[helper •page (4dx,0dy) [locate putblockVeryNearBelow]]
+
+[helper •page (2dx,~1dy) [locate putblockNearRight] [[shift (0,3mm)] [longblock (TeX `High´)]]]
+
+[helper •page (3dx,~1dy) [locate putblockLabelMarginLeft] (TeX `$u$´)]
+[helper •page (3dx,~2dy) [locate putblockLabelMarginBelow] (TeX `$u$´)]
+[helper •page (3dx,~3dy) [locate putblockLabelMarginRight] (TeX `$u$´)]
+[helper •page (3dx,~4dy) [locate putblockLabelMarginAbove] (TeX `$u$´)]
+
+{
+	fun: [locate putblockOrigin]
+  pos: (2.3dx,~2.5dy)
+	F: [fun •page [[shift pos] [longblock (TeX `New´)]]]
+	•page << [shift pos+(0,~0.5dy)] [] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
+}

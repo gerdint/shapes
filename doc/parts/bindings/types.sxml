@@ -4,6 +4,20 @@
 <p>At the time of writing, only a few types are directly accessible to the user; while other types are hidden, knowledge of them will still help understanding the language.  When, a binding exist, it will have the same identifier as is used to refer to the type abstractly in the documentation.  Types in the list below are represented with a global binding:</p>
 <ul>
 	<li><named-type name="Void" /></li>
+	<li><named-type name="Symbol" /></li>
+	<li><named-type name="Float" /></li>
+	<li><named-type name="Length" /></li>
+	<li><named-type name="Boolean" /></li>
+	<li><named-type name="String" /></li>
+	<li><named-type name="FloatPair" /></li>
+	<li><named-type name="Coords" /></li>
+	<li><named-type name="CornerCoords" /></li>
+	<li><named-type name="Function" /></li>
+	<li><named-type name="Transform" /></li>
+	<li><named-type name="Transform3D" /></li>
+	<li><named-type name="Drawable" /></li>
+	<li><named-type name="Drawable3D" /></li>
+	<li><named-type name="Color" /></li>
 </ul>
 </top>
 

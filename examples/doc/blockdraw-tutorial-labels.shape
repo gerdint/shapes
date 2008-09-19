@@ -1,0 +1,33 @@
+##needs blockdraw_wfo
+##needs blockdraw-tutorial-tut-prefs
+
+tut_prefs
+|
+{ |** Tutorial preferences activated.
+
+F: [putblockOrigin •page [longblock (TeX `$F(s)$´)]]
+S: [putblockNearLeft •page [sumpicture] F]
+G: [putblockFarRight •page [longblock (TeX `$G(s)$´)] F]
+
+tr: [putblockFarLeft •page pointpicture S]
+sy: [putblockVeryNearRight •page [splitdot] G]
+ty: [putblockFarRight •page pointpicture G]
+
+ignore [] [connect •page tr S]
+•page << [leftpointsign S `+´]
+
+ignore [] [connect •page S F]
+
+ignore [] [connect •page G ty]
+
+ignore [] [bbconnect •page sy S @blockspacenear]
+•page << [bottompointsign S `-´]
+
+{p: [connect •page F G]
+ •page << [putlabelAbove (TeX `$u$´) [mspoint p 0.5] 0]
+}
+
+•page << [putlabelAbove (TeX `$r$´) [toppoint tr] ~1]
+•page << [putlabelAbove (TeX `$y$´) [toppoint ty] 1]
+
+} |** End of tutorial preferences.

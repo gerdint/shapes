@@ -4,7 +4,7 @@
 <book>
 	<title>bondgraph</title>
 	<description>
-		<p>Application-specific function for bond graphs.</p>
+		<p>Application-specific functions for bond graphs.</p>
 	</description>
 	<meta-selflink><extension-href name="bondgraph" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />

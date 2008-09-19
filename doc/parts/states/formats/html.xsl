@@ -5,6 +5,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
+<xsl:include href="../../formats/language-elements-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -35,10 +36,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<p class="center">
 				<xsl:for-each select="/book/section/system-state[@identifier]">
 					<xsl:sort select="@identifier" />
-					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-						<xsl:value-of select="@identifier" />
-					</xsl:element>
+					<xsl:call-template name="name-to-linked-state">
+						<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+					</xsl:call-template>
 					  
 				</xsl:for-each>
 			</p>
@@ -55,10 +55,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<p class="center">
 					<xsl:for-each select="system-state[@identifier]">
 						<xsl:sort select="@identifier" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@identifier" /></xsl:attribute>
-							<xsl:value-of select="@identifier" />
-						</xsl:element>
+						<xsl:call-template name="name-to-linked-state">
+							<xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param>
+						</xsl:call-template>
 						  
 					</xsl:for-each>
 				</p>
@@ -67,20 +66,5 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		</body>
   </html>
 </xsl:template>
-
-<xsl:template match="system-state[@identifier]">
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
-			<xsl:call-template name="name-to-state"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<p>
-		<b>Type:</b><xsl:text> </xsl:text><xsl:apply-templates select="type"/>
-	</p>
-	<h4>Description</h4>
-	<xsl:apply-templates select="description/*"/>
-</xsl:template>
-
 
 </xsl:stylesheet>

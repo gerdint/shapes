@@ -5,6 +5,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:include href="../../formats/html.xsl" />
 <xsl:include href="../../formats/examplecode-html.xsl" />
+<xsl:include href="../../formats/language-elements-html.xsl" />
 
 <xsl:template match="/book">
   <html>
@@ -16,6 +17,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:element>
     </head>
     <body>
+			<xsl:call-template name="head-navigation" />
 			<h1><xsl:apply-templates select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
@@ -34,10 +36,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<p class="center">
 				<xsl:for-each select="/book/section/coretype[@name]">
 					<xsl:sort select="@name" />
-					<xsl:element name="a">
-						<xsl:attribute name="href">#<xsl:value-of select="@name" /></xsl:attribute>
-						<xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-					</xsl:element>
+					<xsl:call-template name="name-to-linked-type">
+						<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+					</xsl:call-template>
 					  
 				</xsl:for-each>
 			</p>
@@ -54,10 +55,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<p class="center">
 					<xsl:for-each select="coretype[@name]">
 						<xsl:sort select="@name" />
-						<xsl:element name="a">
-							<xsl:attribute name="href">#<xsl:value-of select="@name" /></xsl:attribute>
-							<xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-						</xsl:element>
+						<xsl:call-template name="name-to-linked-type">
+							<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
+						</xsl:call-template>
 						  
 					</xsl:for-each>
 				</p>
@@ -72,139 +72,192 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:variable name="self">
     <xsl:value-of select="@name" />
   </xsl:variable>
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
-			Type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<xsl:apply-templates select="abstraction" />
-	<h4>Construction</h4>
-	<xsl:if test="construction/syntax">
+	<div>
 		<p>
-			<b>Syntax:</b>
-			<xsl:for-each select="construction/syntax">
-				<xsl:text>  </xsl:text>
-				<xsl:apply-templates select="." />
-			</xsl:for-each>
+			<xsl:element name="table">
+				<xsl:attribute name="class">type</xsl:attribute>
+				<tr>
+					<th class="big" colspan="2">
+						<xsl:element name="a">
+							<xsl:attribute name="name">type/<xsl:value-of select="@name" /></xsl:attribute>
+							<xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
+						</xsl:element>
+					</th>
+				</tr>
+				<xsl:apply-templates select="abstraction" />
+				<tr>
+					<th class="heading" colspan="2">Construction</th>
+				</tr>
+				<xsl:if test="construction/syntax">
+					<tr>
+						<th class="horiz">Syntax:</th>
+						<td>
+							<xsl:for-each select="construction/syntax">
+								<xsl:text>  </xsl:text>
+								<xsl:apply-templates select="." />
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:if test="/book/external//operator-unary/case/result[@consider-constructor='yes' and named-type/@name=$self] | /book/external//operator-binary/case/result[@consider-constructor='yes' and named-type/@name=$self]">
+					<tr>
+						<th class="horiz">Operators:</th>
+						<td>
+							<xsl:for-each select="/book/external//operator-unary[@side='prefix']/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
+								<xsl:text>  ( </xsl:text>
+								<xsl:value-of select="../@op" />
+								<xsl:text> </xsl:text>
+								<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
+								<xsl:text> )</xsl:text>
+							</xsl:for-each>
+							<xsl:for-each select="/book/external//operator-unary[@side='postfix']/case/result[result/@consider-constructor='yes' and result/named-type/@name=$self]">
+								<xsl:text>  ( </xsl:text>
+								<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
+								<xsl:text> </xsl:text>
+ 								<xsl:value-of select="../@op" />
+								<xsl:text> )</xsl:text>
+							</xsl:for-each>
+							<xsl:for-each select="/book/external//operator-binary/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
+								<xsl:text>  ( </xsl:text>
+								<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@first-type" /></xsl:with-param></xsl:call-template>
+								<xsl:text> </xsl:text>
+ 								<xsl:value-of select="../@op" />
+								<xsl:text> </xsl:text>
+								<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@second-type" /></xsl:with-param></xsl:call-template>
+								<xsl:text> )</xsl:text>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:if test="/book/external//system-binding/function/case[@constructor-of=$self]">
+					<tr>
+						<th class="horiz">See also:</th>
+						<td>
+							<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
+								<xsl:text>  </xsl:text>
+								<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
+				<tr>
+					<th class="heading" colspan="2">Fields</th>
+				</tr>
+				<xsl:apply-templates select="fields" />
+				<xsl:if test="not(fields)">
+					<tr>
+						<td colspan="2">
+							<p>A value of type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template> has no fields.</p>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:apply-templates select="description" />
+				<tr>
+					<th class="heading" colspan="2">Involved operators</th>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<xsl:apply-templates select="operators" />
+						<table class="operator-table">
+							<tr><td colspan="5"><hr class="thick"/></td></tr>
+							<tr> <th colspan="5">Unary prefix operators</th> </tr>
+							<tr> <th></th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
+							<tr><td colspan="5"><hr /></td></tr>
+							<xsl:apply-templates select="/book/external//operator-unary[@side='prefix']/case[@type=$self]" />
+							<tr><td colspan="5"><hr class="thick"/></td></tr>
+							<tr> <th colspan="5">Unary postfix operators</th> </tr>
+							<tr> <th>Type</th> <th>Operator</th> <th></th> <th>Result</th> <th>Description</th> </tr>
+							<tr><td colspan="5"><hr /></td></tr>
+							<xsl:apply-templates select="/book/external//operator-unary[@side='postfix']/case[@type=$self]" />
+							<tr><td colspan="5"><hr class="thick"/></td></tr>
+							<tr> <th colspan="5">Binary operators</th> </tr>
+							<tr> <th>Type</th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
+							<tr><td colspan="5"><hr /></td></tr>
+							<xsl:apply-templates select="/book/external//operator-binary/case[@first-type=$self and @second-type=$self]" />
+							<xsl:apply-templates select="/book/external//operator-binary/case[@first-type=$self and @second-type!=$self]" />
+							<xsl:apply-templates select="/book/external//operator-binary/case[@first-type!=$self and @second-type=$self]" />
+							<tr><td colspan="5"><hr class="thick"/></td></tr>
+						</table>
+					</td>
+				</tr>
+				<xsl:if test="see-also">
+					<tr>
+						<th class="horiz">See also:</th>
+						<td>
+							<xsl:for-each select="see-also/*">
+								<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
+			</xsl:element>
 		</p>
-	</xsl:if>
-	<xsl:if test="/book/external//operator-unary/case/result[@consider-constructor='yes' and named-type/@name=$self] | /book/external//operator-binary/case/result[@consider-constructor='yes' and named-type/@name=$self]">
-		<p>
-			<b>Operators:</b>
-			<xsl:for-each select="/book/external//operator-unary[@side='prefix']/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
-				<xsl:value-of select="../@op" />
-				<xsl:text> </xsl:text>
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> )</xsl:text>
-			</xsl:for-each>
-			<xsl:for-each select="/book/external//operator-unary[@side='postfix']/case/result[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> </xsl:text>
- 				<xsl:value-of select="../@op" />
-				<xsl:text> )</xsl:text>
-			</xsl:for-each>
-			<xsl:for-each select="/book/external//operator-binary/case[result/@consider-constructor='yes' and result/named-type/@name=$self]">
-				<xsl:text>  ( </xsl:text>
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@first-type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> </xsl:text>
- 				<xsl:value-of select="../@op" />
-				<xsl:text> </xsl:text>
-				<xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@second-type" /></xsl:with-param></xsl:call-template>
-				<xsl:text> )</xsl:text>
-			</xsl:for-each>
-		</p>
-	</xsl:if>
-	<xsl:if test="/book/external//system-binding/function/case[@constructor-of=$self]">
-		<p>
-			<b>See also:</b>
-			<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
-				<xsl:text>  </xsl:text>
-				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
-			</xsl:for-each>
-		</p>
-	</xsl:if>
-	<h4>Fields</h4>
-	<xsl:apply-templates select="type-templates" />
-	<xsl:apply-templates select="fields" />
-	<xsl:if test="not(fields)">
-		<p>A value of type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template> has no fields.</p>
-	</xsl:if>
-	<xsl:apply-templates select="description" />
-	<h4>Involved operators</h4>
-	<xsl:apply-templates select="operators" />
-  <table class="operator-table">
-    <tr><td colspan="5"><hr class="thick"/></td></tr>
-    <tr> <th colspan="5">Unary prefix operators</th> </tr>
-    <tr> <th></th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
-    <tr><td colspan="5"><hr /></td></tr>
-    <xsl:apply-templates select="/book/external//operator-unary[@side='prefix']/case[@type=$self]" />
-    <tr><td colspan="5"><hr class="thick"/></td></tr>
-    <tr> <th colspan="5">Unary postfix operators</th> </tr>
-    <tr> <th>Type</th> <th>Operator</th> <th></th> <th>Result</th> <th>Description</th> </tr>
-    <tr><td colspan="5"><hr /></td></tr>
-    <xsl:apply-templates select="/book/external//operator-unary[@side='postfix']/case[@type=$self]" />
-    <tr><td colspan="5"><hr class="thick"/></td></tr>
-    <tr> <th colspan="5">Binary operators</th> </tr>
-    <tr> <th>Type</th> <th>Operator</th> <th>Type</th> <th>Result</th> <th>Description</th> </tr>
-    <tr><td colspan="5"><hr /></td></tr>
-    <xsl:apply-templates select="/book/external//operator-binary/case[@first-type=$self and @second-type=$self]" />
-    <xsl:apply-templates select="/book/external//operator-binary/case[@first-type=$self and @second-type!=$self]" />
-    <xsl:apply-templates select="/book/external//operator-binary/case[@first-type!=$self and @second-type=$self]" />
-    <tr><td colspan="5"><hr class="thick"/></td></tr>
-  </table>
-	<xsl:if test="see-also">
-		<p>
-			<b>See also:</b>
-			<xsl:for-each select="see-also/*">
-				<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
-			</xsl:for-each>
-		</p>
-	</xsl:if>
+	</div>
 </xsl:template>
 
 <xsl:template match="coretype[@name and definition]">
   <xsl:variable name="self">
     <xsl:value-of select="@name" />
   </xsl:variable>
-	<h3>
-		<xsl:element name="a">
-			<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
-			Type <xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
-		</xsl:element>
-	</h3>
-	<xsl:apply-templates select="abstraction" />
-	<h4>Defined as</h4>
-	<xsl:apply-templates select="definition" />
-	<xsl:if test="see-also or /book/external//system-binding/function/case[@constructor-of=$self]">
+	<div>
 		<p>
-			<b>See also:</b>
-			<xsl:for-each select="see-also/*">
-				<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
-			</xsl:for-each>
-			<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
-				<xsl:text>  </xsl:text>
-				<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
-			</xsl:for-each>
+			<xsl:element name="table">
+				<xsl:attribute name="class">type</xsl:attribute>
+				<tr>
+					<th class="big" colspan="2">
+						<xsl:element name="a">
+							<xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
+							<xsl:call-template name="name-to-type"><xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template>
+						</xsl:element>
+					</th>
+				</tr>
+				<xsl:apply-templates select="abstraction" />
+				<tr>
+					<th class="horiz">Defined as:</th>
+					<td><xsl:apply-templates select="definition"/></td>
+				</tr>
+				<xsl:if test="see-also or /book/external//system-binding/function/case[@constructor-of=$self]">
+					<tr>
+						<th class="horiz">See also:</th>
+						<td>
+							<xsl:for-each select="see-also/*">
+								<xsl:text>  </xsl:text><xsl:apply-templates select="."/>
+							</xsl:for-each>
+							<xsl:for-each select="/book/external//system-binding/function/case[@constructor-of=$self]">
+								<xsl:text>  </xsl:text>
+								<xsl:call-template name="name-to-linked-binding"><xsl:with-param name="name"><xsl:value-of select="../../@identifier" /></xsl:with-param></xsl:call-template>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
+			</xsl:element>
 		</p>
-	</xsl:if>
+	</div>
 </xsl:template>
 
 <xsl:template match="coretype[@name]/abstraction">
-	<h4>Abstraction</h4>
-	<xsl:apply-templates />
+	<tr>
+		<th class="horiz">Abstraction:</th>
+		<td><xsl:apply-templates /></td>
+	</tr>
 </xsl:template>
 
 <xsl:template match="coretype[@name]/fields">
-	<xsl:apply-templates select="top" />
-  <table cellspacing="5">
-    <tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
-    <tr><td colspan="3"><hr /></td></tr>
-    <xsl:apply-templates select="type-field"/>
-  </table>
+	<tr>
+		<td colspan="2">
+			<xsl:apply-templates select="top" />
+			<xsl:if test="../type-templates">
+				<xsl:apply-templates select="../type-templates" />
+			</xsl:if>
+			<table class="loose">
+				<tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
+				<tr><td colspan="3"><hr /></td></tr>
+				<xsl:apply-templates select="type-field"/>
+			</table>
+		</td>
+	</tr>
 </xsl:template>
+
 <xsl:template match="coretype/fields/type-field">
   <tr>
     <td><varname><xsl:value-of select="@name" /></varname></td>
@@ -214,8 +267,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="coretype[@name]/description">
-	<h4>Description</h4>
-	<xsl:apply-templates />
+	<tr>
+		<th class="heading" colspan="2">Description</th>
+	</tr>
+	<tr>
+		<td colspan="2"><xsl:apply-templates /></td>
+	</tr>
 </xsl:template>
 
 <xsl:template match="coretype[@name]/abstraction/p/self">

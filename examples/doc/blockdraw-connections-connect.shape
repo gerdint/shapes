@@ -1,0 +1,30 @@
+##needs blockdraw_wfo
+
+from: [longblock (TeX `From´)]
+to: [longblock (TeX `To´)]
+
+dynamic @to identity to
+
+dynShift: \ pos .> @to:[[shift pos] to]
+
+helper: \ start .>
+{
+  •dst: newGroup
+  •dst << from
+
+  [[range '0 '11 '3].foldsl
+   \ •page p e .>
+     {
+	     [dynShift 3cm*[dir (e*1+start)*(360°/'12)]] | { •page << @to  [ignore [connect •page from @to]] }
+		   p
+	   }
+   void
+   •dst]
+	•dst;
+}
+
+##unit dx = 8cm
+•page << [shift (0dx,0cm)] [] [helper 0]
+•page << [shift (1dx,0cm)] [] [helper 0.5]
+•page << [shift (2dx,0cm)] [] [helper 1]
+•page << [shift (3dx,0cm)] [] [helper 2]

@@ -62,8 +62,10 @@ h2 {
 }
 
 h3 {
-	font-size: 					1.3em;
 	margin-top:					1.2em;
+}
+h3, th.big {
+	font-size: 					1.3em;
 }
 
 h4 {
@@ -111,7 +113,7 @@ div.p pre {
 	margin-top:					0.5em;
 	margin-bottom:				0.5em;
 }
-div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates {
+div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates, div.p table.dynvars, div.p table.function, div.p table.simple, div.p table.hotvalue, div.p table.state, div.p table.state-type, div.p table.type {
 	margin-top:					0.1em;
 	margin-bottom:				0.1em;
 }
@@ -132,7 +134,7 @@ varname.replacable, typename.replacable, constname.replacable, filename.replacab
 typename.template
 { color: #0000FF; }
 
-pre, table.syntax, table.tokens, table.tight, table.loose, table.type-templates { margin-left: 1.5em; }
+pre, table.syntax, table.tokens, table.tight, table.loose, table.type-templates, table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { color: #009; }
@@ -154,9 +156,6 @@ remark div.p { margin-left: 0.5em; font-size: smaller; font-style: italic; }
 here-caption div.p { margin-left: 10%; margin-right: 10%; font-size: smaller; font-style: italic; }
 todo div.p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F00; }
 
-table.codefile { width:100%; background:#FFFFCC; }
-table.operator-table { width:100%; background:#FFFFCC; }
-table.constructor-table { background:#FFFFCC; }
 table.syntax { cellspacing:5; }
 table.tokens { cellspacing:5; }
 table.loose { cellspacing:5; }
@@ -164,7 +163,196 @@ table.tight { cellspacing:0; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 hr.thin { border:0; height:1px; color:#666; background:#000; }
 
-table.note { width:100%; border-style:solid; border-color:#0C0; }
+table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type
+{
+		text-align: left;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		cellspacing:0;
+		width:95%;
+}
+table.dynvars tr th, table.function tr th, table.simple tr th, table.hotvalue tr th, table.state tr th, table.state-type tr th, table.type tr th
+{
+		padding: 0em 2em 0em 2em;
+		text-align: left;
+		border-bottom: 2px solid #6699CC;
+		border-left: 1px solid #6699CC;
+		background-color: #BEC8D1;
+		color: #404040;
+}
+table.dynvars tr td, table.function tr td, table.simple tr td, table.hotvalue tr td, table.state tr td, table.state-type tr td, table.type tr td
+{
+		padding: 0em 0.5em 0em 0.5em;
+		vertical-align: top;
+}
+
+table.dynvars
+{
+		color: #404040;
+		border: 1px #6699CC solid;
+}
+table.dynvars, table.dynvars tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.dynvars tr td, table.dynvars tr th
+{
+		border-bottom: 2px solid #6699CC;
+		border-left: 1px solid #6699CC;
+}
+
+table.function
+{
+		color: #404040;
+		border: 1px #CC6633 solid;
+}
+table.function, table.function tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.function tr td, table.function tr th
+{
+		border-bottom: 2px solid #CC6633;
+		border-left: 1px solid #CC6633;
+}
+table.function tr th.heading
+{
+		font-size: 1em;
+		background-color: #FFCC99;
+}
+
+table.simple
+{
+		color: #404040;
+		border: 1px #333333 solid;
+}
+table.simple, table.simple tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.simple tr td, table.simple tr th
+{
+		border-bottom: 2px solid #333333;
+		border-left: 1px solid #333333;
+}
+
+table.hotvalue
+{
+		color: #404040;
+		border: 1px #FF3300 solid;
+}
+table.hotvalue, table.hotvalue tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.hotvalue tr td, table.hotvalue tr th
+{
+		border-bottom: 2px solid #FF3300;
+		border-left: 1px solid #FF3300;
+}
+table.hotvalue tr th.note
+{
+		font-size: 1em;
+		background-color: #FFFF33;
+}
+
+table.state
+{
+		color: #404040;
+		border: 1px #3366FF solid;
+}
+table.state, table.state tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.state tr td, table.state tr th
+{
+		border-bottom: 2px solid #3366FF;
+		border-left: 1px solid #3366FF;
+}
+
+table.state-type
+{
+		color: #404040;
+		border: 1px #669933 solid;
+}
+table.state-type, table.state-type tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.state-type tr td, table.state-type tr th
+{
+		border-bottom: 2px solid #669933;
+		border-left: 1px solid #669933;
+}
+
+table.type
+{
+		color: #404040;
+		border: 1px #FF6699 solid;
+}
+table.type, table.type tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.type tr td, table.type tr th
+{
+		border-bottom: 2px solid #FF6699;
+		border-left: 1px solid #FF6699;
+}
+table.type tr th.heading
+{
+		padding-top: 0.3em
+		font-size: 1em;
+		background-color: #F0F0F9;
+		border-bottom: 1px solid #FF6699;
+}
+
+table.dynvars tr th.horiz, table.function tr th.horiz, table.simple tr th.horiz, table.hotvalue tr th.horiz, table.state tr th.horiz, table.state-type tr th.horiz, table.type tr th.horiz
+{
+		width: 10em;
+		text-align: right;
+}
+
+table.note
+{
+		width:100%;
+		border-top: 1px solid;
+		border-bottom: 1px solid;
+		border-left: none;
+		border-right: none;
+		border-color:#0C0;
+		background-color: #CCFFCC;
+		margin: 5px
+}
+table.operator-table { width:100%; }
+table.constructor-table { background:#FFFFCC; }
+table.codefile
+{
+		width:100%;
+		border-top: 3px solid #000;
+		border-bottom: 3px solid #000;
+		border-left: 2px solid #000;
+		border-right: 2px solid #000;
+}
+
+table.loose tr th, table.loose tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td, table.note tr td
+{
+		padding: 0em 0.5em 0em 0.5em;
+		border-bottom: none;
+		border-left: none;
+		color: #000;
+}
+table.loose tr th, table.loose tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td
+{
+		background-color: #fafafa;
+}
+table.loose tr th, table.tight tr th, table.operator-table tr th, table.type-templates tr th, table.codefile tr th
+{
+		padding: 0em 2em 0em 2em;
+		text-align: center;
+}
+
 
 .tex sub, .latex sub, .latex sup {
   text-transform: uppercase;

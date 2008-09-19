@@ -10,7 +10,7 @@
 		<p>Holds result of single-page programs.</p>
 		<p>It is an error if the program terminates with both <self /> and <state name="catalog" /> being non-empty.</p>
 		<note>
-			<p>Note the conceptual difference between programs that produce many pages of output (and it may happen to be just one), and programs that produce just one piece of graphics; a “book” with just one page is still a book, and hence not something which should be included on a page of another document.  If the output is something to be placed on a page of an external document, then there is only one logical page to paint, namely <self />.</p>
+			<p>Note the conceptual difference between programs that produce many pages of output (and it may happen to be just one), and programs that produce just one piece of graphics; a “book” with just one page is still a book, and hence not something which should be included on a page of another document.  If the output is something to be placed on a page of an external document, then there is only one logical page to paint, namely <state name="page" />.</p>
 		</note>
 	</description>
 </system-state>

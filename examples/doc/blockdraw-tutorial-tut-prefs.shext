@@ -1,0 +1,9 @@
+hwidth: 0.3bp
+hdash: [dashpattern 2.5mm 2.5mm]
+hdash1: [dashpattern 4mm 1mm 3bp 1mm 3bp 1mm]
+hstyle: @width:hwidth & @dash:hdash
+hstyle1: @width:hwidth & @dash:hdash1
+hboxmargin: 3mm
+hboxmargin1: 2mm
+
+tut_prefs: @blockspacenear:6mm
