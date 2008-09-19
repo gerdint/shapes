@@ -48,6 +48,7 @@
 			<p>When positioning text relative to other elements, it often looks good if labels appear at a certain distance from the objects they label.  This idea is implemented as functions using a common dynamic variable.</p>
 
 			<dynamic-variable identifier="labelmargin">
+				<default><physical><scalar>1</scalar><unit>mm</unit></physical></default>
 				<type><named-type name="Length" /></type>
 				<description>
 					<p>Distance to be used when placing labels relative to the point they label.</p>
