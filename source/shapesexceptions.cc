@@ -277,7 +277,7 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 						}
 					if( sourceDir_ != 0 && (*i)[0] != '/' )
 						{
-							os << *sourceDir_ << "/" ;
+							os << *sourceDir_ ;
 						}
 					os << *i ;
 				}

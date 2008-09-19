@@ -19,7 +19,7 @@ Kernel::registerClasses( Kernel::Environment * env )
 	env->initDefineClass( Lang::FloatPair::TypeID );
 	env->initDefineClass( Lang::Coords2D::TypeID );
 	env->initDefineClass( Lang::CornerCoords2D::TypeID );
- 
+
 	env->initDefineClass( Lang::Function::TypeID );
 	env->initDefineClass( Lang::Transform2D::TypeID );
 	env->initDefineClass( Lang::Transform3D::TypeID );
