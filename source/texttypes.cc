@@ -588,6 +588,9 @@ Lang::KernedText::shipout( std::ostream & os, Kernel::PageContentStates * pdfSta
 								case ')':
 									os << "\\)" ;
 									break;
+								case '\\':
+									os << "\\\\" ;
+									break;
 								case '\n':
 									os << ")] TJ T* [(" ;
 									break;

@@ -247,6 +247,9 @@ SimplePDF::PDF_LiteralString::writeTo( std::ostream & os, SimplePDF::PDF_xref * 
 				case ')':
 					os << "\\)" ;
 					break;
+				case '\\':
+					os << "\\\\" ;
+					break;
 				default:
 					os << *src ;
 				}
