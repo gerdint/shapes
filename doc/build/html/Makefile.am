@@ -107,12 +107,16 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
+# Warning!
+# Dependencies such as extensions/../dynamic.html will cause dynamic.html to be built as if it was the extension ../dynamic.html ,
+# which will produce the wrong result.
+# Therefore, we make an attempt at removing collapsable parts from the dependencies.
 extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
 	$(SAXON) $< ${docdir}/extensions/formats/html.xsl | \
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL : $$( sed  -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL : $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
