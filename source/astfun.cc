@@ -617,6 +617,7 @@ Kernel::CallCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsU
 		}
 	else
 		{
+			evalState->env_ = env_; /* This matters only when the function being called is FunctionFunction! */
 			evalState->dyn_ = dyn_;
 			evalState->cont_ = cont_;
 			fun_->call( evalState, args, traceLoc_ );

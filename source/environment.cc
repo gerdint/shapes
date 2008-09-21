@@ -683,7 +683,7 @@ Kernel::Environment::lookup( size_t pos, Kernel::EvalState * evalState ) const
 
 Kernel::VariableHandle
 Kernel::Environment::getVarHandle( const Kernel::Environment::LexicalKey & lexKey )
-{ 
+{
 	Environment * env = this;
 	for( size_t i = lexKey.up_; i > 0; --i )
 		{
@@ -1086,7 +1086,7 @@ Kernel::Environment::recursivePrint( std::ostream & os, std::set< MapType::key_t
 		{
 			for( MapType::const_iterator i = bindings_->begin( ); i != bindings_->end( ); ++i )
 				{
-					os << indentation << "| " ;
+					os << indentation << i->second ;
 					if( shadowedBefore.find( i->first ) != shadowedBefore.end( ) )
 						{
 							os << "#" ;
