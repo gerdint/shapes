@@ -1,0 +1,21 @@
+##needs blockdraw_wfo
+
+##unit dx = 6cm
+##unit dy = 2cm
+
+helper: \ pos obj .>
+  [[shift pos]
+   obj & [[shift (0,~0.5dy)] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof obj]) to_top]]]
+
+•page << [helper (1dx,1dy) [locate [sumpicture]]]
+•page << [helper (2dx,1dy) [locate [squareblock (TeX `$-1$´)]]]
+•page << [helper (3dx,1dy) [locate [splitdot]]]
+•page << [helper (4dx,1dy) [locate [termcircle]]]
+•page << [helper (1dx,0dy) [locate [longblock (TeX `$F$´)]]]
+•page << [helper (1dx,~1dy) [locate [longenoughblock (TeX `$F$´)]]]
+•page << [helper (1dx,~2dy) [locate [longenoughblock (TeX `Regulator 1´)]]]
+•page << [helper (3dx,0dy) [locate [fracblock (TeX `$\frac{1+s}{2+s^{2}}$´)]]]
+•page << [helper (3dx,~1dy) [locate [longenoughfracblock (TeX `$\frac{1+s}{2+s^{2}}$´)]]]
+•page << [helper (3dx,~2dy) [locate [longenoughfracblock (TeX `$\frac{1+s+s^{2}+s^{3}+s^{4}}{2+s^{5}}$´)]]]
+•page << [helper (1dx,~3dy) [locate [sizedblock (TeX `$\pi$´) 2mm 2mm]]]
+•page << [helper (3dx,~3dy) [locate [roundblock (TeX `$\Pi$´)]]]

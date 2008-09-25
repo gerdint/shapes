@@ -1,0 +1,37 @@
+##needs blockdraw_wfo
+
+##unit dx = 6cm
+##unit dy = 3cm
+
+F: [longblock (TeX `$F$´)]
+S: [sumpicture]
+
+helper: \ pos pt blk .>
+[[shift pos]
+ blk & (@width:4bp & @stroking:RGB_RED | [spot pt])
+ &
+ [[shift (0,~0.5dy)] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof pt]) to_top]]]
+
+•page << [helper (1dx,0dy) [locate [leftpoint F]] F]
+•page << [helper (2dx,0dy) [locate [leftpoint F 2]] F]
+•page << [helper (3dx,0dy) [locate [leftpoint F 2 1]] F]
+•page << [helper (4dx,0dy) [locate [leftpoint F 2 2]] F]
+•page << [helper (5dx,0dy) [locate [leftpoint F 2 3]] F]
+
+•page << [helper (1dx,~1dy) [locate [rightpoint F]] F]
+•page << [helper (2dx,~1dy) [locate [rightpoint F 3]] F]
+•page << [helper (3dx,~1dy) [locate [rightpoint F 3 1]] F]
+•page << [helper (4dx,~1dy) [locate [rightpoint F 3 2]] F]
+•page << [helper (5dx,~1dy) [locate [rightpoint F 3 3]] F]
+
+•page << [helper (1dx,~2dy) [locate [bottompoint F]] F]
+•page << [helper (2dx,~2dy) [locate [bottompoint F 4]] F]
+•page << [helper (3dx,~2dy) [locate [bottompoint F 4 1]] F]
+•page << [helper (4dx,~2dy) [locate [bottompoint F 4 2]] F]
+•page << [helper (5dx,~2dy) [locate [bottompoint F 4 3]] F]
+
+•page << [helper (1dx,~3dy) [locate [toppoint S]] S]
+•page << [helper (2dx,~3dy) [locate [toppoint S 5]] S]
+•page << [helper (3dx,~3dy) [locate [toppoint S 5 1]] S]
+•page << [helper (4dx,~3dy) [locate [toppoint S 5 2]] S]
+•page << [helper (5dx,~3dy) [locate [toppoint S 5 3]] S]

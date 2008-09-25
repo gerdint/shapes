@@ -12,13 +12,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="example-with-output[@*]">
 	<div class="p">
 		<table class="codefile">
-			<tr><td><hr class="thick"/></td></tr>
-			<tr><th colspan="3"><xsl:value-of select="@title" /></th></tr>
+			<tr><th colspan="3">
+					<xsl:choose>
+						<xsl:when test="@id" >
+							<xsl:element name="a">
+								<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
+								<xsl:value-of select="@title" />
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@title" />
+						</xsl:otherwise>
+					</xsl:choose>
+			</th></tr>
 			<xsl:apply-templates select="image" />
 			<xsl:apply-templates select="caption" />
 			<xsl:apply-templates select="source" />
 			<xsl:apply-templates select="stdout" />
-			<tr><td><hr class="thick"/></td></tr>
 		</table>
 	</div>
 </xsl:template>

@@ -1,0 +1,28 @@
+##needs bondgraph
+
+##unit dx = 8cm
+##unit dy = 3.5cm
+dc: (2.5cm,0)
+
+centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
+
+helper: \ pos dc fun lbl .>
+[[shift pos]
+{
+  j1: sjunction
+  j2: [shift dc] [] pjunction
+  p: [bgconnect j1 j2]
+	centermark & [[shift dc] centermark]
+	& j1 & j2
+	& [fun p]
+  & [[shift 0.5*dc + (0,~1.2cm)] [shiftoffwlm lbl to_bot]]
+}]
+
+•page << [helper (1dx,3dy) dc [stroke head:MetaPostArrow ...] (TeX `\texttt{head:MetaPostArrow}´)]
+
+•page << [helper (1dx,2dy) dc [stroke head:[bondgraphArrow doHook:true ...] ...] (TeX `\texttt{head:[bondgraphArrow doHook:true ...]}´)]
+•page << [helper (2dx,2dy) dc [stroke head:[bondgraphArrow doCausal:true ...] ...] (TeX `\texttt{head:[bondgraphArrow doCausal:true ...]}´)]
+
+•page << [helper (1dx,1dy) dc ubond (TeX `\texttt{ubond}´)]
+•page << [helper (2dx,1dy) dc hbond (TeX `\texttt{hbond}´)]
+•page << [helper (3dx,1dy) dc tbond (TeX `\texttt{tbond}´)]

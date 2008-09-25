@@ -1,0 +1,27 @@
+##needs bondgraph
+
+##unit dx = 6cm
+##unit dy = 6cm
+dc: (2cm,0cm)
+
+centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
+
+helper: \ pos dc fun lbl .>
+{
+  •dst: newGroup
+  •dst << [[shift dc] centermark]
+       << sjunction
+       << [stroke [fun •dst pointpicture dc (TeX `I: $m_{1}$´)] head:MetaPostArrow]
+       << [[shift (0,~2.5cm)] [shiftoffwlm lbl to_bot]]
+  [shift pos] [] (•dst)
+}
+
+•page << [helper (1dx,2dy) [rotate 0°][]dc terminalfrom (TeX `\texttt{terminalfrom}´)]
+•page << [helper (2dx,2dy) [rotate 90°][]dc terminalfrom (TeX `\texttt{terminalfrom}´)]
+•page << [helper (3dx,2dy) [rotate 180°][]dc terminalfrom (TeX `\texttt{terminalfrom}´)]
+•page << [helper (4dx,2dy) [rotate 270°][]dc terminalfrom (TeX `\texttt{terminalfrom}´)]
+
+•page << [helper (1dx,1dy) [rotate 0°][]dc terminalto (TeX `\texttt{terminalto}´)]
+•page << [helper (2dx,1dy) [rotate 90°][]dc terminalto (TeX `\texttt{terminalto}´)]
+•page << [helper (3dx,1dy) [rotate 180°][]dc terminalto (TeX `\texttt{terminalto}´)]
+•page << [helper (4dx,1dy) [rotate 270°][]dc terminalto (TeX `\texttt{terminalto}´)]

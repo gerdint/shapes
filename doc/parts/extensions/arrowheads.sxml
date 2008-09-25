@@ -9,6 +9,7 @@
 	<meta-selflink><extension-href name="arrowheads" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
 	<needs></needs>
 	<top>
 		<alphabetical-index/>
@@ -49,8 +50,8 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 							<type><named-type name="Length" /></type>
 							<default><binding name="void" /></default>
 						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
+						<arg identifier="ahAngle">
+							<type><named-type name="Float" /></type>
 							<default><eq>30°</eq></default>
 						</arg>
 						<arg identifier="fillAsStrokeing">
@@ -85,8 +86,8 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 							<type><named-type name="Length" /></type>
 							<default><binding name="void" /></default>
 						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
+						<arg identifier="ahAngle">
+							<type><named-type name="Float" /></type>
 							<default><eq>30°</eq></default>
 						</arg>
 						<arg identifier="fillAsStrokeing">
@@ -130,8 +131,8 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 							<type><named-type name="Length" /></type>
 							<default><binding name="void" /></default>
 						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
+						<arg identifier="ahAngle">
+							<type><named-type name="Float" /></type>
 							<default><eq>30°</eq></default>
 						</arg>
 					</arguments>
@@ -165,8 +166,8 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 							<type><named-type name="Length" /></type>
 							<default><binding name="void" /></default>
 						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
+						<arg identifier="ahAngle">
+							<type><named-type name="Float" /></type>
 							<default><eq>30°</eq></default>
 						</arg>
 						<arg identifier="fillAsStrokeing">
@@ -205,8 +206,8 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 							<type><named-type name="Length" /></type>
 							<default><binding name="void" /></default>
 						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
+						<arg identifier="ahAngle">
+							<type><named-type name="Float" /></type>
 							<default><eq>30°</eq></default>
 						</arg>
 						<arg identifier="fillAsStrokeing">

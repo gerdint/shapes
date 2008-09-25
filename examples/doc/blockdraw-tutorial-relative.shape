@@ -1,0 +1,4 @@
+##needs blockdraw_wfo
+
+S: [putblockOrigin •page [sumpicture]]
+F: [putblockFarRight •page [longblock (TeX `$F_{\mathrm{y}}(s)$´)] S]

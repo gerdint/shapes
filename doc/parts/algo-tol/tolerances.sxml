@@ -3,7 +3,7 @@
 	<default><physical><scalar>0.1</scalar><unit>bp</unit></physical></default>
 	<command-line-option-derived>length</command-line-option-derived>
 	<description>
-		<p>Set maximum integration step length to use when integrating along paths.  See also <tol-param name="dtmin" />.</p>
+		<p>Maximum integration step length to use when integrating along paths.  See also <tol-param name="dtmin" />.</p>
 	</description>
 </tolerance-parameter>
 
@@ -12,7 +12,7 @@
 	<default><sci-fmt mantissa="1" exp="-4" /></default>
 	<command-line-option-derived>low</command-line-option-derived>
 	<description>
-		<p>Set minimum integration step to use when integrating along paths.  See also <tol-param name="arcdelta" />.</p>
+		<p>Minimum integration step to use when integrating along paths.  See also <tol-param name="arcdelta" />.</p>
 	</description>
 </tolerance-parameter>
 

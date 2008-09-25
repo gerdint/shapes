@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<book>
+	<title>bondgraph</title>
+	<description>
+		<p>Application-specific functions for bond graphs.</p>
+	</description>
+	<meta-selflink><extension-href name="bondgraph" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
+	<needs>
+		<a extension="blockdraw_wfo" />
+		<a extension="shiftoff" />
+		<a extension="centering" />
+	</needs>
+	<top>
+		<alphabetical-index/>
+		<p>A <em>bond graph</em> is graphical representation of a dynamic model in one of several analogous physical domains.  What they look like is best explained by an example.</p>
+<example-with-output title="Bond graph example" internal-id="bondgraph/intro">
+<image pdf="showcase/bonddemo_3.pdf" jpg="showcase/bonddemo_70%.jpg" />
+<source file="showcase/bonddemo.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)showcase/bonddemo.shape" -->]]>
+</source>
+<caption>
+	<p>A typical application of the <a extension="bondgraph" /> extension.</p>
+</caption>
+</example-with-output>
+
+    <p>Unlike the blocks typically used with <a extension="blockdraw_wfo" />, the corresponding elements here, the junctions, do not have a visible border and their bounding boxes are not used.  Instead, a circle of radius <dynvar extension="blockdraw_wfo" name="smallblockr" />, centered at the junction's origin, defines where bonds connect with the junction.  The extension also helps with other tasks, such as drawing the unusual arrowheads and putting the effort and flow labels on the correct side of the bond.</p>
+	</top>
+
+	<section id="extensions/bondgraph/junctions">
+		<title>Junctions</title>
+		<body>
+<example-with-output title="Junctions" internal-id="bondgraph/junctions">
+<image pdf="doc/bondgraph-junctions_3.pdf" jpg="doc/bondgraph-junctions_70%.jpg" />
+<source file="doc/bondgraph-junctions.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-junctions.shape" -->]]>
+</source>
+<caption>
+	<p>Four types of junctions, clarifying the meaning of the direction parameter for transformers and gyrators.</p>
+</caption>
+</example-with-output>
+
+			<system-binding identifier="pjunction">
+				<simple-value>
+					<type><named-type name="Drawable" /></type>
+					<description>
+						<p>A parallel (type 0) junction.</p>
+					</description>
+					<see-also>
+						<binding extension="bondgraph" name="sjunction" />
+						<binding extension="bondgraph" name="tfjunction" />
+						<binding extension="bondgraph" name="gyjunction" />
+						<binding extension="bondgraph" name="junction" />
+					</see-also>
+				</simple-value>
+			</system-binding>
+
+			<system-binding identifier="sjunction">
+				<simple-value>
+					<type><named-type name="Drawable" /></type>
+					<description>
+						<p>A serial (type 1) junction.</p>
+					</description>
+					<see-also>
+						<binding extension="bondgraph" name="pjunction" />
+						<binding extension="bondgraph" name="tfjunction" />
+						<binding extension="bondgraph" name="gyjunction" />
+						<binding extension="bondgraph" name="junction" />
+					</see-also>
+				</simple-value>
+			</system-binding>
+
+			<system-binding identifier="tfjunction">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="arrowdir">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="lbl">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>Constructs a transformer junction.</p>
+							<p>The <arg name="arrowdir" /> value should be one of the constants for non-diagonal directions defined by <a extension="shiftoff" />, and tells the direction in which the arrow by the transformer is pointing (that is, not in which direction the arrow is located relative to the transformer).  The label <arg name="lbl" /> is placed outside the arrow.</p>
+						</description>
+						<see-also>
+							<binding extension="bondgraph" name="pjunction" />
+							<binding extension="bondgraph" name="sjunction" />
+							<binding extension="bondgraph" name="gyjunction" />
+							<binding extension="bondgraph" name="junctionlbl" />
+						</see-also>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="gyjunction">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="arrowdir">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="lbl">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>Constructs a gyrator junction.</p>
+							<p>This is almost like <binding extension="bondgraph" name="tfjunction" />, but the symbol is different, and the little arrow is never drawn; <arg name="arrowdir" /> is only used to control the position of <arg name="lbl" /> relative to the gyrator.</p>
+						</description>
+						<see-also>
+							<binding extension="bondgraph" name="pjunction" />
+							<binding extension="bondgraph" name="sjunction" />
+							<binding extension="bondgraph" name="tfjunction" />
+							<binding extension="bondgraph" name="junctionlbl" />
+						</see-also>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="junction">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="txt">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>This function is low-level and should not be used directly in standard applications.</p>
+							<p>Centers the argument at the origin, and sets a suitable bounding box.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="pjunction" /> <binding extension="bondgraph" name="sjunction" /> <binding extension="bondgraph" name="junctionlbl" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="junctionlbl">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="txt">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="arrowdir">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="lbl">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="doArrow">
+								<type><named-type name="Boolean" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>This function is low-level and should not be used directly in standard applications.</p>
+							<p>Extends <binding extension="bondgraph" name="junction" /> by also adding a label, and possibly a small arrow between the junction mark and the label.</p>
+							<p>The <arg name="arrowdir" /> value should be one of the constants for non-diagonal directions defined by <a extension="shiftoff" />.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="tfjunction" /> <binding extension="bondgraph" name="gyjunction" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/bondgraph/terminals">
+		<title>Terminals</title>
+		<body>
+<example-with-output title="Terminals" internal-id="bondgraph/terminals">
+<image pdf="doc/bondgraph-termbonds_3.pdf" jpg="doc/bondgraph-termbonds_70%.jpg" />
+<source file="doc/bondgraph-termbonds.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-termbonds.shape" -->]]>
+</source>
+<caption>
+	<p>Terminals with bonds.  The terminal, positioned at the plus mark, is connected with the serial junction.  The non-pure fuctions <binding extension="bondgraph" name="terminalto" /> and <binding extension="bondgraph" name="terminalfrom" /> will add the terminal label to a <named-state-type name="Group" /> state and return the path for the bond.  The path is then stroked with an arrowhead to indicate its extent and direction.</p>
+</caption>
+</example-with-output>
+
+			<system-binding identifier="terminalfrom">
+				<function>
+					<case>
+						<arguments>
+							<state identifier="dst">
+								<type><named-state-type name="Group" /></type>
+							</state>
+							<arg identifier="oldBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="pos">
+								<type><named-type name="Coords" /></type>
+							</arg>
+							<arg identifier="newBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Path" /></type>
+						</result>
+						<description>
+							<p>Places <arg name="newBlock" /> near <arg name="pos" /> in such a position that it can be beautifully connected to <arg name="oldBlock" />, and adds it to <state-arg name="dst" /> as a side effect.</p>
+							<p>The <arg name="newBlock" /> will typically be just a label, while <arg name="oldBlock" /> is an existing junction.</p>
+							<p>The result is a path for the bond <em>from</em> <arg name="oldBlock" /> to <arg name="newBlock" />.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="putblockTerminal" /> <binding extension="bondgraph" name="bgconnect" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="terminalto">
+				<function>
+					<case>
+						<arguments>
+							<state identifier="dst">
+								<type><named-state-type name="Group" /></type>
+							</state>
+							<arg identifier="oldBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="pos">
+								<type><named-type name="Coords" /></type>
+							</arg>
+							<arg identifier="newBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Path" /></type>
+						</result>
+						<description>
+							<p>Places <arg name="newBlock" /> near <arg name="pos" /> in such a position that it can be beautifully connected to <arg name="oldBlock" />, and adds it to <state-arg name="dst" /> as a side effect.</p>
+							<p>The <arg name="newBlock" /> will typically be just a label, while <arg name="oldBlock" /> is an existing junction.</p>
+							<p>The result is a path for the bond <em>to</em> <arg name="oldBlock" /> from <arg name="newBlock" />.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="putblockTerminal" /> <binding extension="bondgraph" name="bgconnect" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="putblockTerminal">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="newBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="pos">
+								<type><named-type name="Coords" /></type>
+							</arg>
+							<arg identifier="oldBlock">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>This function is low-level and should not be used directly in standard applications.</p>
+							<p>Places <arg name="newBlock" /> near <arg name="pos" /> in such a position that it can be beautifully connected to <arg name="oldBlock" />.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="terminalto" /> <binding extension="bondgraph" name="terminalfrom" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+		</body>
+	</section>
+
+	<section id="extensions/bondgraph/bonds">
+		<title>Bonds</title>
+		<body>
+<example-with-output title="Painting bonds" internal-id="bondgraph/bonds">
+<image pdf="doc/bondgraph-bonds_3.pdf" jpg="doc/bondgraph-bonds_70%.jpg" />
+<source file="doc/bondgraph-bonds.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-bonds.shape" -->]]>
+</source>
+<caption>
+	<p>Various means to paint a bond path.  In the top row, the extent and direction of the path is indicated using a standard stroke with an arrowhead.  The second row shows how <binding extension="bondgraph" name="bondgraphArrow" /> may be used to produce arrowheads suited for bond graph bonds, but note that direct use of these arrowheads is considered low-level, and the user should use the convenience function illustrated in the last row instead.</p>
+</caption>
+</example-with-output>
+
+			<system-binding identifier="bgconnect">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="pica">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="picb">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Path" /></type>
+						</result>
+						<dynamic-references><dynvar extension="blockdraw_wfo" name="smallblockr" /></dynamic-references>
+						<description>
+							<p>Constructs the path that shall be used for drawing the bond between junctions.</p>
+							<p>If terminal points are involved, the convenience functions <binding extension="bondgraph" name="terminalto" /> or <binding extension="bondgraph" name="terminalfrom" /> may produce the path instead.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="ubond">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<description>
+							<p>Draws a bond along the path <arg name="p" />, with <em>undetermined</em> causality (that is, without a causality mark).</p>
+							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="hbond">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<description>
+							<p>Draws a bond along the path <arg name="p" />, placing a causality mark at the <em>head</em> of the path.</p>
+							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="tbond">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<description>
+							<p>Draws a bond along the path <arg name="p" />, placing a causality mark at the <em>tail</em> of the path.</p>
+							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<dynamic-variable identifier="bgArrowWidth">
+				<type><named-type name="Length" /></type>
+				<default><physical><scalar>4</scalar><unit>bp</unit></physical></default>
+				<description>
+					<p>The width of the half arrowhead used for bonds.</p>
+				</description>
+				<see-also><binding extension="bondgraph" name="bondgraphArrow" /></see-also>
+			</dynamic-variable>
+
+			<system-binding identifier="bondgraphArrow">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+							<arg identifier="doHook">
+								<type><named-type name="Boolean" /></type>
+								<default><const-false /></default>
+							</arg>
+							<arg identifier="doCausal">
+								<type><named-type name="Boolean" /></type>
+								<default><const-false /></default>
+							</arg>
+							<arg identifier="ahAngle">
+								<type><named-type name="Float" /></type>
+								<default><eq>30°</eq></default>
+							</arg>
+							<arg identifier="fillAsStrokeing">
+								<type><named-type name="Boolean" /></type>
+								<default><eq><const-true /></eq></default>
+							</arg>
+						</arguments>
+						<result>
+							<type>
+								<structure-type>
+									<field name="picture"><type><named-type name="Drawable" /></type></field>
+									<field name="cut"><type><named-type name="Length" /></type></field>
+								</structure-type>
+							</type>
+						</result>
+						<dynamic-references>Whole graphics state and <dynvar extension="bondgraph" name="bgArrowWidth" /></dynamic-references>
+						<description>
+							<p>This function is low-level and should not be used directly in standard applications.</p>
+							<p>Arrowhead for bond graph junctions.  All arguments but <arg name="doHook" /> and <arg name="doCausal" /> have the same meaning as for <binding extension="arrowheads" name="MetaPostArrow" />.</p>
+							<p>When <arg name="doHook" />, the half arrowhead is produced, and when <arg name="doCausal" />, the causality mark is produced.  This is like two different kinds of arrowheads combined in one function.</p>
+						</description>
+						<see-also><binding extension="bondgraph" name="hbond" /> <binding extension="bondgraph" name="tbond" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/bondgraph/labels">
+		<title>Effort and flow labels</title>
+		<body>
+<example-with-output title="Positioning labels" internal-id="bondgraph/labels">
+<image pdf="doc/bondgraph-labels_3.pdf" jpg="doc/bondgraph-labels_70%.jpg" />
+<source file="doc/bondgraph-labels.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/bondgraph-labels.shape" -->]]>
+</source>
+<caption>
+	<p>Positioning effort and flow labels on the correct side of a bond, as defined by the side of the asymmetric arrowhead.</p>
+</caption>
+</example-with-output>
+
+			<system-binding identifier="flowlabel">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+							<arg identifier="lbl">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>Places <arg name="lbl" /> on the flow side of the bond along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="effortlabel">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+							<arg identifier="lbl">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Drawable" /></type>
+						</result>
+						<description>
+							<p>Places <arg name="lbl" /> on the effort side of the bond along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+		</body>
+	</section>
+
+</book>

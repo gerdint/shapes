@@ -20,6 +20,8 @@ SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
+SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
+
 html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
 extensions/index.html extensions/centering.html extensions/circle.html extensions/blockdraw_wfo.html extensions/bondgraph.html
 
@@ -29,6 +31,8 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
+SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
+html-INSTALL: $(SHEXT_FILES)
 
 extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 	install -d $(@D)
@@ -73,16 +77,23 @@ example/%.shape : ${top_srcdir}/examples/%.shape
 	install -d $(@D)
 	install -m 444 $< $@
 
+example/%.shext : ${top_srcdir}/examples/%.shext
+	install -d $(@D)
+	install -m 444 $< $@
+
 %.css : ${top_srcdir}/doc/styles/html/%.css
 	install -m 444 $< $@
 
-%.pdf %.stdout: %.shape
+%.pdf %.stdout: %.shape $(SHEXT_FILES)
 	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
 
-%_3.pdf %.stdout: %.shape
+%_3.pdf %.stdout: %.shape $(SHEXT_FILES)
 	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
+%_70%.jpg: %.pdf
+	-convert -density 100 -resize $(shell echo $@ | sed -e 's!.*_\([^._]*\).jpg!\1!') $< $@
+
 %_y_big.jpg: %.pdf
 	-convert -density 150 -resize x150 $< $@
 
@@ -95,12 +106,16 @@ example/%.shape : ${top_srcdir}/examples/%.shape
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
+# Warning!
+# Dependencies such as extensions/../dynamic.html will cause dynamic.html to be built as if it was the extension ../dynamic.html ,
+# which will produce the wrong result.
+# Therefore, we make an attempt at removing collapsable parts from the dependencies.
 extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
 	$(SAXON) $< ${docdir}/extensions/formats/html.xsl | \
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL : $$( sed  -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL : $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
