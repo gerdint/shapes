@@ -159,10 +159,10 @@ rrconnect: \ •dst pica picb slide .> { z1:[rightpoint pica 1 1]  z2:[rightpoin
 bbconnect: \ •dst pica picb slide .> { z1:[bottompoint pica 1 1] z2:[bottompoint picb 1 1] [vvconnect •dst z1 z2 [if z1.x<z2.x 0 1] slide] }
 ttconnect: \ •dst pica picb slide .> { z1:[toppoint pica 1 1]    z2:[toppoint picb 1 1]    [vvconnect •dst z1 z2 [if z1.x>z2.x 0 1] slide] }
 
-lrconnect: \ •dst pica picb .> [hhconnect •dst [leftpoint pica 1 1] [rightpoint picb 1 1] 0.5 0cm]
-rlconnect: \ •dst pica picb .> [hhconnect •dst [rightpoint pica 1 1] [leftpoint picb 1 1] 0.5 0cm]
-btconnect: \ •dst pica picb .> [vvconnect •dst [bottompoint pica 1 1] [toppoint picb 1 1] 0.5 0cm]
-tbconnect: \ •dst pica picb .> [vvconnect •dst [toppoint pica 1 1] [bottompoint picb 1 1] 0.5 0cm]
+lrconnect: \ •dst pica picb mediation:0.5 slide:0cm .> [hhconnect •dst [leftpoint pica 1 1] [rightpoint picb 1 1] mediation slide]
+rlconnect: \ •dst pica picb mediation:0.5 slide:0cm .> [hhconnect •dst [rightpoint pica 1 1] [leftpoint picb 1 1] mediation slide]
+btconnect: \ •dst pica picb mediation:0.5 slide:0cm .> [vvconnect •dst [bottompoint pica 1 1] [toppoint picb 1 1] mediation slide]
+tbconnect: \ •dst pica picb mediation:0.5 slide:0cm .> [vvconnect •dst [toppoint pica 1 1] [bottompoint picb 1 1] mediation slide]
 
 ltconnect: \ •dst pica picb .> [hvconnect •dst [leftpoint pica 1 1] [toppoint picb 1 1]]
 lbconnect: \ •dst pica picb .> [hvconnect •dst [leftpoint pica 1 1] [bottompoint picb 1 1]]
