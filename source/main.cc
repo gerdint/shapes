@@ -86,7 +86,7 @@ main( int argc, char ** argv )
 	std::string labelDBName;
 	std::string fontmetricsOutputName;
 
-	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TMP, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM, FILENAME_TEXINPUTS };
+	enum FilenameRequests{ FILENAME_RESOURCE, FILENAME_IN, FILENAME_OUT, FILENAME_TMP, FILENAME_TEXJOB, FILENAME_LABELDB, FILENAME_AFM, FILENAME_TEXINPUTS, FILENAME_HTMLDOC };
 
 	std::list< int > filenameRequestList;
 	std::list< const char * > resourceRequestList;
@@ -564,12 +564,6 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--which-in" ) == 0 )
-				{
-					filenameRequestList.push_back( FILENAME_IN );
-					argv += 1;
-					argc -= 1;
-				}
 			else if( strcmp( *argv, "--in" ) == 0 )
 				{
 					argcAssertion( *argv, argc, 2 );
@@ -582,9 +576,9 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--which-out" ) == 0 )
+			else if( strcmp( *argv, "--which-in" ) == 0 )
 				{
-					filenameRequestList.push_back( FILENAME_OUT );
+					filenameRequestList.push_back( FILENAME_IN );
 					argv += 1;
 					argc -= 1;
 				}
@@ -600,9 +594,9 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--which-texjob" ) == 0 )
+			else if( strcmp( *argv, "--which-out" ) == 0 )
 				{
-					filenameRequestList.push_back( FILENAME_TEXJOB );
+					filenameRequestList.push_back( FILENAME_OUT );
 					argv += 1;
 					argc -= 1;
 				}
@@ -623,9 +617,9 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--which-labeldb" ) == 0 )
+			else if( strcmp( *argv, "--which-texjob" ) == 0 )
 				{
-					filenameRequestList.push_back( FILENAME_LABELDB );
+					filenameRequestList.push_back( FILENAME_TEXJOB );
 					argv += 1;
 					argc -= 1;
 				}
@@ -641,15 +635,9 @@ main( int argc, char ** argv )
 					argv += 2;
 					argc -= 2;
 				}
-			else if( strcmp( *argv, "--which-afmout" ) == 0 )
+			else if( strcmp( *argv, "--which-labeldb" ) == 0 )
 				{
-					filenameRequestList.push_back( FILENAME_AFM );
-					argv += 1;
-					argc -= 1;
-				}
-			else if( strcmp( *argv, "--which-TEXINPUTS" ) == 0 )
-				{
-					filenameRequestList.push_back( FILENAME_TEXINPUTS );
+					filenameRequestList.push_back( FILENAME_LABELDB );
 					argv += 1;
 					argc -= 1;
 				}
@@ -664,6 +652,24 @@ main( int argc, char ** argv )
 					fontmetricsOutputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
 					argc -= 2;
+				}
+			else if( strcmp( *argv, "--which-afmout" ) == 0 )
+				{
+					filenameRequestList.push_back( FILENAME_AFM );
+					argv += 1;
+					argc -= 1;
+				}
+			else if( strcmp( *argv, "--which-TEXINPUTS" ) == 0 )
+				{
+					filenameRequestList.push_back( FILENAME_TEXINPUTS );
+					argv += 1;
+					argc -= 1;
+				}
+			else if( strcmp( *argv, "--which-doc" ) == 0 )
+				{
+					filenameRequestList.push_back( FILENAME_HTMLDOC );
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strcmp( *argv, "--outdir" ) == 0 )
 				{
@@ -917,8 +923,17 @@ main( int argc, char ** argv )
 
 	if( outputName == "" )
 		{
-			std::cerr << "The output file is undetermined.  Consider specifying it using \"--out <filename>\"." << std::endl ;
-			exit( 1 );
+			if( ! filenameRequestList.empty( ) )
+				{
+					/* The output name will never really be used, so it's rather harmless to assign a dummy value.
+					 */
+					outputName = "?.pdf" ;
+				}
+			else
+				{
+					std::cerr << "The output file is undetermined.  Consider specifying it using \"--out <filename>\"." << std::endl ;
+					exit( 1 );
+				}
 		}
 
 	if( labelDBName == "" )
@@ -1006,10 +1021,6 @@ main( int argc, char ** argv )
 					 i != filenameRequestList.end( );
 					 ++i )
 				{
-					if( i != filenameRequestList.begin( ) )
-						{
-							std::cout << " " ;
-						}
 					switch( *i )
 						{
 						case FILENAME_IN:
@@ -1042,6 +1053,11 @@ main( int argc, char ** argv )
 								std::cout << getenv( "TEXINPUTS" ) ;
 							}
 							break;
+						case FILENAME_HTMLDOC:
+							{
+								std::cout << HTMLDIR << "/index.html" ;
+							}
+							break;
 						case FILENAME_RESOURCE:
 							{
 								try
@@ -1061,6 +1077,7 @@ main( int argc, char ** argv )
 							std::cerr << "Internal error:	filename request switch in main out of range." << std::endl ;
 							exit( 1 );
 						}
+					std::cout << std::endl ;
 				}
 			exit( 0 );
 		}

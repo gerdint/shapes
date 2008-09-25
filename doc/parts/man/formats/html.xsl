@@ -50,6 +50,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:element name="a"><xsl:attribute name="href">http://www.google.com/search?btnI=I%27m+Feeling+Lucky&amp;q=%22<xsl:value-of select="@tool" />(<xsl:value-of select="@section" />)%22</xsl:attribute><b><xsl:value-of select="@tool" /></b>(<xsl:value-of select="@section" />)</xsl:element>
 </xsl:template>
 
+<xsl:template match="man-only">
+<!-- Ignore in HTML output -->
+</xsl:template>
+
 <xsl:template match="env-variable-list">
 <ul><xsl:apply-templates /></ul>
 </xsl:template>
