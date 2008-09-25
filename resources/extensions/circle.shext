@@ -1,4 +1,4 @@
-circle :
+circle:
 {
    p1cm: @defaultunit:1%c
 	 | (^)<(1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(~1cm,0cm)>(^)--(^)<(0cm,~1cm)>(^)--cycle
@@ -24,3 +24,16 @@ cw_arc: \ z0 zStart zEnd r .>
           [if tmp <= aStart tmp tmp-360°] }
   @defaultunit:1%C | [shift z0] [] ( dStart>(^aStart-90°)--(^)<(r*[dir aStart+0.25*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.5*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.75*(aEnd-aStart)])>(^)--(^aEnd+90°)<dEnd )
 }
+
+generic_arc3D: \ arc2D z0 zStart zEnd r .>
+{
+	dStart: [normalized zStart - z0]
+	dEnd: [normalized zEnd - z0]
+  n: [normalized [cross dStart dEnd]]
+  tf: [affinetransform3D dStart [cross n dStart] n z0]
+	itf: [inverse tf]
+	tf [] immerse [] [arc2D [view [itf z0]] [view [itf zStart]] [view [itf zEnd]] r]
+}
+
+ccw_arc3D: [generic_arc3D ccw_arc ...]
+cw_arc3D: [generic_arc3D cw_arc ...]

@@ -17,10 +17,10 @@
 		<p>It should be reminded that circular arcs can only be approximated using cubic splines, so there is no way to define a path perfectly following a circle.</p>
 	</top>
 
-	<section id="extensions/circle/bindings">
-		<title>Bindings</title>
+	<section id="extensions/circle/2D">
+		<title><str-2D /></title>
 		<body>
-			<p>The extentsion consists of just a few bindings, and we turn directly to the details of each.</p>
+			<p>These functions operate in <str-2D />.</p>
 
 		<system-binding identifier="circle">
 			<function>
@@ -93,5 +93,98 @@
 		</system-binding>
 
 		</body>
-		</section> <!-- End of  -->
+		</section> <!-- End of 2D -->
+
+	<section id="extensions/circle/3D">
+		<title><str-3D /></title>
+		<body>
+			<p>In <str-3D />, circles and circular arcs are basically constructed by immersing a circle or arc in <str-2D /> and then move it to the right location.  The functions in this section does this for you.</p>
+
+		<system-binding identifier="generic_arc3D">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="arc2D">
+							<type><named-type name="Function" /></type>
+						</arg>
+						<arg identifier="z0">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zStart">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zEnd">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="r">
+							<type><named-type name="Length" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>The argument <arg name="arc2D" /> should be a function accepting the same arguments as, for instance, <binding extension="circle" name="ccw_arc" />.</p>
+						<p>This function computes the transform that maps the plane spanned by <arg name="z0" />, <arg name="zStart" />, and <arg name="zEnd" />, to a plane through the origin, normal to the <eq>z</eq> direction.  Using this transform in combination with <binding name="view" />, the task of constructing arcs is moved from <str-3D /> to <str-2D />, where the arc is constructed using <arg name="arc2D" />, and then the result is immersed and mapped back the the right position in <str-3D />.</p>
+						<p>The orientation of the intermediate <str-2D /> representation is chosen to ensure that rotation about <arg name="z0" /> from the direction to <arg name="zStart" /> to <arg name="zEnd" /> becomes counter-clockwise in <str-2D />.</p>
+						<p>The cuts of this function obtained by using <binding extension="circle" name="ccw_arc" /> or <binding extension="circle" name="cw_arc" /> are bound to separate variables.</p>
+					</description>
+					<see-also>
+						<binding extension="circle" name="ccw_arc3D" />
+						<binding extension="circle" name="cw_arc3D" />
+					</see-also>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="ccw_arc3D">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="z0">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zStart">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zEnd">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="r">
+							<type><named-type name="Length" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Uses <binding extension="circle" name="generic_arc3D" /> with <binding extension="circle" name="ccw_arc" /> to construct the arc in <str-2D />.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		<system-binding identifier="cw_arc3D">
+			<function>
+				<case constructor-of="Path">
+					<arguments>
+						<arg identifier="z0">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zStart">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="zEnd">
+							<type><named-type name="Coords3D" /></type>
+						</arg>
+						<arg identifier="r">
+							<type><named-type name="Length" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Uses <binding extension="circle" name="generic_arc3D" /> with <binding extension="circle" name="cw_arc" /> to construct the arc in <str-2D />.</p>
+					</description>
+				</case>
+			</function>
+		</system-binding>
+
+		</body>
+		</section> <!-- End of 3D -->
 </book>
