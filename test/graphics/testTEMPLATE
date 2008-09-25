@@ -7,16 +7,22 @@ fi
 
 OUTPUT=out/FNAME.pdf
 LOG=FNAME.log
-CORRECT=${srcdir}/FNAME.correct.pdf
+CORRECT=${srcdir}/FNAME.correct*.pdf
 
 case "$COMPARE" in
 yes|'')
-	compare -verbose -density 150 \
-	        ${CORRECT} ${OUTPUT} /dev/null > /dev/null 2>&1
-	result=$?
+  result=1
+	for corr in ${CORRECT}
+  do
+	  if test "$(compare -density 150 -metric AE \
+	          ${corr} ${OUTPUT} /dev/null 2>&1)" -eq 0
+    then
+      result=0
+    fi
+  done
 	;;
 *)
-	cmp -s ${CORRECT} ${OUTPUT} > /dev/null 2>&1
+	test -f ${OUTPUT} -a ! -f out/FNAME.error
 	result=$?
 	;;
 esac
@@ -36,9 +42,11 @@ Result          :  FAIL
 EOF
 	case "$COMPARE" in
 	yes|'')
+	for corr in ${CORRECT}
+  do
 		compare -verbose -density 150 \
-		        ${CORRECT} ${OUTPUT} /dev/null >> $LOG 2>&1
-		result=$?
+		        ${corr} ${OUTPUT} /dev/null >> $LOG 2>&1
+  done
 		;;
 	esac
 else

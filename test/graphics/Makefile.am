@@ -38,4 +38,5 @@ test_% : testTEMPLATE
 
 out/%.pdf: ${srcdir}/%.shape $(SHAPES)
 	-@mkdir out tmp > /dev/null 2>&1
-	-@$(SHAPES) $(SHAPESFLAGS) $< > /dev/null 2>&1 || touch $@
+	-@rm -f out/$*.error
+	-@$(SHAPES) $(SHAPESFLAGS) $< > /dev/null 2>&1 || touch $@ out/$*.error
