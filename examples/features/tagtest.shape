@@ -1,10 +1,10 @@
 ##needs circle
 
-obj: ( Hot2D << [stroke [circle 2cm]] << [tag 'foo (0.5cm,1cm)] << [tag 'bar (~0.5cm,1cm)] )
+obj: ( newGroup << [stroke [circle 2cm]] << [tag 'foo (0.5cm,1cm)] << [tag 'bar (~0.5cm,1cm)] )
 
 obj2: [shift (3cm,3cm)] [] obj
 
-@<< obj << obj2
+•page << obj << obj2
 
-@<< stroke [] [find obj 'foo]--[find obj2 'foo]
-@<< stroke [] [find obj 'bar]--[find obj2 'bar]
+•page << stroke [] [find obj 'foo]--[find obj2 'foo]
+•page << stroke [] [find obj 'bar]--[find obj2 'bar]
