@@ -19,7 +19,128 @@
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Combines dynamic bindings.  Can be used instead of repeating the operator <operator name="&amp;" />.</description>
+			<description>
+				<p>Combines dynamic bindings.  Can be used instead of repeating the operator <operator name="&amp;" />.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="tag">
+	<function>
+		<case>
+			<arguments>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+				<arg identifier="obj">
+				</arg>
+				<arg identifier="transform">
+					<type><named-type name="Boolean" /></type>
+					<default>true</default>
+				</arg>
+				<arg identifier="draw">
+					<type><named-type name="Boolean" /></type>
+					<default>true</default>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Value" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Creates a tagged object by attaching key <arg name="key" /> to <arg name="obj" />.</p>
+				<p>The result is either a <named-type name="Drawable" /> or a <named-type name="Drawable3D" />, depending on the type of <arg name="obJ" /> and the values of <arg name="transform" /> and <arg name="draw" />.  Non-geometric values result in <named-type name="Drawable" />.</p>
+				<p><arg name="transform" /> means the tagged object shall try to preserve the geometric nature of <arg name="obj" />, while <arg name="draw" /> means that the drawable nature should be preserved.  Note that a drawable object is also geometric.</p>
+				<p>Tagged objects are useful for many purposes.  At the lowest level, they may be retrieved later by their key, and they can be referred to for removal from a group state.</p>
+			</description>
+			<see-also>
+				<binding name="find" /> <binding name="findall" /> <binding name="remove" />
+			</see-also>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="find">
+	<function>
+		<case>
+			<arguments>
+				<arg identifier="container">
+					<type><named-type name="Group" /></type>
+				</arg>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Value" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Retrieves one value tagged with <arg name="key" />.  It is an error if the key is not present in <arg name="container" />.</p>
+			</description>
+			<see-also>
+				<binding name="tag" /> <binding name="findall" />
+			</see-also>
+		</case>
+		<case>
+			<arguments>
+				<arg identifier="container">
+					<type><named-type name="Group3D" /></type>
+				</arg>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Value" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>See the <str-2D /> case.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="findall">
+	<function>
+		<case>
+			<arguments>
+				<arg identifier="container">
+					<type><named-type name="Group" /></type>
+				</arg>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Vector" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Retrieves all values tagged with <arg name="key" />.</p>
+			</description>
+			<see-also>
+				<binding name="tag" /> <binding name="find" />
+			</see-also>
+		</case>
+		<case>
+			<arguments>
+				<arg identifier="container">
+					<type><named-type name="Group3D" /></type>
+				</arg>
+				<arg identifier="key">
+					<type><named-type name="Symbol" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Vector" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>See the <str-2D /> case.</p>
+			</description>
 		</case>
 	</function>
 </system-binding>
@@ -36,7 +157,9 @@
 				<type><named-type name="Value" /></type>
 			</result>
 			<dynamic-references></dynamic-references>
-			<description><em>Mutates</em> the value in order to associate it with the abstract syntax tree node of the argument passed to this function.</description>
+			<description>
+				<p><em>Mutates</em> the value in order to associate it with the abstract syntax tree node of the argument passed to this function.</p>
+			</description>
 			<see-also>
 				<binding name="sourceof" />
 			</see-also>
@@ -53,7 +176,9 @@
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Returns the source code string determined by the abstract syntax tree node associated with the argument.  The value needs to be properly prepared using <binding name="locate" />.</description>
+			<description>
+				<p>Returns the source code string determined by the abstract syntax tree node associated with the argument.  The value needs to be properly prepared using <binding name="locate" />.</p>
+			</description>
 		</case>
 	</function>
 </system-binding>

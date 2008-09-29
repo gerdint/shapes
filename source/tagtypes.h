@@ -9,9 +9,19 @@ namespace Shapes
 	namespace Lang
 	{
 
-		class TaggedValue2D : public Lang::Drawable2D
+		class Tagged2D : public Lang::Drawable2D
 		{
+		protected:
 			Lang::Symbol::KeyType key_;
+		public:
+			Tagged2D( const RefCountPtr< const Lang::Symbol > & key );
+			Tagged2D( const Lang::Symbol::KeyType key );
+			virtual ~Tagged2D( );
+			Lang::Symbol::KeyType key( ) const;
+		};
+
+		class TaggedValue2D : public Lang::Tagged2D
+		{
 			RefCountPtr< const Lang::Value > val_;
 		public:
 			TaggedValue2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Value > & val );
@@ -23,14 +33,12 @@ namespace Shapes
 			virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 			virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 			virtual void show( std::ostream & os ) const;
-			Lang::Symbol::KeyType key( ) const;
 			RefCountPtr< const Lang::Value > val( ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		class TaggedGeometric2D : public Lang::Drawable2D
+		class TaggedGeometric2D : public Lang::Tagged2D
 		{
-			Lang::Symbol::KeyType key_;
 			RefCountPtr< const Lang::Geometric2D > val_;
 		public:
 			TaggedGeometric2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Geometric2D > & val );
@@ -45,9 +53,8 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		class TaggedDrawable2D : public Lang::Drawable2D
+		class TaggedDrawable2D : public Lang::Tagged2D
 		{
-			Lang::Symbol::KeyType key_;
 			RefCountPtr< const Lang::Drawable2D > val_;
 		public:
 			TaggedDrawable2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Drawable2D > & val );
@@ -62,9 +69,19 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		class TaggedValue3D : public Lang::Drawable3D
+		class Tagged3D : public Lang::Drawable3D
 		{
+		protected:
 			Lang::Symbol::KeyType key_;
+		public:
+			Tagged3D( const RefCountPtr< const Lang::Symbol > & key );
+			Tagged3D( const Lang::Symbol::KeyType key );
+			virtual ~Tagged3D( );
+			Lang::Symbol::KeyType key( ) const;
+		};
+
+		class TaggedValue3D : public Lang::Tagged3D
+		{
 			RefCountPtr< const Lang::Value > val_;
 		public:
 			TaggedValue3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Value > & val );
@@ -78,9 +95,8 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		class TaggedGeometric3D : public Lang::Drawable3D
+		class TaggedGeometric3D : public Lang::Tagged3D
 		{
-			Lang::Symbol::KeyType key_;
 			RefCountPtr< const Lang::Geometric3D > val_;
 		public:
 			TaggedGeometric3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Geometric3D > & val );
@@ -94,9 +110,8 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
-		class TaggedDrawable3D : public Lang::Drawable3D
+		class TaggedDrawable3D : public Lang::Tagged3D
 		{
-			Lang::Symbol::KeyType key_;
 			RefCountPtr< const Lang::Drawable3D > val_;
 		public:
 			TaggedDrawable3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Drawable3D > & val );

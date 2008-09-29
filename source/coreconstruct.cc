@@ -39,7 +39,7 @@ namespace Shapes
 			Core_tag( const char * title )
 				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 			{
-				formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "obj", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "transform", Kernel::THE_TRUE_VARIABLE );	// this argument means "transform if applicable"
 				formals_->appendEvaluatedCoreFormal( "draw", Kernel::THE_TRUE_VARIABLE );	// this argument means "draw if applicable"
@@ -150,7 +150,7 @@ namespace Shapes
 				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 			{
 				formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
-				formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 			}
 
 			virtual void
@@ -171,7 +171,7 @@ namespace Shapes
 
 						if( ! container->findOneTag( evalState, key->getKey( ), Lang::THE_2D_IDENTITY ) )
 							{
-								throw Exceptions::CoreOutOfRange( title_, args, 1, "Label not found." );
+								throw Exceptions::CoreOutOfRange( title_, args, 1, "Key not found." );
 							}
 						return;
 					}
@@ -188,7 +188,7 @@ namespace Shapes
 
 						if( ! container->findOneTag( evalState, key->getKey( ), Lang::THE_3D_IDENTITY ) )
 							{
-								throw Exceptions::CoreOutOfRange( title_, args, 1, "Label not found." );
+								throw Exceptions::CoreOutOfRange( title_, args, 1, "Key not found." );
 							}
 						return;
 					}
@@ -209,7 +209,7 @@ namespace Shapes
 				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
 			{
 				formals_->appendEvaluatedCoreFormal( "container", Kernel::THE_SLOT_VARIABLE );
-				formals_->appendEvaluatedCoreFormal( "label", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
 			}
 
 			virtual void

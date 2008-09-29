@@ -592,23 +592,29 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 	pageContents->shipout( contents->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
 
 	RefCountPtr< const Lang::ElementaryPath2D > theBBox = pageContents->bbox( );
-	if( theBBox->empty( ) )
-		{
-			throw Exceptions::InsertingEmptyPage( callLoc );
-		}
 	Concrete::Coords2D llcorner( 0, 0 );
 	Concrete::Coords2D urcorner( 0, 0 );
-	theBBox->boundingRectangle( & llcorner, & urcorner );
+	if( ! theBBox->empty( ) )
+		{
+			theBBox->boundingRectangle( & llcorner, & urcorner );
+		}
 	RefCountPtr< BoundingRectangle > mediabox = RefCountPtr< BoundingRectangle >( NullPtr< BoundingRectangle >( ) );
 	if( bboxGroup_ == NullPtr< const Lang::Symbol >( ) )
 		{
+			if( theBBox->empty( ) )
+				{
+					throw Exceptions::InsertingEmptyPage( callLoc );
+				}
 			mediabox = RefCountPtr< BoundingRectangle >( );
 		}
 	else
 		{
 			mediabox = mediaBoxes_[ bboxGroup_->getKey( ) ];
 		}
-	mediabox->growToContain( llcorner, urcorner );
+	if( ! theBBox->empty( ) )
+		{
+			mediabox->growToContain( llcorner, urcorner );
+		}
 	Page * newPage( new Page( pages_.size( ), resources, contents, mediabox ) );
 	pages_.push_back( newPage );
 

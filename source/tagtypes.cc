@@ -4,13 +4,30 @@
 
 using namespace Shapes;
 
+Lang::Tagged2D::Tagged2D( const RefCountPtr< const Lang::Symbol > & key )
+	: key_( key->getKey( ) )
+{ }
+
+Lang::Tagged2D::Tagged2D( const Lang::Symbol::KeyType key )
+	: key_( key )
+{ }
+
+Lang::Tagged2D::~Tagged2D( )
+{ }
+
+Lang::Symbol::KeyType
+Lang::Tagged2D::key( ) const
+{
+	return key_;
+}
+
 
 Lang::TaggedValue2D::TaggedValue2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Value > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedValue2D::TaggedValue2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Value > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedValue2D::~TaggedValue2D( )
@@ -61,13 +78,14 @@ Lang::TaggedValue2D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::Ke
 void
 Lang::TaggedValue2D::show( std::ostream & os ) const
 {
-	os << "Value with the tag " << Lang::Symbol( key_ ).name( ) ;
-}
-
-Lang::Symbol::KeyType
-Lang::TaggedValue2D::key( ) const
-{
-	return key_;
+	try
+		{
+			os << "Value with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Value with unique tag." ;
+		}
 }
 
 RefCountPtr< const Lang::Value >
@@ -84,11 +102,11 @@ Lang::TaggedValue2D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::TaggedGeometric2D::TaggedGeometric2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Geometric2D > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedGeometric2D::TaggedGeometric2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Geometric2D > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedGeometric2D::~TaggedGeometric2D( )
@@ -139,7 +157,14 @@ Lang::TaggedGeometric2D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol
 void
 Lang::TaggedGeometric2D::show( std::ostream & os ) const
 {
-	os << "Geometric value with the tag " << Lang::Symbol( key_ ).name( ) ;
+	try
+		{
+			os << "Geometric value with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Geometric value with unique tag." ;
+		}
 }
 
 void
@@ -150,11 +175,11 @@ Lang::TaggedGeometric2D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::TaggedDrawable2D::TaggedDrawable2D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Drawable2D > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedDrawable2D::TaggedDrawable2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Drawable2D > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged2D( key ), val_( val )
 { }
 
 Lang::TaggedDrawable2D::~TaggedDrawable2D( )
@@ -207,7 +232,14 @@ Lang::TaggedDrawable2D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol:
 void
 Lang::TaggedDrawable2D::show( std::ostream & os ) const
 {
-	os << "Drawable value with the tag " << Lang::Symbol( key_ ).name( ) ;
+	try
+		{
+			os << "Drawable value with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Drawable value with unique tag." ;
+		}
 }
 
 void
@@ -217,12 +249,30 @@ Lang::TaggedDrawable2D::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
+Lang::Tagged3D::Tagged3D( const RefCountPtr< const Lang::Symbol > & key )
+	: key_( key->getKey( ) )
+{ }
+
+Lang::Tagged3D::Tagged3D( const Lang::Symbol::KeyType key )
+	: key_( key )
+{ }
+
+Lang::Tagged3D::~Tagged3D( )
+{ }
+
+Lang::Symbol::KeyType
+Lang::Tagged3D::key( ) const
+{
+	return key_;
+}
+
+
 Lang::TaggedValue3D::TaggedValue3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Value > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedValue3D::TaggedValue3D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Value > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedValue3D::~TaggedValue3D( )
@@ -267,7 +317,14 @@ Lang::TaggedValue3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::Ke
 void
 Lang::TaggedValue3D::show( std::ostream & os ) const
 {
-	os << "Value with the tag " << Lang::Symbol( key_ ).name( ) ;
+	try
+		{
+			os << "Value (3D) with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Value (3D) with unique tag." ;
+		}
 }
 
 void
@@ -278,11 +335,11 @@ Lang::TaggedValue3D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::TaggedGeometric3D::TaggedGeometric3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Geometric3D > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedGeometric3D::TaggedGeometric3D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Geometric3D > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedGeometric3D::~TaggedGeometric3D( )
@@ -329,7 +386,14 @@ Lang::TaggedGeometric3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol
 void
 Lang::TaggedGeometric3D::show( std::ostream & os ) const
 {
-	os << "Geometric value with the tag " << Lang::Symbol( key_ ).name( ) ;
+	try
+		{
+			os << "Geometric value (3D) with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Geometric value (3D) with unique tag." ;
+		}
 }
 
 void
@@ -340,11 +404,11 @@ Lang::TaggedGeometric3D::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::TaggedDrawable3D::TaggedDrawable3D( const RefCountPtr< const Lang::Symbol > & key, const RefCountPtr< const Lang::Drawable3D > & val )
-	: key_( key->getKey( ) ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedDrawable3D::TaggedDrawable3D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Drawable3D > & val )
-	: key_( key ), val_( val )
+	: Lang::Tagged3D( key ), val_( val )
 { }
 
 Lang::TaggedDrawable3D::~TaggedDrawable3D( )
@@ -392,7 +456,14 @@ Lang::TaggedDrawable3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol:
 void
 Lang::TaggedDrawable3D::show( std::ostream & os ) const
 {
-	os << "Drawable value with the tag " << Lang::Symbol( key_ ).name( ) ;
+	try
+		{
+			os << "Drawable value (3D) with the tag " << Lang::Symbol::nameFromKey( key_ ).getPtr( ) ;
+		}
+	catch( ... )
+		{
+			os << "Drawable value (3D) with unique tag." ;
+		}
 }
 
 void

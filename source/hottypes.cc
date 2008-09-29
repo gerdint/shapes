@@ -305,6 +305,12 @@ Kernel::WarmGroup2D::erase( )
 }
 
 void
+Kernel::WarmGroup2D::remove( Lang::Symbol::KeyType key )
+{
+	pile_ = pile_->removeShallow( key );
+}
+
+void
 Kernel::WarmGroup2D::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Group2D * >( pile_.getPtr( ) )->gcMark( marked );
@@ -353,6 +359,12 @@ void
 Kernel::WarmGroup3D::erase( )
 {
 	pile_ = Lang::THE_NULL3D;
+}
+
+void
+Kernel::WarmGroup3D::remove( Lang::Symbol::KeyType key )
+{
+	pile_ = pile_->removeShallow( key );
 }
 
 void

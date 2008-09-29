@@ -669,6 +669,7 @@ namespace Shapes
 		virtual ~Group2D( );
 		TYPEINFODECL;
 		virtual bool isNull( ) const = 0;
+		virtual RefCountPtr< const Lang::Group2D > removeShallow( Lang::Symbol::KeyType key ) const = 0;
 	};
 
 	class GroupPair2D : public Lang::Group2D
@@ -684,6 +685,7 @@ namespace Shapes
 		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
+		virtual RefCountPtr< const Lang::Group2D > removeShallow( Lang::Symbol::KeyType key ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -693,6 +695,7 @@ namespace Shapes
 		GroupNull2D( );
 		virtual ~GroupNull2D( );
 		virtual bool isNull( ) const;
+		virtual RefCountPtr< const Lang::Group2D > removeShallow( Lang::Symbol::KeyType key ) const;
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
 		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
 	};
@@ -846,6 +849,7 @@ namespace Shapes
 		virtual ~Group3D( );
 		TYPEINFODECL;
 		virtual bool isNull( ) const = 0;
+		virtual RefCountPtr< const Lang::Group3D > removeShallow( Lang::Symbol::KeyType key ) const = 0;
 		virtual RefCountPtr< const Lang::Drawable2D > typed_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
 		virtual RefCountPtr< const Lang::Group2D > group_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf ) const = 0;
 	};
@@ -863,6 +867,7 @@ namespace Shapes
 		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform3D & tf ) const;
+		virtual RefCountPtr< const Lang::Group3D > removeShallow( Lang::Symbol::KeyType key ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
@@ -874,6 +879,7 @@ namespace Shapes
 		virtual bool isNull( ) const;
 		virtual RefCountPtr< const Lang::Group2D > group_to2D( const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf ) const;
 		virtual void polygonize( std::list< RefCountPtr< Computation::PaintedPolygon3D > > * zBufPile, std::list< RefCountPtr< Computation::StrokedLine3D > > * linePile, const Kernel::PassedDyn & dyn, const Lang::Transform3D & tf, const RefCountPtr< const Lang::Drawable3D > & self ) const;
+		virtual RefCountPtr< const Lang::Group3D > removeShallow( Lang::Symbol::KeyType key ) const;
 	};
 
 	class Drawable2Din3D : public Lang::Drawable3D

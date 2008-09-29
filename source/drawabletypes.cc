@@ -209,6 +209,20 @@ Lang::GroupPair2D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyT
 		car_->findOneTag( evalState, key, tf );
 }
 
+RefCountPtr< const Lang::Group2D >
+Lang::GroupPair2D::removeShallow( Lang::Symbol::KeyType key ) const
+{
+	{
+		typedef const Lang::Tagged2D TaggedType;
+		TaggedType * t = dynamic_cast< TaggedType * >( car_.getPtr( ) );
+		if( t != 0 && t->key( ) == key )
+			{
+				return cdr_->removeShallow( key );
+			}
+	}
+	return RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( car_, cdr_->removeShallow( key ), metaState_ ) );
+}
+
 void
 Lang::GroupPair2D::gcMark( Kernel::GCMarkedSet & marked )
 {
@@ -227,6 +241,12 @@ bool
 Lang::GroupNull2D::isNull( ) const
 {
 	return true;
+}
+
+RefCountPtr< const Lang::Group2D >
+Lang::GroupNull2D::removeShallow( Lang::Symbol::KeyType key ) const
+{
+	return Lang::THE_NULL2D;
 }
 
 void
@@ -982,6 +1002,20 @@ Lang::GroupPair3D::findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyT
 		car_->findOneTag( evalState, key, tf );
 }
 
+RefCountPtr< const Lang::Group3D >
+Lang::GroupPair3D::removeShallow( Lang::Symbol::KeyType key ) const
+{
+	{
+		typedef const Lang::Tagged3D TaggedType;
+		TaggedType * t = dynamic_cast< TaggedType * >( car_.getPtr( ) );
+		if( t != 0 && t->key( ) == key )
+			{
+				return cdr_->removeShallow( key );
+			}
+	}
+	return RefCountPtr< const Lang::Group3D >( new Lang::GroupPair3D( car_, cdr_->removeShallow( key ), metaState_ ) );
+}
+
 void
 Lang::GroupPair3D::gcMark( Kernel::GCMarkedSet & marked )
 {
@@ -1000,6 +1034,12 @@ bool
 Lang::GroupNull3D::isNull( ) const
 {
 	return true;
+}
+
+RefCountPtr< const Lang::Group3D >
+Lang::GroupNull3D::removeShallow( Lang::Symbol::KeyType key ) const
+{
+	return Lang::THE_NULL3D;
 }
 
 RefCountPtr< const Lang::Group2D >

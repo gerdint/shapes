@@ -153,6 +153,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			RefCountPtr< const Lang::Group2D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
 			void erase( );
+			void remove( Lang::Symbol::KeyType key );
 			TYPEINFODECL;
 		};
 
@@ -168,6 +169,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			RefCountPtr< const Lang::Group3D > getPile( ){ return pile_; } /* For special use with arrowheads and instances of user classes */
 			void erase( );
+			void remove( Lang::Symbol::KeyType key );
 			TYPEINFODECL;
 		};
 
