@@ -98,7 +98,7 @@
 	<section id="extensions/circle/3D">
 		<title><str-3D /></title>
 		<body>
-			<p>In <str-3D />, circles and circular arcs are basically constructed by immersing a circle or arc in <str-2D /> and then move it to the right location.  The functions in this section does this for you.</p>
+			<p>In <str-3D />, circles and circular arcs are basically constructed by immersing a <str-2D /> circle or arc, and then move it to the right location.  The functions in this section do this for you.</p>
 
 		<system-binding identifier="generic_arc3D">
 			<function>

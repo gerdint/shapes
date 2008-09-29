@@ -1,7 +1,7 @@
 <section id="chap-text">
 <title>Text</title>
 <top>
-<p><str-Shapes /> provides an interface to the text capabilities of <str-PDF />.  Compared to using <str-LaTeX /> for typesetting, this will compile faster and yield smaller output files, while <str-LaTeX /> if your friend if you need to typeset maths or simply want typesetting consistency with other material produced using <str-LaTeX />.</p>
+<p><str-Shapes /> provides an interface to the text capabilities of <str-PDF />.  Compared to using <str-LaTeX /> for typesetting, this will compile faster and yield smaller output files, while <str-LaTeX /> is your friend if you need to typeset maths or simply want typesetting consistency with other material produced using <str-LaTeX />.</p>
 
 <p>At the moment, there is not much support for text layout i <str-Shapes />.  It may be added in the future, but until then, use the interface to <str-LaTeX /> instead.</p>
 </top>
