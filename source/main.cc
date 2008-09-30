@@ -1331,6 +1331,27 @@ main( int argc, char ** argv )
 				oFile.open( outputName.c_str( ) );
 				if( ! oFile.good( ) )
 					{
+						/* If this is because the output directory does not exist, we shall inform the user about this. */
+						std::string::size_type slash = outputName.rfind( '/' );
+						if( slash != std::string::npos )
+							{
+								std::string outputDir = outputName.substr( 0, slash );
+								struct stat theStat;
+								if( stat( outputDir.c_str( ), & theStat ) == 0 )
+									{
+										if( ( theStat.st_mode & S_IFDIR ) == 0 )
+											{
+												std::cerr << "The prefix " << outputDir << " of the output name must be a directory." << std::endl ;
+												exit( 1 );
+											}
+										/* In case we reach here, the directory exists, so we fall back on the generic error message below. */
+									}
+								else
+									{
+										std::cerr << "The file " << outputName << " cannot be opened for output since the directory " << outputDir << " does not exist." << std::endl ;
+										exit( 1 );
+									}
+							}
 						std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
 						exit( 1 );
 					}
