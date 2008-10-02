@@ -22,9 +22,9 @@ main( int argc, char ** argv )
 	while( argc > 0 )
 		{
 			char * optionSuffix;
-			if( strncmp( *argv, "-d", 2 ) == 0 )
+			if( strprefixcmp( *argv, "-d", & optionSuffix ) )
 				{
-					char * name = *argv + 2;
+					char * name = optionSuffix;
 					char * asgn = strchr( name, '=' );
 					if( asgn == 0 )
 						{
@@ -44,7 +44,7 @@ main( int argc, char ** argv )
 				}
 			else if( strcmp( *argv, "--head" ) == 0 )
 				{
-					std::cout << *( argv + 1 ) << ":" ;
+					std::cout << argv[ 1 ] << ":" ;
 					doEndl = true;
 					argv += 2;
 					argc -= 2;
