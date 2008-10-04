@@ -154,7 +154,8 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 .PHONY : html-tmp
 
 clean-local :
-	${RM} -r *.xml *.html .deps extensions example \#*
+	find . \( -name "*~" -o -name "*.html" \) -exec ${RM} {} \;
+	find ${DEPDIR} -type f -exec ${RM} {} \;
 
 include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep))
 -include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
