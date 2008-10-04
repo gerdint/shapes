@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <stack>
 #include <list>
+#include <vector>
 
 #ifndef FLEXINT_H								// Else *FlexLexer will be defined twice
 #	undef yyFlexLexer
@@ -39,10 +40,11 @@ class SSIScanner : public ssiFlexLexer
 	std::stack< size_t > depthLimitStack_;
 	size_t currentDepthLimit_;
 	std::stack< bool > metaInclusionStack_;
+	std::vector< std::string > includePath_;
 	bool currentMeta_;
 	void more( );
 public:
-	SSIScanner( bool onlyDependencies, const std::string & initDir, std::istream * yyin = 0, std::ostream * yyout = 0 );
+	SSIScanner( bool onlyDependencies, const std::string & initDir, const std::vector< std::string > & includePath, std::istream * yyin = 0, std::ostream * yyout = 0 );
 	virtual ~SSIScanner( );
 	virtual int yylex( );
  private:

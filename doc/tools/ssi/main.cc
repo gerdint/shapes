@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <string>
+#include <vector>
 
 
 bool strprefixcmp( char * str, const char * prefix, char ** endp );
@@ -16,6 +18,8 @@ main( int argc, char ** argv )
 	bool absolutePath = false;
 	bool doEndl = false;
 	char * inputFilename = 0;
+	std::vector< std::string > includePath;
+	includePath.push_back( "./" );
 
 	--argc;
 	++argv;
@@ -54,6 +58,15 @@ main( int argc, char ** argv )
 					inputFilename = argv[ 1 ];
 					argv += 2;
 					argc -= 2;
+				}
+			else if( strprefixcmp( *argv, "-I", & optionSuffix ) )
+				{
+					std::string tmp( optionSuffix );
+					if( tmp[ tmp.size() - 1 ] != '/' )
+						tmp += "/";
+					includePath.push_back( tmp );
+					argv += 1;
+					argc -= 1;
 				}
 			else if( strprefixcmp( *argv, "--absolute=", & optionSuffix ) )
 				{
@@ -110,7 +123,7 @@ main( int argc, char ** argv )
 		free( tmp );
 	}
 
-	SSIScanner scanner( onlyDependencies, initDir, & iFile, & std::cout );
+	SSIScanner scanner( onlyDependencies, initDir, includePath, & iFile, & std::cout );
 	scanner.yylex( );
 
 	if( doEndl )

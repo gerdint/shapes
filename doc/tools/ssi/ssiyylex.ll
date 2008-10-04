@@ -231,8 +231,13 @@ SSIScanner::doInclusion( )
 			*yyout << " " << includeFilename_ ;
 		}
 
-	std::ifstream * iFile = new std::ifstream( includeFilename_.c_str( ) );
-	if( ! iFile->good( ) )
+	std::ifstream * iFile = new std::ifstream;
+	typedef std::vector< std::string >::const_iterator cItr;
+	for( cItr i = includePath_.begin( ); ! iFile->is_open( ) && i != includePath_.end( ); ++i )
+		{
+			iFile->open( ( *i + includeFilename_ ).c_str( ) );
+		}
+	if( ! iFile->is_open( ) || iFile->bad( ) )
 		{
 			if( onlyDependencies_ )
 				{
