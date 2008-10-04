@@ -6,3 +6,5 @@ AM_YFLAGS = -dvt
 
 postproc_html_SOURCES = html.l
 postproc_man_SOURCES = man.l
+
+dist-hook : postproc-html${EXEEXT} postproc-man${EXEEXT} 

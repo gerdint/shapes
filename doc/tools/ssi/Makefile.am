@@ -5,3 +5,5 @@ AM_LFLAGS = -olex.yy.c
 AM_YFLAGS = -dvt
 
 ssipp_SOURCES = main.cc ssiscanner.cc ssiscanner.h ssiyylex.ll
+
+dist-hook : ssipp${EXEEXT}

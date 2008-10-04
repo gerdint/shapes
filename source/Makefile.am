@@ -16,8 +16,8 @@ SHAPES-VERSION-FILE : FORCE
 bin_PROGRAMS = shapes
 dist_noinst_SCRIPTS = SHAPES-VERSION-GEN
 
-dist-hook : SHAPES-VERSION-FILE
-	@${srcdir}/SHAPES-VERSION-GEN ${top_srcdir} && mv SHAPES-VERSION-FILE ${distdir}/version
+dist-hook : shapes${EXEEXT} SHAPES-VERSION-FILE
+	@${srcdir}/SHAPES-VERSION-GEN ${top_srcdir} && cp SHAPES-VERSION-FILE ${distdir}/version
 
 BUILT_SOURCES = shapesparser.h
 
