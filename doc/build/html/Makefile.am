@@ -67,6 +67,7 @@ ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
+		sed -i '' -e 's!^!html-DIST '$@' !' -e 's!: !: $< !' ${DEPDIR}/extensions/$*.Tssidep ; \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Tssidep; \
@@ -77,6 +78,7 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
 	then \
+		sed -i '' -e 's!^!html-DIST '$@' !'  -e 's!: !: $< !' ${DEPDIR}/$*.Tssidep ; \
 		mv ${DEPDIR}/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/$*.Tssidep; \
@@ -128,7 +130,7 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL : $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL html-DIST : $< $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -140,7 +142,7 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $*.html
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		echo "html-BUILD html-INSTALL html-DIST : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
@@ -156,6 +158,9 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 clean-local :
 	find . \( -name "*~" -o -name "*.html" \) -exec ${RM} {} \;
 	find ${DEPDIR} -type f -exec ${RM} {} \;
+
+distclean-local :
+	-find . -type f -exec ${RM} {} \;
 
 include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep))
 -include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
@@ -177,4 +182,15 @@ html-INSTALL : ${html_DATA} shapes.css
 		dir="${htmldir}/$$( dirname $$f )" ; \
 		test -z  $$dir || ${mkdir_p} $(DESTDIR)$$dir ; \
 		${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
+	done
+
+dist-hook : html-local
+	${MAKE} ${AM_MAKEFLAGS} html-DIST
+
+html-DIST : ${html_DATA} shapes.css
+	for f in $^ ; \
+	do \
+		dir="${distdir}/$$( dirname $$f | sed -e 's!${top_srcdir}!${top_builddir}!' )" ; \
+		test -d  $$dir || ${mkdir_p} $$dir ; \
+		${install_sh_DATA} $$f $$dir ; \
 	done

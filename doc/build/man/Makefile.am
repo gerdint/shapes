@@ -51,3 +51,6 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 	  ${top_builddir}/doc/tools/postproc/postproc-man > $@
 
 .PRECIOUS : ${DEPDIR}/man.ssidep ${DEPDIR}/man.xml
+
+distclean-local :
+	-find . -type f -exec ${RM} {} \;
