@@ -31,9 +31,15 @@ html_DATA = algo-tol.html bindings.html dynamic.html man.html \
 
 docdir=${top_srcdir}/doc/parts
 
-dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
-                   ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
-                   ${docdir}/algo-tol/tolerances.sxml
+dist_noinst_DATA = ${docdir}/extensions/formats/html.xsl \
+                   ${docdir}/man/formats/man.xsl \
+                   $(addprefix ${docdir}/formats/, \
+                      examplecode-html.xsl html.xsl language-elements-html.xsl \
+                      man.xsl plain-book-html.xsl) \
+                   $(addprefix ${docdir}/, \
+                      $(addsuffix /formats/html.xsl, \
+                         algo-tol bindings dynamic man states state-types \
+                         syntax tutorial types index))
 
 SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
 html-INSTALL: $(SHEXT_FILES)
