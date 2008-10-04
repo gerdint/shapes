@@ -13,11 +13,11 @@ DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
 MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- ) \
-               -dHTML_DOC_DIR=$(htmldir)
+               -dHTML_DOC_DIR=$(htmldir) -I${srcdir}
 
 # Setting BUILDDIR=^ means that paths will be relative to the current working directory.
 SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS) -I${srcdir}
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
