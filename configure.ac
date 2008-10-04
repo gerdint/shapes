@@ -71,7 +71,7 @@ AC_CONFIG_FILES([Makefile source/Makefile resources/Makefile
                  test/Makefile test/text/Makefile test/graphics/Makefile
                  doc/Makefile doc/tools/Makefile
                  doc/tools/ssi/Makefile doc/tools/postproc/Makefile
-                 doc/build/Makefile
+                 doc/tools/xhtml-deps/Makefile doc/build/Makefile
                  doc/build/man/Makefile doc/build/html/Makefile])
 AC_OUTPUT
 

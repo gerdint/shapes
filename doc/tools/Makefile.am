@@ -1,1 +1,1 @@
-SUBDIRS = ssi postproc
+SUBDIRS = ssi postproc xhtml-deps
