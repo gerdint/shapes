@@ -127,8 +127,7 @@ SimplePDF::PDF_Resources::requireProcedureSet( ProcSet procSet )
 					procSetsVector->vec.push_back( SimplePDF::newName( "ImageI" ) );
 					break;
 				default:
-					std::cerr << "Internal error: An unexpected procedure set was requested." << std::endl ;
-					exit( 1 );
+					throw "SimplePDF::PDF_Resources: Internal error: An unexpected procedure set was requested.";
 				}
 			procSets.insert( procSets.begin( ), procSet );
 		}
@@ -147,8 +146,7 @@ SimplePDF::DocumentInfo::addExtensionAuthorString( const std::string & str )
 {
 	if( finalized_ )
 		{
-			std::cerr << "Internal error: DocumentInfo::addExtensionAuthorString: Already finalized." << std::endl ;
-			exit( 1 );
+			throw "Internal error: DocumentInfo::addExtensionAuthorString: Already finalized.";
 		}
 	extensionAuthorStrings.push_back( str );
 }
@@ -158,8 +156,7 @@ SimplePDF::DocumentInfo::addInfo( const char * key, const RefCountPtr< PDF_Objec
 {
 	if( finalized_ )
 		{
-			std::cerr << "Internal error: DocumentInfo::addInfo: Already finalized." << std::endl ;
-			exit( 1 );
+			throw "Internal error: DocumentInfo::addInfo: Already finalized.";
 		}
 
 	if( info_->hasKey( key ) )
@@ -247,20 +244,21 @@ SimplePDF::PDF_out::writeFile( std::ostream & os, SimplePDF::PDF_Version & pdfVe
 		}
 	catch( const char * ball )
 		{
-			cerr << "Caught (char*) ball at top level:" << endl
-					 << "	" << ball << endl ;
-			exit( 1 );
+			std::ostringstream msg;
+			msg << "SimplePDF::PDF_out::writeFile: Caught (char*) ball at top level:" << endl
+					<< "	" << ball << endl ;
+			throw msg.str( );
 		}
 	catch( const string & ball )
 		{
-			cerr << "Caught (string) ball at top level:" << endl
-					 << "	" << ball << endl ;
-			exit( 1 );
+			std::ostringstream msg;
+			msg << "SimplePDF::PDF_out::writeFile: Caught (string) ball at top level:" << endl
+					<< "	" << ball << endl ;
+			throw msg.str( );
 		}
 	catch( ... )
 		{
-			cerr << "Caught (...) ball at top level." << endl ;
-			exit( 1 );
+			throw "SimplePDF::PDF_out::writeFile: Caught (...) ball at top level.";
 		}
 }
 

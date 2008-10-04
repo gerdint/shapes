@@ -42,7 +42,7 @@ std::string absoluteFilename( const char * filename );
 std::string absoluteDirectory( const char * filename );
 void ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate );
 RefCountPtr< std::ifstream > performIterativeStartup( const std::string & texJobName );
-void abortProcedure( );
+void abortProcedure( int exitCode );
 void setupGlobals( );
 enum XpdfAction{ XPDF_DEFAULT, XPDF_RAISE, XPDF_RELOAD, XPDF_QUIT, XPDF_NOSERVER };
 void xpdfHelper( const std::string & filename, const std::string & server, const XpdfAction & action );
@@ -167,7 +167,7 @@ main( int argc, char ** argv )
 					if( tmp < 0 )
 						{
 							std::cerr << "The --debugstep value must be nonnegative: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					Interaction::debugStep = static_cast< size_t >( tmp );
 					argv += 1;
@@ -183,7 +183,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					argv += 2;
 					argc -= 2;
@@ -197,7 +197,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					argv += 1;
 					argc -= 1;
@@ -211,7 +211,7 @@ main( int argc, char ** argv )
 					catch( const char * ball )
 						{
 							std::cerr << ball << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					argv += 1;
 					argc -= 1;
@@ -283,7 +283,7 @@ main( int argc, char ** argv )
 					if( pdfVersion != SimplePDF::PDF_Version::VERSION_UNDEFINED )
 						{
 							std::cerr << "Multiply defined pdf version." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					switch( *optionSuffix )
@@ -299,7 +299,7 @@ main( int argc, char ** argv )
 							break;
 						default:
 							std::cerr << "The only allowed action-characters in the pdf version specification are: \"e\" (error), \"w\" (warn), and \"s\" (silent).  You said \"" << *optionSuffix << "\", being the first character in \"" << optionSuffix << "\"." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					++optionSuffix;
 					if( strncmp( optionSuffix, "1.", 2 ) == 0 &&
@@ -315,7 +315,7 @@ main( int argc, char ** argv )
 					else
 						{
 							std::cerr << "Unsupported pdf version specification: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					argv += 1;
 					argc -= 1;
@@ -346,12 +346,12 @@ main( int argc, char ** argv )
 					if( *endp != '\0' )
 						{
 							std::cerr << "Argument to --splicingtol= was not a float: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::theTrixelizeSplicingTol <= 0 )
 						{
 							std::cerr << "Argument to --splicingtol not positive: " << Computation::theTrixelizeSplicingTol.offtype< 1, 0 >( ) << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					argv += 1;
@@ -364,12 +364,12 @@ main( int argc, char ** argv )
 					if( *endp != '\0' )
 						{
 							std::cerr << "Argument to --overlaptol was not a float: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::theTrixelizeOverlapTol <= 0 )
 						{
 							std::cerr << "Argument to --overlaptol not positive: " << Computation::theTrixelizeOverlapTol.offtype< 1, 0 >( ) << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					argv += 1;
@@ -410,19 +410,10 @@ main( int argc, char ** argv )
 									std::cerr << " (or " << shortFlag << ")" ;
 								}
 							std::cerr <<"." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
- 					try
-						{
-							Ast::theShapesScanner.push_backNeedPath( absoluteDirectory( pth ) );
-						}
-					catch( const Exceptions::Exception & ball )
-						{
-							std::cout.flush( );
-							ball.display( std::cerr );
-							exit( 1 );
-						}
+					Ast::theShapesScanner.push_backNeedPath( absoluteDirectory( pth ) );
 
 					if( longForm )
 						{
@@ -470,7 +461,7 @@ main( int argc, char ** argv )
 									std::cerr << " (or " << shortFlag << ")" ;
 								}
 							std::cerr <<"." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					Lang::Font::push_backFontMetricsPath( absoluteDirectory( pth ) );
@@ -493,7 +484,7 @@ main( int argc, char ** argv )
 					if( *endp != '\0' )
 						{
 							std::cerr << "Argument to --seed= was not an integer: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					srand( s );
@@ -508,12 +499,12 @@ main( int argc, char ** argv )
 					if( *endp != '\0' )
 						{
 							std::cerr << "Argument to --arcdelta= was not a float: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::the_arcdelta <= 0 )
 						{
 							std::cerr << "Argument to --arcdelta= not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					argv += 1;
@@ -526,12 +517,12 @@ main( int argc, char ** argv )
 					if( *endp != '\0' )
 						{
 							std::cerr << "Argument to --dtmin= was not a float: " << optionSuffix << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::the_dtMin <= 0 )
 						{
 							std::cerr << "Argument to --dtmin= not positive: " << Computation::the_dtMin << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 
 					argv += 1;
@@ -550,7 +541,7 @@ main( int argc, char ** argv )
 					if( baseName != "" )
 						{
 							std::cerr << "The name base is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					baseName = *( argv + 1 );
 					argv += 2;
@@ -570,7 +561,7 @@ main( int argc, char ** argv )
 					if( inputName != "" )
 						{
 							std::cerr << "The input file is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					inputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
@@ -588,7 +579,7 @@ main( int argc, char ** argv )
 					if( outputName != "" )
 						{
 							std::cerr << "The output file is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					outputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
@@ -606,13 +597,13 @@ main( int argc, char ** argv )
 					if( texJobName != "" )
 						{
 							std::cerr << "The tex job name is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					texJobName = *( argv + 1 );
 					if( texJobName.find( '/' ) != std::string::npos )
 						{
 							std::cerr << "The tex job name may not include directory specification.  Please use --tmpdir to set the directory where the tex job is carried out." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					argv += 2;
 					argc -= 2;
@@ -629,7 +620,7 @@ main( int argc, char ** argv )
 					if( labelDBName != "" )
 						{
 							std::cerr << "The label database file is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					labelDBName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
@@ -647,7 +638,7 @@ main( int argc, char ** argv )
 					if( fontmetricsOutputName != "" )
 						{
 							std::cerr << "The font metrics output name is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					fontmetricsOutputName = absoluteFilename( *( argv + 1 ) );
 					argv += 2;
@@ -677,7 +668,7 @@ main( int argc, char ** argv )
 					if( outDir != "" )
 						{
 							std::cerr << "The output directory is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					outDir = absoluteDirectory( *( argv + 1 ) );
 					argv += 2;
@@ -695,7 +686,7 @@ main( int argc, char ** argv )
 					if( tmpDir != "" )
 						{
 							std::cerr << "The temporaries directory is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					tmpDir = absoluteDirectory( *( argv + 1 ) );
 					argv += 2;
@@ -740,7 +731,7 @@ main( int argc, char ** argv )
 					if( xpdfServer != "" )
 						{
 							std::cerr << "The xpdf server is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					xpdfServer = *( argv + 1 );
 					argv += 2;
@@ -751,7 +742,7 @@ main( int argc, char ** argv )
 					if( xpdfAction != XPDF_DEFAULT )
 						{
 							std::cerr << "The xpdf action is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					xpdfAction = XPDF_NOSERVER;
 					argv += 1;
@@ -762,7 +753,7 @@ main( int argc, char ** argv )
 					if( xpdfAction != XPDF_DEFAULT )
 						{
 							std::cerr << "The xpdf action is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					xpdfAction = XPDF_RELOAD;
 					argv += 1;
@@ -773,7 +764,7 @@ main( int argc, char ** argv )
 					if( xpdfAction != XPDF_DEFAULT )
 						{
 							std::cerr << "The xpdf action is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					xpdfAction = XPDF_QUIT;
 					argv += 1;
@@ -796,14 +787,14 @@ main( int argc, char ** argv )
 			else if( strcmp( *argv, "--version" ) == 0 )
 				{
 					printVersion( );
-					exit( 0 );
+					exit( Interaction::EXIT_OK );
 				}
 			else if( argc == 1 )
 				{
 					if( baseName != "" )
 						{
 							std::cerr << "The name base is multiply specified." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					struct stat theStat;
 					if( stat( *argv, & theStat ) == 0 &&
@@ -814,12 +805,12 @@ main( int argc, char ** argv )
 							if( ext <= *argv )
 								{
 									std::cerr << "The file name \"" << *argv << "\" is unexpectedly short (it should include the \".shape\" suffix)." << std::endl ;
-									exit( 1 );
+									exit( Interaction::EXIT_INVOCATION_ERROR );
 								}
 							if( strcmp( ext, ".shape" ) != 0 )
 								{
 									std::cerr << "Expected \".shape\" suffix in the file name \"" << *argv << "\"." << std::endl ;
-									exit( 1 );
+									exit( Interaction::EXIT_INVOCATION_ERROR );
 								}
 						}
 					else
@@ -839,7 +830,7 @@ main( int argc, char ** argv )
 									 * This should cause the least confusion.
 									 */
 									std::cerr << "Failed to locate input file: " << *argv << std::endl ;
-									exit( 1 );
+									exit( Interaction::EXIT_INPUT_FILE_ERROR );
 								}
 						}
 
@@ -861,7 +852,7 @@ main( int argc, char ** argv )
 			else
 				{
 					std::cerr << "Illegal command line option: " << *argv << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_INVOCATION_ERROR );
 				}
 		}
 
@@ -932,7 +923,7 @@ main( int argc, char ** argv )
 			else
 				{
 					std::cerr << "The output file is undetermined.  Consider specifying it using \"--out <filename>\"." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_INVOCATION_ERROR );
 				}
 		}
 
@@ -981,7 +972,7 @@ main( int argc, char ** argv )
 	if( Computation::theTrixelizeSplicingTol >= Computation::theTrixelizeOverlapTol )
 		{
 			std::cerr << "The splicing tolerance (" << Concrete::Length::offtype( Computation::theTrixelizeSplicingTol ) << "bp) must be less than the overlap tolerance (" << Concrete::Length::offtype( Computation::theTrixelizeOverlapTol ) << "bp)." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_INVOCATION_ERROR );
 		}
 
 	if( xpdfServer == "" )
@@ -1000,17 +991,8 @@ main( int argc, char ** argv )
 #ifdef RESOURCES_DIR
 	if( useResources )
 		{
-			try
-				{
-					Ast::theShapesScanner.push_backNeedPath( std::string( RESOURCES_DIR ) + "/extensions/" );
-					Lang::Font::push_backFontMetricsPath( std::string( RESOURCES_DIR ) + "/fontmetrics/" );
-				}
-			catch( const Exceptions::Exception & ball )
-				{
-					std::cout.flush( );
-					ball.display( std::cerr );
-					exit( 1 );
-				}
+			Ast::theShapesScanner.push_backNeedPath( std::string( RESOURCES_DIR ) + "/extensions/" );
+			Lang::Font::push_backFontMetricsPath( std::string( RESOURCES_DIR ) + "/fontmetrics/" );
 		}
 #endif
 
@@ -1068,18 +1050,18 @@ main( int argc, char ** argv )
 									{
 										std::cout.flush( );
 										ball.display( std::cerr );
-										exit( 1 );
+										exit( Interaction::EXIT_INVOCATION_ERROR );
 									}
 								++resource;
 							}
 							break;
 						default:
 							std::cerr << "Internal error:	filename request switch in main out of range." << std::endl ;
-							exit( 1 );
+							exit( Interaction::EXIT_INTERNAL_ERROR );
 						}
 					std::cout << std::endl ;
 				}
-			exit( 0 );
+			exit( Interaction::EXIT_OK );
 		}
 
 	if( pdfVersion == SimplePDF::PDF_Version::VERSION_UNDEFINED )
@@ -1121,7 +1103,7 @@ main( int argc, char ** argv )
 			if( ! iFile.good( ) || ! iFile.is_open( ) )
 				{
 					std::cerr << "Failed to open " << inputName << " for input." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_INPUT_FILE_ERROR );
 				}
 			Ast::theShapesScanner.switch_streams( & iFile, & std::cerr );
 			Ast::theShapesScanner.setNameOf_yyin( inputName.c_str( ) );
@@ -1175,7 +1157,7 @@ main( int argc, char ** argv )
 							std::cerr << "(Bad exception type)" << ": " ;
 							(*i)->display( std::cerr );
 						}
-					abortProcedure( );
+					abortProcedure( Interaction::EXIT_USER_ERROR );
 				}
 
 			// The display unit is looked up after the input is scanned, so the user may use her own units
@@ -1183,7 +1165,7 @@ main( int argc, char ** argv )
 			if( Interaction::displayUnitFactor <= 0 )
 				{
 					std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
-					abortProcedure( );
+					abortProcedure( Interaction::EXIT_INVOCATION_ERROR );
 				}
 			labelDBFile = performIterativeStartup( labelDBName );
 			RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
@@ -1219,7 +1201,7 @@ main( int argc, char ** argv )
 					std::cout.flush( );
 					std::cerr << ball.loc( ) << ": " ;
 					ball.display( std::cerr );
-					abortProcedure( );
+					abortProcedure( ball.exitCode( ) );
 				}
 			catch( Exceptions::Exception & ball )
 				{
@@ -1231,7 +1213,7 @@ main( int argc, char ** argv )
 
 					std::cerr << evalState.cont_->traceLoc( ) << Exceptions::Exception::locsep ;
 					ball.display( std::cerr );
-					abortProcedure( );
+					abortProcedure( ball.exitCode( ) );
 				}
 
 			Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
@@ -1260,56 +1242,53 @@ main( int argc, char ** argv )
 			std::cout.flush( );
 			std::cerr << ball.loc( ) << ": " ;
 			ball.display( std::cerr );
-			abortProcedure( );
+			abortProcedure( ball.exitCode( ) );
 		}
 	catch( const Exceptions::Exception & ball )
 		{
 			std::cout.flush( );
 			ball.display( std::cerr );
-			abortProcedure( );
+			abortProcedure( ball.exitCode( ) );
 		}
 	catch( const NonLocalExit::DynamicBindingNotFound & ball )
 		{
 			std::cerr << "Caught DynamicBindingNotFound at top level." << std::endl
-					 << "This should really not be possible; it is an internal error." << std::endl ;
-			exit( 1 );
+								<< "This should really not be possible; it is an internal error." << std::endl ;
+			exit( Interaction::EXIT_INTERNAL_ERROR );
 		}
 	catch( const NonLocalExit::NotThisType & ball )
 		{
 			std::cerr << "Caught NotThisType at top level." << std::endl
-					 << "This should really not be possible; it is an internal error." << std::endl ;
-			exit( 1 );
+								<< "This should really not be possible; it is an internal error." << std::endl ;
+			exit( Interaction::EXIT_INTERNAL_ERROR );
 		}
 	catch( const NonLocalExit::NonLocalExitBase & ball )
 		{
 			std::cerr << "Caught an unknown descendant to NonLocalExitBase at top level." << std::endl
-					 << "This should really not be possible; it is an internal error." << std::endl ;
-			exit( 1 );
+								<< "This should really not be possible; it is an internal error." << std::endl ;
+			exit( Interaction::EXIT_INTERNAL_ERROR );
 		}
 	catch( const char * ball )
 		{
 			std::cerr << "Caught (char*) ball at top level:" << std::endl
-					 << "	" << ball << std::endl ;
-			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
-			exit( 1 );
+								<< "	" << ball << std::endl ;
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 	catch( const std::string & ball )
 		{
 			std::cerr << "Caught (string) ball at top level:" << std::endl
-					 << "	" << ball << std::endl ;
-			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
-			exit( 1 );
+								<< "	" << ball << std::endl ;
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 	catch( ... )
 		{
 			std::cerr << "Caught (...) ball at top level." << std::endl ;
-			std::cerr << "This shit should not be thrown!	Use Exceptions::Exception derivatives!" << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 
 	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
-			abortProcedure( );
+			abortProcedure( Interaction::EXIT_USER_ERROR );
 		}
 
 	if( memoryStats )
@@ -1342,18 +1321,18 @@ main( int argc, char ** argv )
 										if( ( theStat.st_mode & S_IFDIR ) == 0 )
 											{
 												std::cerr << "The prefix " << outputDir << " of the output name must be a directory." << std::endl ;
-												exit( 1 );
+												exit( Interaction::EXIT_NO_DIRECTORY_ERROR );
 											}
 										/* In case we reach here, the directory exists, so we fall back on the generic error message below. */
 									}
 								else
 									{
 										std::cerr << "The file " << outputName << " cannot be opened for output since the directory " << outputDir << " does not exist." << std::endl ;
-										exit( 1 );
+										exit( Interaction::EXIT_NO_DIRECTORY_ERROR );
 									}
 							}
 						std::cerr << "Failed to open " << outputName << " for output." << std::endl ;
-						exit( 1 );
+						exit( Interaction::EXIT_OUTPUT_FILE_ERROR );
 					}
 				documents.front( ).writeFile( oFile, Kernel::the_PDF_version );
 			}
@@ -1379,7 +1358,7 @@ main( int argc, char ** argv )
 						if( ! oFile.good( ) )
 							{
 								std::cerr << "Failed to open " << tmpFilename.str( ) << " for output." << std::endl ;
-								exit( 1 );
+								exit( Interaction::EXIT_OUTPUT_FILE_ERROR );
 							}
 						i->writeFile( oFile, Kernel::the_PDF_version );
 					}
@@ -1393,7 +1372,7 @@ main( int argc, char ** argv )
 						if( ( theStat.st_mode & S_IFDIR ) == 0 )
 							{
 								std::cerr << "The path " << outputName << " was expected to reference a directory." << std::endl ;
-								exit( 1 );
+								exit( Interaction::EXIT_NO_DIRECTORY_ERROR );
 							}
 					}
 				else
@@ -1401,7 +1380,7 @@ main( int argc, char ** argv )
 						if( mkdir( outputName.c_str( ), S_IRWXU | S_IRWXG | S_IRWXO ) != 0 )
 							{
 								std::cerr << "Failed to create directory for split document files (errno=" << errno << "): " << outputName << std::endl ;
-								exit( 1 );
+								exit( Interaction::EXIT_OUTPUT_FILE_ERROR );
 							}
 					}
 				std::ostringstream rmCommand;
@@ -1423,7 +1402,7 @@ main( int argc, char ** argv )
 						if( ! oFile.good( ) )
 							{
 								std::cerr << "Failed to open " << tmpFilename.str( ) << " for output." << std::endl ;
-								exit( 1 );
+								exit( Interaction::EXIT_OUTPUT_FILE_ERROR );
 							}
 						i->writeFile( oFile, Kernel::the_PDF_version );
 					}
@@ -1485,7 +1464,7 @@ argcAssertion( const char * optionSpecifier, int argc, int argcMin )
 	if( argc < argcMin )
 		{
 			std::cerr << "The command line option " << optionSpecifier << " requires " << argcMin - 1 << " parameters." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_INVOCATION_ERROR );
 		}
 }
 
@@ -1524,7 +1503,7 @@ strtobool( const char * str, const char * containingString, const char * trueLab
 			return false;
 		}
 	std::cerr << "The string \"" << str << "\" in the command line argument \"" << containingString << "\" was not recognized as a boolean value." << std::endl ;
-	exit( 1 );
+	exit( Interaction::EXIT_INVOCATION_ERROR );
 }
 
 
@@ -1560,30 +1539,30 @@ performIterativeStartup( const std::string & labelDBName )
 	catch( const char * ball )
 		{
 			std::cerr << "Caught (char*) ball from iterative startup:" << std::endl
-					 << "	" << ball << std::endl ;
-			exit( 1 );
+								<< "	" << ball << std::endl ;
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 	catch( const std::string & ball )
 		{
 			std::cerr << "Caught (string) ball from iterative startup:" << std::endl
-					 << "	" << ball << std::endl ;
-			exit( 1 );
+								<< "	" << ball << std::endl ;
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 	catch( const Exceptions::Exception & ball )
 		{
 			ball.display( std::cerr );
-			exit( 1 );
+			exit( ball.exitCode( ) );
 		}
 	catch( ... )
 		{
 			std::cerr << "Caught (...) ball from iterative startup." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_GENERIC_ERROR );
 		}
 }
 
 
 void
-abortProcedure( )
+abortProcedure( int exitCode )
 {
 	if( ! Kernel::thePostCheckErrorsList.empty( ) )
 		{
@@ -1617,7 +1596,7 @@ abortProcedure( )
 				}
 		}
 	std::cerr << "Aborting job.	 Output files are left unchanged." << std::endl ;
-	exit( 1 );
+	exit( exitCode );
 }
 
 namespace Shapes
@@ -1732,15 +1711,15 @@ xpdfHelper( const std::string & filename, const std::string & server, const Xpdf
 					break;
 				default:
 					std::cerr << "Internal error: XpdfAction switch out of range." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_INTERNAL_ERROR );
 				}
 			if( errno != 0 )
 				{
 					std::cerr << "Recieved errno = " << errno << " from execlp call to xpdf." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_EXTERNAL_ERROR );
 				}
 			std::cerr << "execlp call to xpdf returned with errno == 0." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_INTERNAL_ERROR );
 		}
 
 }
@@ -1770,10 +1749,10 @@ openHelper( const std::string & filename, const char * application )
 			if( errno != 0 )
 				{
 					std::cerr << "Recieved errno = " << errno << " from execlp call to open." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_EXTERNAL_ERROR );
 				}
 			std::cerr << "execlp call to open returned with errno == 0." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_INTERNAL_ERROR );
 		}
 }
 
@@ -1790,26 +1769,17 @@ Interaction::systemDebugMessage( const std::string & msg )
 void
 addDefaultNeedPath( )
 {
-	try
+	char * start = getenv( "SHAPESINPUTS" );
+	if( start == 0 )
 		{
-			char * start = getenv( "SHAPESINPUTS" );
-			if( start == 0 )
-				{
-					Ast::theShapesScanner.push_backNeedPath( "./" );
-					return;
-				}
-			char * tok = strsep( & start, ":" );
-			while( tok != 0 )
-				{
-					Ast::theShapesScanner.push_backNeedPath( tok );
-					tok = strsep( & start, ":" );
-				}
+			Ast::theShapesScanner.push_backNeedPath( "./" );
+			return;
 		}
-	catch( const Exceptions::Exception & ball )
+	char * tok = strsep( & start, ":" );
+	while( tok != 0 )
 		{
-			std::cout.flush( );
-			ball.display( std::cerr );
-			exit( 1 );
+			Ast::theShapesScanner.push_backNeedPath( tok );
+			tok = strsep( & start, ":" );
 		}
 }
 
@@ -1885,12 +1855,12 @@ ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 			if( ( theStat.st_mode & S_IFDIR ) == 0 )
 				{
 					std::cerr << "The path " << dirname << " was expected to reference a directory." << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_NO_DIRECTORY_ERROR );
 				}
 			//				if( ( theStat.st_mode & S_IWOTH ) == 0 )
 			//					{
 			//						std::cerr << "The directory " << dirname << " was expected have write permission for others." << std::endl ;
-			//						exit( 1 );
+			//						exit( Interaction::EXIT_FILE_PERMISSION_ERROR );
 			//					}
 			return;
 		}
@@ -1898,7 +1868,7 @@ ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 	if( ! allowCreate )
 		{
 			std::cerr << "The directory for temporaries, " << dirname << ", does not exist and is not allowed to be created.  Consider using --tmpdir+ instead of --tmpdir ." << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_NO_DIRECTORY_ERROR );
 		}
 
 	size_t i2 = 0; /* We know there's a slash at the first position */
@@ -1912,7 +1882,7 @@ ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 	if( atRoot )
 		{
 			std::cerr << "Shapes will not create directories for temporary files at the root: " << dirname << std::endl ;
-			exit( 1 );
+			exit( Interaction::EXIT_INVOCATION_ERROR );
 		}
 
 	mode_t oldUmask = umask( 0 ); /* We want to be able to create directories with any permissions. */
@@ -1921,7 +1891,7 @@ ensureTmpDirectoryExists( const std::string & dirname, bool allowCreate )
 			if( mkdir( dirname.substr( 0, i2 ).c_str( ), theStat.st_mode & ( S_IRWXU | S_IRWXG | S_IRWXO ) ) != 0 )
 				{
 					std::cerr << "Failed to create directory for temporary files (errno=" << errno << "): " << dirname.substr( 0, i2 ) << std::endl ;
-					exit( 1 );
+					exit( Interaction::EXIT_OUTPUT_FILE_ERROR );
 				}
 			i2 = dirname.find( '/', i2 + 1 );
 		}

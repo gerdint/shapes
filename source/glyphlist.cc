@@ -289,8 +289,9 @@ GlyphList::readfile( std::istream & iFile )
 				}
 			catch( ... )
 				{
-					std::cerr << "Failed to catch ball. name: " << name << std::endl ;
-					exit( 1 );
+					std::ostringstream msg;
+					msg << "Failed to catch ball. name: " << name ;
+					throw Shapes::Exceptions::InternalError( msg );
 				}
 
 			if( code != 0 && *end != '\0' && *end != '\r' )

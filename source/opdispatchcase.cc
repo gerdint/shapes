@@ -88,8 +88,7 @@ public:
 		RefCountPtr< const T2 > arg2 = other.down_cast< const T2 >( );				\
 		if( arg2 == NullPtr< const T2 >( ) )																\
 			{\
-				cerr << "Downcast in dispatch level 2 failed, " #T2 << endl ;\
-				exit( 1 );\
+				throw Exceptions::InternalError( "Downcast in dispatch level 2 failed, " #T2 ); \
 			}\
 		return op->op( arg1, arg2 );				\
 	}\
@@ -101,15 +100,13 @@ public:
 		RefCountPtr< const T1 > arg1 = self.down_cast< const T1 >( );				\
 		if( arg1 == NullPtr< const T1 >( ) )																\
 			{\
-				cerr << "Downcast in dispatch level 1 failed, " #T1 << endl ;\
-				exit( 1 );\
+				throw Exceptions::InternalError( "Downcast in dispatch level 1 failed, " #T1 );	\
 			}\
 		switch( other->getTypeID( ) )								\
 			{																																				\
 				SINGLELOOP2( CLASSTREE2_ROOT, DISPATCHCASE_LEVEL2 );								\
 			default:																																\
-				cerr << "QuickTypeID out of range in dispatch level 2" << endl ; \
-				exit( 1 );																												\
+				throw Exceptions::InternalError( "QuickTypeID out of range in dispatch level 2" ); \
 			}																																				\
 	}\
 	break;
@@ -122,8 +119,7 @@ int Value::dispatch1( RefCountPtr< const Value > self, RefCountPtr< const Value 
 		{\
 			SINGLELOOP1( CLASSTREE1_ROOT, DISPATCHCASE_LEVEL1 );								\
 		default:\
-			cerr << "QuickTypeID out of range in dispatch level 1" << endl ;\
-			exit( 1 );\
+			throw Exceptions::InternalError( "QuickTypeID out of range in dispatch level 1" ); \
 		}\
 }
 

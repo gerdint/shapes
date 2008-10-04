@@ -1,0 +1,99 @@
+<exit-code value="0">
+	<short>Success</short>
+	<description>
+		<p>The program finished without errors.</p>
+	</description>
+</exit-code>
+
+<exit-code value="1">
+	<short>Generic error</short>
+	<description>
+		<p>An error situation which has not been classified.</p>
+	</description>
+</exit-code>
+
+<exit-code value="2">
+	<short>User error</short>
+	<description>
+		<p>The user caused the error by providing error in the input.</p>
+	</description>
+</exit-code>
+
+<exit-code value="3">
+	<short><str-pdfLaTeX /> error</short>
+	<description>
+		<p>An error occurred when <str-pdfLaTeX /> was typesetting labels.</p>
+	</description>
+</exit-code>
+
+<exit-code value="4">
+	<short>External error</short>
+	<description>
+		<p>An error outside the compiler was detected.</p>
+	</description>
+</exit-code>
+
+<exit-code value="5">
+	<short>Invocation error</short>
+	<description>
+		<p>The command line arguments were not properly specified.</p>
+	</description>
+</exit-code>
+
+<exit-code value="6">
+	<short>Tolerance error</short>
+	<description>
+		<p>The program could not be compiled with the current tolerance settings.  Sometimes, the solution to this is to run the program with other settings for the tolerances.  Sometimes, this is an indication of ill-conditioned computations that must be resolved in source — like any other user error.</p>
+	</description>
+</exit-code>
+
+
+
+<exit-code value="10">
+	<short>Internal error</short>
+	<description>
+		<p>There was an error in the compiler.</p>
+	</description>
+</exit-code>
+
+<exit-code value="11">
+	<short>Not implemented</short>
+	<description>
+		<p>The actual implementation of some feature has not been written yet.  For the user this is similar to an internal error, but for developers it is very different since no debugging is required.</p>
+	</description>
+</exit-code>
+
+<exit-code value="20">
+	<short>File error</short>
+	<description>
+		<p>Generic error related to file I/O.</p>
+	</description>
+</exit-code>
+
+<exit-code value="21">
+	<short>Error opening file for input</short>
+	<description>
+		<p>A file could not be opened for input.</p>
+	</description>
+</exit-code>
+
+<exit-code value="22">
+	<short>Error opening file for output</short>
+	<description>
+		<p>A file could not be opened for output, or an attempt to create a directory failed.  For instance, this could be because a file is locked by another process, or because of permissions.</p>
+	</description>
+</exit-code>
+
+<exit-code value="23">
+	<short>File permission error</short>
+	<description>
+		<p>File permissions were insufficient.</p>
+	</description>
+</exit-code>
+
+<exit-code value="24">
+	<short>Missing directory</short>
+	<description>
+		<p>A directory to be used did not exist, and was not created.</p>
+	</description>
+</exit-code>

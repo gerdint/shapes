@@ -4,9 +4,12 @@
 
 #include "afmscanner.h"
 #include "strrefdup.h"
+#include "exitcodes.h"
 
 #include <string.h>
 #include <iostream>
+
+#define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 // These functions must note be called with invalid arguments!
 const char * strtoname( char * begin, char ** endp, const char * delim = " \t" );

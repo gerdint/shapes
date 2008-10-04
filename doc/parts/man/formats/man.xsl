@@ -124,6 +124,20 @@ Default value: </xsl:text><xsl:apply-templates select="default" />
 .ensure-line-break.br
 .ensure-line-break</xsl:text></xsl:template>
 
+
+<xsl:template match="exit-code-list">
+<xsl:apply-templates select="/man/external/exit-code" />
+</xsl:template>
+
+<xsl:template match="exit-code[@value]">
+<xsl:text>
+
+.B </xsl:text><xsl:value-of select="@value" /> — <xsl:apply-templates select="short" /><xsl:text>
+.ensure-line-break.br
+</xsl:text>
+<xsl:apply-templates select="description/*"/>
+</xsl:template>
+
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><xsl:text>
 .ensure-line-break.B "</xsl:text><xsl:value-of select="." /><xsl:text>"

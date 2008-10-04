@@ -21,8 +21,7 @@ SimplePDF::PDF_Object::~PDF_Object( )
 void
 SimplePDF::PDF_Object::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
-	cerr << "This function, PDF_Object::writeTo, must not be called.	It is practically purely virtual." << endl ;
-	exit( 1 );
+	throw "This function, PDF_Object::writeTo, must not be called.	It is practically purely virtual.";
 }
 RefCountPtr< PDF_Object >
 SimplePDF::PDF_Object::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
@@ -143,7 +142,7 @@ SimplePDF::PDF_Int::PDF_Int( const char * strvalue )
 	my_value = strtol( strvalue, & end, 10 );
 	if( *end != '\0' )
 		{
-			throw( "Internal error: Bad numeric int format" );
+			throw "Internal error: Bad numeric int format";
 		}
 }
 SimplePDF::PDF_Int::~PDF_Int( )
@@ -580,14 +579,13 @@ SimplePDF::PDF_Stream::~PDF_Stream( )
 void
 SimplePDF::PDF_Stream::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
-	throw( "Internal error: PDF_Stream::writeTo called" );
+	throw "PDF_Stream::writeTo called";
 }
 
 RefCountPtr< PDF_Object >
 SimplePDF::PDF_Stream::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
-	cerr << "PDF_Stream::deepCopy must not be called.	(However PDF_Stream_in::deepCopy may be called.)" << endl ;
-	exit( 1 );
+	throw "PDF_Stream::deepCopy must not be called.	(However PDF_Stream_in::deepCopy may be called.)";
 }
 /****************/
 
@@ -739,8 +737,7 @@ SimplePDF::PDF_Stream_in::deepCopy( RefCountPtr< PDF_Object > self, size_t * ind
 	 */
 	if( *dicCopy.getCounterPtr( ) != 1 )
 		{
-			cerr << "I expected to own the only reference to the new PDF_Dictionary" << endl ;
-			exit( 1 );
+			throw "I expected to own the only reference to the new PDF_Dictionary";
 		}
 	++(*dicCopy.getCounterPtr( ));
 	return RefCountPtr< PDF_Stream_in >( new PDF_Stream_in( reinterpret_cast< PDF_Dictionary * >( dicCopy.getPtr( ) ), is, dataStart ) );
@@ -755,8 +752,7 @@ SimplePDF::PDF_Indirect::~PDF_Indirect( )
 void
 SimplePDF::PDF_Indirect_in::writeTo( std::ostream & os, SimplePDF::PDF_xref * xref, const RefCountPtr< const PDF_Object > & self ) const
 {
-	std::cerr << "Internal error: PDF_Indirect_in::writeTo: This object is only good for reading, not for writing!" << std::endl ;
-	exit( 1 );
+	throw "Internal error: PDF_Indirect_in::writeTo: This object is only good for reading, not for writing!";
 	//	os << i << " " << v << " R" ;
 }
 bool SimplePDF::operator < ( const PDF_Indirect & o1, const PDF_Indirect & o2 )
@@ -778,8 +774,7 @@ bool SimplePDF::operator < ( const PDF_Indirect & o1, const PDF_Indirect & o2 )
 RefCountPtr< PDF_Object >
 SimplePDF::PDF_Indirect::deepCopy( RefCountPtr< PDF_Object > self, size_t * indirectObjectCounter, IndirectRemapType * remap )
 {
-	cerr << "PDF_Indirect::deepCopy must not be called.	(However PDF_Indirect_in::deepCopy may be called.)" << endl ;
-	exit( 1 );
+	throw "PDF_Indirect::deepCopy must not be called.	(However PDF_Indirect_in::deepCopy may be called.)";
 }
 /****************/
 
@@ -898,8 +893,7 @@ SimplePDF::PDF_xref::writeTable( std::ostream & os ) const
 {
 	if( size_ > 0 )
 		{
-			std::cerr << "Internal error: PDF_xref::writeTable: This table has already been written." << std::endl ;
-			exit( 1 );
+			throw "Internal error: PDF_xref::writeTable: This table has already been written.";
 		}
 	size_ = localOrder_.size( );
 
@@ -920,8 +914,7 @@ SimplePDF::PDF_xref::size( ) const
 {
 	if( size_ == 0 )
 		{
-			std::cerr << "Internal error: PDF_xref::size: The size of the table is not determined yet.  Call writeTable first." << std::endl ;
-			exit( 1 );
+			throw "Internal error: PDF_xref::size: The size of the table is not determined yet.  Call writeTable first.";
 		}
 	return size_;
 }

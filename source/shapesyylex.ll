@@ -11,6 +11,7 @@
 #include "shapesexceptions.h"
 #include "texlabelmanager.h"
 #include "globals.h"
+#include "exitcodes.h"
 
 using namespace Shapes;
 #include "yyltype.h"
@@ -23,6 +24,7 @@ using namespace Shapes;
 #include <iomanip>
 
 #define YY_USER_ACTION doBeforeEachAction( );
+#define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 double shapes_strtod( char * str, char ** end );
 

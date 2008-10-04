@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "basicsimplex.h"
+#include "shapesexceptions.h"
 
 #include "autoonoff.h"
 
@@ -168,8 +169,7 @@ Computation::BasicSimplex::maximize( double * xdst,
 bool
 Computation::BasicSimplex::phaseOne( ) const
 {
-	std::cerr << "Simple phase one is not implemented!" << std::endl ;
-	exit( 1 );
+	throw Exceptions::NotImplemented( "Simplex phase one." );
 }
 
 // Function for minimizing given a feasible initial tableau.

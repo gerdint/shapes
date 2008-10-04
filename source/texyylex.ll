@@ -2,9 +2,12 @@
 
 #include "texscanner.h"
 #include "strrefdup.h"
+#include "exitcodes.h"
 
 #include <string.h>
 #include <iostream>
+
+#define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 %}
 

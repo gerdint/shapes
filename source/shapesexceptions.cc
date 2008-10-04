@@ -609,20 +609,6 @@ Exceptions::BinaryInfixNotApplicable::display( std::ostream & os ) const
 }
 
 
-Exceptions::RedefiningUnknown::RedefiningUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-	: Exceptions::RuntimeError( _loc ), id( _id )
-{ }
-
-Exceptions::RedefiningUnknown::~RedefiningUnknown( )
-{ }
-
-void
-Exceptions::RedefiningUnknown::display( std::ostream & os ) const
-{
-	os << "The variable " << id << " is not introduced" << std::endl ;
-}
-
-
 Exceptions::ProhibitedTypeChange::ProhibitedTypeChange( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id, RefCountPtr< const char > _oldType, RefCountPtr< const char > _newType )
 	: Exceptions::RuntimeError( _loc ), id( _id ), oldType( _oldType ), newType( _newType )
 { }

@@ -151,7 +151,7 @@ SimplePDF::PDF_in::PageIterator::operator -= ( int diff )
 SimplePDF::PDF_in::PDF_in( RefCountPtr< istream > _is )
 	: is( _is ), isPtr( is.getPtr( ) ),
 		resources( new PDF_Dictionary )
-{ 
+{
 	string str;
 	for( int i( -6 ); ; --i )
 		{
@@ -164,8 +164,7 @@ SimplePDF::PDF_in::PDF_in( RefCountPtr< istream > _is )
 					(*isPtr) >> str ;
 					if( str != "startxref" )
 						{
-							cerr << "Expected \"startxref\", found " << str << endl ;
-							exit( 1 );
+							throw "Expected \"startxref\", found " + str;
 						}
 					break;
 				}
@@ -179,8 +178,9 @@ SimplePDF::PDF_in::PDF_in( RefCountPtr< istream > _is )
 		(*isPtr) >> tmp ;
 		if( tmp != "xref" )
 			{
-				cerr << "Expected \"xref\" at " << xrefTmp << endl ;
-				exit( 1 );
+				std::ostringstream msg;
+				msg << "Expected \"xref\" at " << xrefTmp ;
+				throw msg.str( );
 			}
 	}
 	{
@@ -188,8 +188,7 @@ SimplePDF::PDF_in::PDF_in( RefCountPtr< istream > _is )
 		(*isPtr) >> i ;
 		if( i != 0 )
 			{
-				cerr << "Expected a 0 before size of xref." << endl ;
-				exit( 1 );
+				throw "Expected a 0 before size of xref.";
 			}
 	}
 	(*isPtr) >> xrefSize ;
@@ -199,23 +198,20 @@ SimplePDF::PDF_in::PDF_in( RefCountPtr< istream > _is )
 	(*isPtr) >> str ;
 	if( str != "trailer" )
 		{
-			cerr << "Expected \"trailer\" at this point." << endl ;
-			exit( 1 );
+			throw "Expected \"trailer\" at this point.";
 		}
 
 	RefCountPtr< PDF_Object > trailerMem( parse( ) );
 	PDF_Dictionary * trailer( dynamic_cast< PDF_Dictionary * >( trailerMem.getPtr( ) ) );
 	if( trailer == 0 )
 		{
-			cerr << "Failed to parse the trailer dictionary." << endl ;
-			exit( 1 );
+			throw "Failed to parse the trailer dictionary.";
 		}
 	RefCountPtr< PDF_Object > rootMem( trailer->dic[ "Root" ] );
 	PDF_Indirect * indirectRoot( dynamic_cast< PDF_Indirect * >( rootMem.getPtr( ) ) );
 	if( indirectRoot == 0)
 		{
-			cerr << "I believe the Root field of the trailer dictionary is an indirect object..." << endl ;
-			exit( 1 );
+			throw "I believe the Root field of the trailer dictionary is an indirect object...";
 		}
 	pages = follow<PDF_Vector>( follow<PDF_Dictionary>( follow<PDF_Dictionary>( trailer->operator[]( "Root" ) )->operator[]( "Pages" ) )->operator[]( "Kids" ) );
 }

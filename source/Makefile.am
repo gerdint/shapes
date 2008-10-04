@@ -29,7 +29,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  charconverters.h charptrless.h check.h \
                  classtree1.h classtree2.h classtreemacros.h classtypes.h \
                  concretecolors.h constructorrepresentation.h \
-                 consts.h containertypes.h continuations.h debuglog.h \
+                 consts.h exitcodes.h containertypes.h continuations.h debuglog.h \
                  dispatch_case.h dispatch_none.h dispatch_void.h \
                  dispatch_vtbl.h drawabletypes.h dynamicenvironment.h \
                  elementarycoords.h elementarylength.h elementarytypes.h \
