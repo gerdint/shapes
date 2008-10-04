@@ -22,9 +22,12 @@ SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
 
-html_DATA = man.html tutorial.html syntax.html algo-tol.html bindings.html dynamic.html states.html state-types.html types.html index.html \
-extensions/index.html extensions/blockdraw_wfo.html  extensions/centering.html  extensions/circle.html \
-shapes.css
+html_DATA = algo-tol.html bindings.html dynamic.html man.html \
+            state-types.html states.html syntax.html types.html \
+            tutorial.html index.html \
+            extensions/bondgraph.html extensions/centering.html \
+            extensions/circle.html extensions/blockdraw_wfo.html \
+            extensions/index.html
 
 docdir=${top_srcdir}/doc/parts
 
