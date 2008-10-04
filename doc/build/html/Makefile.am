@@ -167,6 +167,9 @@ html-local : ${html_DATA} shapes.css
 install-data-local : html-local
 	${MAKE} ${AM_MAKEFLAGS} html-INSTALL
 
+uninstall-local :
+	find ${DESTDIR}${htmldir} -type f -exec ${RM} {} \;
+
 html-INSTALL : ${html_DATA} shapes.css
 	for f in $^; \
 	do \

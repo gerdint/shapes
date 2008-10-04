@@ -23,3 +23,5 @@ version_test : FORCE
 	fi
 
 FORCE :
+
+distuninstallcheck_listfiles = find . -type f -print | sed -e '\!./doc/build/html!d' -e '\!./share/!d'
