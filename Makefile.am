@@ -14,7 +14,7 @@ dist_noinst_SCRIPTS     = config/oldtool
 
 .PHONY: version_sync
 version_sync:
-	sed 's/VERSION/$(shell sed "2,$$ d" < VERSION)/' < source/exscripts/exconfig | ex -sC configure.ac
+	-sed -e 's/VERSION/$(shell sed "2,$$ d" < VERSION)/' < source/exscripts/exconfig | ex -sC configure.ac
 
 version_test : FORCE
 	@if test -x version_test.sh ;\
