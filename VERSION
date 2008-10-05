@@ -1,13 +1,15 @@
-0.3.8
-The first line of this file shall be the current version string.  It shall be incremented at least after each tagging.  Thus, when tagging, one can either use the current version string, or increment.  If incrementing, note that it makes no sense to increment only the least significant part of the version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
+0.4.0
+The first line of this file shall be the last tagged version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
 
-====( 0.3.8 )====
-FILL IN DATE WHEN TAGGING!
+====( 0.4.0 )====
+2008-10-05
 
-(This version number is not expected to be tagged.  Expecting 0.4.0 to be the next real version.)
+The distribution contains the documentation now, making it complete.
+
+Lots of new documentation.
 
 Minor, but many, changes in the syntax of command line options.  Basically, all parameters but files and directories are given using the --param=val style.
 
@@ -21,7 +23,12 @@ The document can be split into one output file per page, see the --split=mode op
 
 Improvements relating to PDF versions including a separate setting for whether to use transparency in the kernel, and not marking the output file with a higher version than what is implied by the PDF features is uses.
 
-Bugfixes includes: Intersection of straight line segments.
+Additions and improvements to some of the standard extensions.
+
+Bugfixes include:
+-  Intersection of straight line segments.
+-  Sometimes, functions were associated with the wrong environment.
+-  Escaping the '\' in PDF strings.
 
 
 ====( 0.3.7 )====
