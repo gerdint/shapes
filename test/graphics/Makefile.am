@@ -23,7 +23,7 @@ TESTS = ${addprefix test_, ${TEST_BASE}}
 check_DATA = $(patsubst %,out/%.pdf,${TEST_BASE})
 dist_check_DATA = testTEMPLATE \
                   ${addsuffix .shape, ${TEST_BASE}} \
-                  ${addsuffix .correct.pdf, ${TEST_BASE}} \
+                  ${foreach base,${TEST_BASE},${base}.correct.pdf ${wildcard ${base}.correct-*.pdf}} \
                   mypackage.sty
 CLEANFILES = ${addprefix test_, ${TEST_BASE}} \
              ${addsuffix .log, ${TEST_BASE}} \
