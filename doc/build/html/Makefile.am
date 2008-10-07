@@ -128,6 +128,7 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 # which will produce the wrong result.
 # Therefore, we make an attempt at removing collapsable parts from the dependencies.
 extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
+	test -d  ${@D} || ${mkdir_p} ${@D} ; \
 	( $(SAXON) $< ${docdir}/extensions/formats/html.xsl  || exit 1 ) | \
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -140,6 +141,7 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 	fi
 
 %.html : %.xml ${docdir}/%/formats/html.xsl ${docdir}/formats/html.xsl
+	test -d  ${@D} || ${mkdir_p} ${@D} ; \
 	( $(SAXON) $< ${docdir}/$*/formats/html.xsl || exit 1 ) | \
 	  ${top_builddir}/doc/tools/postproc/postproc-html > $*.html
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
