@@ -36,9 +36,10 @@ SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
 html_DATA = algo-tol.html bindings.html dynamic.html man.html \
             state-types.html states.html syntax.html types.html \
             tutorial.html index.html \
-            extensions/bondgraph.html extensions/centering.html \
-            extensions/circle.html extensions/blockdraw_wfo.html \
-            extensions/index.html index.html
+            $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
+              bondgraph.html centering.html circle.html conssupport.html \
+              linkpaths.html pathmapping.html shiftoff.html index.html ) \
+            index.html
 
 dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                    $(addprefix ${formatsdir}/, \
