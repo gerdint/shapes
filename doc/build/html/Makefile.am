@@ -1,4 +1,4 @@
-docdir=${top_srcdir}/doc
+docdir=../..
 partsdir=${docdir}/parts
 extensionsdir=${partsdir}/extensions
 formatsdir=${partsdir}/formats
@@ -52,7 +52,7 @@ dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
 SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
 html-INSTALL: $(SHEXT_FILES)
 
-extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
+extensions/%.xml : ${extensionsdir}/%.sxml
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
@@ -62,7 +62,7 @@ extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-%.xml : ${partsdir}/%/index.sxml ${DEPDIR}/%.ssidep ${formatsdir}/html.xsl
+%.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
 		mv $*.Txml $@; \
@@ -73,7 +73,8 @@ extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 
 ${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
-	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
+	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml \
+	  --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
 		sed -i'' -e 's!^!html-DIST $@ !' -e 's!:!: $< !' \
 		  ${DEPDIR}/extensions/$*.Tssidep ; \
@@ -85,7 +86,8 @@ ${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml
 
 ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
-	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
+	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > \
+	  ${DEPDIR}/$*.Tssidep; \
 	then \
 		sed -i'' -e 's!^!html-DIST $@ !'  -e 's!:!: $< !' \
 		    ${DEPDIR}/$*.Tssidep ; \
@@ -105,15 +107,15 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 
 %.css : ${stylesdir}/html/%.css
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	${INSTALL_DATA} $$( test -f $< | echo "${srcdir}"/ )$< $@
+	${INSTALL_DATA} $< $@
 
 %.pdf %.stdout: %.shape $(SHEXT_FILES)
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) --in $(test -f $< || echo '${srcdir}/')$< --out $*.pdf > $*.stdout
+	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
 
 %_3.pdf %.stdout: %.shape $(SHEXT_FILES)
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $(test -f $< || echo '${srcdir}/')$< --out $*_3.pdf > $*.stdout
+	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_70%.jpg: %.pdf
@@ -139,9 +141,11 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
                     ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< ${extensionsdir}/formats/html.xsl  || exit 1 ) | \
+	( $(SAXON) $< $$( test -f ${extensionsdir}/formats/html.xsl || \
+	  echo '${srcdir}'/ )${extensionsdir}/formats/html.xsl || exit 1 ) | \
 	  ${POSTPROC_HTML} > $@
-	if $(SAXON) $@ ${toolsdir}/xhtml-deps/filter.xsl > \
+	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
+	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
 	   ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
 		echo "html-BUILD html-INSTALL html-DIST : $< $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
@@ -153,9 +157,12 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 
 %.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< ${partsdir}/$*/formats/html.xsl || exit 1 ) | \
+	( $(SAXON) $< $$( test -f ${partsdir}/$*/formats/html.xsl || \
+	  echo '${srcdir}'/ )${partsdir}/$*/formats/html.xsl || exit 1 ) | \
 	  ${POSTPROC_HTML} > $*.html
-	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
+	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
+	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
+	  ${DEPDIR}/$*.Thtmldep ; \
 	then \
 		echo "html-BUILD html-INSTALL html-DIST : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
@@ -196,6 +203,7 @@ html-INSTALL : ${html_DATA} shapes.css
 	do \
 		dir="${htmldir}/$$( dirname $$f )" ; \
 		test -z  $$dir || ${mkdir_p} $(DESTDIR)$$dir ; \
+		echo ${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
 		${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
 	done
 

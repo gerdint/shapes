@@ -53,7 +53,8 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
 	fi
 
 %.1 : %.xml ${partsdir}/%/formats/man.xsl ${formatsdir}/man.xsl
-	$(SAXON) $< ${partsdir}/$*/formats/man.xsl | \
+	$(SAXON) $< $$(test -f ${partsdir}/$*/formats/man.xsl || \
+	  echo ${srcdir}/ )${partsdir}/$*/formats/man.xsl | \
 	  ${POSTPROC_MAN} > $@
 
 .PRECIOUS : ${DEPDIR}/man.ssidep man.xml
