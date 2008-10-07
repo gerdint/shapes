@@ -27,7 +27,7 @@ html_DATA = algo-tol.html bindings.html dynamic.html man.html \
             tutorial.html index.html \
             extensions/bondgraph.html extensions/centering.html \
             extensions/circle.html extensions/blockdraw_wfo.html \
-            extensions/index.html
+            extensions/index.html index.html
 
 docdir=${top_srcdir}/doc/parts
 
