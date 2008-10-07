@@ -32,26 +32,25 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
                -dHTML_DOC_DIR=$(htmldir) -I${srcdir}
 
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
+SHEXT_FILES=$(addprefix example/, $(SHEXT_LIST))
 
-html_DATA = algo-tol.html bindings.html dynamic.html man.html \
+html_FILES = algo-tol.html bindings.html dynamic.html man.html \
             state-types.html states.html syntax.html types.html \
             tutorial.html index.html \
             $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
               bondgraph.html centering.html circle.html conssupport.html \
-              linkpaths.html pathmapping.html shiftoff.html index.html ) \
-            index.html
+              linkpaths.html pathmapping.html shiftoff.html index.html )
 
-dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
+nobase_dist_html_DATA = ${html_FILES} shapes.css
+
+nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                    $(addprefix ${formatsdir}/, \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
                    $(addprefix ${partsdir}/, \
                       $(addsuffix /formats/html.xsl, \
                          algo-tol bindings dynamic man states state-types \
-                         syntax tutorial types index))
-
-SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
-html-INSTALL: $(SHEXT_FILES)
+                         syntax tutorial types index)) $(SHEXT_FILES)
 
 extensions/%.xml : ${extensionsdir}/%.sxml
 	test -d  $(@D) || ${mkdir_p} $(@D)
@@ -175,7 +174,7 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 %.htmldep : %.ssidep
 	@touch $@
 
-.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep)) $(html_DATA:.html=.xml)
+.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep)) $(html_FILES:.html=.xml)
 .PHONY : html-tmp
 
 clean-local :
@@ -185,12 +184,12 @@ clean-local :
 distclean-local :
 	-find . -type f -exec ${RM} {} \;
 
-include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep))
--include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
+include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep))
+-include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.htmldep))
 
 all-local : html-local
 
-html-local : ${html_DATA} shapes.css
+html-local : ${nobase_dist_html_DATA}
 	${MAKE} ${AM_MAKEFLAGS} html-BUILD
 
 install-data-local : html-local
@@ -199,7 +198,7 @@ install-data-local : html-local
 uninstall-local :
 	find ${DESTDIR}${htmldir} -type f -exec ${RM} {} \;
 
-html-INSTALL : ${html_DATA} shapes.css
+html-INSTALL :
 	for f in $^; \
 	do \
 		dir="${htmldir}/$$( dirname $$f )" ; \
@@ -211,7 +210,7 @@ html-INSTALL : ${html_DATA} shapes.css
 dist-hook : html-local
 	${MAKE} ${AM_MAKEFLAGS} html-DIST
 
-html-DIST : ${html_DATA} shapes.css
+html-DIST :
 	for f in $^ ; \
 	do \
 		dir="${distdir}/$$( dirname $$f | sed -e 's!${top_srcdir}!${top_builddir}!' )" ; \
