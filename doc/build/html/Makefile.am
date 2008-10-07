@@ -67,7 +67,8 @@ ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
-		sed -i '' -e 's!^!html-DIST '$@' !' -e 's!: !: $< !' ${DEPDIR}/extensions/$*.Tssidep ; \
+		sed -i'' -e 's!^!html-DIST $@ !' -e 's!:!: $< !' \
+		  ${DEPDIR}/extensions/$*.Tssidep ; \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Tssidep; \
@@ -78,7 +79,8 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
 	then \
-		sed -i '' -e 's!^!html-DIST '$@' !'  -e 's!: !: $< !' ${DEPDIR}/$*.Tssidep ; \
+		sed -i'' -e 's!^!html-DIST $@ !'  -e 's!:!: $< !' \
+		    ${DEPDIR}/$*.Tssidep ; \
 		mv ${DEPDIR}/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/$*.Tssidep; \
