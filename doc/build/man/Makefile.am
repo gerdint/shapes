@@ -1,6 +1,15 @@
+docdir=../..
+partsdir=${docdir}/parts
+extensionsdir=${partsdir}/extensions
+formatsdir=${partsdir}/formats
+stylesdir=${docdir}/styles
+toolsdir=${docdir}/tools
+
+POSTPROC_MAN=${top_builddir}/doc/tools/postproc/postproc-man
+
 SAXON = @SAXON@
 
--include ${top_builddir}/source/SHAPES-VERSION-FILE
+include ${top_builddir}/source/SHAPES-VERSION-FILE
 
 DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
 MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
@@ -16,16 +25,14 @@ DISTCLEANFILES = shapes.1 ${DEPDIR}/man.ssidep man.xml
 
 dist_man1_MANS = shapes.1
 
-docdir=${top_srcdir}/doc/parts
-
 shapes.1 : man.1
 	cp man.1 shapes.1
 
-dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
-                   ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
-                   ${docdir}/algo-tol/tolerances.sxml
+dist_noinst_DATA = ${partsdir}/man/index.sxml ${formatsdir}/html.xsl \
+                   ${formatsdir}/man.xsl ${partsdir}/man/formats/man.xsl \
+                   ${partsdir}/algo-tol/tolerances.sxml
 
-%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.ssidep ${docdir}/formats/html.xsl
+%.xml : ${partsdir}/%/index.sxml ${DEPDIR}/%.ssidep ${formatsdir}/html.xsl
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
 		mv $*.Txml $@; \
@@ -35,7 +42,7 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
 
 -include ${DEPDIR}/man.ssidep
 
-${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
+${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
 	install -d ${DEPDIR}
 	if $(SSI) --in $< $(SSIFLAGS) --head $< --deps > ${DEPDIR}/$*.Tssidep; \
 	then \
@@ -45,9 +52,8 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 		exit 1; \
 	fi
 
-
-%.1 : %.xml ${docdir}/%/formats/man.xsl ${docdir}/formats/man.xsl
-	$(SAXON) $< ${docdir}/$*/formats/man.xsl | \
-	  ${top_builddir}/doc/tools/postproc/postproc-man > $@
+%.1 : %.xml ${partsdir}/%/formats/man.xsl ${formatsdir}/man.xsl
+	$(SAXON) $< ${partsdir}/$*/formats/man.xsl | \
+	  ${POSTPROC_MAN} > $@
 
 .PRECIOUS : ${DEPDIR}/man.ssidep man.xml

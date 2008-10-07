@@ -1,4 +1,14 @@
+docdir=${top_srcdir}/doc
+partsdir=${docdir}/parts
+extensionsdir=${partsdir}/extensions
+formatsdir=${partsdir}/formats
+stylesdir=${docdir}/styles
+toolsdir=${docdir}/tools
+
+POSTPROC_HTML=${top_builddir}/doc/tools/postproc/postproc-html
+
 SAXON = @SAXON@
+
 SHAPES = $(top_builddir)/source/shapes
 SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resources/fontmetrics \
@@ -10,15 +20,16 @@ SHAPESFLAGS = --resources=no \
 include ${top_builddir}/source/SHAPES-VERSION-FILE
 
 DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
+SSI=${top_builddir}/doc/tools/ssi/ssipp
+# Setting BUILDDIR=^ means that paths will be relative to the current working
+# directory.
+SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ \
+                     $(MORE_SSIFLAGS) -I${srcdir}
 MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
 	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
                grep -e ${DATE_PATTERN} 2> /dev/null || echo --- ) \
                -dHTML_DOC_DIR=$(htmldir) -I${srcdir}
-
-# Setting BUILDDIR=^ means that paths will be relative to the current working directory.
-SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS) -I${srcdir}
-SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
 
@@ -29,14 +40,11 @@ html_DATA = algo-tol.html bindings.html dynamic.html man.html \
             extensions/circle.html extensions/blockdraw_wfo.html \
             extensions/index.html index.html
 
-docdir=${top_srcdir}/doc/parts
-
-dist_noinst_DATA = ${docdir}/extensions/formats/html.xsl \
-                   ${docdir}/man/formats/man.xsl \
-                   $(addprefix ${docdir}/formats/, \
+dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
+                   $(addprefix ${formatsdir}/, \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
-                   $(addprefix ${docdir}/, \
+                   $(addprefix ${partsdir}/, \
                       $(addsuffix /formats/html.xsl, \
                          algo-tol bindings dynamic man states state-types \
                          syntax tutorial types index))
@@ -44,7 +52,7 @@ dist_noinst_DATA = ${docdir}/extensions/formats/html.xsl \
 SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
 html-INSTALL: $(SHEXT_FILES)
 
-extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
+extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
@@ -54,7 +62,7 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.ssidep ${docdir}/formats/html.xsl
+%.xml : ${partsdir}/%/index.sxml ${DEPDIR}/%.ssidep ${formatsdir}/html.xsl
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
 		mv $*.Txml $@; \
@@ -63,7 +71,7 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
+${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
@@ -75,7 +83,7 @@ ${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
 		exit 1; \
 	fi
 
-${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
+${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
 	then \
@@ -95,9 +103,9 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
-%.css : ${top_srcdir}/doc/styles/html/%.css
+%.css : ${stylesdir}/html/%.css
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	${INSTALL_DATA} $< $@
+	${INSTALL_DATA} $$( test -f $< | echo "${srcdir}"/ )$< $@
 
 %.pdf %.stdout: %.shape $(SHEXT_FILES)
 	test -d  $(@D) || ${mkdir_p} $(@D)
@@ -123,15 +131,18 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
-# Warning!
-# Dependencies such as extensions/../dynamic.html will cause dynamic.html to be built as if it was the extension ../dynamic.html ,
-# which will produce the wrong result.
-# Therefore, we make an attempt at removing collapsable parts from the dependencies.
-extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
+# WARNING!
+# Dependencies such as extensions/../dynamic.html will cause
+# dynamic.html to be built as if it was the extension ../dynamic.html,
+# which will produce the wrong result.  Therefore, we make an
+# attempt at removing collapsable parts from the dependencies.
+extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
+                    ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< ${docdir}/extensions/formats/html.xsl  || exit 1 ) | \
-	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
-	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
+	( $(SAXON) $< ${extensionsdir}/formats/html.xsl  || exit 1 ) | \
+	  ${POSTPROC_HTML} > $@
+	if $(SAXON) $@ ${toolsdir}/xhtml-deps/filter.xsl > \
+	   ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
 		echo "html-BUILD html-INSTALL html-DIST : $< $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -140,10 +151,10 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 		exit 1; \
 	fi
 
-%.html : %.xml ${docdir}/%/formats/html.xsl ${docdir}/formats/html.xsl
+%.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< ${docdir}/$*/formats/html.xsl || exit 1 ) | \
-	  ${top_builddir}/doc/tools/postproc/postproc-html > $*.html
+	( $(SAXON) $< ${partsdir}/$*/formats/html.xsl || exit 1 ) | \
+	  ${POSTPROC_HTML} > $*.html
 	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
 	then \
 		echo "html-BUILD html-INSTALL html-DIST : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
