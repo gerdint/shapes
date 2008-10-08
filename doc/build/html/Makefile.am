@@ -52,7 +52,7 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                          algo-tol bindings dynamic man states state-types \
                          syntax tutorial types index)) $(SHEXT_FILES)
 
-extensions/%.xml : ${extensionsdir}/%.sxml
+extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
@@ -62,7 +62,7 @@ extensions/%.xml : ${extensionsdir}/%.sxml
 		exit 1; \
 	fi
 
-%.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl
+%.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/%.ssidep
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
 		mv $*.Txml $@; \
@@ -76,8 +76,8 @@ ${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml \
 	  --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
-		sed -i'' -e 's!^!html-DIST $@ !' -e 's!:!: $< !' \
-		  ${DEPDIR}/extensions/$*.Tssidep ; \
+		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
+		       < ${DEPDIR}/extensions/$*.Tssidep > ${DEPDIR}/extensions/$*.dist ; \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Tssidep; \
@@ -89,8 +89,8 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > \
 	  ${DEPDIR}/$*.Tssidep; \
 	then \
-		sed -i'' -e 's!^!html-DIST $@ !'  -e 's!:!: $< !' \
-		    ${DEPDIR}/$*.Tssidep ; \
+		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
+		       < ${DEPDIR}/$*.Tssidep > ${DEPDIR}/$*.dist ; \
 		mv ${DEPDIR}/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/$*.Tssidep; \
@@ -148,7 +148,7 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
 	   ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL html-DIST : $< $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		echo "nobase_dist_html_DATA += $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -164,7 +164,7 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
 	  ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL html-DIST : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		echo "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
@@ -174,11 +174,13 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 %.htmldep : %.ssidep
 	@touch $@
 
-.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep)) $(html_FILES:.html=.xml)
-.PHONY : html-tmp
+.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep) \
+                                    $(html_FILES:.html=.htmldep) \
+                                    $(html_FILES:.html=.dist)) \
+            $(html_FILES:.html=.xml)
 
 clean-local :
-	find . \( -name "*~" -o -name "*.html" \) -exec ${RM} {} \;
+	find . \( -name "*~" -o -name "*.html" -o -name "*.xml" \) -exec ${RM} {} \;
 	find ${DEPDIR} -type f -exec ${RM} {} \;
 
 distclean-local :
@@ -186,34 +188,11 @@ distclean-local :
 
 include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep))
 -include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.htmldep))
+-include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.dist))
 
+html-local : ${nobase_dist_html_DATA} ${nobase_dist_noinst_DATA} FORCE
+dist-hook : all-local
 all-local : html-local
+	${MAKE} html-local
 
-html-local : ${nobase_dist_html_DATA}
-	${MAKE} ${AM_MAKEFLAGS} html-BUILD
-
-install-data-local : html-local
-	${MAKE} ${AM_MAKEFLAGS} html-INSTALL
-
-uninstall-local :
-	find ${DESTDIR}${htmldir} -type f -exec ${RM} {} \;
-
-html-INSTALL :
-	for f in $^; \
-	do \
-		dir="${htmldir}/$$( dirname $$f )" ; \
-		test -z  $$dir || ${mkdir_p} $(DESTDIR)$$dir ; \
-		echo ${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
-		${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
-	done
-
-dist-hook : html-local
-	${MAKE} ${AM_MAKEFLAGS} html-DIST
-
-html-DIST :
-	for f in $^ ; \
-	do \
-		dir="${distdir}/$$( dirname $$f | sed -e 's!${top_srcdir}!${top_builddir}!' )" ; \
-		test -d  $$dir || ${mkdir_p} $$dir ; \
-		${install_sh_DATA} $$f $$dir ; \
-	done
+FORCE :
