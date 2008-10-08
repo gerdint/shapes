@@ -187,7 +187,7 @@ namespace Shapes
 			virtual void display( std::ostream & os ) const;
 		};
 
-		class FileOpenError : public Exception
+		class FileReadOpenError : public Exception
 		{
 		public:
 			enum Type{ OPEN, STAT };
@@ -198,10 +198,23 @@ namespace Shapes
 			const std::string * sourceDir_;
 			const std::list< std::string > * searchPath_;
 		public:
-			FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type = OPEN );
-			virtual ~FileOpenError( );
+			FileReadOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type = OPEN );
+			virtual ~FileReadOpenError( );
 			virtual void display( std::ostream & os ) const;
 			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_INPUT_FILE_ERROR; }
+		};
+
+		class FileWriteOpenError : public Exception
+		{
+		private:
+			Ast::SourceLocation loc;
+			RefCountPtr< const char > filename;
+			const char * purpose_;
+		public:
+			FileWriteOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const char * purpose = 0 );
+			virtual ~FileWriteOpenError( );
+			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_OUTPUT_FILE_ERROR; }
 		};
 
 		class TeXSetupTooLate : public Exception

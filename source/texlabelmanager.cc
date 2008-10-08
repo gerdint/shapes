@@ -275,7 +275,7 @@ Kernel::TeXLabelManager::processRequests( )
 	ofstream texFile( extendedName.c_str( ) );
 	if( ! texFile.good( ) )
 		{
-			throw Exceptions::InternalError( strrefdup( "Failed to open the TeX source file for write." ) );
+			throw Exceptions::FileWriteOpenError( Ast::THE_UNKNOWN_LOCATION, strrefdup( extendedName ), "(TeX source)" );
 		}
 
 	if( ! setupFinalized )
@@ -343,7 +343,7 @@ Kernel::TeXLabelManager::processRequests( )
 																	S_IRUSR | S_IWUSR );
 					if( stdout_file == -1 )
 						{
-							throw Exceptions::ExternalError( strrefdup( "Failed to open file for what pdfLaTeX writes to stdout: " + stdout_filename ) );
+							throw Exceptions::FileWriteOpenError( Ast::THE_UNKNOWN_LOCATION, strrefdup( stdout_filename ), "(destination for stdout from pdfLaTeX)"  );
 						}
 					dup2( stdout_file, 1 );
 					close( stdout_file );
