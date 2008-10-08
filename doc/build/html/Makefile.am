@@ -26,9 +26,9 @@ SSI=${top_builddir}/doc/tools/ssi/ssipp
 SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
 SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ \
                      $(MORE_SSIFLAGS) -I${srcdir}
-MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
-	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
-               grep -e ${DATE_PATTERN} 2> /dev/null || echo --- ) \
+MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell ${ECHO} $(VERSION_DATE) | \
+	             ${SED} -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
+               grep -e ${DATE_PATTERN} 2> /dev/null || ${ECHO} --- ) \
                -dHTML_DOC_DIR=$(htmldir) -I${srcdir}
 
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
@@ -119,7 +119,7 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_70%.jpg: %.pdf
-	-convert -density 100 -resize $(shell echo $@ | sed -e 's!.*_\([^._]*\).jpg!\1!') $< $@
+	-convert -density 100 -resize $(shell ${ECHO} $@ | ${SED} -e 's!.*_\([^._]*\).jpg!\1!') $< $@
 
 %_y_big.jpg: %.pdf
 	-convert -density 150 -resize x150 $< $@
@@ -142,13 +142,13 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
                     ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
 	( $(SAXON) $< $$( test -f ${extensionsdir}/formats/html.xsl || \
-	  echo '${srcdir}'/ )${extensionsdir}/formats/html.xsl || exit 1 ) | \
+	  ${ECHO} '${srcdir}'/ )${extensionsdir}/formats/html.xsl || exit 1 ) | \
 	  ${POSTPROC_HTML} > $@
 	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
-	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
+	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
 	   ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "nobase_dist_html_DATA += $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		${ECHO} "nobase_dist_html_DATA += $$( ${SED} -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | ${SED} -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
@@ -158,13 +158,13 @@ extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
 %.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
 	( $(SAXON) $< $$( test -f ${partsdir}/$*/formats/html.xsl || \
-	  echo '${srcdir}'/ )${partsdir}/$*/formats/html.xsl || exit 1 ) | \
+	  ${ECHO} '${srcdir}'/ )${partsdir}/$*/formats/html.xsl || exit 1 ) | \
 	  ${POSTPROC_HTML} > $*.html
 	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
-	  echo '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
+	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
 	  ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		echo "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		${ECHO} "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
