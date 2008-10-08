@@ -12,7 +12,7 @@ SSIFLAGS=-dBASE=$(HREF_BASE) -dEXAMPLES=example/ $(MORE_SSIFLAGS)
 SSI=${top_builddir}/doc/tools/ssi/ssipp
 
 CLEANFILES = man.1
-DISTCLEANFILES = shapes.1 ${DEPDIR}/man.dep ${DEPDIR}/man.xml
+DISTCLEANFILES = shapes.1 ${DEPDIR}/man.ssidep man.xml
 
 dist_man1_MANS = shapes.1
 
@@ -25,12 +25,12 @@ dist_noinst_DATA = ${docdir}/man/index.sxml ${docdir}/formats/html.xsl \
                    ${docdir}/formats/man.xsl ${docdir}/man/formats/man.xsl \
                    ${docdir}/algo-tol/tolerances.sxml
 
-${DEPDIR}/%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.ssidep ${docdir}/formats/html.xsl
-	if ${SSI} --in $< ${SSIFLAGS} > ${DEPDIR}/$*.Txml; \
+%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.ssidep ${docdir}/formats/html.xsl
+	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
-		mv ${DEPDIR}/$*.Txml $@; \
+		mv $*.Txml $@; \
 	else \
-		${RM} ${DEPDIR}/$*.Txml; \
+		${RM} $*.Txml; \
 	fi
 
 -include ${DEPDIR}/man.ssidep
@@ -46,11 +46,8 @@ ${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
 	fi
 
 
-%.1 : ${DEPDIR}/%.xml ${docdir}/%/formats/man.xsl ${docdir}/formats/man.xsl
+%.1 : %.xml ${docdir}/%/formats/man.xsl ${docdir}/formats/man.xsl
 	$(SAXON) $< ${docdir}/$*/formats/man.xsl | \
 	  ${top_builddir}/doc/tools/postproc/postproc-man > $@
 
-.PRECIOUS : ${DEPDIR}/man.ssidep ${DEPDIR}/man.xml
-
-distclean-local :
-	-find . -type f -exec ${RM} {} \;
+.PRECIOUS : ${DEPDIR}/man.ssidep man.xml
