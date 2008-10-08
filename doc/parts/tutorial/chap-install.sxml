@@ -27,9 +27,9 @@
 <section id="install-build">
 <title>Building and installing</title>
 <body>
-<p>Assuming the downloaded file was called <filename>shapes-x-y-z.tgz</filename>, the standard procedure below contains the necessary steps.</p>
+<p>Assuming the downloaded file was called <filename>shapes-x-y-z.tar.gz</filename>, the standard procedure below contains the necessary steps.</p>
 <command-line>
-tar zxf shapes-x-y-z.tgz
+tar zxf shapes-x-y-z.tar.gz
 cd shapes-x-y-z
 autoreconf -ivfs
 ./configure
