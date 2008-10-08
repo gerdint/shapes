@@ -91,7 +91,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 </p>
 <p>It is almost allways the case that combining the operators is (sometimes much) more efficient than applying one transform after the other.</p>
 
-<p>Well, that's about all we are going to say regarding transforms in this tutorial.  Befor ending, we'll just mention that there are other constructors beside the ones seen here, that (almost all) transforms can be inverted (see <binding name="inverse" />), and that transforms also exist in <str-3D /> (see <named-type name="Transform3D" />).</p>
+<p>Well, that's about all we are going to say regarding transforms in this tutorial.  Before ending, we'll just mention that there are other constructors beside the ones seen here, that (almost all) transforms can be inverted (see <binding name="inverse" />), and that transforms also exist in <str-3D /> (see <named-type name="Transform3D" />).</p>
 </body>
 </section><!-- End of basics/transforms -->
 

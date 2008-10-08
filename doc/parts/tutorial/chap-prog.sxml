@@ -32,7 +32,7 @@ a: 8 + 7
 <section id="prog/functions">
 <title>Functions, and the lexical and dynamic environments</title>
 <body>
-	<p>In this section, the <em>pure functions</em> will be introduced.  These are my favourite function-like abstraction, and hence what you will find in most code examples.  Other function-like abstractions will be introduced later, after <em>state</em> have been properly introduced.</p>
+	<p>In this section, the <em>pure functions</em> will be introduced.  These are my favorite function-like abstraction, and hence what you will find in most code examples.  Other function-like abstractions will be introduced later, after <em>state</em> have been properly introduced.</p>
 
 	<p>A function has no side effects.  Given arguments and a <em>dynamic</em> environment, a function returns a value.  Given the same arguments and the same dynamic environment, the function will always return the same result.  This implies that a function must not be allowed to access anything which can change from time to time.  In <str-Shapes /> these things which can change are the <em>states</em>, so the rule is simply that a pure function is not allowed to access any states.  Note that this does not mean a function cannot use states internally to compute its result.</p>
 
