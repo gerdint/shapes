@@ -71,26 +71,28 @@ extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml
+${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml \
 	  --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
 		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
-		       < ${DEPDIR}/extensions/$*.Tssidep > ${DEPDIR}/extensions/$*.dist ; \
+		  ${DEPDIR}/extensions/$*.Tssidep > ${DEPDIR}/extensions/$*.dist ; \
+	  ${SED} -e 's!^!$@ !' ${DEPDIR}/extensions/$*.Tssidep > $@ ; \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Tssidep; \
 		exit 1; \
 	fi
 
-${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml
+${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} ${@D}
 	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > \
 	  ${DEPDIR}/$*.Tssidep; \
 	then \
 		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
-		       < ${DEPDIR}/$*.Tssidep > ${DEPDIR}/$*.dist ; \
+		  ${DEPDIR}/$*.Tssidep > ${DEPDIR}/$*.dist ; \
+	  ${SED} -e 's!^!$@ !' ${DEPDIR}/$*.Tssidep > $@ ; \
 		mv ${DEPDIR}/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/$*.Tssidep; \
