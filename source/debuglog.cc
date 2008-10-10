@@ -48,9 +48,7 @@ Kernel::DebugLog::os( )
 			myFile_.open( filename_.c_str( ) );
 			if( ! myFile_.is_open( ) )
 				{
-					std::ostringstream msg;
-					msg << "Failed to open the debug log \"" << filename_ << "\" for write." ;
-					throw Exceptions::ExternalError( strrefdup( msg ) );
+					throw Exceptions::FileWriteOpenError( Ast::THE_UNKNOWN_LOCATION, strrefdup( filename_ ), "(debug log)" );
 				}
 			os_ = & myFile_;
 		}

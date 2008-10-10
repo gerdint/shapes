@@ -125,8 +125,11 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 											goto doneRear;
 										}
 								}
-								cerr << "Internal error:	Unexpected type found in handle point: " << pathPoint->rear_->getTypeName( ) << endl ;
-								exit( 1 );
+								{
+									std::ostringstream msg;
+									msg << "Unexpected type found in handle point: " << pathPoint->rear_->getTypeName( ) ;
+									throw Exceptions::InternalError( msg );
+								}
 							}
 					doneRear:
 
@@ -191,8 +194,11 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 											goto doneFront;
 										}
 								}
-								cerr << "Internal error:	Unexpected type found in handle point: " << pathPoint->front_->getTypeName( ) << endl ;
-								exit( 1 );
+								{
+									std::ostringstream msg;
+									msg << "Unexpected type found in handle point: " << pathPoint->front_->getTypeName( ) ;
+									throw Exceptions::InternalError( msg );
+								}
 							}
 					doneFront:
 
@@ -206,8 +212,11 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 					}
 					break;
 				default:
-					cerr << "Internal error:	Unexpected type found in subpath: " << node->getTypeName( ) << endl ;
-					exit( 1 );
+					{
+						std::ostringstream msg;
+						msg << "Unexpected type found in subpath: " << node->getTypeName( ) ;
+						throw Exceptions::InternalError( msg );
+					}
 				}
 		}
 

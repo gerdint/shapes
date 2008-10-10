@@ -121,6 +121,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<b>--<xsl:value-of select="../@name" />=</b><program-param class="replacable"><xsl:value-of select="." /></program-param><br />
 </xsl:template>
 
+<xsl:template match="exit-code-list">
+	<ul>
+		<xsl:apply-templates select="/man/external/exit-code" />
+	</ul>
+</xsl:template>
+
+
+<xsl:template match="exit-code[@value]">
+	<li>
+		<b><xsl:apply-templates select="@value" /> — <xsl:apply-templates select="short" /></b><br />
+		<xsl:apply-templates select="description/*" />
+	</li>
+</xsl:template>
 
 <xsl:template match="prog-name[@class='other']"><xsl:value-of select="." /></xsl:template>
 <xsl:template match="prog-name"><b><xsl:value-of select="." /></b></xsl:template>

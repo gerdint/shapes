@@ -251,8 +251,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 				int status = gsl_linalg_SV_decomp( a, v, s, work );
 				if( status != 0 )
 					{
-						std::cerr << "Gnu Scientific Library SVD routine failed." << std::endl ;
-						exit( 1 );
+						throw Exceptions::ExternalError( "Gnu Scientific Library SVD routine failed." );
 					}
 			}
 
@@ -277,8 +276,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 
 //			 if( info != 0 )
 //				 {
-//					 std::cerr << "LAPACK routine DGESVD failed." << std::endl ;
-//					 exit( 1 );
+//					 throw Exceptions::ExternalError( "LAPACK routine DGESVD failed." );
 //				 }
 
 			if( gsl_vector_get( s, 1 ) < 1e-5 )

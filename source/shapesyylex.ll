@@ -11,6 +11,7 @@
 #include "shapesexceptions.h"
 #include "texlabelmanager.h"
 #include "globals.h"
+#include "exitcodes.h"
 
 using namespace Shapes;
 #include "yyltype.h"
@@ -23,6 +24,7 @@ using namespace Shapes;
 #include <iomanip>
 
 #define YY_USER_ACTION doBeforeEachAction( );
+#define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 double shapes_strtod( char * str, char ** end );
 
@@ -875,7 +877,7 @@ ShapesScanner::doInclusion( )
 			struct stat theStat;
 			if( stat( path.c_str( ), & theStat ) != 0 )
 				{
-					throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0, 0, Exceptions::FileOpenError::STAT );
+					throw Exceptions::FileReadOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0, 0, Exceptions::FileReadOpenError::STAT );
 				}
 			FileID fileID( theStat );
 			if( neededFiles.find( fileID ) != neededFiles.end( ) )
@@ -892,7 +894,7 @@ ShapesScanner::doInclusion( )
 	std::ifstream * iFile = new std::ifstream( path.c_str( ) );
 	if( ! iFile->good( ) )
 		{
-			throw Exceptions::FileOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0, 0 );
+			throw Exceptions::FileReadOpenError( shapeslloc, strrefdup( path.c_str( ) ), 0, 0 );
 		}
 
 	shapeslloc.firstLine = shapeslloc.lastLine + 1;

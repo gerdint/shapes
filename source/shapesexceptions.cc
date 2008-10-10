@@ -244,15 +244,15 @@ Exceptions::FreezingUndefined::display( std::ostream & os ) const
 }
 
 
-Exceptions::FileOpenError::FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type )
+Exceptions::FileReadOpenError::FileReadOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type )
 	: loc( _loc ), filename( _filename ), type( _type ), sourceDir_( sourceDir ), searchPath_( searchPath )
 { }
 
-Exceptions::FileOpenError::~FileOpenError( )
+Exceptions::FileReadOpenError::~FileReadOpenError( )
 { }
 
 void
-Exceptions::FileOpenError::display( std::ostream & os ) const
+Exceptions::FileReadOpenError::display( std::ostream & os ) const
 {
 	switch( type )
 		{
@@ -263,7 +263,7 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 			os << loc << locsep << "Could not stat() file: " << filename ;
 			break;
 		default:
-			os << loc << locsep << "Internal error when displaying FileOpenError on file: " << filename ;
+			os << loc << locsep << "Internal error when displaying FileReadOpenError on file: " << filename ;
 		}
 	if( searchPath_ != 0 )
 		{
@@ -283,6 +283,26 @@ Exceptions::FileOpenError::display( std::ostream & os ) const
 				}
 			os << "\"" ;
 		}
+	os << std::endl ;
+}
+
+
+Exceptions::FileWriteOpenError::FileWriteOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const char * purpose )
+	: loc( _loc ), filename( _filename ), purpose_( purpose )
+{ }
+
+Exceptions::FileWriteOpenError::~FileWriteOpenError( )
+{ }
+
+void
+Exceptions::FileWriteOpenError::display( std::ostream & os ) const
+{
+	os << loc << locsep << "Could not open " ;
+	if( purpose_ != 0 )
+		{
+			os << purpose_ ;
+		}
+	os << " file for write: " << filename ;
 	os << std::endl ;
 }
 
@@ -606,20 +626,6 @@ Exceptions::BinaryInfixNotApplicable::display( std::ostream & os ) const
 		{
 			os << "Operator " << operatorSymbol << " is not defined for the operand combination (" << valueType1 << "," << valueType2 << ")" << std::endl ;
 		}
-}
-
-
-Exceptions::RedefiningUnknown::RedefiningUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id )
-	: Exceptions::RuntimeError( _loc ), id( _id )
-{ }
-
-Exceptions::RedefiningUnknown::~RedefiningUnknown( )
-{ }
-
-void
-Exceptions::RedefiningUnknown::display( std::ostream & os ) const
-{
-	os << "The variable " << id << " is not introduced" << std::endl ;
 }
 
 

@@ -514,6 +514,13 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 	</section>
 
 	<section>
+		<title>Exit codes</title>
+		<body>
+			<exit-code-list />
+		</body>
+	</section>
+
+	<section>
 		<title>Examples</title>
 		<section>
 			<title>Basic use</title>
@@ -586,5 +593,6 @@ shapes --resources=no --needpath ../../resources/extensions/ --fontmetricspath .
 
 	<external>
 		<!--#include virtual="../algo-tol/tolerances.sxml" -->
+		<!--#include virtual="exit-codes.sxml" -->
 	</external>
 </man>

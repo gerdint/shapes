@@ -61,7 +61,7 @@ Lang::Type3Glyph::shipout( std::ostream & os, RefCountPtr< SimplePDF::PDF_Resour
 		}
 	else
 		{
-			os << Concrete::Length::offtype( widthX_ ) << " 0 " 
+			os << Concrete::Length::offtype( widthX_ ) << " 0 "
 				 << Concrete::Length::offtype( xmin_ ) << " " << Concrete::Length::offtype( ymin_ )
 				 << " " << Concrete::Length::offtype( xmax_ ) << " " << Concrete::Length::offtype( ymax_ ) << " d1" << std::endl ;
 		}

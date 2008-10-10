@@ -2,6 +2,7 @@
 
 #include "pdfstructure.h"
 #include "pdfscanner.h"
+#include "exitcodes.h"
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -10,6 +11,8 @@ unsigned char hexToChar( char c1, char c2 );
 unsigned char octalToChar( char c1, char c2, char c3 );
 
 size_t stringParenDepth;
+
+#define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 using namespace SimplePDF;
 

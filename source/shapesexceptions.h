@@ -7,6 +7,7 @@
 #include "Shapes_Exceptions_decls.h"
 
 #include "sourcelocation.h"
+#include "exitcodes.h"
 #include "methodid.h"
 #include "simplepdfo.h"
 #include "strrefdup.h" // this is not needed in this file, but it is convenient to get these declarations for users of this file.
@@ -32,6 +33,7 @@ namespace Shapes
 			Exception( );
 			virtual ~Exception( );
 			virtual void display( std::ostream & os ) const = 0;
+			virtual Interaction::ExitCode exitCode( ) const = 0;
 			static const char * locsep;
 		};
 
@@ -42,6 +44,7 @@ namespace Shapes
 			NotImplemented( const char * _functionality );
 			virtual ~NotImplemented( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_NOT_IMPLEMENTED; }
 		};
 
 		class StaticInconsistency : public Exception
@@ -52,6 +55,7 @@ namespace Shapes
 			StaticInconsistency( Ast::SourceLocation primaryLoc ) : primaryLoc_( primaryLoc ) { }
 			virtual ~StaticInconsistency( ) { }
 			const Ast::SourceLocation & loc( ) const { return primaryLoc_; }
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; }
 		};
 
 		class PostCondition : public Exception
@@ -62,6 +66,7 @@ namespace Shapes
 			PostCondition( Ast::SourceLocation primaryLoc ) : primaryLoc_( primaryLoc ) { }
 			virtual ~PostCondition( ) { }
 			const Ast::SourceLocation & loc( ) const { return primaryLoc_; }
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; }
 		};
 
 		class ScannerError : public StaticInconsistency
@@ -182,7 +187,7 @@ namespace Shapes
 			virtual void display( std::ostream & os ) const;
 		};
 
-		class FileOpenError : public Exception
+		class FileReadOpenError : public Exception
 		{
 		public:
 			enum Type{ OPEN, STAT };
@@ -193,9 +198,23 @@ namespace Shapes
 			const std::string * sourceDir_;
 			const std::list< std::string > * searchPath_;
 		public:
-			FileOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type = OPEN );
-			virtual ~FileOpenError( );
+			FileReadOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const std::string * sourceDir, const std::list< std::string > * searchPath, Type _type = OPEN );
+			virtual ~FileReadOpenError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_INPUT_FILE_ERROR; }
+		};
+
+		class FileWriteOpenError : public Exception
+		{
+		private:
+			Ast::SourceLocation loc;
+			RefCountPtr< const char > filename;
+			const char * purpose_;
+		public:
+			FileWriteOpenError( const Ast::SourceLocation & _loc, RefCountPtr< const char > _filename, const char * purpose = 0 );
+			virtual ~FileWriteOpenError( );
+			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_OUTPUT_FILE_ERROR; }
 		};
 
 		class TeXSetupTooLate : public Exception
@@ -205,6 +224,7 @@ namespace Shapes
 			TeXSetupTooLate( const Ast::SourceLocation & _loc );
 			virtual ~TeXSetupTooLate( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; }
 		};
 
 		class EmptyFinalPicture : public Exception
@@ -213,6 +233,7 @@ namespace Shapes
 			EmptyFinalPicture( );
 			virtual ~EmptyFinalPicture( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; }
 		};
 
 		class RuntimeError : public Exception
@@ -223,6 +244,7 @@ namespace Shapes
 			RuntimeError( Ast::Expression * expr );
 			const Ast::SourceLocation & getLoc( ) const;
 			virtual ~RuntimeError( );
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; } /* This should be overridden when apropriate! */
 		};
 
 		class UserError : public RuntimeError
@@ -232,6 +254,7 @@ namespace Shapes
 			UserError( RefCountPtr< const char > _msg );
 			virtual ~UserError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_USER_ERROR; }
 		};
 
 		class InternalError : public RuntimeError
@@ -246,6 +269,7 @@ namespace Shapes
 			InternalError( const std::ostringstream & msg );
 			virtual ~InternalError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_INTERNAL_ERROR; }
 		};
 
 		class ExternalError : public RuntimeError
@@ -257,6 +281,7 @@ namespace Shapes
 			ExternalError( const char * msg );
 			virtual ~ExternalError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_EXTERNAL_ERROR; }
 			ExternalError * clone( ) const;
 		};
 
@@ -463,15 +488,6 @@ namespace Shapes
 			BinaryInfixNotApplicable( const Ast::SourceLocation & _loc, const Ast::Expression * _expr1, RefCountPtr< const char > _valueType1, const Ast::Expression * _expr2, RefCountPtr< const char > _valueType2 );
 			virtual ~BinaryInfixNotApplicable( );
 			void setOperatorSymbol( const char * _operatorSymbol );
-			virtual void display( std::ostream & os ) const;
-		};
-
-		class RedefiningUnknown : public RuntimeError
-		{
-			RefCountPtr< const char > id;
-		public:
-			RedefiningUnknown( const Ast::SourceLocation & _loc, RefCountPtr< const char > _id );
-			virtual ~RedefiningUnknown( );
 			virtual void display( std::ostream & os ) const;
 		};
 
@@ -781,6 +797,7 @@ namespace Shapes
 			TeXLabelError( bool quoted, const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & strLoc );
 			virtual ~TeXLabelError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_TEX_ERROR; }
 		};
 
 		class StaticTeXLabelError : public StaticInconsistency
@@ -793,6 +810,7 @@ namespace Shapes
 			StaticTeXLabelError( bool quoted, const char * region, RefCountPtr< const char > summary, RefCountPtr< const char > details, const Ast::SourceLocation & strLoc );
 			virtual ~StaticTeXLabelError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_TEX_ERROR; }
 		};
 
 		class InstantiatingAbstractClass : public RuntimeError
@@ -983,6 +1001,7 @@ namespace Shapes
 			DtMinError( double _dt );
 			virtual ~DtMinError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_TOLERANCE_ERROR; }
 		};
 
 		class AffineTransformKillsPlane : public RuntimeError
@@ -1002,6 +1021,7 @@ namespace Shapes
 			MissingFontMetrics( RefCountPtr< const char > fontname, const std::list< std::string > * searchPath );
 			virtual ~MissingFontMetrics( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_EXTERNAL_ERROR; }
 		};
 
 		class FontMetricsError : public RuntimeError
@@ -1012,6 +1032,7 @@ namespace Shapes
 			FontMetricsError( const RefCountPtr< const char > & fontname, const RefCountPtr< const char > & message );
 			virtual ~FontMetricsError( );
 			virtual void display( std::ostream & os ) const;
+			virtual Interaction::ExitCode exitCode( ) const { return Interaction::EXIT_EXTERNAL_ERROR; }
 		};
 
 		class InsertingEmptyPage : public RuntimeError
