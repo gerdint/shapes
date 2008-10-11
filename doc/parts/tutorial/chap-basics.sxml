@@ -134,7 +134,7 @@ lbl: (TeX `$x^{2} + y^{2}$´)
 		<li><p>Hence, some mechanism for automatic determination of such distances should be welcome.</p></li>
 		<li><p>A mechanism for automatic determination of angles should be welcome too.</p></li>
 		<li><p>Automatic choices and values set directly by the user should mix in a way that allows complete freedom to mix the two, while also being easy to learn and remember.</p></li>
-		<li><p>While it is possible to use polar coordinates to specify interpolation points relative to the trough point by using the <binding name="dir" /> function, for example <inline>(+ r*[dir a])</inline>, this solution has no room for automatic choices.</p></li>
+		<li><p>While it is possible to use polar coordinates to specify interpolation points relative to the through-point by using the <binding name="dir" /> function, for example <inline>(+ r*[dir a])</inline>, this solution has no room for automatic choices.</p></li>
 	</ol>
 	Of course, all of these features are available in <str-Shapes />.  The syntax may feel a bit clumsy initially, but that's the small price we pay for the powerful and easy to remember syntax, see <syntax name="polar-handle-2D" /> and <syntax name="corner-point-2D" />.
 </p>
