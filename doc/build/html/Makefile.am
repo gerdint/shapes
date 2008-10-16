@@ -1,4 +1,14 @@
+docdir=../..
+partsdir=${docdir}/parts
+extensionsdir=${partsdir}/extensions
+formatsdir=${partsdir}/formats
+stylesdir=${docdir}/styles
+toolsdir=${docdir}/tools
+
+POSTPROC_HTML=${top_builddir}/doc/tools/postproc/postproc-html
+
 SAXON = @SAXON@
+
 SHAPES = $(top_builddir)/source/shapes
 SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resources/fontmetrics \
@@ -10,41 +20,39 @@ SHAPESFLAGS = --resources=no \
 include ${top_builddir}/source/SHAPES-VERSION-FILE
 
 DATE_PATTERN='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
-MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell echo $(VERSION_DATE) | \
-	             sed -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
-               grep -e ${DATE_PATTERN} 2> /dev/null || echo --- ) \
+SSI=${top_builddir}/doc/tools/ssi/ssipp
+# Setting BUILDDIR=^ means that paths will be relative to the current working
+# directory.
+SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
+SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ \
+                     $(MORE_SSIFLAGS) -I${srcdir}
+MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell ${ECHO} $(VERSION_DATE) | \
+	             ${SED} -e 's!.*\('${DATE_PATTERN}'\).*!\1!' | \
+               grep -e ${DATE_PATTERN} 2> /dev/null || ${ECHO} --- ) \
                -dHTML_DOC_DIR=$(htmldir) -I${srcdir}
 
-# Setting BUILDDIR=^ means that paths will be relative to the current working directory.
-SSIFLAGS=-dEXAMPLES=example/ -dBASE= -dBUILDDIR=^/ $(MORE_SSIFLAGS)
-SSIFLAGS_EXTENSIONS=-dEXAMPLES=example/ -dBASE=../ -dBUILDDIR=^/ $(MORE_SSIFLAGS) -I${srcdir}
-SSI=${top_builddir}/doc/tools/ssi/ssipp
-
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
+SHEXT_FILES=$(addprefix example/, $(SHEXT_LIST))
 
-html_DATA = algo-tol.html bindings.html dynamic.html man.html \
+html_FILES = algo-tol.html bindings.html dynamic.html man.html \
             state-types.html states.html syntax.html types.html \
             tutorial.html index.html \
-            extensions/bondgraph.html extensions/centering.html \
-            extensions/circle.html extensions/blockdraw_wfo.html \
-            extensions/index.html
+            $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
+              bondgraph.html centering.html circle.html conssupport.html \
+              linkpaths.html pathmapping.html shiftoff.html index.html )
 
-docdir=${top_srcdir}/doc/parts
+nobase_dist_html_DATA = ${html_FILES} shapes.css
 
-dist_noinst_DATA = ${docdir}/extensions/formats/html.xsl \
-                   ${docdir}/man/formats/man.xsl \
-                   $(addprefix ${docdir}/formats/, \
+nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
+                   $(addprefix ${formatsdir}/, \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
-                   $(addprefix ${docdir}/, \
+                   $(addprefix ${partsdir}/, \
                       $(addsuffix /formats/html.xsl, \
                          algo-tol bindings dynamic man states state-types \
-                         syntax tutorial types index))
+                         syntax tutorial types index)) $(SHEXT_FILES)
 
-SHEXT_FILES=$(patsubst %,example/%,$(SHEXT_LIST))
-html-INSTALL: $(SHEXT_FILES)
-
-extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
+extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \
 	then \
@@ -54,7 +62,7 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-%.xml : ${docdir}/%/index.sxml ${DEPDIR}/%.ssidep ${docdir}/formats/html.xsl
+%.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/%.ssidep
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
 		mv $*.Txml $@; \
@@ -63,22 +71,28 @@ extensions/%.xml : ${docdir}/extensions/%.sxml ${DEPDIR}/extensions/%.ssidep
 		exit 1; \
 	fi
 
-${DEPDIR}/extensions/%.ssidep : ${docdir}/extensions/%.sxml
+${DEPDIR}/extensions/%.ssidep : ${extensionsdir}/%.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} ${@D}
-	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml --deps > ${DEPDIR}/extensions/$*.Tssidep; \
+	if $(SSI) --in $< $(SSIFLAGS_EXTENSIONS) --head extensions/$*.xml \
+	  --deps > ${DEPDIR}/extensions/$*.Tssidep; \
 	then \
-		sed -i '' -e 's!^!html-DIST '$@' !' -e 's!: !: $< !' ${DEPDIR}/extensions/$*.Tssidep ; \
+		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
+		  ${DEPDIR}/extensions/$*.Tssidep > ${DEPDIR}/extensions/$*.dist ; \
+	  ${SED} -e 's!^!$@ !' ${DEPDIR}/extensions/$*.Tssidep > $@ ; \
 		mv ${DEPDIR}/extensions/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Tssidep; \
 		exit 1; \
 	fi
 
-${DEPDIR}/%.ssidep : ${docdir}/%/index.sxml
+${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} ${@D}
-	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > ${DEPDIR}/$*.Tssidep; \
+	if $(SSI) --in $< $(SSIFLAGS) --head $*.xml --deps > \
+	  ${DEPDIR}/$*.Tssidep; \
 	then \
-		sed -i '' -e 's!^!html-DIST '$@' !'  -e 's!: !: $< !' ${DEPDIR}/$*.Tssidep ; \
+		${SED} -e 's!^.*:!nobase_dist_noinst_DATA += $< !' \
+		  ${DEPDIR}/$*.Tssidep > ${DEPDIR}/$*.dist ; \
+	  ${SED} -e 's!^!$@ !' ${DEPDIR}/$*.Tssidep > $@ ; \
 		mv ${DEPDIR}/$*.Tssidep $@; \
 	else \
 		${RM} ${DEPDIR}/$*.Tssidep; \
@@ -93,21 +107,21 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
-%.css : ${top_srcdir}/doc/styles/html/%.css
+%.css : ${stylesdir}/html/%.css
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
 %.pdf %.stdout: %.shape $(SHEXT_FILES)
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) --in $(test -f $< || echo '${srcdir}/')$< --out $*.pdf > $*.stdout
+	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
 
 %_3.pdf %.stdout: %.shape $(SHEXT_FILES)
 	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $(test -f $< || echo '${srcdir}/')$< --out $*_3.pdf > $*.stdout
+	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_70%.jpg: %.pdf
-	-convert -density 100 -resize $(shell echo $@ | sed -e 's!.*_\([^._]*\).jpg!\1!') $< $@
+	-convert -density 100 -resize $(shell ${ECHO} $@ | ${SED} -e 's!.*_\([^._]*\).jpg!\1!') $< $@
 
 %_y_big.jpg: %.pdf
 	-convert -density 150 -resize x150 $< $@
@@ -121,28 +135,38 @@ example/%.shext : ${top_srcdir}/examples/%.shext
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
-# Warning!
-# Dependencies such as extensions/../dynamic.html will cause dynamic.html to be built as if it was the extension ../dynamic.html ,
-# which will produce the wrong result.
-# Therefore, we make an attempt at removing collapsable parts from the dependencies.
-extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${docdir}/formats/html.xsl
-	( $(SAXON) $< ${docdir}/extensions/formats/html.xsl  || exit 1 ) | \
-	  ${top_builddir}/doc/tools/postproc/postproc-html > $@
-	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/extensions/$*.Thtmldep ; \
+# WARNING!
+# Dependencies such as extensions/../dynamic.html will cause
+# dynamic.html to be built as if it was the extension ../dynamic.html,
+# which will produce the wrong result.  Therefore, we make an
+# attempt at removing collapsable parts from the dependencies.
+extensions/%.html : extensions/%.xml ${extensionsdir}/formats/html.xsl \
+                    ${formatsdir}/html.xsl
+	test -d  ${@D} || ${mkdir_p} ${@D} ; \
+	( $(SAXON) $< $$( test -f ${extensionsdir}/formats/html.xsl || \
+	  ${ECHO} '${srcdir}'/ )${extensionsdir}/formats/html.xsl || exit 1 ) | \
+	  ${POSTPROC_HTML} > $@
+	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
+	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
+	   ${DEPDIR}/extensions/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL html-DIST : $< $$( sed -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | sed -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
+		${ECHO} "nobase_dist_html_DATA += $$( ${SED} -e 's!\([^ ]\{1,\}\)!extensions/\1!g' < ${DEPDIR}/extensions/$*.Thtmldep | ${SED} -e 's![^/ ]\{1,\}/\.\./!!g' | tr ' ' '\n' | sort -u | tr '\n' ' ' )" > ${DEPDIR}/extensions/$*.htmldep ; \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/extensions/$*.Thtmldep ; \
 		exit 1; \
 	fi
 
-%.html : %.xml ${docdir}/%/formats/html.xsl ${docdir}/formats/html.xsl
-	( $(SAXON) $< ${docdir}/$*/formats/html.xsl || exit 1 ) | \
-	  ${top_builddir}/doc/tools/postproc/postproc-html > $*.html
-	if $(SAXON) $@ ${top_srcdir}/doc/tools/xhtml-deps/filter.xsl > ${DEPDIR}/$*.Thtmldep ; \
+%.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
+	test -d  ${@D} || ${mkdir_p} ${@D} ; \
+	( $(SAXON) $< $$( test -f ${partsdir}/$*/formats/html.xsl || \
+	  ${ECHO} '${srcdir}'/ )${partsdir}/$*/formats/html.xsl || exit 1 ) | \
+	  ${POSTPROC_HTML} > $*.html
+	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
+	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
+	  ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		echo "html-BUILD html-INSTALL html-DIST : $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		${ECHO} "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
 		${RM} ${DEPDIR}/$*.Thtmldep ; \
@@ -152,45 +176,25 @@ extensions/%.html : extensions/%.xml ${docdir}/extensions/formats/html.xsl ${doc
 %.htmldep : %.ssidep
 	@touch $@
 
-.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep)) $(html_DATA:.html=.xml)
-.PHONY : html-tmp
+.PRECIOUS : $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep) \
+                                    $(html_FILES:.html=.htmldep) \
+                                    $(html_FILES:.html=.dist)) \
+            $(html_FILES:.html=.xml)
 
 clean-local :
-	find . \( -name "*~" -o -name "*.html" \) -exec ${RM} {} \;
+	find . \( -name "*~" -o -name "*.html" -o -name "*.xml" \) -exec ${RM} {} \;
 	find ${DEPDIR} -type f -exec ${RM} {} \;
 
 distclean-local :
 	-find . -type f -exec ${RM} {} \;
 
-include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.ssidep))
--include $(addprefix ${DEPDIR}/, $(html_DATA:.html=.htmldep))
+include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep))
+-include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.htmldep))
+-include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.dist))
 
+html-local : ${nobase_dist_html_DATA} ${nobase_dist_noinst_DATA} FORCE
+dist-hook : all-local
 all-local : html-local
+	${MAKE} html-local
 
-html-local : ${html_DATA} shapes.css
-	${MAKE} ${AM_MAKEFLAGS} html-BUILD
-
-install-data-local : html-local
-	${MAKE} ${AM_MAKEFLAGS} html-INSTALL
-
-uninstall-local :
-	find ${DESTDIR}${htmldir} -type f -exec ${RM} {} \;
-
-html-INSTALL : ${html_DATA} shapes.css
-	for f in $^; \
-	do \
-		dir="${htmldir}/$$( dirname $$f )" ; \
-		test -z  $$dir || ${mkdir_p} $(DESTDIR)$$dir ; \
-		${INSTALL_DATA} $$f $(DESTDIR)$$dir ; \
-	done
-
-dist-hook : html-local
-	${MAKE} ${AM_MAKEFLAGS} html-DIST
-
-html-DIST : ${html_DATA} shapes.css
-	for f in $^ ; \
-	do \
-		dir="${distdir}/$$( dirname $$f | sed -e 's!${top_srcdir}!${top_builddir}!' )" ; \
-		test -d  $$dir || ${mkdir_p} $$dir ; \
-		${install_sh_DATA} $$f $$dir ; \
-	done
+FORCE :
