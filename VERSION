@@ -1,11 +1,21 @@
-0.4.0
+0.4.1
 The first line of this file shall be the last tagged version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
 
-====( x.y.z )====
-FILL-IN-DATE-WHEN-TAGGING!
+====( 0.4.1 )====
+2008-10-16
+
+(Celebrating my thirtieth birthday.)
+
+Improved build process for the documentation.
+
+Introducing exit codes.
+
+Bugfixes include:
+-  Building the correct index.html at the top of the HTML documentation.
+-  Lost JPG files in the HTML documentation were found by correct handling of the percent sign in URIs.
 
 
 ====( 0.4.0 )====
