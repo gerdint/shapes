@@ -1,9 +1,14 @@
-<section id="chap-install">
-<title>Installing Shapes</title>
-<top>
-<p>Before we get to the interesting parts, we must make sure the tools are in place.</p>
-</top>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
 
+<book>
+	<title>Installing Shapes</title>
+	<description>
+	</description>
+	<meta-selflink><part-href name="install" /></meta-selflink>
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<top>
+	</top>
 <section id="install-depend">
 <title>Dependencies</title>
 <body>
@@ -46,4 +51,4 @@ man shapes
 </body>
 </section><!-- End of install-fetch -->
 
-</section><!-- end of chap-install -->
+</book>

@@ -31,6 +31,7 @@
 <!--#include virtual="../man/index.sxml" depth="0" -->
 <!--#include virtual="../algo-tol/index.sxml" depth="0" -->
 <!--#include virtual="../extensions/index.sxml" depth="0" -->
+<!--#include virtual="../install/index.sxml" depth="0" -->
 </external>
 
 </book>

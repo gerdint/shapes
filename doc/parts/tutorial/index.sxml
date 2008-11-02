@@ -12,7 +12,6 @@
 		<p>Welcome to this tutorial on Shapes!</p>
 		<p>This document is meant to serve as a short introduction to the Shapes language and related tools.  It assumes you have already got a reason for being curious about Shapes.  Likewise, being a short tutorial it will not waste your time telling about the history and background of Shapes; interested readers will find such information elsewhere.</p>
 	</top>
-	<!--#include virtual="chap-install.sxml" -->
 	<!--#include virtual="chap-hello.sxml" -->
 	<!--#include virtual="chap-basics.sxml" -->
 	<!--#include virtual="chap-prog.sxml" -->

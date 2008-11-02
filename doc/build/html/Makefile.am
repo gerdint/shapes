@@ -34,12 +34,12 @@ MORE_SSIFLAGS=-dMODIFICATION_DATE=$(shell ${ECHO} $(VERSION_DATE) | \
 SHEXT_LIST=doc/blockdraw-tutorial-tut-prefs.shext
 SHEXT_FILES=$(addprefix example/, $(SHEXT_LIST))
 
-html_FILES = algo-tol.html bindings.html dynamic.html man.html \
-            state-types.html states.html syntax.html types.html \
-            tutorial.html index.html \
-            $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
-              bondgraph.html centering.html circle.html conssupport.html \
-              linkpaths.html pathmapping.html shiftoff.html index.html )
+html_FILES = algo-tol.html bindings.html dynamic.html install.html \
+             man.html state-types.html states.html syntax.html types.html \
+             tutorial.html index.html \
+             $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
+               bondgraph.html centering.html circle.html conssupport.html \
+               linkpaths.html pathmapping.html shiftoff.html index.html )
 
 nobase_dist_html_DATA = ${html_FILES} shapes.css
 
