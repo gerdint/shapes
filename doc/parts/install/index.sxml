@@ -4,30 +4,52 @@
 <book>
 	<title>Installing Shapes</title>
 	<description>
+		<p>Instructions on how to install <str-Shapes /></p>
 	</description>
 	<meta-selflink><part-href name="install" /></meta-selflink>
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<top>
-	</top>
-<section id="install-depend">
-<title>Dependencies</title>
-<body>
-<p>In order to build the <str-Shapes /> compiler, the following software need to be installed on your system:</p>
-<ol>
-<li><p><em>zLib</em>, the compression library.</p></li>
-<li><p>The <em>iconv</em> library, for conversions between various character encodings.</p></li>
-<li><p>The Gnu Scientific Library, <em>gsl</em>, for mathematical algorithms.</p></li>
-<li><p><str-LaTeX /> (not required), for typesetting labels in your figures.</p></li>
-</ol>
-</body>
-</section><!-- End of install-depend -->
+		<p><str-Shapes /> is written to be as platform independent as	possible, but the system is developed on Macintosh and Linux and has not been tested under Windows.  As a concequence, the instructions given here might need to be adjusted in order to get <str-Shapes /> running in Windows.</p>
 
-<section id="install-fetch">
-<title>Obtaining the source code</title>
-<body>
-<p>The source code can be downloaded from the <a href="http://www.control.isy.liu.se/~tidefelt/projects/shapes/download/">download</a> section of the <str-Shapes /> homepage.</p>
-</body>
-</section><!-- End of install-fetch -->
+	<p>This install guide will guide you obtaining shapes, making sure all dependencies are available, and finally compile and install the program.</p>
+	</top>
+
+	<section id="install-fetch">
+	<title>Download the source</title>
+	<body>
+		<p>The source code can be downloaded from the <a href="http://www.control.isy.liu.se/~tidefelt/projects/shapes/download/">download</a> section of the <str-Shapes /> homepage.  The source is available in files named <filename>shapes-x-y-z.tar.gz</filename>, where a change in <filename>z</filename> is a pure bug fix with out new functionality, whereas a change in <filename>y</filename> should be only backwards compatible feature fixes, and finally <filename>x</filename> is used to indicate backwards incompatible changes.</p>
+	</body>
+	</section><!-- End of install-fetch -->
+
+	<section id="install-depend">
+	<title>Dependencies</title>
+	<top>
+		<p>In order to build the <str-Shapes /> compiler from the downloaded source, the following software need to be installed on your system:</p>
+	</top>
+
+	<section id="install-depend/required">
+	<title>Required</title>
+	<body>
+		<p>These libraries needs to be present on your computer in order to install <str-Shapes />:</p>
+		<ul>
+			<li><p><em>zlib</em>, the compression library.  The source and install instructions can be obtained from the <a href="http://www.gzip.org/zlib/"><em>zlib</em> homepage</a>.</p></li>
+			<li><p>The <em>GNU libiconv</em> library, for conversions between various character encodings.  Refer to the <a href="http://www.gnu.org/software/libiconv/">library homepage</a> to get the software.</p></li>
+			<li><p>The GNU Scientific Library (<em>GSL</em>) v 1.8 or later, for mathematical algorithms.  Obtain <em>GSL</em> from its <a href="http://www.gnu.org/software/gsl/">homepage</a>.</p></li>
+		</ul>
+	</body>
+	</section><!-- End of install-depend/required -->
+
+	<section id="install-depend/recommended">
+	<title>Recommended (optional)</title>
+	<body>
+		<p>A working <str-LaTeX /> installation is optional, but to produce labels with beautifully formated math you need it.</p>
+		<ul>
+			<li><p><em><str-LaTeX /></em>, the typesetting language.  There are many <str-TeX /> distributions available, one free and suitable is <str-TeX /> Live, download the latest <str-TeX /> Live distribution form <a href="http://www.tug.org/texcollection/">tug.org</a>.</p></li>
+		</ul>
+	</body>
+	</section><!-- End of install-depend/recommended -->
+	</section><!-- End of install-depend -->
+
 
 <section id="install-build">
 <title>Building and installing</title>
@@ -36,18 +58,20 @@
 <command-line>
 tar zxf shapes-x-y-z.tar.gz
 cd shapes-x-y-z
-autoreconf -ivfs
 ./configure
 make
 make check
 sudo make install
 </command-line>
 <p>You may omit the <quote>make check</quote> part if you like, but it won't save you much time.  Also, the <quote>sudo</quote> word at the beginning of the last line may not be appropriate for your system, or not required if the installation was configured to install somewhere where your user has permission to write files.</p>
-<p>To see for yourself that the program is installed, you may try reading its terminal-based documentation:</p>
+<p>To see for yourself that the program is installed, run</p>
+<command-line>
+shapes --version
+</command-line>
+<p>and shapes should reply with just installed version of <str-Shapes />.  You can also try to view the online help:</p>
 <command-line>
 man shapes
 </command-line>
-<p>That's it, now you're ready for the rest of this tutorial, the fun part!</p>
 </body>
 </section><!-- End of install-fetch -->
 
