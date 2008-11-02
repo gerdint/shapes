@@ -75,4 +75,39 @@ man shapes
 </body>
 </section><!-- End of install-fetch -->
 
+
+<section id="install-dev">
+<title>Help develop <str-Shapes /></title>
+<body>
+	<p>To help out develop <str-Shapes /> some more packages are needed, depending on which part of <str-Shapes /> you are interested in, you need different tools as outlined below.  Any and all improvements are very welcome and should be sent by e-mail to <a href="mailto:tidefelt@isy.liu.se">tidefelt@isy.liu.se</a>.</p>
+
+	<p>First you should get a hold of the very latest version of the <str-Shapes /> soure.  To do this you need to use <em>git</em>.
+	<ul>
+		<li><p><em>git</em>, used to manage <str-Shapes />.  Get <em>git</em> from <a href="http://git.or.cz">git homepage</a>.</p></li>
+	</ul>
+	With <em>git</em> installed, <str-Shapes /> can be cloned from <tt>URL_TO_BE_DECIDED</tt>.</p>
+
+	<p>To further compile the obtained source, the <em>GNU Autoconf-Automake-Libtool</em> toolchain is needed in combination with <em>Flex</em> and <em>Bison</em>
+	<ul>
+		<li><p><em>GNU Automake</em> can be obtained from <a href="http://www.gnu.org/software/automake/">GNU's homepage</a>.</p></li>
+		<li><p><em>GNU Autoconf</em> can be downloaded from its <a href="http://www.gnu.org/software/autoconf/">homepage</a>.</p></li>
+		<li><p><em>GNU Libtool</em> (GNU Portable Library Tool) is available from <a href="http://www.gnu.org/software/libtool/">GNU</a>.</p></li>
+		<li><p><em>Bison 2.3</em>, needed only if you want to change the way <str-Shapes /> parse source code.  Obtain a current verson of <em>Bison</em> from <a href="http://www.gnu.org/software/bison/">GNU</a>.</p></li>
+		<li><p><em>Flex 2.5.33</em>, needed to modify the scanners used by <str-Shapes />.  Download a sufficiently new version of <em>Flex</em> from <a href="http://flex.sourceforge.net">Sourceforge</a>.</p></li>
+	</ul>
+	</p>
+
+	<p>To run the <str-Shapes /> test suit, <tt>convert</tt> from <em>ImageMagick</em> is needed.to compare the generated images.
+	<ul>
+		<li><p><em>ImageMagick 6.4.0</em>, download it from <a href="http://imagemagick.org">here</a>.</p></li>
+	</ul>
+	</p>
+
+	<p><em>Saxon</em> is used to transform the documentation from the XML format it is written in to man-pages and <str-HTML />.  In this process <em>ImageMagick</em> is used too.
+	<ul>
+		<li><p><em>Saxon 9.0.0.2</em>, is available from its homepage at <a href="http://saxon.sourceforge.net">Sourceforge</a>.</p></li>
+	</ul>
+	</p>
+</body>
+</section><!-- End of install-dev -->
 </book>
