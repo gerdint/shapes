@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
 
 <book>
-	<title>Shapes' global dynamic variables</title>
+	<title>Global dynamic variables</title>
 	<description>
 		<p>Presentation of the dynamic variables defined in the initial environment.</p>
 	</description>

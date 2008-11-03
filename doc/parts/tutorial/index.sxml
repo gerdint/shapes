@@ -2,15 +2,15 @@
 <!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
 
 <book>
-	<title>The short Shapes tutorial</title>
+	<title>The short <str-Shapes /> tutorial</title>
 	<description>
 		<p>A tutorial that will introduce you to the core concepts of the language, without getting into details.  Plenty of examples.</p>
 	</description>
 	<meta-selflink><part-href name="tutorial" /></meta-selflink>
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<top>
-		<p>Welcome to this tutorial on Shapes!</p>
-		<p>This document is meant to serve as a short introduction to the Shapes language and related tools.  It assumes you have already got a reason for being curious about Shapes.  Likewise, being a short tutorial it will not waste your time telling about the history and background of Shapes; interested readers will find such information elsewhere.</p>
+		<p>Welcome to this tutorial on <str-Shapes />!</p>
+		<p>This document is meant to serve as a short introduction to the <str-Shapes /> language and related tools.  It assumes you have already got a reason for being curious about <str-Shapes />.  Likewise, being a short tutorial it will not waste your time telling about the history and background of <str-Shapes />; interested readers will find such information elsewhere.</p>
 	</top>
 	<!--#include virtual="chap-hello.sxml" -->
 	<!--#include virtual="chap-basics.sxml" -->

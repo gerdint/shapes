@@ -9,7 +9,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/book">
   <html>
     <head>
-      <title><xsl:value-of select="title" /></title>
+      <title><xsl:apply-templates select="title" /></title>
 			<xsl:element name="link">
 				<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />shapes.css</xsl:attribute>
@@ -17,7 +17,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
 			<xsl:call-template name="head-navigation" />
-			<h1><xsl:value-of select="title" /></h1>
+			<h1><xsl:apply-templates select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
 			<p><b>Sections:</b>
@@ -25,7 +25,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					  
 					<xsl:element name="a">
 						<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
-						<xsl:value-of select="title" />
+						<xsl:apply-templates select="title" />
 					</xsl:element>
 				</xsl:for-each>
 			</p>
@@ -47,7 +47,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<h2>
 					<xsl:element name="a">
 						<xsl:attribute name="name"><xsl:value-of select="@id" /></xsl:attribute>
-						<xsl:value-of select="title" />
+						<xsl:apply-templates select="title" />
 					</xsl:element>
 				</h2>
 				<xsl:apply-templates select="top" />

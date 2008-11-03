@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
 
 <book>
-	<title>Shapes' algorithms and tolerance settings</title>
+	<title>Algorithms and tolerance settings</title>
 	<description>
 		<p>Advanced topics.</p>
 	</description>

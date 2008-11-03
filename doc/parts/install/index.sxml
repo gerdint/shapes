@@ -2,9 +2,9 @@
 <!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
 
 <book>
-	<title>Installing Shapes</title>
+	<title>Installing <str-Shapes /></title>
 	<description>
-		<p>Instructions on how to install <str-Shapes /></p>
+		<p>Instructions on how to install <str-Shapes />.</p>
 	</description>
 	<meta-selflink><part-href name="install" /></meta-selflink>
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />

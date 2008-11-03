@@ -9,9 +9,9 @@
 					 section="1"
 					 modification-date=<!--#expand-next-string-->"$(MODIFICATION_DATE)">
 		<left-footer>Tiddes</left-footer>
-		<center-header>The Shapes language compiler</center-header>
+		<center-header>The <str-Shapes /> language compiler</center-header>
 		<description>
-			<p>The man page descripting the commad line interface of the compiler.</p>
+			<p>Man page descripting the commad line interface of the compiler.</p>
 		</description>
 		<meta-selflink><part-href name="man" /></meta-selflink>
 		<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
@@ -272,7 +272,7 @@
  		<section>
 			<title>Preview</title>
 			<body>
-				<p>Shapes can launch xpdf or invoke the MacOS <prog-name>open</prog-name> command to show the resulting graphics.  In a future version, it may be possible to specify an arbitrary command to be issued, which could look like this:</p>
+				<p><str-Shapes /> can launch xpdf or invoke the MacOS <prog-name>open</prog-name> command to show the resulting graphics.  In a future version, it may be possible to specify an arbitrary command to be issued, which could look like this:</p>
 <command-line>
 shapes --viewer 'open -a TeXShop %' myfile.shapes
 </command-line>

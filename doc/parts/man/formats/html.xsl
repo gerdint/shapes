@@ -8,7 +8,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/man">
   <html>
     <head>
-      <title><xsl:value-of select="manhead/center-header" /></title>
+      <title><xsl:apply-templates select="manhead/center-header" /></title>
 			<xsl:element name="link">
 				<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" />shapes.css</xsl:attribute>
@@ -33,7 +33,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="manhead">
-	<h1><xsl:value-of select="center-header" /></h1>
+	<h1><xsl:apply-templates select="center-header" /></h1>
 	<p>This page corresponds to the man page <b><xsl:value-of select="@prog-name" /></b>(<xsl:value-of select="@section" />), dated <xsl:value-of select="@modification-date" />.</p>
 	<p><em><b>Note:</b> The examples here may be presented using characters that may not be available in the man page format.  Hence, the examples may be presented differently in the man page.</em></p>
 </xsl:template>

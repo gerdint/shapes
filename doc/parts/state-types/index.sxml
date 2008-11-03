@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
 
 <book>
-	<title>Shapes' core state types</title>
+	<title>Core state types</title>
 	<description>
 		<p>Presentation of the variable types of states defined by the core language.</p>
 	</description>
