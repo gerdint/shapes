@@ -4,6 +4,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="str-PDF"><span class="medium-caps">pdf</span></xsl:template>
 <xsl:template match="str-HTML"><span class="medium-caps">html</span></xsl:template>
+<xsl:template match="str-XML"><span class="medium-caps">xml</span></xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="str-TeX"><span class="tex">T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
@@ -12,6 +13,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-UTF-8"><span class="medium-caps">utf</span>-8</xsl:template>
 <xsl:template match="str-2D">2<span class="medium-caps"><sup>d</sup></span></xsl:template>
 <xsl:template match="str-3D">3<span class="medium-caps"><sup>d</sup></span></xsl:template>
+
 <xsl:template name="str-Google" match="str-Google"><span class="Google"><blue>G</blue><red>o</red><yellow>o</yellow><blue>g</blue><green>l</green><red>e</red><black>™</black></span></xsl:template>
 
 <xsl:template match="abbr-etc">&amp;c</xsl:template>

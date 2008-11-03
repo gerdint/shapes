@@ -4,10 +4,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-HTML">HTML</xsl:template>
+<xsl:template match="str-XML">XML</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="str-TeX">TeX</xsl:template>
 <xsl:template match="str-LaTeX">LaTeX</xsl:template>
 <xsl:template match="str-pdfLaTeX">pdfLaTeX</xsl:template>
+<xsl:template match="str-MetaPost">MetaPost</xsl:template>
 <xsl:template match="str-UTF-8">UTF-8</xsl:template>
 <xsl:template match="str-2D">2D</xsl:template>
 <xsl:template match="str-3D">3D</xsl:template>

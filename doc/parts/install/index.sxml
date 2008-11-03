@@ -103,7 +103,7 @@ man shapes
 	</ul>
 	</p>
 
-	<p><em>Saxon</em> is used to transform the documentation from the XML format it is written in to man-pages and <str-HTML />.  In this process <em>ImageMagick</em> is used too.
+	<p><em>Saxon</em> is used to transform the documentation from the <str-XML /> format it is written in to man-pages and <str-HTML />.  In this process <em>ImageMagick</em> is used too.
 	<ul>
 		<li><p><em>Saxon 9.0.0.2</em>, is available from its homepage at <a href="http://saxon.sourceforge.net">Sourceforge</a>.</p></li>
 	</ul>
