@@ -131,7 +131,7 @@ Kernel::TeXLabelManager::request( const std::string & str, const Ast::SourceLoca
 		{
 			throw Exceptions::InternalError( strrefdup( "Failed to find generated label: " + str ) );
 		}
-	return static_cast< RefCountPtr< const Lang::Geometric2D > >( i->second->cloneWithState( dyn->getGraphicsState( ) ) );
+	return static_cast< RefCountPtr< const Lang::Geometric2D > >( i->second->cloneWithState( dyn->getGraphicsState( ), dyn->getTeXBleed( ) ) );
 }
 
 namespace Shapes

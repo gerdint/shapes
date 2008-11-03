@@ -134,7 +134,7 @@ Lang::DocumentDestination::getDirectDestination( const RefCountPtr< SimplePDF::P
 	Concrete::Coords2D urcorner( 0, 0 );
 	if( target_ != NullPtr< const Lang::Drawable2D >( ) )
 		{
-			RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( );
+			RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( Lang::Drawable2D::BOUNDING );
 			if( theBBox->empty( ) )
 				{
 					throw Exceptions::MiscellaneousRequirement( "The destination target produced an empty bounding box." );
@@ -801,7 +801,7 @@ Kernel::WarmCatalog::tackOnPage( const Kernel::PassedDyn & dyn, const RefCountPt
 
 	pageContents->shipout( contents->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, 0, 0 ) );
 
-	RefCountPtr< const Lang::ElementaryPath2D > theBBox = pageContents->bbox( );
+	RefCountPtr< const Lang::ElementaryPath2D > theBBox = pageContents->bbox( Lang::Drawable2D::BLEED );
 	Concrete::Coords2D llcorner( 0, 0 );
 	Concrete::Coords2D urcorner( 0, 0 );
 	if( ! theBBox->empty( ) )

@@ -197,7 +197,7 @@ namespace Shapes
 					}
 
 				// Find boudning box:
-				RefCountPtr< const Lang::ElementaryPath2D > theBBox = glyph->bbox( );
+				RefCountPtr< const Lang::ElementaryPath2D > theBBox = glyph->bbox( Lang::Drawable2D::BOUNDING );
 				Concrete::Coords2D llcorner( 0, 0 );
 				Concrete::Coords2D urcorner( 0, 0 );
 				if( ! theBBox->boundingRectangle( & llcorner, & urcorner ) )

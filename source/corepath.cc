@@ -44,23 +44,51 @@ namespace Shapes
 		class Core_bbox : public Lang::CoreFunction
 		{
 		public:
-			Core_bbox( const char * title ) : CoreFunction( title ) { }
+			Core_bbox( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "obj", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "type", Helpers::newValHandle( new Lang::Symbol( "bounding" ) ) );
+			}
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				const size_t ARITY = 1;
-				CHECK_ARITY( args, ARITY, title_ );
+				args.applyDefaults( );
 
+				size_t argsi = 0;
 				typedef const Lang::Drawable2D ArgType;
-				RefCountPtr< ArgType > arg = args.getValue( 0 ).down_cast< ArgType >( );
+				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, argsi, callLoc );
 				if( arg == NullPtr< ArgType >( ) )
 					{
-						throw Exceptions::CoreTypeMismatch( callLoc, title_, args, 0, Interaction::SEVERAL_TYPES );
+						throw Exceptions::CoreTypeMismatch( callLoc, title_, args, argsi, Interaction::SEVERAL_TYPES );
 					}
 
+				++argsi;
+				typedef const Lang::Symbol TypeType;
+				RefCountPtr< TypeType > type = Helpers::down_cast_CoreArgument< TypeType >( title_, args, argsi, callLoc );
+				static Lang::Symbol BOUNDING( "bounding" );
+				static Lang::Symbol BLEED( "bleed" );
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( arg->bbox( ),
-												 evalState );
+				if( *type == BOUNDING )
+					{
+						cont->takeValue( arg->bbox( Lang::Drawable2D::BOUNDING ),
+														 evalState );
+					}
+				else if( *type == BLEED )
+					{
+						cont->takeValue( arg->bbox( Lang::Drawable2D::BLEED ),
+														 evalState );
+					}
+				else
+					{
+						std::ostringstream msg;
+						msg << "The only allowed symbols are { " ;
+						BOUNDING.show( msg );
+						msg << " , " ;
+						BLEED.show( msg );
+						msg << " }." ;
+						throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( msg ) );
+					}
 			}
 		};
 
