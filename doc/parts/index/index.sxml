@@ -22,15 +22,19 @@
 
 <external>
 <!--#include virtual="../tutorial/index.sxml" depth="0" -->
-<!--#include virtual="../syntax/index.sxml" depth="0" -->
-<!--#include virtual="../bindings/index.sxml" depth="0" -->
-<!--#include virtual="../states/index.sxml" depth="0" -->
-<!--#include virtual="../dynamic/index.sxml" depth="0" -->
-<!--#include virtual="../types/index.sxml" depth="0" -->
-<!--#include virtual="../state-types/index.sxml" depth="0" -->
 <!--#include virtual="../man/index.sxml" depth="0" -->
-<!--#include virtual="../algo-tol/index.sxml" depth="0" -->
+<group>
+	<title>Language documentation</title>
+	<description><p>Documentation of the core language.</p></description>
+	<!--#include virtual="../syntax/index.sxml" depth="0" -->
+	<!--#include virtual="../bindings/index.sxml" depth="0" -->
+	<!--#include virtual="../states/index.sxml" depth="0" -->
+	<!--#include virtual="../dynamic/index.sxml" depth="0" -->
+	<!--#include virtual="../types/index.sxml" depth="0" -->
+	<!--#include virtual="../state-types/index.sxml" depth="0" -->
+</group>
 <!--#include virtual="../extensions/index.sxml" depth="0" -->
+<!--#include virtual="../algo-tol/index.sxml" depth="0" -->
 <!--#include virtual="../install/index.sxml" depth="0" -->
 </external>
 

@@ -40,11 +40,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="index-of-books">
 	<ul>
-		<xsl:apply-templates select="/book/external/book | /book/external/man" />
+		<xsl:apply-templates select="/book/external/book | /book/external/man | /book/external/group" />
 	</ul>
 </xsl:template>
 
-<xsl:template match="external/book">
+<xsl:template match="external//book">
 	<li>
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
@@ -54,7 +54,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</li>
 </xsl:template>
 
-<xsl:template match="external/man">
+<xsl:template match="external//man">
 	<li>
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/book/base/@href" /><xsl:apply-templates select="manhead/meta-selflink" /></xsl:attribute>
@@ -63,6 +63,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:apply-templates select="manhead/description" />
 	</li>
 </xsl:template>
+
+<xsl:template match="external//group">
+	<li>
+		<b><xsl:apply-templates select="title" /></b>
+		<xsl:apply-templates select="description" />
+		<ul>
+			<xsl:apply-templates select="book | man | group" />
+		</ul>
+	</li>
+</xsl:template>
+
 
 </xsl:stylesheet>
 
