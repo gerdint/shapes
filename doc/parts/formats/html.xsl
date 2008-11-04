@@ -380,6 +380,53 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template name="name-to-mutator">
+	<xsl:param name="name" />
+	<varname><xsl:value-of select="$name" /></varname>
+</xsl:template>
+<xsl:template name="name-to-linked-mutator">
+	<xsl:param name="extension" />
+	<xsl:param name="extension-href" />
+	<xsl:param name="type" />
+	<xsl:param name="name" />
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">
+			<xsl:choose>
+				<xsl:when test="$extension">
+					<xsl:call-template name="extension-to-href"><xsl:with-param name="name"><xsl:value-of select="$extension" /></xsl:with-param></xsl:call-template>#mutator/<xsl:value-of select="$type" />/<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:when test="$extension-href">
+					<xsl:value-of select="$extension-href" />#mutator/<xsl:value-of select="$type" />/<xsl:value-of select="$name" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="part-to-href"><xsl:with-param name="name">state-types</xsl:with-param></xsl:call-template>#mutator/<xsl:value-of select="$type" />/<xsl:value-of select="$name" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
+		<xsl:call-template name="name-to-state-type">
+			<xsl:with-param name="name"><xsl:value-of select="$type" /></xsl:with-param>
+		</xsl:call-template>
+		<inline>/</inline>
+		<xsl:call-template name="name-to-mutator">
+			<xsl:with-param name="name"><xsl:value-of select="$name" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:element>
+</xsl:template>
+<xsl:template match="mutator[@type and @mutator and not(@extension)]">
+	<xsl:call-template name="name-to-linked-mutator">
+		<xsl:with-param name="type"><xsl:value-of select="@type" /></xsl:with-param>
+		<xsl:with-param name="name"><xsl:value-of select="@mutator" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+<xsl:template match="mutator[@type and @mutator and @extension]">
+	<xsl:call-template name="name-to-linked-mutator">
+		<xsl:with-param name="extension"><xsl:value-of select="@extension" /></xsl:with-param>
+		<xsl:with-param name="type"><xsl:value-of select="@type" /></xsl:with-param>
+		<xsl:with-param name="name"><xsl:value-of select="@mutator" /></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="tol-param[@name and @link='no']">
 	<tolparam><xsl:value-of select="@name" /></tolparam>
 </xsl:template>
