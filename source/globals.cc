@@ -33,7 +33,6 @@ Kernel::Import Kernel::thePDFImporter;
 Kernel::DebugLog Kernel::theDebugLog;
 Kernel::TeXLabelManager Kernel::theTeXLabelManager;
 RefCountPtr< const Kernel::GraphicsState > Kernel::THE_NO_STATE = NullPtr< const Kernel::GraphicsState >( );
-RefCountPtr< const Kernel::GraphicsState > Kernel::THE_DEFAULT_STATE( new Kernel::GraphicsState( true ) );
 RefCountPtr< const Lang::Function > Kernel::THE_NO_FUNCTION = NullPtr< const Lang::Function >( );
 
 Concrete::Length Computation::the_arcdelta( 0.1 );	/* that is, 0.1bp */
@@ -113,6 +112,11 @@ Lang::Transform3D Lang::THE_3D_IDENTITY( 1, 0, 0,
 																				 0, 1, 0,
 																				 0, 0, 1,
 																				 Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH );
+
+/*
+ * Be sure to initiate this after globals that it relies on!
+ */
+RefCountPtr< const Kernel::GraphicsState > Kernel::THE_DEFAULT_STATE( new Kernel::GraphicsState( true ) );
 
 
 void
