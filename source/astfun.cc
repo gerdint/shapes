@@ -594,8 +594,8 @@ Ast::FunctionFunction::call( Kernel::EvalState * evalState, Kernel::Arguments & 
 }
 
 
-Kernel::CallCont_last::CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
-	: Kernel::Continuation( callLoc ), fun_( fun ), argList_( argList ), curry_( curry ), env_( env ), dyn_( dyn ), cont_( cont )
+Kernel::CallCont_last::CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, Kernel::StateHandle mutatorSelf, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc )
+	: Kernel::Continuation( callLoc ), fun_( fun ), argList_( argList ), curry_( curry ), mutatorSelf_( mutatorSelf ), env_( env ), dyn_( dyn ), cont_( cont )
 { }
 
 Kernel::CallCont_last::~CallCont_last( )
@@ -609,6 +609,10 @@ Kernel::CallCont_last::takeValue( const RefCountPtr< const Lang::Value > & valsU
 
 	Kernel::Arguments args = fun_->newCurriedArguments( );
 	argList_->bind( & args, vals, env_, dyn_ );
+	if( mutatorSelf_ != 0 )
+		{
+			args.setMutatorSelf( mutatorSelf_ );
+		}
 
 	if( curry_ )
 		{
@@ -719,8 +723,8 @@ Kernel::CallCont_n::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Kernel::CallCont_1::CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
-	: Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), procedural_( procedural ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
+Kernel::CallCont_1::CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, Kernel::StateHandle mutatorSelf, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc )
+	: Kernel::Continuation( traceLoc ), argList_( argList ), curry_( curry ), procedural_( procedural ), mutatorSelf_( mutatorSelf ), env_( evalState.env_ ), dyn_( evalState.dyn_ ), cont_( evalState.cont_ ), callLoc_( callLoc )
 { }
 
 Kernel::CallCont_1::~CallCont_1( )
@@ -748,7 +752,7 @@ Kernel::CallCont_1::takeValue( const RefCountPtr< const Lang::Value > & funUntyp
 					}
 				evalState->env_ = env_;
 				evalState->dyn_ = dyn_;
-				evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, env_, dyn_, cont_, callLoc_ ) );
+				evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( fun, argList_, curry_, mutatorSelf_, env_, dyn_, cont_, callLoc_ ) );
 				argList_->evaluate( fun->newCallContInfo( argList_, *evalState ),
 														argList_->begin( ), Lang::THE_CONS_NULL,
 														evalState );
@@ -900,11 +904,11 @@ Kernel::CallCont_1::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry, bool procedural )
-	: Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( Kernel::THE_NO_FUNCTION ), funExpr_( funExpr ), argList_( argList )
+	: Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( Kernel::THE_NO_FUNCTION ), mutatorSelf_( 0 ), funExpr_( funExpr ), argList_( argList )
 { }
 
 Ast::CallExpr::CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry, bool procedural )
-	: Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( constFun ), funExpr_( 0 ), argList_( argList )
+	: Ast::Expression( loc ), curry_( curry ), procedural_( procedural ), constFun_( constFun ), mutatorSelf_( 0 ), funExpr_( 0 ), argList_( argList )
 { }
 
 Ast::CallExpr::~CallExpr( )
@@ -913,9 +917,18 @@ Ast::CallExpr::~CallExpr( )
 		{
 			delete funExpr_;
 		}
+	if( mutatorSelf_ != 0 )
+		{
+			delete mutatorSelf_;
+		}
 	delete argList_;
 }
 
+void
+Ast::CallExpr::setMutatorSelf( Ast::StateReference * mutatorSelf )
+{
+	mutatorSelf_ = mutatorSelf;
+}
 
 void
 Ast::CallExpr::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
@@ -945,7 +958,7 @@ Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
 	if( funExpr_ != 0 )
 		{
 			evalState->expr_ = funExpr_;
-			evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_1( evalState->expr_->loc( ), argList_, curry_, procedural_, *evalState, loc_ ) );
+			evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_1( evalState->expr_->loc( ), argList_, curry_, procedural_, mutatorSelf_ ? (mutatorSelf_->getHandle( evalState->env_, evalState->dyn_ )) : 0, *evalState, loc_ ) );
 		}
 	else
 		{
@@ -953,7 +966,7 @@ Ast::CallExpr::eval( Kernel::EvalState * evalState ) const
 				{
 					throw Exceptions::InternalError( "Function calling syntax should not be procedural." );
 				}
-			evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( constFun_, argList_, curry_, evalState->env_, evalState->dyn_, evalState->cont_, loc_ ) );
+			evalState->cont_ = Kernel::ContRef( new Kernel::CallCont_last( constFun_, argList_, curry_, mutatorSelf_ ? (mutatorSelf_->getHandle( evalState->env_, evalState->dyn_ )) : 0, evalState->env_, evalState->dyn_, evalState->cont_, loc_ ) );
 			argList_->evaluate( constFun_->newCallContInfo( argList_, *evalState ),
 													argList_->begin( ), Lang::THE_CONS_NULL,
 													evalState );

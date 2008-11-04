@@ -146,6 +146,8 @@ namespace Shapes
 			void peek( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			void freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
+			RefCountPtr< const Lang::Function > getMutator( const char * mutatorID );
+
 			virtual const RefCountPtr< const ::Shapes::Lang::Class > & getClass( ) const = 0;
 			RefCountPtr< const char > getTypeName( ) const;
 			bool isAlive( ) const;

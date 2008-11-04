@@ -24,7 +24,7 @@ DISPATCHBASEIMPL
 Kernel::VariableHandle
 Lang::Value::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
-	throw Exceptions::ElementaryTypeWithoutFields( getTypeName( ) );
+	throw Exceptions::ElementaryWithout( Exceptions::ElementaryWithout::VALUE, Exceptions::ElementaryWithout::FIELD, getTypeName( ) );
 }
 
 void

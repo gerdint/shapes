@@ -63,6 +63,7 @@ namespace Shapes
 
 		class DebugLog;
 
+		void registerMutators( );
 		void registerGlobals( Kernel::Environment * env );
 		void registerDynamic( Kernel::Environment * env );
 		void registerHot( Kernel::Environment * env );

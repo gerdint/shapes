@@ -451,17 +451,37 @@ Exceptions::NonObjectMemberAssignment::display( std::ostream & os ) const
 }
 
 
-Exceptions::ElementaryTypeWithoutFields::ElementaryTypeWithoutFields( RefCountPtr< const char > _valueType )
-	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), valueType( _valueType )
+Exceptions::ElementaryWithout::ElementaryWithout( Kind kind, Ref ref, RefCountPtr< const char > _valueType )
+	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), kind_( kind ), ref_( ref ), valueType( _valueType )
 { }
 
-Exceptions::ElementaryTypeWithoutFields::~ElementaryTypeWithoutFields( )
+Exceptions::ElementaryWithout::~ElementaryWithout( )
 { }
 
 void
-Exceptions::ElementaryTypeWithoutFields::display( std::ostream & os ) const
+Exceptions::ElementaryWithout::display( std::ostream & os ) const
 {
-	os << "This value is of the elementary type " << valueType << ", which has no fields." << std::endl ;
+	os << "This " ;
+	switch( kind_ )
+		{
+		case VALUE:
+			os << "value" ;
+			break;
+		case STATE:
+			os << "state" ;
+			break;
+		}
+	os << " is of the elementary type " << valueType << ", which has no " ;
+	switch( ref_ )
+		{
+		case FIELD:
+			os << "fields" ;
+			break;
+		case MUTATOR:
+			os << "mutators" ;
+			break;
+		}
+		os << "." << std::endl ;
 }
 
 
@@ -490,6 +510,20 @@ void
 Exceptions::NonExistentMember::display( std::ostream & os ) const
 {
 	os << "Class " << valueType << " has no (non-private) field called " << fieldID << "." << std::endl ;
+}
+
+
+Exceptions::NonExistentMutator::NonExistentMutator( RefCountPtr< const char > _valueType, const char * _mutatorID )
+	: Exceptions::RuntimeError( Ast::THE_UNKNOWN_LOCATION ), valueType( _valueType ), mutatorID( _mutatorID )
+{ }
+
+Exceptions::NonExistentMutator::~NonExistentMutator( )
+{ }
+
+void
+Exceptions::NonExistentMutator::display( std::ostream & os ) const
+{
+	os << "State type " << valueType << " has no mutator called " << mutatorID << "." << std::endl ;
 }
 
 

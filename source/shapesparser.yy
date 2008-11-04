@@ -151,7 +151,7 @@ void shapeserror( char * msg )
  * pp2: You'll need to add many of these of your own.
  */
 
-%type <expr> Program Expr ExprExceptConstStrings DynamicBinding CallExpr CurryCallExpr Function OperatorFunction Class ConstantExceptStrings Coords PolarHandle
+%type <expr> Program Expr ExprExceptConstStrings DynamicBinding CallExpr CurryCallExpr MutateExpr Function OperatorFunction Class ConstantExceptStrings Coords PolarHandle
 %type <expr> NamedLetExpr								 //	 LetDestinations LetExpr LetStarExpr LetrecExpr
 %type <expr> CodeBracket SuperCall SuperMemberReference
 %type <exprList> InsertionSequence
@@ -469,6 +469,17 @@ CurryCallExpr
 	$$ = new Ast::CallExpr( @$, $2, $3, true ); /* true means Curry */
 }
 ;
+
+MutateExpr
+: StateReference '.' '[' T_identifier ArgList ']'
+{
+	Ast::CallExpr * res =
+		new Ast::CallExpr( @$,
+											 new Ast::MutatorReference( @4, $1, $4 ),
+											 $5 );
+	res->setMutatorSelf( $1 );
+	$$ = res;
+}
 
 
 Formals
@@ -945,6 +956,7 @@ ExprExceptConstStrings
 {
 	$$ = new Ast::Peek( @$, $2 );
 }
+| MutateExpr
 | Expr '.' T_identifier
 {
 	Ast::ArgListExprs * args = new Ast::ArgListExprs( false );

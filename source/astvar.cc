@@ -346,6 +346,41 @@ Ast::MemberReferenceFunction::call( Kernel::EvalState * evalState, Kernel::Argum
 
 
 
+Ast::MutatorReference::MutatorReference( const Ast::SourceLocation & mutatorLoc, Ast::StateReference * state, const char * mutatorID )
+	: Ast::Expression( mutatorLoc ), mutatorLoc_( mutatorLoc ), state_( state ), mutatorID_( mutatorID )
+{ }
+
+Ast::MutatorReference::~MutatorReference( )
+{
+	/* At the time of implementing this bug-fix, state_ will allways be owned by the Ast::CallExpr that is also the owner of us.
+	 * Hence, we do not consider ourselves owners.  Perhaps one should have a flag indicating whether ownership is transferred
+	 * when calling the constructor, but at the moment this seems like a waste of resources.
+	 */
+	//	delete state_;
+	delete mutatorID_;
+}
+
+void
+Ast::MutatorReference::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{
+	state_->analyze( this, env );
+
+	imperative_ = true;
+
+	/* If the type of the state was known here, we should verify that there is a mutator corresponding to the message <mutatorID>.
+	 */
+}
+
+void
+Ast::MutatorReference::eval( Kernel::EvalState * evalState ) const
+{
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( state_->getHandle( evalState->env_, evalState->dyn_ )->getMutator( mutatorID_ ),
+									 evalState );
+}
+
+
+
 Ast::SpecialLength::SpecialLength( const Ast::SourceLocation & loc, double val, int sort )
 	: Ast::Expression( loc ), val_( val ), sort_( sort )
 { }
@@ -390,7 +425,7 @@ Ast::SpecialLength::eval( Kernel::EvalState * evalState ) const
 		}
 
 	if( sort_ & Computation::SPECIALU_CORR )
-		{ 
+		{
 			res *= Computation::specialUnitCorrection( a0, a1 );
 		}
 
