@@ -49,7 +49,7 @@ LiTH: [import `LiTH_staende_eng_sv.pdf´] [] '0   |** import all pages, and sele
 
 {
   tmp: [bboxed [clip (•page) pageFrame_S5] pageFrame_S5]
-	[erase •page]
+	•page.[erase]
   •page << tmp
 }
 
