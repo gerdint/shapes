@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cat exscripts/GPL-head exscripts/copyright-tidefelt > GPL-head-shapes; cat exscripts/comment-shapes.ex | ex GPL-head-shapes
+
+for i in `ls *.shape *.shext`; do
+  echo Fixing $i
+  mv $i tmp; cat GPL-head-shapes tmp > $i
+done
+
+rm GPL-head-shapes tmp

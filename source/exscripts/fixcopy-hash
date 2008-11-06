@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cat exscripts/GPL-head exscripts/copyright-hendeby > GPL-head-hash; cat exscripts/comment-hash.ex | ex GPL-head-hash
+
+for i in `ls Makefile.am SHAPES-VERSION-GEN`; do
+  echo Fixing $i
+  mv $i tmp; cat GPL-head-hash tmp > $i
+done
+
+rm GPL-head-hash tmp
