@@ -5,6 +5,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-PDF">PDF</xsl:template>
 <xsl:template match="str-HTML">HTML</xsl:template>
 <xsl:template match="str-XML">XML</xsl:template>
+<xsl:template match="str-SVG">SVG</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="str-TeX">TeX</xsl:template>
 <xsl:template match="str-LaTeX">LaTeX</xsl:template>
