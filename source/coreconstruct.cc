@@ -1225,6 +1225,325 @@ namespace Shapes
 			}
 		};
 
+		namespace Implementation
+		{
+			double
+			svg_path_strtod( const char ** src )
+			{
+				const char * start = *src;
+				char * endp;
+				double res = strtod( start, & endp );
+				*src = endp;
+				if( **src != ' ' )
+					{
+						for( ; *start == ' '; ++start )
+							;
+						throw std::string( start, strchr( start, ' ' ) - start );
+					}
+				return res;
+			}
+		}
+		class Core_svg_path : public Lang::CoreFunction
+		{
+		public:
+			Core_svg_path( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "d", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "xunit", Helpers::newValHandle( new Lang::Length( Concrete::Length( 1 ) ) ) );
+				formals_->appendEvaluatedCoreFormal( "yunit", Helpers::newValHandle( new Lang::Length( Concrete::Length( 1 ) ) ) );
+				formals_->appendEvaluatedCoreFormal( "multi", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "singletons", Kernel::THE_TRUE_VARIABLE );
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				size_t argsi = 0;
+				typedef const Lang::String StrType;
+				RefCountPtr< StrType > arg = Helpers::down_cast_CoreArgument< StrType >( title_, args, argsi, callLoc );
+
+				typedef const Lang::Length ScaleType;
+				++argsi;
+				Concrete::Length dx = Helpers::down_cast_CoreArgument< ScaleType >( title_, args, argsi, callLoc )->get( );
+				++argsi;
+				Concrete::Length dy = Helpers::down_cast_CoreArgument< ScaleType >( title_, args, argsi, callLoc )->get( );
+
+				typedef const Lang::Boolean FlagType;
+				++argsi;
+				RefCountPtr< FlagType > multi = Helpers::down_cast_CoreArgument< FlagType >( title_, args, argsi, callLoc, true );
+				++argsi;
+				bool singletons = Helpers::down_cast_CoreArgument< FlagType >( title_, args, argsi, callLoc )->val_;
+
+				RefCountPtr< char > buf = RefCountPtr< char >( new char[ 2 * strlen( arg->val_.getPtr( ) + 1 ) ] );
+				{
+					/* Get rid of any whitespace that isn't a plain space, and make sure every number is terminated by whitespace.
+					 */
+					char * dst = buf.getPtr( );
+					for( const char * src = arg->val_.getPtr( ); *src != '\0'; ++src, ++dst )
+						{
+							switch( *src )
+								{
+								case '\t':
+								case '\n':
+								case ',':
+									*dst = ' ';
+									continue;
+								}
+							if( ( 'A' <= *src && *src <= 'Z' ) || ( 'a' <= *src && *src <= 'z' ) )
+								{
+									/* Insert whitespace before command to ensure command is not immediately following number.
+									 */
+									*dst = ' ';
+									++dst;
+								}
+							*dst = *src;
+						}
+					*dst = ' ';
+					++dst;
+					*dst = '\0';
+				}
+
+				RefCountPtr< Lang::MultiPath2D > multiPath = RefCountPtr< Lang::MultiPath2D >( new Lang::MultiPath2D );
+				RefCountPtr< Lang::ElementaryPath2D > elemPath = RefCountPtr< Lang::ElementaryPath2D >( NullPtr< Lang::ElementaryPath2D >( ) );
+
+				try
+					{
+						char cmd = '\0';
+						Concrete::PathPoint2D originPathPoint( new Concrete::Coords2D( 0, 0 ) );
+						Concrete::PathPoint2D * first = & originPathPoint;
+						Concrete::PathPoint2D * last = & originPathPoint;
+						const char * srcEnd = buf.getPtr( ) + strlen( buf.getPtr( ) );
+						for( const char * src = buf.getPtr( ); src < srcEnd; ++src )
+							{
+								for( ; *src == ' '; ++src )
+									;
+								if( *src == '\0' )
+									{
+										break;
+									}
+								switch( *src )
+									{
+									case 'M':
+									case 'm':
+									case 'Z':
+									case 'z':
+									case 'L':
+									case 'l':
+									case 'H':
+									case 'h':
+									case 'V':
+									case 'v':
+									case 'C':
+									case 'c':
+									case 'S':
+									case 's':
+										{
+											cmd = *src;
+											++src;
+											break;
+										}
+									case 'Q':
+									case 'q':
+									case 'T':
+									case 't':
+									case 'A':
+									case 'a':
+										{
+											throw Exceptions::CoreOutOfRange( title_, args, 0, strrefdup( std::string( "SVG path command not compatible with cubic splines: " ) + *src ) );
+										}
+									}
+								switch( cmd )
+									{
+									case 'M':
+										{
+											if( elemPath != NullPtr< Lang::ElementaryPath2D >( ) && ( singletons || elemPath->duration( ) >= 1 ) )
+												{
+													multiPath->push_back( elemPath );
+												}
+											Concrete::Length x = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y = - dy * Implementation::svg_path_strtod( & src );
+											first = new Concrete::PathPoint2D( new Concrete::Coords2D( x, y ) );
+											last = first;
+											elemPath = RefCountPtr< Lang::ElementaryPath2D >( new Lang::ElementaryPath2D );
+											elemPath->push_back( last );
+											cmd = 'L';
+											break;
+										}
+									case 'm':
+										{
+											if( elemPath != NullPtr< Lang::ElementaryPath2D >( ) && ( singletons || elemPath->duration( ) >= 1 ) )
+												{
+													multiPath->push_back( elemPath );
+												}
+											Concrete::Length x = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											first = new Concrete::PathPoint2D( new Concrete::Coords2D( x, y ) );
+											last = first;
+											elemPath = RefCountPtr< Lang::ElementaryPath2D >( new Lang::ElementaryPath2D );
+											elemPath->push_back( last );
+											cmd = 'l';
+											break;
+										}
+									case 'Z':
+										{
+											elemPath->close( );
+											last = first;
+											break;
+										}
+									case 'z':
+										{
+											elemPath->close( );
+											last = first;
+											break;
+										}
+									case 'L':
+										{
+											Concrete::Length x = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y = - dy * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x, y ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'l':
+										{
+											Concrete::Length x = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x, y ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'H':
+										{
+											Concrete::Length x = dx * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x, last->mid_->y_ ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'h':
+										{
+											Concrete::Length x = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x, last->mid_->y_ ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'V':
+										{
+											Concrete::Length y = - dy * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( last->mid_->x_, y ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'v':
+										{
+											Concrete::Length y = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( last->mid_->x_, y ) );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'C':
+										{
+											Concrete::Length x1 = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y1 = - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x2 = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y2 = - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x3 = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y3 = - dy * Implementation::svg_path_strtod( & src );
+											last->front_ = new Concrete::Coords2D( x1, y1 );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x3, y3 ) );
+											last->rear_ = new Concrete::Coords2D( x2, y2 );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'c':
+										{
+											Concrete::Length x1 = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y1 = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x2 = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y2 = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x3 = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y3 = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											last->front_ = new Concrete::Coords2D( x1, y1 );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x3, y3 ) );
+											last->rear_ = new Concrete::Coords2D( x2, y2 );
+											elemPath->push_back( last );
+											break;
+										}
+									case 'S':
+										{
+											Concrete::Length x2 = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y2 = - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x3 = dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y3 = - dy * Implementation::svg_path_strtod( & src );
+											last->front_ = new Concrete::Coords2D( 2 * *(last->mid_) - *(last->rear_) );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x3, y3 ) );
+											last->rear_ = new Concrete::Coords2D( x2, y2 );
+											elemPath->push_back( last );
+											break;
+										}
+									case 's':
+										{
+											Concrete::Length x2 = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y2 = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											Concrete::Length x3 = last->mid_->x_ + dx * Implementation::svg_path_strtod( & src );
+											Concrete::Length y3 = last->mid_->y_ - dy * Implementation::svg_path_strtod( & src );
+											last->front_ = new Concrete::Coords2D( 2 * *(last->mid_) - *(last->rear_) );
+											last = new Concrete::PathPoint2D( new Concrete::Coords2D( x3, y3 ) );
+											last->rear_ = new Concrete::Coords2D( x2, y2 );
+											elemPath->push_back( last );
+											break;
+										}
+									case '\0':
+										throw Exceptions::CoreOutOfRange( title_, args, 0, "Malformed SVG path string (failed to initialize command character)." );
+									default:
+										{
+											throw Exceptions::InternalError( "While reading SVG path string: Command character out of range." );
+										}
+									}
+							}
+					}
+				catch( const std::string & badNumber )
+					{
+						throw Exceptions::CoreOutOfRange( title_, args, 0, strrefdup( std::string( "Ill-formed number: " ) + badNumber ) );
+					}
+
+				if( elemPath != NullPtr< Lang::ElementaryPath2D >( ) && ( singletons || elemPath->duration( ) >= 1 ) )
+					{
+						multiPath->push_back( RefCountPtr< const Lang::Path2D >( elemPath ) );
+					}
+
+				if( multiPath->size( ) == 0 )
+					{
+						throw Exceptions::CoreOutOfRange( title_, args, 0, "No path was produced." );
+					}
+				if( multiPath->size( ) == 1 )
+					{
+						Kernel::ContRef cont = evalState->cont_;
+						if( multi != NullPtr< FlagType >( ) && multi->val_ )
+							{
+								cont->takeValue( Kernel::ValueRef( multiPath ),
+																 evalState );
+							}
+						else
+							{
+								cont->takeValue( Kernel::ValueRef( multiPath->front( ) ),
+																 evalState );
+							}
+					}
+				else
+					{
+						if( multi != NullPtr< FlagType >( ) && ! multi->val_ )
+							{
+								throw Exceptions::CoreOutOfRange( title_, args, 0, "More than one sub-path conflicts with false for <multi>." );
+							}
+						Kernel::ContRef cont = evalState->cont_;
+						cont->takeValue( Kernel::ValueRef( multiPath ),
+														 evalState );
+					}
+			}
+		};
+
 		class Core_sprintf : public Lang::CoreFunction
 		{
 		public:
@@ -2100,6 +2419,8 @@ Kernel::registerCore_construct( Kernel::Environment * env )
 
 	env->initDefineCoreFunction( new Lang::Core_vector( "vector" ) );
 	env->initDefineCoreFunction( new Lang::Core_importPDFpages( "import" ) );
+
+	env->initDefineCoreFunction( new Lang::Core_svg_path( "svg_path" ) );
 
 	env->initDefineCoreFunction( new Lang::Core_sprintf( "sprintf" ) );
 	env->initDefineCoreFunction( new Lang::Core_strftime( "strftime" ) );

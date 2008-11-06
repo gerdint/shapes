@@ -743,6 +743,41 @@ is equivalent to
 	</function>
 </system-binding>
 
+<system-binding identifier="svg_path">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg identifier="d">
+					<type><named-type name="String" /></type>
+				</arg>
+				<arg identifier="xunit">
+					<type><named-type name="Lenth" /></type>
+					<default><physical><scalar>1</scalar><unit>bp</unit></physical></default>
+				</arg>
+				<arg identifier="yunit">
+					<type><named-type name="Lenth" /></type>
+					<default><physical><scalar>1</scalar><unit>bp</unit></physical></default>
+				</arg>
+				<arg identifier="multi">
+					<type><named-type name="Boolean" /></type>
+				</arg>
+				<arg identifier="singletons">
+					<type><named-type name="Boolean" /></type>
+					<default><const-true /></default>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Interpret the string <arg name="d" /> as an <str-SVG /> description of a path.  Generally, converting coordinates from the <str-SVG /> model to <str-Shapes /> is cumbersome, as it basically requires a drawing area in the <str-Shapes /> world to be defined and related to <str-SVG /> coordinates.  However, by disregarding the shift part of the true coordinate transform, only scaling remains to be determined, and for this there is <arg name="xunit" /> and <arg name="yunit" />.</p>
+				<p>The argument <arg name="multi" /> is optional.  If provided, <const-true /> means that a <named-type name="MultiPath" /> will be returned (generally containing several sub paths of type <named-type name="Path" />), and <const-false /> means that there must be exactly one sub path, which will be returned as a <named-type name="Path" />.</p>
+				<p>If <arg name="singletons" /> is false, paths with zero duration are ignored.</p>
+				<p>Use this function when you'd rather use a graphical tool to define paths than writing the <str-Shapes /> code by hand.  For instance, paths can be created with <a href="http://www.gimp.org/">Gimp</a>, and exported in <str-SVG /> format.</p>
+				<p>Note that <str-SVG /> graphics is typically located below the origin, while <str-Shapes /> (and <str-PDF />) programs typically locate graphics above the origin.  When determining how to shift the returned path, and this is done using <str-SVG /> information, it must be remembered that the <str-SVG /> <eq>y</eq> coordinate is increasing downwards.</p>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 <system-binding identifier="facet">
 	<function>
 		<case constructor-of="Drawable3D">
