@@ -19,7 +19,7 @@
 <tolerance-parameter name="splicingtol">
 	<type><named-type name="Length" /></type>
 	<default><physical><scalar><sci-fmt mantissa="1" exp="-5" /></scalar><unit>bp</unit></physical></default>
-	<command-line-option-derived>tol</command-line-option-derived>
+	<command-line-option-derived>length</command-line-option-derived>
 	<description>
 		<p>Tolerance used when a <str-3D /> scene is viewed in <str-2D />.</p>
 	</description>
@@ -28,7 +28,7 @@
 <tolerance-parameter name="overlaptol">
 	<type><named-type name="Length" /></type>
 	<default><physical><scalar><sci-fmt mantissa="1" exp="-3" /></scalar><unit>bp</unit></physical></default>
-	<command-line-option-derived>tol</command-line-option-derived>
+	<command-line-option-derived>length</command-line-option-derived>
 	<description>
 		<p>Tolerance used when a <str-3D /> scene is viewed in <str-2D />.</p>
 	</description>

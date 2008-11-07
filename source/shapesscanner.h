@@ -3,6 +3,7 @@
 
 #include "sourcelocation.h"
 #include "charptrless.h"
+#include "elementarylength.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -67,6 +68,7 @@ class ShapesScanner : public shapesFlexLexer
 	void doBeforeEachAction( );
 
 	double lookupUnitFactor( const char * name ) const;
+	Shapes::Concrete::Length strtoLength( const char * str ) const;
  private:
 	std::string currentNeedFile;
 	size_t currentNeedPushCount;

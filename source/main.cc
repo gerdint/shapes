@@ -341,12 +341,14 @@ main( int argc, char ** argv )
 				}
 			else if( strprefixcmp( *argv, "--splicingtol=", & optionSuffix ) )
 				{
-					char * endp;
-					Computation::theTrixelizeSplicingTol = strtod( optionSuffix, &endp );
-					if( *endp != '\0' )
+					try
 						{
-							std::cerr << "Argument to --splicingtol= was not a float: " << optionSuffix << std::endl ;
-							exit( Interaction::EXIT_INVOCATION_ERROR );
+							Computation::theTrixelizeSplicingTol = Ast::theShapesScanner.strtoLength( optionSuffix );
+						}
+					catch( ... )
+						{
+							std::cerr << "Argument to --splicing= was not recognized as a length: " << optionSuffix << std::endl ;
+							abortProcedure( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::theTrixelizeSplicingTol <= 0 )
 						{
@@ -359,12 +361,14 @@ main( int argc, char ** argv )
 				}
 			else if( strprefixcmp( *argv, "--overlaptol=", & optionSuffix ) )
 				{
-					char * endp;
-					Computation::theTrixelizeOverlapTol = strtod( optionSuffix, &endp );
-					if( *endp != '\0' )
+					try
 						{
-							std::cerr << "Argument to --overlaptol was not a float: " << optionSuffix << std::endl ;
-							exit( Interaction::EXIT_INVOCATION_ERROR );
+							Computation::theTrixelizeOverlapTol = Ast::theShapesScanner.strtoLength( optionSuffix );
+						}
+					catch( ... )
+						{
+							std::cerr << "Argument to --overlaptol= was not recognized as a length: " << optionSuffix << std::endl ;
+							abortProcedure( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::theTrixelizeOverlapTol <= 0 )
 						{
@@ -494,16 +498,18 @@ main( int argc, char ** argv )
 				}
 			else if( strprefixcmp( *argv, "--arcdelta=", & optionSuffix ) )
 				{
-					char * endp;
-					Computation::the_arcdelta = strtod( optionSuffix, &endp );
-					if( *endp != '\0' )
+					try
 						{
-							std::cerr << "Argument to --arcdelta= was not a float: " << optionSuffix << std::endl ;
-							exit( Interaction::EXIT_INVOCATION_ERROR );
+							Computation::the_arcdelta = Ast::theShapesScanner.strtoLength( optionSuffix );
+						}
+					catch( ... )
+						{
+							std::cerr << "Argument to --arcdelta= was not recognized as a length: " << optionSuffix << std::endl ;
+							abortProcedure( Interaction::EXIT_INVOCATION_ERROR );
 						}
 					if( Computation::the_arcdelta <= 0 )
 						{
-							std::cerr << "Argument to --arcdelta= not positive: " << Computation::the_arcdelta.offtype< 1, 0 >( ) << std::endl ;
+							std::cerr << "Argument to --arcdelta= not positive: " << optionSuffix << std::endl ;
 							exit( Interaction::EXIT_INVOCATION_ERROR );
 						}
 

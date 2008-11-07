@@ -123,6 +123,20 @@ ShapesScanner::lookupUnitFactor( const char * name ) const
 	return 1 / i->second;
 }
 
+Concrete::Length
+ShapesScanner::strtoLength( const char * str ) const
+{
+	char * endp;
+	double scalar = strtod( str, &endp );
+	typedef typeof unitTable MapType;
+	MapType::const_iterator i = unitTable.find( endp );
+	if( i == unitTable.end( ) )
+		{
+			throw "Malformed length.";
+		}
+	return scalar * i->second;
+}
+
 std::string
 ShapesScanner::searchFile( const std::string & suffix ) const
 {
