@@ -5,6 +5,8 @@
 |** different from the other logos.  It can be used in printed material like
 |** theses, course material, and books.  (The other logos are used in
 |** presentations and posters.)
+|**
+|** This file requires rtlogo_elements, which is not part of Shapes.
 |***************************************************************************
 ##author Henrik Tidefelt
 
