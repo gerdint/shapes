@@ -1,0 +1,95 @@
+/** This file is part of Shapes.
+ **
+ ** Shapes is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** any later version.
+ **
+ ** Shapes is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with Shapes.  If not, see <http://www.gnu.org/licenses/>.
+ **
+ ** Copyright 2008 Henrik Tidefelt
+ **/
+
+##needs centering
+##needs circle
+##needs arrowheads
+##needs pathmapping
+
+##classoption 12pt
+##documenttop \bf
+TeXScale: [scale 2.5]
+
+##unit u = 1mm
+
+yellow: @stroking:[rgb 1 0.7 0]
+blue: @stroking:[rgb 0.3 0.6 1]
+
+thickStyle: @width:3bp
+thinStyle: @width:1.5bp & yellow & @cap:CAP_ROUND
+
+succedesArrow:
+{
+ bentPath: (0cm,0cm)>(1%C^0°)--(1%c^)<(+(1cm*[dir 40°]))>(^40°)
+ \ p ahLength:void ahAngle:30° tailAngle:60° .>
+ (@blend:BLEND_NORMAL
+  |
+  { sl: [p 0]
+    z: sl.p
+    d: [angle sl.T]
+    theLength: [if [typeof ahLength]==§Void @width*6 ahLength]
+    (>
+      picture: @cap:CAP_BUTT | [shift sl.p]*[rotate [angle sl.T]] [] [stroke ([rotate ~0.5*ahAngle]*[scale theLength/1cm][]bentPath) & ([rotate 0.5*ahAngle]*[scale y:~1]*[scale theLength/1cm][]bentPath)]
+      cut: 0bp
+    <)
+  }
+ )
+}
+
+h_style: blue & @width:0.7bp
+
+s_path: (0u,0u)>(0.8%c^140°)--(0.8%c^)<(~1.1u,0u)>(^~120°)--(^)<(0.5u,~1.4u)>(0.7%C^~10°)--(^)<(3u,1u)>(0.6%c^100°)--(1%C^)<(~4u,3u)>(0.7%C^~168°)
+          --(1%C^)<(~13u,~4.5u)>(0.6%C^~90°)--(1.1%C^)<(1u,~17u)>(1%C^~90°)--(^)<(~9u,~25u)>(1%C^180°)--(1%c^)<(~22u,~18u)>(^120°)
+
+arrowLength: 10u
+
+sl1: [maximizer s_path [dir 108°]]
+the_c: sl1.p+sl1.ik*sl1.N
+hook: [[shift sl1.p]*[scale ~1]*[shift ~sl1.p] s_path.begin--sl1]
+rotateAbout: \ z angle .> [shift z]*[rotate angle]*[shift ~z]
+hookCount:'3
+
+•page << yellow & thickStyle & @nonstroking:[gray 0.94] | [fillstroke [shift the_c] [] [circle sl1.ik]]
+			<< yellow & thickStyle & @cap:CAP_ROUND | [[range '1 hookCount].foldl \ p e .> ( p & [[rotateAbout the_c 360°/hookCount*(e-'1)] [stroke hook]] ) null]
+
+sl2: [maximizer s_path [dir ~10°]]-3u
+the_c2: sl2.p+sl2.ik*sl2.N
+•page << yellow & thickStyle | [stroke [shift the_c2] [] [circle sl2.ik]]
+
+subPath: [sidepath2 [upsample_every 2u sl1--sl2] 1u]
+
+•page << thickStyle & @cap:CAP_ROUND | [stroke s_path]
+|**			<< h_style | [stroke [controlling s_path]]
+
+•page << h_style | [stroke subPath]
+
+•page << h_style | [stroke [shift sl1.p] [] [circle 1u]]
+•page << thinStyle | [stroke sl1.p--(+(sl1.T*arrowLength)) head:succedesArrow]
+•page << thinStyle | [stroke sl1.p--(+(sl1.N*arrowLength)) head:succedesArrow]
+
+•page << h_style | [stroke [shift sl2.p] [] [circle 1u]]
+•page << thinStyle | [stroke sl2.p--(+(sl2.T*arrowLength)) head:succedesArrow]
+•page << thinStyle | [stroke sl2.p--(+(sl2.N*arrowLength)) head:succedesArrow]
+
+@nonstroking:(blue|@stroking)
+|
+{
+  •page << [shift sl2.p+sl2.N*(arrowLength+1u)] [] [centerat [TeXScale (TeX `$\lambda$´)] (~1,0)]
+  •page << [shift the_c2] [] [centerat [TeXScale (TeX `@´)] (0,0)]
+  •page << [shift the_c+(2u,~sl1.ik+1u)] [] [centerat [TeXScale (TeX `\#´)] (0,~1)]
+}
