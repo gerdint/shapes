@@ -11,10 +11,10 @@
 <tr> <th>Concept</th> <th>Example</th> <th>Remark</th> </tr>
 <tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
 <tr> <td>Binding (a “variable”) or state</td> <td><binding name="stroke" />, <state name="page" /></td> <td></td> </tr>
-<tr> <td>Replacable argument</td> <td><arg name="some_var" class="replacable" />, <state-arg name="destination" class="replacable" /></td> <td></td> </tr>
+<tr> <td>Formal parameter</td> <td><arg name="some_var" />, <state-arg name="destination" /></td> <td></td> </tr>
 <tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
 <tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
-<tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td>Not yet supported by the language.</td> </tr>
+<tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td></td> </tr>
 <tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
 <tr> <td>Syntax rule name</td> <td><syntax name="call-expr" /></td> <td></td> </tr>
 <tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>

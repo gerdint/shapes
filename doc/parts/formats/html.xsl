@@ -471,7 +471,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:value-of select="$name" />
 	</xsl:element>
 </xsl:template>
-<xsl:template match="p/arg[@name]">
+<xsl:template match="p/arg[@name] | td/arg[@name]">
 	<xsl:call-template name="name-to-argument">
 		<xsl:with-param name="name"><xsl:value-of select="@name" /></xsl:with-param>
 		<xsl:with-param name="class"><xsl:value-of select="@class" /></xsl:with-param>

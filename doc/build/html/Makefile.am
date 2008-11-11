@@ -48,6 +48,7 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
                    $(addprefix ${partsdir}/, \
+                      syntax/formats/syntax-html.xsl \
                       $(addsuffix /formats/html.xsl, \
                          algo-tol bindings dynamic man states state-types \
                          syntax tutorial types index)) $(SHEXT_FILES)
