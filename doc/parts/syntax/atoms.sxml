@@ -268,13 +268,13 @@ Multi-line...´
 <body>
 <p>
 	<syntax-table>
-		<tr> <td><syntax name="identifier" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>{LowerCaseLetter}({Letter}|[0-9])*</lexerregexp></td></tr>
+		<tr> <td><syntax name="identifier" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>{Letter}({Letter}|[0-9])*</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 
 <p>Although identifiers <em>by themselves</em> do not denote values, they are introduced here since they are needed in the definition of symbols below.</p>
 
-<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9, the underscore, and the question mark.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.  As of today, identifiers may neither begin with a capital letter.  Instead, a capital letter indicates a type name.</p>
+<p>An identifier is made up by one or more of the characters a-z, A-Z, 0-9, the underscore, and the question mark.  However, it must not begin with a number, and if it begins by the underscore, the second character must not be a number.</p>
 
 <p>
 	<token-example-table>
@@ -283,7 +283,7 @@ Multi-line...´
 		</head>
 		<body>
 			<tr> <td><inline>cool?</inline></td> <td>Yes</td> </tr>
-			<tr> <td><inline>a_1_2</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>A_1_2</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>__cplusplus</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>3cm</inline></td> <td>No (this begins with a digit and is a length)</td> </tr>
 			<tr> <td><inline>_3abc</inline></td> <td>No (digit after underscore in first position)</td> </tr>

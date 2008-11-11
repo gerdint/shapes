@@ -35,10 +35,12 @@
 
 <p>The following character classes will be used later:</p>
 <syntax-table>
-<tr> <td><syntax name="LowerCaseLetter" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?π§]</lexerregexp></td></tr>
+<tr> <td><syntax name="LowerCaseLetter" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[a-z_?]</lexerregexp></td></tr>
 <tr> <td><syntax name="UpperCaseLetter" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[A-Z]</lexerregexp></td></tr>
-<tr> <td><syntax name="Letter" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="LowerCaseLetter" /> <bnf>|</bnf> <syntax name="UpperCaseLetter" /></inline></td></tr>
+<tr> <td><syntax name="Greek" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[αβγΓδΔεζηΘικλΛμνχΞπΠρσΣτϕωΩ]</lexerregexp></td></tr>
+<tr> <td><syntax name="Letter" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="LowerCaseLetter" /> <bnf>|</bnf> <syntax name="UpperCaseLetter" /> <bnf>|</bnf> <syntax name="Greek" /></inline></td></tr>
 </syntax-table>
+<p>The range of non-Latin characters that match <syntax name="Letter" /> is expected to be extended in the future.</p>
 </body>
 
 </section>
