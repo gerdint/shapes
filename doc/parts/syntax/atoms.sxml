@@ -91,7 +91,7 @@
 </pre>
 </p>
 <p>
-	The point used by TeX is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:
+	The point used by <str-TeX /> is taken as an example.  The new unit will be called <lengthunit>tex</lengthunit>:
 <pre>
 ##unit tex = 0.996264009963bp
 </pre>
@@ -139,7 +139,7 @@
 <section id="syntax/atoms/strings">
 <title>Strings</title>
 <body>
-<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow TeX strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
+<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow <str-TeX /> strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
 
 <p>
 	The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:
