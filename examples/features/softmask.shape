@@ -18,24 +18,21 @@
 
 ##needs circle
 
-##echo The resulting graphics is not correctly displayed in Preview.app.
-##echo On the other hand, it doesn't seem right in Adobe Reader either.
-
 r: 1cm
 
 mask: @blendspace: DEVICE_GRAY | [tgroup
        @blend: BLEND_LIGHTEN
        |
-       ( Hot2D << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-               << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
-               << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
+       ( newGroup << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+                  << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+                  << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
        )
       ]
 
-@<< [shift (1*5*r,0)] [] mask
+•page << [shift (1*5*r,0)] [] mask
 
-@<< [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [alphamask mask] ]
-@<< [shift (0,~1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
-|**@<< [shift (0*4*r,1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
-|**@<< [shift (1*4*r,1*5*r)] [] formxo [] ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] )
+•page << [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [alphamask mask] ]
+•page << [shift (0,~1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
+|**•page << [shift (0*4*r,1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
+|**•page << [shift (1*4*r,1*5*r)] [] formxo [] ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] )
 
