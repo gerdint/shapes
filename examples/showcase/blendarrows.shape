@@ -18,13 +18,15 @@
 
 ##needs arrowheads
 
+##unit u = 1cm
+
 @blend: BLEND_MULTIPLY
 &
-@stroking: [gray 0.7] & @width:3mm
+@stroking: [gray 0.7] & @width:0.2u
 &
 @defaultunit: 1%C
 |
 {
-  •page << [stroke (0cm,0cm)>(^)--(^)<(1cm,1cm)>(^)--(^)<(0cm,2.5cm) head:MetaPostArrow]
-  •page << [stroke (1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(1cm,2cm) head:MetaPostArrow]
+  •page << [stroke (0u,0u)>(^)--(^)<(1u,1u)>(^)--(^)<(0u,2.5u) head:MetaPostArrow]
+  •page << [stroke (1u,0u)>(^)--(^)<(0u,1u)>(^)--(^)<(1u,2u) head:MetaPostArrow]
 }
