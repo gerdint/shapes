@@ -25,7 +25,8 @@ dist_extensions_DATA =  extensions/arrowheads.shext extensions/blockdraw_wfo.she
                      extensions/linkpaths.shext extensions/newline.shext \
                      extensions/no-utf-8.shext extensions/pathmapping.shext \
                      extensions/shapes2D.shext extensions/shapes3D.shext \
-                     extensions/shiftoff.shext extensions/revolutionbody.shext
+                     extensions/shiftoff.shext extensions/revolutionbody.shext \
+                     extensions/golden.shext
 dist_fontmetrics_DATA = fontmetrics/Courier-Bold.afm fontmetrics/Courier-BoldOblique.afm \
                      fontmetrics/Courier-Oblique.afm fontmetrics/Courier.afm \
                      fontmetrics/Helvetica-Bold.afm fontmetrics/Helvetica-BoldOblique.afm \
