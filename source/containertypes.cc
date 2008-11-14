@@ -512,3 +512,90 @@ Lang::Structure::gcMark( Kernel::GCMarkedSet & marked )
 	const_cast< Lang::SingleList * >( values_.getPtr( ) )->gcMark( marked );
 }
 
+
+Kernel::StructureFactory::StructureFactory( const std::list< const char * > & fields )
+{
+	init( fields );
+}
+
+Kernel::StructureFactory::StructureFactory( const char * field1 )
+{
+	std::list< const char * > fields;
+	fields.push_back( field1 );
+	init( fields );
+}
+
+Kernel::StructureFactory::StructureFactory( const char * field1, const char * field2 )
+{
+	std::list< const char * > fields;
+	fields.push_back( field1 );
+	fields.push_back( field2 );
+	init( fields );
+}
+
+Kernel::StructureFactory::StructureFactory( const char * field1, const char * field2, const char * field3 )
+{
+	std::list< const char * > fields;
+	fields.push_back( field1 );
+	fields.push_back( field2 );
+	fields.push_back( field3 );
+	init( fields );
+}
+
+Kernel::StructureFactory::StructureFactory( const char * field1, const char * field2, const char * field3, const char * field4 )
+{
+	std::list< const char * > fields;
+	fields.push_back( field1 );
+	fields.push_back( field2 );
+	fields.push_back( field3 );
+	fields.push_back( field4 );
+	init( fields );
+}
+
+void
+Kernel::StructureFactory::init( const std::list< const char * > & fields )
+{
+	Ast::ArgListExprs * tmp = new Ast::ArgListExprs( false );
+	typedef typeof fields ListType;
+	for( ListType::const_iterator i = fields.begin( ); i != fields.end( ); ++i )
+		{
+			(*tmp->namedExprs_)[ *i ] = 0;
+			typedef typeof values_ MapType;
+			values_.insert( MapType::value_type( *i, Kernel::THE_VOID_VARIABLE ) );
+		}
+	argList_ = tmp;
+}
+
+void
+Kernel::StructureFactory::clear( )
+{
+	typedef typeof values_ MapType;
+	for( MapType::iterator i = values_.begin( ); i != values_.end( ); ++i )
+		{
+			i->second = Kernel::THE_VOID_VARIABLE;
+		}
+}
+
+void
+Kernel::StructureFactory::set( const char * field, const Kernel::VariableHandle & value )
+{
+	typedef typeof values_ MapType;
+	MapType::iterator i = values_.find( field );
+	if( i == values_.end( ) )
+		{
+			throw Exceptions::InternalError( "Kernel::StructureFactory::set: Field was not declared." );
+		}
+	i->second = value;
+}
+
+RefCountPtr< const Lang::Structure >
+Kernel::StructureFactory::build( )
+{
+	RefCountPtr< const Lang::SingleList > tmp = Lang::THE_CONS_NULL;
+	typedef typeof values_ MapType;
+	for( MapType::iterator i = values_.begin( ); i != values_.end( ); ++i )
+		{
+			tmp = RefCountPtr< const Lang::SingleList >( new Lang::SingleListPair( i->second, tmp ) );
+		}
+	return RefCountPtr< const Lang::Structure >( new Lang::Structure( argList_, tmp ) );
+}

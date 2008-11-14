@@ -156,6 +156,25 @@ namespace Shapes
 	};
 
 	}
+	namespace Kernel
+	{
+		class StructureFactory
+		{
+			const Ast::ArgListExprs * argList_;
+			std::map< const char *, Kernel::VariableHandle > values_;
+		private:
+			void init( const std::list< const char * > & fields );
+		public:
+			StructureFactory( const std::list< const char * > & fields );
+			StructureFactory( const char * field1 );
+			StructureFactory( const char * field1, const char * field2 );
+			StructureFactory( const char * field1, const char * field2, const char * field3 );
+			StructureFactory( const char * field1, const char * field2, const char * field3, const char * field4 );
+			void clear( );
+			void set( const char * field, const Kernel::VariableHandle & value );
+			RefCountPtr< const Lang::Structure > build( );
+		};
+	}
 }
 
 #endif
