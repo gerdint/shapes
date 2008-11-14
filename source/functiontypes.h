@@ -226,6 +226,8 @@ namespace Shapes
 			Transform2D( double xx, double yx, double xy, double yy,
 									 Concrete::Length xt, Concrete::Length yt );
 			Transform2D( const Lang::Transform2D & tf2, const Lang::Transform2D & tf1 );
+			virtual ~Transform2D( );
+			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			bool isIdentity( ) const;
 			bool isTranslation( ) const;
 			void shipout( std::ostream & os ) const;
@@ -259,6 +261,7 @@ namespace Shapes
 									 Concrete::Length xt, Concrete::Length yt, Concrete::Length zt );
 			Transform3D( const Lang::Transform3D & tf2, const Lang::Transform3D & tf1 );
 			virtual ~Transform3D( );
+			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			bool isIdentity( ) const;
 			Concrete::UnitFloatTriple transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n ) const;
 			TYPEINFODECL;

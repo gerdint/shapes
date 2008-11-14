@@ -86,6 +86,39 @@ Lang::Transform2D::Transform2D( const Lang::Transform2D & tf2, const Lang::Trans
 
 DISPATCHIMPL( Transform2D );
 
+Lang::Transform2D::~Transform2D( )
+{ }
+
+Kernel::VariableHandle
+Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+	if( strcmp( fieldID, "p" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Coords2D( xt_, yt_ ) );
+		}
+	if( strcmp( fieldID, "L" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Transform2D( xx_, yx_, xy_, yy_, 0, 0 ) );
+		}
+	if( strcmp( fieldID, "Lx" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatPair( xx_, yx_ ) );
+		}
+	if( strcmp( fieldID, "Ly" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatPair( xy_, yy_ ) );
+		}
+	if( strcmp( fieldID, "xL" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatPair( xx_, xy_ ) );
+		}
+	if( strcmp( fieldID, "yL" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatPair( yx_, yy_ ) );
+		}
+	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
 bool
 Lang::Transform2D::isIdentity( ) const
 {
@@ -185,6 +218,44 @@ Lang::Transform3D::~Transform3D( )
 			gsl_matrix_free( planeNormalTransformData_ );
 			//			delete planeNormalTransformData_;
 		}
+}
+
+Kernel::VariableHandle
+Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+	if( strcmp( fieldID, "p" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Coords3D( xt_, yt_, zt_ ) );
+		}
+	if( strcmp( fieldID, "L" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Transform3D( xx_, yx_, zx_, xy_, yy_, zy_, zx_, zy_, zz_, 0, 0, 0 ) );
+		}
+	if( strcmp( fieldID, "Lx" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( xx_, yx_, zx_ ) );
+		}
+	if( strcmp( fieldID, "Ly" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( xy_, yy_, zy_ ) );
+		}
+	if( strcmp( fieldID, "Lz" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( xz_, yz_, zz_ ) );
+		}
+	if( strcmp( fieldID, "xL" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( xx_, xy_, xz_ ) );
+		}
+	if( strcmp( fieldID, "yL" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( yx_, yy_, yz_ ) );
+		}
+	if( strcmp( fieldID, "zL" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::FloatTriple( zx_, zy_, zz_ ) );
+		}
+	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
 bool

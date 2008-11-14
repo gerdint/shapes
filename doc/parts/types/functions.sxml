@@ -34,13 +34,75 @@
   <coretype name="Transform">
     <abstraction>
       <p>The <self /> type is an affine transform, mapping <named-type name="Coord" /> to <named-type name="Coord" />.</p>
+			<p>Below, a transform is denoted <eq>( L, p )</eq>, defined by <eq>( L, p )( u ) = L u + p</eq>.</p>
     </abstraction>
+		<fields>
+			<type-field name="p">
+				<type><named-type name="Coords" /></type>
+				<description>The offset, <eq>p</eq>.</description>
+			</type-field>
+			<type-field name="L">
+				<type><named-type name="Transform" /></type>
+				<description>The linear part, <eq>L</eq>.</description>
+			</type-field>
+			<type-field name="Lx">
+				<type><named-type name="FloatPair" /></type>
+				<description><eq>L <x-hat /></eq>, that is, the first column of <eq>L</eq> in the <eq>( <x-hat />, <y-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="Ly">
+				<type><named-type name="FloatPair" /></type>
+				<description><eq>L <y-hat /></eq>, that is, the second column of <eq>L</eq> in the <eq>( <x-hat />, <y-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="xL">
+				<type><named-type name="FloatPair" /></type>
+				<description><eq><x-hat /> L</eq>, that is, the first row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="yL">
+				<type><named-type name="FloatPair" /></type>
+				<description><eq><y-hat /> L</eq>, that is, the first row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat /> )</eq> basis.</description>
+			</type-field>
+		</fields>
   </coretype>
 
   <coretype name="Transform3D">
     <abstraction>
 			<p>The analogue of <named-type name="Transform" />, in <str-3D /> instead of <str-2D />.</p>
+			<p>Below, a transform is denoted <eq>( L, p )</eq>, defined by <eq>( L, p )( u ) = L u + p</eq>.</p>
     </abstraction>
+		<fields>
+			<type-field name="p">
+				<type><named-type name="Coords3D" /></type>
+				<description>The offset, <eq>p</eq>.</description>
+			</type-field>
+			<type-field name="L">
+				<type><named-type name="Transform3D" /></type>
+				<description>The linear part, <eq>L</eq>.</description>
+			</type-field>
+			<type-field name="Lx">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq>L <x-hat /></eq>, that is, the first column of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="Ly">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq>L <y-hat /></eq>, that is, the second column of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="Lz">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq>L <z-hat /></eq>, that is, the third column of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="xL">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq><x-hat /> L</eq>, that is, the first row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="yL">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq><y-hat /> L</eq>, that is, the first row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="zL">
+				<type><named-type name="FloatTriple" /></type>
+				<description><eq><z-hat /> L</eq>, that is, the third row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+		</fields>
   </coretype>
 
 </section>

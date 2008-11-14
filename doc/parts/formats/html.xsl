@@ -45,6 +45,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="const-false"><rm>false</rm></xsl:template>
 <xsl:template match="const-true"><rm>true</rm></xsl:template>
 
+<xsl:template match="x-hat"><b>x</b></xsl:template>
+<xsl:template match="y-hat"><b>y</b></xsl:template>
+<xsl:template match="z-hat"><b>z</b></xsl:template>
+
 <xsl:template match="physical"><span class="nowrap"><xsl:apply-templates select="scalar" /><span class="xx-small"> </span><xsl:apply-templates select="unit" /></span></xsl:template>
 <xsl:template match="sci-fmt[@mantissa,@exp]"><span class="nowrap"><xsl:value-of select="@mantissa" /><span class="small-caps">e</span><xsl:value-of select="@exp" /></span></xsl:template>
 <xsl:template match="quote">“<xsl:apply-templates />”</xsl:template>
