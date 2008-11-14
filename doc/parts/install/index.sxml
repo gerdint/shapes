@@ -52,7 +52,7 @@
 		<ul>
 			<li><p><em>zlib</em>, the compression library.  The source and install instructions can be obtained from the <a href="http://www.gzip.org/zlib/"><em>zlib</em> homepage</a>.</p></li>
 			<li><p>The <em>GNU libiconv</em> library, for conversions between various character encodings.  Refer to the <a href="http://www.gnu.org/software/libiconv/">library homepage</a> to get the software.</p></li>
-			<li><p>The GNU Scientific Library (<em>GSL</em>) v 1.8 or later, for mathematical algorithms.  Obtain <em>GSL</em> from its <a href="http://www.gnu.org/software/gsl/">homepage</a>.</p></li>
+			<li><p>The GNU Scientific Library (<em>GSL</em>) v 1.9 or later, for mathematical algorithms.  Obtain <em>GSL</em> from its <a href="http://www.gnu.org/software/gsl/">homepage</a>.</p></li>
 		</ul>
 	</body>
 	</section><!-- End of install-depend/required -->
