@@ -193,6 +193,16 @@ Lang::Transform3D::Transform3D( double xx, double yx, double zx, double xy, doub
 		xx_( xx ), yx_( yx ), zx_( zx ), xy_( xy ), yy_( yy ), zy_( zy ), xz_( xz ), yz_( yz ), zz_( zz ), xt_( xt ), yt_( yt ), zt_( zt )
 { }
 
+Lang::Transform3D::Transform3D( const gsl_matrix * matrix_3_3, const gsl_vector * vec_3 )
+	: planeNormalTransformData_( 0 ),
+		xx_( gsl_matrix_get( matrix_3_3, 0, 0 ) ), yx_( gsl_matrix_get( matrix_3_3, 1, 0 ) ), zx_( gsl_matrix_get( matrix_3_3, 2, 0 ) ),
+		xy_( gsl_matrix_get( matrix_3_3, 0, 1 ) ), yy_( gsl_matrix_get( matrix_3_3, 1, 1 ) ), zy_( gsl_matrix_get( matrix_3_3, 2, 1 ) ),
+		xz_( gsl_matrix_get( matrix_3_3, 0, 2 ) ), yz_( gsl_matrix_get( matrix_3_3, 1, 2 ) ), zz_( gsl_matrix_get( matrix_3_3, 2, 2 ) ),
+		xt_( gsl_vector_get( vec_3, 0 ) ), yt_( gsl_vector_get( vec_3, 1 ) ), zt_( gsl_vector_get( vec_3, 2 ) )
+{ }
+
+
+
 Lang::Transform3D::Transform3D( const Lang::Transform3D & tf2, const Lang::Transform3D & tf1 )
 	: planeNormalTransformData_( 0 ),
 		xx_( tf2.xx_ * tf1.xx_ + tf2.xy_ * tf1.yx_ + tf2.xz_ * tf1.zx_ ),
@@ -267,6 +277,28 @@ Lang::Transform3D::isIdentity( ) const
 		xy_ == 0 && xz_ == 0 && yx_ == 0 && yz_ == 0 && zx_ == 0 && zy_ == 0;
 }
 
+void
+Lang::Transform3D::write_gsl_matrix( gsl_matrix * matrix_3_3 ) const
+{
+	gsl_matrix_set( matrix_3_3, 0, 0, xx_ );
+	gsl_matrix_set( matrix_3_3, 1, 0, yx_ );
+	gsl_matrix_set( matrix_3_3, 2, 0, zx_ );
+	gsl_matrix_set( matrix_3_3, 0, 1, xy_ );
+	gsl_matrix_set( matrix_3_3, 1, 1, yy_ );
+	gsl_matrix_set( matrix_3_3, 2, 1, zy_ );
+	gsl_matrix_set( matrix_3_3, 0, 2, xz_ );
+	gsl_matrix_set( matrix_3_3, 1, 2, yz_ );
+	gsl_matrix_set( matrix_3_3, 2, 2, zz_ );
+}
+
+void
+Lang::Transform3D::write_gsl_vector( gsl_vector * vec_3 ) const
+{
+	gsl_vector_set( vec_3, 0, Concrete::Length::offtype( xt_ ) );
+	gsl_vector_set( vec_3, 1, Concrete::Length::offtype( yt_ ) );
+	gsl_vector_set( vec_3, 2, Concrete::Length::offtype( zt_ ) );
+}
+
 Concrete::UnitFloatTriple
 Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n ) const
 {
@@ -323,15 +355,7 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 
 			planeNormalTransformData_ = gsl_matrix_alloc( N, N );
 
-			gsl_matrix_set( a, 0, 0, xx_ );
-			gsl_matrix_set( a, 1, 0, yx_ );
-			gsl_matrix_set( a, 2, 0, zx_ );
-			gsl_matrix_set( a, 0, 1, xy_ );
-			gsl_matrix_set( a, 1, 1, yy_ );
-			gsl_matrix_set( a, 2, 1, zy_ );
-			gsl_matrix_set( a, 0, 2, xz_ );
-			gsl_matrix_set( a, 1, 2, yz_ );
-			gsl_matrix_set( a, 2, 2, zz_ );
+			write_gsl_matrix( a );
 
 //			 std::cerr << "Here's a:" << std::endl ;
 //			 displayArray( std::cerr, a );

@@ -1160,6 +1160,7 @@ main( int argc, char ** argv )
 			Kernel::registerCore_misc( Kernel::theGlobalEnvironment );
 			Kernel::registerCore_state( Kernel::theGlobalEnvironment );
 			Kernel::registerCore_annotation( Kernel::theGlobalEnvironment );
+			Kernel::registerCore_decomp( Kernel::theGlobalEnvironment );
 			Ast::theGlobalAnalysisEnvironment = Kernel::theGlobalEnvironment->newAnalysisEnvironment( );
 			Ast::theProgram->analyze( 0, Ast::theGlobalAnalysisEnvironment );
 			if( ! Ast::theAnalysisErrorsList.empty( ) )

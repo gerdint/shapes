@@ -90,7 +90,7 @@ shapes_SOURCES = shapesyylex.ll \
 		shapesscanner.cc sourcelocation.cc shapesexceptions.cc strrefdup.cc \
 		shapesparser.yy environment.cc dynamicenvironment.cc registerclasses.cc \
 		shapescore.cc coreast.cc coreelem.cc coreconstruct.cc coreannotation.cc \
-	        corepoint.cc corepath.cc coremisc.cc coredraw.cc corestate.cc \
+	        corepoint.cc corepath.cc coremisc.cc coredraw.cc corestate.cc coredecomp.cc \
 		angleselect.cc texlabelmanager.cc texscanner.cc texyylex.ll specialunits.cc trianglefunctions.cc basicsimplex.cc \
 		computeelementarypath.cc \
 		zbuftriangle.cc zbufline.cc zbufto2D.cc zbufinternals.cc zsorterto2D.cc \

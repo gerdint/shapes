@@ -95,6 +95,7 @@ namespace Shapes
 		void registerCore_misc( Kernel::Environment * env );
 		void registerCore_state( Kernel::Environment * env );
 		void registerCore_annotation( Kernel::Environment * env );
+		void registerCore_decomp( Kernel::Environment * env );
 	}
 }
 

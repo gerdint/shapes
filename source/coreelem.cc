@@ -1059,7 +1059,7 @@ namespace Shapes
 				StateType * st = Helpers::down_cast_CoreState< StateType >( title_, args, 0, callLoc );
 
 				st->setState( );
- 
+
 				double x1 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
 				double x2 = TWO_DIV_RANDOM_MAX * static_cast< double >( random( ) ) - 1;
 				while( x1 * x1 + x2 * x2 > 1 )

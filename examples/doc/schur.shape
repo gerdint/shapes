@@ -1,0 +1,27 @@
+/** Define transform to work with. **/
+tf: [shift (3cm,4cm,5cm)]*[rotate3D angle:25° dir:(1,1,2)]
+
+/** Compute decompositions, both with automatic and manual selection of rank. **/
+sda: [Schur_decomp tf]
+•stdout << sda.U << `¢n´
+
+sd0: [Schur_decomp tf rank:'0]
+•stdout << sd0.U << `¢n´
+
+sd2: [Schur_decomp tf rank:'2]
+•stdout << sd2.U << `¢n´
+
+/** Verify decompositions; if two transforms are equal, then combining one with
+ ** the inverse of the other shall be the identity.
+ **/
+check: \ tf decomp .>
+{
+  [inverse tf] * decomp.Q*decomp.U*[inverse decomp.Q]
+}
+
+•stdout << [check tf sda] << `¢n´
+•stdout << [check tf sd0] << `¢n´
+•stdout << [check tf sd2] << `¢n´
+
+/** Prevent empty output error. **/
+•page << [spot (0m,0m)]

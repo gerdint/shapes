@@ -836,5 +836,43 @@ is equivalent to
 	</function>
 </system-binding>
 
+<system-binding identifier="Schur_decomp">
+	<function>
+		<case>
+			<arguments>
+				<arg identifier="tf">
+					<type><named-type name="Transform3D" /></type>
+				</arg>
+				<arg identifier="rank">
+					<type><named-type name="Integer" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type>
+					<structure-type>
+						<field name="Q"><type><named-type name="Transform3D" /></type></field>
+						<field name="U"><type><named-type name="Transform3D" /></type></field>
+					</structure-type>
+				</type>
+			</result>
+			<description>
+				<p>Computes a rigid body coordinate transform that brings the transform <arg name="tf" /> into a simple form.  The linear part of the coordinate transform is given by the real Schur decomposition, ensuring that a real eigenvalue is associated with the third basis vector.  (Hence, if there is a 2 by 2 block in the Schur form, it will be in the upper left part.)  The translational part of the coordinate transform is computed to make the translational part in the new coordinates small.  The <arg name="rank"/> parameter determines how many equation to use when the translational part is computed.  If <arg name="rank" /> is not provided, it is determined automatically from singular values.  A <arg name="rank" /> of zero means that the translational part of the coordinate transform shall not be used at all.</p>
+				<p>Note that the rank shall <em>not</em> be selected full (that is, <eq>3</eq>) if <arg name="tf" /> is a rigid body transformation; use <eq>2</eq> if the rotation is not close to zero, and <eq>0</eq> otherwise (or use the automatic selection).  Compare Chasles' theorem, which says that the new transform will in general have a non-trivial translational part.</p>
+<example-with-output title="Schur decomposition" internal-id="example/schur_decomp">
+<source file="doc/schur.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/schur.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/schur.stdout" -->]]>
+</stdout>
+<caption>
+	<p>The generalization of real Schur decomposition to also include a translation.  It can be seen that rank <eq>2</eq> is selected for a rigid body transform with non-trivial rotation.</p>
+</caption>
+				</example-with-output>
+			</description>
+		</case>
+	</function>
+</system-binding>
+
 
 </section>
