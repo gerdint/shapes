@@ -19,14 +19,13 @@
 
 ;;; Commentary:
 
-;; Supports compilation-mode, comment-dwim and viewing output through doc-view.
+;; Supports compilation-mode, comment-dwim, imenu and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
 ;; - motion commands
 ;; - Tag global bindings as keywords?
 ;; - automatic indentation
-;; - imenu support?
 
 ;;; Installation
 
@@ -40,7 +39,9 @@
 
 ;; Code tested only on GNU Emacs 22.
 
-(defvar shapes-compile-command "~/shapes/source/shapes")
+(defcustom shapes-compile-command "~/shapes/source/shapes"
+  "Name of the Shapes compiler executable, and any options to pass to it."
+  :type 'string)
 
 ;; Example data:
 ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
@@ -108,6 +109,10 @@ doc-view."
 
   ;; Shapes source files should be UTF-8 encoded.
   (setq buffer-file-coding-system 'utf-8)
+
+  ;; Simplified recognition of a top-level Shapes identifier. Probably needs
+  ;; more work.
+  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)))
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
