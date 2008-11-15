@@ -26,8 +26,7 @@
 ;; - motion commands
 ;; - Tag global bindings as keywords?
 ;; - automatic indentation
-;; - set buffer in utf-8 mode
-;;
+;; - imenu support?
 
 ;;; Installation
 
@@ -107,7 +106,8 @@ doc-view."
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
-  (make-local-variable 'view-buf)
+  ;; Shapes source files should be UTF-8 encoded.
+  (setq buffer-file-coding-system 'utf-8)
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
