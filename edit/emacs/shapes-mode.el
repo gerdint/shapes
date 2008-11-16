@@ -26,6 +26,14 @@
 ;; - motion commands
 ;; - Tag global bindings as keywords?
 ;; - automatic indentation
+;; - Automatically associate .shape and .shext files with shapes-mode
+;; - Hide compilation buffer if a doc-view buffer is visible and there are no
+;;errors when recompiling.
+;; - Make imenu display dynamic bindings, prefixed with the @ character.
+;; - PDF sync between source and output (path control points etc).
+
+;; BUGS
+;; - Investigate mismatch between Shapes and Emacs column numbers.
 
 ;;; Installation
 
