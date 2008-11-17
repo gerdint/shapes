@@ -11,26 +11,57 @@
     <construction>
 			<binding name="newGroup" />
     </construction>
-		<tack-on>
-			<case>
-				<types><named-type name="Drawable" /></types>
-				<dynamic-references><dynvar name="blend" /></dynamic-references>
-			</case>
-		</tack-on>
-		<peek>
-			<type><named-type name="Drawable" /></type>
-		</peek>
-		<freeze>
-			<type><named-type name="Drawable" /></type>
-		</freeze>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Drawable" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references><dynvar name="blend" /></dynamic-references>
+					<side-effect>
+						<p>Put element on top of pile.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="peek">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="freeze">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
 		<mutator identifier="erase">
 			<function>
 				<case>
 					<arguments>
 					</arguments>
 					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Erase contents.</p>
+					</side-effect>
 					<description>
-						<p>Erase the contents.</p>
 						<p>A common application of this is when <state name="page" /> has been used to define the contents of the pages in <state name="catalog" />.  Then, when <state name="catalog" /> is non-empty at the end of the program, it is an error if <state name="page" /> is also non-tmpty.  All you have to do then is to write
 <pre>
 •page.[erase]
@@ -49,8 +80,10 @@ at the end of the program.</p>
 						</arg>
 					</arguments>
 					<dynamic-references></dynamic-references>
-					<description>
+					<side-effect>
 						<p>Remove <em>shallow</em> tagged objects with the key <arg name="key" />.</p>
+					</side-effect>
+					<description>
 						<p>Here, <em>shallow</em> refers to objects that were tacked on directly to the state.  For instance,
 <pre>
 •page &lt;&lt; [shift (1cm,0cm)] [] [tag 'a [stroke (0cm,0cm)--(1cm,1cm)]]
@@ -83,8 +116,11 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
 					<arguments>
 					</arguments>
 					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Erase contents.</p>
+					</side-effect>
 					<description>
-						<p>Erase the contents.  See <named-type-mutator type="Group2D" mutator="erase" />.</p>
+						<p>Analogous to <mutator type="Group" mutator="erase" />.</p>
 					</description>
 				</case>
 			</function>
@@ -98,8 +134,11 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
 						</arg>
 					</arguments>
 					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Remove <em>shallow</em> tagged objects with the key <arg name="key" />.</p>
+					</side-effect>
 					<description>
-						<p>Erase the contents.  See <named-type-mutator type="Group2D" mutator="remove" />.</p>
+						<p>Analogous to <mutator type="Group" mutator="remove" />.</p>
 					</description>
 				</case>
 			</function>
