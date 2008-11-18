@@ -8,18 +8,71 @@
     <abstraction>
       <p>States of type <self /> just ignores everything tacked onto them.</p>
     </abstraction>
-    <construction>
-			<binding name="newIgnore" />
-    </construction>
+    <see-also>
+			<binding name="newIgnore" /> <state name="ignore" />
+    </see-also>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Object" /></type>
+						</arg>
+					</arguments>
+					<side-effect>
+						<p>Nothing.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="peek">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="freeze">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
   </core-state-type>
 
   <core-state-type name="Time">
     <abstraction>
       <p>States of type <self /> represent the ever-changing time.</p>
     </abstraction>
-    <construction>
+    <see-also>
 			<state name="time" />
-    </construction>
+    </see-also>
+		<mutator op="peek">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="ChronologicalTime" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current time.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
   </core-state-type>
 
 </section>

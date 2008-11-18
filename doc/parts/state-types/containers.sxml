@@ -110,6 +110,47 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
     <construction>
 			<binding name="newGroup3D" />
     </construction>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Drawable3D" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references><dynvar name="blend" /></dynamic-references>
+					<side-effect>
+						<p>Put element on top of pile.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="peek">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group3D" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="freeze">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Group3D" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Get current pile.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
 		<mutator identifier="erase">
 			<function>
 				<case>
@@ -152,6 +193,36 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
     <construction>
 			<state name="catalog" />
     </construction>
+		<description>
+			<p>There is currently no way a user can create their own <named-state-type name="Catalog" /> states; only the global <state name="catalog" /> may be accessed.  It is directly associated with the program output, so instead of peeking or freezing the state, the program is terminated, at which point the contents of the state is used.</p>
+		</description>
+		<see-also>
+			<state name="catalog" />
+		</see-also>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Drawable" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references><dynvar name="eyez" /></dynamic-references>
+					<side-effect>
+						<p>Add graphics as page att the end of the catalog.</p>
+						<p>Note that a <named-type name="Drawable" /> value can contain objects that have special meaning when appearing on a page out output.  Below, functions that construct such objects are listed.</p>
+						<p>Don't expect the lista of dynamic references to be complete, and don't expect any of the listed references to actually be used.</p>
+					</side-effect>
+					<see-also>
+						<binding name="destination" />
+						<binding name="site" />
+						<binding name="annotationText" />
+						<binding name="annotationLaunch" />
+						<binding name="annotationLink" />
+					</see-also>
+				</case>
+			</function>
+		</mutator>
   </core-state-type>
 
 
@@ -162,24 +233,91 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
     <construction>
 			<state name="newText" />
     </construction>
-		<tack-on>
-			<case>
-				<types><named-type name="String" /></types>
-				<dynamic-references><dynvar name="blend" /></dynamic-references>
-				<dynamic-references>
-					<dynvar name="text_font" />
-					<dynvar name="text_characterspacing" />
-					<dynvar name="text_wordspacing" />
-					<dynvar name="text_horizontalscaling" />
-					<dynvar name="text_leading" />
-					<dynvar name="text_font" />
-					<dynvar name="text_size" />
-					<dynvar name="text_rendering" />
-					<dynvar name="text_rise" />
-					<dynvar name="text_knockout" />
-				</dynamic-references>
-			</case>
-		</tack-on>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="TextOperation" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Append operation.</p>
+					</side-effect>
+				</case>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="String" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references>
+						<dynvar name="text_font" />
+						<dynvar name="text_characterspacing" />
+						<dynvar name="text_wordspacing" />
+						<dynvar name="text_horizontalscaling" />
+						<dynvar name="text_leading" />
+						<dynvar name="text_font" />
+						<dynvar name="text_size" />
+						<dynvar name="text_rendering" />
+						<dynvar name="text_rise" />
+						<dynvar name="text_knockout" />
+					</dynamic-references>
+					<side-effect>
+						<p>Append text without kerning.</p>
+					</side-effect>
+				</case>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Transform" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Append <em>move to</em> command.</p>
+					</side-effect>
+				</case>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Coords" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Append <em>newline</em> command followed by relative move.</p>
+					</side-effect>
+				</case>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="FloatPair" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references>
+						<dynvar name="text_size" />
+					</dynamic-references>
+					<side-effect>
+						<p>Append <em>newline</em> command followed by relative move, interpreting the move in units of <dynvar name="text_size" />.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
+		<mutator op="freeze">
+			<function>
+				<case>
+					<result>
+						<type><named-type name="Drawable" /></type>
+					</result>
+					<dynamic-references><dynstate name="graphics" /> <dynstate name="text" /></dynamic-references>
+					<description>
+						<p>Produce graphic representation of entered objects.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
 		<freeze>
 			<type><named-type name="Drawable" /></type>
 		</freeze>
