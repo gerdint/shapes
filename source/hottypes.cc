@@ -854,7 +854,7 @@ Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLo
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Text( evalState->dyn_->getGraphicsState( ), 
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Text( evalState->dyn_->getGraphicsState( ),
 																																		 evalState->dyn_->getTextState( ),
 																																		 pile_,
 																																		 RefCountPtr< const Lang::ElementaryPath2D >( bbox ) ) ),
