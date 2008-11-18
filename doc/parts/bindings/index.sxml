@@ -20,7 +20,6 @@
 	<!--#include virtual="misc.sxml" -->
 	<!--#include virtual="types.sxml" -->
 	<!--#include virtual="hot.sxml" -->
-	<!--#include virtual="non-pure.sxml" -->
 	<!--#include virtual="syntax.sxml" -->
 	<!--#include virtual="3D.sxml" -->
 </book>
