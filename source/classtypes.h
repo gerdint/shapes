@@ -183,10 +183,13 @@ namespace Shapes
 	class SystemFinalClass : public Lang::Class
 	{
 		std::map< const char *, RefCountPtr< const Lang::Function >, charPtrLess > mutators_;
+		typedef void ( * RegisterMutatorFunction )( SystemFinalClass * );
+		RegisterMutatorFunction registerMutatorFunction_;
 	public:
 		SystemFinalClass( RefCountPtr< const char > _prettyName );
-		SystemFinalClass( RefCountPtr< const char > _prettyName, void (registerMutatorFunction)( SystemFinalClass * ) );
+		SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction );
 		virtual ~SystemFinalClass( );
+		void initMutators( );
 		void registerMutator( Lang::CoreFunction * fun );
 
 		virtual Kernel::ValueRef method_new( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;

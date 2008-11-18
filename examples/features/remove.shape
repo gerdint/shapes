@@ -1,6 +1,6 @@
 •stuff: newGroup
 
-[setbboxgroup •catalog 'all]
+•catalog.[setbboxgroup 'all]
 
 •stuff << [tag 'a ( newText << `A´ )]
 •catalog << (•stuff)

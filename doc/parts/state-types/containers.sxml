@@ -232,16 +232,77 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
 						</arg>
 					</arguments>
 					<dynamic-references></dynamic-references>
-					<description>
+					<side-effect>
 						<p>Define the bounding box key to be used for pages subsequently tacked on to the catalog.  These pages will get equal media boxes in the end, being the smallest that contains all the bounding boxes of the pages in the group.</p>
-					</description>
+					</side-effect>
 				</case>
 				<case>
 					<arguments>
 					</arguments>
 					<dynamic-references></dynamic-references>
-					<description>
+					<side-effect>
 						<p>Clear the bounding box key to be used for pages subsequently tacked on to the catalog.  Pages will get a media box equal to their own bounding box.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
+		<mutator identifier="setpagelabel">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="prefix">
+							<type><named-type name="String" /></type>
+						</arg>
+						<arg identifier="style">
+							<type><named-type name="Symbol" /></type>
+						</arg>
+						<arg identifier="number">
+							<type><named-type name="Integer" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>Change the page labeling properties to use for future pages being added to the state.</p>
+					</side-effect>
+					<description>
+						<p>All arguments may be omitted, and their names explain their meanings.  If omitted, the corresponding property is not changed by the mutator.</p>
+						<p>The parameter <arg name="style" /> can be any of <inline>'none</inline>, <inline>'decimal</inline>, <inline>'ROMAN</inline>, <inline>'roman</inline>, <inline>'ALPHABET</inline>, or <inline>'alphabet</inline>.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
+		<mutator identifier="nextpagelabel">
+			<function>
+				<case>
+					<arguments>
+					</arguments>
+					<result>
+						<type><named-type name="String" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>None.</p>
+					</side-effect>
+					<description>
+						<p>Returns the string that would be used as page label for the next page being added to the state.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
+		<mutator identifier="nextpagenumber">
+			<function>
+				<case>
+					<arguments>
+					</arguments>
+					<result>
+						<type><named-type name="Integer" /></type>
+					</result>
+					<dynamic-references></dynamic-references>
+					<side-effect>
+						<p>None.</p>
+					</side-effect>
+					<description>
+						<p>Returns the document page number (as opposed to logic page number) for the next page being added to the state.</p>
 					</description>
 				</case>
 			</function>

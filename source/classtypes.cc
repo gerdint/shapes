@@ -712,17 +712,24 @@ Lang::MetaClass::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName )
-	: Lang::Class( _prettyName )
+	: Lang::Class( _prettyName ), registerMutatorFunction_( 0 )
 { }
 
-Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName, void (registerMutatorFunction)( SystemFinalClass * ) )
-	: Lang::Class( _prettyName )
-{
-	registerMutatorFunction( this );
-}
+Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction )
+	: Lang::Class( _prettyName ), registerMutatorFunction_( registerMutatorFunction )
+{ }
 
 Lang::SystemFinalClass::~SystemFinalClass( )
 { }
+
+void
+Lang::SystemFinalClass::initMutators( )
+{
+	if( registerMutatorFunction_ != 0 )
+		{
+			registerMutatorFunction_( this );
+		}
+}
 
 void
 Lang::SystemFinalClass::registerMutator( Lang::CoreFunction * fun )

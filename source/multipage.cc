@@ -8,6 +8,7 @@
 #include "continuations.h"
 #include "globals.h"
 #include "shapesexceptions.h"
+#include "shapescore.h"
 
 #include <algorithm>
 
@@ -262,6 +263,188 @@ Kernel::WarmCatalog::PageLabelEntry::PageLabelEntry( size_t pageIndex, const Ref
 Kernel::WarmCatalog::PageLabelEntry::~PageLabelEntry( )
 { }
 
+namespace Shapes
+{
+	namespace Kernel
+	{
+
+		template< class T >
+		class Mutator_setbboxgroup : public Lang::CoreFunction
+		{
+		public:
+			Mutator_setbboxgroup( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_VOID_VARIABLE );
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+				state->setBBoxGroup( Helpers::down_cast_CoreArgument< const Lang::Symbol >( title_, args, 0, callLoc, true ) );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Lang::THE_VOID,
+												 evalState );
+			}
+		};
+
+		template< class T >
+		class Mutator_setpagelabel : public Lang::CoreFunction
+		{
+		public:
+			Mutator_setpagelabel( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "prefix", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "style", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "number", Kernel::THE_VOID_VARIABLE );
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+
+				size_t argsi = 0;
+				typedef const Lang::String PrefixValType;
+				RefCountPtr< PrefixValType > prefixVal = Helpers::down_cast_CoreArgument< PrefixValType >( title_, args, argsi, callLoc, true );
+				RefCountPtr< const char > prefix = state->getNextPagePrefix( );
+				if( prefixVal != NullPtr< PrefixValType >( ) )
+					{
+						prefix = prefixVal->val_;
+					}
+
+				++argsi;
+				typedef const Lang::Symbol StyleType;
+				RefCountPtr< StyleType > style = Helpers::down_cast_CoreArgument< StyleType >( title_, args, argsi, callLoc, true );
+
+				static Lang::Symbol STYLE_none( "none" );
+				static Lang::Symbol STYLE_decimal( "decimal" );
+				static Lang::Symbol STYLE_ROMAN( "ROMAN" );
+				static Lang::Symbol STYLE_roman( "roman" );
+				static Lang::Symbol STYLE_ALPHABET( "ALPHABET" );
+				static Lang::Symbol STYLE_alphabet( "alphabet" );
+
+				Kernel::WarmCatalog::PageLabelEntry::Style styleVal;
+				if( style == NullPtr< StyleType >( ) )
+					{
+						styleVal = state->getNextPageStyle( );
+					}
+				else
+					{
+						if( *style == STYLE_none )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::NONE;
+							}
+						else if( *style == STYLE_decimal )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::DECIMAL;
+							}
+						else if( *style == STYLE_ROMAN )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::ROMAN;
+							}
+						else if( *style == STYLE_roman )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::rOMAN;
+							}
+						else if( *style == STYLE_ALPHABET )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::ALPHABET;
+							}
+						else if( *style == STYLE_alphabet )
+							{
+								styleVal = Kernel::WarmCatalog::PageLabelEntry::aLPHABET;
+							}
+						else
+							{
+								std::ostringstream oss;
+								oss << "Valid page label styles are the symbols { "
+										<< STYLE_none.name( ).getPtr( ) << ", "
+										<< STYLE_decimal.name( ).getPtr( ) << ", "
+										<< STYLE_ROMAN.name( ).getPtr( ) << ", "
+										<< STYLE_roman.name( ).getPtr( ) << ", "
+										<< STYLE_alphabet.name( ).getPtr( ) << ", "
+										<< STYLE_ALPHABET.name( ).getPtr( )
+										<< " }." ;
+								throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( oss ) );
+							}
+					}
+
+				++argsi;
+				typedef const Lang::Integer NumberType;
+				RefCountPtr< NumberType > numberVal = Helpers::down_cast_CoreArgument< NumberType >( title_, args, argsi, callLoc, true );
+				size_t number;
+				if( numberVal != NullPtr< NumberType >( ) )
+					{
+						if( numberVal->val_ < 1 )
+							{
+								throw Exceptions::CoreOutOfRange( title_, args, argsi, "PDF only allows strictly positive page numbers." );
+							}
+						number = static_cast< size_t >( numberVal->val_ );
+					}
+				else
+					{
+						number = state->getNextPageNumber( );
+					}
+
+				state->setLabel( prefix, styleVal, number );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+													evalState );
+			}
+		};
+
+		template< class T >
+		class Mutator_nextpagelabel : public Lang::CoreFunction
+		{
+		public:
+			Mutator_nextpagelabel( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Kernel::ValueRef( new Lang::String( state->getNextPageLabel( ) ) ),
+												 evalState );
+			}
+		};
+
+		template< class T >
+		class Mutator_nextpagenumber : public Lang::CoreFunction
+		{
+		public:
+			Mutator_nextpagenumber( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Kernel::ValueRef( new Lang::Integer( state->getNextPageNumber( ) ) ),
+												 evalState );
+			}
+		};
+	}
+}
 
 Kernel::WarmCatalog::WarmCatalog( )
 	: pageLabelsActivated_( false ),
@@ -273,7 +456,16 @@ Kernel::WarmCatalog::WarmCatalog( )
 Kernel::WarmCatalog::~WarmCatalog( )
 { }
 
-RefCountPtr< const Lang::Class > Kernel::WarmCatalog::TypeID( new Lang::SystemFinalClass( strrefdup( "#Catalog" ) ) );
+void
+WarmCatalog_register_mutators( Lang::SystemFinalClass * dstClass )
+{
+	dstClass->registerMutator( new Kernel::Mutator_setbboxgroup< Kernel::WarmCatalog >( "setbboxgroup" ) );
+	dstClass->registerMutator( new Kernel::Mutator_setpagelabel< Kernel::WarmCatalog >( "setpagelabel" ) );
+	dstClass->registerMutator( new Kernel::Mutator_nextpagelabel< Kernel::WarmCatalog >( "nextpagelabel" ) );
+	dstClass->registerMutator( new Kernel::Mutator_nextpagenumber< Kernel::WarmCatalog >( "nextpagenumber" ) );
+}
+
+RefCountPtr< const Lang::Class > Kernel::WarmCatalog::TypeID( new Lang::SystemFinalClass( strrefdup( "#Catalog" ), WarmCatalog_register_mutators ) );
 TYPEINFOIMPL_STATE( WarmCatalog );
 
 void

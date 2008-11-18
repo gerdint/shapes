@@ -267,8 +267,8 @@ namespace Shapes
 				state->erase( );
 
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Lang::THE_VOID,
-												 evalState );
+				cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+													evalState );
 			}
 		};
 
