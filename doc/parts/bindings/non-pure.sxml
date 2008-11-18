@@ -4,34 +4,5 @@
 <p>This section contains non-pure functions that are used to modify states.</p>
 </top>
 
-<system-binding identifier="setbboxgroup">
-	<function>
-		<case>
-			<arguments>
-				<state identifier="catalog">
-					<type><named-state-type name="Catalog" /></type>
-				</state>
-				<arg identifier="key">
-					<type><named-type name="Symbol" /></type>
-				</arg>
-			</arguments>
-			<dynamic-references></dynamic-references>
-			<description>
-				<p>Define the bounding box key to be used for pages subsequently tacked on to the catalog.  These pages will get equal media boxes in the end, being the smallest that contains all the bounding boxes of the pages in the group.</p>
-			</description>
-		</case>
-		<case>
-			<arguments>
-				<state identifier="catalog">
-					<type><named-state-type name="Catalog" /></type>
-				</state>
-			</arguments>
-			<dynamic-references></dynamic-references>
-			<description>
-				<p>Clear the bounding box key to be used for pages subsequently tacked on to the catalog.  Pages will get a media box equal to their own bounding box.</p>
-			</description>
-		</case>
-	</function>
-</system-binding>
 
 </section>

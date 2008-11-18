@@ -223,6 +223,29 @@ will <em>not</em> remove the stroke from the page, since the value being tacked 
 				</case>
 			</function>
 		</mutator>
+		<mutator identifier="setbboxgroup">
+			<function>
+				<case>
+					<arguments>
+						<arg identifier="key">
+							<type><named-type name="Symbol" /></type>
+						</arg>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Define the bounding box key to be used for pages subsequently tacked on to the catalog.  These pages will get equal media boxes in the end, being the smallest that contains all the bounding boxes of the pages in the group.</p>
+					</description>
+				</case>
+				<case>
+					<arguments>
+					</arguments>
+					<dynamic-references></dynamic-references>
+					<description>
+						<p>Clear the bounding box key to be used for pages subsequently tacked on to the catalog.  Pages will get a media box equal to their own bounding box.</p>
+					</description>
+				</case>
+			</function>
+		</mutator>
   </core-state-type>
 
 
