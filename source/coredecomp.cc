@@ -60,6 +60,7 @@ namespace Shapes
 			{
 				formals_->appendEvaluatedCoreFormal( "tf", Kernel::THE_SLOT_VARIABLE );
 				formals_->appendEvaluatedCoreFormal( "rank", Kernel::THE_VOID_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "canonical", Kernel::THE_FALSE_VARIABLE );
 			}
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -80,6 +81,10 @@ namespace Shapes
 							}
 					}
 
+				++argsi;
+				typedef const Lang::Boolean FlagType;
+				bool canonical = Helpers::down_cast_CoreArgument< FlagType >( title_, args, argsi, callLoc )->val_;
+
 				argsi = 0;
 				try
 					{
@@ -89,7 +94,7 @@ namespace Shapes
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, argsi, "Rank exceeds dimension." );
 							}
-						Helpers::Schur_decomposition_helper_2D( evalState, tf, rank, callLoc );
+						Helpers::Schur_decomposition_helper_2D( evalState, tf, rank, canonical, callLoc );
 						return;
 					}
 				catch( const NonLocalExit::NotThisType & ball )
@@ -106,7 +111,7 @@ namespace Shapes
 							{
 								throw Exceptions::CoreOutOfRange( title_, args, argsi, "Rank exceeds dimension." );
 							}
-						Helpers::Schur_decomposition_helper_3D( evalState, tf, rank, callLoc );
+						Helpers::Schur_decomposition_helper_3D( evalState, tf, rank, canonical, callLoc );
 						return;
 					}
 				catch( const NonLocalExit::NotThisType & ball )
@@ -126,13 +131,13 @@ namespace Shapes
 	namespace Helpers
 	{
 		void
-		Schur_decomposition_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform2D > & tf, int rank, const Ast::SourceLocation & callLoc )
+		Schur_decomposition_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform2D > & tf, int rank, bool canonical, const Ast::SourceLocation & callLoc )
 		{
 			throw Exceptions::NotImplemented( "Schur_decomposition_helper_2D" );
 		}
 
 		void
-		Schur_decomposition_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform3D > & tf, int rank, const Ast::SourceLocation & callLoc )
+		Schur_decomposition_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform3D > & tf, int rank, bool canonical, const Ast::SourceLocation & callLoc )
 		{
 			const size_t N = 3;
 			static gsl_eigen_nonsymm_workspace * ws = gsl_eigen_nonsymm_alloc( N );
@@ -158,6 +163,42 @@ namespace Shapes
 					/* Perhaps we should also switch the order of the eigenvalues in eval here, but they seem
 					 * unrelated anyway.
 					 */
+				}
+			if( canonical )
+				{
+					/* If there is a 2x2 block, we use the one degree of freedom this gives for Q, to make the angle of
+					 * of rotation in Q as small as possible.
+					 * The most reliable test of a 2x2 block that I can think of now is to check for complex eigenvalues.
+					 * At most one of the eigenvalues can be real, so testing the maximum angle of any two will reveal the answer.
+					 * (If I could rely on the order of the elements in eval, I would just have to test one argument.)
+					 */
+					if( std::max( fabs( gsl_complex_arg( gsl_vector_complex_get( eval, 0 ) ) ), fabs( gsl_complex_arg( gsl_vector_complex_get( eval, 1 ) ) ) ) > 1e-4 )
+						{
+							/* The direction of rotation given by the third column of Q.  It is already normalized.
+							 * The job that Q must do is to map the (0,0,1) direction to the direction of rotation.
+							 */
+							Helpers::minRotationMatrix3D( Concrete::UnitFloatTriple( bool( ), bool( ), bool( ) ), /* This is the z direction. */
+																						Concrete::UnitFloatTriple( gsl_matrix_get( Q, 0, 2 ), gsl_matrix_get( Q, 1, 2 ), gsl_matrix_get( Q, 2, 2 ), bool( ) ),
+																						Q );
+						}
+					else
+						{
+							/* The only thing we can do is to ensure that the Q is special.
+							 */
+							Concrete::UnitFloatTriple q3 =
+								Concrete::crossDirection( Concrete::UnitFloatTriple( gsl_matrix_get( Q, 0, 0 ), gsl_matrix_get( Q, 1, 0 ), gsl_matrix_get( Q, 2, 0 ), bool( ) ),
+																					Concrete::UnitFloatTriple( gsl_matrix_get( Q, 0, 1 ), gsl_matrix_get( Q, 1, 1 ), gsl_matrix_get( Q, 2, 1 ), bool( ) ) );
+							gsl_matrix_set( Q, 0, 2, q3.x_ );
+							gsl_matrix_set( Q, 1, 2, q3.y_ );
+							gsl_matrix_set( Q, 2, 2, q3.z_ );
+						}
+					/* Compute new L.
+					 */
+					static gsl_matrix * tmp1 = gsl_matrix_alloc( N, N );
+					static gsl_matrix * tmp2 = gsl_matrix_alloc( N, N );
+					tf->write_gsl_matrix( tmp1 );
+					gsl_blas_dgemm( CblasTrans, CblasNoTrans, 1, Q, tmp1, 0, tmp2 );
+					gsl_blas_dgemm( CblasNoTrans, CblasNoTrans, 1, tmp2, Q, 0, L );
 				}
 			static gsl_vector * QTp = gsl_vector_alloc( N );
 			tf->write_gsl_vector( p );

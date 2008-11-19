@@ -1,9 +1,18 @@
 /** Define transform to work with. **/
 tf: [shift (3cm,4cm,5cm)]*[rotate3D angle:25° dir:(1,1,2)]
+•stdout << `Linear? ´ << tf.linear? << `¢n´
+•stdout << `Translation? ´ << tf.translation? << `¢n´
+•stdout << `Special? ´ << tf.special? << `¢n´
+•stdout << `Euclidean? ´ << tf.Euclidean? << `¢n´
+
+•stdout << `Transforms in new coordinates:¢n´
 
 /** Compute decompositions, both with automatic and manual selection of rank. **/
 sda: [Schur_decomp tf]
 •stdout << sda.U << `¢n´
+
+sdac: [Schur_decomp tf canonical:true]
+•stdout << sdac.U << `¢n´
 
 sd0: [Schur_decomp tf rank:'0]
 •stdout << sd0.U << `¢n´
@@ -19,9 +28,14 @@ check: \ tf decomp .>
   [inverse tf] * decomp.Q*decomp.U*[inverse decomp.Q]
 }
 
+•stdout << `Verification (should be the identity):¢n´
 •stdout << [check tf sda] << `¢n´
+•stdout << [check tf sdac] << `¢n´
 •stdout << [check tf sd0] << `¢n´
 •stdout << [check tf sd2] << `¢n´
+
+•stdout << `(Not canonical:) Change of coordinates is special? ´ << sda.Q.special? << `¢n´
+•stdout << `(Canonical:) Change of coordinates is special? ´ << sdac.Q.special? << `¢n´
 
 /** Prevent empty output error. **/
 •page << [spot (0m,0m)]
