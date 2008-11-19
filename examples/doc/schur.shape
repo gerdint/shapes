@@ -10,6 +10,7 @@ tf: [shift (3cm,4cm,5cm)]*[rotate3D angle:25° dir:(1,1,2)]
 /** Compute decompositions, both with automatic and manual selection of rank. **/
 sda: [Schur_decomp tf]
 •stdout << sda.U << `¢n´
+•stdout << [sda.U.chop L:0.00001 p:0.000001mm] << ` (chopped)¢n´
 
 sdac: [Schur_decomp tf canonical:true]
 •stdout << sdac.U << `¢n´
@@ -25,14 +26,20 @@ sd2: [Schur_decomp tf rank:'2]
  **/
 check: \ tf decomp .>
 {
-  [inverse tf] * decomp.Q*decomp.U*[inverse decomp.Q]
+	/** The decomposition is verified by reconstructing the original transform, and comparing
+   ** with tf by composing with the inverse of tf, and comparing that result with the identity.
+	 ** The identity transform is characterized by being both linear and a translation, but to apply
+	 ** these predicates we must chop the elements of the transform first.
+   **/
+  tmp: [( [inverse tf] * decomp.Q*decomp.U*[inverse decomp.Q] ).chop L:0.00001 p:0.00001mm]
+	`Verifying ´ + [sourceof decomp] + `: ´ + [if tmp.linear? and tmp.translation? `OK´ `Incorrect´]
 }
 
-•stdout << `Verification (should be the identity):¢n´
-•stdout << [check tf sda] << `¢n´
-•stdout << [check tf sdac] << `¢n´
-•stdout << [check tf sd0] << `¢n´
-•stdout << [check tf sd2] << `¢n´
+•stdout << `Verification:¢n´
+•stdout << [check tf [locate sda]] << `¢n´
+•stdout << [check tf [locate sdac]] << `¢n´
+•stdout << [check tf [locate sd0]] << `¢n´
+•stdout << [check tf [locate sd2]] << `¢n´
 
 •stdout << `(Not canonical:) Change of coordinates is special? ´ << sda.Q.special? << `¢n´
 •stdout << `(Canonical:) Change of coordinates is special? ´ << sdac.Q.special? << `¢n´

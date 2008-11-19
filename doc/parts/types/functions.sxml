@@ -63,11 +63,17 @@
 			</type-field>
 			<type-field name="linear?">
 				<type><named-type name="Boolean" /></type>
-				<description><p>True if the transform has no translational part.</p></description>
+				<description>
+					<p>True if the transform has no translational part.</p>
+					<p>The test has zero tolerance and must not be used on the result from a numeric computation — chop the result first.</p>
+				</description>
 			</type-field>
 			<type-field name="translation?">
 				<type><named-type name="Boolean" /></type>
-				<description><p>True if the linear part is the identity.</p></description>
+				<description>
+					<p>True if the linear part is the identity.</p>
+					<p>The test has zero tolerance and must not be used on the result from a numeric computation — chop the result first.</p>
+				</description>
 			</type-field>
 			<type-field name="special?">
 				<type><named-type name="Boolean" /></type>
@@ -78,6 +84,24 @@
 				<description>
 					<p>True if the transform preserves Euclidean distance.</p>
 					<p>For linear transforms, this is the same as the transform being <em>orthogonal</em> or <em>unitary</em>.</p>
+					<p>This test is not exact, but uses a build-in tolerance.</p>
+				</description>
+			</type-field>
+			<type-field name="chop">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="T"><type><named-type name="Float" /></type></arg>
+							<arg identifier="p"><type><named-type name="Length" /></type></arg>
+						</arguments>
+						<result>
+							<type><named-type name="Transform" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description>
+					<p>Performes round-off according to given tolerances.</p>
+					<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
 				</description>
 			</type-field>
 		</fields>
@@ -123,11 +147,17 @@
 			</type-field>
 			<type-field name="linear?">
 				<type><named-type name="Boolean" /></type>
-				<description><p>True if the transform has no translational part.</p></description>
+				<description>
+					<p>True if the transform has no translational part.</p>
+					<p>The test has zero tolerance and must not be used on the result from a numeric computation — chop the result first.</p>
+				</description>
 			</type-field>
 			<type-field name="translation?">
 				<type><named-type name="Boolean" /></type>
-				<description><p>True if the linear part is the identity.</p></description>
+				<description>
+					<p>True if the linear part is the identity.</p>
+					<p>The test has zero tolerance and must not be used on the result from a numeric computation — chop the result first.</p>
+				</description>
 			</type-field>
 			<type-field name="special?">
 				<type><named-type name="Boolean" /></type>
@@ -138,6 +168,24 @@
 				<description>
 					<p>True if the transform preserves Euclidean distance.</p>
 					<p>For linear transforms, this is the same as the transform being <em>orthogonal</em> or <em>unitary</em>.</p>
+					<p>This test is not exact, but uses a build-in tolerance.</p>
+				</description>
+			</type-field>
+			<type-field name="chop">
+				<type>
+					<function-type>
+						<arguments>
+							<arg identifier="T"><type><named-type name="Float" /></type></arg>
+							<arg identifier="p"><type><named-type name="Length" /></type></arg>
+						</arguments>
+						<result>
+							<type><named-type name="Transform3D" /></type>
+						</result>
+					</function-type>
+				</type>
+				<description>
+					<p>Performes round-off according to given tolerances.</p>
+					<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
 				</description>
 			</type-field>
 		</fields>

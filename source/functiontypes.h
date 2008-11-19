@@ -228,6 +228,7 @@ namespace Shapes
 			Transform2D( const Lang::Transform2D & tf2, const Lang::Transform2D & tf1 );
 			virtual ~Transform2D( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+			Transform2D * clone( ) const;
 			bool isIdentity( ) const;
 			bool isTranslation( ) const;
 			void write_gsl_matrix( gsl_matrix * matrix_2_2 ) const;
@@ -265,6 +266,7 @@ namespace Shapes
 			Transform3D( const Lang::Transform3D & tf2, const Lang::Transform3D & tf1 );
 			virtual ~Transform3D( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
+			Transform3D * clone( ) const;
 			bool isIdentity( ) const;
 			bool isTranslation( ) const;
 			Concrete::UnitFloatTriple transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n ) const;

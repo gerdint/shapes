@@ -37,6 +37,26 @@
 #include <ctype.h>
 #include <stack>
 
+#define CHOP_Ltol( x )\
+	if( fabs( x ) < Ltol )\
+		{\
+			x = 0;\
+		}\
+	else if( fabs( x - 1 ) < Ltol )\
+		{\
+			x = 1;\
+		}\
+	else if( fabs( x + 1 ) < Ltol )\
+		{\
+			x = -1;\
+		}
+
+#define CHOP_ptol( x )\
+	if( x.abs( ) < ptol )\
+		{\
+			x = Concrete::ZERO_LENGTH;\
+		}
+
 using namespace Shapes;
 using namespace std;
 
@@ -68,6 +88,53 @@ void displayArray( std::ostream & os, const gsl_matrix * m )
 				}
 			os << std::endl ;
 		}
+}
+
+namespace Shapes
+{
+	namespace Lang
+	{
+		class Transform2DMethodBase : public Lang::Function
+		{
+		protected:
+			RefCountPtr< const Lang::Transform2D > self_;
+			const char * title_;
+		public:
+			Transform2DMethodBase( RefCountPtr< const Lang::Transform2D > self, const char * title );
+			virtual ~Transform2DMethodBase( );
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
+			virtual bool isTransforming( ) const;
+		};
+
+		class Transform2DMethod_chop : public Lang::Transform2DMethodBase
+		{
+		public:
+			Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > _self );
+			virtual ~Transform2DMethod_chop( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+		class Transform3DMethodBase : public Lang::Function
+		{
+		protected:
+			RefCountPtr< const Lang::Transform3D > self_;
+			const char * title_;
+		public:
+			Transform3DMethodBase( RefCountPtr< const Lang::Transform3D > self, const char * title );
+			virtual ~Transform3DMethodBase( );
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
+			virtual bool isTransforming( ) const;
+		};
+
+		class Transform3DMethod_chop : public Lang::Transform3DMethodBase
+		{
+		public:
+			Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > _self );
+			virtual ~Transform3DMethod_chop( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+	}
 }
 
 
@@ -153,7 +220,24 @@ Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang
 			gsl_matrix_free( A );
 			return Helpers::newValHandle( new Lang::Boolean( res ) );
 		}
+
+	/* At the end, we put any methods, since this requires a downcast.
+	 */
+	RefCountPtr< const Lang::Transform2D > typedSelfRef = Helpers::down_cast< const Lang::Transform2D >( selfRef, "< Transform2D::getField >" );
+	if( strcmp( fieldID, "chop" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Transform2DMethod_chop( typedSelfRef ) );
+		}
+
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
+Lang::Transform2D *
+Lang::Transform2D::clone( ) const
+{
+	return new Transform2D( xx_, yx_,
+													xy_, yy_,
+													xt_, yt_ );
 }
 
 bool
@@ -355,7 +439,25 @@ Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang
 			gsl_matrix_free( A );
 			return Helpers::newValHandle( new Lang::Boolean( res ) );
 		}
+
+	/* At the end, we put any methods, since this requires a downcast.
+	 */
+	RefCountPtr< const Lang::Transform3D > typedSelfRef = Helpers::down_cast< const Lang::Transform3D >( selfRef, "< Transform3D::getField >" );
+	if( strcmp( fieldID, "chop" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Transform3DMethod_chop( typedSelfRef ) );
+		}
+
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
+Lang::Transform3D *
+Lang::Transform3D::clone( ) const
+{
+	return new Transform3D( xx_, yx_, zx_,
+													xy_, yy_, zy_,
+													xz_, yz_, zz_,
+													xt_, yt_, zt_ );
 }
 
 bool
@@ -2147,3 +2249,139 @@ Lang::UnaryOperatorFunction::isTransforming( ) const
 	return false;
 }
 
+
+Lang::Transform2DMethodBase::Transform2DMethodBase( RefCountPtr< const Lang::Transform2D > self, const char * title )
+	: Lang::Function( new Kernel::EvaluatedFormals( title, true ) ), self_( self ), title_( title )
+{ }
+
+Lang::Transform2DMethodBase::~Transform2DMethodBase( )
+{ }
+
+void
+Lang::Transform2DMethodBase::gcMark( Kernel::GCMarkedSet & marked )
+{
+	const_cast< Lang::Transform2D * >( self_.getPtr( ) )->gcMark( marked );
+}
+
+bool
+Lang::Transform2DMethodBase::isTransforming( ) const
+{
+	return false;
+}
+
+Lang::Transform2DMethod_chop::Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > self )
+	: Lang::Transform2DMethodBase( self, strdup( Kernel::MethodId( Lang::Transform2D::TypeID, "chop" ).prettyName( ).getPtr( ) ) )
+{
+	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
+	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );
+}
+
+Lang::Transform2DMethod_chop::~Transform2DMethod_chop( )
+{ }
+
+void
+Lang::Transform2DMethod_chop::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+	args.applyDefaults( );
+
+	size_t argsi = 0;
+	double Ltol = Helpers::down_cast_CoreArgument< const Lang::Float >( title_, args, argsi, callLoc )->val_;
+	if( Ltol < 0 )
+		{
+			throw Exceptions::CoreOutOfRange( title_, args, argsi, "Tolerances must not be negative." );
+		}
+
+	++argsi;
+	Concrete::Length ptol = Helpers::down_cast_CoreArgument< const Lang::Length >( title_, args, argsi, callLoc )->get( );
+	if( ptol < Concrete::ZERO_LENGTH )
+		{
+			throw Exceptions::CoreOutOfRange( title_, args, argsi, "Tolerances must not be negative." );
+		}
+
+	Lang::Transform2D * res = self_->clone( );
+
+	CHOP_Ltol( res->xx_ );
+	CHOP_Ltol( res->yx_ );
+
+	CHOP_Ltol( res->xy_ );
+	CHOP_Ltol( res->yy_ );
+
+	CHOP_ptol( res->xt_ );
+	CHOP_ptol( res->yt_ );
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( RefCountPtr< const Lang::Value >( res ),
+									 evalState );
+}
+
+
+Lang::Transform3DMethodBase::Transform3DMethodBase( RefCountPtr< const Lang::Transform3D > self, const char * title )
+	: Lang::Function( new Kernel::EvaluatedFormals( title, true ) ), self_( self ), title_( title )
+{ }
+
+Lang::Transform3DMethodBase::~Transform3DMethodBase( )
+{ }
+
+void
+Lang::Transform3DMethodBase::gcMark( Kernel::GCMarkedSet & marked )
+{
+	const_cast< Lang::Transform3D * >( self_.getPtr( ) )->gcMark( marked );
+}
+
+bool
+Lang::Transform3DMethodBase::isTransforming( ) const
+{
+	return false;
+}
+
+Lang::Transform3DMethod_chop::Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > self )
+	: Lang::Transform3DMethodBase( self, strdup( Kernel::MethodId( Lang::Transform3D::TypeID, "chop" ).prettyName( ).getPtr( ) ) )
+{
+	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
+	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );
+}
+
+Lang::Transform3DMethod_chop::~Transform3DMethod_chop( )
+{ }
+
+void
+Lang::Transform3DMethod_chop::call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+{
+	args.applyDefaults( );
+
+	size_t argsi = 0;
+	double Ltol = Helpers::down_cast_CoreArgument< const Lang::Float >( title_, args, argsi, callLoc )->val_;
+	if( Ltol < 0 )
+		{
+			throw Exceptions::CoreOutOfRange( title_, args, argsi, "Tolerances must not be negative." );
+		}
+
+	++argsi;
+	Concrete::Length ptol = Helpers::down_cast_CoreArgument< const Lang::Length >( title_, args, argsi, callLoc )->get( );
+	if( ptol < Concrete::ZERO_LENGTH )
+		{
+			throw Exceptions::CoreOutOfRange( title_, args, argsi, "Tolerances must not be negative." );
+		}
+
+	Lang::Transform3D * res = self_->clone( );
+
+	CHOP_Ltol( res->xx_ );
+	CHOP_Ltol( res->yx_ );
+	CHOP_Ltol( res->zx_ );
+
+	CHOP_Ltol( res->xy_ );
+	CHOP_Ltol( res->yy_ );
+	CHOP_Ltol( res->zy_ );
+
+	CHOP_Ltol( res->xz_ );
+	CHOP_Ltol( res->yz_ );
+	CHOP_Ltol( res->zz_ );
+
+	CHOP_ptol( res->xt_ );
+	CHOP_ptol( res->yt_ );
+	CHOP_ptol( res->zt_ );
+
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( RefCountPtr< const Lang::Value >( res ),
+									 evalState );
+}
