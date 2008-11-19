@@ -29,6 +29,7 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_eigen.h>
+#include <gsl/gsl_complex_math.h>
 #include <iostream>
 #include <sstream>
 
@@ -39,9 +40,11 @@ namespace Shapes
 {
 	namespace Helpers
 	{
-		void Schur_decomposition_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform2D > & tf, int rank, const Ast::SourceLocation & callLoc );
-		void Schur_decomposition_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform3D > & tf, int rank, const Ast::SourceLocation & callLoc );
+		void Schur_decomposition_helper_2D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform2D > & tf, int rank, bool canonical, const Ast::SourceLocation & callLoc );
+		void Schur_decomposition_helper_3D( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Transform3D > & tf, int rank, bool canonical, const Ast::SourceLocation & callLoc );
 		Kernel::StructureFactory Schur_decomposition_resultFactory( "Q", "U" );
+
+		void minRotationMatrix3D( const Concrete::UnitFloatTriple & from, const Concrete::UnitFloatTriple & to, gsl_matrix * dst_3_3 );
 	}
 }
 
@@ -218,8 +221,103 @@ namespace Shapes
 }
 
 void
+Helpers::minRotationMatrix3D( const Concrete::UnitFloatTriple & from, const Concrete::UnitFloatTriple & to, gsl_matrix * dst_3_3 )
+{
+	/* The rotation maps:
+	 *   from -> to
+	 *   r    -> r
+	 *   a3   -> b3
+	 * as defined below.
+	 */
+	try
+		{
+			Concrete::UnitFloatTriple r = Concrete::crossDirection( from, to );
+			Concrete::UnitFloatTriple a3 = Concrete::crossDirection( from, r );
+			Concrete::UnitFloatTriple b3 = Concrete::crossDirection( to, r );
+			static gsl_matrix * A = gsl_matrix_alloc( 3, 3 );
+			static gsl_matrix * B = gsl_matrix_alloc( 3, 3 );
+			gsl_matrix_set( A, 0, 0, from.x_ );
+			gsl_matrix_set( A, 1, 0, from.y_ );
+			gsl_matrix_set( A, 2, 0, from.z_ );
+			gsl_matrix_set( A, 0, 1, r.x_ );
+			gsl_matrix_set( A, 1, 1, r.y_ );
+			gsl_matrix_set( A, 2, 1, r.z_ );
+			gsl_matrix_set( A, 0, 2, a3.x_ );
+			gsl_matrix_set( A, 1, 2, a3.y_ );
+			gsl_matrix_set( A, 2, 2, a3.z_ );
+			gsl_matrix_set( B, 0, 0, to.x_ );
+			gsl_matrix_set( B, 1, 0, to.y_ );
+			gsl_matrix_set( B, 2, 0, to.z_ );
+			gsl_matrix_set( B, 0, 1, r.x_ );
+			gsl_matrix_set( B, 1, 1, r.y_ );
+			gsl_matrix_set( B, 2, 1, r.z_ );
+			gsl_matrix_set( B, 0, 2, b3.x_ );
+			gsl_matrix_set( B, 1, 2, b3.y_ );
+			gsl_matrix_set( B, 2, 2, b3.z_ );
+			gsl_blas_dgemm( CblasNoTrans, CblasTrans, 1, B, A, 0, dst_3_3 );
+		}
+	catch( const NonLocalExit::CrossDirectionOfParallel & ball )
+		{
+			gsl_matrix_set_identity( dst_3_3 );
+		}
+}
+
+namespace Shapes
+{
+	namespace Lang
+	{
+		class Core_rotationMapping3D : public Lang::CoreFunction
+		{
+		public:
+			Core_rotationMapping3D( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "from", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "to", Kernel::THE_SLOT_VARIABLE );
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				size_t i = 0;
+
+				typedef const Lang::FloatTriple ArgType;
+				RefCountPtr< ArgType > from = Helpers::down_cast_CoreArgument< ArgType >( title_, args, i, callLoc );
+				if( from->x_ == 0 && from->y_ == 0 && from->z_ == 0 )
+					{
+						throw Exceptions::CoreOutOfRange( title_, args, i, "The <from> direction is degenerate, that is (0,0,0)." );
+					}
+
+				++i;
+				RefCountPtr< ArgType > to = Helpers::down_cast_CoreArgument< ArgType >( title_, args, i, callLoc );
+				if( to->x_ == 0 && to->y_ == 0 && to->z_ == 0 )
+					{
+						throw Exceptions::CoreOutOfRange( title_, args, i, "The <to> direction is degenerate, that is (0,0,0)." );
+					}
+
+				gsl_matrix * R = gsl_matrix_alloc( 3, 3 );
+				gsl_vector * t = gsl_vector_alloc( 3 );
+				Helpers::minRotationMatrix3D( Concrete::UnitFloatTriple( from->x_, from->y_, from->z_ ),
+																			Concrete::UnitFloatTriple( to->x_, to->y_, to->z_ ),
+																			R );
+				gsl_vector_set_zero( t );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Kernel::ValueRef( new Lang::Transform3D( R, t ) ),
+												 evalState );
+
+				gsl_vector_free( t );
+				gsl_matrix_free( R );
+			}
+		};
+
+	}
+}
+
+void
 Kernel::registerCore_decomp( Kernel::Environment * env )
 {
 	env->initDefineCoreFunction( new Lang::Core_Schur_decomposition( "Schur_decomp" ) );
+	env->initDefineCoreFunction( new Lang::Core_rotationMapping3D( "rotationMap3D" ) );
 }
-
