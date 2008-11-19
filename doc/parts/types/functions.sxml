@@ -61,6 +61,25 @@
 				<type><named-type name="FloatPair" /></type>
 				<description><eq><y-hat /> L</eq>, that is, the first row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat /> )</eq> basis.</description>
 			</type-field>
+			<type-field name="linear?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the transform has no translational part.</p></description>
+			</type-field>
+			<type-field name="translation?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the linear part is the identity.</p></description>
+			</type-field>
+			<type-field name="special?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the transform does not change orientation.</p></description>
+			</type-field>
+			<type-field name="Euclidean?">
+				<type><named-type name="Boolean" /></type>
+				<description>
+					<p>True if the transform preserves Euclidean distance.</p>
+					<p>For linear transforms, this is the same as the transform being <em>orthogonal</em> or <em>unitary</em>.</p>
+				</description>
+			</type-field>
 		</fields>
   </coretype>
 
@@ -101,6 +120,25 @@
 			<type-field name="zL">
 				<type><named-type name="FloatTriple" /></type>
 				<description><eq><z-hat /> L</eq>, that is, the third row of <eq>L</eq> in the <eq>( <x-hat />, <y-hat />, <z-hat /> )</eq> basis.</description>
+			</type-field>
+			<type-field name="linear?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the transform has no translational part.</p></description>
+			</type-field>
+			<type-field name="translation?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the linear part is the identity.</p></description>
+			</type-field>
+			<type-field name="special?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>True if the transform does not change orientation.</p></description>
+			</type-field>
+			<type-field name="Euclidean?">
+				<type><named-type name="Boolean" /></type>
+				<description>
+					<p>True if the transform preserves Euclidean distance.</p>
+					<p>For linear transforms, this is the same as the transform being <em>orthogonal</em> or <em>unitary</em>.</p>
+				</description>
 			</type-field>
 		</fields>
   </coretype>

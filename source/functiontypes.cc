@@ -92,6 +92,7 @@ Lang::Transform2D::~Transform2D( )
 Kernel::VariableHandle
 Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
+	const size_t N = 2;
 	if( strcmp( fieldID, "p" ) == 0 )
 		{
 			return Helpers::newValHandle( new Lang::Coords2D( xt_, yt_ ) );
@@ -116,6 +117,42 @@ Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang
 		{
 			return Helpers::newValHandle( new Lang::FloatPair( yx_, yy_ ) );
 		}
+	if( strcmp( fieldID, "linear?" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Boolean( xt_ == 0 && yt_ == 0 ) );
+		}
+	if( strcmp( fieldID, "translation?" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Boolean( isTranslation( ) ) );
+		}
+	if( strcmp( fieldID, "special?" ) == 0 )
+		{
+			gsl_matrix * A = gsl_matrix_alloc( N, N );
+			gsl_permutation * perm = gsl_permutation_alloc( N );
+			int signum;
+			write_gsl_matrix( A );
+			gsl_linalg_LU_decomp( A, perm, & signum );
+			bool res = gsl_linalg_LU_det( A, signum ) > 0;
+			gsl_matrix_free( A );
+			gsl_permutation_free( perm );
+			return Helpers::newValHandle( new Lang::Boolean( res ) );
+		}
+	if( strcmp( fieldID, "Euclidean?" ) == 0 )
+		{
+			gsl_matrix * A = gsl_matrix_alloc( N, N );
+			gsl_vector * SVD_work = gsl_vector_alloc( N );
+			gsl_vector * sigma = gsl_vector_alloc( N );
+			gsl_matrix * V = gsl_matrix_alloc( N, N );
+			write_gsl_matrix( A );
+			gsl_linalg_SV_decomp( A, V, sigma, SVD_work );
+			const double tol = 1e-4;
+			bool res = 1 - tol < gsl_vector_get( sigma, N - 1 ) && gsl_vector_get( sigma, 0 ) < 1 + tol;
+			gsl_matrix_free( V );
+			gsl_vector_free( sigma );
+			gsl_vector_free( SVD_work );
+			gsl_matrix_free( A );
+			return Helpers::newValHandle( new Lang::Boolean( res ) );
+		}
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
@@ -134,6 +171,22 @@ Lang::Transform2D::isTranslation( ) const
 	return
 		xx_ == 1 && yy_ == 1 &&
 		xy_ == 0 && yx_ == 0;
+}
+
+void
+Lang::Transform2D::write_gsl_matrix( gsl_matrix * matrix_2_2 ) const
+{
+	gsl_matrix_set( matrix_2_2, 0, 0, xx_ );
+	gsl_matrix_set( matrix_2_2, 1, 0, yx_ );
+	gsl_matrix_set( matrix_2_2, 0, 1, xy_ );
+	gsl_matrix_set( matrix_2_2, 1, 1, yy_ );
+}
+
+void
+Lang::Transform2D::write_gsl_vector( gsl_vector * vec_2 ) const
+{
+	gsl_vector_set( vec_2, 0, Concrete::Length::offtype( xt_ ) );
+	gsl_vector_set( vec_2, 1, Concrete::Length::offtype( yt_ ) );
 }
 
 void
@@ -233,13 +286,14 @@ Lang::Transform3D::~Transform3D( )
 Kernel::VariableHandle
 Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
+	const size_t N = 3;
 	if( strcmp( fieldID, "p" ) == 0 )
 		{
 			return Helpers::newValHandle( new Lang::Coords3D( xt_, yt_, zt_ ) );
 		}
 	if( strcmp( fieldID, "L" ) == 0 )
 		{
-			return Helpers::newValHandle( new Lang::Transform3D( xx_, yx_, zx_, xy_, yy_, zy_, zx_, zy_, zz_, 0, 0, 0 ) );
+			return Helpers::newValHandle( new Lang::Transform3D( xx_, yx_, zx_, xy_, yy_, zy_, xz_, yz_, zz_, 0, 0, 0 ) );
 		}
 	if( strcmp( fieldID, "Lx" ) == 0 )
 		{
@@ -265,6 +319,42 @@ Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang
 		{
 			return Helpers::newValHandle( new Lang::FloatTriple( zx_, zy_, zz_ ) );
 		}
+	if( strcmp( fieldID, "linear?" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Boolean( xt_ == 0 && yt_ == 0 && zt_ == 0 ) );
+		}
+	if( strcmp( fieldID, "translation?" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Boolean( isTranslation( ) ) );
+		}
+	if( strcmp( fieldID, "special?" ) == 0 )
+		{
+			gsl_matrix * A = gsl_matrix_alloc( N, N );
+			gsl_permutation * perm = gsl_permutation_alloc( N );
+			int signum;
+			write_gsl_matrix( A );
+			gsl_linalg_LU_decomp( A, perm, & signum );
+			bool res = gsl_linalg_LU_det( A, signum ) > 0;
+			gsl_matrix_free( A );
+			gsl_permutation_free( perm );
+			return Helpers::newValHandle( new Lang::Boolean( res ) );
+		}
+	if( strcmp( fieldID, "Euclidean?" ) == 0 )
+		{
+			gsl_matrix * A = gsl_matrix_alloc( N, N );
+			gsl_vector * SVD_work = gsl_vector_alloc( N );
+			gsl_vector * sigma = gsl_vector_alloc( N );
+			gsl_matrix * V = gsl_matrix_alloc( N, N );
+			write_gsl_matrix( A );
+			gsl_linalg_SV_decomp( A, V, sigma, SVD_work );
+			const double tol = 1e-4;
+			bool res = 1 - tol < gsl_vector_get( sigma, N - 1 ) && gsl_vector_get( sigma, 0 ) < 1 + tol;
+			gsl_matrix_free( V );
+			gsl_vector_free( sigma );
+			gsl_vector_free( SVD_work );
+			gsl_matrix_free( A );
+			return Helpers::newValHandle( new Lang::Boolean( res ) );
+		}
 	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
 }
 
@@ -275,6 +365,16 @@ Lang::Transform3D::isIdentity( ) const
 		xt_ == Concrete::ZERO_LENGTH && yt_ == Concrete::ZERO_LENGTH && zt_ == Concrete::ZERO_LENGTH &&
 		xx_ == 1 && yy_ == 1 && zz_ == 1 &&
 		xy_ == 0 && xz_ == 0 && yx_ == 0 && yz_ == 0 && zx_ == 0 && zy_ == 0;
+}
+
+bool
+Lang::Transform3D::isTranslation( ) const
+{
+	return
+		xx_ == 1 && yy_ == 1 && zz_ == 1 &&
+		xy_ == 0 && xz_ == 0 &&
+		yx_ == 0 && yz_ == 0 &&
+		zx_ == 0 && zy_ == 0;
 }
 
 void

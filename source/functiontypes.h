@@ -230,6 +230,8 @@ namespace Shapes
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			bool isIdentity( ) const;
 			bool isTranslation( ) const;
+			void write_gsl_matrix( gsl_matrix * matrix_2_2 ) const;
+			void write_gsl_vector( gsl_vector * vec_2 ) const;
 			void shipout( std::ostream & os ) const;
 			void replaceBy( const Lang::Transform2D & newtf );		 // to be used by text moveto commands
 			void prependShift( const Concrete::Coords2D & d );		 // to be used by text newline commands
@@ -264,6 +266,7 @@ namespace Shapes
 			virtual ~Transform3D( );
 			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			bool isIdentity( ) const;
+			bool isTranslation( ) const;
 			Concrete::UnitFloatTriple transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n ) const;
 			void write_gsl_matrix( gsl_matrix * matrix_3_3 ) const;
 			void write_gsl_vector( gsl_vector * vec_3 ) const;
