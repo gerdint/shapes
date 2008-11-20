@@ -46,7 +46,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</div>
 </xsl:template>
 
-<xsl:template match="system-binding[@identifier]/function">
+<xsl:template match="system-binding[@identifier]/function | type-method[@identifier]/function">
 	<xsl:if test="top">
  		<td colspan="2"><xsl:apply-templates select="top"/></td>
 	</xsl:if>
@@ -56,7 +56,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:if>
 </xsl:template>
 
-<xsl:template match="system-binding[@identifier]/function/case">
+<xsl:template match="function/case">
 	<tr>
 		<th class="heading" colspan="2">
 			<xsl:apply-templates select="arguments"/>

@@ -152,7 +152,7 @@ varname.replacable, typename.replacable, constname.replacable, filename.replacab
 typename.template
 { color: #0000FF; }
 
-pre, table.syntax, table.tokens, table.tight, table.loose, table.type-templates, table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type { margin-left: 1.5em; }
+pre, table.syntax, table.tokens, table.tight, table.loose, table.wide, table.type-templates, table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { color: #009; }
@@ -176,7 +176,7 @@ todo div.p { margin-left: 0.5em; font-size: bigger; font-style: italic; color: F
 
 table.syntax { cellspacing:5; }
 table.tokens { cellspacing:5; }
-table.loose { cellspacing:5; }
+table.loose table.wide { cellspacing:5; }
 table.tight { cellspacing:0; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 hr.thin { border:0; height:1px; color:#666; background:#000; }
@@ -354,21 +354,25 @@ table.codefile
 		border-right: 2px solid #000;
 }
 
-table.loose tr th, table.loose tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td, table.note tr td
+table.loose tr th, table.loose tr td, table.wide tr th, table.wide tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td, table.note tr td
 {
 		padding: 0em 0.5em 0em 0.5em;
 		border-bottom: none;
 		border-left: none;
 		color: #000;
 }
-table.loose tr th, table.loose tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td
+table.loose tr th, table.loose tr td, table.wide tr th, table.wide tr td, table.tight tr th, table.tight tr td, table.operator-table tr th, table.operator-table tr td, table.type-templates tr th, table.type-templates tr td, table.codefile tr th, table.codefile tr td
 {
 		background-color: #fafafa;
 }
-table.loose tr th, table.tight tr th, table.operator-table tr th, table.type-templates tr th, table.codefile tr th
+table.loose tr th, table.wide tr th, table.tight tr th, table.operator-table tr th, table.type-templates tr th, table.codefile tr th
 {
 		padding: 0em 2em 0em 2em;
 		text-align: center;
+}
+table.wide
+{
+		width: 100%;
 }
 
 

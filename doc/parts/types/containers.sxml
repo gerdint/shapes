@@ -48,9 +48,9 @@
 			</template-state>
 		</type-templates>
 		<fields>
-			<type-field name="foldl">
-				<type>
-					<function-type>
+			<type-method name="foldl">
+				<function>
+					<case>
 						<arguments>
 							<arg identifier="op">
 								<type>
@@ -70,13 +70,15 @@
 						<result>
 							<type><template-type name="T" /></type>
 						</result>
-					</function-type>
-				</type>
-				<description>Function that performs a left fold over the list.</description>
-			</type-field>
-			<type-field name="foldr">
-				<type>
-					<function-type>
+						<description>
+							<p>Performs a left fold over the list.</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
+			<type-method name="foldr">
+				<function>
+					<case>
 						<arguments>
 							<arg identifier="op">
 								<type>
@@ -96,41 +98,15 @@
 						<result>
 							<type><template-type name="T" /></type>
 						</result>
-					</function-type>
-				</type>
-				<description>Function that performs a right fold over the list.</description>
-			</type-field>
-			<type-field name="foldsl">
-				<type>
-					<function-type>
-						<arguments>
-							<arg identifier="op">
-								<type>
-									<function-type>
-										<arguments>
-											<arg><type><template-type name="T" /></type></arg>
-											<arg><type><template-type name="E" /></type></arg>
-											<state><type><template-state-type name="S" /></type></state>
-										</arguments>
-										<result>
-											<type><template-type name="T" /></type>
-										</result>
-									</function-type>
-								</type>
-							</arg>
-							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
-							<state identifier="state"><type><template-state-type name="S" /></type></state>
-						</arguments>
-						<result>
-							<type><template-type name="T" /></type>
-						</result>
-					</function-type>
-				</type>
-				<description>Function that performs a left fold with state over the list.</description>
-			</type-field>
-			<type-field name="foldsr">
-				<type>
-					<function-type>
+						<description>
+							<p>Performs a right fold over the list.</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
+			<type-method name="foldsl">
+				<function>
+					<case>
 						<arguments>
 							<arg identifier="op">
 								<type>
@@ -152,10 +128,42 @@
 						<result>
 							<type><template-type name="T" /></type>
 						</result>
-					</function-type>
-				</type>
-				<description><p>Function that performs a right fold with state over the list.</p></description>
-			</type-field>
+						<description>
+							<p>Performs a left fold with state over the list.</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
+			<type-method name="foldsr">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="op">
+								<type>
+									<function-type>
+										<arguments>
+											<arg><type><template-type name="T" /></type></arg>
+											<arg><type><template-type name="E" /></type></arg>
+											<state><type><template-state-type name="S" /></type></state>
+										</arguments>
+										<result>
+											<type><template-type name="T" /></type>
+										</result>
+									</function-type>
+								</type>
+							</arg>
+							<arg identifier="nullRes"><type><template-type name="T" /></type></arg>
+							<state identifier="state"><type><template-state-type name="S" /></type></state>
+						</arguments>
+						<result>
+							<type><template-type name="T" /></type>
+						</result>
+						<description>
+							<p>Performs a right fold with state over the list.</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
 		</fields>
   </coretype>
 

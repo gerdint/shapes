@@ -87,9 +87,9 @@
 					<p>This test is not exact, but uses a build-in tolerance.</p>
 				</description>
 			</type-field>
-			<type-field name="chop">
-				<type>
-					<function-type>
+			<type-method name="chop">
+				<function>
+					<case>
 						<arguments>
 							<arg identifier="T"><type><named-type name="Float" /></type></arg>
 							<arg identifier="p"><type><named-type name="Length" /></type></arg>
@@ -97,13 +97,13 @@
 						<result>
 							<type><named-type name="Transform" /></type>
 						</result>
-					</function-type>
-				</type>
-				<description>
-					<p>Performes round-off according to given tolerances.</p>
-					<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
-				</description>
-			</type-field>
+						<description>
+							<p>Performes round-off according to given tolerances.</p>
+							<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
 		</fields>
   </coretype>
 
@@ -171,9 +171,9 @@
 					<p>This test is not exact, but uses a build-in tolerance.</p>
 				</description>
 			</type-field>
-			<type-field name="chop">
-				<type>
-					<function-type>
+			<type-method name="chop">
+				<function>
+					<case>
 						<arguments>
 							<arg identifier="T"><type><named-type name="Float" /></type></arg>
 							<arg identifier="p"><type><named-type name="Length" /></type></arg>
@@ -181,13 +181,13 @@
 						<result>
 							<type><named-type name="Transform3D" /></type>
 						</result>
-					</function-type>
-				</type>
-				<description>
-					<p>Performes round-off according to given tolerances.</p>
-					<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
-				</description>
-			</type-field>
+						<description>
+							<p>Performes round-off according to given tolerances.</p>
+							<p>The elements in the linear part may be rounded (with tolerance <arg name="T" />) towars the values <eq>{ -1, 0, 1 }</eq>, while the elements in the offset are only to rounded to zero (with tolerance <arg name="p" />).</p>
+						</description>
+					</case>
+				</function>
+			</type-method>
 		</fields>
   </coretype>
 

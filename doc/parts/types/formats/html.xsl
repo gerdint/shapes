@@ -264,14 +264,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<tr>
 		<td colspan="2">
 			<xsl:apply-templates select="top" />
-			<xsl:if test="../type-templates">
-				<xsl:apply-templates select="../type-templates" />
-			</xsl:if>
-			<table class="loose">
+			<xsl:apply-templates select="../type-templates" />
+			<xsl:element name="table">
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="type-method">wide</xsl:when>
+						<xsl:otherwise>loose</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
 				<tr> <th>Field</th> <th>Type</th> <th>Description</th> </tr>
 				<tr><td colspan="3"><hr /></td></tr>
-				<xsl:apply-templates select="type-field"/>
-			</table>
+				<xsl:apply-templates select="type-field | type-method"/>
+			</xsl:element>
 		</td>
 	</tr>
 </xsl:template>
@@ -304,6 +308,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="coretype/fields/type-method">
+  <tr>
+    <td><varname><xsl:value-of select="@name" /></varname></td>
+    <td><i>method</i></td>
+    <td>
+			<table class="function">
+				<xsl:apply-templates select="function"/>
+			</table>
+		</td>
+  </tr>
+</xsl:template>
 
 <xsl:template match="operator-unary[@side='prefix']/case">
   <tr>
