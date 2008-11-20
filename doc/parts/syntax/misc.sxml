@@ -18,7 +18,7 @@
 <tr> <td><syntax name="reference" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="identifier" /> <bnf>|</bnf> <syntax name="dyn-var" /> <bnf>|</bnf> <syntax name="peek-state" /></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="field-ref" /> <bnf>|</bnf> <syntax name="lookup-symbol" /> <bnf>|</bnf> <syntax name="typename" /></inline></td></tr>
 
-<tr> <td><syntax name="application" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="basic-call" /> <bnf>|</bnf> <syntax name="proc-call" /> <bnf>|</bnf> <syntax name="unary-call" /> <bnf>|</bnf> <syntax name="split-call" /></inline></td></tr>
+<tr> <td><syntax name="application" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="basic-call" /> <bnf>|</bnf> <syntax name="proc-call" /> <bnf>|</bnf> <syntax name="mutator-call" /> <bnf>|</bnf> <syntax name="unary-call" /> <bnf>|</bnf> <syntax name="split-call" /></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline> <syntax name="basic-cute" /> <bnf>|</bnf> <syntax name="unary-cute" /> <bnf>|</bnf> <syntax name="split-cute" /></inline></td></tr>
 
 <tr> <td><syntax name="constant" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float" /> <bnf>|</bnf> <syntax name="length" /> <bnf>|</bnf> <syntax name="string" /> <bnf>|</bnf> <syntax name="boolean" /> <bnf>|</bnf> <syntax name="integer" /> <bnf>|</bnf> <syntax name="symbol" /></inline></td></tr>

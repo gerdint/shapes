@@ -1,0 +1,34 @@
+<section id="syntax/fields">
+<title>Fields and mutators</title>
+<top>
+<p>Fields and mutators have in common that they use a <em>dot-syntax</em>, similar to many other languages.</p>
+</top>
+
+<section id="syntax/fields/fields">
+<title>Fields</title>
+<body>
+<p>
+	<syntax-table>
+		<tr> <td><syntax name="field-ref" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /> . <syntax name="identifier" /></inline></td></tr>
+	</syntax-table>
+</p>
+<p>Any type of value in <str-Shapes /> may have <em>fields</em> which are referenced using identifiers.  For instance, any value of type <named-type name="Coords" /> has a field called <varname>x</varname>:
+<pre>
+<![CDATA[p: (1cm,2cm)
+•stdout << p.x]]>
+</pre>
+</p>
+<p>Sometimes, a field holds a function which is parametrized by the value owning the field.  Often, such fields are referred to as <em>methods</em>, although they are not fundamentally different from other fields.  Note though, that the difference between <em>methods</em> and <em>mutators</em> is huge, see below.</p>
+</body>
+</section>
+
+
+<section id="syntax/fields/mutators">
+<title>Mutators</title>
+<body>
+<p>Since there is no such thing as expressions referencing some kind of mutator values in <str-Shapes />, we postpone the discussion of mutators until we are ready to discuss <em>mutator calls</em>, see <syntax name="mutator-call" />.</p>
+</body>
+</section>
+
+
+</section><!-- end of syntax-fields -->
