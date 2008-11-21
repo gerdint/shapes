@@ -75,7 +75,7 @@ class RefCountPtr
   const T& operator * ( ) const;
   T& operator * ();
   const T * operator -> ( ) const;
-  T * operator -> ( );  
+  T * operator -> ( );
   bool operator == ( const RefCountPtr<T>& o2 ) const;
   bool operator != ( const RefCountPtr<T>& o2 ) const;
   bool operator == ( const NullPtr<T>& theNull ) const;
@@ -248,24 +248,21 @@ template<class T>
 template<class S>
 RefCountPtr<S> RefCountPtr<T>::hard_cast( )
 {
-  RefCountPtr< S > res( reinterpret_cast< S * >( ptr ), refCount );
-  return res;
+  return RefCountPtr< S >( reinterpret_cast< S * >( ptr ), refCount );
 }
 
 template<class T>
 template<class S>
 RefCountPtr<S> RefCountPtr<T>::hard_cast( ) const
 {
-  RefCountPtr< S > res( reinterpret_cast< S * >( ptr ), refCount );
-  return res;
+  return RefCountPtr< S >( reinterpret_cast< S * >( ptr ), refCount );
 }
 
 template<class T>
 template<class S>
 RefCountPtr<S> RefCountPtr<T>::unconst_cast( ) const
 {
-  RefCountPtr< S > res( const_cast< S * >( ptr ), refCount );
-  return res;
+  return RefCountPtr< S >( const_cast< S * >( ptr ), refCount );
 }
 
 
