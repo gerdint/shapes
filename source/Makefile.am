@@ -51,21 +51,21 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  dispatch_vtbl.h drawabletypes.h dynamicenvironment.h \
                  elementarycoords.h elementarylength.h elementarytypes.h \
                  environment.h errorhandlers.h facettypes.h \
-                 FontMetrics_decls.h fontmetrics.h fonttypes.h \
+                 fontmetrics.h fonttypes.h \
                  functiontypes.h globals.h glyphlist.h hottypes.h \
                  lighttypes.h methodid.h multipage.h operatorside.h \
                  operatorside_none.h pagecontentstates.h pathtypes.h \
                  pdffunctiontypes.h pdfscanner.h pdfstructure.h pdfversion.h \
-                 shadingtypes.h Shapes_Ast_decls.h \
-                 Shapes_Computation_decls.h Shapes_Concrete_decls.h \
-                 shapescore.h Shapes_Exceptions_decls.h shapesexceptions.h \
-                 Shapes_Helpers_decls.h Shapes_Kernel_decls.h \
-                 Shapes_Lang_decls.h shapesscanner.h shapestypes.h \
-                 shapesvalue.h SimplePDF_decls.h simplepdfi.h pdfimport.h \
+                 shadingtypes.h shapescore.h shapesscanner.h shapestypes.h shapesexceptions.h \
+                 shapesvalue.h methodbase.h methodbase_impl.h simplepdfi.h pdfimport.h \
                  simplepdfo.h sourcelocation.h specialunits.h statetypes.h \
                  strrefdup.h tagtypes.h texlabelmanager.h texscanner.h texttypes.h \
                  thunkimpl.h timetypes.h trianglefunctions.h upsamplers.h \
                  value.h yyltype.h zbufinternals.h utf8tools.h \
+                 Shapes_Ast_decls.h Shapes_Computation_decls.h Shapes_Concrete_decls.h \
+                 Shapes_Exceptions_decls.h Shapes_Lang_decls.h \
+                 Shapes_Helpers_decls.h Shapes_Kernel_decls.h \
+                 FontMetrics_decls.h SimplePDF_decls.h \
                  ../tools/include/autoonoff.h ../tools/include/isnan.h \
                  ../tools/include/physical.h ../tools/include/nullptr.h \
                  ../tools/include/ptrowner.h ../tools/include/refcount.h

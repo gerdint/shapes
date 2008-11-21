@@ -24,8 +24,50 @@
 #include "astvar.h"
 #include "astclass.h"
 #include "globals.h"
+#include "methodbase.h"
 
 using namespace Shapes;
+
+
+namespace Shapes
+{
+	namespace Lang
+	{
+
+		class SingleListMethodFoldL : public Lang::MethodBase< Lang::SingleList >
+		{
+		public:
+			SingleListMethodFoldL( RefCountPtr< const Lang::SingleList > _self );
+			virtual ~SingleListMethodFoldL( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+		class SingleListMethodFoldR : public Lang::MethodBase< Lang::SingleList >
+		{
+		public:
+			SingleListMethodFoldR( RefCountPtr< const Lang::SingleList > _self );
+			virtual ~SingleListMethodFoldR( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+		class SingleListMethodFoldSL : public Lang::MethodBase< Lang::SingleList >
+		{
+		public:
+			SingleListMethodFoldSL( RefCountPtr< const Lang::SingleList > _self );
+			virtual ~SingleListMethodFoldSL( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+		class SingleListMethodFoldSR : public Lang::MethodBase< Lang::SingleList >
+		{
+		public:
+			SingleListMethodFoldSR( RefCountPtr< const Lang::SingleList > _self );
+			virtual ~SingleListMethodFoldSR( );
+			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+		};
+
+	}
+}
 
 
 Lang::SingleList::SingleList( )
@@ -40,7 +82,7 @@ TYPEINFOIMPL( SingleList );
 Kernel::VariableHandle
 Lang::SingleList::getField( const char * fieldId, const RefCountPtr< const Lang::Value > & selfRef ) const
 {
-	RefCountPtr< const Lang::SingleList > typedSelfRef = Helpers::down_cast< const Lang::SingleList >( selfRef, "< SingleList::getField >" );
+	RefCountPtr< const Lang::SingleList > typedSelfRef = Helpers::down_cast_internal< const Lang::SingleList >( selfRef );
 	if( strcmp( fieldId, "foldl" ) == 0 )
 		{
 			return Helpers::newValHandle( new Lang::SingleListMethodFoldL( typedSelfRef ) );
@@ -333,28 +375,8 @@ Lang::ConsPair::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Lang::SingleListMethodBase::SingleListMethodBase( RefCountPtr< const Lang::SingleList > self, Kernel::EvaluatedFormals * formals )
-	: Lang::Function( formals ), self_( self )
-{ }
-
-Lang::SingleListMethodBase::~SingleListMethodBase( )
-{ }
-
-void
-Lang::SingleListMethodBase::gcMark( Kernel::GCMarkedSet & marked )
-{
-	const_cast< Lang::SingleList * >( self_.getPtr( ) )->gcMark( marked );
-}
-
-bool
-Lang::SingleListMethodBase::isTransforming( ) const
-{
-	return false;
-}
-
 Lang::SingleListMethodFoldL::SingleListMethodFoldL( RefCountPtr< const Lang::SingleList > self )
-	: Lang::SingleListMethodBase( self,
-																new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldl" ).prettyName( ).getPtr( ) ) ) )
+	: Lang::MethodBase< class_type >( self, "foldl", false )
 {
 	formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
 	formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
@@ -369,14 +391,13 @@ Lang::SingleListMethodFoldL::call( Kernel::EvalState * evalState, Kernel::Argume
 	args.applyDefaults( );
 
 	self_->foldl( evalState,
-								Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldl >", args, 0, callLoc ),
+								Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 0, callLoc ),
 								args.getHandle( 1 ),
 								callLoc );
 }
 
 Lang::SingleListMethodFoldR::SingleListMethodFoldR( RefCountPtr< const Lang::SingleList > self )
-	: Lang::SingleListMethodBase( self,
-																new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldr" ).prettyName( ).getPtr( ) ) ) )
+	: Lang::MethodBase< class_type >( self, "foldr", false )
 {
 	formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
 	formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
@@ -391,14 +412,13 @@ Lang::SingleListMethodFoldR::call( Kernel::EvalState * evalState, Kernel::Argume
 	args.applyDefaults( );
 
 	self_->foldr( evalState,
-								Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldr >", args, 0, callLoc ),
+								Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 0, callLoc ),
 								args.getHandle( 1 ),
 								callLoc );
 }
 
 Lang::SingleListMethodFoldSL::SingleListMethodFoldSL( RefCountPtr< const Lang::SingleList > self )
-	: Lang::SingleListMethodBase( self,
-																new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldsl" ).prettyName( ).getPtr( ) ) ) )
+	: Lang::MethodBase< class_type >( self, "foldsl", false )
 {
 	formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
 	formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
@@ -414,15 +434,14 @@ Lang::SingleListMethodFoldSL::call( Kernel::EvalState * evalState, Kernel::Argum
 	args.applyDefaults( );
 
 	self_->foldsl( evalState,
-								 Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldl >", args, 0, callLoc ),
+								 Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 0, callLoc ),
 								 args.getHandle( 1 ),
 								 args.getState( 0 ),
 								 callLoc );
 }
 
 Lang::SingleListMethodFoldSR::SingleListMethodFoldSR( RefCountPtr< const Lang::SingleList > self )
-	: Lang::SingleListMethodBase( self,
-																new Kernel::EvaluatedFormals( strdup( Kernel::MethodId( Lang::SingleList::TypeID, "foldsr" ).prettyName( ).getPtr( ) ) ) )
+	: Lang::MethodBase< class_type >( self, "foldsr", false )
 {
 	formals_->appendEvaluatedCoreFormal( "op", Kernel::THE_SLOT_VARIABLE, true );
 	formals_->appendEvaluatedCoreFormal( "nullRes", Kernel::THE_SLOT_VARIABLE, false );
@@ -438,7 +457,7 @@ Lang::SingleListMethodFoldSR::call( Kernel::EvalState * evalState, Kernel::Argum
 	args.applyDefaults( );
 
 	self_->foldsr( evalState,
-								 Helpers::down_cast_CoreArgument< const Lang::Function >( "< core method foldr >", args, 0, callLoc ),
+								 Helpers::down_cast_CoreArgument< const Lang::Function >( title_, args, 0, callLoc ),
 								 args.getHandle( 1 ),
 								 args.getState( 0 ),
 								 callLoc );

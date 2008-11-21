@@ -129,28 +129,28 @@ namespace Shapes
 	{
 
 		template< class T >
-			RefCountPtr< T >
-			down_cast( const RefCountPtr< const Lang::Value > & val, const Ast::SourceLocation & loc )
+		RefCountPtr< T >
+		down_cast( const RefCountPtr< const Lang::Value > & val, const Ast::SourceLocation & loc )
+		{
+			RefCountPtr< T > res = val.down_cast< T >( );
+			if( res == NullPtr< T >( ) )
+				{
+					throw Exceptions::TypeMismatch( loc, val->getTypeName( ), T::staticTypeName( ) );
+				}
+			return res;
+		}
+
+		template< class T >
+		RefCountPtr< T >
+		down_cast_internal( const RefCountPtr< const Lang::Value > & val )
 			{
 				RefCountPtr< T > res = val.down_cast< T >( );
 				if( res == NullPtr< T >( ) )
 					{
-						throw Exceptions::TypeMismatch( loc, val->getTypeName( ), T::staticTypeName( ) );
+						throw Exceptions::InternalError( "down_cast_internal: type mismatch." );
 					}
 				return res;
 			}
-
-		/*	 template< class T > */
-		/*		 RefCountPtr< T > */
-		/*		 down_cast( const RefCountPtr< const Lang::Value > & val, const char * msg, size_t argno = INT_MAX ) */
-		/*		 { */
-		/*			 RefCountPtr< T > res = val.down_cast< T >( ); */
-		/*			 if( res == NullPtr< T >( ) ) */
-		/*				 { */
-		/*					 throw Exceptions::CoreTypeMismatch( msg, argno, val->getTypeName( ), T::staticTypeName( ) ); */
-		/*				 } */
-		/*			 return res; */
-		/*		 } */
 
 		Kernel::VariableHandle newValHandle( const Lang::Value * val );
 

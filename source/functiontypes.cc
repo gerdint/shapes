@@ -27,6 +27,7 @@
 #include "astclass.h"
 #include "globals.h"
 #include "continuations.h"
+#include "methodbase.h"
 #include "check.h"
 
 //#include "clapack.h"
@@ -92,21 +93,11 @@ void displayArray( std::ostream & os, const gsl_matrix * m )
 
 namespace Shapes
 {
+
 	namespace Lang
 	{
-		class Transform2DMethodBase : public Lang::Function
-		{
-		protected:
-			RefCountPtr< const Lang::Transform2D > self_;
-			const char * title_;
-		public:
-			Transform2DMethodBase( RefCountPtr< const Lang::Transform2D > self, const char * title );
-			virtual ~Transform2DMethodBase( );
-			virtual void gcMark( Kernel::GCMarkedSet & marked );
-			virtual bool isTransforming( ) const;
-		};
 
-		class Transform2DMethod_chop : public Lang::Transform2DMethodBase
+		class Transform2DMethod_chop : public Lang::MethodBase< Lang::Transform2D >
 		{
 		public:
 			Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > _self );
@@ -114,19 +105,7 @@ namespace Shapes
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 		};
 
-		class Transform3DMethodBase : public Lang::Function
-		{
-		protected:
-			RefCountPtr< const Lang::Transform3D > self_;
-			const char * title_;
-		public:
-			Transform3DMethodBase( RefCountPtr< const Lang::Transform3D > self, const char * title );
-			virtual ~Transform3DMethodBase( );
-			virtual void gcMark( Kernel::GCMarkedSet & marked );
-			virtual bool isTransforming( ) const;
-		};
-
-		class Transform3DMethod_chop : public Lang::Transform3DMethodBase
+		class Transform3DMethod_chop : public Lang::MethodBase< Lang::Transform3D >
 		{
 		public:
 			Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > _self );
@@ -223,7 +202,7 @@ Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang
 
 	/* At the end, we put any methods, since this requires a downcast.
 	 */
-	RefCountPtr< const Lang::Transform2D > typedSelfRef = Helpers::down_cast< const Lang::Transform2D >( selfRef, "< Transform2D::getField >" );
+	RefCountPtr< const Lang::Transform2D > typedSelfRef = Helpers::down_cast_internal< const Lang::Transform2D >( selfRef );
 	if( strcmp( fieldID, "chop" ) == 0 )
 		{
 			return Helpers::newValHandle( new Lang::Transform2DMethod_chop( typedSelfRef ) );
@@ -442,7 +421,7 @@ Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang
 
 	/* At the end, we put any methods, since this requires a downcast.
 	 */
-	RefCountPtr< const Lang::Transform3D > typedSelfRef = Helpers::down_cast< const Lang::Transform3D >( selfRef, "< Transform3D::getField >" );
+	RefCountPtr< const Lang::Transform3D > typedSelfRef = Helpers::down_cast_internal< const Lang::Transform3D >( selfRef );
 	if( strcmp( fieldID, "chop" ) == 0 )
 		{
 			return Helpers::newValHandle( new Lang::Transform3DMethod_chop( typedSelfRef ) );
@@ -2250,27 +2229,8 @@ Lang::UnaryOperatorFunction::isTransforming( ) const
 }
 
 
-Lang::Transform2DMethodBase::Transform2DMethodBase( RefCountPtr< const Lang::Transform2D > self, const char * title )
-	: Lang::Function( new Kernel::EvaluatedFormals( title, true ) ), self_( self ), title_( title )
-{ }
-
-Lang::Transform2DMethodBase::~Transform2DMethodBase( )
-{ }
-
-void
-Lang::Transform2DMethodBase::gcMark( Kernel::GCMarkedSet & marked )
-{
-	const_cast< Lang::Transform2D * >( self_.getPtr( ) )->gcMark( marked );
-}
-
-bool
-Lang::Transform2DMethodBase::isTransforming( ) const
-{
-	return false;
-}
-
 Lang::Transform2DMethod_chop::Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > self )
-	: Lang::Transform2DMethodBase( self, strdup( Kernel::MethodId( Lang::Transform2D::TypeID, "chop" ).prettyName( ).getPtr( ) ) )
+	: Lang::MethodBase< class_type >( self, "chop", false, true )
 {
 	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );
@@ -2315,27 +2275,8 @@ Lang::Transform2DMethod_chop::call( Kernel::EvalState * evalState, Kernel::Argum
 }
 
 
-Lang::Transform3DMethodBase::Transform3DMethodBase( RefCountPtr< const Lang::Transform3D > self, const char * title )
-	: Lang::Function( new Kernel::EvaluatedFormals( title, true ) ), self_( self ), title_( title )
-{ }
-
-Lang::Transform3DMethodBase::~Transform3DMethodBase( )
-{ }
-
-void
-Lang::Transform3DMethodBase::gcMark( Kernel::GCMarkedSet & marked )
-{
-	const_cast< Lang::Transform3D * >( self_.getPtr( ) )->gcMark( marked );
-}
-
-bool
-Lang::Transform3DMethodBase::isTransforming( ) const
-{
-	return false;
-}
-
 Lang::Transform3DMethod_chop::Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > self )
-	: Lang::Transform3DMethodBase( self, strdup( Kernel::MethodId( Lang::Transform3D::TypeID, "chop" ).prettyName( ).getPtr( ) ) )
+	: Lang::MethodBase< class_type >( self, "chop", false, true )
 {
 	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );
