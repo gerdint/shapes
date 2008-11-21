@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+<!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
+
+<book>
+	<title>The <str-Shapes /> language</title>
+	<sub-title>project web</sub-title>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+
+	<top>
+		<p>This is the homepage of <str-Shapes />, a powerful functional drawing language with <str-LaTeX /> support.</p>
+		<p class="center"><img src="logo.jpg" /></p>
+	</top>
+
+	<section>
+		<title>Quick links</title>
+		<body>
+			<ul>
+				<li><a href="doc/">Online documentation</a></li>
+				<li><a href="http://repo.or.cz/w/shapes.git">Main Git repository</a></li>
+				<li><a href="https://sourceforge.net/projects/lang-shapes/">SourceForge area</a></li>
+				<li><a href="http://sourceforge.net/project/showfiles.php?group_id=244376">Download from SourceForge</a></li>
+			</ul>
+		</body>
+	</section>
+
+	<section>
+		<title>Overview</title>
+		<top>
+      <p><str-Shapes /> is under development, and will in the end be a high level graphics language which compiles to <a href="http://partners.adobe.com/public/developer/en/pdf/PDFReference16.pdf"><str-PDF /></a>, just like <a href="http://www.tug.org/metapost.html"><str-MetaPost /></a> is used to produce <str-PostScript />.  The language design is inspired by many existing languages, including <str-PDF /> and <str-MetaPost />.  Another language to be mentioned here is <a href="http://asymptote.sourceforge.net/">Asymptote</a>, which has been developed during the same years and provides similar functionality to <str-Shapes />.</p>
+		</top>
+		<section>
+			<title>Highlights</title>
+			<body>
+				<p>The highlights of <str-Shapes /> include</p>
+				<ul>
+					<li>Application-specific constructs make <str-Shapes /> superior to general-purpose languages when it comes to drawing.</li>
+					<li>Abstractions and scoping make programming scale, compared to more primitive languages (such as <str-PDF />) and GUI-based tools.</li>
+					<li>The output does not require post-processing for stand-alone images (compare with <str-MetaPost /> output).  Neither is there a need for graphics conversions before use with <str-pdfLaTeX />.</li>
+					<li>Functional programming in the sense of one-assignment.</li>
+					<li><em>Sequential construction</em>, a construct that allows some imperative-style techniques to be used under the one-assignment constraint.</li>
+					<li><str-3D /> drawing that is well integrated with the <str-2D /> end media.</li>
+					<li>Continuation passing style evaluation.</li>
+					<li>Lazy evaluation where appropriate.</li>
+					<li>Flexible memory management (no need to ask a wizard to increase the heap size).</li>
+				</ul>
+			</body>
+		</section>
+
+		<section>
+			<title>Limitations</title>
+			<body>
+				<p>It should also mentioned what <str-Shapes /> is not:</p>
+				<ul>
+					<li><str-Shapes /> may not be the easiest way to produce a few simple pictures for somebody who does not know the language.  The choice to use <str-Shapes /> should be based both on concerns to produce high quality end results, and concerns regarding <em>how</em> the result is produced; by careful modeling with this functional language, the logics of the illustration will be captured in the source, resulting in an exceptionally high degree of maintainability.</li>
+					<li><str-Shapes /> does not <em>yet</em> allow for user-defined types.</li>
+					<li><str-Shapes /> does not have macro facilities at the moment, although hygienic macros like those in Scheme would be nice.</li>
+					<li><str-Shapes /> <em>is not</em> <str-MetaPost />.  Although some syntax, concepts and the task is borrowed, <str-Shapes /> is built fundamentally different from the ground up.  Differences range all the way from the big picture's functional programming versus imperative style macro-programming, down to the semantics of the path-stroking primitive.</li>
+				</ul>
+			</body>
+		</section>
+	</section>
+
+	<section>
+		<title>The name of the game</title>
+		<body>
+			<p>For more than a year — when the <str-Shapes /> embryo was just a one man's pet project — the working name was <em>MetaPDF</em>, clearly inspired by <str-MetaPost />.  However, as was pointed out by the local <str-TeX />-guru (who is now a co-developer of <str-Shapes />), the name <em>MetaPDF</em> inevitably suggests a direct continuation of the MetaFont to <str-MetaPost /> development.  <str-Shapes /> isn't so the name had to be changed.  Then, I came up with the idea <em>Drawl</em>, the most natural name of a drawing language.  However, that had been in use since the 1960's, and with the last version that I am aware of being <em>Drawl 70</em>.  Now, <em>Drool</em> not only sounded similar, but is also what people are expected to do when they see nice <em>shapes</em>, and gave name to this project for many months.  Obviously, the name had to change again, this time because <em>Drool</em> turned out also to be the abbreviation used for <a href="http://portal.acm.org/citation.cfm?id=178309">Dave's recycled OO language</a>.</p>
+		</body>
+	</section>
+
+</book>
+
