@@ -24,16 +24,18 @@
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
 ;; - motion commands
-;; - Tag global bindings as keywords?
 ;; - automatic indentation
 ;; - Automatically associate .shape and .shext files with shapes-mode
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - Make imenu display dynamic bindings, prefixed with the @ character.
 ;; - PDF sync between source and output (path control points etc).
+;; - Move to /edit/emacs
+;; - Automatically pretty-print #, \, .>?
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
+;; - Investigate whether utf-8 is activated too late.
 
 ;;; Installation
 
@@ -51,6 +53,13 @@
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
+(setq auto-mode-alist
+     (cons 
+      '("\\.shape$" . shapes-mode)
+      (cons 
+       '("\\.shext$" . shapes-mode)
+       auto-mode-alist)))
+	     
 ;; Example data:
 ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
 (eval-after-load 'compile
