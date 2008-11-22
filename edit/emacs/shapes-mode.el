@@ -19,33 +19,30 @@
 
 ;;; Commentary:
 
-;; Supports compilation-mode, comment-dwim, imenu and viewing output through doc-view.
+;; Supports compilation-mode, comment-dwim, Imenu and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
 ;; - motion commands
 ;; - automatic indentation
-;; - Automatically associate .shape and .shext files with shapes-mode
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
-;; - Make imenu display dynamic bindings, prefixed with the @ character.
 ;; - PDF sync between source and output (path control points etc).
 ;; - Move to /edit/emacs
 ;; - Automatically pretty-print #, \, .>?
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
+;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
+;; = point is after first char (and the cursor is ON char 2).
 ;; - Investigate whether utf-8 is activated too late.
 
 ;;; Installation
 
-;; To install, put this file somewhere in your load path and add the following
-;; code to your ~/.emacs or equivalent:
+;; To install, put this file somewhere in your load path and just require
+;; 'shapes-mode from your ~/.emacs or equivalent, like so:
 ;;
 ;; (require 'shapes-mode)
-;; (add-to-list 'auto-mode-alist
-;; 	     '("\\.shape$" . shapes-mode))
-;;
 
 ;; Code tested only on GNU Emacs 22.
 
@@ -129,7 +126,8 @@ doc-view."
 
   ;; Simplified recognition of a top-level Shapes identifier. Probably needs
   ;; more work.
-  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)))
+  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
+				   (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
