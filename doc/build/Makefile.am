@@ -15,4 +15,4 @@
 #
 # Copyright 2008 Gustaf Hendeby
 
-SUBDIRS = man html
+SUBDIRS = man html proj-web

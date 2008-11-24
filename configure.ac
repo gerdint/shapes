@@ -89,7 +89,7 @@ AC_CONFIG_FILES([Makefile source/Makefile resources/Makefile
                  doc/Makefile doc/tools/Makefile
                  doc/tools/ssi/Makefile doc/tools/postproc/Makefile
                  doc/tools/xhtml-deps/Makefile doc/build/Makefile
-                 doc/build/man/Makefile doc/build/html/Makefile])
+                 doc/build/man/Makefile doc/build/html/Makefile doc/build/proj-web/Makefile])
 AC_OUTPUT
 
 if test "X$COMPARE" != "Xyes"
