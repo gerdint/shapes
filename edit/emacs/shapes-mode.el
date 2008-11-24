@@ -28,14 +28,16 @@
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
-;; - Move to /edit/emacs
-;; - Automatically pretty-print #, \, .>?
+;; - Automatically pretty-print #, \, .>
+;; - Find curly lambda?
+;; - Set tabs-indent mode nil
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
 ;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
-;; = point is after first char (and the cursor is ON char 2).
+;; * point is after first char (and the cursor is ON char 2).
 ;; - Investigate whether utf-8 is activated too late.
+;; - Use preferred-encoding for file with extension mechanism
 
 ;;; Installation
 
