@@ -70,6 +70,13 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                          algo-tol bindings dynamic man states state-types \
                          syntax tutorial types index)) $(SHEXT_FILES)
 
+# Temporary solution for putting the SF logo on each page:
+ADD-SF: $(html_FILES)
+	-for i in $(html_FILES); do \
+	  echo "Putting SF logo in " $$i; \
+	  ex -sC $$i < insert-SF-logo.ex; \
+	done
+
 extensions/%.xml : ${extensionsdir}/%.sxml ${DEPDIR}/extensions/%.ssidep
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	if ${SSI} --in $< ${SSIFLAGS_EXTENSIONS} > extensions/$*.Txml; \

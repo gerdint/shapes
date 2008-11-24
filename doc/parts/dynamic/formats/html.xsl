@@ -81,6 +81,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:apply-templates select="dynamic-variable" />
 			</xsl:for-each>
 
+			<xsl:call-template name="SF-placeholder" />
 		</body>
   </html>
 </xsl:template>

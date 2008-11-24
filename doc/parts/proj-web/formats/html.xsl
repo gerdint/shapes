@@ -54,10 +54,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					</xsl:for-each>
 				</xsl:for-each>
 			</xsl:for-each>
-			<p><a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=244376&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a></p>
+			<xsl:call-template name="SF-placeholder" />
 		</body>
-  </html><xsl:text>
-</xsl:text>
+  </html>
 </xsl:template>
 
 </xsl:stylesheet>

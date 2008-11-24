@@ -703,6 +703,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</tr>
 </xsl:template>
 
+<xsl:template name="SF-placeholder" >
+	<xsl:comment>PUT-SF-LOGO-HERE</xsl:comment>
+</xsl:template>
+
 <xsl:template match="eq"><eq><xsl:apply-templates/></eq></xsl:template>
 <xsl:template match="eq//op"><span class="rm"><xsl:apply-templates/></span></xsl:template>
 <xsl:template match="eq//rm"><span class="rm"><xsl:apply-templates/></span></xsl:template>
