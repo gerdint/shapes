@@ -31,7 +31,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
 			<xsl:call-template name="head-navigation" />
-			<h1><xsl:apply-templates select="title" /></h1>
+			<h2><xsl:apply-templates select="title" /></h2>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />
 
@@ -51,11 +51,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:when test="@id">
 					<xsl:element name="a">
 						<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-						<h2><xsl:apply-templates select="title" /></h2>
+						<h3><xsl:apply-templates select="title" /></h3>
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<h2><xsl:apply-templates select="title" /></h2>
+					<h3><xsl:apply-templates select="title" /></h3>
 				</xsl:otherwise>
 			</xsl:choose>
       <xsl:apply-templates select="top" />
@@ -65,11 +65,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 					<xsl:when test="@id">
 						<xsl:element name="a">
 							<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-							<h3><xsl:apply-templates select="title" /></h3>
+							<h4><xsl:apply-templates select="title" /></h4>
 						</xsl:element>
 					</xsl:when>
 					<xsl:otherwise>
-						<h3><xsl:apply-templates select="title" /></h3>
+						<h4><xsl:apply-templates select="title" /></h4>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:apply-templates select="top" />
@@ -79,11 +79,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 						<xsl:when test="@id">
 							<xsl:element name="a">
 								<xsl:attribute name="name"><xsl:call-template name="id-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@id" /></xsl:with-param></xsl:call-template></xsl:attribute>
-								<h4><xsl:apply-templates select="title" /></h4>
+								<h5><xsl:apply-templates select="title" /></h5>
 							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
-							<h4><xsl:apply-templates select="title" /></h4>
+							<h5><xsl:apply-templates select="title" /></h5>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:apply-templates select="top" />

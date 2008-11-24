@@ -24,6 +24,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-HTML"><span class="medium-caps">html</span></xsl:template>
 <xsl:template match="str-XML"><span class="medium-caps">xml</span></xsl:template>
 <xsl:template match="str-SVG"><span class="medium-caps">svg</span></xsl:template>
+<xsl:template match="str-PostScript">PostScript</xsl:template>
 <xsl:template match="str-Shapes">Shapes</xsl:template>
 <xsl:template match="str-TeX"><span class="tex">T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
@@ -55,8 +56,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="filename"><filename><xsl:value-of select="." /></filename></xsl:template>
 
-<xsl:template match="p">
+<xsl:template match="p[not(@class)]">
   <div class="p"><xsl:apply-templates/></div>
+</xsl:template>
+<xsl:template match="p[@class='center']">
+  <div class="p" style="text-align:center;"><xsl:apply-templates/></div>
 </xsl:template>
 
 <xsl:template match="ol">

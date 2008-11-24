@@ -37,11 +37,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:apply-templates select="manhead" />
 			<hr class="thick"/>
 			<xsl:for-each select="section">
-				<h2><xsl:value-of select="title" /></h2>
+				<h3><xsl:value-of select="title" /></h3>
 				<xsl:apply-templates select="top/*" />
 				<xsl:apply-templates select="body/*" />
 				<xsl:for-each select="section">
-					<h3><xsl:value-of select="title" /></h3>
+					<h4><xsl:value-of select="title" /></h4>
 					<xsl:apply-templates select="top/*" />
 					<xsl:apply-templates select="body/*" />
 				</xsl:for-each>
@@ -51,7 +51,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="manhead">
-	<h1><xsl:apply-templates select="center-header" /></h1>
+	<h2><xsl:apply-templates select="center-header" /></h2>
 	<p>This page corresponds to the man page <b><xsl:value-of select="@prog-name" /></b>(<xsl:value-of select="@section" />), dated <xsl:value-of select="@modification-date" />.</p>
 	<p><em><b>Note:</b> The examples here may be presented using characters that may not be available in the man page format.  Hence, the examples may be presented differently in the man page.</em></p>
 </xsl:template>

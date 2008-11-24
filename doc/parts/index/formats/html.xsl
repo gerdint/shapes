@@ -34,19 +34,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</xsl:element>
     </head>
     <body>
-			<h0><xsl:apply-templates select="title" /></h0>
+			<h1><xsl:apply-templates select="title" /></h1>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
 			<xsl:for-each select="section">
-				<h1><xsl:apply-templates select="title" /></h1>
+				<h2><xsl:apply-templates select="title" /></h2>
 				<xsl:apply-templates select="top" />
 				<xsl:apply-templates select="body" />
 				<xsl:for-each select="section">
-					<h2><xsl:apply-templates select="title" /></h2>
+					<h3><xsl:apply-templates select="title" /></h3>
 					<xsl:apply-templates select="top" />
 					<xsl:apply-templates select="body" />
 					<xsl:for-each select="section">
-						<h3><xsl:apply-templates select="title" /></h3>
+						<h4><xsl:apply-templates select="title" /></h4>
 						<xsl:apply-templates select="top" />
 						<xsl:apply-templates select="body" />
 					</xsl:for-each>

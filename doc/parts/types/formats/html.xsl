@@ -36,7 +36,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
 			<xsl:call-template name="head-navigation" />
-			<h1><xsl:apply-templates select="title" /></h1>
+			<h2><xsl:apply-templates select="title" /></h2>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
 			<p><b>Sections:</b>
@@ -63,12 +63,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<hr class="thin"/>
 
 			<xsl:for-each select="section">
-				<h2>
+				<h3>
 					<xsl:element name="a">
 						<xsl:attribute name="name"><xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:apply-templates select="title" />
 					</xsl:element>
-				</h2>
+				</h3>
 				<xsl:apply-templates select="top" />
 				<p class="center">
 					<xsl:for-each select="coretype[@name]">

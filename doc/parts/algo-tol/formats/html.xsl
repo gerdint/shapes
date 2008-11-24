@@ -34,7 +34,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
 			<xsl:call-template name="head-navigation" />
-			<h1><xsl:apply-templates select="title" /></h1>
+			<h2><xsl:apply-templates select="title" /></h2>
 			<hr class="thick"/>
 			<xsl:apply-templates select="top" />
 			<p><b>Algorithms:</b>
@@ -51,32 +51,32 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<p class="center"><b>Tolerance parameters</b></p>
 			<xsl:for-each select="/book/tolerance-parameter[@name]">
 				<xsl:sort select="@name" />
-				<h4>
+				<h5>
 					<xsl:element name="a">
 						<xsl:attribute name="name">tol-<xsl:value-of select="@name" /></xsl:attribute>
 						<tolparam><xsl:value-of select="@name" /></tolparam>
 					</xsl:element>
 					<xsl:text> : </xsl:text><xsl:apply-templates select="default" /><xsl:text> :: </xsl:text><xsl:apply-templates select="type" />
-				</h4>
+				</h5>
 				<xsl:apply-templates select="description" />
 			</xsl:for-each>
 			<hr class="thin"/>
 
 			<xsl:for-each select="section">
-				<h2>
+				<h3>
 					<xsl:element name="a">
 						<xsl:attribute name="name"><xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:value-of select="title" />
 					</xsl:element>
-				</h2>
+				</h3>
 				<xsl:apply-templates select="top" />
 				<xsl:apply-templates select="body" />
 				<xsl:for-each select="section">
-					<h3><xsl:apply-templates select="title" /></h3>
+					<h4><xsl:apply-templates select="title" /></h4>
 					<xsl:apply-templates select="top" />
 					<xsl:apply-templates select="body" />
 					<xsl:for-each select="section">
-						<h4><xsl:apply-templates select="title" /></h4>
+						<h5><xsl:apply-templates select="title" /></h5>
 						<xsl:apply-templates select="top" />
 						<xsl:apply-templates select="body" />
 					</xsl:for-each>
@@ -87,12 +87,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]">
-	<h3>
+	<h4>
 		<xsl:element name="a">
 			<xsl:attribute name="name"><xsl:value-of select="@identifier" /></xsl:attribute>
 			<xsl:value-of select="@identifier" />
 		</xsl:element>
-	</h3>
+	</h4>
 	<xsl:apply-templates />
 </xsl:template>
 

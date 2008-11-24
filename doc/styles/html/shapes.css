@@ -50,7 +50,7 @@ img.g45 {/* scalable em 45 */
           height: 15em;
           }
 
-h0, h1, h2, h3, h4, h5, h6 {
+h1, h1.sub, h2, h3, h4, h5, h6 {
 	color: 					#006633;
 	font-family: 					"Lucida Grande", sans-serif;
 	font-weight:					bold;
@@ -58,57 +58,43 @@ h0, h1, h2, h3, h4, h5, h6 {
 	margin-bottom:				0.2em;
 }
 
-h0 {
+h1, h1.sub {
 	font-size: 					3em;
 	line-height:					normal;
 	margin-top:					0;
 	margin-bottom:				0.5em;
 	text-align: center;
 }
+h1.sub {
+	font-size: 					2em;
+}
 
-h1 {
+h2 {
 	font-family: 					"Zapfino", sans-serif;
 	font-size: 					2em;
 	line-height:					normal;
 	margin-top:					0;
 }
-h2 {
+h3 {
      text-decoration: underline;
      font-size: 					1.6em;
      line-height:					normal;
      margin-top:					1.2em;
 }
-
-h3 {
+h4 {
 	margin-top:					1.2em;
 }
-h3, th.big {
+h4, th.big {
 	font-size: 					1.3em;
-}
-
-h4 {
-	font-size: 					1em;
-	font-weight:					bold;
 }
 
 h5 {
 	font-size: 					1em;
+	font-weight:					bold;
 }
 
-h2.puff {
-	font-size: 					1.6em;
-	font-weight:					bold;
-	color: 					#000;
-	padding: 					0.1em 0 0 0;
-	margin:					0.1em 0 0 0;
-}
-
-h3.puff {
-	font-size: 					1.3em;
-	font-weight:					bold;
-	color: 					#000;
-	padding: 					0.1em 0 0 0;
-	margin:					0.1em 0 0 0;
+h6 {
+	font-size: 					1em;
 }
 
 div.p {
@@ -134,10 +120,6 @@ div.p pre {
 div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates, div.p table.dynvars, div.p table.function, table.mutator, div.p table.simple, div.p table.hotvalue, div.p table.state, div.p table.state-type, div.p table.type {
 	margin-top:					0.1em;
 	margin-bottom:				0.1em;
-}
-
-p.center {
-	text-align: center;
 }
 
 body { font-size: 12pt; }
