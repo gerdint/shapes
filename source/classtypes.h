@@ -21,6 +21,7 @@
 
 #include "Shapes_Ast_decls.h"
 #include "Shapes_Lang_decls.h"
+#include "Shapes_Kernel_decls.h"
 
 #include "ptrowner.h"
 #include "refcount.h"
@@ -149,6 +150,7 @@ namespace Shapes
 		const MessageMapType & getMessageMap( ) const;
 		const RefCountPtr< const Lang::Class > & getMethodDefinitionClass( const Kernel::MethodId & method ) const;
 
+		virtual Kernel::VariableHandle getMethod( const RefCountPtr< const Lang::Value > & self, const char * methodID ) const;
 		virtual RefCountPtr< const Lang::Function > getMutator( const char * mutatorID ) const;
 
 		void showAbstractSet( std::ostream & os ) const;
@@ -200,14 +202,16 @@ namespace Shapes
 
 	class SystemFinalClass : public Lang::Class
 	{
+		std::map< const char *, RefCountPtr< const Kernel::MethodFactoryBase >, charPtrLess > methods_;
 		std::map< const char *, RefCountPtr< const Lang::Function >, charPtrLess > mutators_;
-		typedef void ( * RegisterMutatorFunction )( SystemFinalClass * );
-		RegisterMutatorFunction registerMutatorFunction_;
+		typedef void ( * RegisterFunction )( SystemFinalClass * );
+		RegisterFunction registerFunction_;
 	public:
 		SystemFinalClass( RefCountPtr< const char > _prettyName );
-		SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction );
+		SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterFunction registerFunction );
 		virtual ~SystemFinalClass( );
-		void initMutators( );
+		void init( );
+		void registerMethod( Kernel::MethodFactoryBase * factory );
 		void registerMutator( Lang::CoreFunction * fun );
 
 		virtual Kernel::ValueRef method_new( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
@@ -220,6 +224,7 @@ namespace Shapes
 													 Kernel::Arguments & emptyArglist,
 													 Kernel::EvalState * evalState ) const;
 		virtual bool isRepeatableBase( ) const;
+		virtual Kernel::VariableHandle getMethod( const RefCountPtr< const Lang::Value > & self, const char * methodID ) const;
 		virtual RefCountPtr< const Lang::Function > getMutator( const char * mutatorID ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};

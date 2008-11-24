@@ -81,6 +81,8 @@ namespace Shapes
 
 		class DebugLog;
 
+		class MethodFactoryBase;
+
 		void registerMutators( );
 		void registerGlobals( Kernel::Environment * env );
 		void registerDynamic( Kernel::Environment * env );

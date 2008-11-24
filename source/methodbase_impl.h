@@ -21,15 +21,15 @@ namespace Shapes
 {
 
 	template< class T >
-	Lang::MethodBase< T >::MethodBase( RefCountPtr< const T > self, const char * field, bool transforming, bool forceAll )
-		: Kernel::MethodBaseBase( Kernel::MethodId( T::TypeID, field ).prettyName( ), forceAll ),
-			self_( self ), title_( getTitlePtr( ) ), transforming_( transforming )
+	Lang::MethodBase< T >::MethodBase( RefCountPtr< const T > self, const char * title, bool transforming, bool forceAll )
+		: Kernel::MethodBaseBase( title, forceAll ),
+			self_( self ), transforming_( transforming )
 	{ }
 
 	template< class T >
-	Lang::MethodBase< T >::MethodBase( RefCountPtr< const T > self, const char * field, bool transforming )
-		: Kernel::MethodBaseBase( Kernel::MethodId( T::TypeID, field ).prettyName( ) ),
-			self_( self ), title_( getTitlePtr( ) ), transforming_( transforming )
+	Lang::MethodBase< T >::MethodBase( RefCountPtr< const T > self, const char * title, bool transforming )
+		: Kernel::MethodBaseBase( title ),
+			self_( self ), transforming_( transforming )
 	{ }
 
 	template< class T >

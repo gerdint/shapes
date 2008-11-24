@@ -28,18 +28,16 @@ namespace Shapes
 	{
 		class MethodBaseBase : public Lang::Function
 		{
-		private:
-			RefCountPtr< const char > titleMem_;
 		protected:
-			const char * getTitlePtr( ) const { return titleMem_.getPtr( ); }
+			const char * title_;
 		public:
-			MethodBaseBase( const RefCountPtr< const char > & title, bool forceAll )
-				: Lang::Function( new Kernel::EvaluatedFormals( title.getPtr( ), forceAll ) ),
-					titleMem_( title )
+			MethodBaseBase( const char * title, bool forceAll )
+				: Lang::Function( new Kernel::EvaluatedFormals( title, forceAll ) ),
+					title_( title )
 			{	}
-			MethodBaseBase( const RefCountPtr< const char > & title )
-				: Lang::Function( new Kernel::EvaluatedFormals( title.getPtr( ) ) ),
-					titleMem_( title )
+			MethodBaseBase( const char * title )
+				: Lang::Function( new Kernel::EvaluatedFormals( title ) ),
+					title_( title )
 			{	}
 			virtual ~MethodBaseBase( )
 			{ }
@@ -56,14 +54,49 @@ namespace Shapes
 			typedef T class_type;
 		protected:
 			RefCountPtr< const T > self_;
-			const char * title_;
 			bool transforming_;
 		public:
-			MethodBase( RefCountPtr< const T > self, const char * field, bool transforming );
-			MethodBase( RefCountPtr< const T > self, const char * field, bool transforming, bool forceAll );
+			MethodBase( RefCountPtr< const T > self, const char * title, bool transforming );
+			MethodBase( RefCountPtr< const T > self, const char * title, bool transforming, bool forceAll );
 			virtual ~MethodBase( );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 			virtual bool isTransforming( ) const;
+		};
+
+	}
+
+	namespace Kernel
+	{
+
+		class MethodFactoryBase
+		{
+		protected:
+			const char * field_;
+		public:
+			MethodFactoryBase( const char * field )
+				: field_( field )
+			{ }
+			virtual ~MethodFactoryBase( )
+			{ }
+			const char * field( ) const { return field_; }
+			virtual Kernel::VariableHandle build( const RefCountPtr< const Lang::Value > self ) const = 0;
+		};
+
+		template< class ValueType, class Method >
+		class MethodFactory : public MethodFactoryBase
+		{
+			RefCountPtr< const char > fullMethodID_;
+		public:
+			MethodFactory( )
+				: MethodFactoryBase( Method::staticFieldID( ) ),
+					fullMethodID_( Kernel::MethodId( ValueType::TypeID, Method::staticFieldID( ) ).prettyName( ) )
+			{ }
+			virtual ~MethodFactory( )
+			{ }
+			virtual Kernel::VariableHandle build( const RefCountPtr< const Lang::Value > self ) const
+			{
+				return Helpers::newValHandle( new Method( Helpers::down_cast_internal< const ValueType >( self ), fullMethodID_.getPtr( ) ) );
+			}
 		};
 
 	}
