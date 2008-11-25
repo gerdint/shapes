@@ -535,9 +535,6 @@ Escape "¢"|"¤"
 "or" { return T_or; }
 "xor" { return T_xor; }
 "not" { return T_not; }
-"let" { return T_let; }
-"let*" { return T_letstar; }
-"letrec" { return T_letrec; }
 
 "dynamic" { return T_dynamic; }
 
