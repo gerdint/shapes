@@ -496,13 +496,11 @@ Escape "¢"|"¤"
 
 "::" { return T_declaretype; }
 ":=" { return T_assign; }
-"{:=}" { return T_flassign; }
 "==" { return T_eqeq; }
 "=/="|"≠" { return T_eqneq; }
 
-".>" { return T_mapsto; }
+"->"|"→" { return T_mapsto; }
 "../" { return T_surrounding; }
-"->" { return T_bindto; }
 "[]" { return T_emptybrackets; }
 "[...]" { return T_dddotbrackets; }
 "[!]" { return T_bangbrackets; }
@@ -523,8 +521,8 @@ Escape "¢"|"¤"
 "/_" { return T_angle; }
 "&|" { return T_ampersandMore; }
 
-"<=" { return T_lesseq; }
-">=" { return T_greatereq; }
+"<="|"≤" { return T_lesseq; }
+">="|"≥" { return T_greatereq; }
 
 "<<" { return T_llthan; }
 ">>" { return T_ggthan; }
@@ -547,8 +545,8 @@ Escape "¢"|"¤"
 
 "TeX" { return T_tex; }
 
-"continuation" { return T_continuation; }
-"continue" { return T_continue; }
+"continuation" { return T_continuation; /* Reserved for future use */ }
+"continue" { return T_continue; /* Reserved for future use */ }
 "escape_continuation" { return T_esc_continuation; }
 "escape_continue" { return T_esc_continue; }
 
