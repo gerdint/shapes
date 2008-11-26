@@ -496,8 +496,8 @@ Escape "¢"|"¤"
 
 "::" { return T_declaretype; }
 ":=" { return T_assign; }
-"==" { return T_eqeq; }
-"=/="|"≠" { return T_eqneq; }
+"=" { return T_eqeq; }
+"/="|"≠" { return T_eqneq; }
 
 "->"|"→" { return T_mapsto; }
 "../" { return T_surrounding; }
@@ -505,7 +505,7 @@ Escape "¢"|"¤"
 "[...]" { return T_dddotbrackets; }
 "[!]" { return T_bangbrackets; }
 "[!...]" { return T_bangdddotbrackets; }
-"()" { return T_compose; }
+"()"|"⊙" { return T_compose; }
 
 "(>" { return T_unionLeft; }
 "<)" { return T_unionRight; }
@@ -517,24 +517,24 @@ Escape "¢"|"¤"
 [\.\,\;\:\_\@\!\#\%\&\|\^\-\+\'\"\\] { return yytext[0]; }
 [*/~=] { return yytext[0]; }
 
-"*/" { return T_projection; }
-"/_" { return T_angle; }
+"*/"|"∥" { return T_projection; }
+"/_"|"∠" { return T_angle; }
 "&|" { return T_ampersandMore; }
 
 "<="|"≤" { return T_lesseq; }
 ">="|"≥" { return T_greatereq; }
 
-"<<" { return T_llthan; }
-">>" { return T_ggthan; }
+"<<"|"≪" { return T_llthan; }
+">>"|"≫" { return T_ggthan; }
 
 "!!" { return	T_bangbang; }
 
 "@@" { return T_atat; }
 
-"and" { return T_and; }
-"or" { return T_or; }
-"xor" { return T_xor; }
-"not" { return T_not; }
+"and"|"⋀" { return T_and; }
+"or"|"⋁" { return T_or; }
+"xor"|"⊻" { return T_xor; }
+"not"|"¬" { return T_not; }
 
 "dynamic" { return T_dynamic; }
 

@@ -96,6 +96,7 @@ Scaling by negative unit.
 
 
 <operator-unary op="not" side="prefix">
+	<alternative op="¬" />
 
 <case type="Boolean">
 <result><named-type name="Boolean" /></result>
@@ -571,7 +572,8 @@ Reverse move distance.
 </operator-binary> <!-- end of binary "-" -->
 
 
-<operator-binary op="/_">
+<operator-binary op="∠">
+<alternative op="/_" />
 
 <case first-type="Float" second-type="Float">
 <result><named-type name="Float" /></result>
@@ -963,7 +965,8 @@ Division.
 </operator-binary> <!-- end of binary "/" -->
 
 
-<operator-binary op="*/">
+<operator-binary op="∥">
+	<alternative "*/" />
 
 <case first-type="FloatPair" second-type="FloatPair">
 <result><named-type name="FloatPair" /></result>
@@ -1017,7 +1020,8 @@ Orthogonal projection of first argument on direction given by second argument.
 
 </operator-binary> <!-- end of binary "*/" -->
 
-<operator-binary op="()">
+<operator-binary op="⊙">
+	<alternative op="()" />
 
 <case first-type="Transform" second-type="Transform">
 <result><named-type name="Transform" /></result>
@@ -1253,7 +1257,8 @@ Same type test.
 </operator-binary> <!-- end of binary "=" -->
 
 
-<operator-binary op="=/=">
+<operator-binary op="≠">
+	<alternative op="/=" />
 
 <case first-type="Symbol" second-type="Symbol">
 <result><named-type name="Boolean" /></result>
@@ -1327,7 +1332,8 @@ Not same type test.
 </operator-binary> <!-- end of binary "≠" -->
 
 
-<operator-binary op="&lt;=">
+<operator-binary op="≤">
+<alternative op="&lt;=" />
 
 <case first-type="Symbol" second-type="Symbol">
 <result><named-type name="Boolean" /></result>
@@ -1354,10 +1360,11 @@ Test less than or equal.
 </description>
 </case>
 
-</operator-binary> <!-- end of binary "&lt;=" -->
+</operator-binary> <!-- end of binary "≤" -->
 
 
-<operator-binary op="&gt;=">
+<operator-binary op="≥">
+<alternative op="&gt;=" />
 
 <case first-type="Symbol" second-type="Symbol">
 <result><named-type name="Boolean" /></result>
@@ -1384,11 +1391,11 @@ Test greater than or equal.
 </description>
 </case>
 
-</operator-binary> <!-- end of binary "&gt;=" -->
+</operator-binary> <!-- end of binary "≥" -->
 
 
-<operator-binary op="and">
-
+<operator-binary op="∧">
+	<alternative op="and" />
 <case first-type="Boolean" second-type="Boolean">
 <result><named-type name="Boolean" /></result>
 <description>
@@ -1399,7 +1406,8 @@ Conjunction.
 </operator-binary> <!-- end of binary "and" -->
 
 
-<operator-binary op="or">
+<operator-binary op="∨">
+	<alternative op="or" />
 
 <case first-type="Boolean" second-type="Boolean">
 <result><named-type name="Boolean" /></result>
@@ -1411,7 +1419,8 @@ Disjunction.
 </operator-binary> <!-- end of binary "or" -->
 
 
-<operator-binary op="xor">
+<operator-binary op="⊻">
+	<alternative op="xor" />
 
 <case first-type="Boolean" second-type="Boolean">
 <result><named-type name="Boolean" /></result>
