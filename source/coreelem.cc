@@ -1125,6 +1125,7 @@ namespace Shapes
 	}
 }
 
+RefCountPtr< const Lang::CoreFunction > Lang::THE_FUNCTION_ABS( new Lang::Core_abs( "abs" ) );
 
 void
 Kernel::registerCore_elem( Kernel::Environment * env )
@@ -1143,7 +1144,7 @@ Kernel::registerCore_elem( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_min( "min" ) );
 	env->initDefineCoreFunction( new Lang::Core_max( "max" ) );
 	env->initDefineCoreFunction( new Lang::Core_sqrt( "sqrt" ) );
-	env->initDefineCoreFunction( new Lang::Core_abs( "abs" ) );
+	env->initDefineCoreFunction( Lang::THE_FUNCTION_ABS );
 	env->initDefineCoreFunction( new Lang::Core_angle( "angle" ) );
 	env->initDefineCoreFunction( new Lang::Core_dir( "dir" ) );
 	env->initDefineCoreFunction( new Lang::Core_normalized( "normalized" ) );
@@ -1157,4 +1158,3 @@ Kernel::registerCore_elem( Kernel::Environment * env )
 
 	env->initDefineCoreFunction( new Lang::Core_gensym( "gensym" ) );
 }
-

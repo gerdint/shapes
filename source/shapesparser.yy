@@ -147,8 +147,7 @@ void shapeserror( char * msg )
 %token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_emptybrackets T_dddotbrackets T_bangbrackets T_bangdddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
 %token <tokenID> T_tex T_dynamic T_continuation T_continue T_esc_continuation T_esc_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
-%token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight
- // %token <tokenID>	T_letdst T_plusassign T_minusassign T_starassign T_slashassign
+%token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight T_absLeft T_absRight
 
 %token <intVal> T_int
 %token <floatVal> T_float T_length
@@ -1009,6 +1008,14 @@ ExprExceptConstStrings
 	 * On the other hand, I can admit that it seems a bit uncanny to let the <if> function return the continuation invokations as thunks, not
 	 * knowing when they will be forced...	But I don't think there's a choice here anyway; this expression can't be immediate.
 	 */
+}
+| T_absLeft Expr T_absRight
+{
+	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+	args->orderedExprs_->push_back( $2 );
+	$$ = new Ast::CallExpr( @$,
+													Lang::THE_FUNCTION_ABS,
+													args );
 }
 | Expr '|' Expr
 {

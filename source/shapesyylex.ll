@@ -512,6 +512,8 @@ Escape "¢"|"¤"
 "<>" { return T_split; }
 "(<" { return T_splitLeft; }
 ">)" { return T_splitRight; }
+"(|" { return T_absLeft; }
+"|)" { return T_absRight; }
 
 [\{\}\(\)\[\]\<\>] { return yytext[0]; }
 [\.\,\;\:\_\@\!\#\%\&\|\^\-\+\'\"\\] { return yytext[0]; }

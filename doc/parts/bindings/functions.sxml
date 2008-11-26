@@ -29,6 +29,135 @@ facing: [../facing scale:true distort:true ...]
 </pre>
 </top>
 
+<system-binding identifier="abs">
+	<function>
+		<top>
+			<p>This is the function invoked by the syntax <syntax name="abs-call" />.  The binding is useful when the function needs to be passed around as a value, or if one does not like the special syntax.</p>
+			<p>Common to all cases of this function, is that the result is some kind of non-negative scalar (that is, a <named-type name="Float" />, <named-type name="Length" />, or <named-type name="Integer" />).</p>
+		</top>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Float" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Float" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Absolute value.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Integer" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Integer" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Absolute value.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Length" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Unsigned length.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="FloatPair" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Float" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Euclidean norm.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Coords" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Euclidean norm.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="FloatTriple" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Float" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Euclidean norm.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Coords3D" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Euclidean norm.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Path" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Length of path.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Path3D" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Length of path.</p></description>
+		</case>
+		<case>
+			<arguments>
+				<arg>
+					<type><named-type name="Dash" /></type>
+				</arg>
+			</arguments>
+			<result>
+				<type><named-type name="Length" /></type>
+			</result>
+			<dynamic-references></dynamic-references>
+			<description><p>Length of dash pattern.</p></description>
+		</case>
+	</function>
+</system-binding>
+
 <system-binding identifier="affinetransform">
 	<function>
 		<case constructor-of="Transform">
@@ -44,7 +173,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform from multiplier for x and y coordinates, followed by a shift.</description>
+			<description><p>Construct transform from multiplier for x and y coordinates, followed by a shift.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -67,7 +196,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform from multiplier for x, y, and z coordinates, followed by a shift.</description>
+			<description><p>Construct transform from multiplier for x, y, and z coordinates, followed by a shift.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -81,7 +210,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform.</description>
+			<description><p>Construct transform.</p></description>
 		</case>
 		<case constructor-of="Transform3D">
 			<arguments>
@@ -90,7 +219,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform.</description>
+			<description><p>Construct transform.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -104,7 +233,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform.</description>
+			<description><p>Construct transform.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -121,7 +250,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct rotation transform about given direction.</description>
+			<description><p>Construct rotation transform about given direction.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -144,7 +273,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and y by <arg name="r" /><char-cdot /><arg name="y" />.</description>
+			<description><p>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and y by <arg name="r" /><char-cdot /><arg name="y" />.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -171,7 +300,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and similarly with y and z.</description>
+			<description><p>Construct transform that scales x by <arg name="r" /><char-cdot /><arg name="x" />, and similarly with y and z.</p></description>
 		</case>
 	</function>
 </system-binding>
@@ -185,7 +314,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</description>
+			<description><p>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</p></description>
 		</case>
 		<case constructor-of="Transform3D">
 			<arguments>
@@ -194,7 +323,7 @@ facing: [../facing scale:true distort:true ...]
 				</arg>
 			</arguments>
 			<dynamic-references></dynamic-references>
-			<description>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</description>
+			<description><p>Constructs the inverse of a transform.  This is only possible if the linear part of the transform is non-singular.</p></description>
 		</case>
 	</function>
 </system-binding>

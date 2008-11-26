@@ -43,7 +43,7 @@
 <tr> <td><syntax name="tuple" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float-pair" /> <bnf>|</bnf> <syntax name="float-triple" /> <bnf>|</bnf> <syntax name="coords-2D" /> <bnf>|</bnf> <syntax name="coords-3D" /></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="polar-handle-2D" /> <bnf>|</bnf> <syntax name="corner-point-2D" /></inline></td></tr>
 
-<tr> <td><syntax name="unary" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="not-expr" /> <bnf>|</bnf> <syntax name="cycle" /></inline></td></tr>
+<tr> <td><syntax name="unary" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="not-expr" /> <bnf>|</bnf> <syntax name="cycle" /> <bnf>|</bnf> <syntax name="abs-call" /></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="negation" /> <bnf>|</bnf> <syntax name="relative" /></inline></td></tr>
 
 <tr> <td><syntax name="binary-arithmetic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="plus" /> <bnf>|</bnf> <syntax name="minus" /> <bnf>|</bnf> <syntax name="star" /> <bnf>|</bnf> <syntax name="slash" /></inline></td></tr>
@@ -157,12 +157,13 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <section id="syntax/misc-expr/unary">
 <title>Unary operators</title>
 <body>
-<p>The expansions of <syntax name="unary" /> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.</p>
+<p>The expansions of <syntax name="unary" /> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.  The special syntax for calling the <binding name="abs" /> function is also included here.</p>
 <syntax-table>
 <tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( - <syntax name="expr" /> )</inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntax name="expr" /></inline></td></tr>
 <tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( + <syntax name="expr" /> )</inline></td></tr>
 <tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntax name="abs-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(| <syntax name="expr" /> |)</inline></td></tr>
 </syntax-table>
 </body>
 </section>
