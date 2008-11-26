@@ -58,17 +58,6 @@ namespace Shapes
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 
-	class ExitVoidContinuation : public Kernel::Continuation
-	{
-		bool * done_;
-	public:
-		ExitVoidContinuation( bool * done, const Ast::SourceLocation & traceLoc );
-		~ExitVoidContinuation( );
-		virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
-		virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
-		virtual void gcMark( Kernel::GCMarkedSet & marked );
-	};
-
 	class IfContinuation : public Kernel::Continuation
 	{
 		Kernel::VariableHandle consequence_;

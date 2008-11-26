@@ -1197,10 +1197,14 @@ main( int argc, char ** argv )
 			Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );
 
 			bool done = false;
+			Kernel::ValueRef resultUntyped = NullPtr< const Lang::Value >( );
 			Kernel::EvalState evalState( Ast::theProgram,
 																	 Kernel::theGlobalEnvironment,
 																	 baseDyn,
-																	 Kernel::ContRef( new Kernel::ExitVoidContinuation( & done, Ast::theProgram->loc( ) ) ) );
+																	 Kernel::ContRef( new Kernel::StoreValueContinuation( & resultUntyped,
+																																												Kernel::ContRef( new Kernel::ExitContinuation( & done, Ast::theProgram->loc( ) ) ),
+																																												Ast::theProgram->loc( ) ) ) );
+
 			try
 				{
 					while( ! done )
@@ -1243,13 +1247,32 @@ main( int argc, char ** argv )
 
 			Kernel::WarmCatalog * catalog = dynamic_cast< Kernel::WarmCatalog * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CATALOG_ID ) ) );
 			RefCountPtr< const Lang::Group2D > finalPicture = dynamic_cast< Kernel::WarmGroup2D * >( Kernel::theGlobalEnvironment->getStateHandle( Ast::theGlobalAnalysisEnvironment->findLocalStatePosition( Ast::THE_UNKNOWN_LOCATION, Lang::CANVAS_ID ) ) )->getPile( );
-			if( catalog->isEmpty( ) && finalPicture->isNull( ) )
+			RefCountPtr< const Lang::Drawable2D > result = Helpers::down_cast< const Lang::Drawable2D >( resultUntyped, "", true ); /* True means "void is null". */
+			if( result != NullPtr< const Lang::Drawable2D >( ) && result == Lang::THE_NULL2D )
+				{
+					throw Exceptions::MiscellaneousRequirement( "Program evaluated to a null-value." );
+				}
+			if( result == NullPtr< const Lang::Drawable2D >( ) && catalog->isEmpty( ) && finalPicture->isNull( ) )
 				{
 					throw Exceptions::EmptyFinalPicture( );
 				}
 			if( catalog->isEmpty( ) )
 				{
-					catalog->tackOnPage( baseDyn, finalPicture, Ast::THE_UNKNOWN_LOCATION );
+					if( result != NullPtr< const Lang::Drawable2D >( ) )
+						{
+							catalog->tackOnPage( baseDyn, result, Ast::THE_UNKNOWN_LOCATION );
+						}
+					else
+						{
+							catalog->tackOnPage( baseDyn, finalPicture, Ast::THE_UNKNOWN_LOCATION );
+						}
+				}
+			else
+				{
+					if( result != NullPtr< const Lang::Drawable2D >( ) )
+						{
+							throw Exceptions::MiscellaneousRequirement( "Ambiguous program output; #catalog was non-empty, and program returned with a value." );
+						}
 				}
 
 			catalog->shipout( splitMode != SPLIT_NO, & documents );

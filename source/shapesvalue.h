@@ -130,12 +130,16 @@ namespace Shapes
 
 		template< class T >
 		RefCountPtr< T >
-		down_cast( const RefCountPtr< const Lang::Value > & val, const Ast::SourceLocation & loc )
+		down_cast( const RefCountPtr< const Lang::Value > & val, const Ast::SourceLocation & loc, bool voidIsNull = false )
 		{
 			RefCountPtr< T > res = val.down_cast< T >( );
 			if( res == NullPtr< T >( ) )
 				{
-					throw Exceptions::TypeMismatch( loc, val->getTypeName( ), T::staticTypeName( ) );
+					if( ! voidIsNull ||
+							dynamic_cast< const Lang::Void * >( val.getPtr( ) ) == 0 )
+						{
+							throw Exceptions::TypeMismatch( loc, val->getTypeName( ), T::staticTypeName( ) );
+						}
 				}
 			return res;
 		}

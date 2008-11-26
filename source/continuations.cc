@@ -358,34 +358,6 @@ Kernel::ExitContinuation::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Kernel::ExitVoidContinuation::ExitVoidContinuation( bool * done, const Ast::SourceLocation & traceLoc )
-	: Kernel::Continuation( traceLoc ), done_( done )
-{ }
-
-Kernel::ExitVoidContinuation::~ExitVoidContinuation( )
-{ }
-
-void
-Kernel::ExitVoidContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
-{
-	if( val.down_cast< const Lang::Void >( ) == NullPtr< const Lang::Void >( ) )
-		{
-			throw Exceptions::NonVoidStatement( traceLoc_, val );
-		}
-	*done_ = true;
-}
-
-void
-Kernel::ExitVoidContinuation::backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
-{
-	trace->push_front( Kernel::Continuation::BackTraceElem( this, "exit (forcing)" ) );
-}
-
-void
-Kernel::ExitVoidContinuation::gcMark( Kernel::GCMarkedSet & marked )
-{ }
-
-
 Kernel::Transform2DCont::Transform2DCont( Lang::Transform2D tf, const Kernel::ContRef & cont, const Ast::SourceLocation & traceLoc )
 	: Kernel::Continuation( traceLoc ), tf_( tf ), cont_( cont )
 { }
