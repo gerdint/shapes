@@ -137,10 +137,10 @@ dynamic @tex_bbox_grow_rel identity 1.01
 	A simple filter could look like this:
 <pre>
 <![CDATA[dynamic @tex_bbox_grow_rel
-  \ new .>
+  \ new →
     [if not [typeof new].isa[]Float
       [error `Type mismatch for @tex_bbox_grow_rel: required a Float.´]
-      [if new <= 0
+      [if new ≤ 0
         [error `Out of range error for @tex_bbox_grow_rel: required a positive value.´]
         new]]
   1.01]]>
