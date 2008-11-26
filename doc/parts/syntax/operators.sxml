@@ -966,7 +966,7 @@ Division.
 
 
 <operator-binary op="∥">
-	<alternative "*/" />
+	<alternative op="*/" />
 
 <case first-type="FloatPair" second-type="FloatPair">
 <result><named-type name="FloatPair" /></result>
@@ -1259,43 +1259,6 @@ Same type test.
 
 <operator-binary op="≠">
 	<alternative op="/=" />
-
-<case first-type="Symbol" second-type="Symbol">
-<result><named-type name="Boolean" /></result>
-<description>
-Inequality test.
-</description>
-</case>
-<case first-type="Float" second-type="Float">
-<result><named-type name="Boolean" /></result>
-<description>
-Inequality test.
-</description>
-</case>
-<case first-type="Integer" second-type="Integer">
-<result><named-type name="Boolean" /></result>
-<description>
-Inequality test.
-</description>
-</case>
-<case first-type="Length" second-type="Length">
-<result><named-type name="Boolean" /></result>
-<description>
-Inequality test.
-</description>
-</case>
-
-<case first-type="Class" second-type="Class">
-<result><named-type name="Boolean" /></result>
-<description>
-Not same type test.
-</description>
-</case>
-
-</operator-binary> <!-- end of binary "=/=" -->
-
-
-<operator-binary op="≠">
 
 <case first-type="Symbol" second-type="Symbol">
 <result><named-type name="Boolean" /></result>
