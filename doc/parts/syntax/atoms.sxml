@@ -303,7 +303,9 @@ Multi-line...´
 			<tr> <td><inline>cool?</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>A_1_2</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>__cplusplus</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>π</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>3cm</inline></td> <td>No (this begins with a digit and is a length)</td> </tr>
+			<tr> <td><inline>2π</inline></td> <td>No (this begins with a digit and isn't even a length)</td> </tr>
 			<tr> <td><inline>_3abc</inline></td> <td>No (digit after underscore in first position)</td> </tr>
 		</body>
 	</token-example-table>
