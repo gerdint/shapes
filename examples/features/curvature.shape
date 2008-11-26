@@ -20,18 +20,19 @@
 
 pth: (0cm,0cm)>(1cm,0cm)--(0cm,2cm)<(1cm,2cm)
 
-@<< [stroke pth]
+•page << [stroke pth]
 
+•page <<
+(
 @width:0.3bp & @stroking:RGB_RED
 |
 [[range 0.1 0.9 0.2].foldl
  \ p e →
  {
    sl: [pth e]
-   [if [abs sl.ik] < 50cm
-    {
-      @<< stroke [] [shift sl.p+sl.N*sl.ik] [] [circle sl.ik]
-    }]
-   p
+   [if (|sl.ik|) < 50cm
+      ( p & [stroke [shift sl.p+sl.N*sl.ik] [] [circle sl.ik]] )
+      p]
  }
- VOID]
+ null]
+)
