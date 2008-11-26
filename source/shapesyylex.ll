@@ -312,13 +312,8 @@ Escape "¢"|"¤"
 
 
 
-{Float}"°" {
-	char * end;
-	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
-	return T_float;
-}
-
-{Float}{Escape}"degree" {
+{Float}"°" |
+{Float}"^^" {
 	char * end;
 	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
 	return T_float;

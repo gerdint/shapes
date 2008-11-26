@@ -29,7 +29,7 @@
 		<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
 		<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
 		<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" />°</inline></td></tr>
+		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" /><lexerregexp>("°"|"^^")</lexerregexp></inline></td></tr>
 	</syntax-table>
 </p>
 <p>
@@ -45,6 +45,7 @@
 			<tr> <td><inline>~3.14</inline></td> <td>Yes (= -3.14)</td> </tr>
 			<tr> <td><inline>~180°</inline></td> <td>Yes (= -3.14159...)</td> </tr>
 			<tr> <td><inline>5*^~3°</inline></td> <td>Yes, (= 0.005*π/180)</td> </tr>
+			<tr> <td><inline>90^^</inline></td> <td>Yes, (= 0.5*π)</td> </tr>
 			<tr> <td><inline>.609</inline></td> <td>No (missing integer part)</td> </tr>
 			<tr> <td><inline>-3.1</inline></td> <td>No (binary minus sign)</td> </tr>
 			<tr> <td><inline>1 000</inline></td> <td>No (spaces are not allowed)</td> </tr>
