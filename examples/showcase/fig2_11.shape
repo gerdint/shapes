@@ -37,7 +37,7 @@ y1: tank_H + 1cm
 y2: tank_H + 1mm
 r: 5mm
 
-inflow: \ •dst x1 x2 txt doValve .>
+inflow: \ •dst x1 x2 txt doValve →
 {
   d: [normalized x2 - x1]
   •dst << [stroke (x1,y1+@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1+@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2+d*@pipe_width/2,y1-@pipe_width/2-r)--(x2+d*@pipe_width/2,y2)]

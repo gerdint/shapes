@@ -18,11 +18,11 @@
 
 pathmap:
 {
-  meeter: \ p1 p2 .>
+  meeter: \ p1 p2 →
    [if p1.null?
        p2
        (escape_continuation cont
-         @handler_NoIntersection: \ pth1 pth2 .>
+         @handler_NoIntersection: \ pth1 pth2 →
               (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rT)]))--((1%C^[angle (-pth2.begin.T)])<pth2.begin--pth2.end))
          |
          {
@@ -32,12 +32,12 @@ pathmap:
        )
    ]
 
-  helper: \ f sl1 sl2 res .>
+  helper: \ f sl1 sl2 res →
     [if sl2.looped
         res
 	[helper f sl2 sl2+1 [meeter res [f sl1 sl2]]]]
 
-  \ pth f .>
+  \ pth f →
   {
     tmp: [helper f [pth 0] [pth 1] emptypath]
     [if pth.closed?
@@ -47,18 +47,18 @@ pathmap:
 }
 
 
-sidepath: \ pth dst .>
+sidepath: \ pth dst →
  (@defaultunit:1%C
   |
   [pathmap pth
-    \ sl1 sl2 .>
+    \ sl1 sl2 →
       (sl1.p + sl1.N*dst)>(^[angle sl1.T])--
       (^[angle sl2.rT])<(sl2.p - sl2.rN*dst)]
  )
 
-sidepath2: \ pth dst .>
+sidepath2: \ pth dst →
   [pathmap pth
-    \ sl1 sl2 .>
+    \ sl1 sl2 →
     {
       p0: sl1.p + sl1.N*dst
       p3: sl2.p - sl2.rN*dst

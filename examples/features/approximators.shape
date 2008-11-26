@@ -30,7 +30,7 @@
  @width: 0.2bp
  |
  [[range '1 '200].foldsl
-  \ pile e •randstate .>
+  \ pile e •randstate →
   {
    p: 1.4cm * [random2D •randstate]
    pile & [stroke p--[approximator pth p].p ]
@@ -41,9 +41,9 @@
  )
 }
 
-randPath: \ n •rand .>
+randPath: \ n •rand →
  [[range '1 n].foldsl
-  \ pile e •randstate .>  pile--( ^ )<(1cm*[random2D •randstate])>( 2mm * (1+[random1D •randstate]) ^ 180°*[random1D •randstate] )
+  \ pile e •randstate →  pile--( ^ )<(1cm*[random2D •randstate])>( 2mm * (1+[random1D •randstate]) ^ 180°*[random1D •randstate] )
   emptypath
 	•rand]
 
@@ -58,7 +58,7 @@ randPath: \ n •rand .>
  @width: 0.2bp
  |
  [[range '1 '200].foldsl
-  \ pile e •randstate .>
+  \ pile e •randstate →
   {
    p: sh [] 1.4cm * [random2D •randstate]
    pile & [stroke p--[approximator pth p].p ]

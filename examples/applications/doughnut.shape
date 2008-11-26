@@ -28,7 +28,7 @@ immerse
 []
 [circle 1.5cm]
 
-square: \ x .> x * x
+square: \ x → x * x
 
 doubleDoughnutProfile:
 [rotate3D dir:(1,0,0) angle:~90°]
@@ -40,7 +40,7 @@ immerse
 ( @defaultunit:1%C
   |
   [[range 0° 359° 10°].foldl
-  	\ p e .>
+    \ p e →
   	{
   	  p--(^)<((0.5cm+1cm*[square [abs [cos e]]])*[dir e])>(^)
   	}

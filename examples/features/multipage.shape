@@ -18,7 +18,7 @@
 
 ##needs circle
 
-clock: \ hour minute .>
+clock: \ hour minute →
 {
   hourLength: 4cm
   minuteLength: 5.5cm

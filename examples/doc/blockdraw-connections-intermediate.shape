@@ -27,7 +27,7 @@ to: [longblock (TeX `To´)]
 dynamic @from identity from
 dynamic @to identity to
 
-helper: \ pth .>
+helper: \ pth →
 (
 @text_font:FONT_COURIER
 |
@@ -35,10 +35,10 @@ helper: \ pth .>
  & [[shift [bottompoint @to & @from]+(1cm,~0.5cm)] [shiftoffwlm (newText << [sourceof pth]) to_bot]])
 )
 
-dynShift1: \ pos .> ( @from:[[shift pos+(~1cm,0.5cm)] from] & @to:[[shift pos+(1cm,2cm)] to] )
-dynShift2: \ pos .> ( @from:[[shift pos+(1cm,2cm)] from] & @to:[[shift pos+(~1cm,0.5cm)] to] )
-dynShift3: \ pos .> ( @from:[[shift pos+(1cm,0.5cm)] from] & @to:[[shift pos+(~1cm,2cm)] to] )
-dynShift4: \ pos .> ( @from:[[shift pos+(~1cm,2cm)] from] & @to:[[shift pos+(1cm,0.5cm)] to] )
+dynShift1: \ pos → ( @from:[[shift pos+(~1cm,0.5cm)] from] & @to:[[shift pos+(1cm,2cm)] to] )
+dynShift2: \ pos → ( @from:[[shift pos+(1cm,2cm)] from] & @to:[[shift pos+(~1cm,0.5cm)] to] )
+dynShift3: \ pos → ( @from:[[shift pos+(1cm,0.5cm)] from] & @to:[[shift pos+(~1cm,2cm)] to] )
+dynShift4: \ pos → ( @from:[[shift pos+(~1cm,2cm)] from] & @to:[[shift pos+(1cm,0.5cm)] to] )
 
 r: 0.8
 

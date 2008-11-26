@@ -16,13 +16,13 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-makeSectionThreeNormals: \ profile phiSteps thetaSteps .>
+makeSectionThreeNormals: \ profile phiSteps thetaSteps →
 {
 	stepLength: [abs profile] / phiSteps
 	T: [rotate3D dir:(0,0,1) angle: 360° / thetaSteps]
 
   [[range '0 phiSteps-'1].foldl
-	  \ p e .>
+	  \ p e →
     {
 			sl1: [profile e * stepLength]
 		  sl2: [profile ( e + '1 ) * stepLength]
@@ -42,13 +42,13 @@ makeSectionThreeNormals: \ profile phiSteps thetaSteps .>
   ]
 }
 
-makeSectionDefaultNormal: \ profile phiSteps thetaSteps .>
+makeSectionDefaultNormal: \ profile phiSteps thetaSteps →
 {
 	stepLength: [abs profile] / phiSteps
 	T: [rotate3D dir:(0,0,1) angle: 360° / thetaSteps]
 
   [[range '0 phiSteps-'1].foldl
-	  \ p e .>
+	  \ p e →
     {
 			sl1: [profile e * stepLength]
 		  sl2: [profile ( e + '1 ) * stepLength]
@@ -60,11 +60,11 @@ makeSectionDefaultNormal: \ profile phiSteps thetaSteps .>
   ]
 }
 
-revolutionBody: \ profile phiSteps:36 thetaSteps:36 .>
+revolutionBody: \ profile phiSteps:36 thetaSteps:36 →
 {
 	section: [makeSectionDefaultNormal profile phiSteps thetaSteps]
   [[range '0 thetaSteps-'1].foldl
-    \ p e .>
+    \ p e →
   	{
   	  p
   		&

@@ -18,16 +18,16 @@
 
 |** We begin with two useful general-purpose abstractions.
 
-rotateAbout: \ z a .> [shift z]()[rotate a]()[shift ~z]
+rotateAbout: \ z a → [shift z]()[rotate a]()[shift ~z]
 
-accumulateGraphics2D: \ lst fun .> [lst.foldl \ p e .> ( p & [fun e] )
+accumulateGraphics2D: \ lst fun → [lst.foldl \ p e → ( p & [fun e] )
                                               null]
 
 
 |** It is now straight-forward to implement the Koch curve (at some finite depth).
 
-koch: \ pth depth .>
-  [if depth == '0
+koch: \ pth depth →
+  [if depth = '0
       pth
       {
         len: [abs pth]
@@ -59,7 +59,7 @@ koch: \ pth depth .>
            end: '5
            [accumulateGraphics2D
              [range '0 end]
-             \ i .> ( @stroking:[mediate i*(1/end) 0.9*GRAY_WHITE GRAY_BLACK]
+             \ i → ( @stroking:[mediate i*(1/end) 0.9*GRAY_WHITE GRAY_BLACK]
                       |
                       [stroke [koch c i]] ) ]
          }

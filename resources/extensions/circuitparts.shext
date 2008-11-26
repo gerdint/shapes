@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-resistance: \ .>
+resistance: \ →
 (
 @width:@connectionlw & @cap:CAP_SQUARE
 |
@@ -28,7 +28,7 @@ resistance: \ .>
 }
 )
 
-inductance: \ .>
+inductance: \ →
 (
 @width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
 |
@@ -41,7 +41,7 @@ inductance: \ .>
 }
 )
 
-capacitance: \ .>
+capacitance: \ →
 (
 @width:@connectionlw & @cap:CAP_SQUARE & @defaultunit:1%c
 |

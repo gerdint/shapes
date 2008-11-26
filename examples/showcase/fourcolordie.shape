@@ -32,7 +32,7 @@ die: ( newGroup3D
 
 world:
   [[range '1 '5].foldsl
-    \ pile e •st .>
+    \ pile e •st →
       pile &
       ( [shift 5*r*[random3D •st]]*[rotate3D dir:[random3D •st] angle:180°*[random1D •st]] [] die )
     null3D

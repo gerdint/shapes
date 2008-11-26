@@ -26,7 +26,7 @@ pt4: (1cm,~1cm,~1cm)
 
 theDash: @dash:[dashpattern 2mm 1mm]
 
-rottest: \ dir angle .>
+rottest: \ dir angle →
 { tf:[rotate3D dir:dir angle:angle]
   @eyez:10cm &
   @width:0.3bp

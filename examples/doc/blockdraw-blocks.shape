@@ -21,7 +21,7 @@
 ##unit dx = 6cm
 ##unit dy = 2cm
 
-helper: \ pos obj .>
+helper: \ pos obj →
   [[shift pos]
    obj & [[shift (0,~0.5dy)] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof obj]) to_top]]]
 

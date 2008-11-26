@@ -28,9 +28,9 @@
 /** In the first example, some values are simply put in a certain order.
  **/
 {
-  multi: \  x .> (>  x  x+1  x+2  <)
+  multi: \  x → (>  x  x+1  x+2  <)
 
-  user: \ a1 a2 a3 .>  100*a1 + 10*a2 + a3
+  user: \ a1 a2 a3 →  100*a1 + 10*a2 + a3
 
   /** Note the special syntax used to call a function with the values expanded:
    **/
@@ -41,9 +41,9 @@
  ** with an evaluated cut.
  **/
 {
-  multi: \  x .> (>  x  a3:x+1  a2:x+2  <)
+  multi: \  x → (>  x  a3:x+1  a2:x+2  <)
 
-  user: \ a1 a2 a3 a4 .>  1000*a4 + 100*a1 + 10*a2 + a3
+  user: \ a1 a2 a3 a4 →  1000*a4 + 100*a1 + 10*a2 + a3
 
   •stdout << user [...] <>[multi 5] [] 9<< `¢n´
 }
@@ -56,7 +56,7 @@
 {
   bunch: (>  6  a3:7  a2:8  <)
 
-  user: \ •dst a1 a2 a3 .>
+  user: \ •dst a1 a2 a3 →
     {
       •dst << 100*a1 + 10*a2 + a3 << `¢n´
     }
@@ -72,7 +72,7 @@
   /** By the way, parts that are not named cannot be accessed in a similar way.  However,
    ** note that we can always to this:
    **/
-  •stdout << `The first argument is:  a1 = ´ << ( \ a1 a2 a3 .> a1 ) [] <>bunch << `¢n´
+  •stdout << `The first argument is:  a1 = ´ << ( \ a1 a2 a3 → a1 ) [] <>bunch << `¢n´
   /** ... but note that this requires that we know the names of the named parts of <bunch>, for
    ** otherwise there will be an error when the function is applied.
    **/
@@ -85,14 +85,14 @@
  ** of view, so code that wish to be type-compilant should not use sinks.
  **/
 {
-  foo: \ <> args .> !
+  foo: \ <> args → !
   {
     •stdout << `a = ´ << args.a << `, b = ´ << args.b << `¢n´
   }
 
   [!foo b:2 a:1]
 
-  bar: \ a <> args .> !
+  bar: \ a <> args → !
   {
     •stdout << `a = ´ << a << `, b = ´ << args.b << `, c = ´ << args.c << `¢n´
   }
@@ -104,7 +104,7 @@
    ** confusion:
    **/
 
-  boo: \ <> args .> !
+  boo: \ <> args → !
   {
     •stdout << `args = ´ << args.args << `¢n´
   }

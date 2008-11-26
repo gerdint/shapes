@@ -32,7 +32,7 @@ obj:
   [facet (r,~5cm,~0.5w)--(r,5cm,~0.5w)--(r,5cm,0.5w)--(r,~5cm,0.5w)--cycle]
 
 [[range 20° 360° 20°].foldsl
- \ p e •st .>
+ \ p e •st →
   !{
     •st << [rotate3D (0,1,0) ~e] [] obj
     p

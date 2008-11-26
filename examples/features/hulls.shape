@@ -19,9 +19,9 @@
 ##needs circle
 ##needs arrowheads
 
-randPath: \ n .>
+randPath: \ n →
  [[range '1 n].foldl
-  \ pile e .>  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
+  \ pile e →  pile--( ^ )<(1cm*[random2D])>( 2mm * (1+[random1D]) ^ 180°*[random1D] )
   EMPTYPATH2D]
 
 {

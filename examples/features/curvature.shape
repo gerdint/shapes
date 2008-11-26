@@ -25,7 +25,7 @@ pth: (0cm,0cm)>(1cm,0cm)--(0cm,2cm)<(1cm,2cm)
 @width:0.3bp & @stroking:RGB_RED
 |
 [[range 0.1 0.9 0.2].foldl
- \ p e .>
+ \ p e →
  {
    sl: [pth e]
    [if [abs sl.ik] < 50cm

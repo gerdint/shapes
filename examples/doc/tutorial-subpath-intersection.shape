@@ -28,9 +28,9 @@ sl2: [pth 4cm]
 circMark: @width:0.5bp | [stroke [circle 4bp]]
 crossMark: @width:0.5bp | [stroke (~4bp,~4bp)--(4bp,4bp) & (~4bp,4bp)--(4bp,~4bp)]
 
-subpath_intersection: \ sl1 sl2 pth .> (sl1+[intersection sl1--sl2 pth].length)
+subpath_intersection: \ sl1 sl2 pth → (sl1+[intersection sl1--sl2 pth].length)
 
-helper: \ pth2 .>
+helper: \ pth2 →
 {
 	( @width:0.5bp & @stroking:RGB_BLUE & @dash:[dashpattern 2bp 1bp] | [stroke pth2] )
 	&

@@ -23,7 +23,7 @@ facetProperties:
   & @facetresolution:1cm
 
 
-leaf: \ a .>
+leaf: \ a →
 (
   facetProperties
   |
@@ -33,7 +33,7 @@ leaf: \ a .>
 •zbuf: newZBuf
 
 [[range 0° 359° 120°].foldsl
- \ p e •st .> { •st << [leaf e]  p }
+ \ p e •st → { •st << [leaf e]  p }
  void
  •zbuf]
 

@@ -24,7 +24,7 @@
 F: [longblock (TeX `$F$´)]
 S: [sumpicture]
 
-helper: \ pos pt blk .>
+helper: \ pos pt blk →
 [[shift pos]
  blk & (@width:4bp & @stroking:RGB_RED | [spot pt])
  &

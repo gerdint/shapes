@@ -34,11 +34,11 @@ dst2: HotString <<
 dst1 << `1:´
 dst2 << `2:´
 
-say_y: \ dstStr .> { dstStr << `y´ }
+say_y: \ dstStr → { dstStr << `y´ }
 
 dynamic @dfoo I stderr
 
-foo: \ .> { @dfoo << ` x ´   [say_y (@dfoo <<)] }
+foo: \ → { @dfoo << ` x ´   [say_y (@dfoo <<)] }
 
 @dfoo: (dst1 <<)
 | [foo]
@@ -47,7 +47,7 @@ foo: \ .> { @dfoo << ` x ´   [say_y (@dfoo <<)] }
 @dfoo: (dst1 <<)
 | [foo]
 
-endline: \ os .> { os << `(endl)¢n´ }
+endline: \ os → { os << `(endl)¢n´ }
 
 [endline (dst1 <<)]
 [endline (dst2 <<)]
@@ -59,6 +59,6 @@ stderr << dst1 << dst2
 /* Just to prevent the empty-output-error:
  */
 
-dummyStroke: \ dst2D .> { dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
+dummyStroke: \ dst2D → { dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 
 [dummyStroke @<<]

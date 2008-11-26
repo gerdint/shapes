@@ -27,7 +27,7 @@ p1: (1cm,2cm)
 dynamic @p0 identity p0
 dynamic @p1 identity p1
 
-helper: \ pth .>
+helper: \ pth →
 (
 @text_font:FONT_COURIER
 |
@@ -37,7 +37,7 @@ helper: \ pth .>
  & [[shift @p0+(1cm,~0.5cm)] [shiftoffwlm (newText << [sourceof pth]) to_bot]])
 )
 
-dynShift: \ pos .> ( @p0:[[shift pos] p0] & @p1:[[shift pos] p1] )
+dynShift: \ pos → ( @p0:[[shift pos] p0] & @p1:[[shift pos] p1] )
 
 [dynShift (1dx,0dy)] | { •page << [helper [locate [hhconnect •page @p0 @p1 0 ~5mm]]] }
 [dynShift (2dx,0dy)] | { •page << [helper [locate [hhconnect •page @p0 @p1 0.5 0mm]]] }

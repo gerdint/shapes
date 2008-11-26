@@ -21,11 +21,11 @@
 pathStyle: @width: 1bp
 controlStyle: @width: 0.3bp & @dash:[dashpattern 2mm 2mm] & @stroking:[gray 0.5]
 onPathMark: @nonstroking:RGB_RED | [fill [circle 1mm]]
-controlHead: \ p .> (> cut:0bp
+controlHead: \ p → (> cut:0bp
                        picture: @width:1bp & @stroking:RGB_RED & @dash:[dashpattern] | ([shift p.begin.p]*[rotate [angle p.begin.T]])[][stroke (~1.5mm,~1.5mm)--(1.5mm,1.5mm) & (~1.5mm,1.5mm)--(1.5mm,~1.5mm)]
                     <)
 
-twoHandlesHelper: \ p0 p1 p2 p3 .>
+twoHandlesHelper: \ p0 p1 p2 p3 →
 (
 	[[shift p0] onPathMark]
 	&
@@ -38,7 +38,7 @@ twoHandlesHelper: \ p0 p1 p2 p3 .>
 	( pathStyle | [stroke p0>p1--p2<p3] )
 )
 
-frontHandlesHelper: \ p0 p1 p3 .>
+frontHandlesHelper: \ p0 p1 p3 →
 (
 	[[shift p0] onPathMark]
 	&
@@ -49,7 +49,7 @@ frontHandlesHelper: \ p0 p1 p3 .>
 	( pathStyle | [stroke p0>p1--p3] )
 )
 
-rearHandlesHelper: \ p0 p2 p3 .>
+rearHandlesHelper: \ p0 p2 p3 →
 (
 	[[shift p0] onPathMark]
 	&
@@ -60,7 +60,7 @@ rearHandlesHelper: \ p0 p2 p3 .>
 	( pathStyle | [stroke p0--p2<p3] )
 )
 
-noHandlesHelper: \ p0 p3 .>
+noHandlesHelper: \ p0 p3 →
 (
 	[[shift p0] onPathMark]
 	&
@@ -69,17 +69,17 @@ noHandlesHelper: \ p0 p3 .>
 	( pathStyle | [stroke p0--p3] )
 )
 
-twoHandles: \ s1 s2 .>
+twoHandles: \ s1 s2 →
 {
 	p0: (0cm,0cm)
 	p3: (6cm,1cm)
 	p1: p0+s1*1.5cm*[dir 60°]
 	p2: p3+s2*3cm*[dir ~165°]
-	[if s1 == 0
-			[if s2 == 0
+	[if s1 = 0
+			[if s2 = 0
 				  [noHandlesHelper p0 p3]
 				  [rearHandlesHelper p0 p2 p3]]
-			[if s2 == 0
+			[if s2 = 0
 				  [frontHandlesHelper p0 p1 p3]
 				  [twoHandlesHelper p0 p1 p2 p3]]]
 }

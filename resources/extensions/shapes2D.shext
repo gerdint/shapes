@@ -16,11 +16,11 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-polyDisc: \ radius sides .>
+polyDisc: \ radius sides →
 {
   deltaAngle: 360° / sides
   r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
   [[range '0 sides-'1].foldl
-   \ pile e .>  pile--( r * [dir deltaAngle * e] )
+   \ pile e →  pile--( r * [dir deltaAngle * e] )
    emptypath]--cycle
 }

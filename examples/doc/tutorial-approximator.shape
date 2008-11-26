@@ -25,7 +25,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^20°)--(1cm,2cm)--(^)<(2.5cm,2cm)>(^)--(2cm^
 circMark: @width:0.5bp | [stroke [circle 4bp]]
 crossMark: @width:0.5bp | [stroke (~4bp,~4bp)--(4bp,4bp) & (~4bp,4bp)--(4bp,~4bp)]
 
-helper: \ pth .>
+helper: \ pth →
 {
   [[shift a] crossMark]
 	&

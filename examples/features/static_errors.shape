@@ -19,7 +19,7 @@
 •stdout << b << `¢n´
 •stdout << c << `¢n´
 
-foo: \ a .>
+foo: \ a →
 {
   •stdout << a
 }

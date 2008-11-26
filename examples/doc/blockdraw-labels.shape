@@ -23,7 +23,7 @@
 
 z: (0cm,0cm)
 
-helper: \ pos lbl .>
+helper: \ pos lbl →
 [[shift pos]
  ( @width:2bp & @stroking:RGB_RED | [spot z] )
  & lbl

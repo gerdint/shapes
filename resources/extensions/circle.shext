@@ -20,30 +20,30 @@ circle:
 {
    p1cm: @defaultunit:1%c
 	 | (^)<(1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(~1cm,0cm)>(^)--(^)<(0cm,~1cm)>(^)--cycle
-   \ r .> [[scale r / 1cm] p1cm]
+   \ r → [[scale r / 1cm] p1cm]
 }
 
-ccw_arc: \ z0 zStart zEnd r .>
+ccw_arc: \ z0 zStart zEnd r →
 {
   dStart: r * [normalized zStart - z0]
   dEnd: r * [normalized zEnd - z0]
   aStart: [angle dStart]
   aEnd: { tmp: [angle dEnd]
-          [if tmp >= aStart tmp tmp+360°] }
+          [if tmp ≥ aStart tmp tmp+360°] }
   @defaultunit:1%C | [shift z0] [] ( dStart>(^aStart+90°)--(^)<(r*[dir aStart+0.25*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.5*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.75*(aEnd-aStart)])>(^)--(^aEnd-90°)<dEnd )
 }
 
-cw_arc: \ z0 zStart zEnd r .>
+cw_arc: \ z0 zStart zEnd r →
 {
   dStart: r * [normalized zStart - z0]
   dEnd: r * [normalized zEnd - z0]
   aStart: [angle dStart]
   aEnd: { tmp: [angle dEnd]
-          [if tmp <= aStart tmp tmp-360°] }
+          [if tmp ≤ aStart tmp tmp-360°] }
   @defaultunit:1%C | [shift z0] [] ( dStart>(^aStart-90°)--(^)<(r*[dir aStart+0.25*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.5*(aEnd-aStart)])>(^)--(^)<(r*[dir aStart+0.75*(aEnd-aStart)])>(^)--(^aEnd+90°)<dEnd )
 }
 
-generic_arc3D: \ arc2D z0 zStart zEnd r .>
+generic_arc3D: \ arc2D z0 zStart zEnd r →
 {
 	dStart: [normalized zStart - z0]
 	dEnd: [normalized zEnd - z0]

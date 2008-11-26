@@ -24,7 +24,7 @@ sd2: [Schur_decomp tf rank:'2]
 /** Verify decompositions; if two transforms are equal, then combining one with
  ** the inverse of the other shall be the identity.
  **/
-check: \ tf decomp .>
+check: \ tf decomp →
 {
 	/** The decomposition is verified by reconstructing the original transform, and comparing
    ** with tf by composing with the inverse of tf, and comparing that result with the identity.

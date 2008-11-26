@@ -24,7 +24,7 @@ dc: (2.5cm,0)
 
 centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
 
-helper: \ pos dc fun lbl .>
+helper: \ pos dc fun lbl →
 [[shift pos]
 {
   j1: sjunction

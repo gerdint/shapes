@@ -126,15 +126,15 @@ s2: [locate s0+1]
 	center: (13cm,0)
   circ: [shift center] [] [circle 2cm]
 	•page << pathStyle | [stroke circ]
-	      << [[range '0 '3].foldl \ p e .> ( p & [[shift [circ e*1].p] onPathMark] ) null]
-	upAngle: \ d .>
+	      << [[range '0 '3].foldl \ p e → ( p & [[shift [circ e*1].p] onPathMark] ) null]
+	upAngle: \ d →
   {
 	  a: [angle d]
-    [if ~90° <= a and a <= 90°
+    [if ~90° ≤ a and a ≤ 90°
 		  a
 			a + 180°]
   }
-	helper: \ sl .>
+	helper: \ sl →
     [if (not sl.looped)
       {
 			  pth: sl.p--(sl.p+sl.T*sl.v)

@@ -2,7 +2,7 @@
 ##preamble \usepackage{fancybox}
 ##preamble \usepackage{mypackage}
 
-•page << (TeX `
+•page ≪ (TeX `
 \fbox{\begin{Beqnarray*}
 &\begin{aligned}
   \firstunknown &= 1 \\

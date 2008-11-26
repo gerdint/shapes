@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-leaf: \ a .>
+leaf: \ a →
 (
   @nonstroking:[gray a / 360°]
   |
@@ -27,7 +27,7 @@ leaf: \ a .>
 
 •zbuf <<
 [[range 0° 359° 120°].foldl
- \ p e .> (p & [leaf e])
+ \ p e → (p & [leaf e])
  null3D]
 
 •zbuf << @nonstroking:[gray 0.3] | [fill (3cm,~2cm,0cm)--(3cm,2cm,0cm)--(7cm,0cm,2cm)--cycle]

@@ -17,7 +17,7 @@
  **/
 
 /**
-fibsFrom: \ n1 n2 .>
+fibsFrom: \ n1 n2 →
 { 
   stderr << `eval:´ << n1 << `, ´ << n2 << `¢n´
   [cons n2 [fibsFrom n2 n1+n2]]
@@ -26,9 +26,9 @@ fibsFrom: \ n1 n2 .>
 fib: [fibsFrom 0 1]
 **/
 
-streamadd: \ s1 s2 .> [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
+streamadd: \ s1 s2 → [cons s1.car+s2.car [streamadd s1.cdr s2.cdr]]
 
-nth: \ lst n .> [if n == 0 lst.car [nth lst.cdr n-1]]
+nth: \ lst n → [if n = 0 lst.car [nth lst.cdr n-1]]
 
 
 fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
@@ -44,7 +44,7 @@ fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
 
 randoms:
 {
-  helper: \ •state .> [cons [random1D •state] [helper •state]]
+  helper: \ •state → [cons [random1D •state] [helper •state]]
 
   |** Remember that the state must be named like this; it cannot be generated as part of the expression below.
   •rand: [newRandom (•time)]

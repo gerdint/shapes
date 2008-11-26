@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-cylinderWall: \ radius height sides .>
+cylinderWall: \ radius height sides →
 {
   deltaAngle: 360° / sides
   r: radius * ( 2 / ( 1 + [cos deltaAngle / 2] ) )
@@ -25,12 +25,12 @@ cylinderWall: \ radius height sides .>
 		  [facetnormal (r*[cos deltaAngle],r*[sin deltaAngle],0m) ([cos deltaAngle],[sin deltaAngle],0)] ]
 
   [[range '0 sides-'1].foldl
-   \ p e .>
+   \ p e →
       p & ( [rotate3D (0,0,1) e*deltaAngle] [] oneSide )
     null3D]
 }
 
-block: \ x1 y1 z1 x2 y2 z2 .>
+block: \ x1 y1 z1 x2 y2 z2 →
   (
     [facet (x1,y1,z1)--(x2,y1,z1)--(x2,y2,z1)--(x1,y2,z1)--cycle]
     &

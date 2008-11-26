@@ -22,7 +22,7 @@
 pth: (0cm,0cm)--(2cm,3cm)--(3cm,2cm)
 
 @<< [stroke pth]
-[[range '0 '10].foldl \ p e .> { @<< [stroke [[shift [point pth [arctime pth e*0.1*[abs pth]]]] [circle 2mm]]]   p } VOID]
+[[range '0 '10].foldl \ p e → { @<< [stroke [[shift [point pth [arctime pth e*0.1*[abs pth]]]] [circle 2mm]]]   p } VOID]
 **/
 
 @dash:[dashpattern 2.5cm 3mm 8mm 1cm]
