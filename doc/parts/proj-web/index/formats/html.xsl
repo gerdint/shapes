@@ -21,8 +21,7 @@
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="xml" indent="no" />
 
-<xsl:include href="../../formats/html.xsl" />
-<xsl:include href="../../syntax/formats/syntax-html.xsl" />
+<xsl:include href="../../../formats/html.xsl" />
 
 <xsl:template match="/book">
   <html>

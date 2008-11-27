@@ -17,8 +17,6 @@
 <!--                                                                        -->
 <!-- Copyright 2008 Henrik Tidefelt                                         -->
 
-<!--#include virtual="../formats/doctype-book.xml" meta="yes" -->
-
 <book>
 	<title>The <str-Shapes /> language</title>
 	<sub-title>project web</sub-title>
