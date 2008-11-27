@@ -16,9 +16,8 @@
 # Copyright 2008 Gustaf Hendeby
 
 docdir=../..
-partsdir=${docdir}/parts
-extensionsdir=${partsdir}/extensions
-formatsdir=${partsdir}/formats
+partsdir=${docdir}/parts/proj-web
+formatsdir=${docdir}/parts/formats
 stylesdir=${docdir}/styles
 toolsdir=${docdir}/tools
 
@@ -53,21 +52,19 @@ html_FILES = index.html
 
 nobase_dist_html_DATA = ${html_FILES} logo.jpg
 
-nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
-                   $(addprefix ${formatsdir}/, \
-                      examplecode-html.xsl html.xsl language-elements-html.xsl \
-                      man.xsl plain-book-html.xsl) \
+# The common XSL files for transform to HTML is taken care of by ../html/Makefile.am .
+nobase_dist_noinst_DATA = \
 	                 $(foreach part,\
                      $(addprefix ${partsdir}/, \
-	                     proj-web/index),\
+	                     index),\
                      $(part)/formats/html.xsl $(wildcard $(part)/formats/*-html.xsl))
 
-index.xml : ${partsdir}/proj-web/index/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/proj-web.ssidep
-	if ${SSI} --in $< ${SSIFLAGS} > index.Txml; \
+%.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/%.ssidep
+	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
 	then \
-		mv index.Txml $@; \
+		mv $*.Txml $@; \
 	else \
-		${RM} index.Txml; \
+		${RM} $*.Txml; \
 		exit 1; \
 	fi
 
@@ -85,11 +82,7 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 		exit 1; \
 	fi
 
-%.css : ${stylesdir}/html/%.css
-	test -d  $(@D) || ${mkdir_p} $(@D)
-	${INSTALL_DATA} $< $@
-
-%.jpg : ${partsdir}/proj-web/index/%.jpg
+%.jpg : ${partsdir}/index/%.jpg
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
@@ -117,19 +110,19 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
-%.html : %.xml ${partsdir}/proj-web/index/formats/html.xsl ${formatsdir}/html.xsl
+%.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< $$( test -f ${partsdir}/proj-web/index/formats/html.xsl || \
-	  ${ECHO} '${srcdir}'/ )${partsdir}/proj-web/index/formats/html.xsl || exit 1 ) | \
-	  ${POSTPROC_HTML} > $@
+	( $(SAXON) $< $$( test -f ${partsdir}/$*/formats/html.xsl || \
+	  ${ECHO} '${srcdir}'/ )${partsdir}/$*/formats/html.xsl || exit 1 ) | \
+	  ${POSTPROC_HTML} > $*.html
 	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
 	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
-	  ${DEPDIR}/proj-web.Thtmldep ; \
+	  ${DEPDIR}/$*.Thtmldep ; \
 	then \
-		${ECHO} "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/proj-web.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/proj-web.htmldep ; \
-		${RM} ${DEPDIR}/proj-web.Thtmldep ; \
+		${ECHO} "nobase_dist_html_DATA += $$( tr ' ' '\n' < ${DEPDIR}/$*.Thtmldep | sort -u | tr '\n' ' ' )" > ${DEPDIR}/$*.htmldep ; \
+		${RM} ${DEPDIR}/$*.Thtmldep ; \
 	else \
-		${RM} ${DEPDIR}/proj-web.Thtmldep ; \
+		${RM} ${DEPDIR}/$*.Thtmldep ; \
 		exit 1; \
 	fi
 

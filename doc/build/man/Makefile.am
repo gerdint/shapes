@@ -45,8 +45,13 @@ dist_man1_MANS = shapes.1
 shapes.1 : man.1
 	cp man.1 shapes.1
 
-nobase_dist_noinst_DATA = ${partsdir}/man/index.sxml ${formatsdir}/html.xsl \
-                   ${formatsdir}/man.xsl ${partsdir}/man/formats/man.xsl \
+nobase_dist_noinst_DATA = \
+                   ${formatsdir}/man.xsl $(wildcard ${formatsdir}/*-man.xsl) \
+	                 $(foreach part,\
+                     $(addprefix ${partsdir}/, \
+	                     man),\
+                     $(part)/formats/man.xsl $(wildcard $(part)/formats/*-man.xsl)) \
+                   ${partsdir}/man/index.sxml \
                    ${partsdir}/algo-tol/tolerances.sxml
 
 %.xml : ${partsdir}/%/index.sxml ${DEPDIR}/%.ssidep ${formatsdir}/html.xsl
