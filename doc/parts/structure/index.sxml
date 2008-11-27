@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+
+<book>
+	<title>Program structure</title>
+	<description>
+		<p>Defines the output of a shapes program, and gives general recommendations on organizing source code.</p>
+	</description>
+	<meta-selflink><part-href name="structure" /></meta-selflink>
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<top>
+		<p>This part should give an idea of the over-all look of a <str-Shapes /> program.  Only the first section below is defining the language; the subsequent sections are just advisory.</p>
+	</top>
+
+	<!--#include virtual="chap-result.sxml" -->
+	<!--#include virtual="chap-guidelines.sxml" -->
+</book>

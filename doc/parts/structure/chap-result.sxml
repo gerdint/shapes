@@ -1,0 +1,32 @@
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+<section id="chap-result">
+<title>Program result</title>
+<body>
+	<p>The only necessary aspect to discuss regarding the global structure of a <str-Shapes /> program, is how the graphical output is defined.  There are three means for defining the output of a <str-Shapes /> program:
+		<ul>
+			<li>Through the value of the program as an expression.  If the program results in a non-<named-type name="Void" /> value, it must be a <named-type name="Drawable" />, and not a null-picture.  The result will be a single-page document.</li>
+			<li>Through a non-empty final value of <state name="page" />.  For single-page documents.  This is equivalent to ending the program with the expression <inline>(<state name="page" />)</inline>.</li>
+			<li>Through a non-empty final value of <state name="catalog" />.  For multi-page documents.</li>
+		</ul>
+	</p>
+	<p>At least one of the alternatives must be used by a program.  It is, however, not necessary that exactly on is used; some combinations are OK due to precedence rules.</p>
+	<p>It is illegal to both add pages to <state name="catalog" /> and let the program evaluate to a value.  The other combinations are allowed by giving precedence to <state name="catalog" /> and program value over <state name="page" />.  Hence, <state name="page" /> is only used when it is the only alternative in use.</p>
+	<p>The rationale behind the precedence rule is that <state name="page" /> may be used to define pages of multi-page documents, and then the rule relieves us from having to clear <state name="page" /> at the end of the program.  Similarly, if one finds that the final content of <state name="page" /> needs to be transformed for some reason, one may apply the transform to <inline>(<state name="page" />)</inline> at the end of the program, without having to clear <state name="page" />.</p>
+</body>
+</section><!-- end of chap-result -->

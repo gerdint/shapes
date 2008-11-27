@@ -1,0 +1,15 @@
+##needs blockdraw_wfo
+
+##classoption 10pt
+##preamble \usepackage{bm}
+
+  @longblockrx:10mm
+& @connectionlw:0.3bp
+|
+{
+
+a: [putblockOrigin •page [longblock (TeX `$\bm{a}$´)]]
+b: [putblockFarRight •page [longblock (TeX `$\bm{b}$´)] a]
+ignore [] [connect •page a b]
+
+}

@@ -116,6 +116,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template name="part-to-href">
 	<xsl:param name="name" />
 	<xsl:value-of select="/book/base/@href" /><xsl:choose>
+		<xsl:when test="$name='structure'">structure.html</xsl:when>
 		<xsl:when test="$name='syntax'">syntax.html</xsl:when>
 		<xsl:when test="$name='bindings'">bindings.html</xsl:when>
 		<xsl:when test="$name='states'">states.html</xsl:when>

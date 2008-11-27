@@ -1,0 +1,115 @@
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+<section id="chap-guidelines">
+<title>Coding guidelines</title>
+<top>
+	<p>This section gives general recommendations on how to organize <str-Shapes /> source code.</p>
+</top>
+<section>
+	<title>One-liners</title>
+	<body>
+		<p>The shortest valid <str-Shapes /> program I can think of, is
+<pre>
+<![CDATA[[spot (0m,0m)]]]>
+</pre>
+It produces a circular mark.
+		</p>
+		<p>This program has the typical structure of a one-liner; it consists just of a pure expression.</p>
+		<p>A nice application of this is to produce a small label typeset using <str-LaTeX />, as shown by the example below.</p>
+<example-with-output title="One-liner" internal-id="structure/oneliner">
+<image pdf="doc/structure-oneliner_3.pdf" jpg="doc/structure-oneliner_y_small.jpg" />
+<source file="doc/structure-oneliner.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/structure-oneliner.shape" -->]]>
+</source>
+<caption>
+	<p>A typical <str-Shapes /> program.</p>
+</caption>
+</example-with-output>
+		<p>Note that one-liners are often given to the compiler through the <filename>stdin</filename> stream.  Search for <em>stdin</em> on <a part="man" /> for more information.</p>
+	</body>
+</section>
+<section>
+	<title>A typical <str-Shapes /> program</title>
+	<body>
+		<p>Let us discuss the big picture of an example program.</p>
+		<p>First, a typical program will list a couple of standard extensions, with the <include>##needs</include> preprocessor directive.</p>
+<pre>
+<![CDATA[##needs blockdraw_wfo]]>
+</pre>
+    <p>If one thinks the font size of <str-TeX /> labels is too small, this could be a good thing to change next.  One may also want to add some <str-LaTeX /> packages…</p>
+<pre>
+<![CDATA[##classoption 10pt
+##preamble \usepackage{bm}]]>
+</pre>
+    <p>OK, so there are a couple of preprocessor directives that fit here, but let's go on and see what happens next in our typical program.  Say we don't like some of the default settings of dynamic variables.  Then we encapsulate the rest of the program with a couple of dynamic bindings in scope.</p>
+<pre>
+<![CDATA[  @longblockrx:10mm
+& @connectionlw:0.3bp
+|
+{
+/** rest of program goes here, typically without indentation. **/
+}]]>
+</pre>
+    <p>Finally, the code that really produces something is inserted where the dynamic bindings are in scope.  As a very simple example, one might insert code like this:</p>
+<pre>
+<![CDATA[a: [putblockOrigin •page [longblock (TeX `$\bm{a}$´)]]
+b: [putblockFarRight •page [longblock (TeX `$\bm{b}$´)] a]
+ignore [] [connect •page a b]]]>
+</pre>
+    <p>Unless something is out of sync, the whole program is included in the example below.</p>
+<example-with-output title="Typical program" internal-id="structure/typical">
+<image pdf="doc/structure-typical_3.pdf" jpg="doc/structure-typical_y_small.jpg" />
+<source file="doc/structure-typical.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/structure-typical.shape" -->]]>
+</source>
+<caption>
+	<p>A typical <str-Shapes /> program.</p>
+</caption>
+</example-with-output>
+	</body>
+</section>
+<section>
+	<title>A text-producing <str-Shapes /> program</title>
+	<body>
+		<p>Sometimes, one may just be interested in playing around with programming concepts and produce text output to verify the operation.  For instance, say that we would like to show somebody how a factorial function can be defined;
+<pre>
+<![CDATA[factorial: \ n → [if ( n = '0 ) '1 ( n * [factorial n-'1] )]
+•stdout << [factorial '5] << `¢n´]]>
+</pre>
+This may look like a valid program, but even if the main purpose of a <str-Shapes /> program is to produce text output, say, by writing to <state name="stdout" />, it <em>must</em> also define some graphical output.  The reason is that <str-Shapes /> is primarily designed for graphics tasks, and it should generally be considered an indication of failure if no graphics is produced.</p>
+		<p>To solve the problem, end the program with any simple expression that evaluates to a <named-type name="Drawable" />, for instance
+<pre>
+<![CDATA[[spot (0m,0m)] /** Avoid empty-output error. **/]]>
+</pre>
+The comment makes it clear that the expression has nothing to do with the main purpose of the program.  The complete program is given in the example below.
+</p>
+<example-with-output title="Text output" internal-id="structure/text">
+<image pdf="doc/structure-text_3.pdf" jpg="doc/structure-text_y_small.jpg" />
+<source file="doc/structure-text.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/structure-text.shape" -->]]>
+</source>
+<stdout>
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/structure-text.stdout" -->]]>
+</stdout>
+<caption>
+	<p>A text-producing <str-Shapes /> program must produce graphics as well.</p>
+</caption>
+</example-with-output>
+	</body>
+</section>
+</section><!-- end of chap-guidelines -->
