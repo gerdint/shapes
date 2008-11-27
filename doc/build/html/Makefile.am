@@ -64,11 +64,12 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                    $(addprefix ${formatsdir}/, \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
-                   $(addprefix ${partsdir}/, \
-                      syntax/formats/syntax-html.xsl \
-                      $(addsuffix /formats/html.xsl, \
-                         algo-tol bindings dynamic man states state-types \
-                         syntax tutorial types index)) $(SHEXT_FILES)
+	                 $(foreach part,\
+                     $(addprefix ${partsdir}/, \
+	                     algo-tol bindings dynamic man states state-types \
+                         syntax tutorial types index),\
+                     $(part)/formats/html.xsl $(wildcard $(part)/formats/*-html.xsl)) \
+                   $(SHEXT_FILES)
 
 # Temporary solution for putting the SF logo on each page:
 ADD-SF: $(html_FILES)

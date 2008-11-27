@@ -57,9 +57,10 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                    $(addprefix ${formatsdir}/, \
                       examplecode-html.xsl html.xsl language-elements-html.xsl \
                       man.xsl plain-book-html.xsl) \
-                   $(addprefix ${partsdir}/, \
-                      $(addsuffix /formats/html.xsl, \
-                         proj-web)) $(SHEXT_FILES)
+	                 $(foreach part,\
+                     $(addprefix ${partsdir}/, \
+	                     proj-web),\
+                     $(part)/formats/html.xsl $(wildcard $(part)/formats/*-html.xsl))
 
 index.xml : ${partsdir}/proj-web/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/proj-web.ssidep
 	if ${SSI} --in $< ${SSIFLAGS} > index.Txml; \
