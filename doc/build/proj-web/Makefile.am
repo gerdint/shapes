@@ -59,10 +59,10 @@ nobase_dist_noinst_DATA = ${extensionsdir}/formats/html.xsl \
                       man.xsl plain-book-html.xsl) \
 	                 $(foreach part,\
                      $(addprefix ${partsdir}/, \
-	                     proj-web),\
+	                     proj-web/index),\
                      $(part)/formats/html.xsl $(wildcard $(part)/formats/*-html.xsl))
 
-index.xml : ${partsdir}/proj-web/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/proj-web.ssidep
+index.xml : ${partsdir}/proj-web/index/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/proj-web.ssidep
 	if ${SSI} --in $< ${SSIFLAGS} > index.Txml; \
 	then \
 		mv index.Txml $@; \
@@ -89,7 +89,7 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
-%.jpg : ${partsdir}/proj-web/%.jpg
+%.jpg : ${partsdir}/proj-web/index/%.jpg
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
@@ -117,10 +117,10 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 %_x_small.jpg: %.pdf
 	-convert -density 50 -resize 50x $< $@
 
-%.html : %.xml ${partsdir}/proj-web/formats/html.xsl ${formatsdir}/html.xsl
+%.html : %.xml ${partsdir}/proj-web/index/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
-	( $(SAXON) $< $$( test -f ${partsdir}/proj-web/formats/html.xsl || \
-	  ${ECHO} '${srcdir}'/ )${partsdir}/proj-web/formats/html.xsl || exit 1 ) | \
+	( $(SAXON) $< $$( test -f ${partsdir}/proj-web/index/formats/html.xsl || \
+	  ${ECHO} '${srcdir}'/ )${partsdir}/proj-web/index/formats/html.xsl || exit 1 ) | \
 	  ${POSTPROC_HTML} > $@
 	if $(SAXON) $@ $$( test -f ${toolsdir}/xhtml-deps/filter.xsl || \
 	  ${ECHO} '${srcdir}'/)${toolsdir}/xhtml-deps/filter.xsl  > \
