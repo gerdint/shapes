@@ -35,6 +35,7 @@ dist_noinst_SCRIPTS = SHAPES-VERSION-GEN
 
 dist-hook : shapes${EXEEXT} SHAPES-VERSION-FILE
 	@${srcdir}/SHAPES-VERSION-GEN ${top_srcdir} && cp SHAPES-VERSION-FILE ${distdir}/version
+	cd ${top_srcdir} && cp @FLEXLEXER_HEADER@ ${distdir}
 
 BUILT_SOURCES = shapesparser.h
 

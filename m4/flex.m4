@@ -89,4 +89,10 @@ int main (void)
       AC_MSG_RESULT(no)
     ],)
   fi
+  cat <<EOF > lex_header.cc
+#include "FlexLexer.h"
+EOF
+  FLEXLEXER_HEADER=`$CXX $CPPFLAGS -M -MP lex_header.cc | sed -n -e 's/\(.*FlexLexer.h\):.*/\\1/p'`
+  AC_SUBST(FLEXLEXER_HEADER, [$FLEXLEXER_HEADER])
+  rm lex_header.cc
 ])
