@@ -28,6 +28,17 @@ namespace Shapes
 	namespace Ast
 	{
 
+		class SourceLocationMark : public Node
+		{
+		public:
+			SourceLocationMark( const Ast::SourceLocation & loc );
+			virtual ~SourceLocationMark( );
+
+			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
+			virtual void eval( Kernel::EvalState * evalState ) const;
+		};
+
+
 		class CodeBracket : public Expression
 		{
 			std::list< Ast::Node * > * nodes_;

@@ -148,6 +148,7 @@ void shapeserror( char * msg )
 %token <tokenID> T_tex T_dynamic T_continuation T_continue T_esc_continuation T_esc_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
 %token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight T_absLeft T_absRight
+%token <tokenID> T_srcLoc
 
 %token <intVal> T_int
 %token <floatVal> T_float T_length
@@ -1235,6 +1236,10 @@ GroupElem
 {
 	shapeserror( "ProtectedMemberInsertionSequence not implemented" );
 	//	$$ = new Ast::ProtectedMemberInsertionSequence( @$, @2, $3, $6, $8 );
+}
+| T_srcLoc
+{
+	$$ = new Ast::SourceLocationMark( @$ );
 }
 ;
 

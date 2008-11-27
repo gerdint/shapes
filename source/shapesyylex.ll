@@ -103,8 +103,8 @@ Escape "¢"|"¤"
 ^"##no-utf8"[\n] { Kernel::theTeXLabelManager.setutf8( shapeslloc, false ); }
 ^"##seed"[ \t]+ { BEGIN( RandSeed ); }
 ^"##unit"[ \t]+ { BEGIN( NewUnitName ); }
-^"##include"[ \t]+ { BEGIN( Incl ); }
-^"##needs"[ \t]+ { BEGIN( Needs ); }
+^"##include"[ \t]+ { BEGIN( Incl ); return T_srcLoc; }
+^"##needs"[ \t]+ { BEGIN( Needs ); return T_srcLoc; }
 ^"##echo"[ \t] { BEGIN( Echo ); }
 ^"##author"[ \t] { BEGIN( Author ); }
 ^"##" {

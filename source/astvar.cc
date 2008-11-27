@@ -29,9 +29,44 @@ using namespace Shapes;
 using namespace std;
 
 
+Ast::SourceLocationMark::SourceLocationMark( const Ast::SourceLocation & loc )
+	: Ast::Node( loc )
+{ }
+
+Ast::SourceLocationMark::~SourceLocationMark( )
+{ }
+
+void
+Ast::SourceLocationMark::analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env )
+{ }
+
+void
+Ast::SourceLocationMark::eval( Kernel::EvalState * evalState ) const
+{
+	throw Exceptions::InternalError( "SourceLocationMark::eval invoked." );
+}
+
+namespace Shapes
+{
+	namespace Helpers
+	{
+		class IsSourceLocationMark
+		{
+		public:
+			bool operator () ( const Ast::Node * n ) const
+			{
+				return dynamic_cast< const Ast::SourceLocationMark * >( n ) != 0;
+			}
+		};
+	}
+}
+
 Ast::CodeBracket::CodeBracket( const Ast::SourceLocation & loc, std::list< Ast::Node * > * nodes )
 	: Ast::Expression( loc ), nodes_( nodes ), argumentOrder_( new typeof *argumentOrder_ ), dynamicMap_( 0 ), stateOrder_( new typeof *stateOrder_ )
 {
+	/* First, we remove any source location marks -- we don't need them anymore. */
+	nodes_->remove_if( Helpers::IsSourceLocationMark( ) );
+
 	for( std::list< Ast::Node * >::const_iterator i = nodes_->begin( );
 			 i != nodes_->end( );
 			 ++i )
