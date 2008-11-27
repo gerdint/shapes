@@ -9,7 +9,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="/html/body//a[@href]">
-	<xsl:if test="not(starts-with(@href,'http://') or starts-with(@href,'mailto:'))">
+	<xsl:if test="not(starts-with(@href,'http://') or starts-with(@href,'https://') or starts-with(@href,'mailto:'))">
 		<xsl:value-of select="/html/head/base/@href" />
 		<xsl:choose>
 			<xsl:when test="contains(@href,'#')">
