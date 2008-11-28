@@ -25,19 +25,19 @@
 
 # Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
 %_70%.jpg: %.pdf
-	-convert -density 100 -resize $(shell ${ECHO} $@ | ${SED} -e 's!.*_\([^._]*\).jpg!\1!') $< $@
+	-convert -antialias -density 100 -resize $(shell ${ECHO} $@ | ${SED} -e 's!.*_\([^._]*\).jpg!\1!') $< $@
 
 %_y_big.jpg: %.pdf
-	-convert -density `echo 150 \* 72 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\2!') | bc` -resize x150 $< $@
+	-convert -antialias -density `echo 150 \* 150 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\2!') | bc` -resize x150 $< $@
 
 %_y_small.jpg: %.pdf
-	-convert -density `echo 50 \* 72 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\2!') | bc` -resize x50 $< $@
+	-convert -antialias -density `echo 50 \* 150 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\2!') | bc` -resize x50 $< $@
 
 %_x_big.jpg: %.pdf
-	-convert -density `echo 150 \* 72 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\1!') | bc` -resize 150x $< $@
+	-convert -antialias -density `echo 150 \* 150 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\1!') | bc` -resize 150x $< $@
 
 %_x_small.jpg: %.pdf
-	-convert -density `echo 50 \* 72 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\1!') | bc` -resize 50x $< $@
+	-convert -antialias -density `echo 50 \* 150 / $$(identify $< | sed -e 's!.* PDF \([^x]*\)x\([^ ]*\).*!\1!') | bc` -resize 50x $< $@
 
 %.xml : ${partsdir}/%/index.sxml ${formatsdir}/html.xsl ${DEPDIR}/%.ssidep
 	if ${SSI} --in $< ${SSIFLAGS} > $*.Txml; \
