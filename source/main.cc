@@ -47,6 +47,7 @@
 
 int shapesparse( );
 extern int shapesdebug;
+void printHelp( );
 void printVersion( );
 
 using namespace Shapes;
@@ -127,6 +128,18 @@ main( int argc, char ** argv )
 
 	argc -= 1;
 	argv += 1;
+
+	if( argc > 0 && strcmp( *argv, "--help" ) == 0 )
+		{
+			if( argc > 1 )
+				{
+					std::cerr << "The --help command line switch must appear alone." << std::endl ;
+					exit( Interaction::EXIT_INVOCATION_ERROR );
+				}
+			printHelp( );
+			exit( 0 );
+		}
+
 	while( argc > 0 )
 		{
 			char * optionSuffix;
@@ -1978,4 +1991,25 @@ escapeExtGlobChars( const std::string & str, std::ostream & dst )
 				}
 			dst << *i ;
 		}
+}
+
+void
+printHelp( )
+{
+	std::string ind("   ");
+	std::cout
+		<< "Usage:" << std::endl
+		<< ind << "shapes [OPTIONS] file[.[shape]]" << std::endl
+		<< "A subset of options is listed below, by cathegory.  This message is just" << std::endl
+		<< "a reminder; legal option values are only listed in rare cases." << std::endl
+		<< "Files:      --in --out --outdir --texjob --tmpdir --tmp*= --labeldb" << std::endl
+		<< "Paths:      --needpath -N --fontmetricspath --resources=" << std::endl
+		<< "Multipage:  --split=('no'|'flat'|'dir')" << std::endl
+		<< "PDF:        (--pdf-version=|-v)(e|w|s)1.N --tp= --spot-pair=" << std::endl
+		<< "Tolerances: --arcdelta= --dtmin= --dtminerror= --splicingtol= --overlaptol=" << std::endl
+		<< "Log file:   --debuglog --debuglog-stderr --debuglog-stdout" << std::endl
+		<< "Help:       --help --which-doc --showfiles= --which --version" << std::endl
+		<< "Viewing:    --xpdf --open --open-a" << std::endl
+		<< "See the man page for a complete listing and details." << std::endl
+		;
 }

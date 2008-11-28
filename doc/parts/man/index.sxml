@@ -50,6 +50,7 @@
 				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf> <replacable>source</replacable></synopsis-case>
 				<synopsis-case><prog-name>shapes</prog-name> <synatxname>option</synatxname><bnf>*</bnf></synopsis-case>
 				<synopsis-case><prog-name>shapes</prog-name> <bnf>(</bnf> <synatxname>options</synatxname> <bnf>|</bnf> <synatxname>file-request</synatxname> <bnf>)*</bnf></synopsis-case>
+				<synopsis-case><prog-name>shapes</prog-name> --help</synopsis-case>
 			</synopsis-table>
 		</body>
 	</section>
@@ -246,6 +247,12 @@
 						<nosep-parameter flag="--stats=">bool</nosep-parameter>
 						<description>
 							<p>Control printing of execution statistics, such as memory and time usage.</p>
+						</description>
+					</command-line-item>
+					<command-line-item>
+						<parameters flag="--help"></parameters>
+						<description>
+							<p>Print a short help message and exit.  Note that this command line option cannot be combined with other usages of the compiler.</p>
 						</description>
 					</command-line-item>
 				</command-line-option-list>
