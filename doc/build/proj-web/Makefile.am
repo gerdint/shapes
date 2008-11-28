@@ -86,30 +86,6 @@ ${DEPDIR}/%.ssidep : ${partsdir}/%/index.sxml Makefile
 	test -d  $(@D) || ${mkdir_p} $(@D)
 	${INSTALL_DATA} $< $@
 
-%.pdf %.stdout: %.shape $(SHEXT_FILES)
-	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) --in $< --out $*.pdf > $*.stdout
-
-%_3.pdf %.stdout: %.shape $(SHEXT_FILES)
-	test -d  $(@D) || ${mkdir_p} $(@D)
-	$(SHAPES) $(SHAPESFLAGS) -vs1.3 --in $< --out $*_3.pdf > $*.stdout
-
-# Some stupid versions of convert exit with a non-zero value even though the conversion was a success...
-%_70%.jpg: %.pdf
-	-convert -density 100 -resize $(shell ${ECHO} $@ | ${SED} -e 's!.*_\([^._]*\).jpg!\1!') $< $@
-
-%_y_big.jpg: %.pdf
-	-convert -density 150 -resize x150 $< $@
-
-%_y_small.jpg: %.pdf
-	-convert -density 50 -resize x50 $< $@
-
-%_x_big.jpg: %.pdf
-	-convert -density 150 -resize 150x $< $@
-
-%_x_small.jpg: %.pdf
-	-convert -density 50 -resize 50x $< $@
-
 %.html : %.xml ${partsdir}/%/formats/html.xsl ${formatsdir}/html.xsl
 	test -d  ${@D} || ${mkdir_p} ${@D} ; \
 	( $(SAXON) $< $$( test -f ${partsdir}/$*/formats/html.xsl || \
@@ -144,6 +120,8 @@ distclean-local :
 include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.ssidep))
 -include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.htmldep))
 -include $(addprefix ${DEPDIR}/, $(html_FILES:.html=.dist))
+
+include ../Makefile.common
 
 html-local : ${nobase_dist_html_DATA} ${nobase_dist_noinst_DATA} FORCE
 dist-hook :
