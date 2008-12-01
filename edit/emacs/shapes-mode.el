@@ -19,7 +19,10 @@
 
 ;;; Commentary:
 
-;; Supports compilation-mode, comment-dwim, Imenu and viewing output through doc-view.
+;; This mode is very much work in progress. It does not handle automatic
+;; indentation of Shapes programs nor does it offer any motion commands adapted
+;; to such. That said, it does support compilation-mode, comment-dwim, Imenu and
+;; viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
@@ -28,16 +31,12 @@
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
-;; - Automatically pretty-print #, \, .>
-;; - Find curly lambda?
-;; - Set tabs-indent mode nil
+;; - Automatically pretty-print #, \, ->
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
 ;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
 ;; * point is after first char (and the cursor is ON char 2).
-;; - Investigate whether utf-8 is activated too late.
-;; - Use preferred-encoding for file with extension mechanism
 
 ;;; Installation
 
@@ -52,12 +51,13 @@
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
-(setq auto-mode-alist
-     (cons 
-      '("\\.shape$" . shapes-mode)
-      (cons 
-       '("\\.shext$" . shapes-mode)
-       auto-mode-alist)))
+(defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
+  "Regular expression matching Shapes source files.")
+
+(add-to-list 'auto-mode-alist (cons shapes-file-regex 'shapes-mode))
+
+;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
+(modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
 	     
 ;; Example data:
 ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
@@ -66,6 +66,7 @@
 		'("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
 		  1 2 (3 . 4) nil 1)))
 
+;;; TBD
 ;; (defvar shapes-mode-syntax-table
 ;;   (let ((st (make-syntax-table)))
 ;;     (modify-syntax-entry ?\" ".   " st)
@@ -112,7 +113,8 @@ doc-view."
   (shapes-compile))
 
 (defun shapes-mode ()
-  "Major mode for working with Shapes programs."
+  "Major mode for editing Shapes programs.
+\\{shapes-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (setq major-mode 'shapes-mode)
@@ -123,8 +125,9 @@ doc-view."
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
-  ;; Shapes source files should be UTF-8 encoded.
-  (setq buffer-file-coding-system 'utf-8)
+  ;; The Shapes compiler tabs philosophy is different from that of Emacs, so for
+  ;; now we do this.
+  (setq indent-tabs-mode nil)
 
   ;; Simplified recognition of a top-level Shapes identifier. Probably needs
   ;; more work.
