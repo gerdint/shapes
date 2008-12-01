@@ -1,3 +1,21 @@
+/** This file is part of Shapes.
+ **
+ ** Shapes is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** any later version.
+ **
+ ** Shapes is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with Shapes.  If not, see <http://www.gnu.org/licenses/>.
+ **
+ ** Copyright 2008 Henrik Tidefelt
+ **/
+
 ##needs blockdraw_wfo
 ##needs braces
 
@@ -65,6 +83,7 @@ p: [mspoint C--P f/P.z]
 {
 	sz: 1.5u
 	imageFrame: [shift (0u,0u,f)] [] [immerse [rectangle (~sz,~sz) (sz,sz)]]
+	•world << [tag 'frame imageFrame]
   •rayWorld << @nonstroking:GRAY_WHITE | [fill imageFrame]
   •rayWorld << [stroke imageFrame]
 }
@@ -105,7 +124,7 @@ flatWorld: view [] [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°]*[rot
 {
 	pt: [find flatWorld 'C]
 	lblPt: pt + (0.3u,1u)
-	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\centre\end{minipage}´) (0,~1)]
+	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\center\end{minipage}´) (0,~1)]
 	•page << [stroke lblPt>(^~80°)--(^60°)<pt head:lblArrow]
 }
 {
@@ -118,6 +137,8 @@ flatWorld: view [] [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°]*[rot
 	pt: [find flatWorld 'planePoint]
 	lblPt: pt + (~1.5u,0.2u)
 	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering image\\plane\end{minipage}´) (1,0)]
-	•page << [stroke lblPt>(^10°)--(^180°)<pt head:lblArrow]
+	pth: lblPt>(^10°)--(^180°)<pt
+	sl: [intersection pth [find flatWorld 'frame]]+0.5bp  /** The extra distance is for half the width of the image frame. **/
+	•page << [stroke pth.begin--sl] << @stroking:[gray 0.7] | [stroke sl--pth.end head:lblArrow]
 }
 }

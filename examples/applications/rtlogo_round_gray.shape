@@ -5,6 +5,8 @@
 |** different from the other logos.  It can be used in printed material like
 |** theses, course material, and books.  (The other logos are used in
 |** presentations and posters.)
+|**
+|** This file requires rtlogo_elements, which is not part of Shapes.
 |***************************************************************************
 ##author Henrik Tidefelt
 
@@ -17,7 +19,7 @@
 ##unit t = 10bp
 ##unit rR = 13mm |** This is the size given to makeRegulator function.
 
-smallFont: @text_font:font_HELVETICA_BOLD & @text_size:1t & @text_horizontalscaling:1.0
+smallFont: @text_font:FONT_HELVETICA_BOLD & @text_size:1t & @text_horizontalscaling:1.0
 
 |** The bent text is drawn along circular arcs, and we put the text in contact with the regulator's box at
 |** the center coordinate.
@@ -28,7 +30,7 @@ outerRadius: innerRadius + charHeight
 ballSpace: 0.22
 graySep: 0.3t
 
-  
+
 •page << @nonstroking:lightGray | [fill [shift circleCenter][][circle outerRadius + graySep]]
 •page << @nonstroking:darkGray | [fill [shift circleCenter][][circle innerRadius - graySep]]
 
@@ -52,7 +54,7 @@ graySep: 0.3t
 
 |**  •page << @width:0bp & @stroking:RGB_RED | [stroke baseline]
 |**  •page << @width:0bp | [stroke (~1r,[baseline 0].p.y)--(1r,(+0r))]
-  
+
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.
    **/
@@ -64,7 +66,7 @@ graySep: 0.3t
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }
@@ -78,7 +80,7 @@ graySep: 0.3t
   text: smallFont | ( @text_characterspacing:stdkern*@text_size | [kerning [kern `LINK´] 0.13 `Ö´ 0.03 [kern `PING´]] )
 
   baseline: [shift circleCenter] [] [rotate ~90° - 0.5*([xmax [bbox (newText << text)]])/outerRadius] [] [circle outerRadius]
-  
+
   /** At the time of writing, there is no abstraction for placing text along a path, but this is the
    ** standard way of doing it.
    **/
@@ -90,7 +92,7 @@ graySep: 0.3t
          sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
          pile
          &
-         [[shift sl.p]()[rotate [angle sl.t]] [centerx c] ]
+         [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
        }
       null]
 }

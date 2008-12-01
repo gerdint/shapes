@@ -1,23 +1,38 @@
-##needs circle
+/** This file is part of Shapes.
+ **
+ ** Shapes is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** any later version.
+ **
+ ** Shapes is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with Shapes.  If not, see <http://www.gnu.org/licenses/>.
+ **
+ ** Copyright 2008 Henrik Tidefelt
+ **/
 
-##echo The resulting graphics is not correctly displayed in Preview.app.
-##echo On the other hand, it doesn't seem right in Adobe Reader either.
+##needs circle
 
 r: 1cm
 
 mask: @blendspace: DEVICE_GRAY | [tgroup
        @blend: BLEND_LIGHTEN
        |
-       ( Hot2D << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-               << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
-               << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
+       ( newGroup << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+                  << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+                  << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
        )
       ]
 
-@<< [shift (1*5*r,0)] [] mask
+•page << [shift (1*5*r,0)] [] mask
 
-@<< [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [alphamask mask] ]
-@<< [shift (0,~1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
-|**@<< [shift (0*4*r,1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
-|**@<< [shift (1*4*r,1*5*r)] [] formxo [] ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] )
+•page << [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [alphamask mask] ]
+•page << [shift (0,~1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
+|**•page << [shift (0*4*r,1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
+|**•page << [shift (1*4*r,1*5*r)] [] formxo [] ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] )
 
