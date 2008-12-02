@@ -19,7 +19,8 @@ docdir=../..
 partsdir=${docdir}/parts
 extensionsdir=${partsdir}/extensions
 formatsdir=${partsdir}/formats
-stylesdir=${docdir}/styles
+# Note: stylesdir must not be relative, or cyclic dependencies will result!
+stylesdir=${top_srcdir}/doc/styles
 toolsdir=${docdir}/tools
 
 POSTPROC_HTML=${top_builddir}/doc/tools/postproc/postproc-html
