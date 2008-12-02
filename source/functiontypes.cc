@@ -767,7 +767,8 @@ Kernel::Arguments::Arguments( const Kernel::EvaluatedFormals * formals )
 		dstEnd_( formals_->formals_->defaultExprs_.size( ) ),
 		isSink_( formals_->isSink_ ),
 		sinkArgList_( 0 ), sinkValues_( NullPtr< const Lang::SingleList >( ) ),
-		states_( new Environment::StateVector::ValueType ), stateDst_( 0 )
+		states_( new Environment::StateVector::ValueType ), stateDst_( 0 ),
+		mutatorSelf_( 0 )
 {
 	if( hasSink_ )
 		{
@@ -1211,6 +1212,22 @@ bool
 Kernel::Arguments::empty( ) const
 {
 	return variables_->empty( );
+}
+
+void
+Kernel::Arguments::setMutatorSelf( Kernel::StateHandle mutatorSelf )
+{
+	mutatorSelf_ = mutatorSelf;
+}
+
+Kernel::StateHandle
+Kernel::Arguments::getMutatorSelf( )
+{
+	if( mutatorSelf_ == 0 )
+		{
+			throw Exceptions::InternalError( "Kernel::Arguments::getMutatorSelf: self is null." );
+		}
+	return mutatorSelf_;
 }
 
 void

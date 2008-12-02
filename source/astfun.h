@@ -147,12 +147,13 @@ namespace Shapes
 			const Ast::ArgListExprs * argList_;
 			bool curry_;
 			bool procedural_;
+			Kernel::StateHandle mutatorSelf_;
 			Kernel::PassedEnv env_;
 			Kernel::PassedDyn dyn_;
 			Kernel::ContRef cont_;
 			const Ast::SourceLocation & callLoc_;
 		public:
-			CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
+			CallCont_1( const Ast::SourceLocation & traceLoc, const Ast::ArgListExprs * argList, bool curry, bool procedural, Kernel::StateHandle mutatorSelf, const Kernel::EvalState & evalState, const Ast::SourceLocation & callLoc );
 			virtual ~CallCont_1( );
 			virtual void takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const;
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -164,11 +165,12 @@ namespace Shapes
 			RefCountPtr< const Lang::Function > fun_;
 			const Ast::ArgListExprs * argList_;
 			bool curry_;
+			Kernel::StateHandle mutatorSelf_;
 			Kernel::PassedEnv env_;
 			Kernel::PassedDyn dyn_;
 			Kernel::ContRef cont_;
 		public:
-			CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
+			CallCont_last( const RefCountPtr< const Lang::Function > & fun, const Ast::ArgListExprs * argList, bool curry, Kernel::StateHandle mutatorSelf, const Kernel::PassedEnv & env, const Kernel::PassedDyn & dyn, const Kernel::ContRef & cont, const Ast::SourceLocation & callLoc );
 			virtual ~CallCont_last( );
 			virtual void takeValue( const RefCountPtr< const Lang::Value > & valsUntyped, Kernel::EvalState * evalState, bool dummy ) const;
 			virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const;
@@ -242,6 +244,7 @@ namespace Shapes
 			bool curry_;
 			bool procedural_;
 			RefCountPtr< const Lang::Function > constFun_;
+			Ast::StateReference * mutatorSelf_;
 		public:
 			Ast::Expression * funExpr_;
 			Ast::ArgListExprs * argList_;
@@ -249,6 +252,7 @@ namespace Shapes
 			CallExpr( const Ast::SourceLocation & loc, Ast::Expression * funExpr, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
 			CallExpr( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Function > & constFun, Ast::ArgListExprs * argList, bool curry = false, bool procedural = false );
 			virtual ~CallExpr( );
+			void setMutatorSelf( Ast::StateReference * mutatorSelf );
 			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
 			virtual void eval( Kernel::EvalState * evalState ) const;
 		};

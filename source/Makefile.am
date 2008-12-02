@@ -61,7 +61,7 @@ noinst_HEADERS = afmscanner.h angleselect.h annotations.h \
                  simplepdfo.h sourcelocation.h specialunits.h statetypes.h \
                  strrefdup.h tagtypes.h texlabelmanager.h texscanner.h texttypes.h \
                  thunkimpl.h timetypes.h trianglefunctions.h upsamplers.h \
-                 value.h yyltype.h zbufinternals.h utf8tools.h \
+                 yyltype.h zbufinternals.h utf8tools.h \
                  Shapes_Ast_decls.h Shapes_Computation_decls.h Shapes_Concrete_decls.h \
                  Shapes_Exceptions_decls.h Shapes_Lang_decls.h \
                  Shapes_Helpers_decls.h Shapes_Kernel_decls.h \

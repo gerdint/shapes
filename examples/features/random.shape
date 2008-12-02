@@ -42,4 +42,3 @@ seed: [newRandom (•time)]
            [[range '0 '12].foldsl \ pth i •st .> pth--(i*1cm,(2+[random1D •st])*1cm)
                  	           emptypath
 				   •rand3]]
-

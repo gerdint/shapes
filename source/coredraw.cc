@@ -873,112 +873,6 @@ namespace Shapes
 			}
 		};
 
-		class Core_erase : public Lang::CoreFunction
-		{
-		public:
-			Core_erase( const char * title )
-				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
-			{
-				formals_->appendCoreStateFormal( "group" );
-			}
-			virtual void
-			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
-			{
-				args.applyDefaults( );
-
-				try
-					{
-						typedef Kernel::WarmGroup2D StateType;
-						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
-						state->erase( );
-
-						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Lang::THE_VOID,
-														 evalState );
-						return;
-					}
-				catch( const NonLocalExit::NotThisType & ball )
-					{
-						/* Wrong type; never mind!.. but see below!
-						 */
-					}
-
-				try
-					{
-						typedef Kernel::WarmGroup3D StateType;
-						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
-						state->erase( );
-
-						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Lang::THE_VOID,
-														 evalState );
-						return;
-					}
-				catch( const NonLocalExit::NotThisType & ball )
-					{
-						/* Wrong type; never mind!.. but see below!
-						 */
-					}
-
-				throw Exceptions::CoreStateTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Kernel::WarmGroup2D::staticTypeName( ), Kernel::WarmGroup3D::staticTypeName( ) ) );
-			}
-		};
-
-		class Core_remove : public Lang::CoreFunction
-		{
-		public:
-			Core_remove( const char * title )
-				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
-			{
-				formals_->appendCoreStateFormal( "group" );
-				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
-			}
-			virtual void
-			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
-			{
-				args.applyDefaults( );
-
-				typedef const Lang::Symbol KeyType;
-				RefCountPtr< KeyType > key = Helpers::down_cast_CoreArgument< KeyType >( title_, args, 0, callLoc );
-
-				try
-					{
-						typedef Kernel::WarmGroup2D StateType;
-						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
-						state->remove( key->getKey( ) );
-
-						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Lang::THE_VOID,
-														 evalState );
-						return;
-					}
-				catch( const NonLocalExit::NotThisType & ball )
-					{
-						/* Wrong type; never mind!.. but see below!
-						 */
-					}
-
-				try
-					{
-						typedef Kernel::WarmGroup3D StateType;
-						StateType * state = Helpers::try_cast_CoreState< StateType >( args.getState( 0 ) );
-						state->remove( key->getKey( ) );
-
-						Kernel::ContRef cont = evalState->cont_;
-						cont->takeValue( Lang::THE_VOID,
-														 evalState );
-						return;
-					}
-				catch( const NonLocalExit::NotThisType & ball )
-					{
-						/* Wrong type; never mind!.. but see below!
-						 */
-					}
-
-				throw Exceptions::CoreStateTypeMismatch( callLoc, title_, args, 0, Helpers::typeSetString( Kernel::WarmGroup2D::staticTypeName( ), Kernel::WarmGroup3D::staticTypeName( ) ) );
-			}
-		};
-
 		class Core_bboxed : public Lang::CoreFunction
 		{
 		public:
@@ -1815,11 +1709,7 @@ Kernel::registerCore_draw( Kernel::Environment * env )
 	env->initDefineCoreFunction( new Lang::Core_clip( "clip", "W" ) );
 	env->initDefineCoreFunction( new Lang::Core_clip( "clipodd", "W*" ) );
 
-	env->initDefineCoreFunction( new Lang::Core_erase( "erase" ) );
-	env->initDefineCoreFunction( new Lang::Core_remove( "remove" ) );
-
 	env->initDefineCoreFunction( new Lang::Core_from3Dto2D( "view" ) );
 	env->initDefineCoreFunction( new Lang::Core_from2Dto3D( "immerse" ) );
 	env->initDefineCoreFunction( new Lang::Core_facing2Din3D( "facing" ) );
 }
-

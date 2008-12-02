@@ -31,9 +31,9 @@ clock: \ hour minute .>
   [stroke (0cm,0cm)--(minuteLength*[dir minuteAngle])]
 }
 
-[setpagelabel •catalog prefix:`Am ´ number:'8]
-[setbboxgroup •catalog 'clock]
-•stdout << `First page's label: ´ << [nextpagelabel •catalog] << `¢n´
+•catalog.[setpagelabel prefix:`Am ´ number:'8]
+•catalog.[setbboxgroup 'clock]
+•stdout << `First page's label: ´ << •catalog.[nextpagelabel] << `¢n´
 
 •catalog << [clock 8 0]
 	    & [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]
@@ -50,17 +50,17 @@ clock: \ hour minute .>
          << [clock 9 0]
 	    & [destination level:'1 text:`Nine´]
 
-[setpagelabel •catalog number:[nextpagenumber •catalog]+'1]
-•stdout << `Skipping to page: ´ << [nextpagenumber •catalog] << `¢n´
+•catalog.[setpagelabel number:•catalog.[nextpagenumber]+'1]
+•stdout << `Skipping to page: ´ << •catalog.[nextpagenumber] << `¢n´
 
-•catalog << [clock [nextpagenumber •catalog]*1 0]
+•catalog << [clock •catalog.[nextpagenumber]*1 0]
 
 /** Note how the various part of the page label may be set independently of each other.
  **/
-[setpagelabel •catalog prefix:`Pm ´]
-[setpagelabel •catalog number:'33]
-[setpagelabel •catalog style:'alphabet]
-•stdout << `Later page's label: ´ << [nextpagelabel •catalog] << `¢n´
+•catalog.[setpagelabel prefix:`Pm ´]
+•catalog.[setpagelabel number:'33]
+•catalog.[setpagelabel style:'alphabet]
+•stdout << `Later page's label: ´ << •catalog.[nextpagelabel] << `¢n´
 
 •catalog << [clock 3 10]
   	    & [destination level:'0 text:`Afternoon´ italic:true]

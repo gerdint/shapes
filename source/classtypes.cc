@@ -468,6 +468,12 @@ Lang::Class::isInTransformingSet( const char * field ) const
 	return false;
 }
 
+RefCountPtr< const Lang::Function >
+Lang::Class::getMutator( const char * mutatorID ) const
+{
+	throw Exceptions::InternalError( "Mutator request not defined for this type of class." );
+}
+
 void
 Lang::Class::showAbstractSet( std::ostream & os ) const
 {
@@ -724,11 +730,31 @@ Lang::MetaClass::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName )
-	: Lang::Class( _prettyName )
+	: Lang::Class( _prettyName ), registerMutatorFunction_( 0 )
+{ }
+
+Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction )
+	: Lang::Class( _prettyName ), registerMutatorFunction_( registerMutatorFunction )
 { }
 
 Lang::SystemFinalClass::~SystemFinalClass( )
 { }
+
+void
+Lang::SystemFinalClass::initMutators( )
+{
+	if( registerMutatorFunction_ != 0 )
+		{
+			registerMutatorFunction_( this );
+		}
+}
+
+void
+Lang::SystemFinalClass::registerMutator( Lang::CoreFunction * fun )
+{
+	typedef typeof mutators_ MapType;
+	mutators_.insert( MapType::value_type( fun->getTitle( ), RefCountPtr< const Lang::Function >( fun ) ) );
+}
 
 Kernel::ValueRef
 Lang::SystemFinalClass::method_new( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
@@ -767,6 +793,18 @@ bool
 Lang::SystemFinalClass::isRepeatableBase( ) const
 {
 	return false;
+}
+
+RefCountPtr< const Lang::Function >
+Lang::SystemFinalClass::getMutator( const char * mutatorID ) const
+{
+	typedef typeof mutators_ MapType;
+	MapType::const_iterator i = mutators_.find( mutatorID );
+	if( i == mutators_.end( ) )
+		{
+			throw Exceptions::NonExistentMutator( staticTypeName( ), mutatorID );
+		}
+	return i->second;
 }
 
 void

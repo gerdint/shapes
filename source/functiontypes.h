@@ -72,6 +72,8 @@ namespace Shapes
 			std::vector< const Ast::Node * > stateLocations_;
 			size_t stateDst_;
 
+			Kernel::StateHandle mutatorSelf_;
+
 		public:
 			Arguments( const Kernel::EvaluatedFormals * formals );
 			~Arguments( );
@@ -98,6 +100,9 @@ namespace Shapes
 
 			Kernel::StateHandle getState( size_t i );
 			const Ast::SourceLocation & getStateLoc( size_t i ) const;
+
+			void setMutatorSelf( Kernel::StateHandle mutatorSelf );
+			Kernel::StateHandle getMutatorSelf( );
 
 			void gcMark( Kernel::GCMarkedSet & marked );
 
@@ -204,6 +209,18 @@ namespace Shapes
 			if( res == NullPtr< T >( ) )
 				{
 					throw NonLocalExit::NotThisType( );
+				}
+			return res;
+		}
+
+		template< class T >
+		T *
+		mutator_cast_self( Kernel::StateHandle st )
+		{
+			T * res = dynamic_cast< T * >( st );
+			if( res == NullPtr< T >( ) )
+				{
+					throw Exceptions::InternalError( "Type of self state does not match mutator signature." );
 				}
 			return res;
 		}

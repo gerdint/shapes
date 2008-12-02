@@ -403,12 +403,18 @@ namespace Shapes
 			virtual void display( std::ostream & os ) const;
 		};
 
-		class ElementaryTypeWithoutFields : public RuntimeError
+		class ElementaryWithout : public RuntimeError
 		{
+		public:
+			enum Kind{ VALUE, STATE };
+			enum Ref{ FIELD, MUTATOR };
+		private:
+			Kind kind_;
+			Ref ref_;
 			RefCountPtr< const char > valueType;
 		public:
-			ElementaryTypeWithoutFields( RefCountPtr< const char > _valueType );
-			virtual ~ElementaryTypeWithoutFields( );
+			ElementaryWithout( Kind kind, Ref ref, RefCountPtr< const char > _valueType );
+			virtual ~ElementaryWithout( );
 			virtual void display( std::ostream & os ) const;
 		};
 
@@ -429,6 +435,16 @@ namespace Shapes
 		public:
 			NonExistentMember( RefCountPtr< const char > _valueType, const char * _fieldID );
 			virtual ~NonExistentMember( );
+			virtual void display( std::ostream & os ) const;
+		};
+
+		class NonExistentMutator : public RuntimeError
+		{
+			RefCountPtr< const char > valueType;
+			const char * mutatorID;
+		public:
+			NonExistentMutator( RefCountPtr< const char > _valueType, const char * _mutatorID );
+			virtual ~NonExistentMutator( );
 			virtual void display( std::ostream & os ) const;
 		};
 

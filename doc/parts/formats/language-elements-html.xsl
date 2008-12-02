@@ -46,7 +46,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</div>
 </xsl:template>
 
-<xsl:template match="system-binding[@identifier]/function | type-method[@identifier]/function">
+<xsl:template match="system-binding[@identifier]/function | type-method[@identifier]/function | mutator/function">
 	<xsl:if test="top">
  		<td colspan="2"><xsl:apply-templates select="top"/></td>
 	</xsl:if>
@@ -76,6 +76,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</tr>
  	<xsl:apply-templates select="type-templates/*"/>
  	<xsl:apply-templates select="dynamic-references"/>
+	<xsl:apply-templates select="side-effect"/>
 	<tr>
 		<td colspan="2">
 			<xsl:apply-templates select="description" />
@@ -97,7 +98,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</tr>
 </xsl:template>
 <xsl:template match="dynamic-references/dynstate[@name='all']">
-	<xsl:text>The entire dynamic state</xsl:text>
+	<xsl:text>&lt;The entire dynamic state&gt;</xsl:text>
+</xsl:template>
+<xsl:template match="dynamic-references/dynstate[@name='graphics']">
+	<xsl:text>&lt;The graphics dynamic state&gt;</xsl:text>
+</xsl:template>
+<xsl:template match="dynamic-references/dynstate[@name='text']">
+	<xsl:text>&lt;The text dynamic state&gt;</xsl:text>
+</xsl:template>
+
+<xsl:template match="side-effect">
+	<tr>
+		<th class="horiz">Side effect:</th>
+		<td><xsl:apply-templates /></td>
+	</tr>
 </xsl:template>
 
 <xsl:template match="system-binding[@identifier]/hot">
@@ -135,7 +149,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:apply-templates select="see-also"/>
 </xsl:template>
 
-<xsl:template match="system-binding//see-also">
+<xsl:template match="system-binding//see-also | core-state-type/see-also | mutator//see-also">
  	<tr>
 		<th class="horiz">See also:</th>
 		<td>
@@ -300,6 +314,78 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 						</td>
 					</tr>
 				</xsl:if>
+				<xsl:apply-templates select="see-also"/>
+				<tr>
+					<th class="big" colspan="2">Mutators</th>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table class="mutator">
+							<tr>
+								<th class="big" colspan="2"><inline>• &lt;&lt;</inline></th>
+							</tr>
+							<xsl:apply-templates select="mutator[@op='tack-on']" />
+							<xsl:if test="not(mutator[@op='tack-on'])">
+								<tr>
+									<td colspan="2">
+										<p>There are no tack-on mutators.</p>
+									</td>
+								</tr>
+							</xsl:if>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table class="mutator">
+							<tr>
+								<th class="big" colspan="2"><inline>(•)</inline></th>
+							</tr>
+							<xsl:apply-templates select="mutator[@op='peek']" />
+							<xsl:if test="not(mutator[@op='peek'])">
+								<tr>
+									<td colspan="2">
+										<p>The state cannot be peeked.</p>
+									</td>
+								</tr>
+							</xsl:if>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table class="mutator">
+							<tr>
+								<th class="big" colspan="2"><inline>•;</inline></th>
+							</tr>
+							<xsl:apply-templates select="mutator[@op='freeze']" />
+							<xsl:if test="not(mutator[@op='freeze'])">
+								<tr>
+									<td colspan="2">
+										<p>The state cannot be frozen.</p>
+									</td>
+								</tr>
+							</xsl:if>
+						</table>
+					</td>
+				</tr>
+				<xsl:for-each select="mutator[@identifier]">
+					<tr>
+						<td colspan="2">
+							<table class="mutator">
+								<tr>
+									<th class="big" colspan="2">
+										<xsl:element name="a">
+											<xsl:attribute name="name">mutator/<xsl:value-of select="./../@name" />/<xsl:value-of select="@identifier" /></xsl:attribute>
+											<xsl:call-template name="name-to-mutator"><xsl:with-param name="name"><xsl:value-of select="@identifier" /></xsl:with-param></xsl:call-template>
+										</xsl:element>
+									</th>
+								</tr>
+								<xsl:apply-templates />
+							</table>
+						</td>
+					</tr>
+				</xsl:for-each>
 			</xsl:element>
 		</p>
 	</div>

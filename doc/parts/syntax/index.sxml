@@ -32,6 +32,7 @@
 	</top>
 	<!--#include virtual="include.sxml" -->
 	<!--#include virtual="atoms.sxml" -->
+	<!--#include virtual="fields.sxml" -->
 	<!--#include virtual="compound.sxml" -->
 	<!--#include virtual="functions.sxml" -->
 	<!--#include virtual="bracket.sxml" -->

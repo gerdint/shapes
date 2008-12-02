@@ -97,7 +97,7 @@ namespace Shapes
 		RefCountPtr< const Lang::Function > getMethod( Kernel::MethodId fieldID ) const;
 
 		virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
- 
+
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
 		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
 
@@ -149,6 +149,8 @@ namespace Shapes
 		const MessageMapType & getMessageMap( ) const;
 		const RefCountPtr< const Lang::Class > & getMethodDefinitionClass( const Kernel::MethodId & method ) const;
 
+		virtual RefCountPtr< const Lang::Function > getMutator( const char * mutatorID ) const;
+
 		void showAbstractSet( std::ostream & os ) const;
 
 		TYPEINFODECL;
@@ -198,9 +200,15 @@ namespace Shapes
 
 	class SystemFinalClass : public Lang::Class
 	{
+		std::map< const char *, RefCountPtr< const Lang::Function >, charPtrLess > mutators_;
+		typedef void ( * RegisterMutatorFunction )( SystemFinalClass * );
+		RegisterMutatorFunction registerMutatorFunction_;
 	public:
 		SystemFinalClass( RefCountPtr< const char > _prettyName );
+		SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction );
 		virtual ~SystemFinalClass( );
+		void initMutators( );
+		void registerMutator( Lang::CoreFunction * fun );
 
 		virtual Kernel::ValueRef method_new( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 		virtual bool method_isa( RefCountPtr< const Lang::Class > T ) const;
@@ -212,6 +220,7 @@ namespace Shapes
 													 Kernel::Arguments & emptyArglist,
 													 Kernel::EvalState * evalState ) const;
 		virtual bool isRepeatableBase( ) const;
+		virtual RefCountPtr< const Lang::Function > getMutator( const char * mutatorID ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 

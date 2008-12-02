@@ -314,7 +314,6 @@ namespace Shapes
 		class MemberReferenceFunction : public Lang::Function
 		{
 			Ast::SourceLocation loc_;
-			Ast::SourceLocation memberLoc_;
 			Ast::Expression * variable_;
 			const char * fieldID_;
 		public:
@@ -325,6 +324,18 @@ namespace Shapes
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked ){ };
 			virtual bool isTransforming( ) const { return false; }
+		};
+
+		class MutatorReference : public Ast::Expression
+		{
+			Ast::SourceLocation mutatorLoc_;
+			Ast::StateReference * state_;
+			const char * mutatorID_;
+		public:
+			MutatorReference( const Ast::SourceLocation & mutatorLoc, Ast::StateReference * state, const char * mutatorID );
+			virtual ~MutatorReference( );
+			virtual void analyze( Ast::Node * parent, const Ast::AnalysisEnvironment * env );
+			virtual void eval( Kernel::EvalState * evalState ) const;
 		};
 
 		class SpecialLength : public Expression

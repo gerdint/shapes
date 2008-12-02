@@ -27,6 +27,7 @@
 #include "isnan.h"
 #include "pdfstructure.h"
 #include "timetypes.h"
+#include "shapescore.h"
 
 #include <sstream>
 #include <limits>
@@ -261,6 +262,64 @@ void
 Kernel::Warm_ostringstream::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
+namespace Shapes
+{
+	namespace Kernel
+	{
+
+		template< class T >
+		class Mutator_erase : public Lang::CoreFunction
+		{
+		public:
+			Mutator_erase( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+				state->erase( );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
+													evalState );
+			}
+		};
+
+		template< class T >
+		class Mutator_remove : public Lang::CoreFunction
+		{
+		public:
+			Mutator_remove( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "key", Kernel::THE_SLOT_VARIABLE );
+			}
+			virtual void
+			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
+			{
+				args.applyDefaults( );
+
+				typedef const Lang::Symbol KeyType;
+				RefCountPtr< KeyType > key = Helpers::down_cast_CoreArgument< KeyType >( title_, args, 0, callLoc );
+
+				typedef T StateType;
+				StateType * state = Helpers::mutator_cast_self< StateType >( args.getMutatorSelf( ) );
+				state->remove( key->getKey( ) );
+
+				Kernel::ContRef cont = evalState->cont_;
+				cont->takeValue( Lang::THE_VOID,
+												 evalState );
+			}
+		};
+
+	}
+}
+
 
 Kernel::WarmGroup2D::WarmGroup2D( )
 	: pile_( Lang::THE_NULL2D )
@@ -269,8 +328,16 @@ Kernel::WarmGroup2D::WarmGroup2D( )
 Kernel::WarmGroup2D::~WarmGroup2D( )
 { }
 
-RefCountPtr< const Lang::Class > Kernel::WarmGroup2D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group2D" ) ) );
+void
+WarmGroup2D_register_mutators( Lang::SystemFinalClass * dstClass )
+{
+	dstClass->registerMutator( new Kernel::Mutator_erase< Kernel::WarmGroup2D >( "erase" ) );
+	dstClass->registerMutator( new Kernel::Mutator_remove< Kernel::WarmGroup2D >( "remove" ) );
+}
+
+RefCountPtr< const Lang::Class > Kernel::WarmGroup2D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group2D" ), WarmGroup2D_register_mutators ) );
 TYPEINFOIMPL_STATE( WarmGroup2D );
+
 
 void
 Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
@@ -343,7 +410,14 @@ Kernel::WarmGroup3D::WarmGroup3D( )
 Kernel::WarmGroup3D::~WarmGroup3D( )
 { }
 
-RefCountPtr< const Lang::Class > Kernel::WarmGroup3D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group3D" ) ) );
+void
+WarmGroup3D_register_mutators( Lang::SystemFinalClass * dstClass )
+{
+	dstClass->registerMutator( new Kernel::Mutator_erase< Kernel::WarmGroup3D >( "erase" ) );
+	dstClass->registerMutator( new Kernel::Mutator_remove< Kernel::WarmGroup3D >( "remove" ) );
+}
+
+RefCountPtr< const Lang::Class > Kernel::WarmGroup3D::TypeID( new Lang::SystemFinalClass( strrefdup( "#Group3D" ), WarmGroup3D_register_mutators ) );
 TYPEINFOIMPL_STATE( WarmGroup3D );
 
 void
@@ -872,7 +946,7 @@ Kernel::WarmText::freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLo
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Text( evalState->dyn_->getGraphicsState( ), 
+	cont->takeValue( RefCountPtr< const Lang::Value >( new Lang::Text( evalState->dyn_->getGraphicsState( ),
 																																		 evalState->dyn_->getTextState( ),
 																																		 pile_,
 																																		 RefCountPtr< const Lang::ElementaryPath2D >( bbox ) ) ),

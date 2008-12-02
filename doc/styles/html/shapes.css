@@ -131,7 +131,7 @@ div.p pre {
 	margin-top:					0.5em;
 	margin-bottom:				0.5em;
 }
-div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates, div.p table.dynvars, div.p table.function, div.p table.simple, div.p table.hotvalue, div.p table.state, div.p table.state-type, div.p table.type {
+div.p table.syntax, div.p table.tight, div.p table.loose, div.p table.type-templates, div.p table.dynvars, div.p table.function, table.mutator, div.p table.simple, div.p table.hotvalue, div.p table.state, div.p table.state-type, div.p table.type {
 	margin-top:					0.1em;
 	margin-bottom:				0.1em;
 }
@@ -152,7 +152,7 @@ varname.replacable, typename.replacable, constname.replacable, filename.replacab
 typename.template
 { color: #0000FF; }
 
-pre, table.syntax, table.tokens, table.tight, table.loose, table.wide, table.type-templates, table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type { margin-left: 1.5em; }
+pre, table.syntax, table.tokens, table.tight, table.loose, table.wide, table.type-templates, table.dynvars, table.function, table.mutator, table.simple, table.hotvalue, table.state, table.state-type, table.type { margin-left: 1.5em; }
 pre.terminal { /* width: 80; */ }
 pre.bad { color: #900; text-decoration: line-through; }
 inline    { color: #009; }
@@ -181,7 +181,7 @@ table.tight { cellspacing:0; }
 hr.thick { border:0; height:3px; color:#000; background:#000; }
 hr.thin { border:0; height:1px; color:#666; background:#000; }
 
-table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.state-type, table.type
+table.dynvars, table.function, table.mutator, table.simple, table.hotvalue, table.state, table.state-type, table.type
 {
 		text-align: left;
 		border-collapse: collapse;
@@ -189,7 +189,11 @@ table.dynvars, table.function, table.simple, table.hotvalue, table.state, table.
 		cellspacing:0;
 		width:95%;
 }
-table.dynvars tr th, table.function tr th, table.simple tr th, table.hotvalue tr th, table.state tr th, table.state-type tr th, table.type tr th
+table.mutator
+{
+		width: 98%;
+}
+table.dynvars tr th, table.function tr th, table.mutator tr th, table.simple tr th, table.hotvalue tr th, table.state tr th, table.state-type tr th, table.type tr th
 {
 		padding: 0em 2em 0em 2em;
 		text-align: left;
@@ -198,7 +202,11 @@ table.dynvars tr th, table.function tr th, table.simple tr th, table.hotvalue tr
 		background-color: #BEC8D1;
 		color: #404040;
 }
-table.dynvars tr td, table.function tr td, table.simple tr td, table.hotvalue tr td, table.state tr td, table.state-type tr td, table.type tr td
+table.mutator tr th
+{
+		background-color: #EEEE00;
+}
+table.dynvars tr td, table.function tr td, table.mutator tr td, table.simple tr td, table.hotvalue tr td, table.state tr td, table.state-type tr td, table.type tr td
 {
 		padding: 0em 0.5em 0em 0.5em;
 		vertical-align: top;
@@ -237,6 +245,26 @@ table.function tr th.heading
 {
 		font-size: 1em;
 		background-color: #FFCC99;
+}
+
+table.mutator
+{
+		color: #404040;
+		border: 1px #DDDD99 solid;
+}
+table.mutator, table.mutator tr th.horiz
+{
+		background-color: #fafafa;
+}
+table.mutator tr td, table.mutator tr th
+{
+		border-bottom: 2px solid #DDDD99;
+		border-left: 1px solid #DDDD99;
+}
+table.mutator tr th.heading
+{
+		font-size: 1em;
+		background-color: #DDDD99;
 }
 
 table.simple
@@ -326,7 +354,7 @@ table.type tr th.heading
 		border-bottom: 1px solid #FF6699;
 }
 
-table.dynvars tr th.horiz, table.function tr th.horiz, table.simple tr th.horiz, table.hotvalue tr th.horiz, table.state tr th.horiz, table.state-type tr th.horiz, table.type tr th.horiz
+table.dynvars tr th.horiz, table.function tr th.horiz, table.mutator tr th.horiz, table.simple tr th.horiz, table.hotvalue tr th.horiz, table.state tr th.horiz, table.state-type tr th.horiz, table.type tr th.horiz
 {
 		width: 10em;
 		text-align: right;

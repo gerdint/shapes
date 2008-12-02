@@ -25,10 +25,24 @@
     <abstraction>
       <p>States of type <self /> wrap a file stream for output.</p>
     </abstraction>
-    <construction>
+    <see-also>
 			<state name="stdout" />
 			<state name="stderr" />
-    </construction>
+    </see-also>
+		<mutator op="tack-on">
+			<function>
+				<case>
+					<arguments>
+						<arg>
+							<type><named-type name="Object" /></type>
+						</arg>
+					</arguments>
+					<side-effect>
+						<p>Allow object to produce a textual representation (may not be unique or have anything to do with the value, well behaved object do a reasonable job here), which is appended to the stream.</p>
+					</side-effect>
+				</case>
+			</function>
+		</mutator>
   </core-state-type>
 
 </section>

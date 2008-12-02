@@ -181,6 +181,12 @@ Kernel::State::freeze( Kernel::EvalState * evalState, const Ast::SourceLocation 
 	this->freezeImpl( evalState, callLoc );
 }
 
+RefCountPtr< const Lang::Function >
+Kernel::State::getMutator( const char * mutatorID )
+{
+	return getClass( )->getMutator( mutatorID );
+}
+
 RefCountPtr< const char >
 Kernel::State::getTypeName( ) const
 {

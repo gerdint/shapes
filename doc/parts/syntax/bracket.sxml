@@ -67,13 +67,51 @@
 
 <p>The last form, denoted a <em>freeze</em>, prohibits future use of the state, and evaluates to the final value of the state.  It is used as the end of a code bracket to return the accumulated value of a sequential computation.</p>
 
-<p>
-	A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value.  The syntax is:
+<p>A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value. The syntax is:
 	<syntax-table>
 		<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="state" /> )</inline></td></tr>
 	</syntax-table>
 	Note that a <syntax name="state" /> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.
 </p>
+<p>Peeking a state, as well as the tack-on and freeze operations described above, are special cases of <em>mutator calls</em>.  Ordinary mutator calls (that is, without dedicated syntax), are similar to calls to non-pure functions.  Recall that state arguments can not be bound with curry.  For the same reason, there is no such thing as a <em>mutator value</em>; instead, when a mutator on a state is selected, it must be immediately applied.  The syntax is simple:
+	<syntax-table>
+		<tr> <td><syntax name="mutator-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="state" /> . [ <syntax name="identifier" /> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> ]</inline></td></tr>
+	</syntax-table>
+	Evaluation of a <syntax name="mutator-call" /> is just like an application of a non-pure function (denoted by the <syntax name="identifier" />) stored in the state, with the state itself prepended to the list of arguments.
+</p>
+<p>Note that while tack-on and peek could have been provided (although less conveniently) as ordinary mutators, the freeze operation has a side effect which ordinary mutators should not have; the freeze operation should release all resources used by the state, and any later references to the state are illegal.</p>
+<note>
+	<p>The important thing to realize about mutator calls is that it would break semantics if a mutator could be accessed like a field of the state.  To illustrate this, imagine that there was a method called <varname>peek</varname>, which we could apply like this:
+<pre class="bad">
+<![CDATA[•rnd: [newRandom (•time)]
+rnd1: [•rnd.peek]]]>
+</pre>
+The problem is that this suggests that <inline>•rnd.peek</inline> is an expression, but expressions must evaluate to values — not states!  The following makes it clear that breaking the fundamental semantic rules would be very confusing:
+<pre class="bad">
+<![CDATA[•rnd: [newRandom (•time)]
+mutator: •rnd.peek
+rnd1: [mutator]
+rnd2: [mutator]]]>
+</pre>
+Here, it looks as if <inline>mutator</inline> was a reference to an ordinary function, which should result in the same value both times it is being invoked.</p>
+<p>
+	The correct way of writing (if there was a mutator called <varname>peek</varname>) is:
+<pre>
+<![CDATA[•rnd: [newRandom (•time)]
+rnd1: •rnd.[peek]
+rnd2: •rnd.[peek]]]>
+</pre>
+The presence of <inline>•rnd</inline> in each mutator call makes it clear that the state may be modified by each call.  Now, it is clear that a new random number may result in each procedure call.
+</p>
+<p>
+	Of course, the mutator in this example refers to the special syntax <syntax name="peek-state" />, so while the example above would not compile, the following would:
+<pre>
+<![CDATA[•rnd: [newRandom (•time)]
+rnd1: (•rnd)
+rnd2: (•rnd)]]>
+</pre>
+</p>
+</note>
 </body>
 </section>
 

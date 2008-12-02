@@ -18,7 +18,7 @@
 
 •stuff: newGroup
 
-[setbboxgroup •catalog 'all]
+•catalog.[setbboxgroup 'all]
 
 •stuff << [tag 'a ( newText << `A´ )]
 •catalog << (•stuff)
@@ -29,11 +29,11 @@
 •stuff << [tag 'c [shift (2cm,0cm)] [] ( newText << `C´ )]
 •catalog << (•stuff)
 
-[remove •stuff 'a]
+•stuff.[remove 'a]
 •catalog << (•stuff)
 
-[remove •stuff 'b]
+•stuff.[remove 'b]
 •catalog << (•stuff)
 
-[remove •stuff 'c]
+•stuff.[remove 'c]
 •catalog << (•stuff)
