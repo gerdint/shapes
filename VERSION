@@ -1,11 +1,31 @@
-0.4.1
+0.4.2
 The first line of this file shall be the last tagged version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
 
-====( x.y.z )====
-FILL-IN-DATE-WHEN-TAGGING!
+====( 0.4.2 )====
+2008-12-02
+
+GPL and copyright notes have been inserted in all non-trivial files.
+
+A logo has been introduced.  Do not consider it final!
+
+New notation, including more ASCII fall-backs.  The change of notation for functions is not backwards compatible!
+
+Introduced mutators for states.  Old, global, non-pure functions were removed -- not backwards compatible!
+
+New shapes-mode for Emacs.
+
+Stuff for transforms, including fields (components as well as predicates), a <chop> method, and a kind of real Schur decomposition in 3D.
+
+Lots of new documentation.
+
+Source code for methods of types in Shapes has been reorganized.
+
+Bugfixes include:
+-  Including FlexLexer.h in distribution.
+-  Annoying internal errors when displaying source locations were removed.
 
 
 ====( 0.4.1 )====
