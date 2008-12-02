@@ -26,7 +26,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^20°)--(1cm,2cm)--(^)<(2.5cm,2cm)>(^)--(2cm^
 circMark: @width:0.5bp | [stroke [circle 4bp]]
 crossMark: @width:0.5bp | [stroke (~4bp,~4bp)--(4bp,4bp) & (~4bp,4bp)--(4bp,~4bp)]
 
-helper: \ pth2 .>
+helper: \ pth2 →
 {
 	( @width:0.5bp & @stroking:RGB_BLUE & @dash:[dashpattern 2bp 1bp] | [stroke pth2] )
 	&
@@ -39,8 +39,8 @@ helper: \ pth2 .>
 	 ** The first uses an escape continuation to replace the usual spot with nothing (null).
 	 ** The second makes the intersection return the beginning of the path, although there is no intersection there.
    **/
-      @handler_NoIntersection: ( \ pth1 pth2 .> (escape_continue cont null) )
-|**      @handler_NoIntersection: ( \ pth1 pth2 .> pth.begin )
+      @handler_NoIntersection: ( \ pth1 pth2 → (escape_continue cont null) )
+|**      @handler_NoIntersection: ( \ pth1 pth2 → pth.begin )
     &	@width:5bp
 	  & @stroking:RGB_RED
 		| [spot [intersection pth pth2].p] )

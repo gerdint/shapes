@@ -24,7 +24,7 @@ dc: (2cm,0cm)
 
 centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
 
-helper: \ pos dc fun lbl .>
+helper: \ pos dc fun lbl →
 {
   •dst: newGroup
   •dst << [[shift dc] centermark]

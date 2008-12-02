@@ -22,7 +22,7 @@
 ##unit dy = 5cm
 dc: (1.4cm,0)
 
-helper: \ pos dc fun lbl .>
+helper: \ pos dc fun lbl →
 [[shift pos]
 {
   p: (0cm,0cm)--dc

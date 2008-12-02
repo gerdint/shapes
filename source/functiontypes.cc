@@ -100,22 +100,32 @@ namespace Shapes
 		class Transform2DMethod_chop : public Lang::MethodBase< Lang::Transform2D >
 		{
 		public:
-			Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > _self );
+			Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > _self, const char * fullMethodID );
 			virtual ~Transform2DMethod_chop( );
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+			static const char * staticFieldID( ) { return "chop"; }
 		};
 
 		class Transform3DMethod_chop : public Lang::MethodBase< Lang::Transform3D >
 		{
 		public:
-			Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > _self );
+			Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > _self, const char * fullMethodID );
 			virtual ~Transform3DMethod_chop( );
 			virtual void call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const;
+			static const char * staticFieldID( ) { return "chop"; }
 		};
 
 	}
 }
 
+void
+Transform2D_register_methods( Lang::SystemFinalClass * dstClass )
+{
+	dstClass->registerMethod( new Kernel::MethodFactory< Lang::Transform2D, Lang::Transform2DMethod_chop >( ) );
+}
+
+RefCountPtr< const Lang::Class > Lang::Transform2D::TypeID( new Lang::SystemFinalClass( strrefdup( "Transform2D" ), Transform2D_register_methods ) );
+TYPEINFOIMPL( Transform2D );
 
 Lang::Transform2D::Transform2D( double xx, double yx, double xy, double yy, Concrete::Length xt, Concrete::Length yt )
 	: xx_( xx ), yx_( yx ), xy_( xy ), yy_( yy ), xt_( xt ), yt_( yt )
@@ -200,15 +210,7 @@ Lang::Transform2D::getField( const char * fieldID, const RefCountPtr< const Lang
 			return Helpers::newValHandle( new Lang::Boolean( res ) );
 		}
 
-	/* At the end, we put any methods, since this requires a downcast.
-	 */
-	RefCountPtr< const Lang::Transform2D > typedSelfRef = Helpers::down_cast_internal< const Lang::Transform2D >( selfRef );
-	if( strcmp( fieldID, "chop" ) == 0 )
-		{
-			return Helpers::newValHandle( new Lang::Transform2DMethod_chop( typedSelfRef ) );
-		}
-
-	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+	return TypeID->getMethod( selfRef, fieldID ); /* This will throw if there is no such method. */
 }
 
 Lang::Transform2D *
@@ -291,9 +293,6 @@ Lang::Transform2D::prependXShift( const Concrete::Length & dx )
 	yt_ += yx_ * dx;
 }
 
-RefCountPtr< const Lang::Class > Lang::Transform2D::TypeID( new Lang::SystemFinalClass( strrefdup( "Transform2D" ) ) );
-TYPEINFOIMPL( Transform2D );
-
 void
 Lang::Transform2D::show( std::ostream & os ) const
 {
@@ -303,6 +302,15 @@ Lang::Transform2D::show( std::ostream & os ) const
 		 << Lang::Length( xt_ ) << ", " << Lang::Length( yt_ ) << ") ]" ;
 }
 
+
+void
+Transform3D_register_methods( Lang::SystemFinalClass * dstClass )
+{
+	dstClass->registerMethod( new Kernel::MethodFactory< Lang::Transform3D, Lang::Transform3DMethod_chop >( ) );
+}
+
+RefCountPtr< const Lang::Class > Lang::Transform3D::TypeID( new Lang::SystemFinalClass( strrefdup( "Transform3D" ), Transform3D_register_methods ) );
+TYPEINFOIMPL( Transform3D );
 
 Lang::Transform3D::Transform3D( double xx, double yx, double zx, double xy, double yy, double zy, double xz, double yz, double zz, Concrete::Length xt, Concrete::Length yt, Concrete::Length zt )
 	: planeNormalTransformData_( 0 ),
@@ -419,15 +427,7 @@ Lang::Transform3D::getField( const char * fieldID, const RefCountPtr< const Lang
 			return Helpers::newValHandle( new Lang::Boolean( res ) );
 		}
 
-	/* At the end, we put any methods, since this requires a downcast.
-	 */
-	RefCountPtr< const Lang::Transform3D > typedSelfRef = Helpers::down_cast_internal< const Lang::Transform3D >( selfRef );
-	if( strcmp( fieldID, "chop" ) == 0 )
-		{
-			return Helpers::newValHandle( new Lang::Transform3DMethod_chop( typedSelfRef ) );
-		}
-
-	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+	return TypeID->getMethod( selfRef, fieldID ); /* This will throw if there is no such method. */
 }
 
 Lang::Transform3D *
@@ -746,9 +746,6 @@ Lang::Transform3D::transformPlaneUnitNormal( const Concrete::UnitFloatTriple & n
 				Concrete::UnitFloatTriple TunitNormal = Tnormal * ( 1 / TnormalNorm );
 	*/
 }
-
-RefCountPtr< const Lang::Class > Lang::Transform3D::TypeID( new Lang::SystemFinalClass( strrefdup( "Transform3D" ) ) );
-TYPEINFOIMPL( Transform3D );
 
 void
 Lang::Transform3D::show( std::ostream & os ) const
@@ -2246,8 +2243,8 @@ Lang::UnaryOperatorFunction::isTransforming( ) const
 }
 
 
-Lang::Transform2DMethod_chop::Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > self )
-	: Lang::MethodBase< class_type >( self, "chop", false, true )
+Lang::Transform2DMethod_chop::Transform2DMethod_chop( RefCountPtr< const Lang::Transform2D > self, const char * fullMethodID )
+	: Lang::MethodBase< class_type >( self, fullMethodID, false, true )
 {
 	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );
@@ -2292,8 +2289,8 @@ Lang::Transform2DMethod_chop::call( Kernel::EvalState * evalState, Kernel::Argum
 }
 
 
-Lang::Transform3DMethod_chop::Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > self )
-	: Lang::MethodBase< class_type >( self, "chop", false, true )
+Lang::Transform3DMethod_chop::Transform3DMethod_chop( RefCountPtr< const Lang::Transform3D > self, const char * fullMethodID )
+	: Lang::MethodBase< class_type >( self, fullMethodID, false, true )
 {
 	formals_->appendEvaluatedCoreFormal( "L", Kernel::THE_SLOT_VARIABLE );
 	formals_->appendEvaluatedCoreFormal( "p", Kernel::THE_SLOT_VARIABLE );

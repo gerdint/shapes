@@ -21,7 +21,7 @@
  **/
 
 dynamic @a identity 8
-f: \ b .> @a + b
+f: \ b → @a + b
 •stdout << [f 2] << `¢n´
 •stdout << @a:6 | [f 2] << `¢n´
 •stdout << [f 2] << `¢n´

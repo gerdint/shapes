@@ -143,13 +143,11 @@ void shapeserror( char * msg )
  * in the generated y.tab.h header file.
  */
 
-%token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_flassign T_atat T_projection T_angle T_ampersandMore
-%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_bindto T_emptybrackets T_dddotbrackets T_bangbrackets T_bangdddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
-%token <tokenID> T_let T_letstar T_letrec
+%token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_atat T_projection T_angle T_ampersandMore
+%token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_emptybrackets T_dddotbrackets T_bangbrackets T_bangdddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
 %token <tokenID> T_tex T_dynamic T_continuation T_continue T_esc_continuation T_esc_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
-%token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight
- // %token <tokenID>	T_letdst T_plusassign T_minusassign T_starassign T_slashassign
+%token <tokenID> T_split T_splitLeft T_splitRight T_unionLeft T_unionRight T_absLeft T_absRight
 
 %token <intVal> T_int
 %token <floatVal> T_float T_length
@@ -170,7 +168,6 @@ void shapeserror( char * msg )
  */
 
 %type <expr> Program Expr ExprExceptConstStrings DynamicBinding CallExpr CurryCallExpr MutateExpr Function OperatorFunction Class ConstantExceptStrings Coords PolarHandle
-%type <expr> NamedLetExpr								 //	 LetDestinations LetExpr LetStarExpr LetrecExpr
 %type <expr> CodeBracket SuperCall SuperMemberReference
 %type <exprList> InsertionSequence
 %type <node> GroupElem
@@ -1012,6 +1009,14 @@ ExprExceptConstStrings
 	 * knowing when they will be forced...	But I don't think there's a choice here anyway; this expression can't be immediate.
 	 */
 }
+| T_absLeft Expr T_absRight
+{
+	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+	args->orderedExprs_->push_back( $2 );
+	$$ = new Ast::CallExpr( @$,
+													Lang::THE_FUNCTION_ABS,
+													args );
+}
 | Expr '|' Expr
 {
 	$$ = new Ast::WithDynamicExpr( @$, $1, $3 );
@@ -1020,7 +1025,6 @@ ExprExceptConstStrings
 {
 	$$ = new Ast::UnionExpr( @$, $2 );
 }
-| NamedLetExpr
 | Expr T_minusminus T_cycle
 {
 	$$ = new Ast::CycleExpr( @3, $1 );
@@ -1149,43 +1153,6 @@ DynamicBinding
 | T_dynamic_state_identifier ':' StateReference	%prec T_dynamiccolon
 {
 	$$ = new Ast::DynamicStateBindingExpression( @$, @1, $1, $3 );
-}
-;
-
-NamedLetExpr
-: '[' T_let T_identifier '(' Formals ')' Expr ']'
-{
-	for( std::vector< Ast::Expression * >::const_iterator i = $5->defaultExprs_.begin( ); i != $5->defaultExprs_.end( ); ++i )
-		{
-			if( *i == 0 )
-				{
-					Ast::theAnalysisErrorsList.push_back( new Exceptions::ParserError( @5, strrefdup( "Formals without default value are not allowed in list of let bindings." ) ) );
-				}
-		}
-
-	std::list< Ast::Node * > * bracket = new std::list< Ast::Node * >( );
-
-	{
-		Ast::ArgListExprs * args = new Ast::ArgListExprs( false );
-		Ast::FunctionFunction * res = new Ast::FunctionFunction( @5, $5, $7, 0 );
-		res->push_exprs( args );
-		size_t ** pos = new size_t * ( 0 );
-		bracket->push_back( new Ast::DefineVariable( @3,
-																								 $3,
-																								 new Ast::CallExpr( @$,
-																																		RefCountPtr< const Lang::Function >( res ),
-																																		args ),
-																								 pos ) );
-	}
-
-	{
-		Kernel::Environment::LexicalKey ** key = new Kernel::Environment::LexicalKey * ( 0 );
-		bracket->push_back( new Ast::CallExpr( @$,
-																					 new Ast::LexiographicVariable( @3, $3, key ),
-																					 new Ast::ArgListExprs( true ) ) );
-	}
-
-	$$ = new Ast::CodeBracket( @$, bracket );
 }
 ;
 

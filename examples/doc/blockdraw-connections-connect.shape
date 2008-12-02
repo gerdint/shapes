@@ -23,15 +23,15 @@ to: [longblock (TeX `To´)]
 
 dynamic @to identity to
 
-dynShift: \ pos .> @to:[[shift pos] to]
+dynShift: \ pos → @to:[[shift pos] to]
 
-helper: \ start .>
+helper: \ start →
 {
   •dst: newGroup
   •dst << from
 
   [[range '0 '11 '3].foldsl
-   \ •page p e .>
+   \ •page p e →
      {
 	     [dynShift 3cm*[dir (e*1+start)*(360°/'12)]] | { •page << @to  [ignore [connect •page from @to]] }
 		   p

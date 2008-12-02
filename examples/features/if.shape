@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-stderr << [if 1 == 0 4+4 4+5 ] << `¢n´
+stderr << [if 1 = 0 4+4 4+5 ] << `¢n´
 
 stderr << [if false [error `Not to be evaluated!´] `Fine¢n´]
 

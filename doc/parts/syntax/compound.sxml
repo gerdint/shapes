@@ -193,7 +193,7 @@
 <p>
 	Let us begin with a very simple example, the hypothenuse function (never mind that there is dedicated syntax for this in the language already):
 <pre>
-<![CDATA[\ x y .> [sqrt x*x + y*y]]]>
+<![CDATA[\ x y → [sqrt x*x + y*y]]]>
 </pre>
 </p>
 
@@ -201,9 +201,9 @@
 	This fits into (note that there is only a small difference between the syntax for functions and procedures)
 	<syntax-table>
 		<tr> <td><syntax name="function" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Function" /></td></tr>
-		<tr> <td><syntax name="function" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="function" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>\</lexerregexp> <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> <lexerregexp>(→|"->")</lexerregexp> <syntax name="expr" /></inline></td></tr>
 		<tr> <td><syntax name="procedure" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Procedure" /></td></tr>
-		<tr> <td><syntax name="procedure" /></td> <td><bnf>→</bnf></td> <td><inline>\ <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> .> ! <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="procedure" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>\</lexerregexp> <bnf>(</bnf> <bnf>(</bnf> <syntax name="identifier" /> <syntax name="default" /><bnf>?</bnf> <bnf>)</bnf> <bnf>|</bnf> <syntax name="state-identifier" /> <bnf>)*</bnf> <syntax name="sink" /><bnf>?</bnf> <lexerregexp>(→|"->")</lexerregexp> <lexerregexp>!</lexerregexp> <syntax name="expr" /></inline></td></tr>
 		<tr> <td><syntax name="default" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>: <syntax name="expr" /></inline></td></tr>
 		<tr> <td><syntax name="sink" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>&lt;&gt; <syntax name="identifier" /></inline></td></tr>
 	</syntax-table>
@@ -252,7 +252,7 @@ Unlike a function application, ordered and named items do not interact; a named 
 <pre>
 <![CDATA[{
   s: (> '9 <)
-  f: \ bar .> { foo:bar  foo }
+  f: \ bar → { foo:bar  foo }
   f [] <> s
 }]]>
 </pre>

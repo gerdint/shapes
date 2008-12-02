@@ -16,11 +16,11 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-xmax: \ p .> [maximizer p (1,0)].p.x
-xmin: \ p .> [maximizer p (~1,0)].p.x
-ymax: \ p .> [maximizer p (0,1)].p.y
-ymin: \ p .> [maximizer p (0,~1)].p.y
-centerat: \ obj z .>
+xmax: \ p → [maximizer p (1,0)].p.x
+xmin: \ p → [maximizer p (~1,0)].p.x
+ymax: \ p → [maximizer p (0,1)].p.y
+ymin: \ p → [maximizer p (0,~1)].p.y
+centerat: \ obj z →
  {
   thebb: [bbox obj]
   [if thebb.null?
@@ -30,7 +30,7 @@ centerat: \ obj z .>
       obj]]
  }
 
-centerxat: \ obj x .>
+centerxat: \ obj x →
  {
   thebb: [bbox obj]
   [[shift ( 0.5*([xmin thebb]*(x-1) - [xmax thebb]*(x+1)),
@@ -38,7 +38,7 @@ centerxat: \ obj x .>
    obj]
  }
 
-centeryat: \ obj y .>
+centeryat: \ obj y →
  {
   thebb: [bbox obj]
   [[shift ( 0cm,
@@ -46,25 +46,25 @@ centeryat: \ obj y .>
    obj]
  }
 
-centerx: \ obj .> [centerxat obj 0]
-centery: \ obj .> [centeryat obj 0]
+centerx: \ obj → [centerxat obj 0]
+centery: \ obj → [centeryat obj 0]
 
 centeryX:
  {thebb: [bbox (TeX `$X$´)]
   [shift (0cm, ~0.5*([ymax thebb] + [ymin thebb]))]}
 centeryatX:
  {thebb: [bbox (TeX `$X$´)]
-  \ obj y .> [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
+  \ obj y → [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
 
-centerof: \ obj .> { thebb: [bbox obj]  (0.5*([xmin thebb]+[xmax thebb]),0.5*([ymin thebb]+[ymax thebb])) }
+centerof: \ obj → { thebb: [bbox obj]  (0.5*([xmin thebb]+[xmax thebb]),0.5*([ymin thebb]+[ymax thebb])) }
 
-mediate: \ r x1 x2 .> (1-r)*x1 + r*x2
-mspoint: \ pth mediation slide:0cm .> [pth mediation * [abs pth] + slide].p
+mediate: \ r x1 x2 → (1-r)*x1 + r*x2
+mspoint: \ pth mediation slide:0cm → [pth mediation * [abs pth] + slide].p
 
 dynamic @labelmargin identity 1mm
 
 |** The name of the following function is an abbreviation of "centerat, with label margin"
-centeratwlm: \ obj z .>
+centeratwlm: \ obj z →
  {
   thebb: [bbox obj]
   [[shift (0.5*(([xmin thebb]-@labelmargin)*(z.x-1) - ([xmax thebb]+@labelmargin)*(z.x+1)),
@@ -73,7 +73,7 @@ centeratwlm: \ obj z .>
  }
 
 |** This function enlarges the bbox so that its center coincides with the origin.
-symbboxed: \ pic .>
+symbboxed: \ pic →
 {
   bb: [bbox pic]
   rx: [max ~[xmin bb] [xmax bb]]
@@ -82,7 +82,7 @@ symbboxed: \ pic .>
 }
 
 |** This function enlarges the bbox vertically so that its vertical midpoint is 0.
-symbboxedy: \ pic .>
+symbboxedy: \ pic →
 {
   bb: [bbox pic]
   ry: [max ~[ymin bb] [ymax bb]]
@@ -90,7 +90,7 @@ symbboxedy: \ pic .>
 }
 
 |** This function enlarges the bbox horizontally.  Compare symbboxedy.
-symbboxedx: \ pic .>
+symbboxedx: \ pic →
 {
   bb: [bbox pic]
   rx: [max ~[xmin bb] [xmax bb]]
@@ -98,7 +98,7 @@ symbboxedx: \ pic .>
 }
 
 |** This function enlarges the bbox in all directions.
-enlargebbox: \ pic xy .>
+enlargebbox: \ pic xy →
 {
   bb: [bbox pic]
   [bboxed pic [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)]]

@@ -33,7 +33,7 @@
 <p>
 	A classic example of how lexical scoping works is the <user-binding name="addn" /> function:
 <pre>
-<![CDATA[addn: \ n .> \ x .> x + n
+<![CDATA[addn: \ n → \ x → x + n
 inc: [addn '1]
 •stdout << [inc '3]]]>
 </pre>
@@ -73,7 +73,7 @@ inc: [addn '1]
 
 <p>As an example of reach out, suppose we regret how we defined the paramter <arg name="depth" /> long time ago.  Now we have to live with it since our function is part of a library with many users which we don't want to bother with the off-by-one change that would make our implementation of the function more natural.  The following is not an option, since the function may be called with named arguments:</p>
 <pre class="bad">
-<![CDATA[\ off_by_one_depth .>
+<![CDATA[\ off_by_one_depth →
   {
     depth: off_by_one_depth - '1
     /**
@@ -84,7 +84,7 @@ inc: [addn '1]
 <p>
 	Of course, we could use a new name for the adjusted depth, but pretend we are really keen to use the name <arg name="depth" />.  Then we could use a reach-out:
 <pre>
-<![CDATA[\ depth .>
+<![CDATA[\ depth →
   {
     /** Important!  We deal with the off-by-one mistake here, once and for all.
      **/
@@ -145,7 +145,7 @@ inc: [addn '1]
 <pre>
 <![CDATA[dynamic @smallskip identity 2cm
 dynamic @bigskip identity 5cm
-test: \ •dst .> { •dst << @bigskip << `¢n´ }
+test: \ •dst → { •dst << @bigskip << `¢n´ }
 @bigskip : dynamic 4 * @smallskip
 |
 {

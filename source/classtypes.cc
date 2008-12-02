@@ -29,6 +29,7 @@
 #include "autoonoff.h"
 #include "shapescore.h"
 #include "astfun.h"
+#include "methodbase.h"
 
 #include <ctype.h>
 #include <stack>
@@ -468,6 +469,12 @@ Lang::Class::isInTransformingSet( const char * field ) const
 	return false;
 }
 
+Kernel::VariableHandle
+Lang::Class::getMethod( const RefCountPtr< const Lang::Value > & self, const char * methodID ) const
+{
+	throw Exceptions::InternalError( "Method request not defined for this type of class." );
+}
+
 RefCountPtr< const Lang::Function >
 Lang::Class::getMutator( const char * mutatorID ) const
 {
@@ -730,23 +737,30 @@ Lang::MetaClass::gcMark( Kernel::GCMarkedSet & marked )
 
 
 Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName )
-	: Lang::Class( _prettyName ), registerMutatorFunction_( 0 )
+	: Lang::Class( _prettyName ), registerFunction_( 0 )
 { }
 
-Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterMutatorFunction registerMutatorFunction )
-	: Lang::Class( _prettyName ), registerMutatorFunction_( registerMutatorFunction )
+Lang::SystemFinalClass::SystemFinalClass( RefCountPtr< const char > _prettyName, RegisterFunction registerFunction )
+	: Lang::Class( _prettyName ), registerFunction_( registerFunction )
 { }
 
 Lang::SystemFinalClass::~SystemFinalClass( )
 { }
 
 void
-Lang::SystemFinalClass::initMutators( )
+Lang::SystemFinalClass::init( )
 {
-	if( registerMutatorFunction_ != 0 )
+	if( registerFunction_ != 0 )
 		{
-			registerMutatorFunction_( this );
+			registerFunction_( this );
 		}
+}
+
+void
+Lang::SystemFinalClass::registerMethod( Kernel::MethodFactoryBase * factory )
+{
+	typedef typeof methods_ MapType;
+	methods_.insert( MapType::value_type( factory->field( ), RefCountPtr< const Kernel::MethodFactoryBase >( factory ) ) );
 }
 
 void
@@ -793,6 +807,18 @@ bool
 Lang::SystemFinalClass::isRepeatableBase( ) const
 {
 	return false;
+}
+
+Kernel::VariableHandle
+Lang::SystemFinalClass::getMethod( const RefCountPtr< const Lang::Value > & self, const char * methodID ) const
+{
+	typedef typeof methods_ MapType;
+	MapType::const_iterator i = methods_.find( methodID );
+	if( i == methods_.end( ) )
+		{
+			throw Exceptions::NonExistentMember( self->getTypeName( ), methodID );
+		}
+	return i->second->build( self );
 }
 
 RefCountPtr< const Lang::Function >

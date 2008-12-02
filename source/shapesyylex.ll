@@ -312,13 +312,8 @@ Escape "¢"|"¤"
 
 
 
-{Float}"°" {
-	char * end;
-	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
-	return T_float;
-}
-
-{Float}{Escape}"degree" {
+{Float}"°" |
+{Float}"^^" {
 	char * end;
 	shapeslval.floatVal = M_PI / 180 * shapes_strtod( yytext, & end );
 	return T_float;
@@ -496,50 +491,47 @@ Escape "¢"|"¤"
 
 "::" { return T_declaretype; }
 ":=" { return T_assign; }
-"{:=}" { return T_flassign; }
-"==" { return T_eqeq; }
-"=/="|"≠" { return T_eqneq; }
+"=" { return T_eqeq; }
+"/="|"≠" { return T_eqneq; }
 
-".>" { return T_mapsto; }
+"->"|"→" { return T_mapsto; }
 "../" { return T_surrounding; }
-"->" { return T_bindto; }
 "[]" { return T_emptybrackets; }
 "[...]" { return T_dddotbrackets; }
 "[!]" { return T_bangbrackets; }
 "[!...]" { return T_bangdddotbrackets; }
-"()" { return T_compose; }
+"()"|"⊙" { return T_compose; }
 
 "(>" { return T_unionLeft; }
 "<)" { return T_unionRight; }
 "<>" { return T_split; }
 "(<" { return T_splitLeft; }
 ">)" { return T_splitRight; }
+"(|" { return T_absLeft; }
+"|)" { return T_absRight; }
 
 [\{\}\(\)\[\]\<\>] { return yytext[0]; }
 [\.\,\;\:\_\@\!\#\%\&\|\^\-\+\'\"\\] { return yytext[0]; }
 [*/~=] { return yytext[0]; }
 
-"*/" { return T_projection; }
-"/_" { return T_angle; }
+"*/"|"∥" { return T_projection; }
+"/_"|"∠" { return T_angle; }
 "&|" { return T_ampersandMore; }
 
-"<=" { return T_lesseq; }
-">=" { return T_greatereq; }
+"<="|"≤" { return T_lesseq; }
+">="|"≥" { return T_greatereq; }
 
-"<<" { return T_llthan; }
-">>" { return T_ggthan; }
+"<<"|"≪" { return T_llthan; }
+">>"|"≫" { return T_ggthan; }
 
 "!!" { return	T_bangbang; }
 
 "@@" { return T_atat; }
 
-"and" { return T_and; }
-"or" { return T_or; }
-"xor" { return T_xor; }
-"not" { return T_not; }
-"let" { return T_let; }
-"let*" { return T_letstar; }
-"letrec" { return T_letrec; }
+"and"|"⋀" { return T_and; }
+"or"|"⋁" { return T_or; }
+"xor"|"⊻" { return T_xor; }
+"not"|"¬" { return T_not; }
 
 "dynamic" { return T_dynamic; }
 
@@ -547,8 +539,8 @@ Escape "¢"|"¤"
 
 "TeX" { return T_tex; }
 
-"continuation" { return T_continuation; }
-"continue" { return T_continue; }
+"continuation" { return T_continuation; /* Reserved for future use */ }
+"continue" { return T_continue; /* Reserved for future use */ }
 "escape_continuation" { return T_esc_continuation; }
 "escape_continue" { return T_esc_continue; }
 

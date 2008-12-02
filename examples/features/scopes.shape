@@ -29,8 +29,8 @@ a: 1
 }
 
 {
-  odd: \ n .> [if n == 0 false [even n-1]]
-  even: \ n .> [if n == 0 true [odd n-1]]
+  odd: \ n → [if n = 0 false [even n-1]]
+  even: \ n → [if n = 0 true [odd n-1]]
   •stdout << `Is 0 odd? --> ´ << [odd 0] << `¢n´
   •stdout << `Is 4 even? --> ´ << [even 4] << `¢n´
 }

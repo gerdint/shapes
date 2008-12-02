@@ -62,10 +62,10 @@ str: •str;
 
 /** Let's begin with a legal program.
  **/
-fun: \ a .>
+fun: \ a →
   {
     •s: newString
-    proc: \ b .> !
+    proc: \ b → !
       {
         /** Note that, for instance, •stdout is not in scope here.
          **/
@@ -81,7 +81,7 @@ fun: \ a .>
 /** The following would be illegal, since •stdout is in the global environment,
  ** which is outside the function boundary.
  **/
-|** badFun: \ a .>
+|** badFun: \ a →
 |** {
 |**   •stdout << a
 |**   `Hej!´
@@ -96,8 +96,8 @@ fun: \ a .>
  ** (although this situation would actually be quite easy to recognize during the
  ** analysis pass).
  **/
-globalProc: \ msg .> ! { •stdout << msg << `¢n´ }
-|** badFun: \ a .>
+globalProc: \ msg → ! { •stdout << msg << `¢n´ }
+|** badFun: \ a →
 |** {
 |**   [!globalProc a]
 |** 	a + ` so bad!´
@@ -108,7 +108,7 @@ globalProc: \ msg .> ! { •stdout << msg << `¢n´ }
  ** Note that the difference is that goodProc is a procedure, so it should be OK
  ** to modify •stdout from within its body.
  **/
-goodProc: \ a .> !
+goodProc: \ a → !
 {
   [!globalProc a]
 }
@@ -124,7 +124,7 @@ goodProc: \ a .> !
 /** Just to prevent the empty-output-error:
  **/
 
-dummyStroke: \ •dst2D .> { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
+dummyStroke: \ •dst2D → { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 
 [dummyStroke •page]
 
@@ -146,11 +146,11 @@ dummyStroke: \ •dst2D .> { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
 •dst1 << `1:´
 •dst2 << `2:´
 
-say_y: \ •dstStr .> { •dstStr << `y´ }
+say_y: \ •dstStr → { •dstStr << `y´ }
 
 |** dynamic @•dfoo •stdout
 |**
-|** foo: \ .> !
+|** foo: \ → !
 |**   {
 |**     @•dfoo << ` x ´
 |**     [say_y @•dfoo]

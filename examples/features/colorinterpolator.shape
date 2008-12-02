@@ -24,7 +24,7 @@ rgbinterp: ( newColorInterpolator
 
 •page <<
   [[range 0 100 1].foldl
-   \ p e .> p & ( @nonstroking:[rgbinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
+   \ p e → p & ( @nonstroking:[rgbinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
    null]
 
 grayinterp: ( newColorInterpolator
@@ -36,7 +36,7 @@ grayinterp: ( newColorInterpolator
 •page <<
 	[[shift (0, 5mm)]
   [[range 0 100 1].foldl
-   \ p e .> p & ( @nonstroking:[grayinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
+   \ p e → p & ( @nonstroking:[grayinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
    null]]
 
 cmykinterp: ( newColorInterpolator
@@ -48,5 +48,5 @@ cmykinterp: ( newColorInterpolator
 •page <<
 	[[shift (0mm, 10mm)]
   [[range 0 100 1].foldl
-   \ p e .> p & ( @nonstroking:[cmykinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
+   \ p e → p & ( @nonstroking:[cmykinterp 4/100*e] | [[shift (e*2mm,0)] [fill [rectangle (0mm,0mm) (5mm,5mm)]]] )
    null]]

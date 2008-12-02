@@ -21,27 +21,27 @@
 ##needs shiftoff
 
 
-junction: \ txt .> [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
+junction: \ txt → [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
 
 pjunction: [junction (TeX `p´)]
 sjunction: [junction (TeX `s´)]
 
-junctionlbl: \ txt arrowdir lbl doArrow .>
+junctionlbl: \ txt arrowdir lbl doArrow →
 {
   ahLength: 1.5mm
   ahAngle: 30°
   tmppic: [junction txt]
   thebb: [bbox tmppic]
   pOffset: 0bp           |**  @connectionlw + ahLength*[sin 0.5*ahAngle]
-  p: [if arrowdir == to_lft [[shift (0,pOffset)] ([xmax thebb],[ymax thebb])--([xmin thebb],[ymax thebb])]
-      [if arrowdir == to_rt [[shift (0,pOffset)] ([xmin thebb],[ymax thebb])--([xmax thebb],[ymax thebb])]
-       [if arrowdir == to_bot [[shift (pOffset,0)] ([xmax thebb],[ymax thebb])--([xmax thebb],[ymin thebb])]
-        [if arrowdir == to_top [[shift (pOffset,0)] ([xmax thebb],[ymin thebb])--([xmax thebb],[ymax thebb])]
+  p: [if arrowdir = to_lft [[shift (0,pOffset)] ([xmax thebb],[ymax thebb])--([xmin thebb],[ymax thebb])]
+      [if arrowdir = to_rt [[shift (0,pOffset)] ([xmin thebb],[ymax thebb])--([xmax thebb],[ymax thebb])]
+       [if arrowdir = to_bot [[shift (pOffset,0)] ([xmax thebb],[ymax thebb])--([xmax thebb],[ymin thebb])]
+        [if arrowdir = to_top [[shift (pOffset,0)] ([xmax thebb],[ymin thebb])--([xmax thebb],[ymax thebb])]
 	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
-  d: [if arrowdir == to_lft to_top
-      [if arrowdir == to_rt to_top
-       [if arrowdir == to_bot to_rt
-        [if arrowdir == to_top to_rt
+  d: [if arrowdir = to_lft to_top
+      [if arrowdir = to_rt to_top
+       [if arrowdir = to_bot to_rt
+        [if arrowdir = to_top to_rt
 	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
 
   [symbboxed
@@ -53,23 +53,23 @@ junctionlbl: \ txt arrowdir lbl doArrow .>
        << tmppic )]
 }
 
-tfjunction: \ arrowdir lbl .> [junctionlbl (TeX `TF´) arrowdir lbl true]
-gyjunction: \ arrowdir lbl .> [junctionlbl (TeX `GY´) arrowdir lbl false]
+tfjunction: \ arrowdir lbl → [junctionlbl (TeX `TF´) arrowdir lbl true]
+gyjunction: \ arrowdir lbl → [junctionlbl (TeX `GY´) arrowdir lbl false]
 
 
 
-putblockTerminal: \ newBlock pos oldBlock .>
+putblockTerminal: \ newBlock pos oldBlock →
 {
   r: [normalized pos - [centerof oldBlock]]
   res: [[shift pos] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
   res
 }
 
-bgconnect: \ pica picb .>
+bgconnect: \ pica picb →
 {
   ca: [centerof pica]
   cb: [centerof picb]
-  d: [if [abs ca - cb] == 0bp
+  d: [if [abs ca - cb] = 0bp
          (1,0)
 	 [normalized cb - ca]]
   (ca + d * @smallblockr)--(cb - d * @smallblockr)
@@ -77,7 +77,7 @@ bgconnect: \ pica picb .>
 
 dynamic @bgArrowWidth identity 4bp
 
-bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true .>
+bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true →
  (@blend:BLEND_NORMAL
   |
   { theLength: @bgArrowWidth / [sin ahAngle]
@@ -115,31 +115,31 @@ bondgraphArrow: \ p doHook:false doCausal:false ahAngle:20° fillAsStroking:true
   }
  )
 
-ubond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...]] )
-hbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true doCausal:true ...]] )
-tbond: \ p .> ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...] tail:[bondgraphArrow doCausal:true ...]] )
+ubond: \ p → ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...]] )
+hbond: \ p → ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true doCausal:true ...]] )
+tbond: \ p → ( @width:@connectionlw | [stroke p head:[bondgraphArrow doHook:true ...] tail:[bondgraphArrow doCausal:true ...]] )
 
 |**  the midpoint has typically singular direction, so we can't do the obvious:
 |**  draw( conlabel( to_dir( dir( angle( direction (0.5*length(p)) of p ) - 90 ) ), txt, mspoint( p, 0.5, 0 ) ) )
 |**  Actually, the above comment is a relic from the MetaPost implementation, and I no longer understand it as I
 |**  think that bond graph connections are _typically_ just straight lines.
-flowlabel: \ p lbl .>
+flowlabel: \ p lbl →
   [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] - 90°]] lbl [mspoint p 0.5]]
 
-effortlabel: \ p lbl .>
+effortlabel: \ p lbl →
   [conlabel [to_dir [dir [angle [p ∞].p - [p 0].p] + 90°]] lbl [mspoint p 0.5]]
 
 
 /** The following two functions are conventience functions that factors out the oldBlock which appears at two places.
  ** They return the path so that it can be labeled.
  **/
-terminalfrom: \ •dst oldBlock pos newBlock  .>
+terminalfrom: \ •dst oldBlock pos newBlock  →
 {
   t: [putblockTerminal newBlock pos oldBlock]
 	 •dst << t
   [bgconnect oldBlock t]
 }
-terminalto: \ •dst oldBlock pos newBlock .>
+terminalto: \ •dst oldBlock pos newBlock →
 {
   t: [putblockTerminal newBlock pos oldBlock]
 	 •dst << t

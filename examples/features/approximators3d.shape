@@ -28,7 +28,7 @@ nIter: '40
   pth: [immerse [circle 1cm]]
 /**
   pth: [[range '0 '3].foldl
-   \ pile e .>  { sl: [pth0 e*1.]  pile--(+sl.rv*sl.rT)<(sl.p + 0.1mm*[random3D])>(+sl.v*sl.T)
+   \ pile e →  { sl: [pth0 e*1.]  pile--(+sl.rv*sl.rT)<(sl.p + 0.1mm*[random3D])>(+sl.v*sl.T)
    emptypath3D]--cycle
 **/
   •page << view [] [stroke pth]
@@ -39,7 +39,7 @@ nIter: '40
   @width: 0.2bp
   |
   [[range '1 nIter].foldsl
-   \ pile e •randstate .>
+   \ pile e •randstate →
    {
     p: 1.4cm * [random3D •randstate]
 |**    tim: newTimer <<
@@ -58,9 +58,9 @@ nIter: '40
   •stdout << [sprintf `Average time: %gs¢n´  timer / nIter]
 }
 
-randPath: \ n •randstate .>
+randPath: \ n •randstate →
  [[range '1 n].foldsl
-  \ pile e •st .>  { h: 3mm*[random3D •st]   pile--(+~h)<(1cm*[random3D •st])>(+h) }
+  \ pile e •st →  { h: 3mm*[random3D •st]   pile--(+~h)<(1cm*[random3D •st])>(+h) }
   emptypath3D •randstate]--cycle
 
 {
@@ -75,7 +75,7 @@ randPath: \ n •randstate .>
   @width: 0.2bp
   |
   [[range '1 nIter].foldsl
-   \ pile e •randstate .>
+   \ pile e •randstate →
    {
     p: sh [] 1.4cm * [random3D •randstate]
 |**    tim: newTimer

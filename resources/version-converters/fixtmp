@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for i in `ls *.shape`; do
+for i in `ls *.shape *.shext`; do
   echo Fixing $i
-  cat extmp | ex -sC $i
+  ex -sC $i < 0.4.2
 done

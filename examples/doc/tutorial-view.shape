@@ -27,28 +27,28 @@ u: R/2.1
 
 /** The function describing the manifold.
  **/
-surfz: \ p .> (0.24*R) * [sin (p.x/u) * (p.y/u)]
+surfz: \ p → (0.24*R) * [sin (p.x/u) * (p.y/u)]
 
 /** A general-purpose helper.
  **/
-surfit: \ f p .> ( p.x, p.y, [f p] )
+surfit: \ f p → ( p.x, p.y, [f p] )
 
 /** A general-purpose surface-circle.
  **/
-surfaceCircle: \ f r c sides:'12 .>
+surfaceCircle: \ f r c sides:'12 →
 {
   mid: [surfit f c]
 	[[range '0 sides-'1].foldl
-   \ p e .> p & [fill mid--[surfit f c+r*[dir (360°*e)/sides]]--[surfit f c+r*[dir (360°*(e+'1))/sides]]--cycle]
+   \ p e → p & [fill mid--[surfit f c+r*[dir (360°*e)/sides]]--[surfit f c+r*[dir (360°*(e+'1))/sides]]--cycle]
 	 null3D]
 }
 
 
 foldpairsl:
 {
-  helper: \ op nullRes last lst .> [if [null? lst] nullRes [helper op [op nullRes last lst.car] lst.car lst.cdr]]
+  helper: \ op nullRes last lst → [if [null? lst] nullRes [helper op [op nullRes last lst.car] lst.car lst.cdr]]
 
-  \ op nullRes lst .>
+  \ op nullRes lst →
     [if [null? lst]
 			lst
 		 	[helper op nullRes lst.car lst.cdr]]
@@ -56,9 +56,9 @@ foldpairsl:
 
 foldtriplesl:
 {
-  helper: \ op nullRes back2 back1 lst .> [if [null? lst] nullRes [helper op [op nullRes back2 back1 lst.car] back1 lst.car lst.cdr]]
+  helper: \ op nullRes back2 back1 lst → [if [null? lst] nullRes [helper op [op nullRes back2 back1 lst.car] back1 lst.car lst.cdr]]
 
-  \ op nullRes lst .>
+  \ op nullRes lst →
     [if [null? lst]
 			lst
       [if [null? lst.cdr]
@@ -66,16 +66,16 @@ foldtriplesl:
 		   	[helper op nullRes lst.car lst.cdr.car lst.cdr.cdr]]]
 }
 
-functionMesh: \ zMap xRange yRange step:'1 .>
+functionMesh: \ zMap xRange yRange step:'1 →
 {
-  xyz: \ p .> ( p.x, p.y, [zMap p] )
+  xyz: \ p → ( p.x, p.y, [zMap p] )
   [foldl
-    \ p x .>
+    \ p x →
 			p
 			&
 			[stroke
         [yRange.foldl
-           \ p y .> p--[xyz (x,y)]
+           \ p y → p--[xyz (x,y)]
            emptypath3D
 			]]
     null3D
@@ -83,12 +83,12 @@ functionMesh: \ zMap xRange yRange step:'1 .>
   ]
 	&
   [foldl
-    \ p y .>
+    \ p y →
 			p
 			&
 			[stroke
         [xRange.foldl
-           \ p x .> p--[xyz (x,y)]
+           \ p x → p--[xyz (x,y)]
            emptypath3D
 			]]
     null3D
@@ -96,17 +96,17 @@ functionMesh: \ zMap xRange yRange step:'1 .>
   ]
 }
 
-functionSurface: \ zMap xRange yRange .>
+functionSurface: \ zMap xRange yRange →
 {
-  xyz: \ p .> ( p.x, p.y, [zMap p] )
+  xyz: \ p → ( p.x, p.y, [zMap p] )
 	xConsRange: [consify xRange]
 	yConsRange: [consify yRange]
   [foldpairsl
-    \ p x1 x2 .>
+    \ p x1 x2 →
 			p
 			&
       [foldpairsl
-         \ p y1 y2 .>
+         \ p y1 y2 →
           p
 					&
 					{
@@ -137,7 +137,7 @@ functionSurface: \ zMap xRange yRange .>
 
 ridgeLines:
 {
-  ridgeTest: \ p1 p2 o1 o2 .>
+  ridgeTest: \ p1 p2 o1 o2 →
   {
     d11: [normalized o1 - p1]
     d12: [normalized o2 - p1]
@@ -146,19 +146,19 @@ ridgeLines:
     d22: [normalized o2 - p2]
     dm2: d21 + d22
     dc: [normalized p2 - p1]
-    ( dm1*dc <= dm1*d11 ) and ( ~(dm2*dc) <= dm2*d22 )
+    ( dm1*dc ≤ dm1*d11 ) and ( ~(dm2*dc) ≤ dm2*d22 )
   }
 
- \ zMap xRange yRange tf .>
+ \ zMap xRange yRange tf →
   {
-    xyz: \ p .> ( p.x, p.y, [zMap p] )
+    xyz: \ p → ( p.x, p.y, [zMap p] )
 
   	xConsRange: [consify xRange]
   	yConsRange: [consify yRange]
     [foldpairsl
-      \ p x1 x2 .>
+      \ p x1 x2 →
         [foldpairsl
-          \ p y1 y2 .>
+          \ p y1 y2 →
   					{
   					  p11: view [] tf [] [xyz (x1,y1)]
   					  p12: view [] tf [] [xyz (x1,y2)]
@@ -186,9 +186,9 @@ ridgeLines:
     ]
   	&
     [foldtriplesl
-      \ p x1 x2 x3 .>
+      \ p x1 x2 x3 →
         [foldpairsl
-          \ p y1 y2 .>
+          \ p y1 y2 →
   					{
   					  p1: view [] tf [] [xyz (x2,y1)]
   					  p2: view [] tf [] [xyz (x2,y2)]
@@ -206,9 +206,9 @@ ridgeLines:
     ]
   	&
     [foldtriplesl
-      \ p y1 y2 y3 .>
+      \ p y1 y2 y3 →
         [foldpairsl
-          \ p x1 x2 .>
+          \ p x1 x2 →
   					{
   					  p1: view [] tf [] [xyz (x1,y2)]
   					  p2: view [] tf [] [xyz (x2,y2)]

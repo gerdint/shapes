@@ -27,7 +27,7 @@ baseline: @defaultunit:1%f | (0cm,~1cm)>(^45°)--(1.5cm^180°)<(3cm,~2cm)
 
 •page <<
  [message.list.foldl
-    \ pile distChar .>
+    \ pile distChar →
      {
        c: ( newText << distChar.cdr )
        sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]

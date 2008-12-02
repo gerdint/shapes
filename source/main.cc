@@ -1632,12 +1632,12 @@ namespace Shapes
 		{
 			cls->setSelfRef( cls );
 		}
-		void initMutators( RefCountPtr< const Lang::Class > cls )
+		void initClass( RefCountPtr< const Lang::Class > cls )
 		{
 			Lang::SystemFinalClass * typedPtr = dynamic_cast< Lang::SystemFinalClass * >( const_cast< Lang::Class * >( cls.getPtr( ) ) );
 			if( typedPtr != 0 )
 				{
-					typedPtr->initMutators( );
+					typedPtr->init( );
 				}
 			else
 				{
@@ -1678,9 +1678,12 @@ setupGlobals( )
 
 	Helpers::setSelfRef( Lang::TransformedInstance::TypeID );
 
-	Helpers::initMutators( Kernel::WarmGroup2D::TypeID );
-	Helpers::initMutators( Kernel::WarmGroup3D::TypeID );
-	Helpers::initMutators( Kernel::WarmCatalog::TypeID );
+	Helpers::initClass( Kernel::WarmGroup2D::TypeID );
+	Helpers::initClass( Kernel::WarmGroup3D::TypeID );
+	Helpers::initClass( Kernel::WarmCatalog::TypeID );
+	Helpers::initClass( Lang::SingleList::TypeID );
+	Helpers::initClass( Lang::Transform2D::TypeID );
+	Helpers::initClass( Lang::Transform3D::TypeID );
 
 	{
 		Lang::SystemVirtualInterface * tmp = new Lang::SystemVirtualInterface( strrefdup( "Geometric2D" ) );

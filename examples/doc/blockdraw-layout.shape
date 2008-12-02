@@ -24,7 +24,7 @@ helper:
 {
   F0: [longblock (TeX `Old´)]
   G0: [longblock (TeX `New´)]
-  \ •dst pos fun obj:G0 .>
+  \ •dst pos fun obj:G0 →
   {
     F: [putblockOrigin •dst [[shift pos] F0]]
 		G: [fun •dst obj F]

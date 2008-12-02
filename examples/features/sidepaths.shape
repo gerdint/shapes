@@ -21,18 +21,18 @@
 
 pathpoints:
 {
-  helper: \ sl .> [if sl.looped [list] [cons sl [helper sl+1]]]
-  \ pth .> [helper pth.begin]
+  helper: \ sl → [if sl.looped [list] [cons sl [helper sl+1]]]
+  \ pth → [helper pth.begin]
 }
 
 
-sstroke: \ pth .>
-( (@stroking:RGB_BLACK | [foldl \ p sl .> ( p & [stroke [shift sl.p][]( (sl.N*6*@width)--(sl.N*~5*@width) )] )  null  [pathpoints pth]])
+sstroke: \ pth →
+( (@stroking:RGB_BLACK | [foldl \ p sl → ( p & [stroke [shift sl.p][]( (sl.N*6*@width)--(sl.N*~5*@width) )] )  null  [pathpoints pth]])
    &
    [stroke pth]
 )
 
-cstroke: \ pth .>
+cstroke: \ pth →
 (
   (@stroking:RGB_GREEN & @width:(2*@width) | [stroke [controlling pth]] )
   &
@@ -41,7 +41,7 @@ cstroke: \ pth .>
 
 testPth: @defaultunit:1%C | (0cm,0cm)>(^~30°)--(^)<(2cm,3cm)>(^45°)--(^)<(5cm,2cm)>(^0°)--(6cm,2cm)--(8cm,4cm)
 
-test: \ •dst pth method .>
+test: \ •dst pth method →
 (
 @width: 0.5bp
 |

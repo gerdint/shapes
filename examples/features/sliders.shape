@@ -28,7 +28,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cy
   c0: [stroke [circle 3bp]]
   c1: [stroke [circle 5bp]]
 
-  test: \ t0 delta .>
+  test: \ t0 delta →
   (
     [[shift [pth [pth t0].length + delta].p] c0]
     &
@@ -37,7 +37,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cy
 
   •page <<
   [[range '0 '15].foldsl
-    \ p e •st .> ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
+    \ p e •st → ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
     null
     •rand]
 }
@@ -51,7 +51,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cy
 
   •page << view [] [stroke pth]
 
-  test: \ t0 delta .>
+  test: \ t0 delta →
   (
     [[shift view [] [pth [pth t0].length + delta].p] c0]
     &
@@ -60,7 +60,7 @@ pth: @defaultunit:1%C | (0cm,0cm)>(^1)--(^~1.3)<(3cm,0cm)--(^~0.5)<(1cm,3cm)--cy
 
   •page <<
   [[range '0 '15].foldsl
-    \ p e •st .> ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
+    \ p e •st → ( p & [test 40*[random1D •st] 20cm*[random1D •st]] )
     null
     •rand]
 }

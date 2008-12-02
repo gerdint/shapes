@@ -34,7 +34,7 @@ pth: [rotate 1][][circle 5cm]
 @<< [stroke pth]
 
 [[range '1 '5].foldr
- \ p i .> {
+ \ p i → {
    t: 1 / i
    a: ([point pth 0]+[direction pth 0]*[speed pth 0]*t)
    @<< [stroke [point pth t]--a]

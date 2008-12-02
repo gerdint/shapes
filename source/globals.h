@@ -159,6 +159,8 @@ namespace Shapes
 		extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_AND;
 		extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_OR;
 		extern RefCountPtr< const Lang::BinaryOperatorFunction > THE_OPERATOR_XOR;
+
+		extern RefCountPtr< const Lang::CoreFunction > THE_FUNCTION_ABS;
 	}
 
 	namespace Ast

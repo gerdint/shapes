@@ -25,7 +25,7 @@ lSteps: '20
 
 •page <<
  [[range '0 lSteps].foldl
-  \ p e .>
+  \ p e →
    {
      l: lMin+e*(lMax-lMin)/(lSteps-'1)
      br: [someBrace (e*xStep,0cm) (e*xStep,l)]

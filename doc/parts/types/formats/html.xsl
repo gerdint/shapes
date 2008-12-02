@@ -324,7 +324,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="operator-unary[@side='prefix']/case">
   <tr>
     <td align="center"></td>
-    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"><xsl:value-of select="../@op" /><xsl:for-each select="../alternative"><xsl:text> or </xsl:text><xsl:value-of select="@op" /></xsl:for-each></td>
     <td align="center"><xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template></td>
     <td align="center"><xsl:apply-templates select="result" /></td>
     <td><xsl:apply-templates select="description" /></td>
@@ -333,7 +333,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="operator-unary[@side='postfix']/case">
   <tr>
     <td align="center"><xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@type" /></xsl:with-param></xsl:call-template></td>
-    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"><xsl:value-of select="../@op" /><xsl:for-each select="../alternative"><xsl:text> or </xsl:text><xsl:value-of select="@op" /></xsl:for-each></td>
     <td align="center"></td>
     <td align="center"><xsl:apply-templates select="result" /></td>
     <td><xsl:apply-templates select="description" /></td>
@@ -342,7 +342,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="operator-binary/case">
   <tr>
     <td align="center"><xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@first-type" /></xsl:with-param></xsl:call-template></td>
-    <td align="center"><xsl:value-of select="../@op" /></td>
+    <td align="center"><xsl:value-of select="../@op" /><xsl:for-each select="../alternative"><xsl:text> or </xsl:text><xsl:value-of select="@op" /></xsl:for-each></td>
     <td align="center"><xsl:call-template name="name-to-linked-type"><xsl:with-param name="name"><xsl:value-of select="@second-type" /></xsl:with-param></xsl:call-template></td>
     <td align="center"><xsl:apply-templates select="result" /></td>
     <td><xsl:apply-templates select="description" /></td>

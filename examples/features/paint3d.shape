@@ -25,7 +25,7 @@ pth: (~1cm,~1cm,~1cm)--(~1cm,1cm,~1cm)--(1cm,1cm,~1cm)--(1cm,~1cm,~1cm)--(1cm,~1
 pth2: [rot*tf pth]
 
 screwSeg: (~1cm,1cm,~1cm)<(~1cm,0cm,~1cm)>(~1cm,~1cm,~1cm)--(1cm,~1cm,~2cm)<(1cm,0cm,~2cm)>(1cm,1cm,~2cm)
-deeper: \ n .> [shift (0cm,0cm,n*~2cm)]
+deeper: \ n → [shift (0cm,0cm,n*~2cm)]
 screw: (1cm,~1cm,0cm)<(1cm,0cm,0cm)>(1cm,1cm,0cm)--screwSeg--[[deeper 1] screwSeg]--[[deeper 2] screwSeg]--cycle
 screw2: [rot screw]
 

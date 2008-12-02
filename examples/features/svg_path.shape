@@ -94,5 +94,5 @@ pth: [svg_path multi:false singletons:false
              185.99,211.80 181.63,231.29 180.18,262.40M 153.72,191.16M 154.59,192.03M 183.38,252.22
 ´]
 
-•stdout << `Length: ´ << [if [typeof pth]==§SubPath [abs pth] `(multi)´] << `¢n´
+•stdout << `Length: ´ << [if [typeof pth]=§SubPath [abs pth] `(multi)´] << `¢n´
 •page << [stroke pth]

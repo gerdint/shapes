@@ -20,8 +20,8 @@
 
 ahLength:2.5mm
 
-strokeWithFlatHead: \ p .>
-  [facing \ tf .>
+strokeWithFlatHead: \ p →
+  [facing \ tf →
 		{
  		  [stroke [view [tf p]] head:[MetaPostArrow ahLength:ahLength ...]]
 		}]

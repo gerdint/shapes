@@ -29,7 +29,7 @@
 
 ##unit u = 1cm
 
-cylinderLid: \ radius height sides smallRadius .>
+cylinderLid: \ radius height sides smallRadius →
   [shift (0cm,0cm,height)] [] ( newGroup3D << [facet [immerse [polyDisc radius sides]]]
                                            << [stroke [immerse [polyDisc radius sides]]]
                                            << @nonstroking:[gray 0.3] | [facet [immerse [polyDisc smallRadius sides]] tiebreaker:1bp]
@@ -58,7 +58,7 @@ joint: jointSurface | ( newGroup3D << [shift (0m,0m,~jointThickness)] [] [cylind
 jointYSeparation: 2*jointThickness + 0.1u
 
 armTwist: 60°
-armPath: \ tfStart tfEnd .>
+armPath: \ tfStart tfEnd →
 {
   pStart: tfStart [] (0u,0u,0u)
   pEnd: tfEnd [] (0u,0u,0u)
@@ -69,7 +69,7 @@ armPath: \ tfStart tfEnd .>
   (tfEnd [] ([rotate3D (0,0,1) armTwist] [] (~hr,0u,0u))) < pEnd
 }
 
-edgyCylinder: \ pth0 pth1 .>
+edgyCylinder: \ pth0 pth1 →
 [if [duration pth0] ≠ [duration pth1]
     [error `edgyCylinder: Paths don't have the same duration.´]
 {
@@ -77,7 +77,7 @@ edgyCylinder: \ pth0 pth1 .>
 
   •res <<
     [[range '0 [duration pth0]-'1].foldl
-       \ p e .>
+       \ p e →
          p
          &
          ( [facet [pth0 e*1].p--[pth0 (e+'1)*1].p--[pth1 (e+'1)*1].p--cycle] )
@@ -87,19 +87,19 @@ edgyCylinder: \ pth0 pth1 .>
 
   •res <<
     [[range '0 [duration pth0]].foldl
-      \ p e .>
+      \ p e →
         p & [stroke [pth0 e*1].p--[pth1 e*1].p]
       null3D]
 
   •res;
 }]
 
-paintArm: \ pth width height steps .>
+paintArm: \ pth width height steps →
 {
   lStep: [abs pth] / steps
 
   [[range '0 steps-'1].foldl
-   \ p e .>
+   \ p e →
      p
      &
      {
@@ -156,7 +156,7 @@ frameArrows:
  ** as relative to to <p>.  <r> is just the radius, measured along <d1> and <d2>.
  ** Although <p> only shifts the result, it is taken as an argument as a convenience for the caller.
  **/
-rightAnglePath: \ p d1 d2 r .>
+rightAnglePath: \ p d1 d2 r →
 {
   p1: [normalized d1]*r
   p2: [normalized d2]*r

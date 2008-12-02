@@ -23,7 +23,7 @@
 
 pointMark: [facing [fill [circle 2bp]]]
 
-baseVectors3D: \ nx ny nz .>
+baseVectors3D: \ nx ny nz →
 {
 	len: 1.5u
 	tmpHead: [MetaPostArrow3D ahLength:3mm ...]
@@ -40,7 +40,7 @@ baseVectors3D: \ nx ny nz .>
   )
 }
 
-baseVectors2D: \ .>
+baseVectors2D: \ →
 {
 	nx: (0,0,1)
 	ny: (0,0,1)

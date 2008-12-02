@@ -37,7 +37,7 @@ interp: ( newRGBInterpolator
 yMin: ~5cm
 yMax: 5cm
 
-makeNormal: \ p .> ( @nonstroking:[interp (p.y-yMin)/(yMax-yMin)] | [debuglog_before [sprintf `%g¢n´ (p.y-yMin)/(yMax-yMin)] [facetnormal p [normalized (p.x,p.y,0bp)]]] )
+makeNormal: \ p → ( @nonstroking:[interp (p.y-yMin)/(yMax-yMin)] | [debuglog_before [sprintf `%g¢n´ (p.y-yMin)/(yMax-yMin)] [facetnormal p [normalized (p.x,p.y,0bp)]]] )
 
 r: 6cm
 ##unit w = 1cm
@@ -50,7 +50,7 @@ obj:
   & @facetresolution:1cm
   |
   [[range 0 0.9999-delta delta].foldl
-   \ p e .> {
+   \ p e → {
 	   y1: yMin + e * ( yMax - yMin )
 	   y2: yMin + ( e + delta ) * ( yMax - yMin )
    	 p &
@@ -62,7 +62,7 @@ obj:
    null3D]
 
 [[range 10° 170° 10°].foldsl
- \ p e •st .>
+ \ p e •st →
   !{
     •st << [rotate3D (0,1,0) ~e] [] obj
     p

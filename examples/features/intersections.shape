@@ -19,7 +19,7 @@
 ##needs circle
 ##needs arrowheads
 
-intersectionCircle: \ pth1 pth2 .>
+intersectionCircle: \ pth1 pth2 →
   ( @stroking:RGB_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
 
 •page << [shift (0cm,4cm)] [] (TeX `\parbox{4cm}{Lines start at black circles, and at their first intersection there's a red circle.}´)
@@ -52,17 +52,17 @@ pth3faraway: (5cm,5cm)>(5cm,6cm)--(7cm,7cm)
 
 |** This will draw nothing, since the handler returns NULL to the insertion continuation
 •page << (continuation cont
-      @handler_NoIntersection: \ pth1 pth2 .> (continue cont NULL)
+      @handler_NoIntersection: \ pth1 pth2 → (continue cont NULL)
       |
       [intersectionCircle pth1curved pth3faraway]
     )
 
 **/
 
-randPath: \ n •state .>
+randPath: \ n •state →
  [scale 5] []
   [[range '1 n].foldsl
-   \ pile e •st .>  pile--( ^ )<(1cm*[random2D •st])>( 2mm * (1+[random1D •st]) ^ 180°*[random1D •st] )
+   \ pile e •st →  pile--( ^ )<(1cm*[random2D •st])>( 2mm * (1+[random1D •st]) ^ 180°*[random1D •st] )
    emptypath •state]
 
 {
@@ -77,7 +77,7 @@ randPath: \ n •state .>
   @width: 0.2bp
   |
   [[range '1 '10].foldsl
-   \ pile e •st .>
+   \ pile e •st →
    {
     pth2: sh [] [randPath '4 •st]
 
@@ -89,10 +89,10 @@ randPath: \ n •state .>
     stderr << `pth2: ´ << [point pth2 1] << `>(´ << [reversespeed pth2 1] << `^´ << 180/180° * [angle [reversedirection pth2 1]] << `°)¢n´
 **/
     pile
-    & [stroke pth2 tail: \ p .> (> picture:[stroke [shift p.begin.p][][circle 3mm]]  cut:0mm <)]
+    & [stroke pth2 tail: \ p → (> picture:[stroke [shift p.begin.p][][circle 3mm]]  cut:0mm <)]
 |** & ( @stroking:[gray 0.7] | [stroke controlling [] pth2] )
     & (escape_continuation cont
-      @handler_NoIntersection: \ pth1 pth2 .> (escape_continue cont [stroke [shift pth1.begin.p][][circle 4mm]])
+      @handler_NoIntersection: \ pth1 pth2 → (escape_continue cont [stroke [shift pth1.begin.p][][circle 4mm]])
       |
       [intersectionCircle pth2 pth]
       )
