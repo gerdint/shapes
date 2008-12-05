@@ -83,5 +83,44 @@
 		</body>
 	</section>
 
+	<section>
+		<title>People and thanks</title>
+		<top>
+			<p>Credit is due to a lot of people.  As an open source project, relying heavily on free software components and tools, the list of people who have more or less directly contributed to this project is endless, and a warm thanks goes to everybody on this long list.  Here, a few persons deserving being mentioned for having contributed directly <str-Shapes />, will be listed.</p>
+		</top>
+		<section>
+			<title>Contributions</title>
+			<body>
+				<p>These are the people having contributed to the project with code:
+					<ul>
+						<li><p><b>Henrik Tidefelt</b> — language design, maintainer, author of the bulk of code and documentation.</p></li>
+						<li><p><b>Gustaf Hendeby</b> — mainly build mechanisms, portability, and distribution, but also some language features.</p></li>
+						<li><p><b>Tobias Gerdin</b> — support for <str-Shapes /> in Emacs.</p></li>
+					</ul>
+				</p>
+			</body>
+		</section>
+		<section>
+			<title>Testing</title>
+			<body>
+				<p>Thanks goes to the following people for being willing to try out <str-Shapes /> and provide feedback (excluding contributors):
+					<ul>
+						<li><b>Thomas Schön</b></li>
+					</ul>
+				</p>
+			</body>
+		</section>
+		<section>
+			<title>Special thanks</title>
+			<body>
+				<p>Special thanks goes to:
+					<ul>
+						<li><p><b>Lennart Ljung</b> and <b>Torkel Glad</b> — for allowing an early version of <str-Shapes /> to be used for many illustrations in their book <a href="http://www.control.isy.liu.se/books/rteknik/"><i>Reglerteknik</i></a>, a basic book on automatic control.</p></li>
+					</ul>
+				</p>
+			</body>
+		</section>
+	</section>
+
 </book>
 
