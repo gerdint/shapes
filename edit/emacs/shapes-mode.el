@@ -32,11 +32,15 @@
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
 ;; - Automatically pretty-print #, \, ->
+;; - Convert Shapes ref manual to info and hook up to Info-Look
+;; - Skeletons, including suitably paired characters.
+;; - Eldoc mode?
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
 ;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
 ;; * point is after first char (and the cursor is ON char 2).
+;; - Shapes compile command affecting other buffers?
 
 ;;; Installation
 
@@ -47,7 +51,7 @@
 
 ;; Code tested only on GNU Emacs 22.
 
-(defcustom shapes-compile-command "~/shapes/source/shapes"
+(defcustom shapes-compile-command "shapes"
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
