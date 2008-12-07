@@ -21,8 +21,8 @@
 
 ;; This mode is very much work in progress. It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
-;; to such. That said, it does support compilation-mode, comment-dwim, Imenu and
-;; viewing output through doc-view.
+;; to such. That said, it does support compilation-mode, comment-dwim, Imenu,
+;; auto-paired characters and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
@@ -86,6 +86,9 @@
     (when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
+    (mapc (lambda (elt) 
+	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
+	  "`[(")
     map))
 
 (defun shapes-compile ()
@@ -125,6 +128,9 @@ doc-view."
   (setq mode-name "Shapes")
   (use-local-map shapes-mode-map)
   ;(set-syntax-table shapes-mode-syntax-table)
+
+  ;; Skeletons
+  (set (make-local-variable 'skeleton-pair-alist) '((?` _ "´"))) ; for strings
 
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
