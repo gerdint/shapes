@@ -22,7 +22,7 @@
 ;; This mode is very much work in progress. It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
 ;; to such. That said, it does support compilation-mode, comment-dwim, Imenu,
-;; auto-paired characters and viewing output through doc-view.
+;; skeleton-pairs, and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
@@ -118,6 +118,7 @@ doc-view."
 Every top level binding of a function is considered to be a defun."
   (interactive)
   ;; match identifier: \ arg1 .. argn -> body-expr
+  (re-search-backward "^")
   )
 
 (defun shapes-mode ()
@@ -140,13 +141,12 @@ Every top level binding of a function is considered to be a defun."
   ;; Example data:
   ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
   (eval-after-load 'compile
-    '(add-to-list 'compilation-error-regexp-alist
-		  '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
-		    1 2 (3 . 4) nil 1)))
-
-  ;; The Shapes compiler tabs philosophy is different from that of Emacs, so for
-  ;; now we do this.
-  (setq indent-tabs-mode nil)
+    '(progn
+       (add-to-list 'compilation-error-regexp-alist
+		    '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
+		      1 2 (3 . 4) nil 1))
+       ;; The Shapes compiler works this way
+       (setq compilation-error-screen-columns nil)))
 
   ;; Simplified recognition of a top-level Shapes identifier. Probably needs
   ;; more work.
