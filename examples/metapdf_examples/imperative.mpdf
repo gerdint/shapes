@@ -1,7 +1,0 @@
-a :: 1;
-[show a]
-a += 3;
-[show a]
-a := a ++ 3;
-[show a]
-[show [cos true]]
