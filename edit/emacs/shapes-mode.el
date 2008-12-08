@@ -56,6 +56,11 @@
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
+(defcustom shapes-unicode-pretty-print t
+  "Whether to pretty-print Shapes idenifiers using their Unicode
+equivalents or not."
+  :type 'boolean)
+
 (defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
   "Regular expression matching Shapes source files.")
 
@@ -63,7 +68,7 @@
 
 ;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
 (modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
-     
+
 ;;; TBD
 ;; (defvar shapes-mode-syntax-table
 ;;   (let ((st (make-syntax-table)))
@@ -82,7 +87,8 @@
       (define-key map "\C-c\C-v" 'shapes-view))
     (mapc (lambda (elt) 
 	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
-	  "`[(")
+	  "`([{")
+    (define-key map "\C-cl" 'shapes-lambda)
     map))
 
 (defun shapes-compile ()
@@ -132,7 +138,13 @@ Every top level binding of a function is considered to be a defun."
   ;(set-syntax-table shapes-mode-syntax-table)
 
   ;; Skeletons
-  (set (make-local-variable 'skeleton-pair-alist) '((?` _ "´"))) ; for strings
+  (set (make-local-variable 'skeleton-pair-alist)
+       '((?` _ ?´)			; for strings
+	 (?{ \n _ \n ?})))			
+
+  (define-skeleton shapes-lambda "Function template skeleton."
+    "Formal parameters: "
+    "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
@@ -160,3 +172,7 @@ Every top level binding of a function is considered to be a defun."
 		 (file-name-sans-extension buffer-file-name)))))
 
 (provide 'shapes-mode)
+
+;; Local Variables: **
+;; coding:utf-8! **
+;; End: **
