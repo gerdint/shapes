@@ -859,6 +859,7 @@ double shapes_strtod( char * str, char ** end )
 							*(term+1) = '0';
 							term += 2;
 						}
+					continue;
 				}
 			break;
 		}
