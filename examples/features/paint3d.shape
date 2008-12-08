@@ -29,4 +29,4 @@ deeper: \ n → [shift (0cm,0cm,n*~2cm)]
 screw: (1cm,~1cm,0cm)<(1cm,0cm,0cm)>(1cm,1cm,0cm)--screwSeg--[[deeper 1] screwSeg]--[[deeper 2] screwSeg]--cycle
 screw2: [rot screw]
 
-@<< @eyez:5cm|[view [stroke pth]]
+•page << @eyez:5cm|[view [stroke pth]]

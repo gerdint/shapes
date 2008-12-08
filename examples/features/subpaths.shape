@@ -18,43 +18,44 @@
 
 ##needs circle
 
-cstroke: \ pth → ( Hot2D << @stroking:RGB_RED|[stroke [controlling pth]] << [stroke pth] )
+cstroke: \ pth → ( newGroup << @stroking:RGB_RED|[stroke [controlling pth]] << [stroke pth] )
 
-/**
-@<< cstroke []
-{
-  c: [circle 3cm]
-  [c 0.6]--[c 3.4]
-}
+|** •page << cstroke []
+|** {
+|**   c: [circle 3cm]
+|**   [c 0.6]--[c 3.4]
+|** }
 
-@<< cstroke [] view []
-{
-  c0: immerse [] [shift (4cm,0)] [] [circle 3cm]
-  c: c0.begin--[c0 3.5]
-  @<< @stroking:RGB_BLUE | view [] [stroke c]
-  (+(~1cm,0cm,0cm))<[c 0.6]--[c 3.4]>(+(1cm,0cm,0cm))--cycle
-}
+|** •page <<
+|** {
+|**   c0: immerse [] [shift (4cm,0)] [] [circle 3cm]
+|**   c: c0.begin--[c0 3.5]
+|**   ( @stroking:RGB_BLUE | view [] [stroke c] )
+|**   &
+|**   [cstroke [view (+(~1cm,0cm,0cm))<[c 0.6]--[c 3.4]>(+(1cm,0cm,0cm))--cycle]]
+|** }
 
-**/
-
-@<< cstroke []
+•page <<
 {
   c: [shift (4cm,0)] [] [circle 3cm]
-  @<< @stroking:RGB_BLUE | [stroke c]
-  (0.5cm^)<[c 0.6]--[c 3.4]>(+(1cm,0))--cycle
+  ( @stroking:RGB_BLUE | [stroke c] )
+	&
+	[cstroke (0.5cm^)<[c 0.6]--[c 3.4]>(+(1cm,0))--cycle]
 }
 
-@<< cstroke []
+•page <<
 {
   c: (0cm,0cm)>(1cm,0cm)--(1cm,1cm)<(0cm,1cm)>(~1cm,1cm)--(~1cm,2cm)<(0cm,2cm)
-  @<< @stroking:RGB_BLUE | [stroke c]
-  (0cm,~0.5cm)<[c 0.2]--[c 1.8]>(0cm,2.5cm)
+  ( @stroking:RGB_BLUE | [stroke c] )
+  &
+	[cstroke (0cm,~0.5cm)<[c 0.2]--[c 1.8]>(0cm,2.5cm)]
 }
 
-@<< cstroke []
+•page <<
 {
   c: [shift (3cm,0)] [] (0cm,0cm)>(1cm,0cm)--(1%C^)<(0cm,1cm)>(1%C^1)--(~1cm,2cm)<(0cm,2cm)
-  @<< @stroking:RGB_BLUE | [stroke c]
-  (0cm,~0.5cm)<[c 0.2]--[c 1.8]>(0cm,2.5cm)
+  ( @stroking:RGB_BLUE | [stroke c] )
+	&
+  [cstroke (0cm,~0.5cm)<[c 0.2]--[c 1.8]>(0cm,2.5cm)]
 }
 

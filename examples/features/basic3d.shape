@@ -32,19 +32,16 @@ screw2: [rot screw]
 @eyez:10cm
 |
 {
-stderr << `Length of screw in 3D: ´ << [duration screw] << `¢n´
-stderr << `Length of screw view: ´ << [duration [view screw]] << `¢n´
+•stderr << `Length of screw in 3D: ´ << [duration screw] << `¢n´
+•stderr << `Length of screw view: ´ << [duration [view screw]] << `¢n´
 
-@<< [stroke [view pth2]]
-@<< [stroke [view screw2]]
+•page << [stroke [view pth2]]
+•page << [stroke [view screw2]]
 
-mark: \ z → ( @stroking:RGB_RED & @width:0.3bp | { @<< [stroke [view (z-(0.5mm,0.5mm,0mm))--(z+(0.5mm,0.5mm,0mm))]] << [stroke [view (z+(~0.5mm,0.5mm,0mm))--(z+(0.5mm,~0.5mm,0mm))]] } )
+mark: \ z → ( @stroking:RGB_RED & @width:0.3bp | ( [stroke [view (z-(0.5mm,0.5mm,0mm))--(z+(0.5mm,0.5mm,0mm))]] & [stroke [view (z+(~0.5mm,0.5mm,0mm))--(z+(0.5mm,~0.5mm,0mm))]] ) )
 
-[[range 0.15 [duration pth2]-1 0.3].foldl \ p e → { [mark [pth2 e].p]   p } VOID]
-[[range 0.15 [duration screw2]-1 0.3].foldl \ p e → { [mark [screw2 e].p]   p } VOID]
+•page << [[range 0.15 [duration pth2]*1-1 0.3].foldl \ p e → ( p & [mark [pth2 e].p] ) null]
+•page << [[range 0.15 [duration screw2]*1-1 0.3].foldl \ p e → ( p & [mark [screw2 e].p] ) null]
 
-
-/**
-@<< @eyez:∞ | [view [stroke pth]]
-**/
+|** •page << @eyez:∞ | [view [stroke pth]]
 }

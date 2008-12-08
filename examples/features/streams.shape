@@ -18,7 +18,7 @@
 
 /**
 fibsFrom: \ n1 n2 →
-{ 
+{
   stderr << `eval:´ << n1 << `, ´ << n2 << `¢n´
   [cons n2 [fibsFrom n2 n1+n2]]
 }
@@ -54,4 +54,5 @@ randoms:
 •stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
 •stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
 
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

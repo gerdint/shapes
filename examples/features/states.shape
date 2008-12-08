@@ -121,7 +121,7 @@ goodProc: \ a → !
  ** As an example of this, we draw something to the •page state using this technique.
  **/
 
-/** Just to prevent the empty-output-error:
+/** Prevent empty output error.
  **/
 
 dummyStroke: \ •dst2D → { •dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }

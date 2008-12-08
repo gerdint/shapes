@@ -212,4 +212,5 @@
 }
 
 
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

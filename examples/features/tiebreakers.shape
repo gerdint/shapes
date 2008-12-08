@@ -16,17 +16,15 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-zbuf: HotZBuf <<
+•zbuf: newZBuf
 
 square: \ r → [rectangle (~r,~r) (r,r)]
 
-zbuf << @nonstroking:[gray 0.3] | [fill immerse [] [shift (0cm,0cm)] [] [square 1cm]  tiebreaker:0bp]
-zbuf << @nonstroking:[gray 0.7] | [fill immerse [] [shift (0.5cm,0.5cm)] [] [square 1cm]  tiebreaker:1bp]
+•zbuf << @nonstroking:[gray 0.3] | [fill immerse [] [shift (0cm,0cm)] [] [square 1cm]  tiebreaker:0bp]
+•zbuf << @nonstroking:[gray 0.7] | [fill immerse [] [shift (0.5cm,0.5cm)] [] [square 1cm]  tiebreaker:1bp]
 
-zbuf << @nonstroking:[gray 0.3] | [fill immerse [] [shift (3cm,0cm)] [] [square 1cm]  tiebreaker:1bp]
-zbuf << @nonstroking:[gray 0.7] | [fill immerse [] [shift (3.5cm,0.5cm)] [] [square 1cm]  tiebreaker:0bp]
+•zbuf << @nonstroking:[gray 0.3] | [fill immerse [] [shift (3cm,0cm)] [] [square 1cm]  tiebreaker:1bp]
+•zbuf << @nonstroking:[gray 0.7] | [fill immerse [] [shift (3.5cm,0.5cm)] [] [square 1cm]  tiebreaker:0bp]
 
-
-zbuf;
-
-@<< [view  zbuf]
+zbuf: •zbuf;
+[view zbuf]

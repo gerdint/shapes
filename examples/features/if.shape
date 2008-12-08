@@ -16,11 +16,12 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-stderr << [if 1 = 0 4+4 4+5 ] << `¢n´
+•stderr << [if 1 = 0 4+4 4+5 ] << `¢n´
 
-stderr << [if false [error `Not to be evaluated!´] `Fine¢n´]
+•stderr << [if false [error `Not to be evaluated!´] `Fine¢n´]
 
 foo: [if false ...]
-stderr << [foo [error `Not to be evaluated!´] `Fine¢n´]
+•stderr << [foo [error `Not to be evaluated!´] `Fine¢n´]
 
-@<< [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

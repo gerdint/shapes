@@ -16,49 +16,47 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-str: HotString <<
-msg: HotString <<
-str << `Say´ << ` ´
-msg << `Say´ << ` ´
-str << `hello!´
-msg << `goodbye!´
-str;
-msg;
-stderr << str << `¢n´ << msg << `¢n´
+•str: newString
+•msg: newString
+•str << `Say´ << ` ´
+•msg << `Say´ << ` ´
+•str << `hello!´
+•msg << `goodbye!´
+str: •str;
+msg: •msg;
+•stderr << str << `¢n´ << msg << `¢n´
 
-stderr << ( HotString << `a ´ << `b¢n´ )
+•stderr << ( newString << `a ´ << `b¢n´ )
 
-dst1: HotString <<
-dst2: HotString <<
+•dst1: newString
+•dst2: newString
 
-dst1 << `1:´
-dst2 << `2:´
+•dst1 << `1:´
+•dst2 << `2:´
 
-say_y: \ dstStr → { dstStr << `y´ }
+say_y: \ •dstStr → { •dstStr << `y´ }
 
-dynamic @dfoo I stderr
+/** Dynamic states is currently not a supported feature. **/
 
-foo: \ → { @dfoo << ` x ´   [say_y (@dfoo <<)] }
+|** dynamic @dfoo I stderr
 
-@dfoo: (dst1 <<)
-| [foo]
-@dfoo: (dst2 <<)
-| [foo]
-@dfoo: (dst1 <<)
-| [foo]
+|** foo: \ → { @dfoo << ` x ´   [say_y (@dfoo <<)] }
 
-endline: \ os → { os << `(endl)¢n´ }
+|** @dfoo: (dst1 <<)
+|** | [foo]
+|** @dfoo: (dst2 <<)
+|** | [foo]
+|** @dfoo: (dst1 <<)
+|** | [foo]
 
-[endline (dst1 <<)]
-[endline (dst2 <<)]
-dst1;
-dst2;
+endline: \ •os → { •os << `(endl)¢n´ }
 
-stderr << dst1 << dst2
+[endline •dst1]
+[endline •dst2]
+dst1: •dst1;
+dst2: •dst2;
 
-/* Just to prevent the empty-output-error:
- */
+•stderr << dst1 << dst2
 
-dummyStroke: \ dst2D → { dst2D << [stroke (0cm,0cm)--(1cm,1cm)] }
-
-[dummyStroke @<<]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

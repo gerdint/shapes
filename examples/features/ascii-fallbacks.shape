@@ -35,5 +35,5 @@ square: \ arg -> arg * arg
 /** We avoid the degree sign by using "^^" instead. **/
 #stdout << ("A quarter turn is ") << 90^^ << (" radians.") << newline
 
-/** This is just to avoid the empty-output error. **/
-#page << [spot (0m,0m)]
+/** Prevent empty output error. **/
+[spot (0m,0m)]

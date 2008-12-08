@@ -39,8 +39,9 @@ myfont: •myfont;
 
 •page << @text_font:myfont | ( newText << [kerning `aåa´ 1 `b´] )
 
-/**
-yourfont: [importfont `yourfont.pdf´]
 
-@<< [shift (0,1cm)] [] ( @text_font:yourfont | ( HotText << `abaabb´ ) )
-**/
+/** What follows is not implemented yet: **/
+
+|** yourfont: [importfont `yourfont.pdf´]
+|**
+|** •page << [shift (0,1cm)] [] ( @text_font:yourfont | ( newText << `abaabb´ ) )

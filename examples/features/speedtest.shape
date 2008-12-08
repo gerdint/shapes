@@ -30,17 +30,17 @@ pth: [rotate 1][][circle 5cm]
 @width:0.1bp
 |
 {
-@<< @stroking:RGB_RED|[stroke [controlling pth]]
-@<< [stroke pth]
+•page << @stroking:RGB_RED|[stroke [controlling pth]]
+•page << [stroke pth]
 
-[[range '1 '5].foldr
+•page << [[range '1 '5].foldr
  \ p i → {
    t: 1 / i
-   a: ([point pth 0]+[direction pth 0]*[speed pth 0]*t)
-   @<< [stroke [point pth t]--a]
-   @<< [shift a] [] (@stroking:RGB_BLUE|[stroke [circle 1mm]])
-   @<< [shift a + (2mm,2mm)] [] [TeX [sprintf `$1/%d$´ i]]
-   p
-}
- VOID]
+   a: (pth.begin.p+pth.begin.T*pth.begin.v*t)
+	 p
+   & [stroke [pth t].p--a]
+   & [[shift a] (@stroking:RGB_BLUE|[stroke [circle 1mm]])]
+   & [[shift a + (2mm,2mm)] (TeX [sprintf `$1/%d$´ i])]
+ }
+ null]
 }

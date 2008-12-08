@@ -18,32 +18,24 @@
 
 ##needs arrowheads
 
-layer1: Hot2D <<
-layer2: Hot2D <<
+•layer1: newGroup
+•layer2: newGroup
 
 pth: (~1cm,0cm)--(0cm,1cm)--(1cm,0cm)--(0cm,~1cm)--cycle
 
-layer1 << @stroking:RGB_RED | [stroke pth]
-layer2 << [TeX `$\mathrm{d}u \wedge \mathrm{d}v$´]
-layer1 << @stroking:RGB_RED | [[shift (0.3cm,0.5cm)] [stroke pth]]
-layer2 << [[shift (0.3cm,~0.5cm)] @nonstroking:RGB_BLUE | [TeX `$\mathrm{d}u \wedge \mathrm{d}v$´]]
+•layer1 << @stroking:RGB_RED | [stroke pth]
+•layer2 << (TeX `$\mathrm{d}u \wedge \mathrm{d}v$´)
+•layer1 << @stroking:RGB_RED | [[shift (0.3cm,0.5cm)] [stroke pth]]
+•layer2 << [[shift (0.3cm,~0.5cm)] @nonstroking:RGB_BLUE | (TeX `$\mathrm{d}u \wedge \mathrm{d}v$´)]
 
 
-layer1;
-layer2;
-@<< layer1 << layer2
+layer1: •layer1;
+layer2: •layer2;
+•page << layer1 << layer2
 
-circle :
- {
-   p1cm: @defaultunit:1%c
-	 | (^)<(1cm,0cm)>(^)--(^)<(0cm,1cm)>(^)--(^)<(~1cm,0cm)>(^)--(^)<(0cm,~1cm)>(^)--cycle
-   \ r → [[scale r / 1cm] p1cm]
- }
+•page << [stroke [circle 8mm]]
 
-@<< [stroke [circle 8mm]]
+ballHead: \ pth → (> picture:[[shift pth.begin.p] [stroke [circle 2mm]]] cut:1mm <)
+tHead: \ pth → { z: pth.begin.p  (> picture:[stroke (z+(0,2mm))--(z-(0,2mm))] cut:0mm <)}
 
-ballHead: \ pth → { @<< [[shift [point pth 0]] [stroke [circle 2mm]]]  1mm }
-tHead: \ pth → { z: [point pth 0]  @<< [stroke (z+(0,2mm))--(z-(0,2mm))]  0mm}
-
-@<< @defaultunit:1%c | [stroke (~1cm,~1cm)--(^)<(1cm,0.5cm)>(^10°)--(^190°)<(1.2cm,0.9cm)  head: MetaPostArrow  tail: ballHead]
-
+•page << @defaultunit:1%c | [stroke (~1cm,~1cm)--(^)<(1cm,0.5cm)>(^10°)--(^190°)<(1.2cm,0.9cm)  head: MetaPostArrow  tail: ballHead]

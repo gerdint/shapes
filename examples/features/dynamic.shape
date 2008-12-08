@@ -89,4 +89,4 @@ b10
 
 
 /** Prevent empty output error. **/
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+[stroke (0cm,0cm)--(1cm,1cm)]

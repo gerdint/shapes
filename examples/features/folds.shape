@@ -71,5 +71,5 @@ nth: \ lst n → [if n = '0 lst.car [nth lst.cdr n-'1]]
 •stdout << [nth Fib2 '5] << `¢n´
 •stdout << [nth Fib2 '6] << `¢n´
 
-|** Avoid empty output error
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error **/
+[stroke (0cm,0cm)--(1cm,1cm)]

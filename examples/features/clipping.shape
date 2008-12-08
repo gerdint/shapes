@@ -20,5 +20,5 @@
 
 bg: @nonstroking:RGB_RED | [fill [rectangle (0cm,0cm) (3cm,3cm)]]
 
-@<< [clip bg ( [[shift (0.4cm,1.6cm)] [circle 0.3cm]] & [[shift (0.9cm,1.6cm)] [circle 0.3cm]] )]
-@<< [clipodd bg ( [circle 1.5cm] & [rectangle (1cm,1cm) (2cm,2cm)] )]
+•page << [clip bg ( [[shift (0.4cm,1.6cm)] [circle 0.3cm]] & [[shift (0.9cm,1.6cm)] [circle 0.3cm]] )]
+•page << [clipodd bg ( [circle 1.5cm] & [rectangle (1cm,1cm) (2cm,2cm)] )]

@@ -45,4 +45,4 @@ check: \ tf decomp →
 •stdout << `(Canonical:) Change of coordinates is special? ´ << sdac.Q.special? << `¢n´
 
 /** Prevent empty output error. **/
-•page << [spot (0m,0m)]
+[spot (0m,0m)]

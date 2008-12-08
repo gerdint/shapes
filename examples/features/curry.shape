@@ -28,4 +28,5 @@ ofo: [bar `ofo´ ...]
 •stdout << [bar `1´ `3´] << `¢n´
 •stdout << [foo [...] b:`2´ [...] `1´ [...] `3´] << `¢n´
 
-•page << [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

@@ -31,7 +31,7 @@ rottest: \ dir angle →
   @eyez:10cm &
   @width:0.3bp
   |
-  ( Hot2D << theDash|[stroke [view pth]] << [stroke [view (0cm,0cm,0cm)--(1.3cm*[normalized dir])] head:MetaPostArrow] << [stroke [view [tf pth]]]
+  ( newGroup << theDash|[stroke [view pth]] << [stroke [view (0cm,0cm,0cm)--(1.3cm*[normalized dir])] head:MetaPostArrow] << [stroke [view [tf pth]]]
  	  << @width:1bp|[stroke [view pt1--[tf pt1]] head:MetaPostArrow]
  	  << @width:1bp|[stroke [view pt2--[tf pt2]] head:MetaPostArrow]
  	  << @width:1bp|[stroke [view pt3--[tf pt3]] head:MetaPostArrow]
@@ -39,6 +39,6 @@ rottest: \ dir angle →
   )
 }
 
-@<< [[shift (0cm,0cm)] [rottest (1,0,0) 15°]]
-@<< [[shift (5cm,0cm)] [rottest (0,1,0) 15°]]
-@<< [[shift (10cm,0cm)] [rottest (0,0,1) 15°]]
+•page << [[shift (0cm,0cm)] [rottest (1,0,0) 15°]]
+•page << [[shift (5cm,0cm)] [rottest (0,1,0) 15°]]
+•page << [[shift (10cm,0cm)] [rottest (0,0,1) 15°]]

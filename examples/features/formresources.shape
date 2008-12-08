@@ -22,30 +22,30 @@
 
 r: 1cm
 
-mask: @blendspace: DEVICE_GRAY | [tgroup @blend:BLEND_MULTIPLY & @nonstroking:[gray 0.5] | ( Hot2D << [fill [circle 0.3*r]] << [fill [circle 0.7*r]] )]
+mask: @blendspace: DEVICE_GRAY | [tgroup @blend:BLEND_MULTIPLY & @nonstroking:[gray 0.5] | ( newGroup << [fill [circle 0.3*r]] << [fill [circle 0.7*r]] )]
 
-|** @<< [shift (0cm,2*r)] [] mask
+|** •page << [shift (0cm,2*r)] [] mask
 
 obj:
  [clip
-  ( 
+  (
     @blend: BLEND_MULTIPLY
     &
     @blendspace: DEVICE_GRAY
     &
     @nonstroking:[gray 0.5]
     |
-    ( Hot2D << fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-            << fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+    ( newGroup << fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
+               << fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
     )
   )
  [luminositymask mask]]
 
-@<< obj
+•page << obj
 
-@<< formxo [] [shift ~(1*4*r,0)] [] obj
+•page << formxo [] [shift ~(1*4*r,0)] [] obj
 
-@<< [shift (1*4*r,0)] [] formxo [] [shift ~(1*4*r,0)] [] obj
+•page << [shift (1*4*r,0)] [] formxo [] [shift ~(1*4*r,0)] [] obj
 
-@<< [shift (1*4*r,0)] [] formxo [] obj
+•page << [shift (1*4*r,0)] [] formxo [] obj
 

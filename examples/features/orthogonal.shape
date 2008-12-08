@@ -18,28 +18,28 @@
 
 {
   v: (1,0.1,~0.1)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 {
   v: (0.1,1,0.1)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 {
   v: (~0.1,~0.1,1)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 {
   v: (1,0,~0)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 {
   v: (0,1,0)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 {
   v: (~0,~0,1)
-  stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
 }
 
-|** Just to prevent the empty-output-error:
-@<< [stroke (0cm,0cm)--(1cm,1cm)]
+/** Prevent empty output error. **/
+[stroke (0cm,0cm)--(1cm,1cm)]

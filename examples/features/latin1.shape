@@ -16,4 +16,4 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-@<< [TeX `\parbox{8cm}{Gau� was a mathematician.\\ �str�m is in automatic control.}´]
+•page << (TeX `\parbox{8cm}{Gauß was a mathematician.\\ Åström is in automatic control.}´)
