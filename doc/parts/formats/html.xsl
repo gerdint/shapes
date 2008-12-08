@@ -30,6 +30,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="str-LaTeX"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="str-pdfLaTeX"><span class="latex">pdfL<sup>a</sup>T<sub>e</sub>X</span></xsl:template>
 <xsl:template match="str-MetaPost">MetaPost</xsl:template>
+<xsl:template match="str-C-plus-plus"><span class="medium-caps">c</span>++</xsl:template>
 <xsl:template match="str-UTF-8"><span class="medium-caps">utf</span>-8</xsl:template>
 <xsl:template match="str-2D">2<span class="medium-caps"><sup>d</sup></span></xsl:template>
 <xsl:template match="str-3D">3<span class="medium-caps"><sup>d</sup></span></xsl:template>

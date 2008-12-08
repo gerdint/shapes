@@ -152,7 +152,7 @@ textGreaterThanEight: [textGreater y:8 ...]
 	<p>The states themselves are of <em>state type</em>.  For instance, <state name="page" /> is of type <named-state-type name="Group" />.  The operations on a state which we are about to describe briefly are further described in the documentation for state types.</p>
 
 	<p>
-		There are three basic operations, <em>tack on</em>, <em>peek</em>, and <em>freeze</em>.  The first of these looks like a C++ insertion operation, and may repeated:
+		There are three basic operations, <em>tack on</em>, <em>peek</em>, and <em>freeze</em>.  The first of these looks like a <str-C-plus-plus /> insertion operation, and may repeated:
 <pre>
 •myState &lt;&lt; (TeX `Hello!´)
          &lt;&lt; [stroke (1cm,1cm)--(2cm,0cm)]

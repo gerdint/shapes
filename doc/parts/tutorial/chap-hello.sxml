@@ -18,14 +18,28 @@
 <section id="chap-hello">
 <title>Hello, Shaper!</title>
 <top>
-<p>Let's begin by working through a very small example.  We'll just make a diagonal line — that's pretty much the simplest thing I can think of.</p>
+<p>Let's begin by working through a very small example.  We'll just make a diagonal line — that's pretty much the simplest thing I can think of.  (Making a very small spot would actually be simpler, but creating lines is such an important topic for <str-Shapes /> that it ought to be part of the first example.)</p>
 </top>
+
+<section id="hello/state-free">
+<title>The really short source</title>
+<body>
+	<p>
+		A <str-Shapes /> program may consist of just one expression.  For this example,
+<pre>
+[stroke (0cm,0cm)--(2cm,1cm)]
+</pre>
+would be a valid program.  However, to display one of the fundamental language constructs of <str-Shapes />, we shall look at a slightly more clumsy way of achieving the same result.
+	</p>
+	<p>Please refer to <a part="structure" /> for an explanation of the various ways a <str-Shapes /> program may define its output.</p>
+</body>
+</section><!-- End of hello/state-free -->
 
 <section id="hello/source">
 <title>The source</title>
 <body>
 	<p>
-		The following line of code is all we need for this example, it will be explained in just a moment:
+		The following, slightly longer, program does the same job as the program in the previous section.  It's still just one line of code, and it will be explained in just a moment:
 <pre>
 &bullet;page &lt;&lt; [stroke (0cm,0cm)--(2cm,1cm)]
 </pre>
@@ -40,7 +54,7 @@
 
 	<p>In either case, make sure your file is encoded using <str-UTF-8 /> (if you avoid the bullet character, most eight bit encodings should be fine by intended coincidence).  Call the file <filename>hello.shape</filename>.</p>
 
-	<p>So what does the code mean?  As you might have guessed, <state name="page" />, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from C++) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <binding name="stroke" /> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <operator name="--" />.</p>
+	<p>So what does the code mean?  As you might have guessed, <state name="page" />, has something to do with the <quote>page</quote> we are drawing on, and the following <inline>&lt;&lt;</inline> is an insertion operator (borrowed from <str-C-plus-plus />) that takes the following argument and <em>tacks it onto</em> the page.  The expression delimited by square brackets is a <em>function call</em>; here <binding name="stroke" /> is the callee, and there is one argument.  The argument is a straight path between two points, simply constructed by combining the two coordinate pairs using the <em>connection operator</em> <operator name="--" />.</p>
 
 	<p>
 		The example displays the following traits of the <str-Shapes /> language
@@ -49,6 +63,7 @@
 			<li><p>Statements are not terminated using a designated token; statements end by themselves, like in Haskell.</p></li>
 			<li><p><em>States</em> (here, <state name="page" />) and <em>variables</em> (here, <binding name="stroke" />) are distinguished by belonging to different name spaces, like variables are distinguished from types in Haskell.  This is called <em>Hungarian notation</em>, and is used also for other distinctions in <str-Shapes />.</p></li>
 			<li><p>Coordinates are specified as pairs of lengths, as opposed to pairs of scalars, unlike many other graphics languages where there is no distinction between lengths and scalars.</p></li>
+			<li><p>The syntax makes use of characters outside the ASCII range, but there is always ASCII fall-backs.</p></li>
 		</ol>
 	</p>
 </body>
