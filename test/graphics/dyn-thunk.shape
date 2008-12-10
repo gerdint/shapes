@@ -1,0 +1,72 @@
+/**
+ ** This test was introduced after a bug was detected.
+ **/
+
+font: @text_size:1cm
+##unit dx = 4cm
+
+{
+fun: \ str tobj →
+	     ( font | ( newText << str << tobj << [kerning str] << `B´ << [kerning `b´] ) )
+x:0dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
+
+{
+fun: \ str tobj →
+	     ( newText << ( font | str ) << tobj << [kerning str] << `B´ << [kerning `b´] )
+x:1dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
+
+{
+fun: \ str tobj →
+	     ( newText << str << ( font | tobj ) << [kerning str] << `B´ << [kerning `b´] )
+x:2dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
+
+{
+fun: \ str tobj →
+	     ( newText << str << tobj << ( font | [kerning str] ) << `B´ << [kerning `b´] )
+x:3dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
+
+{
+fun: \ str tobj →
+	     ( newText << str << tobj << [kerning str] << ( font | `B´ ) << [kerning `b´] )
+x:4dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
+
+{
+fun: \ str tobj →
+	     ( newText << str << tobj << [kerning str] << `B´ << ( font | [kerning `b´] ) )
+x:5dx
+
+•page << [shift (x,~0cm)] [] [fun `A´ [kerning `a´]]
+•page << font | ( [shift (x,~2cm)] [] [fun `A´ [kerning `a´]] )
+•page << [shift (x,~4cm)] [] [fun (font | `A´) [kerning `a´]]
+•page << [shift (x,~6cm)] [] [fun `A´ (font | [kerning `a´])]
+}
