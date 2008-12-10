@@ -145,13 +145,13 @@ Kernel::State::~State( )
 { }
 
 void
-Kernel::State::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::State::tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc )
 {
 	if( ! alive_ )
 		{
 			throw Exceptions::DeadStateAccess( );
 		}
-	this->tackOnImpl( evalState, piece, dyn, callLoc );
+	this->tackOnImpl( evalState, piece, callLoc );
 }
 
 void
@@ -812,7 +812,7 @@ Kernel::Environment::peek( const LexicalKey & lexKey, Kernel::EvalState * evalSt
 void
 Kernel::Environment::tackOn( const LexicalKey & lexKey, Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc )
 {
-	getStateHandle( lexKey )->tackOn( evalState, piece, evalState->dyn_, callLoc );
+	getStateHandle( lexKey )->tackOn( evalState, piece, callLoc );
 }
 
 Kernel::StateHandle

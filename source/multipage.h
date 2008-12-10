@@ -137,7 +137,7 @@ namespace Shapes
 		public:
 			WarmCatalog( );
 			virtual ~WarmCatalog( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );

@@ -773,10 +773,10 @@ Ast::ProtectedMemberInsertionFunction::call( Kernel::EvalState * evalState, Kern
 
 //	 if( parent_ == 0 )
 //		 {
-//			 typedSelf->getField( id_, untypedSelf )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
+//			 typedSelf->getField( id_, untypedSelf )->tackOn( evalState, piece, pieceExpr_->loc( ) );
 //			 return;
 //		 }
 
 //	 RefCountPtr< const Lang::Class > typedParent = args.getHandle( 1 )->getVal< const Lang::Class >( parent_->loc( ) );
-//	 typedSelf->superReference( typedParent )->getLocalField( id_ )->tackOn( evalState, piece, evalState->dyn_, pieceExpr_->loc( ) );
+//	 typedSelf->superReference( typedParent )->getLocalField( id_ )->tackOn( evalState, piece, pieceExpr_->loc( ) );
 }

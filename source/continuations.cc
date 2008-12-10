@@ -224,7 +224,8 @@ void
 Kernel::InsertionContinuation::takeValue( const RefCountPtr< const Lang::Value > & val, Kernel::EvalState * evalState, bool dummy ) const
 {
 	evalState->cont_ = cont_;
-	dst_->tackOn( evalState, val, dyn_, traceLoc_ );
+	evalState->dyn_ = dyn_;  /* This is how we pass dyn_ to dst_->tackOn .  Additionally passing it as a separate argument is (used to be) very confusing. */
+	dst_->tackOn( evalState, val, traceLoc_ );
 }
 
 void

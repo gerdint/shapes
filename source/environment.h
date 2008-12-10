@@ -160,7 +160,7 @@ namespace Shapes
 		public:
 			State( );
 			virtual ~State( );
-			void tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			void tackOn( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			void peek( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			void freeze( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 
@@ -172,7 +172,7 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked ) = 0;
 
 		protected:
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc ) = 0;
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc ) = 0;
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc ) = 0;
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc ) = 0;
 		};

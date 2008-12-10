@@ -114,7 +114,7 @@ namespace Shapes
 		public:
 			WarmTriple( const RefCountPtr< const Lang::Value > & pile, RefCountPtr< const Lang::Function > update, RefCountPtr< const Lang::Function > result );
 			virtual ~WarmTriple( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -126,7 +126,7 @@ namespace Shapes
 		public:
 			WarmIgnore( );
 			virtual ~WarmIgnore( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -139,7 +139,7 @@ namespace Shapes
 		public:
 			WarmOstream( std::ostream & os );
 			virtual ~WarmOstream( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -152,7 +152,7 @@ namespace Shapes
 		public:
 			Warm_ostringstream( );
 			virtual ~Warm_ostringstream( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -165,7 +165,7 @@ namespace Shapes
 		public:
 			WarmGroup2D( );
 			virtual ~WarmGroup2D( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -181,7 +181,7 @@ namespace Shapes
 		public:
 			WarmGroup3D( );
 			virtual ~WarmGroup3D( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -197,7 +197,7 @@ namespace Shapes
 		public:
 			WarmGroupLights( );
 			virtual ~WarmGroupLights( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -213,7 +213,7 @@ namespace Shapes
 		public:
 			WarmZBuf( );
 			virtual ~WarmZBuf( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -228,7 +228,7 @@ namespace Shapes
 		public:
 			WarmZSorter( );
 			virtual ~WarmZSorter( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -241,7 +241,7 @@ namespace Shapes
 		public:
 			WarmTimer( );
 			virtual ~WarmTimer( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -254,7 +254,7 @@ namespace Shapes
 		public:
 			WarmText( );
 			virtual ~WarmText( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -270,7 +270,7 @@ namespace Shapes
 		public:
 			WarmType3Font( );
 			virtual ~WarmType3Font( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -285,7 +285,7 @@ namespace Shapes
 		public:
 			WarmTime( );
 			virtual ~WarmTime( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -301,7 +301,7 @@ namespace Shapes
 			WarmRandomDevice( const char * deviceName );
 			virtual ~WarmRandomDevice( );
 			void read( char * dst, size_t sz );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -315,7 +315,7 @@ namespace Shapes
 			WarmRandomState( char * state );
 			void setState( );
 			virtual ~WarmRandomState( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -343,7 +343,7 @@ namespace Shapes
 		public:
 			WarmColorInterpolator( );
 			virtual ~WarmColorInterpolator( );
-			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc );
+			virtual void tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc );
 			virtual void peekImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void freezeImpl( Kernel::EvalState * evalState, const Ast::SourceLocation & callLoc );
 			virtual void gcMark( Kernel::GCMarkedSet & marked );

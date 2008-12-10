@@ -283,7 +283,7 @@ Kernel::DynamicEnvironment::tackOn( const KeyType & key, Kernel::EvalState * eva
 //				 }
 //			 return parent_->tackOn( key, evalState, piece, callLoc );
 //		 }
-//	 return i->second.first->tackOn( evalState, piece, evalState->dyn_, callLoc );
+//	 return i->second.first->tackOn( evalState, piece, callLoc );
 }
 
 void

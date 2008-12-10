@@ -117,11 +117,11 @@ RefCountPtr< const Lang::Class > Kernel::WarmTriple::TypeID( new Lang::SystemFin
 TYPEINFOIMPL_STATE( WarmTriple );
 
 void
-Kernel::WarmTriple::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmTriple::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	/* This seems dangerous.	I have not verified that pile will still exist when the continuation below is invoked.
 	 */
-	evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreValueContinuation( & pile_, 
+	evalState->cont_ = Kernel::ContRef( new Kernel::StmtStoreValueContinuation( & pile_,
 																																							evalState->cont_,
 																																							callLoc ) );
 	update_->call( evalState, pile_, piece, callLoc );
@@ -162,7 +162,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmIgnore::TypeID( new Lang::SystemFin
 TYPEINFOIMPL_STATE( WarmIgnore );
 
 void
-Kernel::WarmIgnore::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmIgnore::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	// Ignore piece!
 
@@ -199,7 +199,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmOstream::TypeID( new Lang::SystemFi
 TYPEINFOIMPL_STATE( WarmOstream );
 
 void
-Kernel::WarmOstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmOstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	piece->show( os_ );
 	Kernel::ContRef cont = evalState->cont_;
@@ -234,7 +234,7 @@ RefCountPtr< const Lang::Class > Kernel::Warm_ostringstream::TypeID( new Lang::S
 TYPEINFOIMPL_STATE( Warm_ostringstream );
 
 void
-Kernel::Warm_ostringstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::Warm_ostringstream::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	piece->show( os_ );
 	Kernel::ContRef cont = evalState->cont_;
@@ -340,7 +340,7 @@ TYPEINFOIMPL_STATE( WarmGroup2D );
 
 
 void
-Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	typedef const Lang::Drawable2D ArgType;
 	RefCountPtr< ArgType > arg = Helpers::down_cast< ArgType >( piece, callLoc );
@@ -361,7 +361,7 @@ Kernel::WarmGroup2D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPt
 
 	pile_ = RefCountPtr< const Lang::Group2D >( new Lang::GroupPair2D( arg,
 																																		 pile_,
-																																		 dyn->getGraphicsState( ) ) );
+																																		 evalState->dyn_->getGraphicsState( ) ) );
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
 										evalState );
@@ -421,11 +421,11 @@ RefCountPtr< const Lang::Class > Kernel::WarmGroup3D::TypeID( new Lang::SystemFi
 TYPEINFOIMPL_STATE( WarmGroup3D );
 
 void
-Kernel::WarmGroup3D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroup3D::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	pile_ = RefCountPtr< const Lang::Group3D >( new Lang::GroupPair3D( Helpers::down_cast< const Lang::Drawable3D >( piece, callLoc ),
 																																		 pile_,
-																																		 dyn->getGraphicsState( ) ) );
+																																		 evalState->dyn_->getGraphicsState( ) ) );
 	Kernel::ContRef cont = evalState->cont_;
 	cont->takeHandle( Kernel::THE_SLOT_VARIABLE,
 										evalState );
@@ -477,7 +477,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmGroupLights::TypeID( new Lang::Syst
 TYPEINFOIMPL_STATE( WarmGroupLights );
 
 void
-Kernel::WarmGroupLights::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmGroupLights::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	pile_ = RefCountPtr< const Lang::LightGroup >( new Lang::LightPair( Helpers::down_cast< const Lang::LightSource >( piece, callLoc ),
 																																			pile_ ) );
@@ -519,7 +519,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmZBuf::TypeID( new Lang::SystemFinal
 TYPEINFOIMPL_STATE( WarmZBuf );
 
 void
-Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmZBuf::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	try
 		{
@@ -638,7 +638,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmZSorter::TypeID( new Lang::SystemFi
 TYPEINFOIMPL_STATE( WarmZSorter );
 
 void
-Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmZSorter::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	try
 		{
@@ -765,7 +765,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmTimer::TypeID( new Lang::SystemFina
 TYPEINFOIMPL_STATE( WarmTimer );
 
 void
-Kernel::WarmTimer::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmTimer::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	throw Exceptions::MiscellaneousRequirement( strrefdup( "A warm timer does not accept values.	Please freeze to obtain the number of seconds since creation." ) );
 }
@@ -821,7 +821,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmText::TypeID( new Lang::SystemFinal
 TYPEINFOIMPL_STATE( WarmText );
 
 void
-Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmText::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	try
 		{
@@ -996,7 +996,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmType3Font::TypeID( new Lang::System
 TYPEINFOIMPL_STATE( WarmType3Font );
 
 void
-Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmType3Font::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	try
 		{
@@ -1593,7 +1593,7 @@ Kernel::WarmRandomDevice::read( char * dst, size_t sz )
 }
 
 void
-Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmRandomDevice::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	if( ! odev_.is_open( ) )
 		{
@@ -1650,7 +1650,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmTime::TypeID( new Lang::SystemFinal
 TYPEINFOIMPL_STATE( WarmTime );
 
 void
-Kernel::WarmTime::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmTime::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	throw Exceptions::MiscellaneousRequirement( strrefdup( "The time does not accept values." ) );
 }
@@ -1694,7 +1694,7 @@ Kernel::WarmRandomState::setState( )
 }
 
 void
-Kernel::WarmRandomState::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmRandomState::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	throw Exceptions::MiscellaneousRequirement( strrefdup( "A random state does not accept values." ) );
 }
@@ -1731,7 +1731,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmColorInterpolator::TypeID( new Lang
 TYPEINFOIMPL_STATE( WarmColorInterpolator );
 
 void
-Kernel::WarmColorInterpolator::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmColorInterpolator::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece,const Ast::SourceLocation & callLoc )
 {
 	if( hasKey_ )
 		{

@@ -487,7 +487,7 @@ RefCountPtr< const Lang::Class > Kernel::WarmCatalog::TypeID( new Lang::SystemFi
 TYPEINFOIMPL_STATE( WarmCatalog );
 
 void
-Kernel::WarmCatalog::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Kernel::PassedDyn & dyn, const Ast::SourceLocation & callLoc )
+Kernel::WarmCatalog::tackOnImpl( Kernel::EvalState * evalState, const RefCountPtr< const Lang::Value > & piece, const Ast::SourceLocation & callLoc )
 {
 	typedef const Lang::Drawable2D ArgType;
 	RefCountPtr< const ArgType > pageContents( Helpers::down_cast< ArgType >( piece, callLoc ) );
