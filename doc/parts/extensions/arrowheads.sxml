@@ -138,7 +138,7 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 		<body>
 			<p>Now we turn to the considerably trickier <str-3D /> arrowheads.  The reason things become tricky is that flat arrowheads in <str-3D /> must have the surface normal pointing more or less towards the viewer in order for the arrowhead to be visible, and it is not always that easy to see what is a good normal direction, possibly after the objects has been transformed.  Sometimes, the same object will be drawn from different angles, and then it may even be impossible to find a normal direction that suits both viewing angles.  In these situations one can either use multiple arrowheads with different normals, or more general non-flat arrowheads, or resort to using <binding name="facing" /> (see related documentation for examples).</p>
 
-		<system-binding identifier="twoCircles3DArrow">
+		<system-binding identifier="twoCirclesArrow3D">
 			<function>
 				<case>
 					<arguments>
