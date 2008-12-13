@@ -103,3 +103,26 @@ triangleArrow3D: \ p normal:(0,0,1) ahLength:void ahAngle:30° →
       cut: 2*@width
     <)
   }
+
+triangleBundleArrow3D: \ p count:'4 ahLength:void ahAngle:30° →
+  { sl: [p 0]
+    z: sl.p
+    l: [if [typeof ahLength]=§Void @width*6 ahLength]
+		angleStep: 180°/count
+    normal: [cross sl.T [orthogonal sl.T]]
+		oneTriangle: [fill (0m,0m,0m)--([rotate3D dir:normal angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:normal angle:~ahAngle*0.5][](l*sl.T))--cycle]
+		oneCorner: [rotate3D dir:normal angle:ahAngle*0.5][](l*sl.T)
+		pT: sl.T
+    (>
+      picture:
+			 [[shift z]
+			  [[range '0 (count-'1)].foldl
+				 \ p e → p & [[rotate3D dir:pT angle:e*angleStep] oneTriangle]
+				 null3D]
+				&
+				[fill [[range '0 ('2*count-'1)].foldl
+							 \ p e → p--[[rotate3D dir:pT angle:e*angleStep] oneCorner]
+							 emptypath3D]]]
+      cut: 2*@width
+    <)
+  }
