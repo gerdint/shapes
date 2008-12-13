@@ -19,7 +19,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(Shapes, 0.4.2, tidefelt@isy.liu.se)
+AC_INIT(Shapes, 0.4.2.1, tidefelt@isy.liu.se)
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([foreign])
 
