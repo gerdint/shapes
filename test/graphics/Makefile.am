@@ -32,7 +32,7 @@ SHAPES = ${top_builddir}/source/shapes
 SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resources/fontmetrics \
               --needpath ${top_srcdir}/resources/extensions \
-              --tmpdir ./tmp \
+              --tmpdir "/tmp/shapes.${USER}" --tmp*=yes \
               --outdir ./out
 
 TEST_BASE = $(notdir $(basename $(wildcard ${srcdir}/*.shape)))

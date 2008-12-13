@@ -35,6 +35,7 @@ XFAIL_TESTS = test_bad
 SHAPES = ${top_builddir}/source/shapes
 SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resources/fontmetrics \
+              --tmpdir "/tmp/shapes.${USER}" --tmp*=yes \
               --needpath ${top_srcdir}/resources/extensions
 
 TEST_BASE = $(notdir $(basename $(wildcard ${srcdir}/*.shape)))

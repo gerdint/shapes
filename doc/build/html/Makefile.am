@@ -32,7 +32,7 @@ SHAPESFLAGS = --resources=no \
               --fontmetricspath ${top_srcdir}/resources/fontmetrics \
               --needpath ${top_srcdir}/resources/extensions \
               --tp=no \
-              --tmpdir /tmp
+              --tmpdir "/tmp/shapes.${USER}" --tmp*=yes
 
 
 include ${top_builddir}/source/SHAPES-VERSION-FILE
