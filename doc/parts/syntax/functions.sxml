@@ -27,11 +27,11 @@
 <p>
 	Besides ordinary functions, there are some other objects which the function calling syntax accepts.  The other possible types of objects are affine transforms (which <em>should</em> behave just as functions of a single geometric object), and paths (which can accept a path time or an arctime).  The general form of a function application is
 	<syntax-table>
-		<tr> <td><syntax name="basic-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"["</lexerregexp> <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></inline></td></tr>
-		<tr> <td><syntax name="arg-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /> <bnf>|</bnf> <syntax name="named-expr" /></inline></td></tr>
-		<tr> <td><syntax name="named-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></inline></td></tr>
-		<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="state" /> <bnf>|</bnf> <syntax name="named-state" /></inline></td></tr>
-		<tr> <td><syntax name="named-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="state" /></inline></td></tr>
+		<tr> <td><syntax name="basic-call" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"["</lexerregexp> <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></td></tr>
+		<tr> <td><syntax name="arg-item" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="expr" /> <bnf>|</bnf> <syntax name="named-expr" /></td></tr>
+		<tr> <td><syntax name="named-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></td></tr>
+		<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="state" /> <bnf>|</bnf> <syntax name="named-state" /></td></tr>
+		<tr> <td><syntax name="named-state" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="state" /></td></tr>
 		<tr> <td><named-type name="Applicable" /></td> <td><bnf>=</bnf></td> <td><union-type><named-type name="Function" /><named-type name="AffineTransform" /><named-type name="Path" /></union-type></td> </tr>
 	</syntax-table>
 </p>
@@ -62,7 +62,7 @@
 <p>
 	The general form of a procedure application is
 	<syntax-table>
-		<tr> <td><syntax name="proc-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"["</lexerregexp> <lexerregexp>!</lexerregexp> <bnf>&lt;</bnf><named-type name="Procedure" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="proc-call" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"["</lexerregexp> <lexerregexp>!</lexerregexp> <bnf>&lt;</bnf><named-type name="Procedure" /><bnf>&gt;</bnf> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></td></tr>
 	</syntax-table>
 	Recall that a procedure may access states outside its body, so the exclamation mark that is part of the syntax is necessary to indicate that evaluation of the procedure application may have side-effects in case no states are being passed.  A procedure call is <em>out of scope</em> if the environment where the procedure was created cannot be reached from the environment of the call, without crossing any function boundaries.  Besides these difference, the semantics are the same as that of a function application.
 </p>
@@ -75,8 +75,8 @@
 <p>
 	To apply a function to a single argument, one may use either of
 	<syntax-table>
-		<tr> <td><syntax name="unary-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <lexerregexp>[]</lexerregexp> <syntax name="expr" /></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="expr" /> <lexerregexp>(≫|"&gt;&gt;")</lexerregexp> <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><syntax name="unary-call" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <lexerregexp>[]</lexerregexp> <syntax name="expr" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="expr" /> <lexerregexp>(≫|"&gt;&gt;")</lexerregexp> <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf></td></tr>
 	</syntax-table>
 	Note that the <operator name="[]"/> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.
 </p>
@@ -105,7 +105,7 @@ and use <operator name="≫"/> when applying a chain of unary functions:
 <p>
 	Structures are special values that contain ordered as well as named components.  Applying a function to a structure has the same semantics as if the ordered and named components were split in a basic function application.  The syntax for calling a function with a structure is:
 	<syntax-table>
-		<tr> <td><syntax name="split-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <lexerregexp>[]</lexerregexp> <lexerregexp>&lt;&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><syntax name="split-call" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <lexerregexp>[]</lexerregexp> <lexerregexp>&lt;&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></td></tr>
 	</syntax-table>
 	Note that the <inline>[]</inline> and <inline>&lt;&gt;</inline> must each be written as a single token without whitespace.
 </p>
@@ -118,7 +118,7 @@ and use <operator name="≫"/> when applying a chain of unary functions:
 <p>
 	The syntax for the basic evaluated cut is simple:
 	<syntax-table>
-		<tr> <td><syntax name="basic-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"["</lexerregexp> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> <lexerregexp>"..."</lexerregexp> <lexerregexp>"]"</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="basic-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"["</lexerregexp> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /><bnf>*</bnf> <syntax name="named-expr" /><bnf>*</bnf> <lexerregexp>"..."</lexerregexp> <lexerregexp>"]"</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 
@@ -136,8 +136,8 @@ and use <operator name="≫"/> when applying a chain of unary functions:
 <p>
 	The following allows evaluated cuts to be constructed as easy as an unary function application:
 	<syntax-table>
-		<tr> <td><syntax name="unary-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="expr" /></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="named-expr" /></inline></td></tr>
+		<tr> <td><syntax name="unary-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="expr" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="named-expr" /></td></tr>
 	</syntax-table>
 	Note that the <operator name="[...]" /> must be written as a single token without whitespace.
 </p>
@@ -150,7 +150,7 @@ and use <operator name="≫"/> when applying a chain of unary functions:
 <p>
 	The syntax to use a structure for an evaluated cut is
 	<syntax-table>
-		<tr> <td><syntax name="split-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>[...]</lexerregexp> <lexerregexp>&lt;&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td><syntax name="split-cute" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>[...]</lexerregexp> <lexerregexp>&lt;&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Structure" /><bnf>&gt;</bnf></td></tr>
 	</syntax-table>
 </p>
 </body>

@@ -65,7 +65,7 @@ inc: [addn '1]
 <p>
 	It is possible to <em>reach out</em> from the current lexical scope to circumvent <em>shadowing</em> bindings.  The syntax for this is
 	<syntax-table>
-		<tr> <td><syntax name="reach-out" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"../"</lexerregexp> <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="reach-out" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"../"</lexerregexp> <syntax name="expr" /></td></tr>
 	</syntax-table>
 </p>
 
@@ -119,7 +119,7 @@ inc: [addn '1]
 <body>
 <p>The value of a <em>dynamic binding</em> is determined by the current <em>dynamic environment</em> and cannot be determined by a simple lexical analysis.  The dynamic environment is changed by the special construct
 	<syntax-table>
-		<tr> <td><syntax name="with-dynamic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> | <syntax name="expr" /></inline></td></tr>
+		<tr> <td><syntax name="with-dynamic" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> | <syntax name="expr" /></td></tr>
 	</syntax-table>
 	(Note that the vertical bar is not part of the BNF structure, but is the operator that indicates a change of dynamic scope.)
 </p>
@@ -131,12 +131,12 @@ inc: [addn '1]
 	<syntax-table>
 		<tr> <td><syntax name="dynamic-bindings" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBindings" /></td></tr>
 		<tr> <td><syntax name="dynamic-binding" /></td> <td><bnf>::</bnf></td> <td><named-type name="DynamicBinding" /></td></tr>
-		<tr> <td><syntax name="dynamic-bindings" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBinding" /><bnf>&gt;</bnf></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> <lexerregexp>&amp;</lexerregexp> <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> <lexerregexp>"&amp;|"</lexerregexp> <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></inline></td></tr>
-		<tr> <td><syntax name="dynamic-binding" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="dyn-var" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-var" /> <lexerregexp>:</lexerregexp> <lexerregexp>dynamic</lexerregexp> <syntax name="expr" /></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dyn-state" /> <lexerregexp>:</lexerregexp> <syntax name="state" /></inline></td></tr>
+		<tr> <td><syntax name="dynamic-bindings" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="DynamicBinding" /><bnf>&gt;</bnf></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> <lexerregexp>&amp;</lexerregexp> <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf> <lexerregexp>"&amp;|"</lexerregexp> <bnf>&lt;</bnf><named-type name="DynamicBindings" /><bnf>&gt;</bnf></td></tr>
+		<tr> <td><syntax name="dynamic-binding" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="dyn-var" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="dyn-var" /> <lexerregexp>:</lexerregexp> <lexerregexp>dynamic</lexerregexp> <syntax name="expr" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="dyn-state" /> <lexerregexp>:</lexerregexp> <syntax name="state" /></td></tr>
 	</syntax-table>
 </p>
 

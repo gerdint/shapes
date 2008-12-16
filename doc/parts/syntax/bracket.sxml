@@ -20,13 +20,13 @@
 <top>
 <p>The code bracket is a rather complicated kind of expression.  It is the home of many program elements, and its sementics is defined to avoid unnecessary nesting of scoping constructs.  The general form is</p>
 <syntax-table>
-<tr> <td><syntax name="code-bracket" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>{</lexerregexp> <syntax name="bracket-item" /><bnf>*</bnf> <lexerregexp>}</lexerregexp></inline></td></tr>
-<tr> <td><syntax name="bracket-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="variable-definition" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="split-definition" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="state-item" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-variable-declaration" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-state-declaration" /></inline></td></tr>
+<tr> <td><syntax name="code-bracket" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>{</lexerregexp> <syntax name="bracket-item" /><bnf>*</bnf> <lexerregexp>}</lexerregexp></td></tr>
+<tr> <td><syntax name="bracket-item" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="expr" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="variable-definition" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="split-definition" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="state-item" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="dynamic-variable-declaration" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="dynamic-state-declaration" /></td></tr>
 </syntax-table>
 
 <p>The top level semantics of the code brackets is defined by two phases.  In the first phase, all items in the bracket that can be evaluated at any time and without evaluation of sub-expressions, are evaluated.  This includes variable definitions whose right hand side can be delayed using a thunk.  Any items related to states are excluded from this phase.</p>
@@ -42,8 +42,8 @@
 <title>Variable definitions</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="variable-definition" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="lex-state" /> ;</inline></td></tr>
+<tr> <td><syntax name="variable-definition" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="expr" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="identifier" /> <lexerregexp>:</lexerregexp> <syntax name="lex-state" /> <lexerregexp>;</lexerregexp></td></tr>
 </syntax-table>
 <p>The latter form is at the same time a kind of state item, and as such it is always evaluated in the second phase of the code bracket evaluation..</p>
 
@@ -55,9 +55,9 @@
 <title>State items</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> <lexerregexp>:</lexerregexp> <bnf>&lt;</bnf><named-type name="Hot" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="state" /> <bnf>(</bnf> <lexerregexp>≪|"&lt;&lt;"</lexerregexp> <syntax name="expr" /> <bnf>)+</bnf>  </inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="lex-state" /> <lexerregexp>;</lexerregexp></inline></td></tr>
+<tr> <td><syntax name="state-item" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="lex-state" /> <lexerregexp>:</lexerregexp> <bnf>&lt;</bnf><named-type name="Hot" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="state" /> <bnf>(</bnf> <lexerregexp>≪|"&lt;&lt;"</lexerregexp> <syntax name="expr" /> <bnf>)+</bnf>  </td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="lex-state" /> <lexerregexp>;</lexerregexp></td></tr>
 </syntax-table>
 <p>The state items are always evaluated in order of appearance in the code bracket (note also the special kind of variable definition involving a state).</p>
 
@@ -69,13 +69,13 @@
 
 <p>A related concept is to <em>peek</em> a state.  This <em>should</em> result in the same value that would be obtained if the state was frozen.  However, it does not have to obey this rule.  In addition, not all states allow the peek operation for efficiency reasons — peeking would involve an expensive deep copy in some cases.  Other types of states may be possible to peek, but not to freeze.  Also note that peeking a state may <em>poke</em> it at the same time, that is, peeking may have side effects on the state, so two consecutive peeks need not result in the same value. The syntax is:
 	<syntax-table>
-		<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"("</lexerregexp> <syntax name="state" /> <lexerregexp>")"</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="peek-state" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"("</lexerregexp> <syntax name="state" /> <lexerregexp>")"</lexerregexp></td></tr>
 	</syntax-table>
 	Note that a <syntax name="state" /> without surrounding parentheses is not an expression, and can only appear as part of a few constructs.
 </p>
 <p>Peeking a state, as well as the tack-on and freeze operations described above, are special cases of <em>mutator calls</em>.  Ordinary mutator calls (that is, without dedicated syntax), are similar to calls to non-pure functions.  Recall that state arguments can not be bound with curry.  For the same reason, there is no such thing as a <em>mutator value</em>; instead, when a mutator on a state is selected, it must be immediately applied.  The syntax is simple:
 	<syntax-table>
-		<tr> <td><syntax name="mutator-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="state" /> <lexerregexp>"."</lexerregexp> <lexerregexp>"["</lexerregexp> <syntax name="identifier" /> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="mutator-call" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="state" /> <lexerregexp>"."</lexerregexp> <lexerregexp>"["</lexerregexp> <syntax name="identifier" /> <bnf>(</bnf> <syntax name="arg-item" /> <bnf>|</bnf> <syntax name="state-item" /> <bnf>)*</bnf> <lexerregexp>"]"</lexerregexp></td></tr>
 	</syntax-table>
 	Evaluation of a <syntax name="mutator-call" /> is just like an application of a non-pure function (denoted by the <syntax name="identifier" />) stored in the state, with the state itself prepended to the list of arguments.
 </p>
@@ -119,8 +119,8 @@ rnd2: (•rnd)]]>
 <title>Dynamic declarations</title>
 <body>
 <syntax-table>
-<tr> <td><syntax name="dynamic-variable-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>dynamic</lexerregexp> <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="dynamic-variable-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>dynamic</lexerregexp> <syntax name="expr" /></td></tr>
 </syntax-table>
 <p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
 
@@ -150,7 +150,7 @@ dynamic @tex_bbox_grow_rel identity 1.01
 <p>
 	Dynamic states would be a language feature with subtleties.  It is not part of the language at this time, but there is a dedicated syntax:
 	<syntax-table>
-		<tr> <td><syntax name="dynamic-state-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-state" /> <syntax name="state" /></inline></td></tr>
+		<tr> <td><syntax name="dynamic-state-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>dynamic</lexerregexp> <syntax name="dyn-state" /> <syntax name="state" /></td></tr>
 	</syntax-table>
 </p>
 </body>

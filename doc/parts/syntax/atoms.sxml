@@ -29,7 +29,7 @@
 		<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
 		<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
 		<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" /><lexerregexp>("°"|"^^")</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" /><lexerregexp>("°"|"^^")</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 <p>
@@ -79,7 +79,7 @@
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="length" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
-		<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
+		<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></td></tr>
 	</syntax-table>
 </p>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
@@ -227,7 +227,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
-		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>true</lexerregexp> <bnf>|</bnf> <lexerregexp>false</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>true</lexerregexp> <bnf>|</bnf> <lexerregexp>false</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 
@@ -318,7 +318,7 @@ Multi-line...´
 <body>
 <p>
 	<syntax-table>
-		<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>@</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 </p>
 </body>
@@ -330,9 +330,9 @@ Multi-line...´
 <p>
 	Note that state references are not expressions:
 	<syntax-table>
-		<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></inline></td></tr>
-		<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
-		<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></td></tr>
+		<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></td></tr>
+		<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 </p>
 </body>
@@ -344,7 +344,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
-		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>'</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>'</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 	Note that there must not be any whitespace after the apostrophe.
 </p>
