@@ -16,10 +16,15 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-|** This example is included to compare Drool with Sketch.
-|** Kjell Magne Fauske draw a nice robot arm using Sketch, and I want to see
-|** what the corresponding Drool source could look like (if possible to reproduce at all).
-|** Many thanks to Kjell Magne for letting me use his example.
+/** This example is included to compare Shapes with Sketch.
+ ** Kjell Magne Fauske draw a nice robot arm using Sketch, and I want to see
+ ** what the corresponding Shapes source could look like (if possible to reproduce at all).
+ ** Many thanks to Kjell Magne for letting me use his example.
+ **
+ ** Unfortunately, I created this example at a time when I was not familiar with the
+ ** Denavit-Hartenberg convention, so I am afraid that the source is not fully
+ ** utilizing the beauty of the convention, even though it produces the correct picture.
+ **/
 
 ##needs arrowheads
 ##needs centering
@@ -106,17 +111,17 @@ paintArm: \ pth width height steps →
        pth0:
        {
          sl: [pth e*lStep]
- 	 dx: sl.T * 0.5 * width
-	 dy: sl.B * 0.5 * height
-	 [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+         dx: sl.N * 0.5 * width
+         dy: sl.B * 0.5 * height
+         [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
        }
 
        pth1:
        {
          sl: [pth (e*1+0.999)*lStep]
- 	 dx: sl.N * 0.5 * width
-	 dy: sl.B * 0.5 * height
-	 [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
+         dx: sl.N * 0.5 * width
+         dy: sl.B * 0.5 * height
+         [shift sl.p] [] ( (~dx+~dy)--(~dx+dy)--(dx+dy)--(dx+~dy)--cycle )
        }
 
       [edgyCylinder pth0 pth1]
@@ -184,7 +189,7 @@ theta2: 0° |** Never actually seen.
  ** frames of the downstream half of the joints, that is, the frames that the parameterization cares
  ** about.  The tf_u transforms define the frames of the upstream half of the joints, and are only
  ** needed to draw the machinery (besides being used to define the downstream frames).
- ** The difference between adjacent tf_u and tf_d is thus only a shift in the y-direction.
+ ** The difference between adjacent tf_u and tf_d is thus only a shift in the z-direction.
  **/
 tf0d: [rotate3D (1,0,0) ~75°] * [rotate3D (0,0,1) ~20°]
 tf1u: tf0d * [shift (a0,0u,0u)] * [rotate3D (1,0,0) alpha0] * [shift (0u,0u,d1-jointYSeparation)]
@@ -200,13 +205,18 @@ frame1: tf1d [] frameArrows
 •zbuf << [shift (0cm,0cm,10cm)] [] [specular_light [gray 0.9]]
 •zbuf << [ambient_light [gray 0.3]]
 
+|** Annotations to be placed on top of the z-buffer goes here.
+•zbufAnnot: newGroup3D
+
 |** This is the part of the picture where parameters are shown.
 •pbuf: newGroup3D
 
 •zbuf << tf0d [] joint
 •zbuf << tf1u [] joint
+•zbufAnnot << @nonstroking:GRAY_WHITE | tf1u [] [facing [centerat (TeX `\small Link $i$´) (0,2)]]
 •zbuf << tf1d [] joint
 •zbuf << tf2u [] joint
+•zbufAnnot << @nonstroking:GRAY_WHITE | tf2u [] [facing [centerat (TeX `\small Link $i+1$´) (0,1.2)]]
 
 •zbuf << jointSurface | [paintArm [armPath tf0d tf1u] 0.5*jointRadius 0.2*jointRadius '10]
 •zbuf << jointSurface | [paintArm [armPath tf1d tf2u] 0.5*jointRadius 0.2*jointRadius '10]
@@ -283,6 +293,7 @@ axis2: tf2d [] (0u,0u,0u)--(0u,0u,~5*jointThickness)
 •pbuf << [shift 0.5 * ([tf0d (a0,0u,0u)] + [tf1d (0u,0u,0u)])] [] [facing [centeratwlm (TeX `$d_{i}$´) (~1,0)]]
 
 zbuf: •zbuf;
+zbufAnnot: •zbufAnnot;
 pbuf: •pbuf;
 
 |** Finally, the two buffers are drawn.  The parameters are moved down a bit to avoid cluttering.
@@ -290,5 +301,6 @@ pbuf: •pbuf;
 |
 {
   •page << [view zbuf]
+        << [view zbufAnnot]
   •page << [shift (0,~5u)] [] [view pbuf]
 }
