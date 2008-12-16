@@ -227,7 +227,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
-		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>true</lexerregexp> <bnf>|</bnf> <lexerregexp>false</lexerregexp></inline></td></tr>
 	</syntax-table>
 </p>
 
@@ -344,7 +344,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
-		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>'</lexerregexp><syntax name="identifier" /></inline></td></tr>
 	</syntax-table>
 	Note that there must not be any whitespace after the apostrophe.
 </p>

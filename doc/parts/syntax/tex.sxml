@@ -47,7 +47,7 @@
 <p>
 	To produce the labels themselves, the syntax is simply:
 	<syntax-table>
-		<tr> <td><syntax name="tex-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( TeX <bnf>&lt;</bnf><named-type name="String" /><bnf>&gt;</bnf> )</inline></td></tr>
+		<tr> <td><syntax name="tex-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"("</lexerregexp> <lexerregexp>TeX</lexerregexp> <bnf>&lt;</bnf><named-type name="String" /><bnf>&gt;</bnf> <lexerregexp>")"</lexerregexp></inline></td></tr>
 	</syntax-table>
 </p>
 

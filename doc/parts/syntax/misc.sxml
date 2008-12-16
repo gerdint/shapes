@@ -69,8 +69,8 @@
 	<syntax-table>
 		<tr> <td><syntax name="path-point-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
 		<tr> <td><syntax name="path-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> <lexerregexp>&lt;</lexerregexp> <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> <lexerregexp>&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
 		<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
 	</syntax-table>
 	It is illegal to put a handle on a pathpoint which already has a handle in the same direction.
@@ -79,7 +79,7 @@
 <p>
 	Often, paths are constructed according to the pattern
 <pre>
-<syntax name="path-point-2D" /> <bnf>(</bnf> -- <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> -- cycle <bnf>)?</bnf>
+<syntax name="path-point-2D" /> <bnf>(</bnf> <lexerregexp>--</lexerregexp> <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> <lexerregexp>--</lexerregexp> <lexerregexp>cycle</lexerregexp> <bnf>)?</bnf>
 </pre>
 	but this is just a special case of the general
 </p>
@@ -87,9 +87,9 @@
 <syntax-table>
 <tr> <td><syntax name="simple-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="SimplePath2D" /></td></tr>
 <tr> <td><syntax name="simple-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> <lexerregexp>--</lexerregexp> <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="cycle" /></inline></td></tr>
-<tr> <td><syntax name="cycle" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- cycle</inline></td></tr>
+<tr> <td><syntax name="cycle" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> <lexerregexp>--</lexerregexp> <lexerregexp>cycle</lexerregexp></inline></td></tr>
 </syntax-table>
 <p>It is illegal to close a path that is already closed, or to extend a closed path.</p>
 
@@ -125,7 +125,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <syntax-table>
 <tr> <td><syntax name="composite-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="Path2D" /></td></tr>
 <tr> <td><syntax name="composite-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> <lexerregexp>&amp;</lexerregexp> <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></td></tr>
 </syntax-table>
 
 <p>Paths in <str-3D /> are constructed in the same way as in <str-2D />, although their path points cannot have polar handles.</p>
@@ -138,7 +138,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <body>
 <p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  Delayed evaluation is prohibited by flagging an expression as <em>immediate</em>:</p>
 <syntax-table>
-<tr> <td><syntax name="immediate-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>!! <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="immediate-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>!!</lexerregexp> <syntax name="expr" /></td></tr>
 </syntax-table>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
@@ -159,11 +159,11 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <body>
 <p>The expansions of <syntax name="unary" /> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.  The special syntax for calling the <binding name="abs" /> function is also included here.</p>
 <syntax-table>
-<tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( - <syntax name="expr" /> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( + <syntax name="expr" /> )</inline></td></tr>
-<tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><syntax name="abs-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(| <syntax name="expr" /> |)</inline></td></tr>
+<tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"("</lexerregexp> <lexerregexp>-</lexerregexp> <syntax name="expr" /> <lexerregexp>")"</lexerregexp></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><lexerregexp>~</lexerregexp> <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"("</lexerregexp> <lexerregexp>"+"</lexerregexp> <syntax name="expr" /> <lexerregexp>")"</lexerregexp></inline></td></tr>
+<tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>not</lexerregexp> <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td><syntax name="abs-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>"(|"</lexerregexp> <syntax name="expr" /> <lexerregexp>"|)"</lexerregexp></inline></td></tr>
 </syntax-table>
 </body>
 </section>
