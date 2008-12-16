@@ -69,6 +69,11 @@ textGreater: \ x y .> [if x > y `true´ `false´]
 <pre>
 •stdout &lt;&lt; sin [] 30°
 </pre>
+or
+<pre>
+•stdout &lt;&lt; 30° >> sin
+</pre>
+Please read the short discussion about <a part="syntax" id="syntax/fun-apply/unary">unary calls</a> at this time.
 	</p>
 
 	<p>
@@ -241,7 +246,7 @@ mark: \ •dst .> { •dst &lt;&lt; [stroke (0cm,0cm)--(1cm,1cm)] }
 \ pth .>
   (&gt;
     cut: 2mm
-    picture: [shift pth.begin.p] [] [fill [circle 1mm]]
+    picture: [fill [circle 1mm]] >> [shift pth.begin.p]
   &lt;)
 </pre>
    Note that the names of the field in the structure is part of the structure's type, and hence of the function's signature.
