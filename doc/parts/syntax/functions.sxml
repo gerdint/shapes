@@ -73,15 +73,29 @@
 <title>Unary function application</title>
 <body>
 <p>
-	To apply a function to a single argument, one may use
+	To apply a function to a single argument, one may use either of
 	<syntax-table>
-		<tr> <td><syntax name="unary-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntax name="expr" /></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> [] <syntax name="named-expr" /></inline></td></tr>
+		<tr> <td><syntax name="unary-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf> <lexerregexp>[]</lexerregexp> <syntax name="expr" /></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="expr" /> <lexerregexp>(≫|"&gt;&gt;")</lexerregexp> <bnf>&lt;</bnf><named-type name="Applicable" /><bnf>&gt;</bnf></inline></td></tr>
 	</syntax-table>
-	Note that the <inline>[]</inline> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.
+	Note that the <operator name="[]"/> must be written as a single token without whitespace between the brackets.  There is no corresponding sugar for passing states or applying procedures.
 </p>
 
-<p>Postfix alternatives for unary application may be introduced in the future.</p>
+<p>Both operators are left associative, and have equal precedence.  Use the <operator name="[]"/> when applying hard-wired curry functions:
+<pre>
+<![CDATA[fun: \ a → \ b → 10 * a + b
+fun [] 2 [] 1]]>
+</pre>
+and use <operator name="≫"/> when applying a chain of unary functions:
+<pre>
+<![CDATA[•world << [cicle 1cm] >> stroke >> immerse >> [rotate3D dir:(1,1,1) angle:15°]*[shift (2cm,0cm,0cm)]]]>
+</pre>
+</p>
+<p>When neither is the intention to obtain curried looks nor has the chain of functions more than one function, the choice becomes a matter of taste.  Although messy, the following would still work:
+<pre>
+<![CDATA[•world << stroke [] [cicle 1cm] >> immerse >> [rotate3D dir:(1,1,1) angle:15°]*[shift (2cm,0cm,0cm)]]]>
+</pre>
+</p>
 </body>
 </section>
 
