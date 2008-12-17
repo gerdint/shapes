@@ -451,8 +451,14 @@ Computation::SingleSidedPolygon3DGray::writePackedValue( std::ostream & os, char
 RefCountPtr< const Lang::Color >
 Computation::SingleSidedPolygon3DGray::getColor( ) const
 {
-	// This color is only used for debugging, so it doesn't matter that we don't care about lightening.
-	std::cerr << "Warning:	SingleSidedPolygon3DGray::getColor just returns the lightMultiply coefficients as a color." << std::endl ;
+	static bool warned = false;
+	if( ! warned )
+		{
+			// This color is only used for debugging, so it doesn't matter that we don't care about lightening.
+			std::cerr << "Warning:  SingleSidedPolygon3DGray::getColor just returns the lightMultiply coefficients as a color." << std::endl
+								<< "Warning:  The warning above will be suppressed from now on." << std::endl ;
+			warned = true;
+		}
 	return interpolator_->getDebugColor( );
 }
 
@@ -868,8 +874,14 @@ Computation::SingleSidedPolygon3DRGB::writePackedValue( std::ostream & os, char 
 RefCountPtr< const Lang::Color >
 Computation::SingleSidedPolygon3DRGB::getColor( ) const
 {
-	// This color is only used for debugging, so it doesn't matter that we don't care about lightening.
-	std::cerr << "Warning:	SingleSidedPolygon3DRGB::getColor just returns the lightMultiply coefficients as a color." << std::endl ;
+	static bool warned = false;
+	if( ! warned )
+		{
+			// This color is only used for debugging, so it doesn't matter that we don't care about lightening.
+			std::cerr << "Warning:  SingleSidedPolygon3DRGB::getColor just returns the lightMultiply coefficients as a color." << std::endl
+								<< "Warning:  The warning above will be suppressed from now on." << std::endl ;
+			warned = true;
+		}
 	return interpolator_->getDebugColor( );
 }
 
