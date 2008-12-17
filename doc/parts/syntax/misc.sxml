@@ -190,9 +190,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 		<tr> <td>Associativity</td> <td>Operators</td></tr>
 	</head>
 	<body>
-		<tr> <td></td> <td></td> </tr>
 		<tr> <td>non</td> <td><lexerregexp>:</lexerregexp></td> </tr>
-		<tr> <td>left</td> <td><lexerregexp>"]"</lexerregexp>   <lexerregexp>"&gt;)"</lexerregexp></td> </tr>
 
 		<tr> <td>left</td> <td><lexerregexp>≪|"&lt;&lt;"</lexerregexp></td> </tr>
 		<tr> <td>non</td> <td><lexerregexp>!!</lexerregexp></td> </tr>
@@ -221,12 +219,11 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 
 		<tr> <td>left</td> <td><lexerregexp>⊙|"()"</lexerregexp></td> </tr>
 
-		<tr> <td>left</td> <td><lexerregexp>"."</lexerregexp>   <lexerregexp>"["</lexerregexp>   <lexerregexp>"(&lt;"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"."</lexerregexp></td> </tr>
 		<tr> <td>left</td> <td><lexerregexp>#</lexerregexp></td> </tr>
 		<tr> <td>left</td> <td><lexerregexp>&lt;&gt;</lexerregexp></td> </tr>
 		<tr> <td>left</td> <td><lexerregexp>@@</lexerregexp>   <lexerregexp>"../"</lexerregexp></td> </tr>
 
-		<tr> <td>non</td> <td><lexerregexp>")"</lexerregexp></td> </tr>
 		<tr> <td>left</td> <td><lexerregexp>,</lexerregexp></td> </tr>
 	</body>
 </loose-table>

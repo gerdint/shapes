@@ -192,7 +192,6 @@ void shapeserror( char * msg )
 %type <splitFormals> SplitFormals OneOrMoreSplitFormals
 
 %nonassoc T_assign ':'
-%left ']' T_splitRight
 
 %left T_llthan
 %nonassoc T_bangbang
@@ -221,12 +220,11 @@ void shapeserror( char * msg )
 
 %left T_compose
 
-%left '[' '.' T_splitLeft
+%left '.'
 %left '#'
 %left T_split
 %left T_atat T_surrounding
 
-%nonassoc ')'
 %left ','
 
 %start Program
