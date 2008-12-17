@@ -20,7 +20,7 @@
 
 •page << [stroke [circle 5cm]]
 
-myFont: @text_font:font_HELVETICA & @text_size:1cm
+myFont: @text_font:FONT_HELVETICA & @text_size:1cm
 
 {
   bar: [[shift (~2cm,~2cm)] myFont | (newText << `Blah´ )]

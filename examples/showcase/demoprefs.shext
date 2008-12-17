@@ -16,12 +16,14 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
+hwidth: 0.3bp
+hdash: [dashpattern 1.0mm 1mm]
+hdash1: [dashpattern 2.5mm 1mm]
+hstyle: @width:hwidth & @dash:hdash
+hstyle1: @width:hwidth & @dash:hdash1
+hboxmargin: 3mm
+hboxmargin1: 2mm
 
-pic: [import `multipage.pdf´] [] '0   |** import all pages, and select page 0
-
-{
- bb: [bbox pic]
- •page << [scale 20cm/([xmax bb] - [xmin bb])] [] pic
-}
-
+demoprefs:
+    @connectionlw: 0.8bp
+  & @blocklw: 0.8bp

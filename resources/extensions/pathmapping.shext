@@ -19,11 +19,11 @@
 pathmap:
 {
   meeter: \ p1 p2 →
-   [if p1.null?
+   [if p1.null? >> [debuglog_before p1 ...] >> [debuglog_before `¢n´ ...]
        p2
        (escape_continuation cont
-         @handler_NoIntersection: \ pth1 pth2 →
-              (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rT)]))--((1%C^[angle (-pth2.begin.T)])<pth2.begin--pth2.end))
+         @handler_NoIntersection: (\ pth1 pth2 →
+              (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rT)]))--((1%C^[angle (-pth2.begin.T)])<pth2.begin--pth2.end)))
          |
          {
            t: [intersection p1 p2] >> [debuglog_before `search...´ ...] >> [debuglog_after `found´ ...]
@@ -48,13 +48,12 @@ pathmap:
 
 
 sidepath: \ pth dst →
- (@defaultunit:1%C
-  |
-  [pathmap pth
-    \ sl1 sl2 →
-      (sl1.p + sl1.N*dst)>(^[angle sl1.T])--
-      (^[angle sl2.rT])<(sl2.p - sl2.rN*dst)]
- )
+ @defaultunit:1%C
+ |
+ [pathmap pth
+   \ sl1 sl2 →
+     (sl1.p + sl1.N*dst)>(^[angle sl1.T])--
+     (^[angle sl2.rT])<(sl2.p - sl2.rN*dst)]
 
 sidepath2: \ pth dst →
   [pathmap pth

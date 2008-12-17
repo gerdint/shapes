@@ -18,11 +18,11 @@
 
 |** preamble \RequirePackage{../sigsysnotation}
 
-##needs pipefigprefs : ../applications
-##needs examplesprefs : ../applications
+##needs valve
+##needs demoprefs
 ##needs blockdraw_wfo
 
-examplesprefs & @defaultunit:1%c
+demoprefs & @defaultunit:1%c
 |
 {
 
