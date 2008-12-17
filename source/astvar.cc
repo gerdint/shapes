@@ -568,7 +568,7 @@ Kernel::DynamicBindingContinuation::takeHandle( Kernel::VariableHandle val, Kern
 			return;
 		}
 	evalState->cont_ = cont_;
-	env_->lookupDynamicVariable( key_ ).makeBinding( val, idLoc_, evalState );
+	env_->lookupDynamicVariable( key_ ).makeBinding( val, idLoc_, traceLoc_, evalState );
 }
 
 void
@@ -629,6 +629,7 @@ Ast::DynamicBindingExpression::eval( Kernel::EvalState * evalState ) const
 		{
 			dynProps.makeBinding( Kernel::VariableHandle( new Kernel::Variable( new Kernel::Thunk( evalState->env_, evalState->dyn_, expr_ ) ) ),
 														idLoc_,
+														expr_->loc( ),
 														evalState );
 		}
 }

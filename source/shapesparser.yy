@@ -1159,17 +1159,17 @@ ExprExceptConstStrings
 DynamicBinding
 : T_dynamic_identifier ':' Expr %prec T_dynamiccolon
 {
-	$$ = new Ast::DynamicBindingExpression( @$, $1, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
+	$$ = new Ast::DynamicBindingExpression( @1, $1, $3, new Kernel::Environment::LexicalKey * ( 0 ) );
 }
 | T_dynamic_identifier ':' T_dynamic Expr %prec T_dynamiccolon
 {
-	$$ = new Ast::DynamicBindingExpression( @$, $1,
+	$$ = new Ast::DynamicBindingExpression( @1, $1,
 																					new Ast::DynamicExpression( @4, $4 ),
 																					new Kernel::Environment::LexicalKey * ( 0 ) );
 }
 | T_dynamic_state_identifier ':' StateReference	%prec T_dynamiccolon
 {
-	$$ = new Ast::DynamicStateBindingExpression( @$, @1, $1, $3 );
+	$$ = new Ast::DynamicStateBindingExpression( @1, @1, $1, $3 );
 }
 ;
 

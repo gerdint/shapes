@@ -179,7 +179,7 @@ namespace Shapes
 			EyeZDynamicVariableProperties( const char * name );
 			virtual ~EyeZDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class DefaultUnitDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -189,7 +189,7 @@ namespace Shapes
 			virtual ~DefaultUnitDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual bool forceValue( ) const { return false; };
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class BlendSpaceDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -198,7 +198,7 @@ namespace Shapes
 			BlendSpaceDynamicVariableProperties( const char * name );
 			virtual ~BlendSpaceDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 	}

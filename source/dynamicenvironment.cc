@@ -508,7 +508,7 @@ Lang::EyeZBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 
 	if( ! IS_NAN( (*sysBindings)->eyez_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< eye's z-coordinate >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->eyez_ = val_;
@@ -541,13 +541,13 @@ Kernel::EyeZDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Length > len = val->tryVal< const Lang::Length >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, idLoc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -561,10 +561,10 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 			RefCountPtr< const Lang::Float > maybeInfinity = val->tryVal< const Lang::Float >( );
 			if( maybeInfinity->val_ < HUGE_VAL )
 				{
-					throw Exceptions::OutOfRange( loc, strrefdup( "The only float value allowed here is infinity." ) );
+					throw Exceptions::OutOfRange( exprLoc, strrefdup( "The only float value allowed here is infinity." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, Concrete::HUGE_LENGTH ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, idLoc, Concrete::HUGE_LENGTH ) ),
 											 evalState );
 			return;
 		}
@@ -573,7 +573,7 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -596,7 +596,7 @@ Lang::DefaultUnitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 
 	if( (*sysBindings)->defaultUnit_ != NullPtr< const Kernel::PolarHandlePromise >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< default unit >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->defaultUnit_ = val_;
@@ -629,7 +629,7 @@ Kernel::DefaultUnitDynamicVariableProperties::fetch( const Kernel::PassedDyn & d
 }
 
 void
-Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	if( ! val->isThunk( ) )
 		{
@@ -637,7 +637,7 @@ Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( name_, loc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( name_, idLoc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
 									 evalState );
 	return;
 }
@@ -662,7 +662,7 @@ Lang::BlendSpaceBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 
 	if( (*sysBindings)->blendSpace_ != NullPtr< const Lang::ColorSpace >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< blend space >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->blendSpace_ = space_;
@@ -695,16 +695,16 @@ Kernel::BlendSpaceDynamicVariableProperties::fetch( const Kernel::PassedDyn & dy
 }
 
 void
-Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::ColorSpace > space = val->getVal< const Lang::ColorSpace >( loc );
+	RefCountPtr< const Lang::ColorSpace > space = val->getVal< const Lang::ColorSpace >( exprLoc );
 	if( ! space->isBlendable( ) )
 		{
-			throw Exceptions::OutOfRange( loc, strrefdup( "This color space cannot be used in blending." ) );
+			throw Exceptions::OutOfRange( exprLoc, strrefdup( "This color space cannot be used in blending." ) );
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( name_, loc, space ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( name_, idLoc, space ) ),
 									 evalState );
 }
 

@@ -221,16 +221,17 @@ namespace Shapes
 	{
 		Kernel::DynamicEnvironmentKeyType key_;
 		const char * name_;
+		const Ast::SourceLocation idLoc_;
 		Kernel::ContRef cont_;
 	public:
-		UserDynamicBindingContinuation( const Ast::SourceLocation & traceLoc, const Kernel::DynamicEnvironmentKeyType & key, const char * name, const Kernel::ContRef & cont )
-			: Kernel::Continuation( traceLoc ), key_( key ), name_( name ), cont_( cont )
+		UserDynamicBindingContinuation( const Ast::SourceLocation & traceLoc, const Kernel::DynamicEnvironmentKeyType & key, const char * name, const Ast::SourceLocation & idLoc, const Kernel::ContRef & cont )
+			: Kernel::Continuation( traceLoc ), key_( key ), name_( name ), idLoc_( idLoc ), cont_( cont )
 		{ }
 		virtual ~UserDynamicBindingContinuation( )
 		{ }
 		virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 		{
-			cont_->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, traceLoc_, val ) ),
+			cont_->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, idLoc_, val ) ),
 												evalState );
 		}
 		virtual void backTrace( std::list< Kernel::Continuation::BackTraceElem > * trace ) const
@@ -269,19 +270,19 @@ Kernel::UserDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::UserDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::UserDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	if( filter_ == Lang::THE_IDENTITY )
 		{
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, loc, val ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, idLoc, val ) ),
 											 evalState );
 			return;
 		}
 
-	evalState->cont_ = Kernel::ContRef( new Kernel::UserDynamicBindingContinuation( loc, key_, name_, evalState->cont_ ) );
+	evalState->cont_ = Kernel::ContRef( new Kernel::UserDynamicBindingContinuation( exprLoc, key_, name_, idLoc, evalState->cont_ ) );
 
-	filter_->call( filter_, evalState, val, loc );
+	filter_->call( filter_, evalState, val, exprLoc );
 }
 
 
@@ -346,7 +347,7 @@ Lang::WidthBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 
 	if( ! IS_NAN( newState->width_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state width >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->width_ = val_;
@@ -381,17 +382,17 @@ Kernel::WidthDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) c
 }
 
 void
-Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Length > len = val->tryVal< const Lang::Length >( );
 			if( len->getScalar( ) < 0 )
 				{
-					throw Exceptions::OutOfRange( loc, strrefdup( "The length must be non-negative." ) );
+					throw Exceptions::OutOfRange( exprLoc, strrefdup( "The length must be non-negative." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, idLoc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -404,7 +405,7 @@ Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, loc, Concrete::Length( -1 ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, idLoc, Concrete::Length( -1 ) ) ),
 											 evalState );
 			return;
 		}
@@ -413,7 +414,7 @@ Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -448,7 +449,7 @@ Lang::MiterLimitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 
 	if( ! IS_NAN( newState->miterLimit_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state miter limit >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->miterLimit_ = val_;
@@ -483,17 +484,17 @@ Kernel::MiterLimitDynamicVariableProperties::fetch( const Kernel::PassedDyn & dy
 }
 
 void
-Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Length > len = val->tryVal< const Lang::Length >( );
 			if( len->getScalar( ) < 0 )
 				{
-					throw Exceptions::OutOfRange( loc, strrefdup( "The length must be non-negative." ) );
+					throw Exceptions::OutOfRange( exprLoc, strrefdup( "The length must be non-negative." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, idLoc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -506,7 +507,7 @@ Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, loc, Concrete::Length( -1 ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, idLoc, Concrete::Length( -1 ) ) ),
 											 evalState );
 			return;
 		}
@@ -515,7 +516,7 @@ Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1097,7 +1098,7 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 		{
 			if( newState->strokingAlpha_ != NullPtr< const Lang::Alpha >( ) )
 				{
-					throw Exceptions::MultipleDynamicBind( "< graphics state stroking alpha >", loc_, Ast::THE_UNKNOWN_LOCATION );
+					throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 				}
 			newState->strokingAlpha_ = alpha_;
 		}
@@ -1105,7 +1106,7 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 		{
 			if( newState->nonStrokingAlpha_ != NullPtr< const Lang::Alpha >( ) )
 				{
-					throw Exceptions::MultipleDynamicBind( "< graphics state non-stroking alpha >", loc_, Ast::THE_UNKNOWN_LOCATION );
+					throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 				}
 			newState->nonStrokingAlpha_ = alpha_;
 		}
@@ -1147,13 +1148,13 @@ Kernel::AlphaDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) c
 }
 
 void
-Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Alpha > alpha = val->tryVal< const Lang::Alpha >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, loc, alpha, isStroking_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, idLoc, alpha, isStroking_ ) ),
 											 evalState );
 			return;
 		}
@@ -1166,7 +1167,7 @@ Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, loc, RefCountPtr< const Lang::Alpha >( new Lang::Alpha( true, -1 ) ), isStroking_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, idLoc, RefCountPtr< const Lang::Alpha >( new Lang::Alpha( true, -1 ) ), isStroking_ ) ),
 											 evalState );
 			return;
 		}
@@ -1175,7 +1176,7 @@ Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Alpha::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Alpha::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1548,7 +1549,7 @@ Lang::StrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 
 	if( newState->strokingColor_ != NullPtr< const Lang::Color >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state stroking >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->strokingColor_ = color_;
@@ -1585,13 +1586,13 @@ Kernel::StrokingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn 
 }
 
 void
-Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Color > color = val->tryVal< const Lang::Color >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, loc, color ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, idLoc, color ) ),
 											 evalState );
 			return;
 		}
@@ -1604,7 +1605,7 @@ Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, idLoc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1613,7 +1614,7 @@ Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Color::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Color::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1648,7 +1649,7 @@ Lang::NonStrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 
 	if( newState->nonStrokingColor_ != NullPtr< const Lang::Color >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state non-stroking >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->nonStrokingColor_ = color_;
@@ -1685,13 +1686,13 @@ Kernel::NonStrokingDynamicVariableProperties::fetch( const Kernel::PassedDyn & d
 }
 
 void
-Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Color > color = val->tryVal< const Lang::Color >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, loc, color ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, idLoc, color ) ),
 											 evalState );
 			return;
 		}
@@ -1704,7 +1705,7 @@ Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, idLoc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1713,7 +1714,7 @@ Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Color::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Color::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1748,7 +1749,7 @@ Lang::DashBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 
 	if( newState->dash_ != NullPtr< const Lang::Dash >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state dash >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->dash_ = dash_;
@@ -1785,13 +1786,13 @@ Kernel::DashDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Dash > dash = val->tryVal< const Lang::Dash >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, loc, dash ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, idLoc, dash ) ),
 											 evalState );
 			return;
 		}
@@ -1804,7 +1805,7 @@ Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, loc, RefCountPtr< const Lang::Dash >( new Lang::Dash( RefCountPtr< std::list< Concrete::Length > >( new std::list< Concrete::Length >( ) ), 0, -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, idLoc, RefCountPtr< const Lang::Dash >( new Lang::Dash( RefCountPtr< std::list< Concrete::Length > >( new std::list< Concrete::Length >( ) ), 0, -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1813,7 +1814,7 @@ Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Dash::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Dash::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1848,7 +1849,7 @@ Lang::CapStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 
 	if( newState->cap_ != Lang::CapStyle::CAP_UNDEFINED )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state cap >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->cap_ = cap_;
@@ -1883,13 +1884,13 @@ Kernel::CapStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn 
 }
 
 void
-Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::CapStyle > cap = val->tryVal< const Lang::CapStyle >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, loc, cap->cap_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, idLoc, cap->cap_ ) ),
 											 evalState );
 			return;
 		}
@@ -1902,7 +1903,7 @@ Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, loc, Lang::CapStyle::CAP_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, idLoc, Lang::CapStyle::CAP_SAME ) ),
 											 evalState );
 			return;
 		}
@@ -1911,7 +1912,7 @@ Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::CapStyle::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::CapStyle::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -1945,7 +1946,7 @@ Lang::JoinStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 
 	if( newState->join_ != Lang::JoinStyle::JOIN_UNDEFINED )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state join >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->join_ = join_;
@@ -1980,13 +1981,13 @@ Kernel::JoinStyleDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn
 }
 
 void
-Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::JoinStyle > join = val->tryVal< const Lang::JoinStyle >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, loc, join->join_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, idLoc, join->join_ ) ),
 											 evalState );
 			return;
 		}
@@ -1999,7 +2000,7 @@ Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, loc, Lang::JoinStyle::JOIN_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, idLoc, Lang::JoinStyle::JOIN_SAME ) ),
 											 evalState );
 			return;
 		}
@@ -2008,7 +2009,7 @@ Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::JoinStyle::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::JoinStyle::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
@@ -2042,7 +2043,7 @@ Lang::BlendModeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 
 	if( newState->blend_ != Lang::BlendMode::BLEND_UNDEFINED )
 		{
-			throw Exceptions::MultipleDynamicBind( "< graphics state blend >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->blend_ = blend_;
@@ -2077,13 +2078,13 @@ Kernel::BlendModeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn
 }
 
 void
-Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::BlendMode > blend = val->tryVal< const Lang::BlendMode >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, loc, blend->mode_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, idLoc, blend->mode_ ) ),
 											 evalState );
 			return;
 		}
@@ -2096,7 +2097,7 @@ Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, loc, Lang::BlendMode::BLEND_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, idLoc, Lang::BlendMode::BLEND_SAME ) ),
 											 evalState );
 			return;
 		}
@@ -2105,7 +2106,7 @@ Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::BlendMode::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::BlendMode::staticTypeName( ), Lang::Void::staticTypeName( ) ) );
 }
 
 
