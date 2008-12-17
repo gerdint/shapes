@@ -1254,7 +1254,15 @@ main( int argc, char ** argv )
 							evalState.cont_->backTrace( std::cerr );
 						}
 
-					std::cerr << evalState.cont_->traceLoc( ) << Exceptions::Exception::locsep ;
+					Exceptions::RuntimeError & rerr = dynamic_cast< Exceptions::RuntimeError & >( ball );
+					if( & rerr != 0 && ! rerr.getLoc( ).isUnknown( ) )
+						{
+							std::cerr << rerr.getLoc( ) << Exceptions::Exception::locsep ;
+						}
+					else
+						{
+							std::cerr << evalState.cont_->traceLoc( ) << Exceptions::Exception::locsep ;
+						}
 					ball.display( std::cerr );
 					abortProcedure( ball.exitCode( ) );
 				}
