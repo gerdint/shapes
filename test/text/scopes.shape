@@ -16,4 +16,4 @@ a: 1
   •stdout ≪ `Is 4 even? --> ´ ≪ [even 4] ≪ `¢n´
 }
 
-•page ≪ [stroke (0cm,0cm)--(1cm,1cm)]
+[spot (0m,0m)]

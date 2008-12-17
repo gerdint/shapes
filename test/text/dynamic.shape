@@ -1,0 +1,6 @@
+dynamic @a ( \ x → 2 * x ) 1
+
+•stdout << @a << `¢n´
+				<< @a:2 | @a << `¢n´
+
+[spot (0m,0m)]

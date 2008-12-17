@@ -770,7 +770,7 @@ Ast::DynamicVariableDecl::eval( Kernel::EvalState * evalState ) const
 
 
 Ast::DynamicVariableDeclFunction::DynamicVariableDeclFunction( const char * id, Ast::Expression * filterExpr, Ast::Expression * defaultExpr, size_t ** idPos )
-	: Lang::Function( new Kernel::EvaluatedFormals( "< dynamic variable declaration >", false ) ), id_( id ), filterExpr_( filterExpr ), defaultExpr_( defaultExpr ), idPos_( idPos )
+	: Lang::Function( new Kernel::EvaluatedFormals( "< dynamic variable declaration >", true ) ), id_( id ), filterExpr_( filterExpr ), defaultExpr_( defaultExpr ), idPos_( idPos )
 { }
 
 Ast::DynamicVariableDeclFunction::~DynamicVariableDeclFunction( )

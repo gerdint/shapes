@@ -230,7 +230,6 @@ namespace Shapes
 		{ }
 		virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 		{
-			std::cerr << "Warning: I changed from evalState->cont_ to this->cont_! in UserDynamicBindingContinuation::takeHandle" << std::endl ;
 			cont_->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, traceLoc_, val ) ),
 												evalState );
 		}
