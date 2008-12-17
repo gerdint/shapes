@@ -606,10 +606,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <xsl:template match="tight-table">
-  <table class="tight"><xsl:apply-templates select="tr"/></table>
+  <table class="loose"><xsl:apply-templates select="head/tr | body/tr"/></table>
 </xsl:template>
 <xsl:template match="loose-table">
-  <table class="loose"><xsl:apply-templates select="tr"/></table>
+  <table class="loose"><xsl:apply-templates select="head/tr | body/tr"/></table>
 </xsl:template>
 
 <xsl:template match="tr">

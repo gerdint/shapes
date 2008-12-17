@@ -57,11 +57,15 @@
 <note>
 	<p>Many users complain that they cannot type the degree character, but this useful character has been present on all keyboard layouts that I (Henrik) has encountered.  To you Emacs users, note that you must type <em>ctrl-q</em> (that is, pressing the <em>q</em> key while holding down the <em>control</em> key), before you can use the <em>meta</em> key as a modifier.  The following table gives a few examples of where the degree character can be found:
 		<loose-table>
-			<tr> <th>OS</th> <th>Keyboard layout</th> <th>Key sequence</th> </tr>
-			<tr> <td>Mac OS X</td> <td>U.S.</td> <td>alt-shift-8</td> </tr>
-			<tr> <td>Cent OS</td> <td>U.S.</td> <td>alt-0</td> </tr>
-			<tr> <td>Mac OS X</td> <td>Swedish — Pro</td> <td>shift-§</td> </tr>
-			<tr> <td>Mac OS X</td> <td>Tiddish (see below)</td> <td>shift-§</td> </tr>
+			<head>
+				<tr> <td>OS</td> <td>Keyboard layout</td> <td>Key sequence</td> </tr>
+			</head>
+			<body>
+				<tr> <td>Mac OS X</td> <td>U.S.</td> <td>alt-shift-8</td> </tr>
+				<tr> <td>Cent OS</td> <td>U.S.</td> <td>alt-0</td> </tr>
+				<tr> <td>Mac OS X</td> <td>Swedish — Pro</td> <td>shift-§</td> </tr>
+				<tr> <td>Mac OS X</td> <td>Tiddish (see below)</td> <td>shift-§</td> </tr>
+			</body>
 		</loose-table>
 	</p>
 	<p>Note that, on the Mac OS U.S. layout, the key sequence <em>alt-0</em> yields the <em>masculine ordinal indicator</em> (º) which looks very similar to the degree sign (°) — don't confuse the two!</p>
@@ -128,16 +132,20 @@
 <p>
 	Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:
 	<loose-table>
-		<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
-		<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+		<head>
+			<tr align="left"> <td>Name</td> <td>Distance</td> <td>No inflexion</td> <td>Circelish</td> <td>Correction</td> </tr>
+		</head>
+		<body>
+			<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+		</body>
 	</loose-table>
 </p>
 <p>The meaning of the columns is the following.  If there is a check mark in the <em>Distance</em> column, then the distance between the first and last interpolation point is used as a base length.  If there is a check mark in the <em>Circelish</em> column, then the base length is multiplied by a factor based on the near angle, in such a way that circles are approximated well.  If there is a check mark under <em>Correction</em>, a correction factor is applied based on the difference between the near angle and the far angle; if both angles are the same, there is no correction.  If there is a check mark in the <em>No inflexion</em> column, then the distance to the intermediate control point is truncated to avoid inflexions, if necessary.  The unit which is not based on the distance between the first and last interpolation point is based on the inflexion limit instead.</p>

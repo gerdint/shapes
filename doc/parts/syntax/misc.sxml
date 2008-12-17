@@ -180,4 +180,64 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 </body>
 </section>
 
+<section id="syntax/misc-expr/precedence">
+<title>Operator precedence and associativity</title>
+<body>
+<p>This section just gives the operator precedence and associativity.  It is just a polished version of the corresponding segment of the Bison parser input.</p>
+<p>In the table below, the operators have higher precedence (binds stronger) towards the bottom, and the precedence is equal in each row.  Each regexp corresponds to one operator, so the rexexps with alternatives typically give an ASCII fallback for a pretty non-ASCII character.  The table may contain unused operators.</p>
+<loose-table>
+	<head>
+		<tr> <td>Associativity</td> <td>Operators</td></tr>
+	</head>
+	<body>
+		<tr> <td></td> <td></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>:</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"]"</lexerregexp>   <lexerregexp>"&gt;)"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>≪|"&lt;&lt;"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>!!</lexerregexp></td> </tr>
+
+		<tr> <td>non</td> <td><lexerregexp>→|"-&gt;"</lexerregexp></td> </tr>
+		<tr> <td>right</td> <td><lexerregexp>"|"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"[]"</lexerregexp>   <lexerregexp>"[!]"</lexerregexp>   <lexerregexp>"[...]"</lexerregexp>   <lexerregexp>"[!...]"</lexerregexp>   <lexerregexp>≫|"&gt;&gt;"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"&amp;|"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&amp;</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>:</lexerregexp> <em>(dynamic variable binding)</em></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>⋁|"or"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>⊻|"xor"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>⋀|"and"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>¬|"not"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>=</lexerregexp>   <lexerregexp>≠|"/="</lexerregexp>   <lexerregexp>≤|"&lt;="</lexerregexp>   <lexerregexp>≥|"&gt;="</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"++"</lexerregexp>   <lexerregexp>--</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&lt;</lexerregexp>   <lexerregexp>&gt;</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"+"</lexerregexp>   <lexerregexp>-</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>∠|"/_"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"*"</lexerregexp>   <lexerregexp>/</lexerregexp>   <lexerregexp>∥|"*/"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>~</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>⊙|"()"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"."</lexerregexp>   <lexerregexp>"["</lexerregexp>   <lexerregexp>"(&lt;"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>#</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&lt;&gt;</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>@@</lexerregexp>   <lexerregexp>"../"</lexerregexp></td> </tr>
+
+		<tr> <td>non</td> <td><lexerregexp>")"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>,</lexerregexp></td> </tr>
+	</body>
+</loose-table>
+<p>The higher precedence of <operator name=":" /> is additionally used in for the rule
+	<syntax-table>
+		<tr> <td><syntax name="unary-cute" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="named-expr" /></td></tr>
+	</syntax-table>
+	where it appears as part of <syntax name="named-expr" />.</p>
+
+<p>The precedence and associativity of <operator name="&lt;" /> and <operator name="&gt;" /> is non-standard, but is necessary to allow for convenient path construction.</p>
+</body>
+</section>
+
 </section><!-- end of syntax/misc-expr -->
