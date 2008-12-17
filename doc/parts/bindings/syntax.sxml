@@ -23,7 +23,7 @@
 <p>The user should generally <em>not</em> use these functions directly.</p>
 </top>
 
-<system-binding identifier="coords2D">
+<system-binding identifier="coords">
 	<function>
 		<case constructor-of="FloatPair">
 			<arguments>
@@ -97,7 +97,7 @@
 	</function>
 </system-binding>
 
-<system-binding identifier="cornercoords2D">
+<system-binding identifier="cornercoords">
 	<function>
 		<case constructor-of="Coords">
 			<arguments>

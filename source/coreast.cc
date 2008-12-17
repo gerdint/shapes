@@ -264,11 +264,11 @@ namespace Shapes
 
 
 
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords2D( new Lang::Core_coords2D( "coords2D" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_cornercoords2D( new Lang::Core_cornercoords2D( "cornercoords2D" ) );
+RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords2D( new Lang::Core_coords2D( "coords" ) );
+RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_cornercoords2D( new Lang::Core_cornercoords2D( "cornercoords" ) );
 RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_coords3D( new Lang::Core_coords3D( "coords3D" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_r( new Lang::Core_polarHandle2DFree_r( "polarHandle2DFree_r" ) );
-RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( new Lang::Core_polarHandle2DFree_ra( "polarHandle2DFree_ra" ) );
+RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_r( new Lang::Core_polarHandle2DFree_r( "polarHandleFree_r" ) );
+RefCountPtr< const Lang::CoreFunction > Ast::THE_FUNCTION_polarHandle2DFree_ra( new Lang::Core_polarHandle2DFree_ra( "polarHandleFree_ra" ) );
 /* This belongs in consts.cc but we must make sure it is initialized before we use it below.	Note that the identifier will actually be destroyed
  * before Ast::THE_FUNCTION_TeX is destroyed, but that should not cause a failure...
  */
