@@ -489,8 +489,8 @@ Kernel::DynamicEnvironment::isBaseEnvironment( ) const
 }
 
 
-Lang::EyeZBinding::EyeZBinding( const Ast::SourceLocation & loc, Concrete::Length val )
-	: loc_( loc ), val_( val )
+Lang::EyeZBinding::EyeZBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val )
+	: loc_( loc ), val_( val ), id_( id )
 { }
 
 Lang::EyeZBinding::~EyeZBinding( )
@@ -512,6 +512,13 @@ Lang::EyeZBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 		}
 
 	(*sysBindings)->eyez_ = val_;
+}
+
+void
+Lang::EyeZBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << val_ / Interaction::displayUnit << Interaction::displayUnitName ;
 }
 
 void
@@ -540,7 +547,7 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 		{
 			RefCountPtr< const Lang::Length > len = val->tryVal< const Lang::Length >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -557,7 +564,7 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 					throw Exceptions::OutOfRange( loc, strrefdup( "The only float value allowed here is infinity." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( loc, Concrete::HUGE_LENGTH ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, Concrete::HUGE_LENGTH ) ),
 											 evalState );
 			return;
 		}
@@ -570,8 +577,8 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 }
 
 
-Lang::DefaultUnitBinding::DefaultUnitBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Kernel::PolarHandlePromise > & val )
-	: loc_( loc ), val_( val )
+Lang::DefaultUnitBinding::DefaultUnitBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Kernel::PolarHandlePromise > & val )
+	: loc_( loc ), val_( val ), id_( id )
 { }
 
 Lang::DefaultUnitBinding::~DefaultUnitBinding( )
@@ -593,6 +600,12 @@ Lang::DefaultUnitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 		}
 
 	(*sysBindings)->defaultUnit_ = val_;
+}
+
+void
+Lang::DefaultUnitBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":<promise>" ;
 }
 
 void
@@ -624,14 +637,14 @@ Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( loc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( name_, loc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
 									 evalState );
 	return;
 }
 
 
-Lang::BlendSpaceBinding::BlendSpaceBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::ColorSpace > & space )
-	: loc_( loc ), space_( space )
+Lang::BlendSpaceBinding::BlendSpaceBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::ColorSpace > & space )
+	: loc_( loc ), space_( space ), id_( id )
 { }
 
 Lang::BlendSpaceBinding::~BlendSpaceBinding( )
@@ -653,6 +666,13 @@ Lang::BlendSpaceBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 		}
 
 	(*sysBindings)->blendSpace_ = space_;
+}
+
+void
+Lang::BlendSpaceBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << "" ;
+	space_->show( os );
 }
 
 void
@@ -684,7 +704,7 @@ Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( loc, space ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( name_, loc, space ) ),
 									 evalState );
 }
 

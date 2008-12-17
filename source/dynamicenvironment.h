@@ -133,10 +133,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length val_;
+			const char * id_;
 		public:
-			EyeZBinding( const Ast::SourceLocation & loc, Concrete::Length val );
+			EyeZBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val );
 			virtual ~EyeZBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -144,10 +146,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Kernel::PolarHandlePromise > val_;
+			const char * id_;
 		public:
-			DefaultUnitBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Kernel::PolarHandlePromise > & val );
+			DefaultUnitBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Kernel::PolarHandlePromise > & val );
 			virtual ~DefaultUnitBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -155,10 +159,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::ColorSpace > space_;
+			const char * id_;
 		public:
-			BlendSpaceBinding( const Ast::SourceLocation & loc_, const RefCountPtr< const Lang::ColorSpace > & space );
+			BlendSpaceBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::ColorSpace > & space );
 			virtual ~BlendSpaceBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 

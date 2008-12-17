@@ -37,6 +37,8 @@ namespace Shapes
 		extern RefCountPtr< const char > PUBLIC_SCOPE_NAME;
 		extern RefCountPtr< const char > PROTECTED_SCOPE_NAME;
 
+		extern const char * DYNAMIC_VARIABLE_PREFIX;
+
 	}
 
 	namespace Lang

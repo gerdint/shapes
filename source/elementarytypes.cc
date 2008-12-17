@@ -294,7 +294,7 @@ Lang::operator << ( std::ostream & os, const Lang::Length & self )
 		{
 			os << "(+" ;
 		}
-	os << double( self.val_.offtype< 1, 0 >( ) ) * Interaction::displayUnitFactor << Interaction::displayUnitName ;
+	os << self.val_ / Interaction::displayUnit << Interaction::displayUnitName ;
 	if( self.isOffset_ )
 		{
 			os << ")" ;

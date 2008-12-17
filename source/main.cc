@@ -1205,6 +1205,7 @@ main( int argc, char ** argv )
 					std::cerr << "Invalid display unit: " << Interaction::displayUnitName << std::endl ;
 					abortProcedure( Interaction::EXIT_INVOCATION_ERROR );
 				}
+			Interaction::displayUnit = Concrete::Length( 1 / Interaction::displayUnitFactor );
 			labelDBFile = performIterativeStartup( labelDBName );
 			RefCountPtr< const Kernel::GraphicsState > graphicsState( new Kernel::GraphicsState( true ) );
 			Kernel::PassedDyn baseDyn( new Kernel::DynamicEnvironment( graphicsState ) );

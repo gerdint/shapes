@@ -1030,12 +1030,12 @@ RefCountPtr< const Lang::Class > Lang::TextRenderingMode::TypeID( new Lang::Syst
 TYPEINFOIMPL( TextRenderingMode );
 
 
-Lang::CharacterSpacingBinding::CharacterSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing )
-	: loc_( loc ), spacing_( spacing ), isRelative_( false )
+Lang::CharacterSpacingBinding::CharacterSpacingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length spacing )
+	: loc_( loc ), spacing_( spacing ), isRelative_( false ), id_( id )
 { }
 
-Lang::CharacterSpacingBinding::CharacterSpacingBinding( const Ast::SourceLocation & loc, const double r )
-	: loc_( loc ), spacing_( r ), isRelative_( true )
+Lang::CharacterSpacingBinding::CharacterSpacingBinding( const char * id, const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), spacing_( r ), isRelative_( true ), id_( id )
 { }
 
 Lang::CharacterSpacingBinding::~CharacterSpacingBinding( )
@@ -1094,16 +1094,30 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 }
 
 void
+Lang::CharacterSpacingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	if( isRelative_ )
+		{
+			os << Concrete::Length::offtype( spacing_ ) ;
+		}
+	else
+		{
+			os << spacing_ / Interaction::displayUnit << Interaction::displayUnitName ;
+		}
+}
+
+void
 Lang::CharacterSpacingBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::WordSpacingBinding::WordSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing )
-	: loc_( loc ), spacing_( spacing ), isRelative_( false )
+Lang::WordSpacingBinding::WordSpacingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length spacing )
+	: loc_( loc ), spacing_( spacing ), isRelative_( false ), id_( id )
 { }
 
-Lang::WordSpacingBinding::WordSpacingBinding( const Ast::SourceLocation & loc, const double r )
-	: loc_( loc ), spacing_( r ), isRelative_( true )
+Lang::WordSpacingBinding::WordSpacingBinding( const char * id, const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), spacing_( r ), isRelative_( true ), id_( id )
 { }
 
 Lang::WordSpacingBinding::~WordSpacingBinding( )
@@ -1162,12 +1176,26 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 }
 
 void
+Lang::WordSpacingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	if( isRelative_ )
+		{
+			os << Concrete::Length::offtype( spacing_ ) ;
+		}
+	else
+		{
+			os << spacing_ / Interaction::displayUnit << Interaction::displayUnitName ;
+		}
+}
+
+void
 Lang::WordSpacingBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::HorizontalScalingBinding::HorizontalScalingBinding( const Ast::SourceLocation & loc, double scaling )
-	: loc_( loc ), scaling_( scaling )
+Lang::HorizontalScalingBinding::HorizontalScalingBinding( const char * id, const Ast::SourceLocation & loc, double scaling )
+	: loc_( loc ), scaling_( scaling ), id_( id )
 { }
 
 Lang::HorizontalScalingBinding::~HorizontalScalingBinding( )
@@ -1205,16 +1233,23 @@ Lang::HorizontalScalingBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 }
 
 void
+Lang::HorizontalScalingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << scaling_ ;
+}
+
+void
 Lang::HorizontalScalingBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::LeadingBinding::LeadingBinding( const Ast::SourceLocation & loc, const Concrete::Length ty )
-	: loc_( loc ), ty_( ty ), isRelative_( false )
+Lang::LeadingBinding::LeadingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length ty )
+	: loc_( loc ), ty_( ty ), isRelative_( false ), id_( id )
 { }
 
-Lang::LeadingBinding::LeadingBinding( const Ast::SourceLocation & loc, const double r )
-	: loc_( loc ), ty_( r ), isRelative_( true )
+Lang::LeadingBinding::LeadingBinding( const char * id, const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), ty_( r ), isRelative_( true ), id_( id )
 { }
 
 Lang::LeadingBinding::~LeadingBinding( )
@@ -1273,12 +1308,26 @@ Lang::LeadingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables *
 }
 
 void
+Lang::LeadingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	if( isRelative_ )
+		{
+			os << Concrete::Length::offtype( ty_ ) ;
+		}
+	else
+		{
+			os << ty_ / Interaction::displayUnit << Interaction::displayUnitName ;
+		}
+}
+
+void
 Lang::LeadingBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::FontBinding::FontBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Font > & font )
-	: loc_( loc ), font_( font )
+Lang::FontBinding::FontBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Font > & font )
+	: loc_( loc ), font_( font ), id_( id )
 { }
 
 Lang::FontBinding::~FontBinding( )
@@ -1316,14 +1365,21 @@ Lang::FontBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 }
 
 void
+Lang::FontBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	font_->show( os );
+}
+
+void
 Lang::FontBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Font * >( font_.getPtr( ) )->gcMark( marked );
 }
 
 
-Lang::TextSizeBinding::TextSizeBinding( const Ast::SourceLocation & loc, const Concrete::Length size )
-	: loc_( loc ), size_( size )
+Lang::TextSizeBinding::TextSizeBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length size )
+	: loc_( loc ), size_( size ), id_( id )
 { }
 
 Lang::TextSizeBinding::~TextSizeBinding( )
@@ -1361,12 +1417,19 @@ Lang::TextSizeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 }
 
 void
+Lang::TextSizeBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << size_ / Interaction::displayUnit << Interaction::displayUnitName ;
+}
+
+void
 Lang::TextSizeBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::TextRenderingModeBinding::TextRenderingModeBinding( const Ast::SourceLocation & loc, const Lang::TextRenderingMode::ValueType mode )
-	: loc_( loc ), mode_( mode )
+Lang::TextRenderingModeBinding::TextRenderingModeBinding( const char * id, const Ast::SourceLocation & loc, const Lang::TextRenderingMode::ValueType mode )
+	: loc_( loc ), mode_( mode ), id_( id )
 { }
 
 Lang::TextRenderingModeBinding::~TextRenderingModeBinding( )
@@ -1404,16 +1467,23 @@ Lang::TextRenderingModeBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 }
 
 void
+Lang::TextRenderingModeBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << "<internal-enum>" ;
+}
+
+void
 Lang::TextRenderingModeBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::TextRiseBinding::TextRiseBinding( const Ast::SourceLocation & loc, const Concrete::Length ty )
-	: loc_( loc ), ty_( ty ), isRelative_( false )
+Lang::TextRiseBinding::TextRiseBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length ty )
+	: loc_( loc ), ty_( ty ), isRelative_( false ), id_( id )
 { }
 
-Lang::TextRiseBinding::TextRiseBinding( const Ast::SourceLocation & loc, const double r )
-	: loc_( loc ), ty_( r ), isRelative_( true )
+Lang::TextRiseBinding::TextRiseBinding( const char * id, const Ast::SourceLocation & loc, const double r )
+	: loc_( loc ), ty_( r ), isRelative_( true ), id_( id )
 { }
 
 Lang::TextRiseBinding::~TextRiseBinding( )
@@ -1472,12 +1542,26 @@ Lang::TextRiseBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 }
 
 void
+Lang::TextRiseBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	if( isRelative_ )
+		{
+			os << Concrete::Length::offtype( ty_ ) ;
+		}
+	else
+		{
+			os << ty_ / Interaction::displayUnit << Interaction::displayUnitName ;
+		}
+}
+
+void
 Lang::TextRiseBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
 
-Lang::TextKnockoutBinding::TextKnockoutBinding( const Ast::SourceLocation & loc, bool knockout )
-	: loc_( loc ), knockout_( knockout )
+Lang::TextKnockoutBinding::TextKnockoutBinding( const char * id, const Ast::SourceLocation & loc, bool knockout )
+	: loc_( loc ), knockout_( knockout ), id_( id )
 { }
 
 Lang::TextKnockoutBinding::~TextKnockoutBinding( )
@@ -1515,6 +1599,13 @@ Lang::TextKnockoutBinding::bind( MapType & bindings, Kernel::SystemDynamicVariab
 }
 
 void
+Lang::TextKnockoutBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << ( knockout_ ? "true" : "false" ) ;
+}
+
+void
 Lang::TextKnockoutBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -1544,7 +1635,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::Variable
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( loc, spacing->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, loc, spacing->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1558,7 +1649,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::Variable
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( loc, spacing->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, loc, spacing->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1597,7 +1688,7 @@ Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( loc, spacing->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, loc, spacing->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1611,7 +1702,7 @@ Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( loc, spacing->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, loc, spacing->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1644,7 +1735,7 @@ Kernel::HorizontalScalingDynamicVariableProperties::makeBinding( Kernel::Variabl
 {
 	RefCountPtr< const Lang::Float > scaling = val->getVal< const Lang::Float >( loc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::HorizontalScalingBinding( loc, scaling->val_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::HorizontalScalingBinding( name_, loc, scaling->val_ ) ),
 									 evalState );
 }
 
@@ -1674,7 +1765,7 @@ Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle va
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( loc, ty->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, loc, ty->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1688,7 +1779,7 @@ Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle va
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( loc, ty->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, loc, ty->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1720,7 +1811,7 @@ void
 Kernel::FontDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
 {
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::FontBinding( loc, val->getVal< const Lang::Font >( loc ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::FontBinding( name_, loc, val->getVal< const Lang::Font >( loc ) ) ),
 									 evalState );
 }
 
@@ -1744,7 +1835,7 @@ Kernel::TextSizeDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 {
 	RefCountPtr< const Lang::Length > size = val->getVal< const Lang::Length >( loc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextSizeBinding( loc, size->get( ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextSizeBinding( name_, loc, size->get( ) ) ),
 									 evalState );
 }
 
@@ -1768,7 +1859,7 @@ Kernel::TextRenderingModeDynamicVariableProperties::makeBinding( Kernel::Variabl
 {
 	RefCountPtr< const Lang::TextRenderingMode > mode = val->getVal< const Lang::TextRenderingMode >( loc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextRenderingModeBinding( loc, mode->mode_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextRenderingModeBinding( name_, loc, mode->mode_ ) ),
 									 evalState );
 }
 
@@ -1798,7 +1889,7 @@ Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( loc, ty->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, loc, ty->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1812,7 +1903,7 @@ Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( loc, ty->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, loc, ty->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1845,7 +1936,7 @@ Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::VariableHand
 {
 	RefCountPtr< const Lang::Boolean > mode = val->getVal< const Lang::Boolean >( loc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextKnockoutBinding( loc, mode->val_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextKnockoutBinding( name_, loc, mode->val_ ) ),
 									 evalState );
 }
 

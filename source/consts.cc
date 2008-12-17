@@ -30,6 +30,8 @@ RefCountPtr< const char > Interaction::SEVERAL_TYPES = strrefdup( "(several type
 RefCountPtr< const char > Interaction::PUBLIC_SCOPE_NAME = strrefdup( "public" );
 RefCountPtr< const char > Interaction::PROTECTED_SCOPE_NAME = strrefdup( "protected" );
 
+const char * Interaction::DYNAMIC_VARIABLE_PREFIX = "@";
+
 RefCountPtr< const char > Lang::ARCDELTA_ID = strrefdup( "arcdelta" );
 /* The initialization of Lang::TEX_SYNTAX_ID is placed in globals.cc to ensure it gets initialized before we need it there.
  */
