@@ -20,23 +20,12 @@
 ##needs circle
 
 doughnutProfile:
-[rotate3D dir:(1,0,0) angle:~90°]
-[]
-immerse
-[]
-[shift (3cm,0cm)]
-[]
 [circle 1.5cm]
+  >> [shift (3cm,0cm)] >> immerse >> [rotate3D dir:(1,0,0) angle:~90°]
 
 square: \ x → x * x
 
 doubleDoughnutProfile:
-[rotate3D dir:(1,0,0) angle:~90°]
-[]
-immerse
-[]
-[shift (3cm,0cm)]
-[]
 ( @defaultunit:1%C
   |
   [[range 0° 359° 10°].foldl
@@ -46,6 +35,7 @@ immerse
   	}
   	emptypath]--cycle
 )
+  >> [shift (3cm,0cm)] >> immerse >> [rotate3D dir:(1,0,0) angle:~90°]
 
 doughnut:
     @nonstroking:[gray 0.8]

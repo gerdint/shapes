@@ -61,7 +61,7 @@ gyjunction: \ arrowdir lbl → [junctionlbl (TeX `GY´) arrowdir lbl false]
 putblockTerminal: \ newBlock pos oldBlock →
 {
   r: [normalized pos - [centerof oldBlock]]
-  res: [[shift pos] [symbboxed [shift  ~r * @smallblockr] [] [shiftoffwlm newBlock [to_dir r]]]]
+  res: [[shift pos] [symbboxed [shiftoffwlm newBlock [to_dir r]]>>[shift  ~r * @smallblockr]]]
   res
 }
 

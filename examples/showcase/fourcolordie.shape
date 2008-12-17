@@ -38,4 +38,4 @@ world:
     null3D
     •rand]
 
-•page << view [] ( newZBuf << world )
+view [] ( newZBuf << world )

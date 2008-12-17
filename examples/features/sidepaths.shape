@@ -58,7 +58,7 @@ test: \ •dst pth method →
   }
 
   {
-    pth: [shift (0,~10cm)] [] upsample_balance [] upsample_inflections [] ../pth
+    pth: ../pth >> upsample_inflections >> upsample_balance >> [shift (0,~10cm)]
     •dst << @stroking:RGB_RED | [cstroke pth]
     •dst << [debuglog_after `3´ ...][][stroke [method pth 2mm]]
     •dst << [debuglog_after `3´ ...][][stroke [method pth ~2mm]]

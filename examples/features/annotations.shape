@@ -32,7 +32,7 @@ myFont: @text_font:font_HELVETICA & @text_size:1cm
 }
 
 {
-  bar: [shift (3cm,1cm)][]stroke[][circle 5mm]
+  bar: [circle 5mm] >> stroke >> [shift (3cm,1cm)]
   •page << bar
   •page << [annotationLaunch site:[site target:bar
 	  			        text:`The true source.´
@@ -41,7 +41,7 @@ myFont: @text_font:font_HELVETICA & @text_size:1cm
 }
 
 {
-  bar: [shift (3cm,2cm)][]stroke[][circle 5mm]
+  bar: [circle 5mm] >> stroke >> [shift (3cm,2cm)]
   •page << bar
   •page << [annotationLaunch site:[site target:bar
 	  			        text:`The look.´

@@ -26,7 +26,7 @@ pathmap:
               (escape_continue cont (pth1.begin--pth1.end>(1%C^[angle (-pth1.end.rT)]))--((1%C^[angle (-pth2.begin.T)])<pth2.begin--pth2.end))
          |
          {
-           t: [debuglog_after `found´ ...][][debuglog_before `search...´ ...][][intersection p1 p2]
+           t: [intersection p1 p2] >> [debuglog_before `search...´ ...] >> [debuglog_after `found´ ...]
            [meetpaths [p1 0]--t [approximator p2 t.p]--[p2 ∞]]
          }
        )

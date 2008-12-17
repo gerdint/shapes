@@ -36,19 +36,19 @@ clock: \ hour minute →
 •stdout << `First page's label: ´ << •catalog.[nextpagelabel] << `¢n´
 
 •catalog << [clock 8 0]
-	    & [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]
-	    & [destination level:'1 text:`Eight´]
-	    & {
-	      bar: [shift (3cm,1cm)][]stroke[][circle 5mm]
-  	      bar
-	      &
-	      [annotationLink site:[site target:bar
-	  			         text:`Leave this place!´
-				         width: 2bp]
-      	 		   name:`four in the afternoon´]
-	    }
+      & [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]
+      & [destination level:'1 text:`Eight´]
+      & {
+        bar: [circle 5mm] >> stroke >> [shift (3cm,1cm)]
+        bar
+        &
+        [annotationLink site:[site target:bar
+                   text:`Leave this place!´
+                  width: 2bp]
+                   name:`four in the afternoon´]
+      }
          << [clock 9 0]
-	    & [destination level:'1 text:`Nine´]
+      & [destination level:'1 text:`Nine´]
 
 •catalog.[setpagelabel number:•catalog.[nextpagenumber]+'1]
 •stdout << `Skipping to page: ´ << •catalog.[nextpagenumber] << `¢n´
@@ -63,8 +63,8 @@ clock: \ hour minute →
 •stdout << `Later page's label: ´ << •catalog.[nextpagelabel] << `¢n´
 
 •catalog << [clock 3 10]
-  	    & [destination level:'0 text:`Afternoon´ italic:true]
+        & [destination level:'0 text:`Afternoon´ italic:true]
          << [clock 4 10]
-  	    & [destination name:`four in the afternoon´]
-	 << [clock 5 10]
-	    & [destination level:'1 text:`Five´ bold:true]
+        & [destination name:`four in the afternoon´]
+   << [clock 5 10]
+      & [destination level:'1 text:`Five´ bold:true]
