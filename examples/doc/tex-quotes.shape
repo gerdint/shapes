@@ -1,0 +1,23 @@
+/** This file is part of Shapes.
+ **
+ ** Shapes is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** any later version.
+ **
+ ** Shapes is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with Shapes.  If not, see <http://www.gnu.org/licenses/>.
+ **
+ ** Copyright 2008 Henrik Tidefelt
+ **/
+
+##unit dy = 1.5cm
+
+(TeX ("\parbox{10cm}{``This \emph{poor man's string} has bulky delimiters, but can use the \texttt{\`{}\`{}} sequence for the opening left double quote, and uses a sequence of two \emph{impossible-to-produce-in-\LaTeX-apostrophe} for the closing right double quote.''}"))
+& [[shift (0,~1dy)] (TeX `\parbox{10cm}{“This string is entered with left and right double quotes, and can use the \emph{normal string} syntax.”}´)]
+& [[shift (0,~2dy)] (TeX "{{\parbox}7B{10cm}7D7BE2809C{This string is entered as a \emph}7B{data string}7D{, and would be OK for a computer program to generate.  It is entered using plain \textsc}7B{ascii}7D{, have a look at the source!}E2809D7D})]

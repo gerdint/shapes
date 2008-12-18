@@ -49,6 +49,16 @@
 <p>There is also a function that does the same job as the <operator name="TeX" /> special form, but there are good reasons for avoiding it.</p>
 </note>
 
+<example-with-output title="Quotation marks in labels" internal-id="example/tex-quotes">
+<image pdf="doc/tex-quotes.pdf" jpg="doc/tex-quotes_y_big.jpg" />
+<source file="doc/tex-quotes.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tex-quotes.shape" -->]]>
+</source>
+<caption>
+	<p>Since <str-Shapes /> allows pairwise `…´ inside normal strings, the ` cannot be used to create the left double quote in <str-LaTeX />, since there will be no matching ´ at the other end of the quote.  This example presents ways to deal with this.</p>
+</caption>
+</example-with-output>
+
 </body>
 </section><!-- End of basics/LaTeX -->
 
