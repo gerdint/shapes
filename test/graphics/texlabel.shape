@@ -2,7 +2,12 @@
 ##preamble \usepackage{fancybox}
 ##preamble \usepackage{mypackage}
 
-•page ≪ (TeX `
+helper: \ obj → ( @nonstroking:[gray 0.8] | [fill [bbox obj 'bounding]] ) & obj
+
+@TeX_bleed:5bp
+|
+helper []
+(TeX `
 \fbox{\begin{Beqnarray*}
 &\begin{aligned}
   \firstunknown &= 1 \\
