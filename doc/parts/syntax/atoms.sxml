@@ -157,7 +157,7 @@
 <section id="syntax/atoms/strings">
 <title>Strings</title>
 <body>
-<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow <str-TeX /> strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
+<p>The <named-type name="String" /> syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow <str-TeX /> strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.  There is also a string format for computer-generated source or random data, so called <em>data strings</em>.</p>
 
 <p>
 	The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:
@@ -217,6 +217,38 @@ Multi-line...´
 </pre>
 	</p>
 </note>
+
+<p>The string syntax for data strings is made up of sections, alternating between <em>plain</em> and <em>escape</em> mode, starting in <em>escape</em> mode.  The whole string begins with the sequence <lexerregexp>"\&quot;{"</lexerregexp>.  In <em>escape</em> mode, pairs in the form <lexerregexp>[A-F0-9]{2}</lexerregexp> is a base-16 representation one unsigned byte, the range <lexerregexp>[a-z]</lexerregexp> is reserved for named characters (currently, <lexerregexp>n</lexerregexp> is the newline, and <lexerregexp>t</lexerregexp> is the tab), the characters <lexerregexp>[ \t\n]</lexerregexp> are ignored, <lexerregexp>"}"</lexerregexp> terminates the string, <lexerregexp>"{"</lexerregexp> switches to <em>plain</em> mode, and no other characters are allowed.  In <em>plain</em> mode, any character in the range <lexerregexp>[ -z]</lexerregexp> represents itself, the <lexerregexp>[\n]</lexerregexp> is ignored, <lexerregexp>"}"</lexerregexp> switches back to <em>escape</em> mode, and no other characters are allowed.</p>
+
+<note>
+	<p>With the data strings, it is possible to enter strings that are not valid <str-UTF-8 /> data.  It is permitted to put such data in strings, but note that they are not valid input to most functions accepting string arguments.  Since arbitrary data cannot be handled as a null-terminated sequence of bytes, <str-Shapes /> uses both a trailing null byte and a separate byte count.</p>
+</note>
+
+<p>Here are some examples:
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid string?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>&quot;{{Hi there!}}</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>&quot;{{The tilde (}7E{) cannot be written in plain mode.}}</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>&quot;{7EAE00FF}</inline></td> <td>Yes (four bytes)</td> </tr>
+			<tr> <td><inline>&quot;{A0}</inline></td> <td>Yes (the newline character)</td> </tr>
+			<tr> <td><inline>&quot;{n}</inline></td> <td>Yes (same as <inline>&quot;{A0}</inline>)</td> </tr>
+			<tr> <td><pre>
+&quot;{
+7EAE 00FF
+8E7E ABCD
+}</pre></td> <td>Yes (eight bytes)</td> </tr>
+			<tr> <td><inline>&quot;{1234 ABC}</inline></td> <td>No (the <inline>C</inline> needs another hex digit)</td> </tr>
+			<tr> <td><inline>&quot;{7e}</inline></td> <td>No (the <inline>e</inline> should be upper case)</td> </tr>
+			<tr> <td><inline>&quot;{7E{plain text{7E}}}</inline></td> <td>No (should be <inline>&quot;{7E{plain text}7E}</inline>)</td> </tr>
+			<tr> <td><pre>
+&quot;{{Trailing newline
+}}</pre></td> <td>Yes (but does not end with a newline)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
 </body>
 </section>
