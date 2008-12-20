@@ -88,6 +88,16 @@
     <construction>
       <syntax name="string" />
     </construction>
+		<fields>
+			<type-field name="UTF8?">
+				<type><named-type name="Boolean" /></type>
+				<description><p>Predicate for valid <str-UTF-8 /> contents.</p></description>
+			</type-field>
+			<type-field name="bytecount">
+				<type><named-type name="Integer" /></type>
+				<description><p>The size of the string contents in bytes, not counting the trailing null byte.</p></description>
+			</type-field>
+		</fields>
   </coretype>
 
 </section>

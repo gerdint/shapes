@@ -330,6 +330,84 @@ DISPATCHIMPL( String );
 RefCountPtr< const Lang::Class > Lang::String::TypeID( new Lang::SystemFinalClass( strrefdup( "String" ) ) );
 TYPEINFOIMPL( String );
 
+Kernel::VariableHandle
+Lang::String::getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const
+{
+	if( strcmp( fieldID, "bytecount" ) == 0 )
+		{
+			return Helpers::newValHandle( new Lang::Integer( bytecount_ ) );
+		}
+	if( strcmp( fieldID, "UTF8?" ) == 0 )
+		{
+			const unsigned char * src = reinterpret_cast< const unsigned char * >( val_.getPtr( ) );
+			const unsigned char * end = src + bytecount_;
+			bool res = true;
+			for( ; src < end; ++src )
+				{
+					if( ( ( *src ^ 0x00 ) & 0x80 ) == 0 )
+						{
+							continue;
+						}
+					if( ( ( *src ^ 0xC0 ) & 0xE0 ) == 0 )
+						{
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							continue;
+						}
+					if( ( ( *src ^ 0xE0 ) & 0xF0 ) == 0 )
+						{
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							continue;
+						}
+					if( ( ( *src ^ 0xE0 ) & 0xF8 ) == 0 )
+						{
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							++src;
+							if( ( ( *src ^ 0x80 ) & 0xC0 ) != 0 )
+								{
+									res = false;
+									break;
+								}
+							continue;
+						}
+					res = false;
+					break;
+				}
+			if( src != end || *src != '\0' )
+				{
+					res = false;
+				}
+			return Helpers::newValHandle( new Lang::Boolean( res ) );
+		}
+	throw Exceptions::NonExistentMember( getTypeName( ), fieldID );
+}
+
 void
 Lang::String::show( std::ostream & os ) const
 {
