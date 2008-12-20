@@ -889,6 +889,56 @@ is equivalent to
 	</function>
 </system-binding>
 
+<system-binding identifier="bbox">
+	<function>
+		<case constructor-of="Path">
+			<arguments>
+				<arg identifier="obj">
+					<type><named-type name="Drawable" /></type>
+				</arg>
+				<arg identifier="type">
+					<type><named-type name="Symbol" /></type>
+					<default><inline>'bounding</inline></default>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Returns the <em>bounding box</em> or the <em>bleed box</em> of <arg name="obj" />, depending on the parameter <arg name="type" />.</p>
+				<p>The allowed values for <arg name="type" /> are { <inline>'bounding</inline>, <inline>'bleed</inline> }.</p>
+			</description>
+			<see-also><binding name="bboxed" /></see-also>
+		</case>
+	</function>
+</system-binding>
+
+<system-binding identifier="bboxed">
+	<function>
+		<case constructor-of="Drawable">
+			<arguments>
+				<arg identifier="obj">
+					<type><named-type name="Drawable" /></type>
+				</arg>
+				<arg identifier="path">
+					<type><named-type name="Path" /></type>
+				</arg>
+				<arg identifier="type">
+					<type><named-type name="Symbol" /></type>
+					<default><inline>'bounding</inline></default>
+				</arg>
+			</arguments>
+			<dynamic-references></dynamic-references>
+			<description>
+				<p>Creates an object with the same content as <arg name="obj" />, but with different boxes (note that, here, <em>box</em> refers to a convex path — not necessarily a rectangle).  One or both of the new objects boxes is set to <arg name="path" />, depending on the parameter <arg name="type" />.</p>
+				<p>The allowed values for <arg name="type" /> are { <inline>'bounding</inline>, <inline>'bleed</inline>, <inline>'both</inline> }.</p>
+				<note>
+					<p>Generally, the <em>bounding box</em> is the convex path used for layout of an object.  The <em>bleed box</em> is used by the compiler to determine where to crop the final contents of a page.  Making the bleed box slightly bigger than the bounding box can be a good idea for content that may look squeezed (or even get cropped) if appearing by the border of a page.</p>
+				</note>
+			</description>
+			<see-also><binding name="bbox" /> <binding name="TeX" /></see-also>
+		</case>
+	</function>
+</system-binding>
+
 <system-binding identifier="svg_path">
 	<function>
 		<case constructor-of="Path">
