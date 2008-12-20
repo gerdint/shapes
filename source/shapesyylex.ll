@@ -45,6 +45,7 @@ using namespace Shapes;
 #define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 double shapes_strtod( char * str, char ** end );
+char shapes_hexToChar( char c1, char c2 );
 
 %}
 
@@ -80,6 +81,8 @@ Escape "¢"|"¤"
 %x InclPath
 %x String
 %x PoorMansString
+%x DataStringPlain
+%x DataStringHex
 %x Comment
 %x LaTeXOption
 %x LaTeXClass
@@ -107,7 +110,7 @@ Escape "¢"|"¤"
 ^"##needs"[ \t]+ { BEGIN( Needs ); return T_srcLoc; }
 ^"##echo"[ \t] { BEGIN( Echo ); }
 ^"##author"[ \t] { BEGIN( Author ); }
-^"##" {
+^"##"[^\"] {
 	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "All lines beginning with ## must be scanner specials.	Please use a leading horizontal whitespace if this is not what is intended." ) ) );
 }
 
@@ -680,6 +683,62 @@ Escape "¢"|"¤"
 	return T_string;
 }
 
+<INITIAL>"\"{" {
+	while( ! dataStringChunks_.empty( ) )
+		{
+			delete dataStringChunks_.back( ).first;
+			dataStringChunks_.pop_back( );
+		}
+	dataStringTotalLength_ = 0;
+	BEGIN( DataStringHex );
+}
+<DataStringPlain,DataStringHex>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
+<DataStringPlain>[ -z]+ {
+	dataStringChunks_.push_back( std::pair< char *, size_t >( strdup( yytext ), yyleng ) );
+	dataStringTotalLength_ += yyleng;
+}
+<DataStringHex>[ \t]+ { }
+<DataStringHex>(([A-F0-9]{2})|[a-z])+ {
+	char * res = new char[ yyleng + 1 ];
+	char * dst = res;
+	for( const char * src = yytext; *src != '\0'; ++dst )
+		{
+			if( 'a' <= *src && *src <= 'z' )
+				{
+					switch( *src )
+						{
+						case 'n':
+							*dst = '\n';
+							break;
+						case 't':
+							*dst = '\t';
+							break;
+						default:
+							*dst = '\0';
+							Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Invalid character name in escape mode: " + *src ) ) );
+						}
+					src += 1;
+				}
+			else
+				{
+					*dst = shapes_hexToChar( src[0], src[1] );
+					 src += 2;
+				}
+		}
+	dataStringChunks_.push_back( std::pair< char *, size_t >( res, dst - res ) );
+	dataStringTotalLength_ += dst - res;
+}
+<DataStringHex>[{] { BEGIN( DataStringPlain ); }
+<DataStringPlain>[}] { BEGIN( DataStringHex ); }
+<DataStringHex>[}] {
+	concatenateDataString( );
+	BEGIN( INITIAL );
+	return T_string;
+}
+<DataStringPlain,DataStringHex>. {
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Stray character in \"{...} string." ) );
+}
+
 <Incl>[^ \t\n]+ {
 	currentNeedFile = yytext;
 	currentNeedPushCount = 0;
@@ -768,17 +827,17 @@ Escape "¢"|"¤"
 }
 
 {Identifier} {
-	shapeslval.str = strdup( yytext );
+	shapeslval.char_p = strdup( yytext );
 	return T_identifier;
 }
 {TypeMark}{Identifier} {
 	const char * id = yytext + 2; // The type mark is allways 2 bytes.
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_typename;
 }
 
 {DynamicMark}{Identifier} {
-	shapeslval.str = strdup( yytext + 1 );
+	shapeslval.char_p = strdup( yytext + 1 );
 	return T_dynamic_identifier;
 }
 {StateMark}{Identifier} {
@@ -792,7 +851,7 @@ Escape "¢"|"¤"
 		{
 			id += 3;
 		}
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_state_identifier;
 }
 {DynamicMark}{StateMark}{Identifier} {
@@ -806,7 +865,7 @@ Escape "¢"|"¤"
 		{
 			id += 3;
 		}
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_dynamic_state_identifier;
 }
 
@@ -822,7 +881,8 @@ Escape "¢"|"¤"
  * This section is where you put definitions of helper functions.
  */
 
-double shapes_strtod( char * str, char ** end )
+double
+shapes_strtod( char * str, char ** end )
 {
 	char termTmp;
 	char * term = str;
@@ -868,6 +928,16 @@ double shapes_strtod( char * str, char ** end )
 	double val = strtod( str, end );
 	*term = termTmp;
 	return val;
+}
+
+char
+shapes_hexToChar( char c1, char c2 )
+{
+	return
+		static_cast< char >
+		( 16 * ( ( c1 < 'A' ) ? static_cast< unsigned char >( c1 - '0' ) : static_cast< unsigned char >( c1 - 'A' + 10 ) )
+			+
+			( ( c2 < 'A' ) ? static_cast< unsigned char >( c2 - '0' ) : static_cast< unsigned char >( c2 - 'A' + 10 ) ) );
 }
 
 void

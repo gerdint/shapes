@@ -220,8 +220,8 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 void
 ShapesScanner::rinseString( )
 {
-	shapeslval.str = new char[ yyleng - 1 ];
-	char * dst = shapeslval.str;
+	char * res = new char[ yyleng - 1 ];
+	char * dst = res;
 	char * src = yytext;
 	char * end = yytext + yyleng - 2;		// the "- 1" comes from empirical studies...
 	for( ; src != end; ++src )
@@ -239,9 +239,29 @@ ShapesScanner::rinseString( )
 	 * The last of the three conditions ensures that the trailing newline was not generated
 	 * as an escape sequence, in which case it shall be kept.
 	 */
-	if( dst > shapeslval.str && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
+	if( dst > res && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
 		{
 			--dst;
 		}
 	*dst = '\0';
+	shapeslval.Lang_String = new Lang::String( res, false );
+}
+
+void
+ShapesScanner::concatenateDataString( )
+{
+	/* Remember: strcpy, strdup and friends may fail here, since the string may contain zeros. */
+
+	char * res = new char[ dataStringTotalLength_ + 1 ];
+	char * dst = res;
+	while( ! dataStringChunks_.empty( ) )
+		{
+			char * ptr = dataStringChunks_.front( ).first;
+			memcpy( dst, ptr, dataStringChunks_.front( ).second );
+			dst += dataStringChunks_.front( ).second;
+			delete ptr;
+			dataStringChunks_.pop_front( );
+		}
+	*dst = '\0';
+	shapeslval.Lang_String = new Lang::String( RefCountPtr< const char >( res ), dataStringTotalLength_ );
 }
