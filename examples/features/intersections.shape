@@ -40,7 +40,7 @@ pth2curved: (3cm,0cm)>(2cm,0cm)--(0cm,4cm)
 
 •page << [intersectionCircle pth1straight pth2straight]
 •page << [intersectionCircle pth1straight pth2curved]
-stderr << `t: ´ << [intersection pth1curved pth2straight].time << `¢n´
+stderr << `t: ´ << [intersection pth1curved pth2straight].time << "{n}
 •page << [intersectionCircle pth1curved pth2straight]
 •page << [intersectionCircle pth1curved pth2curved]
 
@@ -82,11 +82,11 @@ randPath: \ n •state →
     pth2: sh [] [randPath '4 •st]
 
 /**
-    stderr << `pth: ´ << [point pth 2] << `>(´ << [speed pth 2] << `^´ << 180/180° * [angle [direction pth 2]] << `°)¢n´
-    stderr << `pth: ´ << [point pth 3] << `>(´ << [reversespeed pth 3] << `^´ << 180/180° * [angle [reversedirection pth 3]] << `°)¢n´
+    stderr << `pth: ´ << [point pth 2] << `>(´ << [speed pth 2] << `^´ << 180/180° * [angle [direction pth 2]] << `°)´ << "{n}
+    stderr << `pth: ´ << [point pth 3] << `>(´ << [reversespeed pth 3] << `^´ << 180/180° * [angle [reversedirection pth 3]] << `°)´ << "{n}
 
-    stderr << `pth2: ´ << [point pth2 0] << `>(´ << [speed pth2 0] << `^´ << 180/180° * [angle [direction pth2 0]] << `°)¢n´
-    stderr << `pth2: ´ << [point pth2 1] << `>(´ << [reversespeed pth2 1] << `^´ << 180/180° * [angle [reversedirection pth2 1]] << `°)¢n´
+    stderr << `pth2: ´ << [point pth2 0] << `>(´ << [speed pth2 0] << `^´ << 180/180° * [angle [direction pth2 0]] << `°)´ << "{n}
+    stderr << `pth2: ´ << [point pth2 1] << `>(´ << [reversespeed pth2 1] << `^´ << 180/180° * [angle [reversedirection pth2 1]] << `°)´ << "{n}
 **/
     pile
     & [stroke pth2 tail: \ p → (> picture:[stroke [shift p.begin.p][][circle 3mm]]  cut:0mm <)]

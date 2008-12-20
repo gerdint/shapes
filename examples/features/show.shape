@@ -22,26 +22,29 @@
 Hi shaper!
 
 ´
-•stdout << `The value of pi is ´ << pi << `¢n´
+•stdout << `The value of pi is ´ << pi << "{n}
 
 add: \ x → \ y → x + y
-•stdout << add << [[add 1cm] 2cm] << `¢n´
-•stdout << `Bye¢n´
+•stdout << add << [[add 1cm] 2cm] << "{n}
+•stdout << `Bye´ << "{n}
 {
   add: \ x → 2*x
-  •stdout << [add 5] << [debuglog_after `This string goes to the log file, the next string is returned.¢n´ `¢n´]
+  •stdout << [add 5] << [debuglog_after `This string goes to the log file, the next string is returned.´+"{n} "{n}]
 }
-•stdout << [[add '5] '8] << `¢n´
+•stdout << [[add '5] '8] << "{n}
 
 {
-  a: { •stdout << `Initializing a¢n´  4 }
-  b: !!{ •stdout << `Initializing b¢n´  5 }
-  c: { •stdout << `Initializing c¢n´  6 }
-  •stdout << c << a << b << `¢n´
+  a: { •stdout << `Initializing a´ << "{n}
+	     4 }
+  b: !!{ •stdout << `Initializing b´ << "{n}
+		     5 }
+  c: { •stdout << `Initializing c´ << "{n}
+	     6 }
+  •stdout << c << a << b << "{n}
 }
 
-•stdout << `A very short length: ´ << 1.3*^~5cm << `¢n´
-•stdout << `A very big number: ´ << 5.7*^8 << `¢n´
+•stdout << `A very short length: ´ << 1.3*^~5cm << "{n}
+•stdout << `A very big number: ´ << 5.7*^8 << "{n}
 
 /** Prevent empty output error. **/
 [spot (0m,0m)]

@@ -37,7 +37,7 @@ interp: ( newRGBInterpolator
 yMin: ~5cm
 yMax: 5cm
 
-makeNormal: \ p → ( @nonstroking:[interp (p.y-yMin)/(yMax-yMin)] | [debuglog_before [sprintf `%g¢n´ (p.y-yMin)/(yMax-yMin)] [facetnormal p [normalized (p.x,p.y,0bp)]]] )
+makeNormal: \ p → ( @nonstroking:[interp (p.y-yMin)/(yMax-yMin)] | [debuglog_before [sprintf `%g´+newline (p.y-yMin)/(yMax-yMin)] [facetnormal p [normalized (p.x,p.y,0bp)]]] )
 
 r: 6cm
 ##unit w = 1cm

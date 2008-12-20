@@ -18,9 +18,9 @@
 
 helper: \ •dst rng →
 {
-  •dst << `== ´ << [sourceof rng] << ` ==¢n-->´
+  •dst << `== ´ << [sourceof rng] << ` ==´ << "{n} << `-->´
 			<< [rng.foldl \ p e → ( p + `  ´ + [show e] ) `´]
-			<< `¢n¢n´
+			<< "{nn}
 }
 
 {

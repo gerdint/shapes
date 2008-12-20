@@ -18,27 +18,27 @@
 
 {
   v: (1,0.1,~0.1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 {
   v: (0.1,1,0.1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 {
   v: (~0.1,~0.1,1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 {
   v: (1,0,~0)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 {
   v: (0,1,0)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 {
   v: (~0,~0,1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << `¢n´
+  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
 }
 
 /** Prevent empty output error. **/

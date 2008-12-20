@@ -19,10 +19,7 @@
 /** Since the escape character is outside the ascii range, we can either obtain the newline string from an extension. **/
 |** ##needs newline
 /** But we don't really need the escape character for newlines anyway. **/
-newline: ("
-
-
-")
+newline: "{n}
 
 /** Defining a function without use of the right arrow character. **/
 square: \ arg -> arg * arg

@@ -32,8 +32,8 @@ screw2: [rot screw]
 @eyez:10cm
 |
 {
-•stderr << `Length of screw in 3D: ´ << [duration screw] << `¢n´
-•stderr << `Length of screw view: ´ << [duration [view screw]] << `¢n´
+•stderr << `Length of screw in 3D: ´ << [duration screw] << "{n}
+•stderr << `Length of screw view: ´ << [duration [view screw]] << "{n}
 
 •page << [stroke [view pth2]]
 •page << [stroke [view screw2]]

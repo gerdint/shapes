@@ -16,8 +16,8 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-•stdout << b << `¢n´
-•stdout << c << `¢n´
+•stdout << b << "{n}
+•stdout << c << "{n}
 
 foo: \ a →
 {

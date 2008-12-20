@@ -89,7 +89,7 @@ ignore [] [connect •page a b]]]>
 		<p>Sometimes, one may just be interested in playing around with programming concepts and produce text output to verify the operation.  For instance, say that we would like to show somebody how a factorial function can be defined;
 <pre>
 <![CDATA[factorial: \ n → [if ( n = '0 ) '1 ( n * [factorial n-'1] )]
-•stdout << [factorial '5] << `¢n´]]>
+•stdout << [factorial '5] << "{n}]]>
 </pre>
 This may look like a valid program, but even if the main purpose of a <str-Shapes /> program is to produce text output, say, by writing to <state name="stdout" />, it <em>must</em> also define some graphical output.  The reason is that <str-Shapes /> is primarily designed for graphics tasks, and it should generally be considered an indication of failure if no graphics is produced.</p>
 		<p>To solve the problem, end the program with any simple expression that evaluates to a <named-type name="Drawable" />, for instance

@@ -16,15 +16,15 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-•stderr << [(and)] << `¢n´
-•stderr << [(and) 1=0] << `¢n´
-•stderr << (true and true) << `¢n´
+•stderr << [(and)] << "{n}
+•stderr << [(and) 1=0] << "{n}
+•stderr << (true and true) << "{n}
 
-•stderr << [if [(or) false false (1 = 1) (false = 28)] `Good´ `Bad´] << `¢n´
+•stderr << [if [(or) false false (1 = 1) (false = 28)] `Good´ `Bad´] << "{n}
 
-•stderr << [if not( true and true and (1 = 0) and (false = 28)) `good´ `bad´] << `¢n´
+•stderr << [if not( true and true and (1 = 0) and (false = 28)) `good´ `bad´] << "{n}
 
-•stderr << (escape_continuation esc [if [(and)  1 = 1  (escape_continue esc `Good:escape´) true] `Bad:true´ `Bad:false´]) << `¢n´
+•stderr << (escape_continuation esc [if [(and)  1 = 1  (escape_continue esc `Good:escape´) true] `Bad:true´ `Bad:false´]) << "{n}
 
 /** Prevent empty output error. **/
 [stroke (0cm,0cm)--(1cm,1cm)]

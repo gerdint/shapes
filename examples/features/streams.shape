@@ -19,7 +19,7 @@
 /**
 fibsFrom: \ n1 n2 →
 {
-  stderr << `eval:´ << n1 << `, ´ << n2 << `¢n´
+  stderr << `eval:´ << n1 << `, ´ << n2 << "{n}
   [cons n2 [fibsFrom n2 n1+n2]]
 }
 
@@ -33,10 +33,10 @@ nth: \ lst n → [if n = 0 lst.car [nth lst.cdr n-1]]
 
 fib : [cons 0 [cons 1 [streamadd fib fib.cdr]]]
 
-•stdout << [nth fib 0] << `¢n´
-•stdout << [nth fib 1] << `¢n´
-•stdout << [nth fib 2] << `¢n´
-•stdout << [nth fib 3] << `¢n´
+•stdout << [nth fib 0] << "{n}
+•stdout << [nth fib 1] << "{n}
+•stdout << [nth fib 2] << "{n}
+•stdout << [nth fib 3] << "{n}
 
 
 
@@ -51,8 +51,8 @@ randoms:
   [helper •rand]
 }
 
-•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
-•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << `¢n´
+•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << "{n}
+•stdout << [nth randoms 0] << `  ´ << [nth randoms 1] << `  ´ << [nth randoms 2] << `  ´ << [nth randoms 3] << "{n}
 
 /** Prevent empty output error. **/
 [stroke (0cm,0cm)--(1cm,1cm)]

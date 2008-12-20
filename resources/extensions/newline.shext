@@ -16,4 +16,4 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-newline: `¢n´
+newline: "{n}

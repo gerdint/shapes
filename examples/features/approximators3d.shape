@@ -47,7 +47,7 @@ nIter: '40
 |**    tim;
     a: (p - sl.p) /_ sl.T
     [debuglog_before
-      [sprintf `%g°¢n´ a / 1° ] |**  [sprintf `, %gs¢n´ tim]
+      [sprintf `%g°´+"{n} a / 1° ] |**  [sprintf `, %gs´+"{n} tim]
       pile & [view @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p]]]
    }
    null
@@ -55,7 +55,7 @@ nIter: '40
   ]
   )
   timer: •timer;
-  •stdout << [sprintf `Average time: %gs¢n´  timer / nIter]
+  •stdout << [sprintf `Average time: %gs´  timer / nIter] << "{n}
 }
 
 randPath: \ n •randstate →
@@ -83,7 +83,7 @@ randPath: \ n •randstate →
 |**    tim;
     a: (p - sl.p) /_ sl.T
     [debuglog_before
-      [sprintf `%g°¢n´ a / 1° ] |**  [sprintf `, %gs¢n´ tim]
+      [sprintf `%g°´+"{n} a / 1° ] |**  [sprintf `, %gs´+"{n} tim]
       pile & [view @stroking:[rgb 0 [min 1 [abs a - 90°]/0.1°] 0] | [stroke p--sl.p]]]
    }
    null
@@ -91,5 +91,5 @@ randPath: \ n •randstate →
   ]
   )
   timer: •timer;
-  •stdout << [sprintf `Average time: %gs¢n´  timer / nIter]
+  •stdout << [sprintf `Average time: %gs´  timer / nIter] << "{n}
 }

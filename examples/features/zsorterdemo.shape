@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-•stderr << `This example illustrates that a z sorter does a bad job with cyclic overlaps.¢n´
+##echo This example illustrates that a z sorter does a bad job with cyclic overlaps.
 
 leaf: \ a →
 (

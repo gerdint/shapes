@@ -42,9 +42,9 @@ s0: [locate [path 1.2]]
 s1: [locate s0+4.7cm]
 s2: [locate s0+1]
 
-•stdout << `s0: ´ << [sprintf `spline time: %.3g´ s0.time] << `, ´ << [sprintf `arc time: %.3gcm´ s0.length/1cm] << `¢n´
-•stdout << `s1: ´ << [sprintf `spline time: %.3g´ s1.time] << `, ´ << [sprintf `arc time: %.3gcm´ s1.length/1cm] << `¢n´
-•stdout << `s2: ´ << [sprintf `spline time: %.3g´ s2.time] << `, ´ << [sprintf `arc time: %.3gcm´ s2.length/1cm] << `¢n´
+•stdout << `s0: ´ << [sprintf `spline time: %.3g´ s0.time] << `, ´ << [sprintf `arc time: %.3gcm´ s0.length/1cm] << "{n}
+•stdout << `s1: ´ << [sprintf `spline time: %.3g´ s1.time] << `, ´ << [sprintf `arc time: %.3gcm´ s1.length/1cm] << "{n}
+•stdout << `s2: ´ << [sprintf `spline time: %.3g´ s2.time] << `, ´ << [sprintf `arc time: %.3gcm´ s2.length/1cm] << "{n}
 
 /**
  ** Annotate s0
@@ -156,8 +156,8 @@ s2: [locate s0+1]
 	 **/
   sLoop: [circ 5.5]
 	sMod: sLoop.mod
-  •stdout << `sLoop: ´ << [sprintf `spline time: %.3g´ sLoop.time] << `, ´ << [sprintf `arc time: %.3gcm´ sLoop.length/1cm] << `¢n´
-  •stdout << `sMod: ´ << [sprintf `spline time: %.3g´ sMod.time] << `, ´ << [sprintf `arc time: %.3gcm´ sMod.length/1cm] << `¢n´
+  •stdout << `sLoop: ´ << [sprintf `spline time: %.3g´ sLoop.time] << `, ´ << [sprintf `arc time: %.3gcm´ sLoop.length/1cm] << "{n}
+  •stdout << `sMod: ´ << [sprintf `spline time: %.3g´ sMod.time] << `, ´ << [sprintf `arc time: %.3gcm´ sMod.length/1cm] << "{n}
 }
 
 /**

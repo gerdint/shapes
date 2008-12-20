@@ -36,13 +36,13 @@
 	<ol>
 		<li><p>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <operator name="TeX" /> keyword.</p></li>
 		<li><p>The string delimiters is a pair of one grave and once acute accent.  If you find these difficult to produce using your keyboard layout, there is an alternative syntax; the poor man's string combines straight double quote marks with a pair of parentheses, in this case <inline>("$\Xi^{2}$")</inline>.</p></li>
-		<li><p>The backslash character (\) is not an escape character.</p></li>
+		<li><p>The backslash character (\) is not an escape character (there is no escape character at all in normal strings).</p></li>
 		<li><p><str-LaTeX /> is also useful for including pictures via the <inline>includegraphics</inline> macro.</p></li>
 	</ol>
 </p>
 
 <note>
-Generally, the string syntax is chosen carefully not to interfere with the use of <str-LaTeX />.  Hence, two characters rarely used in <str-LaTeX /> source code were selected to be used interchangeably as escape characters, namely the cent sign (¢) and the sun sign (¤).  However, characters such as newlines and tabs can be included literally in strings, so there is seldom an urge to produce the rather unusual escape characters.
+	<p>The <syntax name="string" /> syntax is chosen carefully not to interfere with the use of <str-LaTeX /> — that's why there is no escape character.</p>
 </note>
 
 <note>
