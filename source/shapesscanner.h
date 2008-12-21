@@ -69,17 +69,20 @@ class ShapesScanner : public shapesFlexLexer
 	std::set< FileID > neededFiles;
 	std::string sourceDir_;
 	std::list< std::string > needSearchPath;
+	bool inPrelude_;
+	std::istream * preludeFile_;
+	std::list< std::string >::const_iterator preludeIterator_;
+	std::list< std::pair< std::istream *, const char * > > yyinQueue_;
 	bool showFiles;
 	bool randSeedSet;
-	std::istream * appendStream_;
 	std::list< std::pair< char *, size_t > > dataStringChunks_;
 	size_t dataStringTotalLength_;
  public:
 	//	Ast::SourceLocation loc;
-	ShapesScanner( std::istream * yyin = 0, std::ostream * yyout = 0 );
+	ShapesScanner( );
 	virtual ~ShapesScanner( );
-	void setNameOf_yyin( const char * yyinName );
-	void prependStream( std::istream * is );
+	void start( );
+	void queueStream( std::istream * is, const char * yyinName );
 	void setSourceDir( const std::string & sourceDir );
 	void push_backNeedPath( const std::string & path );
 	std::string searchFile( const std::string & suffix ) const;
@@ -98,6 +101,7 @@ class ShapesScanner : public shapesFlexLexer
 	void doInclusion( );
 	void rinseString( );
 	void concatenateDataString( );
+	std::string needpathWithSuffix( const std::string & needpath, const std::string & suffix ) const;
 };
 
 

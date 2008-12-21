@@ -1126,12 +1126,19 @@ main( int argc, char ** argv )
 		Kernel::theDocInfo.addInfo( "CreationDate", SimplePDF::newString( oss.str( ).c_str( ) ) );
 	}
 
+	std::istringstream prependStreamIn;
+	if( ! prependStreamOut.str( ).empty( ) )
+		{
+			prependStreamIn.str( prependStreamOut.str( ) );
+			Ast::theShapesScanner.queueStream( & prependStreamIn, "<--prepend>" );
+		}
+
 	std::ifstream iFile;
 	if( inputName == "" )
 		{
 			Kernel::theDocInfo.addInfo( "Title", SimplePDF::newString( "<stdin>" ) );
-			Ast::theShapesScanner.switch_streams( & std::cin, & std::cerr );
-			Ast::theShapesScanner.setNameOf_yyin( "stdin" );
+			Ast::theShapesScanner.queueStream( & std::cin, "<stdin>" );
+			//			Ast::theShapesScanner.setNameOf_yyin( "<stdin>" );
 		}
 	else
 		{
@@ -1142,16 +1149,11 @@ main( int argc, char ** argv )
 					std::cerr << "Failed to open " << inputName << " for input." << std::endl ;
 					exit( Interaction::EXIT_INPUT_FILE_ERROR );
 				}
-			Ast::theShapesScanner.switch_streams( & iFile, & std::cerr );
-			Ast::theShapesScanner.setNameOf_yyin( inputName.c_str( ) );
+			Ast::theShapesScanner.queueStream( & iFile, inputName.c_str( ) );
 		}
 
-	std::istringstream prependStreamIn;
-	if( ! prependStreamOut.str( ).empty( ) )
-		{
-			prependStreamIn.str( prependStreamOut.str( ) );
-			Ast::theShapesScanner.prependStream( & prependStreamIn );
-		}
+	/* This will initiate the reading of preambles, and when there are no more preambles, we turn to the queue set up by calling queueStream. */
+	Ast::theShapesScanner.start( );
 
 	RefCountPtr< std::ifstream > labelDBFile = RefCountPtr< std::ifstream >( NullPtr< std::ifstream >( ) );
 	Kernel::WarmCatalog::ShipoutList documents;

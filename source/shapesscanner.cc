@@ -32,10 +32,9 @@ using namespace Shapes;
 using namespace std;
 
 
-ShapesScanner::ShapesScanner( istream * yyin, ostream * yyout )
-	: yyFlexLexer( yyin, yyout ), moreState( false ), lastleng( 0 ),
-		showFiles( false ), randSeedSet( false ), // loc( "<?>" ),
-		appendStream_( 0 )
+ShapesScanner::ShapesScanner( )
+	: yyFlexLexer( 0, & std::cerr ), moreState( false ), lastleng( 0 ),
+		showFiles( false ), randSeedSet( false )
 {
 	shapeslloc.filename = "<?>";
 	unitTable[ "bp" ] = 1;
@@ -48,15 +47,9 @@ ShapesScanner::ShapesScanner( istream * yyin, ostream * yyout )
 ShapesScanner::~ShapesScanner( )
 { }
 
-void
-ShapesScanner::setNameOf_yyin( const char * yyinName )
-{
-	shapeslloc.filename = yyinName;
-}
-
 
 // The following method is placed in shapesyylex to access YY_BUF_SIZE
-// ShapesScanner::prependStream( std::istream * is )
+// ShapesScanner::start( )
 
 void
 ShapesScanner::setSourceDir( const std::string & sourceDir )
@@ -184,18 +177,7 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 	typedef typeof needSearchPath ListType;
 	for( ListType::const_iterator i = needSearchPath.begin( ); i != needSearchPath.end( ); ++i )
 		{
-			if( (*i)[0] == '/' )
-				{
-					res = *i + suffix;
-				}
-			else if( *i == "./" )
-				{
-					res = sourceDir_ + suffix;
-				}
-			else
-				{
-					res = sourceDir_ + *i + suffix;
-				}
+			res = needpathWithSuffix( *i, suffix );
 
 			struct stat theStatDummy;
 			if( stat( res.c_str( ), & theStatDummy ) == 0 )
@@ -215,6 +197,23 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 			std::cerr << "	" << res << std::endl ;
 		}
 	return res;
+}
+
+std::string
+ShapesScanner::needpathWithSuffix( const std::string & needpath, const std::string & suffix ) const
+{
+	if( needpath[0] == '/' )
+		{
+			return needpath + suffix;
+		}
+	else if( needpath == "./" )
+		{
+			return sourceDir_ + suffix;
+		}
+	else
+		{
+			return sourceDir_ + needpath + suffix;
+		}
 }
 
 void
