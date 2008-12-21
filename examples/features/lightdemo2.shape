@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
-
 •zbuf: newZBuf
 
 r: 10cm

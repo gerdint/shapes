@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs centering
-
 rot: [rotate3D (1,1,1) 30°]
 
 screwSeg: (~1cm,1cm,~1cm)<(~1cm,0cm,~1cm)>(~1cm,~1cm,~1cm)--(1cm,~1cm,~2cm)<(1cm,0cm,~2cm)>(1cm,1cm,~2cm)

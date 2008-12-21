@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##unit dx = 6cm
 ##unit dy = 3cm

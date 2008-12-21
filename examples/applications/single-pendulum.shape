@@ -16,10 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs arrowheads
-##needs blockdraw_wfo
-##needs golden
+##needs blockdraw
 
 r1: 25mm
 

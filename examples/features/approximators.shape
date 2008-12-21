@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs arrowheads
-
 •rand: [newRandom (•time)]
 
 {

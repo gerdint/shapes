@@ -16,8 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##preamble \usepackage[squaren]{SIunits}
 ##preamble \usepackage{url}
@@ -35,14 +34,14 @@ coordsHelper: \ src base offset →
 {
   p: (base--offset).end.p
   (TeX
-    ( newString << `\url{´
+ { tmp: ( newString << `\url{´
                 << src
                 << `} $\Rightarrow (\unit{´
                 << [sprintf `%.1f´ p.x/1cm]
                 << `}{\centi\metre},\unit{´
                 << [sprintf `%.1f´ p.y/1cm]
                 << `}{\centi\metre})$´
-    )
+    ) [debuglog_before tmp tmp] }
   )
 }
 

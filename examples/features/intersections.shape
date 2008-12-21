@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs arrowheads
-
 intersectionCircle: \ pth1 pth2 →
   ( @stroking:RGB_RED | [stroke [shift [intersection pth1 pth2].p] [] [circle 2mm]] )
 

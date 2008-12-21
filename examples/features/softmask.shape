@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 r: 1cm
 
 mask: @blendspace: DEVICE_GRAY | [tgroup

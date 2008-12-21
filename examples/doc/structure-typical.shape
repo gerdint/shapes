@@ -1,4 +1,4 @@
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##classoption 10pt
 ##preamble \usepackage{bm}

@@ -16,11 +16,9 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
 ##needs conssupport
-##needs arrowheads
 ##needs braces
-##needs blockdraw_wfo
+##needs blockdraw
 
 R: 5cm
 u: R/2.1

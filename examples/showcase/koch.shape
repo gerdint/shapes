@@ -51,9 +51,6 @@ koch: \ pth depth →
 
 |** As a more advanced application, we start from a circle, and draw also the curves at intermediate depths, in successively darker shades of gray:
 
-##needs circle
-##needs centering
-
 •page << {
            c: [shift (5cm,~10cm)][][circle 5cm]
            end: '5

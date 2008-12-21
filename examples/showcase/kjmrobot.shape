@@ -26,8 +26,6 @@
  ** utilizing the beauty of the convention, even though it produces the correct picture.
  **/
 
-##needs arrowheads
-##needs centering
 ##needs shapes2D
 ##needs shapes3D
 

@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-##needs circle
-
 a: (1.5cm,4.5cm)
 
 pth: @defaultunit:1%C | (0cm,0cm)>(^20°)--(1cm,2cm)--(^)<(2.5cm,2cm)>(^)--(2cm^)<(4cm,5cm)>(^~30°)--(^)<(5cm,4cm)

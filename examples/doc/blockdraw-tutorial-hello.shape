@@ -16,6 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 •page << [longblock (TeX `$F_{\mathrm{y}}(s)$´)]

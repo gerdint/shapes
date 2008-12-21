@@ -17,7 +17,6 @@
  **/
 
 ##needs revolutionbody
-##needs circle
 
 doughnutProfile:
 [circle 1.5cm]

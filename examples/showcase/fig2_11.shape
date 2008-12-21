@@ -20,7 +20,7 @@
 
 ##needs valve
 ##needs demoprefs
-##needs blockdraw_wfo
+##needs blockdraw
 
 demoprefs & @defaultunit:1%c
 |

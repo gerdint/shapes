@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-
 {
   pth: @defaultunit:5mm | (0cm,0cm)>(^)--(^)<(1cm,0cm^45°)>(^)--(^)<(2cm,0cm)
   sl: [pth 1]

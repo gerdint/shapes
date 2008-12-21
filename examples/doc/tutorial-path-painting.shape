@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-
 •page << [stroke (0cm,4cm)--(0cm,0cm)--(5cm,0cm)]
 •page << [fill (1cm,1cm)--(3cm,2cm)--(2cm,3.5cm)--cycle]
 •page << @width:3bp & @nonstroking:[gray 0.7] | [fillstroke (3cm,1.5cm)--(3.5cm,1cm)--(1.5cm,0.8cm)--cycle]

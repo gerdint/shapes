@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
-##needs circle
-##needs arrowheads
 ##needs pathmapping
 
 ##classoption 12pt

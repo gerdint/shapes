@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 ##needs braces
 
 ##unit u = 1cm

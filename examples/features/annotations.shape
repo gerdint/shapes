@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 •page << [stroke [circle 5cm]]
 
 myFont: @text_font:FONT_HELVETICA & @text_size:1cm

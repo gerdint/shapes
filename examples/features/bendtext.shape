@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
-
 message: @text_size:5mm | [kern `Hi, Dro´ 0.3 `oler!´]
 
 •page << ( newText << message )

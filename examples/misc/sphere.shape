@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 S1: [[shift (0cm,0cm,1mm)][immerse [circle 5cm]]] & [[shift (0cm,0cm,~1mm)][immerse [circle 5cm]]]
 
 mv: [shift (~2cm,~4cm,0cm)]
