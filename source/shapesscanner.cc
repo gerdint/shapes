@@ -220,31 +220,12 @@ ShapesScanner::searchFile( const std::string & suffix ) const
 void
 ShapesScanner::rinseString( )
 {
-	char * res = new char[ yyleng - 1 ];
-	char * dst = res;
-	char * src = yytext;
-	char * end = yytext + yyleng - 2;		// the "- 1" comes from empirical studies...
-	for( ; src != end; ++src )
-		{
-			if( *src != 0 )
-				{
-					*dst = *src;
-					++dst;
-				}
-		}
-	/* The following condition catches the optional trailing newline at the end of
-	 * the literal.	That this condition is non-trivial indicates that this feature
-	 * must be used with care.	For example, when the string creation is automated, either
-	 * should all newlines be written `¢n´, or should the optional newlines always be there.
-	 * The last of the three conditions ensures that the trailing newline was not generated
-	 * as an escape sequence, in which case it shall be kept.
-	 */
-	if( dst > res && *( dst - 1 ) == '\n' && *( src - 1 ) != '\0' )
-		{
-			--dst;
-		}
-	*dst = '\0';
-	shapeslval.Lang_String = new Lang::String( res, false );
+	/* Both types of strings are terminated by a two byte sequence, ") or ´. */
+	size_t bytecount = yyleng - ( ( yyleng >= 3 && yytext[ yyleng - 3 ] == '\n' ) ? 3 : 2 );
+	char * res = new char[ bytecount + 1 ];
+	memcpy( res, yytext, bytecount );
+	res[ bytecount ] = '\0';
+	shapeslval.Lang_String = new Lang::String( RefCountPtr< const char >( res ), bytecount );
 }
 
 void

@@ -61,11 +61,6 @@ DynamicMark "@"
 StateMark "#"|"•"
 TypeMark "//"|"§"
 
-/*
-	At the moment, escape characters must occypy exactly 2 bytes.
-*/
-Escape "¢"|"¤"
-
 
 %option c++
 %option noyywrap
@@ -564,7 +559,7 @@ Escape "¢"|"¤"
 
 <INITIAL>"|**".*[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
 <INITIAL>"/**" { quoteDepth = 1; BEGIN( Comment ); }
-<INITIAL>"**/" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing comment delimiter outside comment" ) ); }
+<INITIAL>"**/" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing comment delimiter outside comment." ) ); }
 <Comment>"/**" { ++quoteDepth; more( ); }
 <Comment>"**/" {
 	--quoteDepth;
@@ -584,7 +579,7 @@ Escape "¢"|"¤"
 	 * however ignornig yyleng (which has the value 1).
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
-	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment" ) );
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment." ) );
  }
 
 <INITIAL>[`][\n]? {
@@ -596,7 +591,7 @@ Escape "¢"|"¤"
 	quoteDepth = 1;
 	BEGIN( String );
 }
-<INITIAL>"´" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing quote outside string" ) ); }
+<INITIAL>"´" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing quote outside string." ) ); }
 <String>"`" { ++quoteDepth; more( ); }
 <String>"´" {
 	--quoteDepth;
@@ -611,58 +606,18 @@ Escape "¢"|"¤"
 	else
 		{
 			more( );
+			yymore( ); // The purpose of this line is only to let flex know that we use yy_more_flag
 		}
 }
+
 <String,PoorMansString>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; more( ); }
-<String,PoorMansString>{Escape}[`nt\n\"] {
-	// The escaped characters each occupy 1 byte
-	char * dst = yytext + yyleng - 3; // 3 = 2 + 1
-	switch( yytext[ yyleng - 1 ] )
-		{
-		case 'n':
-			*dst = '\n';
-			break;
-		case 't':
-			*dst = '\t';
-			break;
-		case '\n':
-			++shapeslloc.lastLine;
-			shapeslloc.lastColumn = 0;
-			*dst = '\0';
-			break;
-		default:
-			*dst = yytext[ yyleng - 1 ];
-		}
-	++dst;
-	*dst = '\0';
-	++dst;
-	*dst = '\0';
-	yymore( ); // The purpose of this line is only to let flex know that we use yy_more_flag
-	more( );
-}
-<String,PoorMansString>{Escape}({Escape}|"´") {
-	char * dst = yytext;
-	char * src = yytext + 2;
-	for( ; *src != '\0'; ++dst, ++src )
-		{
-			*dst = *src;
-		}
-	*dst = '\0';
-	++dst;
-	*dst = '\0';
-	more( );
-}
-<String,PoorMansString>{Escape} {
-	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´\"nt\n]." ) ) );
-	more( );
-}
 <String,PoorMansString>. { more( ); }
 <String,PoorMansString><<EOF>> {
 	/* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
 	 * however ignornig yyleng (which has the value 1).
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
-	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) );
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string." ) );
  }
 
 <INITIAL>"(\""[\n]? {
@@ -674,7 +629,7 @@ Escape "¢"|"¤"
 	quoteDepth = 1;
 	BEGIN( PoorMansString );
 }
-<INITIAL>"\")" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing poor man's quote outside string" ) ); }
+<INITIAL>"\")" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing poor man's quote outside string." ) ); }
 <PoorMansString>"\")" {
 	yytext[ yyleng - 2 ] = '\0';
 	rinseString( );
@@ -715,7 +670,7 @@ Escape "¢"|"¤"
 							break;
 						default:
 							*dst = '\0';
-							Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "Invalid character name in escape mode: " + *src ) ) );
+							Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( std::string( "Invalid character name in escape mode: " ) + *src ) ) );
 						}
 					src += 1;
 				}
