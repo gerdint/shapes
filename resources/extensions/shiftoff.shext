@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
+##needs basic-layout
 
 to_lft: 0
 to_llft: 1

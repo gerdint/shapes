@@ -16,4 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-oo: ∞
+##needs numeric-constants
+##needs basic-layout
+##needs circle
+##needs metapostarrow

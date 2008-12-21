@@ -16,4 +16,12 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-oo: ∞
+##needs basic-layout
+
+centeryX:
+ {thebb: [bbox (TeX `$X$´)]
+  [shift (0cm, ~0.5*([ymax thebb] + [ymin thebb]))]}
+centeryatX:
+ {thebb: [bbox (TeX `$X$´)]
+  \ obj y → [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
+

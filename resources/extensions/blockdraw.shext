@@ -19,9 +19,7 @@
 |** This is "blockdraw, Waiting For Object oriented programming
 
 ##needs shiftoff
-##needs centering
-##needs circle
-##needs arrowheads
+##needs centering-X
 
 dynamic @longblockrx identity 0.7cm
 dynamic @longblockry identity 0.4cm

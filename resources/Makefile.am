@@ -18,15 +18,16 @@
 extensionsdir = ${pkgdatadir}/extensions
 fontmetricsdir = ${pkgdatadir}/fontmetrics
 
-dist_extensions_DATA =  extensions/arrowheads.shext extensions/blockdraw_wfo.shext \
+dist_extensions_DATA = extensions/Shapes-Prelude \
+                     extensions/numeric-constants.shext extensions/basic-layout.shext extensions/metapostarrow.shext extensions/circle.shext \
+                     extensions/arrowheads.shext extensions/blockdraw.shext \
                      extensions/bondgraph.shext extensions/braces.shext \
-                     extensions/centering.shext extensions/circle.shext \
+                     extensions/centering-X.shext \
                      extensions/circuitparts.shext extensions/conssupport.shext \
                      extensions/linkpaths.shext extensions/newline.shext \
                      extensions/no-utf-8.shext extensions/pathmapping.shext \
                      extensions/shapes2D.shext extensions/shapes3D.shext \
-                     extensions/shiftoff.shext extensions/revolutionbody.shext \
-                     extensions/golden.shext
+                     extensions/shiftoff.shext extensions/revolutionbody.shext
 dist_fontmetrics_DATA = fontmetrics/Courier-Bold.afm fontmetrics/Courier-BoldOblique.afm \
                      fontmetrics/Courier-Oblique.afm fontmetrics/Courier.afm \
                      fontmetrics/Helvetica-Bold.afm fontmetrics/Helvetica-BoldOblique.afm \
