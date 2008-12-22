@@ -165,28 +165,20 @@
 <section id="syntax/atoms/strings">
 <title>Strings</title>
 <body>
-<p>The string syntax in <str-Shapes /> is fairly non-standard.  However, it needs to be so to allow <str-TeX /> strings to be entered as plain as possible.  For compatibility with less capable editing environments, there's also a poor man's string syntax, explained at the end of this section.</p>
-
 <p>
-	The recommended strings are delimited by the grave and acute accent, respectively.  Each delimiter can be extended to include a newline character on the inside.  Other newlines are part of the string literal.  The delimiting accents (no optional newlines this time) nest.  There are two escape characters, <inline>¢</inline> (the cent sign) and <inline>¤</inline> (the sun sign), and the possible escape sequences are given below:
-	<token-example-table>
-		<head>
-			<tr> <td>Escape sequence (not showing use of <inline>¤</inline>)</td> <td>Resulting character</td> </tr>
-		</head>
-		<body>
-			<tr> <td><inline>¢¢</inline></td> <td>¢</td> </tr>
-			<tr> <td><inline>¢¤</inline></td> <td>¤</td> </tr>
-			<tr> <td><inline>¢`</inline></td> <td>`</td> </tr>
-			<tr> <td><inline>¢´</inline></td> <td>´</td> </tr>
-			<tr> <td><inline>¢"</inline></td> <td>"</td> </tr>
-			<tr> <td><inline>¢n</inline></td> <td>(a newline)</td> </tr>
-			<tr> <td><inline>¢t</inline></td> <td>(a tab character)</td> </tr>
-		</body>
-	</token-example-table>
+	<syntax-table>
+		<tr> <td><syntax name="string" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="String" /></td></tr>
+		<tr> <td><syntax name="string" /></td> <td><bnf>→</bnf></td> <td><syntax name="normal-string" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="poor-mans-string" /></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="data-string" /></td></tr>
+	</syntax-table>
 </p>
+<p>The <named-type name="String" /> construction syntax in <str-Shapes /> gives three alternatives.  Frist, there is a pretty one (called <em>normal string</em>), with one-character pairwise delimiters that nest, then, there is the ASCII-fallback with two-character delimiters that do not nest (called <em>poor man's string</em>), and finally there is one for arbitrary data (called <em>data string</em>).</p>
+
+<p>The reason why is has to be so complicated is that the normal string is optimized to allow <str-TeX /> strings to be entered as plain as possible, which rules out any reasonable choice of escape character.  Hence, the normal string cannot contain arbitrary strings of characters (since at least the terminating sequence would have to be escapable).  Note, though, that the poor man's string can contain any <em>single</em> Unicode character.  Hence, in theory, there is a way to at least enter any Unicode string as a string concatenation of individual characters, but clearly this is not an acceptable solution, and why there are data strings as well.</p>
 
 <p>
-	It is recommended that strings are entered in one of two ways among all ways to deal with newline characters.  The first alternative is to enter newlines literally and using the optional newlines at the delimiters.  The other alternative, of course, is to skip the newlines at the delimiters and replace all newlines in the literal by the corresponding escape sequence.  See the following examples:
+	The <syntax name="normal-string" class="new"/> is delimited by the grave and acute accent, respectively (<lexerregexp>`</lexerregexp>…<lexerregexp>´</lexerregexp>).  Each delimiter can be extended to include a line break on the inside.  Other line breaks are part of the string literal.  The delimiting accents nest (no optional line breaks this time).  It is recommended that strings are entered in one of two ways among all ways to deal with line breaks.  The first alternative is to enter line breaks literally and using the optional line breaks at the delimiters.  The other alternative, of course, is to skip the line breaks at the delimiters and use string concatenation to insert line breaks inside the string (the data strings provide a compact way of constructing the line break).  See the following examples:
 	<token-example-table>
 		<head>
 			<tr> <td>Token</td> <td>Valid string?</td> </tr>
@@ -194,18 +186,15 @@
 		<body>
 			<tr> <td><inline>`Hi there´</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>`Shapes string: `Hi there´´</inline></td> <td>Yes</td> </tr>
-			<tr> <td><inline>`Boing!¢b´</inline></td> <td>No (no such escape sequence)</td> </tr>
 			<tr> <td><inline>`Quasiquotation: `(0 1 ,(1+1))´</inline></td> <td>No (Unbalanced delimiter)</td> </tr>
-			<tr> <td><inline>`Quasiquotation: ¢`(0 1 ,(1+1))´</inline></td> <td>Yes</td> </tr>
 			<tr> <td><inline>`Here's a formula: $(1+x)^{2}$´</inline></td> <td>Yes</td> </tr>
-			<tr> <td><inline>`Dear Shaper¢n¢nMulti-line...´</inline></td> <td>Yes</td> </tr>
 			<tr> <td><pre>
 `
 Dear Shaper,
 
 Multi-line...
 ´
-</pre></td> <td>Yes</td> </tr>
+</pre></td> <td>Yes (contains just one line break)</td> </tr>
 			<tr> <td><pre>
 `Dear Shaper,
 
@@ -215,16 +204,56 @@ Multi-line...´
 	</token-example-table>
 </p>
 
-<p>The syntax of a poor man's string differs in several ways from the recommended strings.  First, they are delimited using <inline>("</inline> and <inline>")</inline>.  The delimiters no not nest, and either of the two characters in the closing delimiter must be escaped if a closing delimiter is to be included literally in the string.  At the time of writing, the escape character is the same as in recommended strings.</p>
+<note>
+	<p>The situation when normal strings fail (unmatched accents) is, albeit uncommon, present in standard use of <str-TeX />.  Recall that the left double quote is entered as <inline>``</inline> in <str-TeX />, but matched by <inline>''</inline>.  To deal with this, one may either resort to the poor man's string when the situation occurs, or replace the ugly two-character sequences by their proper Unicode representations instead.  It is recommended to stick with normal strings, to avoid the bulkiness of the poor man's strings.</p>
+</note>
+
+<p>The syntax of a <syntax name="poor-mans-string" class="new" /> differs in two ways from normal strings.  First, they are delimited using <lexerregexp>"(\&quot;"</lexerregexp> and <lexerregexp>"\&quot;)"</lexerregexp>.  Second, the delimiters no not nest (but they have the same optional line break on the inside).  Except that the delimiters are a bit bulky, this provides a very powerful way to enter most Unicode strings.  There is still a technical need to be able to enter <em>any</em> Unicode string, and it is a bit inconvenient to have to enter line breaks literally.
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid string?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>("´")</inline></td> <td>Yes (cannot be entered conveniently using normal or data strings)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
 <note>
-	<p>
-		The escape character in poor man's strings has not been finalized yet.  The characters used today are two byte entities, and hence not really serving a poor man's needs.  The problem is that there is no obvious one byte choice.  Hence, one of the options would be to let the user specify the escape character to be used on a per string basis, like this, for example:
-<pre>
-("%On the next line there are two per cent signs:%n%%%%")
-</pre>
-	</p>
+	<p>The bulkiness of the poor man's string delimiters is not only a burden; it is also what makes the syntax so powerful.  The only Unicode sequence it cannot handle is <inline>&quot;)</inline>, which gives an advantage over the normal string, where the acute accent can be entered only if it is preceded by a matching grave accent.  However, because of the bulkiness, it is recommended to use the poor man's string only if it is required due to the presence of unmatched accents, or because the user don't know how to type the accent characters.</p>
 </note>
+
+<p>The syntax for <syntax name="data-string" class="new" /> is made up of sections, alternating between <em>plain</em> and <em>escape</em> mode, starting in <em>escape</em> mode.  The whole string begins with the sequence <lexerregexp>"\&quot;{"</lexerregexp>.  In <em>escape</em> mode, pairs in the form <lexerregexp>[A-F0-9]{2}</lexerregexp> is a base-16 representation one unsigned byte, the range <lexerregexp>[a-z]</lexerregexp> is reserved for named characters (currently, <lexerregexp>n</lexerregexp> is the newline character, and <lexerregexp>t</lexerregexp> is the tab), the characters <lexerregexp>[ \t\n]</lexerregexp> are ignored, <lexerregexp>"}"</lexerregexp> terminates the string, <lexerregexp>"{"</lexerregexp> switches to <em>plain</em> mode, and no other characters are allowed.  In <em>plain</em> mode, any character in the range <lexerregexp>[ -z]</lexerregexp> represents itself, the <lexerregexp>[\n]</lexerregexp> is ignored, <lexerregexp>"}"</lexerregexp> switches back to <em>escape</em> mode, and no other characters are allowed.</p>
+
+<note>
+	<p>With the data strings, it is possible to enter strings that are not valid <str-UTF-8 /> data.  It is permitted to put such data in strings, but note that they are not valid input to most functions accepting string arguments.  Since arbitrary data cannot be handled as a null-terminated sequence of bytes, <str-Shapes /> uses both a trailing null byte and a separate byte count.</p>
+</note>
+
+<p>Here are some examples:
+	<token-example-table>
+		<head>
+			<tr> <td>Token</td> <td>Valid string?</td> </tr>
+		</head>
+		<body>
+			<tr> <td><inline>&quot;{{Hi there!}}</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>&quot;{{The tilde (}7E{) cannot be written in plain mode.}}</inline></td> <td>Yes</td> </tr>
+			<tr> <td><inline>&quot;{7EAE00FF}</inline></td> <td>Yes (four bytes)</td> </tr>
+			<tr> <td><inline>&quot;{A0}</inline></td> <td>Yes (the newline character)</td> </tr>
+			<tr> <td><inline>&quot;{n}</inline></td> <td>Yes (same as <inline>&quot;{A0}</inline>)</td> </tr>
+			<tr> <td><pre>
+&quot;{
+7EAE 00FF
+8E7E ABCD
+}</pre></td> <td>Yes (eight bytes)</td> </tr>
+			<tr> <td><inline>&quot;{1234 ABC}</inline></td> <td>No (the <inline>C</inline> needs another hex digit)</td> </tr>
+			<tr> <td><inline>&quot;{7e}</inline></td> <td>No (the <inline>e</inline> should be upper case)</td> </tr>
+			<tr> <td><inline>&quot;{7E{plain text{7E}}}</inline></td> <td>No (should be <inline>&quot;{7E{plain text}7E}</inline>)</td> </tr>
+			<tr> <td><pre>
+&quot;{{No trailing newline.
+}}</pre></td> <td>Yes (line break is ignored)</td> </tr>
+		</body>
+	</token-example-table>
+</p>
 
 </body>
 </section>

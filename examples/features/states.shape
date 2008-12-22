@@ -37,7 +37,7 @@ str: •str;
 /** We can also peek at the state.  This is a potentially expensive operation, depending on
  ** the implementation of this particular kind of state.
  **/
-•stdout << str << `¢n´ << (•msg) << `¢n´
+•stdout << str << "{n} << (•msg) << "{n}
 
 /** The following is legal:
  **/
@@ -48,7 +48,7 @@ str: •str;
  ** where newString is used to spawn the unnamed state.  The state is frozen at the end of the
  ** insertion sequence within parentheses, and the final value is returned.
  **/
-•stdout << ( newString << `a ´ << `b¢n´ )
+•stdout << ( newString << `a ´ << `b´ << "{n} )
 
 
 /** Next, we turn to the scoping rules for lexical access of states.  The rule is that states
@@ -75,7 +75,7 @@ fun: \ a →
     •s;
   }
 
-•stdout << [fun `--´] << `¢n´
+•stdout << [fun `--´] << "{n}
 
 
 /** The following would be illegal, since •stdout is in the global environment,
@@ -96,13 +96,13 @@ fun: \ a →
  ** (although this situation would actually be quite easy to recognize during the
  ** analysis pass).
  **/
-globalProc: \ msg → ! { •stdout << msg << `¢n´ }
+globalProc: \ msg → ! { •stdout << msg << "{n} }
 |** badFun: \ a →
 |** {
 |**   [!globalProc a]
 |** 	a + ` so bad!´
 |** }
-|** •stdout << [badFun `I'm bad!´] << `¢n´
+|** •stdout << [badFun `I'm bad!´] << "{n}
 
 /** As a last example of procedures, the following program is legal!
  ** Note that the difference is that goodProc is a procedure, so it should be OK
@@ -165,4 +165,4 @@ say_y: \ •dstStr → { •dstStr << `y´ }
 |** @•dfoo: •dst1
 |** | [! foo]
 
-|** •stdout << (•dst1) << `¢n´ << (•dst2) << `¢n´
+|** •stdout << (•dst1) << "{n} << (•dst2) << "{n}

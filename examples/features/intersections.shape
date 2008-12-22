@@ -39,7 +39,7 @@ intersectionCircle: \ pth1 pth2 →
 
 |** •page << [intersectionCircle pth1straight pth2straight]
 |** •page << [intersectionCircle pth1straight pth2curved]
-|** •stdout << `t: ´ << [intersection pth1curved pth2straight].time << `¢n´
+|** •stdout << `t: ´ << [intersection pth1curved pth2straight].time << "{n}
 |** •page << [intersectionCircle pth1curved pth2straight]
 |** •page << [intersectionCircle pth1curved pth2curved]
 
@@ -86,10 +86,10 @@ randPath: \ n •state →
       |
       [intersectionCircle pth2 pth]
       )
-		>> [debuglog_after ( newString << `pth: ´ << [pth 2].p << `>(´ << [pth 2].v << `^´ << [angle [pth 2].T]/1° << `°)¢n´ ) ...]
-    >> [debuglog_after ( newString << `pth: ´ << [pth 3].p << `>(´ << [pth 3].rv << `^´ << [angle [pth 3].rT]/1° << `°)¢n´ ) ...]
-    >> [debuglog_after ( newString << `pth2: ´ << [pth2 0].p << `>(´ << [pth2 0].v << `^´ << [angle [pth2 0].T]/1° << `°)¢n´ ) ...]
-    >> [debuglog_after ( newString << `pth2: ´ << [pth2 1].p << `>(´ << [pth2 1].rv << `^´ << [angle [pth2 1].rT]/1° << `°)¢n´ ) ...]
+		>> [debuglog_after ( newString << `pth: ´ << [pth 2].p << `>(´ << [pth 2].v << `^´ << [angle [pth 2].T]/1° << `°)´ << "{n} ) ...]
+    >> [debuglog_after ( newString << `pth: ´ << [pth 3].p << `>(´ << [pth 3].rv << `^´ << [angle [pth 3].rT]/1° << `°)´ << "{n} ) ...]
+    >> [debuglog_after ( newString << `pth2: ´ << [pth2 0].p << `>(´ << [pth2 0].v << `^´ << [angle [pth2 0].T]/1° << `°)´ << "{n} ) ...]
+    >> [debuglog_after ( newString << `pth2: ´ << [pth2 1].p << `>(´ << [pth2 1].rv << `^´ << [angle [pth2 1].rT]/1° << `°)´ << "{n} ) ...]
    }
    null
    •rand

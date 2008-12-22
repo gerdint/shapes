@@ -19,7 +19,7 @@
 pathmap:
 {
   meeter: \ p1 p2 →
-   [if p1.null? >> [debuglog_before p1 ...] >> [debuglog_before `¢n´ ...]
+   [if p1.null? >> [debuglog_before p1 ...] >> [debuglog_before "{n} ...]
        p2
        (escape_continuation cont
          @handler_NoIntersection: (\ pth1 pth2 →

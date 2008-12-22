@@ -73,5 +73,5 @@ test: \ •dst pth method →
 }
 )
 
-[debuglog_before `sidepath¢n´ ...][][test •page testPth sidepath]
-|**[debuglog_before `sidepath2¢n´ ...][][test •page [shift (9cm,0)][]testPth sidepath2]
+[debuglog_before `sidepath´+"{n} ...][][test •page testPth sidepath]
+|**[debuglog_before `sidepath2´+"{n} ...][][test •page [shift (9cm,0)][]testPth sidepath2]

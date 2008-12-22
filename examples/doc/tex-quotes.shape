@@ -16,30 +16,8 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-{
-  v: (1,0.1,~0.1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
-{
-  v: (0.1,1,0.1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
-{
-  v: (~0.1,~0.1,1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
-{
-  v: (1,0,~0)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
-{
-  v: (0,1,0)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
-{
-  v: (~0,~0,1)
-  •stderr << `Orthogonal vectors in 3D: ´ << v << `, ´ << [orthogonal v] << "{n}
-}
+##unit dy = 1.5cm
 
-/** Prevent empty output error. **/
-[stroke (0cm,0cm)--(1cm,1cm)]
+(TeX ("\parbox{10cm}{``This \emph{poor man's string} has bulky delimiters, but can use the \texttt{\`{}\`{}} sequence for the opening left double quote, and uses a sequence of two \emph{impossible-to-produce-in-\LaTeX-apostrophe} for the closing right double quote.''}"))
+& [[shift (0,~1dy)] (TeX `\parbox{10cm}{“This string is entered with left and right double quotes, and can use the \emph{normal string} syntax.”}´)]
+& [[shift (0,~2dy)] (TeX "{{\parbox}7B{10cm}7D7BE2809C{This string is entered as a \emph}7B{data string}7D{, and would be OK for a computer program to generate.  It is entered using plain \textsc}7B{ascii}7D{, have a look at the source!}E2809D7D})]

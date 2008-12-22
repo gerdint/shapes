@@ -16,18 +16,18 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-•stdout << `Now is ´ << [sprintf `%H:%M´ (•time)] << `¢n´
+•stdout << `Now is ´ << [sprintf `%H:%M´ (•time)] << "{n}
 
-•stdout << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `¢n´
+•stdout << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << `, ´ << (•randomdevice) << "{n}
 
 seed: [newRandom (•time)]
 •rand1: seed
 •rand2: seed
 |**•rand3: [newRandom (•time)]
 •rand3: [devRandom •randomdevice]
-•stdout << (•rand1) << `=´ << (•rand2) << `, ´ << (•rand1) << `=´ << (•rand2) << `¢n´
-•stdout << (•rand3) << `, ´ << [random2D •rand3] << `¢n´
-•stdout << [random1D •rand1] << `=´ << [random1D •rand2] << `, ´ << [random2D •rand1] << `=´ << [random2D •rand2] << `¢n´
+•stdout << (•rand1) << `=´ << (•rand2) << `, ´ << (•rand1) << `=´ << (•rand2) << "{n}
+•stdout << (•rand3) << `, ´ << [random2D •rand3] << "{n}
+•stdout << [random1D •rand1] << `=´ << [random1D •rand2] << `, ´ << [random2D •rand1] << `=´ << [random2D •rand2] << "{n}
 
 ##needs conssupport
 

@@ -17,14 +17,14 @@
  **/
 
 a: [debuglog_before `1´ 1]
-•stdout << a << `¢n´
+•stdout << a << "{n}
 
 b: [debuglog_before `2´ 2]
 c: [debuglog_before `3´ 3]
 d: !![debuglog_before `4´ 4]
-•stdout << c << `¢n´
-•stdout << b << `¢n´
-•stdout << d << `¢n´
+•stdout << c << "{n}
+•stdout << b << "{n}
+•stdout << d << "{n}
 
 /** Prevent empty output error. **/
 [stroke (0cm,0cm)--(1cm,1cm)]

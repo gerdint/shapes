@@ -45,6 +45,7 @@ using namespace Shapes;
 #define YY_EXIT_FAILURE Shapes::Interaction::EXIT_INTERNAL_ERROR
 
 double shapes_strtod( char * str, char ** end );
+char shapes_hexToChar( char c1, char c2 );
 
 %}
 
@@ -59,11 +60,6 @@ Identifier {Letter}({Letter}|[0-9])*
 DynamicMark "@"
 StateMark "#"|"•"
 TypeMark "//"|"§"
-
-/*
-	At the moment, escape characters must occypy exactly 2 bytes.
-*/
-Escape "¢"|"¤"
 
 
 %option c++
@@ -80,6 +76,8 @@ Escape "¢"|"¤"
 %x InclPath
 %x String
 %x PoorMansString
+%x DataStringPlain
+%x DataStringHex
 %x Comment
 %x LaTeXOption
 %x LaTeXClass
@@ -107,7 +105,7 @@ Escape "¢"|"¤"
 ^"##needs"[ \t]+ { BEGIN( Needs ); return T_srcLoc; }
 ^"##echo"[ \t] { BEGIN( Echo ); }
 ^"##author"[ \t] { BEGIN( Author ); }
-^"##" {
+^"##"[^\"] {
 	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "All lines beginning with ## must be scanner specials.	Please use a leading horizontal whitespace if this is not what is intended." ) ) );
 }
 
@@ -561,7 +559,7 @@ Escape "¢"|"¤"
 
 <INITIAL>"|**".*[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
 <INITIAL>"/**" { quoteDepth = 1; BEGIN( Comment ); }
-<INITIAL>"**/" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing comment delimiter outside comment" ) ); }
+<INITIAL>"**/" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing comment delimiter outside comment." ) ); }
 <Comment>"/**" { ++quoteDepth; more( ); }
 <Comment>"**/" {
 	--quoteDepth;
@@ -581,7 +579,7 @@ Escape "¢"|"¤"
 	 * however ignornig yyleng (which has the value 1).
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
-	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment" ) );
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning comment." ) );
  }
 
 <INITIAL>[`][\n]? {
@@ -593,7 +591,7 @@ Escape "¢"|"¤"
 	quoteDepth = 1;
 	BEGIN( String );
 }
-<INITIAL>"´" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing quote outside string" ) ); }
+<INITIAL>"´" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing quote outside string." ) ); }
 <String>"`" { ++quoteDepth; more( ); }
 <String>"´" {
 	--quoteDepth;
@@ -608,58 +606,18 @@ Escape "¢"|"¤"
 	else
 		{
 			more( );
+			yymore( ); // The purpose of this line is only to let flex know that we use yy_more_flag
 		}
 }
+
 <String,PoorMansString>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; more( ); }
-<String,PoorMansString>{Escape}[`nt\n\"] {
-	// The escaped characters each occupy 1 byte
-	char * dst = yytext + yyleng - 3; // 3 = 2 + 1
-	switch( yytext[ yyleng - 1 ] )
-		{
-		case 'n':
-			*dst = '\n';
-			break;
-		case 't':
-			*dst = '\t';
-			break;
-		case '\n':
-			++shapeslloc.lastLine;
-			shapeslloc.lastColumn = 0;
-			*dst = '\0';
-			break;
-		default:
-			*dst = yytext[ yyleng - 1 ];
-		}
-	++dst;
-	*dst = '\0';
-	++dst;
-	*dst = '\0';
-	yymore( ); // The purpose of this line is only to let flex know that we use yy_more_flag
-	more( );
-}
-<String,PoorMansString>{Escape}({Escape}|"´") {
-	char * dst = yytext;
-	char * src = yytext + 2;
-	for( ; *src != '\0'; ++dst, ++src )
-		{
-			*dst = *src;
-		}
-	*dst = '\0';
-	++dst;
-	*dst = '\0';
-	more( );
-}
-<String,PoorMansString>{Escape} {
-	Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( "The only characters possible to protect using [¢¤] are [¢¤`´\"nt\n]." ) ) );
-	more( );
-}
 <String,PoorMansString>. { more( ); }
 <String,PoorMansString><<EOF>> {
 	/* It seems like YY_USER_ACTION is not invoked at EOF, so we do this manually,
 	 * however ignornig yyleng (which has the value 1).
 	 */
 	shapeslloc.firstColumn = shapeslloc.lastColumn;
-	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string" ) );
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found EOF while scanning string." ) );
  }
 
 <INITIAL>"(\""[\n]? {
@@ -671,13 +629,69 @@ Escape "¢"|"¤"
 	quoteDepth = 1;
 	BEGIN( PoorMansString );
 }
-<INITIAL>"\")" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing poor man's quote outside string" ) ); }
+<INITIAL>"\")" { throw Exceptions::ScannerError( shapeslloc, strrefdup( "Found closing poor man's quote outside string." ) ); }
 <PoorMansString>"\")" {
 	yytext[ yyleng - 2 ] = '\0';
 	rinseString( );
 	--shapeslloc.firstColumn;
 	BEGIN( INITIAL );
 	return T_string;
+}
+
+<INITIAL>"\"{" {
+	while( ! dataStringChunks_.empty( ) )
+		{
+			delete dataStringChunks_.back( ).first;
+			dataStringChunks_.pop_back( );
+		}
+	dataStringTotalLength_ = 0;
+	BEGIN( DataStringHex );
+}
+<DataStringPlain,DataStringHex>[\n] { ++shapeslloc.lastLine; shapeslloc.lastColumn = 0; }
+<DataStringPlain>[ -z]+ {
+	dataStringChunks_.push_back( std::pair< char *, size_t >( strdup( yytext ), yyleng ) );
+	dataStringTotalLength_ += yyleng;
+}
+<DataStringHex>[ \t]+ { }
+<DataStringHex>(([A-F0-9]{2})|[a-z])+ {
+	char * res = new char[ yyleng + 1 ];
+	char * dst = res;
+	for( const char * src = yytext; *src != '\0'; ++dst )
+		{
+			if( 'a' <= *src && *src <= 'z' )
+				{
+					switch( *src )
+						{
+						case 'n':
+							*dst = '\n';
+							break;
+						case 't':
+							*dst = '\t';
+							break;
+						default:
+							*dst = '\0';
+							Ast::theAnalysisErrorsList.push_back( new Exceptions::ScannerError( shapeslloc, strrefdup( std::string( "Invalid character name in escape mode: " ) + *src ) ) );
+						}
+					src += 1;
+				}
+			else
+				{
+					*dst = shapes_hexToChar( src[0], src[1] );
+					 src += 2;
+				}
+		}
+	dataStringChunks_.push_back( std::pair< char *, size_t >( res, dst - res ) );
+	dataStringTotalLength_ += dst - res;
+}
+<DataStringHex>[{] { BEGIN( DataStringPlain ); }
+<DataStringPlain>[}] { BEGIN( DataStringHex ); }
+<DataStringHex>[}] {
+	concatenateDataString( );
+	BEGIN( INITIAL );
+	return T_string;
+}
+<DataStringPlain,DataStringHex>. {
+	throw Exceptions::ScannerError( shapeslloc, strrefdup( "Stray character in \"{...} string." ) );
 }
 
 <Incl>[^ \t\n]+ {
@@ -768,17 +782,17 @@ Escape "¢"|"¤"
 }
 
 {Identifier} {
-	shapeslval.str = strdup( yytext );
+	shapeslval.char_p = strdup( yytext );
 	return T_identifier;
 }
 {TypeMark}{Identifier} {
 	const char * id = yytext + 2; // The type mark is allways 2 bytes.
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_typename;
 }
 
 {DynamicMark}{Identifier} {
-	shapeslval.str = strdup( yytext + 1 );
+	shapeslval.char_p = strdup( yytext + 1 );
 	return T_dynamic_identifier;
 }
 {StateMark}{Identifier} {
@@ -792,7 +806,7 @@ Escape "¢"|"¤"
 		{
 			id += 3;
 		}
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_state_identifier;
 }
 {DynamicMark}{StateMark}{Identifier} {
@@ -806,7 +820,7 @@ Escape "¢"|"¤"
 		{
 			id += 3;
 		}
-	shapeslval.str = strdup( id );
+	shapeslval.char_p = strdup( id );
 	return T_dynamic_state_identifier;
 }
 
@@ -822,7 +836,8 @@ Escape "¢"|"¤"
  * This section is where you put definitions of helper functions.
  */
 
-double shapes_strtod( char * str, char ** end )
+double
+shapes_strtod( char * str, char ** end )
 {
 	char termTmp;
 	char * term = str;
@@ -868,6 +883,16 @@ double shapes_strtod( char * str, char ** end )
 	double val = strtod( str, end );
 	*term = termTmp;
 	return val;
+}
+
+char
+shapes_hexToChar( char c1, char c2 )
+{
+	return
+		static_cast< char >
+		( 16 * ( ( c1 < 'A' ) ? static_cast< unsigned char >( c1 - '0' ) : static_cast< unsigned char >( c1 - 'A' + 10 ) )
+			+
+			( ( c2 < 'A' ) ? static_cast< unsigned char >( c2 - '0' ) : static_cast< unsigned char >( c2 - 'A' + 10 ) ) );
 }
 
 void

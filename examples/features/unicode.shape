@@ -16,11 +16,10 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs newline
 π: 180°
 
-•stdout << π << newline
-•stdout << ∞ << newline
+•stdout << π << "{n}
+•stdout << ∞ << "{n}
 
 /** Prevent empty output error. **/
-[stroke (0cm,0cm)--(1cm,1cm)]
+[spot (0m,0m)]

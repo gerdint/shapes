@@ -36,18 +36,28 @@
 	<ol>
 		<li><p>There is no function call here.  The expression delimited by parentheses is a special form indicated by the <operator name="TeX" /> keyword.</p></li>
 		<li><p>The string delimiters is a pair of one grave and once acute accent.  If you find these difficult to produce using your keyboard layout, there is an alternative syntax; the poor man's string combines straight double quote marks with a pair of parentheses, in this case <inline>("$\Xi^{2}$")</inline>.</p></li>
-		<li><p>The backslash character (\) is not an escape character.</p></li>
+		<li><p>The backslash character (\) is not an escape character (there is no escape character at all in normal strings).</p></li>
 		<li><p><str-LaTeX /> is also useful for including pictures via the <inline>includegraphics</inline> macro.</p></li>
 	</ol>
 </p>
 
 <note>
-Generally, the string syntax is chosen carefully not to interfere with the use of <str-LaTeX />.  Hence, two characters rarely used in <str-LaTeX /> source code were selected to be used interchangeably as escape characters, namely the cent sign (¢) and the sun sign (¤).  However, characters such as newlines and tabs can be included literally in strings, so there is seldom an urge to produce the rather unusual escape characters.
+	<p>The <syntax name="string" /> syntax is chosen carefully not to interfere with the use of <str-LaTeX /> — that's why there is no escape character.</p>
 </note>
 
 <note>
 <p>There is also a function that does the same job as the <operator name="TeX" /> special form, but there are good reasons for avoiding it.</p>
 </note>
+
+<example-with-output title="Quotation marks in labels" internal-id="example/tex-quotes">
+<image pdf="doc/tex-quotes.pdf" jpg="doc/tex-quotes_y_big.jpg" />
+<source file="doc/tex-quotes.shape">
+<![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/tex-quotes.shape" -->]]>
+</source>
+<caption>
+	<p>Since <str-Shapes /> allows pairwise `…´ inside normal strings, the ` cannot be used to create the left double quote in <str-LaTeX />, since there will be no matching ´ at the other end of the quote.  This example presents ways to deal with this.</p>
+</caption>
+</example-with-output>
 
 </body>
 </section><!-- End of basics/LaTeX -->

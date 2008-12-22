@@ -1,9 +1,9 @@
 dynamic @a ( \ x → 2 * x ) 1
 
-•stdout << @a << `¢n´
-				<< @a:2 | @a << `¢n´
+•stdout << @a << "{n}
+				<< @a:2 | @a << "{n}
 
 dynamic @b identity [error `Dynamic variable has no default binding.´]
-•stdout << @b:(4+3) | @b << ` No error see?´ << `¢n´
+•stdout << @b:(4+3) | @b << ` No error see?´ << "{n}
 
 [spot (0m,0m)]

@@ -18,15 +18,15 @@
 
 foo: \ a b c → a + b + c
 
-•stdout << [foo `1´ `2´ `3´] << `¢n´
+•stdout << [foo `1´ `2´ `3´] << "{n}
 
 bar: [foo b:`BAR´ ...]
 
 ofo: [bar `ofo´ ...]
 
-•stdout << [ofo `2´] << `¢n´
-•stdout << [bar `1´ `3´] << `¢n´
-•stdout << [foo [...] b:`2´ [...] `1´ [...] `3´] << `¢n´
+•stdout << [ofo `2´] << "{n}
+•stdout << [bar `1´ `3´] << "{n}
+•stdout << [foo [...] b:`2´ [...] `1´ [...] `3´] << "{n}
 
 /** Prevent empty output error. **/
 [stroke (0cm,0cm)--(1cm,1cm)]

@@ -1,4 +1,4 @@
 factorial: \ n → [if ( n = '0 ) '1 ( n * [factorial n-'1] )]
-•stdout << [factorial '5] << `¢n´
+•stdout << [factorial '5] << "{n}
 
 [spot (0m,0m)] /** Avoid empty-output error. **/

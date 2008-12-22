@@ -24,9 +24,9 @@
 •msg << `goodbye!´
 str: •str;
 msg: •msg;
-•stderr << str << `¢n´ << msg << `¢n´
+•stderr << str << "{n} << msg << "{n}
 
-•stderr << ( newString << `a ´ << `b¢n´ )
+•stderr << ( newString << `a ´ << `b´ << "{n} )
 
 •dst1: newString
 •dst2: newString
@@ -49,7 +49,7 @@ say_y: \ •dstStr → { •dstStr << `y´ }
 |** @dfoo: (dst1 <<)
 |** | [foo]
 
-endline: \ •os → { •os << `(endl)¢n´ }
+endline: \ •os → { •os << `(endl)´ << "{n} }
 
 [endline •dst1]
 [endline •dst2]

@@ -23,14 +23,14 @@ lst: [range begin:'4 end:'10]
 /**
  ** We can measure the length of a list by folding a function that adds one for each element.
  **/
-•stdout << `Length: ´ << [lst.foldl (\ p e → '1+p) '0] << `¢n´
+•stdout << `Length: ´ << [lst.foldl (\ p e → '1+p) '0] << "{n}
 
 /**
  ** This is to show the order in which the state is modified when folding with state from left and right.
  **/
 [lst.foldsl \ p e •dst → { •dst << e   p } void •stdout]
 [lst.foldsr \ p e •dst → { •dst << e   p } void •stdout]
-•stdout << `¢n´
+•stdout << "{n}
 
 /**
  ** To show how the laziness of the cons-pair allows us to define infinite streams, we
@@ -59,17 +59,17 @@ Fib2: [stream_map (\ x → x*x) Fib]
 
 nth: \ lst n → [if n = '0 lst.car [nth lst.cdr n-'1]]
 
-•stdout << `A short sequence of Fibonacci numbers:¢n´
+•stdout << `A short sequence of Fibonacci numbers:´ << "{n}
 
-•stdout << [nth Fib '4] << `¢n´
-•stdout << [nth Fib '5] << `¢n´
-•stdout << [nth Fib '6] << `¢n´
+•stdout << [nth Fib '4] << "{n}
+•stdout << [nth Fib '5] << "{n}
+•stdout << [nth Fib '6] << "{n}
 
-•stdout << `... and the same sequence squared:¢n´
+•stdout << `... and the same sequence squared:´ << "{n}
 
-•stdout << [nth Fib2 '4] << `¢n´
-•stdout << [nth Fib2 '5] << `¢n´
-•stdout << [nth Fib2 '6] << `¢n´
+•stdout << [nth Fib2 '4] << "{n}
+•stdout << [nth Fib2 '5] << "{n}
+•stdout << [nth Fib2 '6] << "{n}
 
 /** Prevent empty output error **/
 [stroke (0cm,0cm)--(1cm,1cm)]

@@ -145,7 +145,7 @@ inc: [addn '1]
 <pre>
 <![CDATA[dynamic @smallskip identity 2cm
 dynamic @bigskip identity 5cm
-test: \ •dst → { •dst << @bigskip << `¢n´ }
+test: \ •dst → { •dst << @bigskip << "{n} }
 @bigskip : dynamic 4 * @smallskip
 |
 {

@@ -165,8 +165,11 @@ namespace Shapes
 		{
 		public:
 			RefCountPtr< const char > val_;
-			String( RefCountPtr< const char > val ) : val_( val ) { };
-			String( const char * val, bool duplicate ) : val_( duplicate ? strdup( val ) : val ) { };
+			size_t bytecount_;
+			String( RefCountPtr< const char > val ) : val_( val ), bytecount_( strlen( val.getPtr( ) ) ) { };
+			String( RefCountPtr< const char > val, size_t bytecount ) : val_( val ), bytecount_( bytecount ) { };
+			String( const char * val, bool duplicate ) : val_( duplicate ? strdup( val ) : val ), bytecount_( strlen( val ) ) { };
+			virtual Kernel::VariableHandle getField( const char * fieldID, const RefCountPtr< const Lang::Value > & selfRef ) const;
 			virtual ~String( );
 			TYPEINFODECL;
 			virtual void show( std::ostream & os ) const;

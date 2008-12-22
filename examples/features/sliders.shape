@@ -17,7 +17,6 @@
  **/
 
 ##needs circle
-##needs newline
 
 •rand: [newRandom (•time)]
 

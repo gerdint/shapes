@@ -72,6 +72,8 @@ class ShapesScanner : public shapesFlexLexer
 	bool showFiles;
 	bool randSeedSet;
 	std::istream * appendStream_;
+	std::list< std::pair< char *, size_t > > dataStringChunks_;
+	size_t dataStringTotalLength_;
  public:
 	//	Ast::SourceLocation loc;
 	ShapesScanner( std::istream * yyin = 0, std::ostream * yyout = 0 );
@@ -95,6 +97,7 @@ class ShapesScanner : public shapesFlexLexer
 	void pop_frontNeedPath( );
 	void doInclusion( );
 	void rinseString( );
+	void concatenateDataString( );
 };
 
 

@@ -24,9 +24,9 @@
 
 dynamic @a identity 8
 f: \ b → @a + b
-•stdout << [f 2] << `¢n´
-•stdout << @a:6 | [f 2] << `¢n´
-•stdout << [f 2] << `¢n´
+•stdout << [f 2] << "{n}
+•stdout << @a:6 | [f 2] << "{n}
+•stdout << [f 2] << "{n}
 
 /**
  ** Note that the default value is delayed, so we can require that a dynamic variable must be bound by the user.
@@ -37,10 +37,10 @@ f: \ b → @a + b
  **/
 
 dynamic @a_noDefault identity [error `Dynamic variable has no default binding.´]
-•stdout << @a_noDefault:9 | @a_noDefault << ` No error, see?´ << `¢n´
+•stdout << @a_noDefault:9 | @a_noDefault << ` No error, see?´ << "{n}
 
-dynamic @a_logDefault identity [debuglog_before `The default value was used.´+`¢n´ ~9]
-•stdout << @a_logDefault << ` Check out the debug log!´ << `¢n´
+dynamic @a_logDefault identity [debuglog_before `The default value was used.´+"{n} ~9]
+•stdout << @a_logDefault << ` Check out the debug log!´ << "{n}
 
 
 /**
@@ -54,7 +54,7 @@ dynamic @b identity dynamic @a + 5
 & @c: 20
 |
 {
-  •stdout << `@b: ´ << @b << `¢n´
+  •stdout << `@b: ´ << @b << "{n}
 }
 
 
@@ -79,12 +79,12 @@ b01: locate [] b0 &| b1
 b01
 |
 {
-  •stdout << [sourceof b01] << ` :¢n´
-  •stdout << `@a: ´ << @a << `¢n´
-  •stdout << `@b: ´ << @b << `¢n´
-  •stdout << `@c: ´ << @c << `¢n´
-  •stdout << `@width: ´ << @width << `¢n´
-  •stdout << `@stroking: ´ << @stroking << `¢n´
+  •stdout << [sourceof b01] << ` :´ << "{n}
+  •stdout << `@a: ´ << @a << "{n}
+  •stdout << `@b: ´ << @b << "{n}
+  •stdout << `@c: ´ << @c << "{n}
+  •stdout << `@width: ´ << @width << "{n}
+  •stdout << `@stroking: ´ << @stroking << "{n}
 }
 
 /**
@@ -95,12 +95,12 @@ b10: locate [] b1 &| b0
 b10
 |
 {
-  •stdout << [sourceof b10] << ` :¢n´
-  •stdout << `@a: ´ << @a << `¢n´
-  •stdout << `@b: ´ << @b << `¢n´
-  •stdout << `@c: ´ << @c << `¢n´
-  •stdout << `@width: ´ << @width << `¢n´
-  •stdout << `@stroking: ´ << @stroking << `¢n´
+  •stdout << [sourceof b10] << ` :´ << "{n}
+  •stdout << `@a: ´ << @a << "{n}
+  •stdout << `@b: ´ << @b << "{n}
+  •stdout << `@c: ´ << @c << "{n}
+  •stdout << `@width: ´ << @width << "{n}
+  •stdout << `@stroking: ´ << @stroking << "{n}
 }
 
 

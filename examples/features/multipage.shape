@@ -33,7 +33,7 @@ clock: \ hour minute →
 
 •catalog.[setpagelabel prefix:`Am ´ number:'8]
 •catalog.[setbboxgroup 'clock]
-•stdout << `First page's label: ´ << •catalog.[nextpagelabel] << `¢n´
+•stdout << `First page's label: ´ << •catalog.[nextpagelabel] << "{n}
 
 •catalog << [clock 8 0]
       & [destination level:'0 text:`Morning´ color:[rgb 0.5 0.5 0] open:true]
@@ -51,7 +51,7 @@ clock: \ hour minute →
       & [destination level:'1 text:`Nine´]
 
 •catalog.[setpagelabel number:•catalog.[nextpagenumber]+'1]
-•stdout << `Skipping to page: ´ << •catalog.[nextpagenumber] << `¢n´
+•stdout << `Skipping to page: ´ << •catalog.[nextpagenumber] << "{n}
 
 •catalog << [clock •catalog.[nextpagenumber]*1 0]
 
@@ -60,7 +60,7 @@ clock: \ hour minute →
 •catalog.[setpagelabel prefix:`Pm ´]
 •catalog.[setpagelabel number:'33]
 •catalog.[setpagelabel style:'alphabet]
-•stdout << `Later page's label: ´ << •catalog.[nextpagelabel] << `¢n´
+•stdout << `Later page's label: ´ << •catalog.[nextpagelabel] << "{n}
 
 •catalog << [clock 3 10]
         & [destination level:'0 text:`Afternoon´ italic:true]

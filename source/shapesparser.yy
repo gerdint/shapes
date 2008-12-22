@@ -122,8 +122,9 @@ void shapeserror( char * msg )
 	int intVal;
 	double floatVal;
 	bool boolVal;
-	char * str;
+	char * char_p;
 	int tokenID;
+	Lang::String * Lang_String;
 	std::list< const Ast::CallExpr * > * callExprList;
 	std::list< Ast::ClassSection * > * classSectionList;
 	Ast::ClassSection * classSection;
@@ -154,7 +155,8 @@ void shapeserror( char * msg )
 %token <floatVal> T_float T_length
 %token <expr> T_speciallength
 %token <boolVal> T_bool
-%token <str> T_string T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier T_typename
+%token <char_p> T_identifier T_dynamic_identifier T_state_identifier T_dynamic_state_identifier T_typename
+%token <Lang_String> T_string
 
 /* Non-terminal types
  * ------------------
@@ -888,7 +890,7 @@ Expr
 : ExprExceptConstStrings
 | T_string
 {
-	$$ = new Ast::Constant( @1, new Lang::String( $1, false ) );
+	$$ = new Ast::Constant( @1, $1 );
 }
 ;
 
@@ -906,9 +908,9 @@ ExprExceptConstStrings
 }
 | '(' T_tex T_string ')'
 {
-	Kernel::theTeXLabelManager.announce( string( $3 ), @3 );
+	Kernel::theTeXLabelManager.announce( std::string( $3->val_.getPtr( ) ), @3 );
 	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
-	args->orderedExprs_->push_back( new Ast::Constant( @3, new Lang::String( $3, false ) ) );
+	args->orderedExprs_->push_back( new Ast::Constant( @3, $3 ) );
 	$$ = new Ast::CallExpr( @$,
 													Ast::THE_FUNCTION_TeX,
 													args );

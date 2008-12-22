@@ -1,0 +1,30 @@
+/** This file is part of Shapes.
+ **
+ ** Shapes is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** any later version.
+ **
+ ** Shapes is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with Shapes.  If not, see <http://www.gnu.org/licenses/>.
+ **
+ ** Copyright 2008 Henrik Tidefelt
+ **/
+
+AringPiAlpha: "{C3A5CF80CEB1}
+junk: "{C3A5 0C80 CEB1}
+data: "{C3A5 0080 CEB1}
+
+•stdout << `String #1: This string is partly outside ASCII (åπα), but most characters {UFT code points} are ASCII.´ << "{n}
+				<< "{{String #2: This string is partly outside ASCII (}C3A5 CF80 CEB1{), but most characters }7B{UFT code points}7D{ are ASCII.}} << "{n}
+				<< `It is easy to generate strings by writing all characters in hex: ´ << AringPiAlpha << "{n}
+				<< `Shapes, is ´ << ("`") << AringPiAlpha << ("´")  << ` valid UTF-8? → ´ << AringPiAlpha.UTF8? << "{n}
+				<< `Shapes, is the modified UTF-8 junk valid UTF-8? → ´ << junk.UTF8? << "{n}
+				<< `The raw data looks like one character, ´ << data << `, but is acutally ´ << data.bytecount << ` bytes, and valid UTF-8? → ´ << data.UTF8? << "{n}
+
+[spot (0m,0m)]

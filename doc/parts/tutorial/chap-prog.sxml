@@ -86,8 +86,8 @@ In combination with evaluated cuts of <binding name="debuglog_after" />, <operat
   {
     b: 10 * a
     a + b
-      >> [debuglog_after ( newString << `The value of a is ´ << a << `¢n´ ) ...]
-      >> [debuglog_after ( newString << `The value of b is ´ << b << `¢n´ ) ...]
+      >> [debuglog_after ( newString << `The value of a is ´ << a << "{n} ) ...]
+      >> [debuglog_after ( newString << `The value of b is ´ << b << "{n} ) ...]
   }]]>
 </pre>
 Recall that global states such as <state name="stderr" /> is not in scope inside the function body, but by making <filename>stderr</filename> the debug log file (see <a part="man" id="debuglog">man page</a>), this is a way to get around the function's scoping barrier.
