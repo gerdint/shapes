@@ -31,17 +31,21 @@
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
-;; - Automatically pretty-print #, \, ->
+;; - Automatically pretty-print #, -> (use abbrevs!)
 ;; - Convert Shapes ref manual to info and hook up to Info-Look
 ;; - Skeletons?
 ;; - Eldoc mode?
 ;; - Some sort of camelCase support a la subword mode of cc-mode
+;; - Investigate Flymake support
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
 ;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
 ;; * point is after first char (and the cursor is ON char 2).
 ;; - Handle the case when shapes-mode is started in a buffer that isn't saved.
+;; - Handle the case when shapes-mode is activated on a buffer that doesn't end
+;; with .sh(ape|ext), so that its encoding is not set to utf-8 correctly, that
+;; is change the buffer encoding to utf-8 if it is something else.
 
 ;;; Installation
 
@@ -88,7 +92,7 @@ equivalents or not."
     (mapc (lambda (elt) 
 	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
 	  "`([{")
-    (define-key map "\C-cl" 'shapes-lambda)
+    ;; (define-key map "\C-cl" 'shapes-lambda)
     map))
 
 (defun shapes-compile ()
@@ -119,12 +123,12 @@ doc-view."
 	   (doc-view t output))))))
   (shapes-compile))
 
-(defun shapes-beginning-of-defun ()
-  "Move backward to the beginning of a defun.
-Every top level binding of a function is considered to be a defun."
-  (interactive)
-  ;; match identifier: \ arg1 .. argn -> body-expr
-  (re-search-backward "^")
+;; (defun shapes-beginning-of-defun ()
+;;   "Move backward to the beginning of a defun.
+;; Every top level binding of a function is considered to be a defun."
+;;   (interactive)
+;;   ;; match identifier: \ arg1 .. argn -> body-expr
+;;   (re-search-backward "^")
   )
 
 (defun shapes-mode ()
@@ -142,10 +146,13 @@ Every top level binding of a function is considered to be a defun."
        '((?` _ ?´)			; for strings
 	 (?{ \n _ \n ?})))			
 
-  (define-skeleton shapes-lambda "Function template skeleton."
-    "Formal parameters: "
-    "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
+  ;; (define-skeleton shapes-lambda "Function template skeleton."
+;;     "Formal parameters: "
+;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
+  (when shapes-unicode-pretty-print
+    (setq abbrev-mode t))
+  
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
