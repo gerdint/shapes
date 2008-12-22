@@ -74,10 +74,10 @@ version of this page.</xsl:text>
 <xsl:template match="env-variable-list">
 <xsl:apply-templates select="./*" />
 </xsl:template>
-<xsl:template match="env-variable-item">
+<xsl:template match="env-variable-item[@name]">
 <xsl:text>
 
-.B </xsl:text><xsl:value-of select="name" /><xsl:text>
+.B </xsl:text><xsl:value-of select="@name" /><xsl:text>
 .ensure-line-break</xsl:text>
 <xsl:apply-templates select="description/*"/>
 </xsl:template>

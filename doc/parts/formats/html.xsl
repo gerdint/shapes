@@ -139,6 +139,24 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="id" />
 	<xsl:text>secid:</xsl:text><xsl:value-of select="$id" />
 </xsl:template>
+<xsl:template name="env-var-to-anchor-name">
+	<xsl:param name="id" />
+	<xsl:text>env:</xsl:text><xsl:value-of select="$id" />
+</xsl:template>
+
+<xsl:template match="env-var[@name]">
+	<xsl:element name="a">
+		<xsl:attribute name="class">discrete</xsl:attribute>
+		<xsl:attribute name="href">
+			<xsl:call-template name="part-to-href">
+				<xsl:with-param name="name">man</xsl:with-param>
+			</xsl:call-template>#<xsl:call-template name="env-var-to-anchor-name">
+				<xsl:with-param name="id"><xsl:value-of select="@name" /></xsl:with-param>
+			</xsl:call-template>
+		</xsl:attribute>
+		<xsl:value-of select="@name" />
+	</xsl:element>
+</xsl:template>
 
 <xsl:template match="part-href[@name]">
 	<xsl:call-template name="part-to-href">

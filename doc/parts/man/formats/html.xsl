@@ -77,10 +77,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="env-variable-list">
 <ul><xsl:apply-templates /></ul>
 </xsl:template>
-<xsl:template match="env-variable-item">
+<xsl:template match="env-variable-item[@name]">
 <li>
-<b><xsl:value-of select="name" /></b>
-<xsl:apply-templates select="description/*"/>
+	<xsl:element name="a">
+		<xsl:attribute name="name"><xsl:call-template name="env-var-to-anchor-name"><xsl:with-param name="id"><xsl:value-of select="@name" /></xsl:with-param></xsl:call-template></xsl:attribute>
+		<b><xsl:value-of select="@name" /></b>
+	</xsl:element>
+	<xsl:apply-templates select="description/*"/>
 </li>
 </xsl:template>
 

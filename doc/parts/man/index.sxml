@@ -98,7 +98,7 @@
 					<command-line-item>
 						<parameters flag="--tmpdir"> <replacable>dir</replacable></parameters>
 						<description>
-							<p>Specify directory for temporary files.  See also --tmp*= and the environment variable SHAPESTMPDIR.</p>
+							<p>Specify directory for temporary files.  See also --tmp*= and the environment variable <env-var name="SHAPESTMPDIR" />.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -111,7 +111,7 @@
 						<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
 						<nosep-parameter flag="-N">dir</nosep-parameter>
 						<description>
-							<p>Add <replacable>dir</replacable> to the end of the search path for language extension sources.  See also the environment variable SHAPESINPUTS.</p>
+							<p>Add <replacable>dir</replacable> to the end of the search path for language extension sources.  See also the environment variable <env-var name="SHAPESINPUTS" />.</p>
 						</description>
 					</command-line-item>
 					<command-line-item>
@@ -486,7 +486,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
  					<command-line-item>
 						<parameters flag="--which-TEXINPUTS"/>
 						<description>
-							<p>Request the environment variable TEXINPUTS after any modifications made by <str-Shapes />.</p>
+							<p>Request the environment variable <env-var name="TEXINPUTS" /> after any modifications made by <str-Shapes />.</p>
 						</description>
 					</command-line-item>
  					<command-line-item>
@@ -510,26 +510,22 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 		<title>Environment variables</title>
 		<body>
 			<env-variable-list>
-				<env-variable-item>
-					<name>SHAPESINPUTS</name>
+				<env-variable-item name="SHAPESINPUTS">
 					<description>
 						<p>contains a search path used for requested source files.  It usually consists of directories with language extension files (with the <filename>.shext</filename> extension).  On typical installations, the extension files shipped with the compiler are found using another mechanism.</p>
 					</description>
 				</env-variable-item>
-				<env-variable-item>
-					<name>SHAPESTMPDIR</name>
+				<env-variable-item name="SHAPESTMPDIR">
 					<description>
 						<p>tells, when present, where to create temporary files.  In particular this concerns files related to label creation.  Note, however, that the label database file (with the <filename>.labels.pdf</filename> extension) is put in the output directory since it is not considered a temporary file.  The environment variable is overridden by the --tmpdir command line option.  When undefined, it defaults to the current directory.</p>
 					</description>
 				</env-variable-item>
-				<env-variable-item>
-					<name>SHAPESFONTMETRICS</name>
+				<env-variable-item name="SHAPESFONTMETRICS">
 					<description>
 						<p>tells where to search for font metrics files.  Font metrics for the standard fonts in <str-PDF /> are distributed with the compiler, and on typical installations these are found using another mechanism.</p>
 					</description>
 				</env-variable-item>
-				<env-variable-item>
-					<name>TEXINPUTS</name>
+				<env-variable-item name="TEXINPUTS">
 					<description>
 						<p>is manipulated locally to enable <str-TeX /> to find files located relative to the <str-Shapes /> source, although the <str-LaTeX /> source used for label creation may be placed in a different directory.</p>
 					</description>
