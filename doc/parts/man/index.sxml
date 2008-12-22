@@ -574,7 +574,7 @@ shapes --viewer 'open -a TeXShop %' myfile.shapes
 			<body>
 				<p>The following can be used to generate a small <str-PDF />-label from a <str-LaTeX /> string, without littering the current working directory with the <str-LaTeX />-related files:</p>
 <command-line>
-echo '&bullet;page &lt;&lt; (TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdir /tmp --out label.pdf
+echo '(TeX &str-open;$x^{2}$&str-close;)' | shapes --tmpdir /tmp --out label.pdf
 </command-line>
 			</body>
 		</section>
