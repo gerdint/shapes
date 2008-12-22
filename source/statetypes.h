@@ -59,6 +59,7 @@ namespace Shapes
 			DynamicBindingsNull( );
 			virtual ~DynamicBindingsNull( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -71,6 +72,7 @@ namespace Shapes
 			DynamicBindingsPair( const RefCountPtr< const Lang::DynamicBindings > & car, const RefCountPtr< const Lang::DynamicBindings > & cdr, bool override = false );
 			virtual ~DynamicBindingsPair( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -84,6 +86,7 @@ namespace Shapes
 			UserDynamicBinding( const Kernel::DynamicEnvironmentKeyType & key, const char * id, const Ast::SourceLocation & loc, const Kernel::VariableHandle & var );
 			virtual ~UserDynamicBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -91,10 +94,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length val_;
+			const char * id_;
 		public:
-			WidthBinding( const Ast::SourceLocation & loc, Concrete::Length val );
+			WidthBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val );
 			virtual ~WidthBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -102,10 +107,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length val_;
+			const char * id_;
 		public:
-			MiterLimitBinding( const Ast::SourceLocation & loc, Concrete::Length val );
+			MiterLimitBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val );
 			virtual ~MiterLimitBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -172,10 +179,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Color > color_;
+			const char * id_;
 		public:
-			StrokingBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color );
+			StrokingBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color );
 			virtual ~StrokingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -183,10 +192,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Color > color_;
+			const char * id_;
 		public:
-			NonStrokingBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color );
+			NonStrokingBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color );
 			virtual ~NonStrokingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -213,10 +224,12 @@ namespace Shapes
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Alpha > alpha_;
 			bool isStroking_;
+			const char * id_;
 		public:
-			AlphaBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Alpha > & alpha, bool isStroking );
+			AlphaBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Alpha > & alpha, bool isStroking );
 			virtual ~AlphaBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -277,10 +290,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Dash > dash_;
+			const char * id_;
 		public:
-			DashBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Dash > dash );
+			DashBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Dash > dash );
 			virtual ~DashBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -298,10 +313,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Lang::CapStyle::ValueType cap_;
+			const char * id_;
 		public:
-			CapStyleBinding( const Ast::SourceLocation & loc, const Lang::CapStyle::ValueType & cap );
+			CapStyleBinding( const char * id, const Ast::SourceLocation & loc, const Lang::CapStyle::ValueType & cap );
 			virtual ~CapStyleBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -319,10 +336,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Lang::JoinStyle::ValueType join_;
+			const char * id_;
 		public:
-			JoinStyleBinding( const Ast::SourceLocation & loc, const Lang::JoinStyle::ValueType & join );
+			JoinStyleBinding( const char * id, const Ast::SourceLocation & loc, const Lang::JoinStyle::ValueType & join );
 			virtual ~JoinStyleBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -345,10 +364,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Lang::BlendMode::ValueType blend_;
+			const char * id_;
 		public:
-			BlendModeBinding( const Ast::SourceLocation & loc, const Lang::BlendMode::ValueType & blend );
+			BlendModeBinding( const char * id, const Ast::SourceLocation & loc, const Lang::BlendMode::ValueType & blend );
 			virtual ~BlendModeBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 

@@ -166,11 +166,13 @@ namespace Shapes
 			Ast::SourceLocation loc_;
 			Concrete::Length spacing_;
 			bool isRelative_;
+			const char * id_;
 		public:
-			CharacterSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing );
-			CharacterSpacingBinding( const Ast::SourceLocation & loc, const double r );
+			CharacterSpacingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length spacing );
+			CharacterSpacingBinding( const char * id, const Ast::SourceLocation & loc, const double r );
 			virtual ~CharacterSpacingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -179,11 +181,13 @@ namespace Shapes
 			Ast::SourceLocation loc_;
 			Concrete::Length spacing_;
 			bool isRelative_;
+			const char * id_;
 		public:
-			WordSpacingBinding( const Ast::SourceLocation & loc, const Concrete::Length spacing );
-			WordSpacingBinding( const Ast::SourceLocation & loc, const double r );
+			WordSpacingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length spacing );
+			WordSpacingBinding( const char * id, const Ast::SourceLocation & loc, const double r );
 			virtual ~WordSpacingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -191,10 +195,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			double scaling_;
+			const char * id_;
 		public:
-			HorizontalScalingBinding( const Ast::SourceLocation & loc, const double scaling );
+			HorizontalScalingBinding( const char * id, const Ast::SourceLocation & loc, const double scaling );
 			virtual ~HorizontalScalingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -203,11 +209,13 @@ namespace Shapes
 			Ast::SourceLocation loc_;
 			Concrete::Length ty_;
 			bool isRelative_;
+			const char * id_;
 		public:
-			LeadingBinding( const Ast::SourceLocation & loc, const Concrete::Length ty );
-			LeadingBinding( const Ast::SourceLocation & loc, const double r );
+			LeadingBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length ty );
+			LeadingBinding( const char * id, const Ast::SourceLocation & loc, const double r );
 			virtual ~LeadingBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -215,10 +223,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Font > font_;
+			const char * id_;
 		public:
-			FontBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Font > & font );
+			FontBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Font > & font );
 			virtual ~FontBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -226,10 +236,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length size_;
+			const char * id_;
 		public:
-			TextSizeBinding( const Ast::SourceLocation & loc, const Concrete::Length size );
+			TextSizeBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length size );
 			virtual ~TextSizeBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -237,10 +249,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Lang::TextRenderingMode::ValueType mode_;
+			const char * id_;
 		public:
-			TextRenderingModeBinding( const Ast::SourceLocation & loc, const Lang::TextRenderingMode::ValueType mode );
+			TextRenderingModeBinding( const char * id, const Ast::SourceLocation & loc, const Lang::TextRenderingMode::ValueType mode );
 			virtual ~TextRenderingModeBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -249,11 +263,13 @@ namespace Shapes
 			Ast::SourceLocation loc_;
 			Concrete::Length ty_;
 			bool isRelative_;
+			const char * id_;
 		public:
-			TextRiseBinding( const Ast::SourceLocation & loc, const Concrete::Length ty );
-			TextRiseBinding( const Ast::SourceLocation & loc, const double r );
+			TextRiseBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length ty );
+			TextRiseBinding( const char * id, const Ast::SourceLocation & loc, const double r );
 			virtual ~TextRiseBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -261,10 +277,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			bool knockout_;
+			const char * id_;
 		public:
-			TextKnockoutBinding( const Ast::SourceLocation & loc, const bool knockout );
+			TextKnockoutBinding( const char * id, const Ast::SourceLocation & loc, const bool knockout );
 			virtual ~TextKnockoutBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 

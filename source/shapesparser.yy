@@ -96,9 +96,9 @@ void shapeserror( char * msg )
  * input file. Here is where you declare tokens and types, add precedence
  * and associativity options, and so on.
  */
- 
+
 /*
- * yylval 
+ * yylval
  * ------
  * Here we define the type of the yylval global variable that is used by
  * the scanner to store attibute information about the token just scanned
@@ -193,26 +193,34 @@ void shapeserror( char * msg )
 
 %nonassoc T_assign ':'
 %left ']' T_splitRight
+
 %left T_llthan
 %nonassoc T_bangbang
+
+%nonassoc T_mapsto
 %right '|'
-%right T_mapsto T_emptybrackets T_bangbrackets
-%left T_dddotbrackets T_bangdddotbrackets
+%left T_emptybrackets T_bangbrackets T_dddotbrackets T_bangdddotbrackets T_ggthan
+
 %left T_ampersandMore
 %left '&'
 %nonassoc T_dynamiccolon
-%left T_or T_xor
+
+%left T_or
+%nonassoc T_xor
 %left T_and
 %left T_not
-%nonassoc T_eqeq T_eqneq
+%nonassoc T_eqeq T_eqneq T_lesseq T_greatereq
+
 %left T_plusplus T_minusminus
 %left '<' '>'
-%nonassoc T_lesseq T_greatereq
+
 %left '+' '-'
 %nonassoc T_angle
 %left '*' '/' T_projection
 %left '~'
+
 %left T_compose
+
 %left '[' '.' T_splitLeft
 %left '#'
 %left T_split
@@ -403,6 +411,14 @@ CallExpr
 	args->orderedExprs_->push_back( $3 );
 	$$ = new Ast::CallExpr( @$,
 													$1,
+													args );
+}
+| Expr T_ggthan Expr
+{
+	Ast::ArgListExprs * args = new Ast::ArgListExprs( true );
+	args->orderedExprs_->push_back( $1 );
+	$$ = new Ast::CallExpr( @$,
+													$3,
 													args );
 }
 | Expr T_emptybrackets Split

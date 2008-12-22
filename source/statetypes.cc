@@ -124,6 +124,25 @@ Lang::DynamicBindingsPair::bind( MapType & bindings, Kernel::SystemDynamicVariab
 }
 
 void
+Lang::DynamicBindingsPair::show( std::ostream & os ) const
+{
+	bool showCar = false;
+	if( dynamic_cast< const Lang::DynamicBindingsNull * >( car_.getPtr( ) ) == 0 )
+		{
+			showCar = true;
+			car_->show( os );
+		}
+	if( dynamic_cast< const Lang::DynamicBindingsNull * >( cdr_.getPtr( ) ) == 0 )
+		{
+			if( showCar )
+				{
+					os << " & " ;
+				}
+			cdr_->show( os );
+		}
+}
+
+void
 Lang::DynamicBindingsPair::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::DynamicBindings * >( car_.getPtr( ) )->gcMark( marked );
@@ -140,6 +159,12 @@ Lang::DynamicBindingsNull::~DynamicBindingsNull( )
 void
 Lang::DynamicBindingsNull::bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const
 {
+}
+
+void
+Lang::DynamicBindingsNull::show( std::ostream & os ) const
+{
+	os << "@(an empty set of dynamic bindings)" ;
 }
 
 void
@@ -167,6 +192,20 @@ Lang::UserDynamicBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 }
 
 void
+Lang::UserDynamicBinding::show( std::ostream & os ) const
+{
+	os << "@" << id_ << ":" ;
+	try
+		{
+			var_->getUntyped( )->show( os );
+		}
+	catch( ... )
+		{
+			os << "<thunk>" ;
+		}
+}
+
+void
 Lang::UserDynamicBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	var_->gcMark( marked );
@@ -191,7 +230,6 @@ namespace Shapes
 		{ }
 		virtual void takeHandle( Kernel::VariableHandle val, Kernel::EvalState * evalState, bool dummy ) const
 		{
-			std::cerr << "Warning: I changed from evalState->cont_ to this->cont_! in UserDynamicBindingContinuation::takeHandle" << std::endl ;
 			cont_->takeValue( Kernel::ValueRef( new Lang::UserDynamicBinding( key_, name_, traceLoc_, val ) ),
 												evalState );
 		}
@@ -277,8 +315,8 @@ Kernel::UserDynamicStateProperties::makeBinding( Kernel::StateHandle val, Ast::S
 
 
 
-Lang::WidthBinding::WidthBinding( const Ast::SourceLocation & loc, Concrete::Length val )
-	: loc_( loc ), val_( val )
+Lang::WidthBinding::WidthBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val )
+	: loc_( loc ), val_( val ), id_( id )
 { }
 
 Lang::WidthBinding::~WidthBinding( )
@@ -316,6 +354,13 @@ Lang::WidthBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 }
 
 void
+Lang::WidthBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << double( val_.offtype< 1, 0 >( ) ) * Interaction::displayUnitFactor << Interaction::displayUnitName ;
+}
+
+void
 Lang::WidthBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -346,7 +391,7 @@ Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 					throw Exceptions::OutOfRange( loc, strrefdup( "The length must be non-negative." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, loc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -359,7 +404,7 @@ Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( loc, Concrete::Length( -1 ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WidthBinding( name_, loc, Concrete::Length( -1 ) ) ),
 											 evalState );
 			return;
 		}
@@ -372,8 +417,8 @@ Kernel::WidthDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 }
 
 
-Lang::MiterLimitBinding::MiterLimitBinding( const Ast::SourceLocation & loc, Concrete::Length val )
-	: loc_( loc ), val_( val )
+Lang::MiterLimitBinding::MiterLimitBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val )
+	: loc_( loc ), val_( val ), id_( id )
 { }
 
 Lang::MiterLimitBinding::~MiterLimitBinding( )
@@ -411,6 +456,13 @@ Lang::MiterLimitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 }
 
 void
+Lang::MiterLimitBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << double( val_.offtype< 1, 0 >( ) ) * Interaction::displayUnitFactor << Interaction::displayUnitName ;
+}
+
+void
 Lang::MiterLimitBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -441,7 +493,7 @@ Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 					throw Exceptions::OutOfRange( loc, strrefdup( "The length must be non-negative." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, loc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -454,7 +506,7 @@ Kernel::MiterLimitDynamicVariableProperties::makeBinding( Kernel::VariableHandle
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( loc, Concrete::Length( -1 ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::MiterLimitBinding( name_, loc, Concrete::Length( -1 ) ) ),
 											 evalState );
 			return;
 		}
@@ -997,8 +1049,8 @@ std::map< double, RefCountPtr< SimplePDF::PDF_Object > > Lang::Alpha::nonStrokin
 std::map< double, RefCountPtr< SimplePDF::PDF_Object > > Lang::Alpha::nonStrokingOpacityResourcemap;
 
 
-Lang::AlphaBinding::AlphaBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Alpha > & alpha, bool isStroking )
-	: loc_( loc ), alpha_( alpha ), isStroking_( isStroking )
+Lang::AlphaBinding::AlphaBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Alpha > & alpha, bool isStroking )
+	: loc_( loc ), alpha_( alpha ), isStroking_( isStroking ), id_( id )
 { }
 
 Lang::AlphaBinding::~AlphaBinding( )
@@ -1062,6 +1114,13 @@ Lang::AlphaBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** 
 }
 
 void
+Lang::AlphaBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	alpha_->show( os );
+}
+
+void
 Lang::AlphaBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Alpha * >( alpha_.getPtr( ) )->gcMark( marked );
@@ -1094,7 +1153,7 @@ Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 		{
 			RefCountPtr< const Lang::Alpha > alpha = val->tryVal< const Lang::Alpha >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( loc, alpha, isStroking_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, loc, alpha, isStroking_ ) ),
 											 evalState );
 			return;
 		}
@@ -1107,7 +1166,7 @@ Kernel::AlphaDynamicVariableProperties::makeBinding( Kernel::VariableHandle val,
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( loc, RefCountPtr< const Lang::Alpha >( new Lang::Alpha( true, -1 ) ), isStroking_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::AlphaBinding( name_, loc, RefCountPtr< const Lang::Alpha >( new Lang::Alpha( true, -1 ) ), isStroking_ ) ),
 											 evalState );
 			return;
 		}
@@ -1458,8 +1517,8 @@ Lang::CMYK::componentVector( ) const
 }
 
 
-Lang::StrokingBinding::StrokingBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color )
-	: loc_( loc ), color_( color )
+Lang::StrokingBinding::StrokingBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color )
+	: loc_( loc ), color_( color ), id_( id )
 { }
 
 Lang::StrokingBinding::~StrokingBinding( )
@@ -1497,6 +1556,13 @@ Lang::StrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 }
 
 void
+Lang::StrokingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	color_->show( os );
+}
+
+void
 Lang::StrokingBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Color * >( color_.getPtr( ) )->gcMark( marked );
@@ -1525,7 +1591,7 @@ Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::Color > color = val->tryVal< const Lang::Color >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( loc, color ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, loc, color ) ),
 											 evalState );
 			return;
 		}
@@ -1538,7 +1604,7 @@ Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::StrokingBinding( name_, loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1551,8 +1617,8 @@ Kernel::StrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 }
 
 
-Lang::NonStrokingBinding::NonStrokingBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color )
-	: loc_( loc ), color_( color )
+Lang::NonStrokingBinding::NonStrokingBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Color > color )
+	: loc_( loc ), color_( color ), id_( id )
 { }
 
 Lang::NonStrokingBinding::~NonStrokingBinding( )
@@ -1590,6 +1656,13 @@ Lang::NonStrokingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 }
 
 void
+Lang::NonStrokingBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	color_->show( os );
+}
+
+void
 Lang::NonStrokingBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Color * >( color_.getPtr( ) )->gcMark( marked );
@@ -1618,7 +1691,7 @@ Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			RefCountPtr< const Lang::Color > color = val->tryVal< const Lang::Color >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( loc, color ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, loc, color ) ),
 											 evalState );
 			return;
 		}
@@ -1631,7 +1704,7 @@ Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::NonStrokingBinding( name_, loc, RefCountPtr< const Lang::Color >( new Lang::Gray( -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1644,8 +1717,8 @@ Kernel::NonStrokingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 }
 
 
-Lang::DashBinding::DashBinding( const Ast::SourceLocation & loc, RefCountPtr< const Lang::Dash > dash )
-	: loc_( loc ), dash_( dash )
+Lang::DashBinding::DashBinding( const char * id, const Ast::SourceLocation & loc, RefCountPtr< const Lang::Dash > dash )
+	: loc_( loc ), dash_( dash ), id_( id )
 { }
 
 Lang::DashBinding::~DashBinding( )
@@ -1683,6 +1756,13 @@ Lang::DashBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 }
 
 void
+Lang::DashBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":" ;
+	dash_->show( os );
+}
+
+void
 Lang::DashBinding::gcMark( Kernel::GCMarkedSet & marked )
 {
 	const_cast< Lang::Dash * >( dash_.getPtr( ) )->gcMark( marked );
@@ -1711,7 +1791,7 @@ Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 		{
 			RefCountPtr< const Lang::Dash > dash = val->tryVal< const Lang::Dash >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( loc, dash ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, loc, dash ) ),
 											 evalState );
 			return;
 		}
@@ -1724,7 +1804,7 @@ Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( loc, RefCountPtr< const Lang::Dash >( new Lang::Dash( RefCountPtr< std::list< Concrete::Length > >( new std::list< Concrete::Length >( ) ), 0, -1 ) ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::DashBinding( name_, loc, RefCountPtr< const Lang::Dash >( new Lang::Dash( RefCountPtr< std::list< Concrete::Length > >( new std::list< Concrete::Length >( ) ), 0, -1 ) ) ) ),
 											 evalState );
 			return;
 		}
@@ -1738,8 +1818,8 @@ Kernel::DashDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 
 
 
-Lang::CapStyleBinding::CapStyleBinding( const Ast::SourceLocation & loc, const Lang::CapStyle::ValueType & cap )
-	: loc_( loc ), cap_( cap )
+Lang::CapStyleBinding::CapStyleBinding( const char * id, const Ast::SourceLocation & loc, const Lang::CapStyle::ValueType & cap )
+	: loc_( loc ), cap_( cap ), id_( id )
 { }
 
 Lang::CapStyleBinding::~CapStyleBinding( )
@@ -1776,6 +1856,13 @@ Lang::CapStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 }
 
 void
+Lang::CapStyleBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << "<internal-enum>" ;
+}
+
+void
 Lang::CapStyleBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -1802,7 +1889,7 @@ Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::CapStyle > cap = val->tryVal< const Lang::CapStyle >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( loc, cap->cap_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, loc, cap->cap_ ) ),
 											 evalState );
 			return;
 		}
@@ -1815,7 +1902,7 @@ Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( loc, Lang::CapStyle::CAP_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CapStyleBinding( name_, loc, Lang::CapStyle::CAP_SAME ) ),
 											 evalState );
 			return;
 		}
@@ -1828,8 +1915,8 @@ Kernel::CapStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 }
 
 
-Lang::JoinStyleBinding::JoinStyleBinding( const Ast::SourceLocation & loc, const Lang::JoinStyle::ValueType & join )
-	: loc_( loc ), join_( join )
+Lang::JoinStyleBinding::JoinStyleBinding( const char * id, const Ast::SourceLocation & loc, const Lang::JoinStyle::ValueType & join )
+	: loc_( loc ), join_( join ), id_( id )
 { }
 
 Lang::JoinStyleBinding::~JoinStyleBinding( )
@@ -1866,6 +1953,13 @@ Lang::JoinStyleBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 }
 
 void
+Lang::JoinStyleBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << "<internal-enum>" ;
+}
+
+void
 Lang::JoinStyleBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -1892,7 +1986,7 @@ Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::JoinStyle > join = val->tryVal< const Lang::JoinStyle >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( loc, join->join_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, loc, join->join_ ) ),
 											 evalState );
 			return;
 		}
@@ -1905,7 +1999,7 @@ Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( loc, Lang::JoinStyle::JOIN_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::JoinStyleBinding( name_, loc, Lang::JoinStyle::JOIN_SAME ) ),
 											 evalState );
 			return;
 		}
@@ -1918,8 +2012,8 @@ Kernel::JoinStyleDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 }
 
 
-Lang::BlendModeBinding::BlendModeBinding( const Ast::SourceLocation & loc, const Lang::BlendMode::ValueType & blend )
-	: loc_( loc ), blend_( blend )
+Lang::BlendModeBinding::BlendModeBinding( const char * id, const Ast::SourceLocation & loc, const Lang::BlendMode::ValueType & blend )
+	: loc_( loc ), blend_( blend ), id_( id )
 { }
 
 Lang::BlendModeBinding::~BlendModeBinding( )
@@ -1956,6 +2050,13 @@ Lang::BlendModeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables
 }
 
 void
+Lang::BlendModeBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << "<internal-enum>" ;
+}
+
+void
 Lang::BlendModeBinding::gcMark( Kernel::GCMarkedSet & marked )
 { }
 
@@ -1982,7 +2083,7 @@ Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::BlendMode > blend = val->tryVal< const Lang::BlendMode >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( loc, blend->mode_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, loc, blend->mode_ ) ),
 											 evalState );
 			return;
 		}
@@ -1995,7 +2096,7 @@ Kernel::BlendModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle 
 		{
 			RefCountPtr< const Lang::Void > dummy = val->tryVal< const Lang::Void >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( loc, Lang::BlendMode::BLEND_SAME ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::BlendModeBinding( name_, loc, Lang::BlendMode::BLEND_SAME ) ),
 											 evalState );
 			return;
 		}

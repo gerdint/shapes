@@ -48,6 +48,7 @@ namespace Shapes
 		extern bool debugSystem;
 		extern size_t debugStep;
 		extern const char * displayUnitName;
+		extern Concrete::Length displayUnit;
 		extern double displayUnitFactor;
 		extern bool fontMetricMessages;
 		extern bool fontMetricDebug;

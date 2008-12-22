@@ -46,10 +46,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::SpecularReflection > reflections_;
+			const char * id_;
 		public:
-			ReflectionsBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::SpecularReflection > & reflections );
+			ReflectionsBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::SpecularReflection > & reflections );
 			virtual ~ReflectionsBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -57,10 +59,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::Color > color_;
+			const char * id_;
 		public:
-			AutoIntensityBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Color > & color );
+			AutoIntensityBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::Color > & color );
 			virtual ~AutoIntensityBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -68,10 +72,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			RefCountPtr< const Lang::SpecularReflection > reflections_;
+			const char * id_;
 		public:
-			AutoScatteringBinding( const Ast::SourceLocation & loc, const RefCountPtr< const Lang::SpecularReflection > & reflections );
+			AutoScatteringBinding( const char * id, const Ast::SourceLocation & loc, const RefCountPtr< const Lang::SpecularReflection > & reflections );
 			virtual ~AutoScatteringBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -79,10 +85,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Concrete::Length resolution_;
+			const char * id_;
 		public:
-			ViewResolutionBinding( const Ast::SourceLocation & loc, const Concrete::Length resolution );
+			ViewResolutionBinding( const char * id, const Ast::SourceLocation & loc, const Concrete::Length resolution );
 			virtual ~ViewResolutionBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
@@ -90,10 +98,12 @@ namespace Shapes
 		{
 			Ast::SourceLocation loc_;
 			Computation::FacetShadeOrder order_;
+			const char * id_;
 		public:
-			ShadeOrderBinding( const Ast::SourceLocation & loc, const Computation::FacetShadeOrder order );
+			ShadeOrderBinding( const char * id, const Ast::SourceLocation & loc, const Computation::FacetShadeOrder order );
 			virtual ~ShadeOrderBinding( );
 			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 

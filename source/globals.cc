@@ -77,6 +77,7 @@ bool Interaction::debugBacktrace = true;
 bool Interaction::debugSystem = false;
 size_t Interaction::debugStep = INT_MAX;
 const char * Interaction::displayUnitName = "cm";
+Concrete::Length Interaction::displayUnit( 72 / 2.54 );
 double Interaction::displayUnitFactor = -1;
 bool Interaction::fontMetricMessages = false;
 bool Interaction::fontMetricDebug = false;
