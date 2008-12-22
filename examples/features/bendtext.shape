@@ -31,6 +31,6 @@ baseline: @defaultunit:1%f | (0cm,~1cm)>(^45°)--(1.5cm^180°)<(3cm,~2cm)
        sl: [baseline distChar.car + 0.5*[xmax [bbox c]]]
        pile
        &
-       [[shift sl.p]()[rotate [angle sl.T]] [centerx c] ]
+       [[shift sl.p]()[rotate [angle sl.T]] [center_x c] ]
      }
     null]

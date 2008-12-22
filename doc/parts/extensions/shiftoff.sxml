@@ -134,7 +134,7 @@
 						</result>
 						<dynamic-references></dynamic-references>
 						<description>
-							<p>Converts a direction constant (which must have one of the values held by the constants defined by this extension) to a relative point to center at.  The returned value can be used with <binding extension="basic-layout" name="centerat" />.</p>
+							<p>Converts a direction constant (which must have one of the values held by the constants defined by this extension) to a relative point to center at.  The returned value can be used with <binding extension="basic-layout" name="center" />.</p>
 						</description>
 					</case>
 					<see-also><binding extension="shiftoff" name="to_dir" /></see-also>
@@ -154,7 +154,7 @@
 						</result>
 						<dynamic-references></dynamic-references>
 						<description>
-							<p>This generalizes the inverse of <binding extension="shiftoff" name="dirtopoint" />.  It converts any relative point (see <binding extension="basic-layout" name="centerat" />) to the closest direction constant defined by this extension.  It always returns a directional value, never <binding extension="shiftoff" name="to_center" />.</p>
+							<p>This generalizes the inverse of <binding extension="shiftoff" name="dirtopoint" />.  It converts any relative point (see <binding extension="basic-layout" name="center" />) to the closest direction constant defined by this extension.  It always returns a directional value, never <binding extension="shiftoff" name="to_center" />.</p>
 						</description>
 					</case>
 				</function>
@@ -224,7 +224,7 @@
 						<dynamic-references><dynvar extension="basic-layout" name="labelmargin" /></dynamic-references>
 						<description>
 							<p>Provides <str-MetaPost />-like layout.</p>
-							<p>This function is like <binding extension="shiftoff" name="shiftoff" />, but treats the obeject as if it was slightly bigger than it really is.  The implementation uses <binding extension="basic-layout" name="centeratwlm" /> instead of <binding extension="basic-layout" name="centerat" />.</p>
+							<p>This function is like <binding extension="shiftoff" name="shiftoff" />, but treats the obeject as if it was slightly bigger than it really is.  The implementation uses <binding extension="basic-layout" name="centerat_wlm" /> instead of <binding extension="basic-layout" name="center" />.</p>
 						</description>
 					</case>
 				</function>

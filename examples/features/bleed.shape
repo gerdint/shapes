@@ -23,5 +23,5 @@ helper: \ obj →
 	<< obj )
 
 •page << [helper (TeX `O´)]
-			<< [shift (2cm,0cm)] [] [helper [enlargebleedbox (TeX `O´) (2bp,2bp)]]
-			<< @TeX_bleed:3bp | [shift (3cm,3cm)] [] [helper [enlargebbox (TeX `O´) (~1bp,~1bp)]]
+			<< [shift (2cm,0cm)] [] [helper [enlarge_bleedbox (TeX `O´) (2bp,2bp)]]
+			<< @TeX_bleed:3bp | [shift (3cm,3cm)] [] [helper [bboxed_enlarge (TeX `O´) (~1bp,~1bp)]]

@@ -23,7 +23,7 @@
 
 centermark: @stroking:[gray 0.7] | [stroke (~1cm,0cm)--(1cm,0cm) & (0cm,~1cm)--(0cm,1cm) ]
 
-helper: \ pos obj lbl → [[shift pos] ( centermark & obj & [[shift (0,~1.2cm)] [shiftoffwlm lbl to_bot]] )]
+helper: \ pos obj lbl → [[shift pos] ( centermark & obj & [[shift (0,~1.2cm)] [shiftoff_wlm lbl to_bot]] )]
 
 •page << [helper (1dx,3dy) sjunction (TeX `serial (type 1)´)]
 •page << [helper (2dx,3dy) pjunction (TeX `parallel (type 0)´)]

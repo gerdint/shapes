@@ -44,7 +44,7 @@ obj:
 
 zbuf: •zbuf;
 
-tmp: [enlargebbox [view [rotate3D (1,0,0) 20°]*[rotate3D (0,1,0) 1°] [] zbuf] (5mm,5mm)]
+tmp: [bboxed_enlarge [view [rotate3D (1,0,0) 20°]*[rotate3D (0,1,0) 1°] [] zbuf] (5mm,5mm)]
 
 •page << @nonstroking:GRAY_BLACK | [fill [bbox tmp]]
 •page << tmp

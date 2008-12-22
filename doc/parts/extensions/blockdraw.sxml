@@ -2114,7 +2114,7 @@
 							<p>Position <arg name="lbl" /> to the left of <arg name="z" />, centering vertically at <arg name="y" />.  For instance, <arg name="y" /><eq>=1</eq> gives a label below <arg name="z" />, while <eq>-1</eq> gives a label above.</p>
 						</description>
 						<see-also>
-							<binding extension="centering-X" name="centeryatX" />
+							<binding extension="centering-X" name="Xcenter_y" />
 						</see-also>
 					</case>
 				</function>
@@ -2141,7 +2141,7 @@
 							<p>Analogous to <binding extension="blockdraw" name="putlabelLeft" />.</p>
 						</description>
 						<see-also>
-							<binding extension="centering-X" name="centeryatX" />
+							<binding extension="centering-X" name="Xcenter_y" />
 						</see-also>
 					</case>
 				</function>
@@ -2168,7 +2168,7 @@
 							<p>Position <arg name="lbl" /> below <arg name="z" />, treating the label as if it had the height of an <eq>X</eq>, centering horizontally at <arg name="x" />.  For instance, <arg name="x" /><eq>=1</eq> gives a label to the left of <arg name="z" />, while <eq>-1</eq> gives a label to the right.</p>
 						</description>
 						<see-also>
-							<binding extension="centering-X" name="centeryatX" />
+							<binding extension="centering-X" name="Xcenter_y" />
 						</see-also>
 					</case>
 				</function>

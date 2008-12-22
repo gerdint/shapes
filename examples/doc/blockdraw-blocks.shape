@@ -23,7 +23,7 @@
 
 helper: \ pos obj →
   [[shift pos]
-   obj & [[shift (0,~0.5dy)] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof obj]) to_top]]]
+   obj & [[shift (0,~0.5dy)] [shiftoff_wlm @text_font:FONT_COURIER | (newText << [sourceof obj]) to_top]]]
 
 •page << [helper (1dx,1dy) [locate [sumpicture]]]
 •page << [helper (2dx,1dy) [locate [squareblock (TeX `$-1$´)]]]

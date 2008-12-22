@@ -32,6 +32,7 @@
 		<a extension="blockdraw" />
 		<a extension="shiftoff" />
 		<a extension="basic-layout" />
+		<a extension="arrowheads" />
 	</needs>
 	<top>
 		<alphabetical-index/>

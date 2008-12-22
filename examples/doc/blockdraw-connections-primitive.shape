@@ -34,7 +34,7 @@ helper: \ pth →
 (( @width:4bp & @stroking:RGB_RED | [spot @p0] & [spot @p1] )
  & [putlabelAbove (newText << `@p0´) @p0 0]
  & [putlabelBelow (newText << `@p1´) @p1 0]
- & [[shift @p0+(1cm,~0.5cm)] [shiftoffwlm (newText << [sourceof pth]) to_bot]])
+ & [[shift @p0+(1cm,~0.5cm)] [shiftoff_wlm (newText << [sourceof pth]) to_bot]])
 )
 
 dynShift: \ pos → ( @p0:[[shift pos] p0] & @p1:[[shift pos] p1] )
