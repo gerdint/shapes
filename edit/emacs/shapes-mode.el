@@ -21,8 +21,8 @@
 
 ;; This mode is very much work in progress. It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
-;; to such. That said, it does support compilation-mode, comment-dwim, Imenu and
-;; viewing output through doc-view.
+;; to such. That said, it does support compilation-mode, comment-dwim, Imenu,
+;; skeleton-pairs, and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
@@ -31,12 +31,21 @@
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
-;; - Automatically pretty-print #, \, ->
+;; - Automatically pretty-print #, -> (use abbrevs!)
+;; - Convert Shapes ref manual to info and hook up to Info-Look
+;; - Skeletons?
+;; - Eldoc mode?
+;; - Some sort of camelCase support a la subword mode of cc-mode
+;; - Investigate Flymake support
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
 ;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
 ;; * point is after first char (and the cursor is ON char 2).
+;; - Handle the case when shapes-mode is started in a buffer that isn't saved.
+;; - Handle the case when shapes-mode is activated on a buffer that doesn't end
+;; with .sh(ape|ext), so that its encoding is not set to utf-8 correctly, that
+;; is change the buffer encoding to utf-8 if it is something else.
 
 ;;; Installation
 
@@ -47,9 +56,14 @@
 
 ;; Code tested only on GNU Emacs 22.
 
-(defcustom shapes-compile-command "~/shapes/source/shapes"
+(defcustom shapes-compile-command "shapes"
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
+
+(defcustom shapes-unicode-pretty-print t
+  "Whether to pretty-print Shapes idenifiers using their Unicode
+equivalents or not."
+  :type 'boolean)
 
 (defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
   "Regular expression matching Shapes source files.")
@@ -58,13 +72,6 @@
 
 ;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
 (modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
-	     
-;; Example data:
-;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
-(eval-after-load 'compile
-  '(add-to-list 'compilation-error-regexp-alist
-		'("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
-		  1 2 (3 . 4) nil 1)))
 
 ;;; TBD
 ;; (defvar shapes-mode-syntax-table
@@ -82,6 +89,10 @@
     (when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
+    (mapc (lambda (elt) 
+	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
+	  "`([{")
+    ;; (define-key map "\C-cl" 'shapes-lambda)
     map))
 
 (defun shapes-compile ()
@@ -112,6 +123,14 @@ doc-view."
 	   (doc-view t output))))))
   (shapes-compile))
 
+;; (defun shapes-beginning-of-defun ()
+;;   "Move backward to the beginning of a defun.
+;; Every top level binding of a function is considered to be a defun."
+;;   (interactive)
+;;   ;; match identifier: \ arg1 .. argn -> body-expr
+;;   (re-search-backward "^")
+  )
+
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
 \\{shapes-mode-map}"
@@ -122,12 +141,31 @@ doc-view."
   (use-local-map shapes-mode-map)
   ;(set-syntax-table shapes-mode-syntax-table)
 
+  ;; Skeletons
+  (set (make-local-variable 'skeleton-pair-alist)
+       '((?` _ ?´)			; for strings
+	 (?{ \n _ \n ?})))			
+
+  ;; (define-skeleton shapes-lambda "Function template skeleton."
+;;     "Formal parameters: "
+;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
+
+  (when shapes-unicode-pretty-print
+    (setq abbrev-mode t))
+  
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
-  ;; The Shapes compiler tabs philosophy is different from that of Emacs, so for
-  ;; now we do this.
-  (setq indent-tabs-mode nil)
+  ;; Compilation-mode support.
+  ;; Example data:
+  ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
+  (eval-after-load 'compile
+    '(progn
+       (add-to-list 'compilation-error-regexp-alist
+		    '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
+		      1 2 (3 . 4) nil 1))
+       ;; The Shapes compiler works this way
+       (setq compilation-error-screen-columns nil)))
 
   ;; Simplified recognition of a top-level Shapes identifier. Probably needs
   ;; more work.
@@ -141,3 +179,7 @@ doc-view."
 		 (file-name-sans-extension buffer-file-name)))))
 
 (provide 'shapes-mode)
+
+;; Local Variables: **
+;; coding:utf-8! **
+;; End: **
