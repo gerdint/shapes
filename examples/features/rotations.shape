@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-
 pth: (~1cm,~1cm,~1cm)--(~1cm,1cm,~1cm)--(1cm,1cm,~1cm)--(1cm,~1cm,~1cm)--(1cm,~1cm,1cm)--(1cm,1cm,1cm)--(~1cm,1cm,1cm)--(~1cm,~1cm,1cm)
 pt1: (~1cm,~1cm,~1cm)
 pt2: (~1cm,~1cm,1cm)

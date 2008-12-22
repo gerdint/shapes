@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 ##needs braces
 
 ##unit u = 1cm
@@ -124,19 +124,19 @@ flatWorld: (•world) >> [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°
 {
 	pt: [find flatWorld 'C]
 	lblPt: pt + (0.3u,1u)
-	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\center\end{minipage}´) (0,~1)]
+	•page << [shift lblPt] [] [center (TeX `\begin{minipage}{1cm}\centering optical\\center\end{minipage}´) (0,~1)]
 	•page << [stroke lblPt>(^~80°)--(^60°)<pt head:lblArrow]
 }
 {
 	pt: [mspoint [find flatWorld 'C]--[find flatWorld 'P0] 1 ~1.5u]
 	lblPt: pt + (0.5u,1u)
-	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering optical\\axis\end{minipage}´) (0,~1)]
+	•page << [shift lblPt] [] [center (TeX `\begin{minipage}{1cm}\centering optical\\axis\end{minipage}´) (0,~1)]
 	•page << [stroke lblPt>(^~100°)--(^90°)<pt head:lblArrow]
 }
 {
 	pt: [find flatWorld 'planePoint]
 	lblPt: pt + (~1.5u,0.2u)
-	•page << [shift lblPt] [] [centerat (TeX `\begin{minipage}{1cm}\centering image\\plane\end{minipage}´) (1,0)]
+	•page << [shift lblPt] [] [center (TeX `\begin{minipage}{1cm}\centering image\\plane\end{minipage}´) (1,0)]
 	pth: lblPt>(^10°)--(^180°)<pt
 	sl: [intersection pth [find flatWorld 'frame]]+0.5bp  /** The extra distance is for half the width of the image frame. **/
 	•page << [stroke pth.begin--sl] << @stroking:[gray 0.7] | [stroke sl--pth.end head:lblArrow]

@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##unit dx = 6cm
 ##unit dy = 3cm
@@ -28,7 +28,7 @@ helper: \ pos pt blk →
 [[shift pos]
  blk & (@width:4bp & @stroking:RGB_RED | [spot pt])
  &
- [[shift (0,~0.5dy)] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof pt]) to_top]]]
+ [[shift (0,~0.5dy)] [shiftoff_wlm @text_font:FONT_COURIER | (newText << [sourceof pt]) to_top]]]
 
 •page << [helper (1dx,0dy) [locate [leftpoint F]] F]
 •page << [helper (2dx,0dy) [locate [leftpoint F 2]] F]

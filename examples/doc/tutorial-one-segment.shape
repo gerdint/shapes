@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 pathStyle: @width: 1bp
 controlStyle: @width: 0.3bp & @dash:[dashpattern 2mm 2mm] & @stroking:[gray 0.5]
 onPathMark: @nonstroking:RGB_RED | [fill [circle 1mm]]

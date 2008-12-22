@@ -30,7 +30,7 @@ helper: \ pos dc fun lbl →
   •dst << [[shift dc] centermark]
        << sjunction
        << [stroke [fun •dst pointpicture dc (TeX `I: $m_{1}$´)] head:MetaPostArrow]
-       << [[shift (0,~2.5cm)] [shiftoffwlm lbl to_bot]]
+       << [[shift (0,~2.5cm)] [shiftoff_wlm lbl to_bot]]
   [shift pos] [] (•dst)
 }
 

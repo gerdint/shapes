@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 •page << @nonstroking:RGB_RED | [fill [circle 2cm]]
 •page << @nonstroking:RGB_BLACK & @nonstrokingalpha:[opacity 0.3] | [fill [shift (2cm,0)] [] [circle 2cm]]
 •page << @nonstroking:RGB_WHITE & @nonstrokingalpha:[shape 0.3] | [fill [shift (0,~2cm)] [] [circle 2cm]]

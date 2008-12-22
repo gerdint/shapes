@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-
 obj: ( newGroup << [stroke [circle 2cm]] << [tag 'foo (0.5cm,1cm)] << [tag 'bar (~0.5cm,1cm)] )
 
 obj2: [shift (3cm,3cm)] [] obj

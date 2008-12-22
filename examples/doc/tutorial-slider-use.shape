@@ -16,9 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs circle
-##needs arrowheads
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##preamble \usepackage[squaren]{SIunits}
 
@@ -123,8 +121,8 @@ s2: [locate s0+1]
  ** a similar purpose for open paths.
  **/
 {
-	center: (13cm,0)
-  circ: [shift center] [] [circle 2cm]
+	c: (13cm,0)
+  circ: [shift c] [] [circle 2cm]
 	•page << pathStyle | [stroke circ]
 	      << [[range '0 '3].foldl \ p e → ( p & [[shift [circ e*1].p] onPathMark] ) null]
 	upAngle: \ d →
@@ -143,13 +141,13 @@ s2: [locate s0+1]
 				&
 				[[shift pth.begin.p] [stroke pth.begin.N*2bp--pth.begin.N*~2bp]]
 				&
-				[[shift slMid.p+1mm*[dir [upAngle slMid.T]+90°]]*[rotate [upAngle slMid.T]] [centerat ( TeX [sprintf `$\unit{%.3g}{\centi\metre}$´ sl.v/1cm] ) (0,~1)]]
+[[shift slMid.p+1mm*[dir [upAngle slMid.T]+90°]]*[rotate [upAngle slMid.T]] [center ( TeX [sprintf `$\unit{%.3g}{\centi\metre}$´ sl.v/1cm] ) (0,~1)]]
 				&
 				[helper sl+1.6cm]
       }
 			null]
   •page << dirStyle | [helper circ.begin]
-	•page << [shift center] [] [centerat (TeX `The velocity $v$´) (0,0)]
+	•page << [shift c] [] [center (TeX `The velocity $v$´) (0,0)]
 
 	/** While we are working with a closed path, we also illustrate the <mod> field.  It is a slider at the same location, but with a spline time in the range
 	 ** zero to the duration of the path.

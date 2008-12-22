@@ -20,37 +20,45 @@
 
 
 <book>
-	<title>Standard extensions</title>
+	<title>centering-X</title>
 	<description>
-		<p>Descriptions of the <str-Shapes /> extension files included in standard installations.</p>
+		<p>Positioning of labels relative to the size of an <em>X</em>.</p>
 	</description>
-	<meta-selflink><part-href name="extensions" /></meta-selflink>
+	<meta-selflink><extension-href name="centering-X" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
+	<needs></needs>
 	<top>
-		<p>A <str-Shapes /> <em>extension</em> is a <str-Shapes /> source that provides functionality that can be used in applications.  An extension should only introduce bindings, and not produce any output by modifying any program states.</p>
-		<p>Extensions are usually activated by loading the source using the <inline>##need</inline> scanner directive, see <a part="syntax" id="syntax/include/include" /> for more details.</p>
+		<alphabetical-index/>
+		<p>This extension is not part of the prelude, since it will require a <str-TeX /> label to be rendered.</p>
 	</top>
 
-	<section id="extensions/index">
-		<title>Index</title>
+	<section id="extensions/centering-X/basic">
+		<title>Label positioning</title>
 		<body>
-			<p>The following extensions are contained in the documentation:</p>
-			<index-of-books />
+
+			<system-binding identifier="Xcenter_y">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="y">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Shifts the argument veritically, treating it as the standard label <inline>(TeX `$X$´)</inline>.</p>
+						</description>
+						<see-also><binding extension="basic-layout" name="center_y" /></see-also>
+					</case>
+				</function>
+			</system-binding>
+
 		</body>
 	</section>
 
-	<external>
-		<!--#include virtual="numeric-constants.sxml" depth="0" -->
-		<!--#include virtual="circle.sxml" depth="0" -->
-		<!--#include virtual="basic-layout.sxml" depth="0" -->
-		<!--#include virtual="metapostarrow.sxml" depth="0" -->
-		<!--#include virtual="shiftoff.sxml" depth="0" -->
-		<!--#include virtual="centering-X.sxml" depth="0" -->
-		<!--#include virtual="arrowheads.sxml" depth="0" -->
-		<!--#include virtual="conssupport.sxml" depth="0" -->
-		<!--#include virtual="linkpaths.sxml" depth="0" -->
-		<!--#include virtual="blockdraw.sxml" depth="0" -->
-		<!--#include virtual="bondgraph.sxml" depth="0" -->
-	</external>
 </book>

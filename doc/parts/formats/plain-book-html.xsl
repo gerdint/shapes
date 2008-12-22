@@ -31,6 +31,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     </head>
     <body>
 			<xsl:call-template name="head-navigation" />
+			<xsl:if test="prelude">
+				<h3>[standard prelude]</h3>
+			</xsl:if>
 			<h2><xsl:apply-templates select="title" /></h2>
     <hr class="thick"/>
     <xsl:apply-templates select="top" />

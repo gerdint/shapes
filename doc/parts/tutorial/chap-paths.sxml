@@ -49,7 +49,7 @@
 
 <p>The simplest operations that yield sliders on a path are either to access the fields <field name="begin" /> or <field name="end" />, or to <em>apply</em> the path like a function to a <named-type name="Float" /> value to construct a slider with the given spline time.  Similarly, if the path is applied to a <named-type name="Length" /> value, one obtains a slider at the given arc time.</p>
 
-<p>The function <binding extension="blockdraw_wfo" name="mspoint" /> (read it as <em>mediation-slide point</em>) is a convenient way to specify the arc time relative to the arc length of the path itself.</p>
+<p>The function <binding extension="basic-layout" name="mspoint" /> (read it as <em>mediation-slide point</em>) is a convenient way to specify the arc time relative to the arc length of the path itself.</p>
 
 <p>The most often used field of a slider is its location in space.  The name of this field is <field name="p" />.  This along with other fields and slider use is shown in the next example.  Note that there are additional fields in <str-3D />, and that it is not obvious how to best extend the definitions from <str-2D /> to <str-3D />.</p>
 

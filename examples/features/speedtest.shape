@@ -23,8 +23,6 @@
  * At junctions, the speed is 3 times the radius.
  **/
 
-##needs circle
-
 pth: [rotate 1][][circle 5cm]
 
 @width:0.1bp

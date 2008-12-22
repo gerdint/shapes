@@ -20,7 +20,7 @@
 
 ##needs valve
 ##needs demoprefs
-##needs blockdraw_wfo
+##needs blockdraw
 
 demoprefs & @defaultunit:1%c
 |
@@ -44,7 +44,7 @@ inflow: \ •dst x1 x2 txt doValve →
   •dst << [stroke (x1,y1-@pipe_width/2)--(x2-d*(r+@pipe_width/2),y1-@pipe_width/2)>(^[angle (d,0)])--(^90°)<(x2-d*@pipe_width/2,y1-@pipe_width/2-r)--(x2-d*@pipe_width/2,y2)]
   p: (x2-d*(r+7mm),y1)--(x2-d*(r+2mm),y1)
   •dst <<[stroke p head:MetaPostArrow]
-  •dst << [[shift (x1+d*3mm,y1-@pipe_width/2-3mm)] [centerat (TeX txt) (0,1)]]
+  •dst << [[shift (x1+d*3mm,y1-@pipe_width/2-3mm)] [center (TeX txt) (0,1)]]
   •dst << [if doValve
         [[shift ([mediate 0.4 x1 x2],y1)]*[rotate 90°] [valve]]
 	null]

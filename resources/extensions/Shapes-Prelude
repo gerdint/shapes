@@ -16,12 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-helper: \ obj →
-( newGroup
-  << @nonstroking:[gray 0.5] | [fill [bbox obj 'bleed]]
-	<< @nonstroking:GRAY_WHITE | [fill [bbox obj]]
-	<< obj )
-
-•page << [helper (TeX `O´)]
-			<< [shift (2cm,0cm)] [] [helper [enlarge_bleedbox (TeX `O´) (2bp,2bp)]]
-			<< @TeX_bleed:3bp | [shift (3cm,3cm)] [] [helper [bboxed_enlarge (TeX `O´) (~1bp,~1bp)]]
+##needs numeric-constants
+##needs basic-layout
+##needs circle
+##needs metapostarrow

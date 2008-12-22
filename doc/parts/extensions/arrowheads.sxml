@@ -57,42 +57,6 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 		<body>
 			<p>These arrowheads are provided for use in <str-2D />.</p>
 
-		<system-binding identifier="MetaPostArrow">
-			<function>
-				<case>
-					<arguments>
-						<arg identifier="p">
-							<type><named-type name="Path" /></type>
-						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
-							<default><binding name="void" /></default>
-						</arg>
-						<arg identifier="ahAngle">
-							<type><named-type name="Float" /></type>
-							<default><eq>30°</eq></default>
-						</arg>
-						<arg identifier="fillAsStrokeing">
-							<type><named-type name="Boolean" /></type>
-							<default><eq><const-true /></eq></default>
-						</arg>
-					</arguments>
-					<result>
-						<type>
-							<structure-type>
-								<field name="picture"><type><named-type name="Drawable" /></type></field>
-								<field name="cut"><type><named-type name="Length" /></type></field>
-							</structure-type>
-						</type>
-					</result>
-					<dynamic-references>Whole graphics state</dynamic-references>
-					<description>
-						<p>As the name of this function indicates, this arrowhead design is borrowed from <str-MetaPost />, although there are differences.  The main idea with the design is that the arrowhead should bend with the path, please refer to the canonical illustration on the <str-MetaPost /> <a href="http://plan9.bell-labs.com/who/hobby/MetaPost.html">home page</a>. The argument <arg name="ahLength" /> suggests how long the arrowhead should be (this will only be overridden in exceptional cases when the path is too short).  If it is not provided, its value will be computed based on the width of the stroke and <arg name="ahAngle" /> — exactly how will remain subject to change for some time.  <arg name="ahAngle" /> is the angle at the tip of the arrowhead.  When <arg name="fillAsStroking" /> is true, the fill color of the arrowhead will be <dynvar name="stroking" /> instead of <dynvar name="nonstroking" />.</p>
-					</description>
-				</case>
-			</function>
-		</system-binding>
-
 		<system-binding identifier="triangleArrow">
 			<function>
 				<case>
@@ -165,45 +129,6 @@ headStroke: [stroke head:[MetaPostArrow ahLength:4mm ...] ...]
 					<dynamic-references>Whole graphics state</dynamic-references>
 					<description>
 						<p>This arrowhead is the only attempt so far to make an arrowhead in <str-3D /> completely without need to specify a normal direction.  The arrowhead will be constructed as two circles to remind of a cone.</p>
-					</description>
-				</case>
-			</function>
-		</system-binding>
-
-		<system-binding identifier="MetaPostArrow3D">
-			<function>
-				<case>
-					<arguments>
-						<arg identifier="normal">
-							<type><named-type name="FloatTriple" /></type>
-						</arg>
-						<arg identifier="p">
-							<type><named-type name="Path3D" /></type>
-						</arg>
-						<arg identifier="ahLength">
-							<type><named-type name="Length" /></type>
-							<default><binding name="void" /></default>
-						</arg>
-						<arg identifier="ahAngle">
-							<type><named-type name="Float" /></type>
-							<default><eq>30°</eq></default>
-						</arg>
-						<arg identifier="fillAsStrokeing">
-							<type><named-type name="Boolean" /></type>
-							<default><eq><const-true /></eq></default>
-						</arg>
-					</arguments>
-					<result>
-						<type>
-							<structure-type>
-								<field name="picture"><type><named-type name="Drawable3D" /></type></field>
-								<field name="cut"><type><named-type name="Length" /></type></field>
-							</structure-type>
-						</type>
-					</result>
-					<dynamic-references>Whole graphics state</dynamic-references>
-					<description>
-						<p>This is a generalization of <binding name="MetaPostArrow" /> to <str-3D /> (let us not look closer at what this really means).  Note that the mandatory <arg name="normal" /> means that this function is not a <named-type name="ArrowHead3D" /> until this argument has been bound.</p>
 					</description>
 				</case>
 			</function>

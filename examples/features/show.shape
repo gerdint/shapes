@@ -22,7 +22,7 @@
 Hi shaper!
 
 ´
-•stdout << `The value of pi is ´ << pi << "{n}
+•stdout << `The value of pi is ´ << 180^^ << "{n}
 
 add: \ x → \ y → x + y
 •stdout << add << [[add 1cm] 2cm] << "{n}

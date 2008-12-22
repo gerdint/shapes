@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 ##unit dx = 6cm
 ##unit dy = 3cm
@@ -28,7 +28,7 @@ helper:
   {
     F: [putblockOrigin •dst [[shift pos] F0]]
 		G: [fun •dst obj F]
-		•dst << [shift pos+(0,~0.5dy)] [] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
+		•dst << [shift pos+(0,~0.5dy)] [] [shiftoff_wlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
   }
 }
 
@@ -53,5 +53,5 @@ helper:
 	fun: [locate putblockOrigin]
   pos: (2.3dx,~2.5dy)
 	F: [fun •page [[shift pos] [longblock (TeX `New´)]]]
-	•page << [shift pos+(0,~0.5dy)] [] [shiftoffwlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
+	•page << [shift pos+(0,~0.5dy)] [] [shiftoff_wlm @text_font:FONT_COURIER | (newText << [sourceof fun]) to_top]
 }

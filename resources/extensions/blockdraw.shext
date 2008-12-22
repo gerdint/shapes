@@ -19,9 +19,7 @@
 |** This is "blockdraw, Waiting For Object oriented programming
 
 ##needs shiftoff
-##needs centering
-##needs circle
-##needs arrowheads
+##needs centering-X
 
 dynamic @longblockrx identity 0.7cm
 dynamic @longblockry identity 0.4cm
@@ -47,16 +45,16 @@ dynamic @textscaling identity [scale 1]
 
 dynamic @connectpainter identity [stroke head:MetaPostArrow ...]
 
-centerlabel: \ obj → [centerx [centeryX obj]]
+centerlabel: \ obj → [center_x [Xcenter_y obj]]
 
-putlabelAbove: \ lbl z x → [[shift z + (0cm,@abovelabelmargin)] [centerxat lbl x]]
-putlabelBelow: \ lbl z x → [[shift z + (0cm,~@belowlabelmargin)] [centeryatX [centerxat lbl x] 1]]
-putlabelLeft: \ lbl z y → [[shift z + (~@leftrightlabelmargin,0cm)] [centeryatX [centerxat lbl 1] y]]
-putlabelRight: \ lbl z y → [[shift z + (@leftrightlabelmargin,0cm)] [centeryatX lbl y]]
-leftpointsign: \ obj str n:1 i:1 → [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
-rightpointsign: \ obj str n:1 i:1 → [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
-bottompointsign: \ obj str n:1 i:1 → [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
-toppointsign: \ obj str n:1 i:1 → [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [centerat (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+putlabelAbove: \ lbl z x → [[shift z + (0cm,@abovelabelmargin)] [center_x lbl x]]
+putlabelBelow: \ lbl z x → [[shift z + (0cm,~@belowlabelmargin)] [Xcenter_y [center_x lbl x] 1]]
+putlabelLeft: \ lbl z y → [[shift z + (~@leftrightlabelmargin,0cm)] [Xcenter_y [center_x lbl 1] y]]
+putlabelRight: \ lbl z y → [[shift z + (@leftrightlabelmargin,0cm)] [Xcenter_y lbl y]]
+leftpointsign: \ obj str n:1 i:1 → [[shift [leftpoint obj n i] + (~@signmarginslide,~@signmarginoffset)] [center (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+rightpointsign: \ obj str n:1 i:1 → [[shift [rightpoint obj n i] + (@signmarginslide,@signmarginoffset)] [center (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+bottompointsign: \ obj str n:1 i:1 → [[shift [bottompoint obj n i] + (@signmarginoffset,~@signmarginslide)] [center (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
+toppointsign: \ obj str n:1 i:1 → [[shift [toppoint obj n i] + (~@signmarginoffset,@signmarginslide)] [center (TeX [sprintf `$\scriptsize %s$´ str]) (0,0)]]
 
 putblockOrigin: \ •dst newBlock → {
   •dst << newBlock
@@ -64,7 +62,7 @@ putblockOrigin: \ •dst newBlock → {
 }
 
 putblockLeft: \ •dst newBlock oldBlock dist → {
-  res: [[shift [leftpoint oldBlock 1 1]+(~dist,0)] [centerxat newBlock 1]]
+  res: [[shift [leftpoint oldBlock 1 1]+(~dist,0)] [center_x newBlock 1]]
   •dst << res
   res
 }
@@ -76,7 +74,7 @@ putblockLabelSpaceLeft: \ •dst newBlock oldBlock → [putblockLeft •dst newB
 putblockLabelMarginLeft: \ •dst newBlock oldBlock → [putblockLeft •dst newBlock oldBlock @leftrightlabelmargin]
 
 putblockRight: \ •dst newBlock oldBlock dist → {
-  res: [[shift [rightpoint oldBlock 1 1]+(dist,0)] [centerxat newBlock ~1]]
+  res: [[shift [rightpoint oldBlock 1 1]+(dist,0)] [center_x newBlock ~1]]
   •dst << res
   res
 }
@@ -88,7 +86,7 @@ putblockLabelSpaceRight: \ •dst newBlock oldBlock → [putblockRight •dst ne
 putblockLabelMarginRight: \ •dst newBlock oldBlock → [putblockRight •dst newBlock oldBlock @leftrightlabelmargin]
 
 putblockBelow: \ •dst newBlock oldBlock dist → {
-  res: [[shift [bottompoint oldBlock 1 1]+(0,~dist)] [centeryat newBlock 1]]
+  res: [[shift [bottompoint oldBlock 1 1]+(0,~dist)] [center_y newBlock 1]]
   •dst << res
   res
 }
@@ -100,7 +98,7 @@ putblockLabelSpaceBelow: \ •dst newBlock oldBlock → [putblockBelow •dst ne
 putblockLabelMarginBelow: \ •dst newBlock oldBlock → [putblockBelow •dst newBlock oldBlock @belowlabelmargin]
 
 putblockAbove: \ •dst newBlock oldBlock dist → {
-  res: [[shift [toppoint oldBlock 1 1]+(0,dist)] [centeryat newBlock ~1]]
+  res: [[shift [toppoint oldBlock 1 1]+(0,dist)] [center_y newBlock ~1]]
   •dst << res
   res
 }
@@ -127,7 +125,7 @@ longenoughfracblock: \ lbl → [sizedblock lbl [max @longblockrx 1mm+0.5*([xmax 
 
 roundblock: \ lbl →
   (
-    [centerat [@textscaling lbl] (0,0)]
+    [center [@textscaling lbl] (0,0)]
     &
     ( @width:@blocklw | [stroke [circle @smallblockr]] )
   )
@@ -165,7 +163,7 @@ vhconnect: \ •dst pa pb →
     respath
   }
 
-conlabel: \ shiftdir lbl z → [[shift z] [shiftoffwlm lbl shiftdir]]
+conlabel: \ shiftdir lbl z → [[shift z] [shiftoff_wlm lbl shiftdir]]
 
 leftpoint:   \ pic n:1 i:1 → { bb: [bbox pic] ([xmin bb], [mediate i/(n+1) [ymin bb] [ymax bb]])}
 rightpoint:  \ pic n:1 i:1 → { bb: [bbox pic] ([xmax bb], [mediate i/(n+1) [ymin bb] [ymax bb]])}

@@ -30,7 +30,7 @@ helper: \ pos dc fun lbl →
   &
   [fun p]
   &
-  [[shift (0,~2cm)] [shiftoffwlm lbl to_bot]]
+  [[shift (0,~2cm)] [shiftoff_wlm lbl to_bot]]
 }]
 
 •page << [helper (1dx,2dy) [rotate   0°][]dc [flowlabel lbl:(TeX `$f_{1}$´) ...] (TeX `\texttt{flowlabel}´)]

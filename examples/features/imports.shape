@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
-
 pic: [import `multipage.pdf´] [] '0   |** import all pages, and select page 0
 
 {

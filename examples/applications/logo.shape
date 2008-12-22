@@ -16,9 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs centering
-##needs circle
-##needs arrowheads
 ##needs pathmapping
 
 ##classoption 12pt
@@ -89,7 +86,7 @@ subPath: [sidepath2 [upsample_every 2u sl1--sl2] 1u]
 @nonstroking:(blue|@stroking)
 |
 {
-  •page << [shift sl2.p+sl2.N*(arrowLength+1u)] [] [centerat [TeXScale (TeX `$\lambda$´)] (~1,0)]
-  •page << [shift the_c2] [] [centerat [TeXScale (TeX `@´)] (0,0)]
-  •page << [shift the_c+(2u,~sl1.ik+1u)] [] [centerat [TeXScale (TeX `\#´)] (0,~1)]
+  •page << [shift sl2.p+sl2.N*(arrowLength+1u)] [] [center [TeXScale (TeX `$\lambda$´)] (~1,0)]
+  •page << [shift the_c2] [] [center [TeXScale (TeX `@´)] (0,0)]
+  •page << [shift the_c+(2u,~sl1.ik+1u)] [] [center [TeXScale (TeX `\#´)] (0,~1)]
 }

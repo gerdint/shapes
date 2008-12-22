@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-
 •layer1: newGroup
 •layer2: newGroup
 

@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 g1: [putblockOrigin •page [longblock (TeX `Amp´)]]
 g2: [putblockNearRight •page [longblock (TeX `Motor´)] g1]

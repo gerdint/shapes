@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+
+<book>
+	<title>basic-layout</title>
+	<description>
+		<p>Elementary layout using bounding boxes.</p>
+	</description>
+	<meta-selflink><extension-href name="basic-layout" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
+	<prelude />
+	<needs></needs>
+	<top>
+		<alphabetical-index/>
+		<p>The functions in this extension provide the basic means for layout.</p>
+	</top>
+
+	<section id="extensions/basic-layout/path-max">
+		<title>Extreme coordinates on paths</title>
+		<body>
+			<p>These functions optimize along paths in one of the four principal directions, returning the coordinate of the optimum.</p>
+
+			<system-binding identifier="xmax">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Length" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Rightmost coordinate along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="xmin">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Length" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Leftmost coordinate along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="ymax">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Length" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Topmost coordinate along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="ymin">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="p">
+								<type><named-type name="Path" /></type>
+							</arg>
+						</arguments>
+						<result>
+							<type><named-type name="Length" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Bottommost coordinate along <arg name="p" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/basic-layout/basic">
+		<title>Basic positioning operations</title>
+		<body>
+
+			<system-binding identifier="center">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="FloatPair" /></type>
+								<default><eq>(0,0)</eq></default>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="center_x">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="x">
+								<type><named-type name="Float" /></type>
+								<default><eq>0</eq></default>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Like <binding extension="basic-layout" name="center" />, but operates only along the <eq>x</eq> axis.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="center_y">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="y">
+								<type><named-type name="Float" /></type>
+								<default><eq>0</eq></default>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Like <binding extension="basic-layout" name="center" />, but operates only along the <eq>y</eq> axis.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="centerof">
+				<function>
+					<case constructor-of="Coords">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Returns the point which is mid-way between the extreme points of the bounding box in the <eq>x</eq> and <eq>y</eq> direction, respectively.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/basic-layout/labelmargin">
+		<title>Label margin</title>
+		<body>
+			<p>When positioning text relative to other elements, it often looks good if labels appear at a certain distance from the objects they label.  This idea is implemented as functions using a common dynamic variable.</p>
+
+			<dynamic-variable identifier="labelmargin">
+				<default><physical><scalar>1</scalar><unit>mm</unit></physical></default>
+				<type><named-type name="Length" /></type>
+				<description>
+					<p>Distance to be used when placing labels relative to the point they label.</p>
+				</description>
+			</dynamic-variable>
+
+			<system-binding identifier="center_wlm">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="FloatPair" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references><dynvar extension="basic-layout" name="labelmargin" /></dynamic-references>
+						<description>
+							<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+	<section id="extensions/basic-layout/mediation">
+		<title>Mediation</title>
+		<body>
+			<p>By <em>mediation</em> we refer to the specification of a value relative to a lower and upper bound.  The bounds can either be very general, or the beginning and end of a path.</p>
+
+			<system-binding identifier="mediate">
+				<function>
+					<case>
+						<type-templates>
+							<template name="L">
+								<description>
+									<p>Elements constitute a linear space, that is, they can be added and multiplied by scalars.</p>
+								</description>
+							</template>
+						</type-templates>
+						<result>
+							<type><template-type name="L" /></type>
+						</result>
+						<arguments>
+							<arg identifier="r">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="x1">
+								<type><template-type name="L" /></type>
+							</arg>
+							<arg identifier="x2">
+								<type><template-type name="L" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Simply computes (1-<arg name="r" />)*<arg name="x1" /> + <arg name="r" />*<arg name="x2" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="mspoint">
+				<function>
+					<case constructor-of="Coords">
+						<arguments>
+							<arg identifier="pth">
+								<type><named-type name="Path" /></type>
+							</arg>
+							<arg identifier="mediation">
+								<type><named-type name="Float" /></type>
+							</arg>
+							<arg identifier="slide">
+								<type><named-type name="Length" /></type>
+								<default><physical><scalar>0</scalar><unit>cm</unit></physical></default>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Interprets <arg name="mediation" /> as a length relative the total length of <arg name="pth" />, then adds <arg name="slide" /> to this length, and finds the coordinates at the computed arc time.</p>
+							<p>For instance, the geometric midpoint of a path <inline>myPath</inline> is obtained as <inline>[mspoint myPath 0.5]</inline>.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+		</body>
+	</section>
+
+	<section id="extensions/basic-layout/boxes">
+		<title>Boxes</title>
+		<body>
+			<p>It is sometime useful to control the layout of an object by altering one or several of its boxes.  At the moment, there are just two boxes, the <em>bounding box</em> and the <em>bleed box</em>, and for historical reasons, the short <em>bbox</em> refers to the <em>bounding box</em>.</p>
+
+			<system-binding identifier="bboxed_sym">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+								<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Enlarges the bounding box to a rectangle just big enough to obtain the center of the bounding box at the origin.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="bboxed_sym_y">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+								<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Enlarges the bounding box to a rectangle just big enough to obtain the center of the bounding box at the <eq>y</eq> coordinate zero.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="bboxed_sym_x">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<result>
+								<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Enlarges the bounding box to a rectangle just big enough to obtain the center of the bounding box at the <eq>x</eq> coordinate zero.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="bboxed_enlarge">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="Coords" /></type>
+							</arg>
+						</arguments>
+						<result>
+								<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Enlarges the bounding box in all four principal direction to a rectangle, the horizontal and vertical enlargements given by the corresponding coordinates of <arg name="z" />.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="enlarge_bleedbox">
+				<function>
+					<case>
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="z">
+								<type><named-type name="Coords" /></type>
+							</arg>
+						</arguments>
+						<result>
+								<type><named-type name="Drawable" /></type>
+						</result>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Like <binding extension="basic-layout" name="bboxed_enlarge" />, but acting on the bleed box instead of the bounding box.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+</book>

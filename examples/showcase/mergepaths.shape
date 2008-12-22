@@ -75,7 +75,6 @@ mergepaths: \ p1 p2 →
 {
 ##needs linkpaths
 ##needs conssupport
-##needs circle
   subpath: \ pth t1 t2 → [pth t1]--[pth t2]
   seg: \ a → [shift (5cm,0)]*[rotate a]*[shift (0,~1.2cm)] [] [reverse [subpath [circle 1cm] 0 1.5]]
   c1: [seg 0°]

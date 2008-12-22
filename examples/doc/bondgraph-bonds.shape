@@ -33,7 +33,7 @@ helper: \ pos dc fun lbl →
 	centermark & [[shift dc] centermark]
 	& j1 & j2
 	& [fun p]
-  & [[shift 0.5*dc + (0,~1.2cm)] [shiftoffwlm lbl to_bot]]
+  & [[shift 0.5*dc + (0,~1.2cm)] [shiftoff_wlm lbl to_bot]]
 }]
 
 •page << [helper (1dx,3dy) dc [stroke head:MetaPostArrow ...] (TeX `\texttt{head:MetaPostArrow}´)]

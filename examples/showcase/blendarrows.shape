@@ -16,8 +16,6 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs arrowheads
-
 ##unit u = 1cm
 
 @blend: BLEND_MULTIPLY

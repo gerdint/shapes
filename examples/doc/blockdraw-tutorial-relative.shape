@@ -16,7 +16,7 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 
 S: [putblockOrigin •page [sumpicture]]
 F: [putblockFarRight •page [longblock (TeX `$F_{\mathrm{y}}(s)$´)] S]

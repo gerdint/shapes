@@ -169,7 +169,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="a[@part | @id]">
+<xsl:template match="a[(@part or @id) and not(@extension)]">
 	<xsl:element name="a">
 		<xsl:attribute name="href">
 			<xsl:if test="@part">

@@ -49,7 +49,7 @@ It produces a circular mark.
 		<p>Let us discuss the big picture of an example program.</p>
 		<p>First, a typical program will list a couple of standard extensions, with the <include>##needs</include> preprocessor directive.</p>
 <pre>
-<![CDATA[##needs blockdraw_wfo]]>
+<![CDATA[##needs blockdraw]]>
 </pre>
     <p>If one thinks the font size of <str-TeX /> labels is too small, this could be a good thing to change next.  One may also want to add some <str-LaTeX /> packages…</p>
 <pre>

@@ -29,9 +29,10 @@
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<up-link><a part="extensions">All extensions</a></up-link>
 	<needs>
-		<a extension="blockdraw_wfo" />
+		<a extension="blockdraw" />
 		<a extension="shiftoff" />
-		<a extension="centering" />
+		<a extension="basic-layout" />
+		<a extension="arrowheads" />
 	</needs>
 	<top>
 		<alphabetical-index/>
@@ -46,7 +47,7 @@
 </caption>
 </example-with-output>
 
-    <p>Unlike the blocks typically used with <a extension="blockdraw_wfo" />, the corresponding elements here, the junctions, do not have a visible border and their bounding boxes are not used.  Instead, a circle of radius <dynvar extension="blockdraw_wfo" name="smallblockr" />, centered at the junction's origin, defines where bonds connect with the junction.  The extension also helps with other tasks, such as drawing the unusual arrowheads and putting the effort and flow labels on the correct side of the bond.</p>
+    <p>Unlike the blocks typically used with <a extension="blockdraw" />, the corresponding elements here, the junctions, do not have a visible border and their bounding boxes are not used.  Instead, a circle of radius <dynvar extension="blockdraw" name="smallblockr" />, centered at the junction's origin, defines where bonds connect with the junction.  The extension also helps with other tasks, such as drawing the unusual arrowheads and putting the effort and flow labels on the correct side of the bond.</p>
 	</top>
 
 	<section id="extensions/bondgraph/junctions">
@@ -329,7 +330,7 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="smallblockr" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="smallblockr" /></dynamic-references>
 						<description>
 							<p>Constructs the path that shall be used for drawing the bond between junctions.</p>
 							<p>If terminal points are involved, the convenience functions <binding extension="bondgraph" name="terminalto" /> or <binding extension="bondgraph" name="terminalfrom" /> may produce the path instead.</p>
@@ -349,7 +350,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /></dynamic-references>
 						<description>
 							<p>Draws a bond along the path <arg name="p" />, with <em>undetermined</em> causality (that is, without a causality mark).</p>
 							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
@@ -369,7 +370,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /></dynamic-references>
 						<description>
 							<p>Draws a bond along the path <arg name="p" />, placing a causality mark at the <em>head</em> of the path.</p>
 							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
@@ -389,7 +390,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /></dynamic-references>
 						<description>
 							<p>Draws a bond along the path <arg name="p" />, placing a causality mark at the <em>tail</em> of the path.</p>
 							<p>The size of the arrowhead may be changed using <dynvar extension="bondgraph" name="bgArrowWidth" />, see <dynvar extension="bondgraph" name="bondgraphArrow" />.</p>
