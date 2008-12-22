@@ -20,19 +20,17 @@
 
 
 <book>
-	<title>blockdraw_wfo</title>
+	<title>blockdraw</title>
 	<description>
 		<p>General purpose layout tools originally developed for drawing of block diagrams.</p>
 	</description>
-	<meta-selflink><extension-href name="blockdraw_wfo" /></meta-selflink>
+	<meta-selflink><extension-href name="blockdraw" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<up-link><a part="extensions">All extensions</a></up-link>
 	<needs>
 		<a extension="shiftoff" />
-		<a extension="centering" />
-		<a extension="circle" />
-		<a extension="arrowheads" />
+		<a extension="centering-X" />
 	</needs>
 	<top>
 		<alphabetical-index/>
@@ -42,13 +40,13 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)showcase/blockdrawdemo.shape" -->]]>
 </source>
 <caption>
-	<p>An application of the <a extension="blockdraw_wfo" /> extension.  This example contains some non-standard solutions, showing how the functions of this extension can be combined with standard <str-Shapes /> operations.</p>
+	<p>An application of the <a extension="blockdraw" /> extension.  This example contains some non-standard solutions, showing how the functions of this extension can be combined with standard <str-Shapes /> operations.</p>
 </caption>
 </example-with-output>
 		<p>The name of this extension includes the mysterious <em>wfo</em>.  It stands for <em>waiting for objects</em>, and refers to the wish to deal with elements of block diagrams using objects of user-defined types rather than just relying on <named-type name="Drawable" />.  However, by relying on <named-type name="Drawable" /> as the representation, this extension is much more generally useful than it would otherwise be.</p>
 	</top>
 
-	<section id="extensions/blockdraw_wfo/tutorial">
+	<section id="extensions/blockdraw/tutorial">
 		<title>Tutorial</title>
 		<body>
 			<p>Before going into the detailed description of the bindings introduced by this extension, this tutorial will serve as a quick start for them who just want to see what the source code for some examples could look like.  This tutorial is really not much more than that; a sequence of increasingly complex examples.</p>
@@ -69,8 +67,8 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/blockdraw-tutorial-relative.shape" -->]]>
 </source>
 <caption>
-	<p>Several functions are provided to put a block at a predefined distance apart from a given block.  They are non-pure functions that both add the positioned object to a destination state and return it so that it can be used for future reference.  See <a id="extensions/blockdraw_wfo/layout" ><title /></a> for a complete list of layout functions.</p>
-	<p>The reason why <binding extension="blockdraw_wfo" name="sumpicture" /> is a function rather than a <named-type name="Drawable" /> is that the result is a function of the dynamic environment; both the radius size of the block, the width of the line, and the size of the summation sign, depend on dynamic bindings.</p>
+	<p>Several functions are provided to put a block at a predefined distance apart from a given block.  They are non-pure functions that both add the positioned object to a destination state and return it so that it can be used for future reference.  See <a id="extensions/blockdraw/layout" ><title /></a> for a complete list of layout functions.</p>
+	<p>The reason why <binding extension="blockdraw" name="sumpicture" /> is a function rather than a <named-type name="Drawable" /> is that the result is a function of the dynamic environment; both the radius size of the block, the width of the line, and the size of the summation sign, depend on dynamic bindings.</p>
 </caption>
 </example-with-output>
 
@@ -90,8 +88,8 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/blockdraw-tutorial-labels.shape" -->]]>
 </source>
 <caption>
-	<p>Depending on the relative layout of blocks, a varying degree of manual effort is needed to get the connecting paths right.  In this example, all paths but the feed-back path can be deduced automatically using <binding extension="blockdraw_wfo" name="connect" />.  The constructed path is both painted and returned.  Most of the time the return value is ignored (by means of <binding name="ignore" />), but it is useful when we want to place a label along the path.  See <a id="extensions/blockdraw_wfo/connections" /> for the complete set of functions for the purpose of making connections.</p>
-	<p>Putting a label along the connection is easy.  To make the source code readable, it is a good idea to bind the connection path to a variable, and then use this variable when placing the label.  Special purpose functions are provided to ensure a consistent layout of labels; the user need only select a point on the path (preferably using <binding extension="centering" name="mspoint" />) and a side of that point (by using the “<inline>putlabel</inline>-function” named accordingly), and how the label should be aligned.</p>
+	<p>Depending on the relative layout of blocks, a varying degree of manual effort is needed to get the connecting paths right.  In this example, all paths but the feed-back path can be deduced automatically using <binding extension="blockdraw" name="connect" />.  The constructed path is both painted and returned.  Most of the time the return value is ignored (by means of <binding name="ignore" />), but it is useful when we want to place a label along the path.  See <a id="extensions/blockdraw/connections" /> for the complete set of functions for the purpose of making connections.</p>
+	<p>Putting a label along the connection is easy.  To make the source code readable, it is a good idea to bind the connection path to a variable, and then use this variable when placing the label.  Special purpose functions are provided to ensure a consistent layout of labels; the user need only select a point on the path (preferably using <binding extension="basic-layout" name="mspoint" />) and a side of that point (by using the “<inline>putlabel</inline>-function” named accordingly), and how the label should be aligned.</p>
 	<p>Putting a label at a terminal point is similar to labeling a connection, the only difference is how the point to be labeled is selected.  Note that for a <binding name="pointpicture" />, all connection point functions will return the same point.</p>
 	<p>This example also shows how to place signs at connection points, and how to indicate a point where a signal splits by a small dot.</p>
 	<p>This is a comparatively simple figure, containing three different kinds of objects: blocks, connections and annotations along the connections.  This example also follows the good habit to let preferences that might be shared by several figures be extracted into a separate file (<a href=<!--#expand-next-string-->"$(BASE)$(EXAMPLES)doc/blockdraw-tutorial-tut-prefs.shext">link</a>).</p>
@@ -114,7 +112,7 @@
 		<li><p>Use <em>Near</em> between vertically aligned blocks.</p></li>
 	</ul>
 	<p>Note how the dashed line was handled similarly to a label when selecting the distance after the middle summation.</p>
-	<p>There are many situations when simple guidelines like the ones above cannot be applied successfully, and one will have to improvise.  For example, the shorter distances may be preferred if the graphics becomes too wide, although an alternative solution to this is to change the values of the predefined lengths instead, see <a id="extensions/blockdraw_wfo/settings" />.</p>
+	<p>There are many situations when simple guidelines like the ones above cannot be applied successfully, and one will have to improvise.  For example, the shorter distances may be preferred if the graphics becomes too wide, although an alternative solution to this is to change the values of the predefined lengths instead, see <a id="extensions/blockdraw/settings" />.</p>
 </caption>
 </example-with-output>
 
@@ -122,12 +120,12 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/settings">
+	<section id="extensions/blockdraw/settings">
 		<title>Settings</title>
 		<top>
 			<p>This extension introduces a large number of dynamic variables to control various aspects of the appearance.  The variables fall naturally into different categories, and are presented accordingly below.</p>
 		</top>
-		<section id="extensions/blockdraw_wfo/settings/blocksize">
+		<section id="extensions/blockdraw/settings/blocksize">
 			<title>Block size</title>
 			<body>
 				<dynamic-variable-table>
@@ -163,7 +161,7 @@
 			</body>
 		</section>
 
-		<section id="extensions/blockdraw_wfo/settings/linewidth">
+		<section id="extensions/blockdraw/settings/linewidth">
 			<title>Line widths</title>
 			<body>
 				<dynamic-variable-table>
@@ -185,7 +183,7 @@
 			</body>
 		</section>
 
-		<section id="extensions/blockdraw_wfo/settings/margins">
+		<section id="extensions/blockdraw/settings/margins">
 			<title>Margins</title>
 			<body>
 				<dynamic-variable-table>
@@ -228,7 +226,7 @@
 			</body>
 		</section>
 
-		<section id="extensions/blockdraw_wfo/settings/blockspace">
+		<section id="extensions/blockdraw/settings/blockspace">
 			<title>Space between blocks</title>
 			<body>
 				<dynamic-variable-table>
@@ -271,7 +269,7 @@
 			</body>
 		</section>
 
-		<section id="extensions/blockdraw_wfo/settings/misc">
+		<section id="extensions/blockdraw/settings/misc">
 			<title>Miscellaneous</title>
 			<body>
 				<dynamic-variable identifier="textscaling">
@@ -306,7 +304,7 @@
 					</type>
 					<description>
 						<p>The function used to paint connections.</p>
-						<p>When called from within this extension, <dynvar name="width" /> will always be set to <dynvar extension="blockdraw_wfo" name="connectionlw" />.  Hence, users who call <dynvar extension="blockdraw_wfo" name="connectpainter" /> directly should consider using this line width as well.</p>
+						<p>When called from within this extension, <dynvar name="width" /> will always be set to <dynvar extension="blockdraw" name="connectionlw" />.  Hence, users who call <dynvar extension="blockdraw" name="connectpainter" /> directly should consider using this line width as well.</p>
 					</description>
 				</dynamic-variable>
 			</body>
@@ -314,10 +312,10 @@
 
 	</section>
 
-	<section id="extensions/blockdraw_wfo/blocks">
+	<section id="extensions/blockdraw/blocks">
 		<title>Blocks</title>
 		<body>
-			<p>These functions return plain <named-type name="Drawable" /> objects — they are dumb in this sense.  A more accurate way of modelling things would at least include information about connection points with each block, while we <em>compute</em> connection points assuming that the blocks are rectangular, see <a id="extensions/blockdraw_wfo/con-points" />.</p>
+			<p>These functions return plain <named-type name="Drawable" /> objects — they are dumb in this sense.  A more accurate way of modelling things would at least include information about connection points with each block, while we <em>compute</em> connection points assuming that the blocks are rectangular, see <a id="extensions/blockdraw/con-points" />.</p>
 
 <example-with-output title="Blocks" internal-id="blockdraw/blocks/intro">
 <image pdf="doc/blockdraw-blocks_3.pdf" jpg="doc/blockdraw-blocks_70%.jpg" />
@@ -346,17 +344,17 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="textscaling" /> <dynvar extension="blockdraw_wfo" name="blocklw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="textscaling" /> <dynvar extension="blockdraw" name="blocklw" /></dynamic-references>
 						<description>
 							<p>This function is considered low-level and should not be used directly in standard applications.</p>
 							<p>Constructs a rectangular block, with a label positioned nicely inside.</p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="longblock" />
-							<binding extension="blockdraw_wfo" name="squareblock" />
-							<binding extension="blockdraw_wfo" name="fracblock" />
-							<binding extension="blockdraw_wfo" name="longenoughblock" />
-							<binding extension="blockdraw_wfo" name="longenoughfracblock" />
+							<binding extension="blockdraw" name="longblock" />
+							<binding extension="blockdraw" name="squareblock" />
+							<binding extension="blockdraw" name="fracblock" />
+							<binding extension="blockdraw" name="longenoughblock" />
+							<binding extension="blockdraw" name="longenoughfracblock" />
 						</see-also>
 					</case>
 				</function>
@@ -373,13 +371,13 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="longblockrx" /> <dynvar extension="blockdraw_wfo" name="longblockry" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="longblockrx" /> <dynvar extension="blockdraw" name="longblockry" /></dynamic-references>
 						<description>
 							<p>Constructs a long rectangular block of standardized size.</p>
-							<p>Calls <binding extension="blockdraw_wfo" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
+							<p>Calls <binding extension="blockdraw" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="sizedblock" />
+							<binding extension="blockdraw" name="sizedblock" />
 						</see-also>
 					</case>
 				</function>
@@ -396,13 +394,13 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="smallblockr" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="smallblockr" /></dynamic-references>
 						<description>
 							<p>Constructs a small square block of standardized size.</p>
-							<p>Calls <binding extension="blockdraw_wfo" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
+							<p>Calls <binding extension="blockdraw" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="sizedblock" />
+							<binding extension="blockdraw" name="sizedblock" />
 						</see-also>
 					</case>
 				</function>
@@ -419,13 +417,13 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="longblockrx" /> <dynvar extension="blockdraw_wfo" name="fracblockry" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="longblockrx" /> <dynvar extension="blockdraw" name="fracblockry" /></dynamic-references>
 						<description>
 							<p>Constructs a long rectangular block of standardized size, tall enough to accommodate a standing fraction in the label.</p>
-							<p>Calls <binding extension="blockdraw_wfo" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
+							<p>Calls <binding extension="blockdraw" name="sizedblock" /> internally, which uses additional dynamic variables.</p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="sizedblock" />
+							<binding extension="blockdraw" name="sizedblock" />
 						</see-also>
 					</case>
 				</function>
@@ -442,9 +440,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="longblockrx" /> <dynvar extension="blockdraw_wfo" name="longblockry" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="longblockrx" /> <dynvar extension="blockdraw" name="longblockry" /></dynamic-references>
 						<description>
-							<p>Like <binding extension="blockdraw_wfo" name="longblock" />, but makes the block wider if required to accommodate the label.</p>
+							<p>Like <binding extension="blockdraw" name="longblock" />, but makes the block wider if required to accommodate the label.</p>
 						</description>
 					</case>
 				</function>
@@ -461,9 +459,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="longblockrx" /> <dynvar extension="blockdraw_wfo" name="fracblockry" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="longblockrx" /> <dynvar extension="blockdraw" name="fracblockry" /></dynamic-references>
 						<description>
-							<p>Like <binding extension="blockdraw_wfo" name="fracblock" />, but makes the block wider if required to accommodate the label.</p>
+							<p>Like <binding extension="blockdraw" name="fracblock" />, but makes the block wider if required to accommodate the label.</p>
 						</description>
 					</case>
 				</function>
@@ -480,7 +478,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="textscaling" /> <dynvar extension="blockdraw_wfo" name="smallblockr" /> <dynvar extension="blockdraw_wfo" name="blocklw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="textscaling" /> <dynvar extension="blockdraw" name="smallblockr" /> <dynvar extension="blockdraw" name="blocklw" /></dynamic-references>
 						<description>
 							<p>Constructs a small circular block of standardized size.</p>
 						</description>
@@ -498,7 +496,7 @@
 						</result>
 						<description>
 							<p>Returns a small circular summation block.  Note that this must be a function since the result shall depend on dynamic bindings!</p>
-							<p>Calls <binding extension="blockdraw_wfo" name="roundblock" /> internally, which uses additional dynamic variables.</p>
+							<p>Calls <binding extension="blockdraw" name="roundblock" /> internally, which uses additional dynamic variables.</p>
 						</description>
 					</case>
 				</function>
@@ -512,7 +510,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar name="stroking" /> <dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<dynamic-references><dynvar name="stroking" /> <dynvar extension="blockdraw" name="connectionlw" /></dynamic-references>
 						<description>
 							<p>Returns a small circular dot to use where a signal splits.  The size is chosen relative to the width of the connection strokes.  Note that this must be a function since the result shall depend on dynamic bindings!</p>
 						</description>
@@ -528,7 +526,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /></dynamic-references>
 						<description>
 							<p>Returns a small circle that can be used if a signal terminal is to be emphasized.  The size is chosen relative to the width of the connection strokes.  Note that this must be a function since the result shall depend on dynamic bindings!</p>
 						</description>
@@ -539,11 +537,11 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/layout">
+	<section id="extensions/blockdraw/layout">
 		<title>Layout</title>
 		<body>
 			<p>The functions are non-pure, as they have the bad (?) habit of tacking on their return value to a <named-state-type name="Group" />.  The reason is that it is almost always convenient to bind a block to a variable so that it can be referred to, and there is seldom reason not to draw it as soon as it is laid out.  If one does not want the object to be drawn to any state, one may simply pass <state-binding name="ignore" /> as the destination.</p>
-			<p>The number of functions in this section may seem overwhelming, but the reason for this is to hide degrees of freedom in order to gain in consistency of the spacing between blocks in the diagram.  Except <binding extension="blockdraw_wfo" name="putblockOrigin" />, uses typically select among function being named after two axes for the user to choose from; one distance axis (<em>VeryNear</em>, <em>Near</em>, <em>LabelSpace</em>, <em>Far</em>, <em>VeryFar</em>), and one direction axis (<em>Left</em>, <em>Right</em>, <em>Below</em>, <em>Above</em>).  This explains 20 of the functions here.  In addition, there are some low-level functions, and another four where the point on the distance axis is <em>LabelMargin</em> (here, the distance depends on the direction, but users typically don't use these functions anyway).</p>
+			<p>The number of functions in this section may seem overwhelming, but the reason for this is to hide degrees of freedom in order to gain in consistency of the spacing between blocks in the diagram.  Except <binding extension="blockdraw" name="putblockOrigin" />, uses typically select among function being named after two axes for the user to choose from; one distance axis (<em>VeryNear</em>, <em>Near</em>, <em>LabelSpace</em>, <em>Far</em>, <em>VeryFar</em>), and one direction axis (<em>Left</em>, <em>Right</em>, <em>Below</em>, <em>Above</em>).  This explains 20 of the functions here.  In addition, there are some low-level functions, and another four where the point on the distance axis is <em>LabelMargin</em> (here, the distance depends on the direction, but users typically don't use these functions anyway).</p>
 
 <example-with-output title="Layout" internal-id="blockdraw/layout/intro">
 <image pdf="doc/blockdraw-layout_3.pdf" jpg="doc/blockdraw-layout_70%.jpg" />
@@ -553,8 +551,8 @@
 <caption>
 	<p>A selection of the layout functions.  The name of the functions reflect which dynamic variable is used to determine the distance between the objects, in the direction also given by the name of the function.  Note that all these functions are non-pure, as they allow the object being laid out to be added to a destination variable in addition to returning it.</p>
 	<p>Note that horizontal positioning does not care about the object's vertical extent, and vice versa.  This is not only apparent in the example with the block labeled “High”, but also in the examples where the new block is a plain label centered at its leftmost baseline point.</p>
-	<p>The function <binding extension="blockdraw_wfo" name="putblockOrigin" /> is different from the others in that it puts the block at the origin instead of relative to another block.</p>
-	<p>The functions using the various label margins should only be used if this non-pure behavior is desired; labels are generally better placed using the pure functions described in <a id="extensions/blockdraw_wfo/labels" />.</p>
+	<p>The function <binding extension="blockdraw" name="putblockOrigin" /> is different from the others in that it puts the block at the origin instead of relative to another block.</p>
+	<p>The functions using the various label margins should only be used if this non-pure behavior is desired; labels are generally better placed using the pure functions described in <a id="extensions/blockdraw/labels" />.</p>
 </caption>
 </example-with-output>
 
@@ -605,12 +603,12 @@
 							<p>Positions <arg name="newBlock" /> to the left of <arg name="oldBlock" />, such that the horizontal distance between the bounding boxes equals <arg name="dist" />.  The vertical positioning will make the origin of <arg name="newBlock" /> level with the vertical midpoint of <arg name="oldBlock" />'s bounding box.</p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="putblockVeryNearLeft" />
-							<binding extension="blockdraw_wfo" name="putblockNearLeft" />
-							<binding extension="blockdraw_wfo" name="putblockLabelSpaceLeft" />
-							<binding extension="blockdraw_wfo" name="putblockFarLeft" />
-							<binding extension="blockdraw_wfo" name="putblockVeryFarLeft" />
-							<binding extension="blockdraw_wfo" name="putblockLabelMarginLeft" />
+							<binding extension="blockdraw" name="putblockVeryNearLeft" />
+							<binding extension="blockdraw" name="putblockNearLeft" />
+							<binding extension="blockdraw" name="putblockLabelSpaceLeft" />
+							<binding extension="blockdraw" name="putblockFarLeft" />
+							<binding extension="blockdraw" name="putblockVeryFarLeft" />
+							<binding extension="blockdraw" name="putblockLabelMarginLeft" />
 						</see-also>
 					</case>
 				</function>
@@ -637,15 +635,15 @@
 							<type><named-type name="Drawable" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="putblockLeft" /></p>
+							<p>Analogous to <binding extension="blockdraw" name="putblockLeft" /></p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="putblockVeryNearRight" />
-							<binding extension="blockdraw_wfo" name="putblockNearRight" />
-							<binding extension="blockdraw_wfo" name="putblockLabelSpaceRight" />
-							<binding extension="blockdraw_wfo" name="putblockFarRight" />
-							<binding extension="blockdraw_wfo" name="putblockVeryFarRight" />
-							<binding extension="blockdraw_wfo" name="putblockLabelMarginRight" />
+							<binding extension="blockdraw" name="putblockVeryNearRight" />
+							<binding extension="blockdraw" name="putblockNearRight" />
+							<binding extension="blockdraw" name="putblockLabelSpaceRight" />
+							<binding extension="blockdraw" name="putblockFarRight" />
+							<binding extension="blockdraw" name="putblockVeryFarRight" />
+							<binding extension="blockdraw" name="putblockLabelMarginRight" />
 						</see-also>
 					</case>
 				</function>
@@ -672,15 +670,15 @@
 							<type><named-type name="Drawable" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="putblockLeft" /></p>
+							<p>Analogous to <binding extension="blockdraw" name="putblockLeft" /></p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="putblockVeryNearAbove" />
-							<binding extension="blockdraw_wfo" name="putblockNearAbove" />
-							<binding extension="blockdraw_wfo" name="putblockLabelSpaceAbove" />
-							<binding extension="blockdraw_wfo" name="putblockFarAbove" />
-							<binding extension="blockdraw_wfo" name="putblockVeryFarAbove" />
-							<binding extension="blockdraw_wfo" name="putblockLabelMarginAbove" />
+							<binding extension="blockdraw" name="putblockVeryNearAbove" />
+							<binding extension="blockdraw" name="putblockNearAbove" />
+							<binding extension="blockdraw" name="putblockLabelSpaceAbove" />
+							<binding extension="blockdraw" name="putblockFarAbove" />
+							<binding extension="blockdraw" name="putblockVeryFarAbove" />
+							<binding extension="blockdraw" name="putblockLabelMarginAbove" />
 						</see-also>
 					</case>
 				</function>
@@ -707,15 +705,15 @@
 							<type><named-type name="Drawable" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="putblockLeft" /></p>
+							<p>Analogous to <binding extension="blockdraw" name="putblockLeft" /></p>
 						</description>
 						<see-also>
-							<binding extension="blockdraw_wfo" name="putblockVeryNearBelow" />
-							<binding extension="blockdraw_wfo" name="putblockNearBelow" />
-							<binding extension="blockdraw_wfo" name="putblockLabelSpaceBelow" />
-							<binding extension="blockdraw_wfo" name="putblockFarBelow" />
-							<binding extension="blockdraw_wfo" name="putblockVeryFarBelow" />
-							<binding extension="blockdraw_wfo" name="putblockLabelMarginBelow" />
+							<binding extension="blockdraw" name="putblockVeryNearBelow" />
+							<binding extension="blockdraw" name="putblockNearBelow" />
+							<binding extension="blockdraw" name="putblockLabelSpaceBelow" />
+							<binding extension="blockdraw" name="putblockFarBelow" />
+							<binding extension="blockdraw" name="putblockVeryFarBelow" />
+							<binding extension="blockdraw" name="putblockLabelMarginBelow" />
 						</see-also>
 					</case>
 				</function>
@@ -738,9 +736,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceverynear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceverynear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -762,9 +760,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacenear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacenear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -786,9 +784,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacelabelspace" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacelabelspace" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -810,9 +808,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacefar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacefar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -834,9 +832,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceveryfar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceveryfar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -858,9 +856,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="leftrightlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="leftrightlabelmargin" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockLeft" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -883,9 +881,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceverynear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceverynear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -907,9 +905,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacenear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacenear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -931,9 +929,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacelabelspace" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacelabelspace" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -955,9 +953,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacefar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacefar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -979,9 +977,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceveryfar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceveryfar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1003,9 +1001,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="leftrightlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="leftrightlabelmargin" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockRight" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1028,9 +1026,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceverynear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceverynear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1052,9 +1050,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacenear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacenear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1076,9 +1074,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacelabelspace" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacelabelspace" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1100,9 +1098,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacefar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacefar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1124,9 +1122,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceveryfar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceveryfar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1148,9 +1146,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="belowlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="belowlabelmargin" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockBelow" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1173,9 +1171,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceverynear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceverynear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1197,9 +1195,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacenear" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacenear" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1221,9 +1219,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacelabelspace" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacelabelspace" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1245,9 +1243,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspacefar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspacefar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1269,9 +1267,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="blockspaceveryfar" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="blockspaceveryfar" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1293,9 +1291,9 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="abovelabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="abovelabelmargin" /></dynamic-references>
 						<description>
-							<p>Calls <binding extension="blockdraw_wfo" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
+							<p>Calls <binding extension="blockdraw" name="putblockAbove" /> with the distance argument given by the dynamic variable corresponding to the name of this function.</p>
 						</description>
 					</case>
 				</function>
@@ -1304,7 +1302,7 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/con-points">
+	<section id="extensions/blockdraw/con-points">
 		<title>Connection points</title>
 		<body>
 			<p>A basic design choice of this extension is to use a plain <named-type name="Drawable" /> object to model a block.  Hence, the points where connections attach to a block is not part of the object representation itself.  Instead, a standardized way of selecting points on the bounding box is provided.</p>
@@ -1365,7 +1363,7 @@
 							<type><named-type name="Coords" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="leftpoint" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="leftpoint" />.</p>
 						</description>
 					</case>
 				</function>
@@ -1390,7 +1388,7 @@
 							<type><named-type name="Coords" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="leftpoint" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="leftpoint" />.</p>
 						</description>
 					</case>
 				</function>
@@ -1415,7 +1413,7 @@
 							<type><named-type name="Coords" /></type>
 						</result>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="leftpoint" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="leftpoint" />.</p>
 						</description>
 					</case>
 				</function>
@@ -1424,12 +1422,12 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/connections">
+	<section id="extensions/blockdraw/connections">
 		<title>Connections</title>
 		<body>
-			<p>These functions are, for the same reason as the layout functions (see <a id="extensions/blockdraw_wfo/layout" />), non-pure.  One difference, though, is that instead of returning the <em>painted</em> path, only the <named-type name="Path" /> object itself is returned.  The reason is that the path is much more useful for further operations, such as putting labels along it.</p>
-			<p>While the most high-level functions take entire blocks as arguments and assume that there is just one connection point on each side of a block, the more low-level functions take the connection points as arguments, allowing the user to select the point using the functions in <a id="extensions/blockdraw_wfo/con-points" />.</p>
-			<p>In most situations, <binding extension="blockdraw_wfo" name="connect" /> is able to figure out the path from the blocks being connected alone, and in these cases this function should be used.  In most cases when <binding extension="blockdraw_wfo" name="connect" /> picks the wrong path, this is because it makes the connection to the wrong sides of the blocks, and then functions such as <binding extension="blockdraw_wfo" name="brconnect" /> (connect the <em>bottom</em> side of the first block with the <em>right</em> of the second block) come in handy.  These functions will still be insufficient if the path shall connect, say, a bottom side to another bottom side, since they cannot figure out the vertical coordinate for the horizontal part of such a path.  Then the most low-level functions, such as <binding extension="blockdraw_wfo" name="vvconnect" /> (construct a path with is initially <em>vertical</em> and <em>vertical</em> at the end as well), are required.  It is only the most low-level functions that operate on points rather than blocks.</p>
+			<p>These functions are, for the same reason as the layout functions (see <a id="extensions/blockdraw/layout" />), non-pure.  One difference, though, is that instead of returning the <em>painted</em> path, only the <named-type name="Path" /> object itself is returned.  The reason is that the path is much more useful for further operations, such as putting labels along it.</p>
+			<p>While the most high-level functions take entire blocks as arguments and assume that there is just one connection point on each side of a block, the more low-level functions take the connection points as arguments, allowing the user to select the point using the functions in <a id="extensions/blockdraw/con-points" />.</p>
+			<p>In most situations, <binding extension="blockdraw" name="connect" /> is able to figure out the path from the blocks being connected alone, and in these cases this function should be used.  In most cases when <binding extension="blockdraw" name="connect" /> picks the wrong path, this is because it makes the connection to the wrong sides of the blocks, and then functions such as <binding extension="blockdraw" name="brconnect" /> (connect the <em>bottom</em> side of the first block with the <em>right</em> of the second block) come in handy.  These functions will still be insufficient if the path shall connect, say, a bottom side to another bottom side, since they cannot figure out the vertical coordinate for the horizontal part of such a path.  Then the most low-level functions, such as <binding extension="blockdraw" name="vvconnect" /> (construct a path with is initially <em>vertical</em> and <em>vertical</em> at the end as well), are required.  It is only the most low-level functions that operate on points rather than blocks.</p>
 			<p>So, there were three levels of functions, and they are presented in order low to high.  The listing of the functions on each level is preceded by an example..</p>
 
 <example-with-output title="Connection primitives" internal-id="blockdraw/connections/primitives">
@@ -1438,7 +1436,7 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/blockdraw-connections-primitive.shape" -->]]>
 </source>
 <caption>
-	<p>These are the primitive functions that construct connection paths.  They operate on points, and are named after the direction at the beginning and end of the constructed path, for instance <binding extension="blockdraw_wfo" name="hvconnect" /> constructs a path that is <em>horizontal</em> at the beginning and <em>vertical</em> at the end.  If the path shall begin and end along the same axis, the user must also tell at which coordinate the beginning and end shall connect with each other.  This is done using a pair of mediation and slide values; the mediation is a linear interpolation between the start (mediation is <eq>0</eq>) and end (mediation is <eq>1</eq>) points, and the slide is an absolute length added to the coordinate given by the slide.</p>
+	<p>These are the primitive functions that construct connection paths.  They operate on points, and are named after the direction at the beginning and end of the constructed path, for instance <binding extension="blockdraw" name="hvconnect" /> constructs a path that is <em>horizontal</em> at the beginning and <em>vertical</em> at the end.  If the path shall begin and end along the same axis, the user must also tell at which coordinate the beginning and end shall connect with each other.  This is done using a pair of mediation and slide values; the mediation is a linear interpolation between the start (mediation is <eq>0</eq>) and end (mediation is <eq>1</eq>) points, and the slide is an absolute length added to the coordinate given by the slide.</p>
 </caption>
 </example-with-output>
 			<system-binding identifier="vhconnect">
@@ -1458,9 +1456,9 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Constructs a path from <arg name="pa" /> to <arg name="pb" /> which consists of two line segments; first a <em>vertical</em> and then a <em>horizontal</em>.  Besides returning the path, it is painted using <dynvar extension="blockdraw_wfo" name="connectpainter" /> with <dynvar name="width" /> being set to <dynvar extension="blockdraw_wfo" name="connectionlw" />, and the resulting <named-type name="Drawable" /> is added to <state-arg name="dst" />.</p>
+							<p>Constructs a path from <arg name="pa" /> to <arg name="pb" /> which consists of two line segments; first a <em>vertical</em> and then a <em>horizontal</em>.  Besides returning the path, it is painted using <dynvar extension="blockdraw" name="connectpainter" /> with <dynvar name="width" /> being set to <dynvar extension="blockdraw" name="connectionlw" />, and the resulting <named-type name="Drawable" /> is added to <state-arg name="dst" />.</p>
 						</description>
 					</case>
 				</function>
@@ -1482,9 +1480,9 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="hvconnect" />; just exchange <em>horizontal</em> and <em>vertical</em> in the description.</p>
+							<p>Analogous to <binding extension="blockdraw" name="hvconnect" />; just exchange <em>horizontal</em> and <em>vertical</em> in the description.</p>
 						</description>
 					</case>
 				</function>
@@ -1512,10 +1510,10 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
 							<p>Constructs a path from <arg name="pa" /> to <arg name="pb" /> which consists of three line segments; initially <em>horizontal</em> and <em>horizontal</em> also at the end.  The horizontal coordinate of the vertical line segment in the middle is given by the <arg name="mediation" /> and <arg name="slide" /> values.  The mediation is relative to the horizontal coordinates of <arg name="pa" /> and <arg name="pb" />, while the slide enters the coordinate as a term.  See the example for illustration!</p>
-							<p>Besides returning the path, it is also painted to <state-arg name="dst" />, just like <binding extension="blockdraw_wfo" name="vhconnect" /> does.</p>
+							<p>Besides returning the path, it is also painted to <state-arg name="dst" />, just like <binding extension="blockdraw" name="vhconnect" /> does.</p>
 						</description>
 					</case>
 				</function>
@@ -1543,9 +1541,9 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="hhconnect" />; just exchange <em>horizontal</em> and <em>vertical</em> in the description.</p>
+							<p>Analogous to <binding extension="blockdraw" name="hhconnect" />; just exchange <em>horizontal</em> and <em>vertical</em> in the description.</p>
 						</description>
 					</case>
 				</function>
@@ -1558,8 +1556,8 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/blockdraw-connections-intermediate.shape" -->]]>
 </source>
 <caption>
-	<p>These are the intermediate level functions that construct connection paths.  They operate on blocks, and are named after the blocks' sides at the beginning and end of the constructed path, for instance <binding extension="blockdraw_wfo" name="rbconnect" /> constructs a path from the <em>right</em> side of the first block to the  <em>bottom</em> side of the second block.  If the path shall connect to the same side of the two blocks, the user must also tell how far from the closest block the path shall turn.</p>
-	<p>When the underlying primitive function being used is <binding extension="blockdraw_wfo" name="vvconnect" /> or <binding extension="blockdraw_wfo" name="hhconnect" /> the mediation parameter is <eq>0.5</eq> and the slide zero.</p>
+	<p>These are the intermediate level functions that construct connection paths.  They operate on blocks, and are named after the blocks' sides at the beginning and end of the constructed path, for instance <binding extension="blockdraw" name="rbconnect" /> constructs a path from the <em>right</em> side of the first block to the  <em>bottom</em> side of the second block.  If the path shall connect to the same side of the two blocks, the user must also tell how far from the closest block the path shall turn.</p>
+	<p>When the underlying primitive function being used is <binding extension="blockdraw" name="vvconnect" /> or <binding extension="blockdraw" name="hhconnect" /> the mediation parameter is <eq>0.5</eq> and the slide zero.</p>
 </caption>
 </example-with-output>
 			<system-binding identifier="trconnect">
@@ -1579,13 +1577,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
 							<p>Calls the appropriate low-level function to create a path from the <em>top</em> of the first block to the <em>right</em> side of the second block.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vhconnect" />
+						<binding extension="blockdraw" name="vhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1606,13 +1604,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vhconnect" />
+						<binding extension="blockdraw" name="vhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1633,13 +1631,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vhconnect" />
+						<binding extension="blockdraw" name="vhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1660,13 +1658,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vhconnect" />
+						<binding extension="blockdraw" name="vhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1687,13 +1685,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hvconnect" />
+						<binding extension="blockdraw" name="hvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1714,13 +1712,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hvconnect" />
+						<binding extension="blockdraw" name="hvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1741,13 +1739,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hvconnect" />
+						<binding extension="blockdraw" name="hvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1768,13 +1766,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="trconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="trconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hvconnect" />
+						<binding extension="blockdraw" name="hvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1804,13 +1802,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
 							<p>Calls the appropriate low-level function to construct a path from the <em>top</em> of the first block to the <em>bottom</em> of the second block.  The <arg name="mediation" /> and <arg name="slide" /> values are simply passed on to the low-level function.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vvconnect" />
+						<binding extension="blockdraw" name="vvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1839,13 +1837,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="tbconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="tbconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vvconnect" />
+						<binding extension="blockdraw" name="vvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1874,13 +1872,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="tbconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="tbconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hhconnect" />
+						<binding extension="blockdraw" name="hhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1909,13 +1907,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="tbconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="tbconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hhconnect" />
+						<binding extension="blockdraw" name="hhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1940,13 +1938,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
 							<p>Calls the appropriate low-level function to construct a path from the <em>top</em> of the first block to the <em>top</em> of the second block.  The <arg name="slide" /> value is simply passed on to the low-level function, and the mediation value is chosen as the reasonable choice of <eq>0</eq> or <eq>1</eq>.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vvconnect" />
+						<binding extension="blockdraw" name="vvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -1970,13 +1968,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="ttconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="ttconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="vvconnect" />
+						<binding extension="blockdraw" name="vvconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -2000,13 +1998,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="ttconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="ttconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hhconnect" />
+						<binding extension="blockdraw" name="hhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -2030,13 +2028,13 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="ttconnect" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="ttconnect" />.</p>
 						</description>
 					</case>
 					<see-also>
-						<binding extension="blockdraw_wfo" name="hhconnect" />
+						<binding extension="blockdraw" name="hhconnect" />
 					</see-also>
 				</function>
 			</system-binding>
@@ -2047,7 +2045,7 @@
 <![CDATA[<!--#include depth="0" virtual="$(BUILDDIR)$(EXAMPLES)doc/blockdraw-connections-connect.shape" -->]]>
 </source>
 <caption>
-	<p>The function <binding extension="blockdraw_wfo" name="connect" /> makes an automatic selection among the intermediate level functions.  Note that the first block's left and right sides are preferred to its bottom and top sides, and that one never obtains a path which connects to the same side of both blocks.  Hence, only eight of the intermediate level functions are accessed through <binding extension="blockdraw_wfo" name="connect" />.</p>
+	<p>The function <binding extension="blockdraw" name="connect" /> makes an automatic selection among the intermediate level functions.  Note that the first block's left and right sides are preferred to its bottom and top sides, and that one never obtains a path which connects to the same side of both blocks.  Hence, only eight of the intermediate level functions are accessed through <binding extension="blockdraw" name="connect" />.</p>
 </caption>
 </example-with-output>
 
@@ -2068,7 +2066,7 @@
 						<result>
 							<type><named-type name="Path" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="connectionlw" /> <dynvar extension="blockdraw_wfo" name="connectpainter" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="connectionlw" /> <dynvar extension="blockdraw" name="connectpainter" /></dynamic-references>
 						<description>
 							<p>Makes an automatic selection among the intermediate level connection functions.  See <a id="blockdraw/connections/connect-example" />.</p>
 						</description>
@@ -2079,7 +2077,7 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/labels">
+	<section id="extensions/blockdraw/labels">
 		<title>Labels</title>
 		<body>
 <example-with-output title="Layout of labels" internal-id="blockdraw/labels/intro">
@@ -2111,12 +2109,12 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="leftrightlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="leftrightlabelmargin" /></dynamic-references>
 						<description>
 							<p>Position <arg name="lbl" /> to the left of <arg name="z" />, centering vertically at <arg name="y" />.  For instance, <arg name="y" /><eq>=1</eq> gives a label below <arg name="z" />, while <eq>-1</eq> gives a label above.</p>
 						</description>
 						<see-also>
-							<binding extension="centering" name="centeryatX" />
+							<binding extension="centering-X" name="centeryatX" />
 						</see-also>
 					</case>
 				</function>
@@ -2138,12 +2136,12 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="leftrightlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="leftrightlabelmargin" /></dynamic-references>
 						<description>
-							<p>Analogous to <binding extension="blockdraw_wfo" name="putlabelLeft" />.</p>
+							<p>Analogous to <binding extension="blockdraw" name="putlabelLeft" />.</p>
 						</description>
 						<see-also>
-							<binding extension="centering" name="centeryatX" />
+							<binding extension="centering-X" name="centeryatX" />
 						</see-also>
 					</case>
 				</function>
@@ -2165,12 +2163,12 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="belowlabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="belowlabelmargin" /></dynamic-references>
 						<description>
 							<p>Position <arg name="lbl" /> below <arg name="z" />, treating the label as if it had the height of an <eq>X</eq>, centering horizontally at <arg name="x" />.  For instance, <arg name="x" /><eq>=1</eq> gives a label to the left of <arg name="z" />, while <eq>-1</eq> gives a label to the right.</p>
 						</description>
 						<see-also>
-							<binding extension="centering" name="centeryatX" />
+							<binding extension="centering-X" name="centeryatX" />
 						</see-also>
 					</case>
 				</function>
@@ -2192,7 +2190,7 @@
 						<result>
 							<type><named-type name="Drawable" /></type>
 						</result>
-						<dynamic-references><dynvar extension="blockdraw_wfo" name="abovelabelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="blockdraw" name="abovelabelmargin" /></dynamic-references>
 						<description>
 							<p>Position <arg name="lbl" /> above <arg name="z" />, centering horizontally at <arg name="x" />.  For instance, <arg name="x" /><eq>=1</eq> gives a label to the left of <arg name="z" />, while <eq>-1</eq> gives a label to the right.</p>
 						</description>

@@ -20,24 +20,24 @@
 
 
 <book>
-	<title>centering</title>
+	<title>basic-layout</title>
 	<description>
 		<p>Elementary layout using bounding boxes.</p>
 	</description>
-	<meta-selflink><extension-href name="centering" /></meta-selflink>
+	<meta-selflink><extension-href name="basic-layout" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
 	<up-link><a part="extensions">All extensions</a></up-link>
+	<prelude />
 	<needs></needs>
 	<top>
 		<alphabetical-index/>
-		<p>The functions in this extension provide the basic means for layout.  The extension is named after the function <binding extension="centering" name="centerat" />.</p>
+		<p>The functions in this extension provide the basic means for layout.</p>
 	</top>
 
 	<section id="extensions/centering/basic">
-		<title>Basic operations</title>
+		<title>Basic positioning operations</title>
 		<body>
-			<p></p>
 
 			<system-binding identifier="centerat">
 				<function>
@@ -85,7 +85,7 @@
 								<type><named-type name="FloatPair" /></type>
 							</arg>
 						</arguments>
-						<dynamic-references><dynvar extension="centering" name="labelmargin" /></dynamic-references>
+						<dynamic-references><dynvar extension="basic-layout" name="labelmargin" /></dynamic-references>
 						<description>
 							<p>The argument <arg name="z" /> is interpreted as a point in the bounding box of <arg name="obj" />, with (-1,-1) being the lower left corner, and (1,1) being the upper right corner.  <arg name="obj" /> is then shifted so that this point ends up at the origin.</p>
 						</description>
@@ -96,7 +96,7 @@
 		</body>
 	</section>
 
-	<section id="extensions/blockdraw_wfo/mediation">
+	<section id="extensions/blockdraw/mediation">
 		<title>Mediation</title>
 		<body>
 			<p>By <em>mediation</em> we refer to the specification of a value relative to a lower and upper bound.  The bounds can either be very general, or the beginning and end of a path.</p>

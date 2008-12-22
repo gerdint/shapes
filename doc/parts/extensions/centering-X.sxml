@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="formats/html.xsl"?>
+
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+
+<book>
+	<title>centering-X</title>
+	<description>
+		<p>Positioning of labels relative to the size of an <em>X</em>.</p>
+	</description>
+	<meta-selflink><extension-href name="centering-X" /></meta-selflink>
+	<base href=<!--#expand-next-string-->"$(BASE)" />
+	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
+	<needs></needs>
+	<top>
+		<alphabetical-index/>
+		<p>This extension is not part of the prelude, since it will require a <str-TeX /> label to be rendered.</p>
+	</top>
+
+	<section id="extensions/centering-X/basic">
+		<title>Label positioning</title>
+		<body>
+
+			<system-binding identifier="centeryX">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg>
+								<type><named-type name="Drawable" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>The vertical shift that puts the center of <inline>(TeX `$X$´)</inline> at <eq>y</eq> coordinate zero.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+			<system-binding identifier="centeryatX">
+				<function>
+					<case constructor-of="Drawable">
+						<arguments>
+							<arg identifier="obj">
+								<type><named-type name="Drawable" /></type>
+							</arg>
+							<arg identifier="y">
+								<type><named-type name="Float" /></type>
+							</arg>
+						</arguments>
+						<dynamic-references></dynamic-references>
+						<description>
+							<p>Similar to <binding extension="centering-X" name="centeryX" />, but with the ability to control the vertical position of the <inline>(TeX `$X$´)</inline>.  As usual, <eq>1</eq> gives positioning below zero, and <eq>-1</eq> above zero, with linear dependence.</p>
+						</description>
+					</case>
+				</function>
+			</system-binding>
+
+		</body>
+	</section>
+
+</book>

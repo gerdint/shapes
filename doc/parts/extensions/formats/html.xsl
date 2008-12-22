@@ -63,7 +63,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="index-of-books">
 	<ul>
-		<xsl:apply-templates select="/book/external/book | /book/external/man" />
+		<xsl:apply-templates select="/book/external/book" />
 	</ul>
 </xsl:template>
 
@@ -72,7 +72,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:apply-templates select="meta-selflink" /></xsl:attribute>
 			<b><xsl:apply-templates select="title" /></b>
-		</xsl:element>:
+		</xsl:element>
+		<xsl:if test="prelude">
+			<xsl:text> (in standard prelude)</xsl:text>
+		</xsl:if>:
 		<xsl:apply-templates select="description" />
 	</li>
 </xsl:template>

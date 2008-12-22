@@ -20,37 +20,43 @@
 
 
 <book>
-	<title>Standard extensions</title>
+	<title>numeric-constants</title>
 	<description>
-		<p>Descriptions of the <str-Shapes /> extension files included in standard installations.</p>
+		<p>Numeric constants.</p>
 	</description>
-	<meta-selflink><part-href name="extensions" /></meta-selflink>
+	<meta-selflink><extension-href name="numeric-constants" /></meta-selflink>
 	<base href=<!--#expand-next-string-->"$(BASE)" />
 	<examples-home href=<!--#expand-next-string-->"$(EXAMPLES)" />
+	<up-link><a part="extensions">All extensions</a></up-link>
+	<prelude />
+	<needs></needs>
 	<top>
-		<p>A <str-Shapes /> <em>extension</em> is a <str-Shapes /> source that provides functionality that can be used in applications.  An extension should only introduce bindings, and not produce any output by modifying any program states.</p>
-		<p>Extensions are usually activated by loading the source using the <inline>##need</inline> scanner directive, see <a part="syntax" id="syntax/include/include" /> for more details.</p>
+		<alphabetical-index/>
+		<p>This this extension is included by the standard prelude, it contains only numeric constants of general interest.</p>
 	</top>
 
-	<section id="extensions/index">
-		<title>Index</title>
+	<section id="extensions/numeric-constants/all">
+		<title>Bindings</title>
 		<body>
-			<p>The following extensions are contained in the documentation:</p>
-			<index-of-books />
-		</body>
-	</section>
 
-	<external>
-		<!--#include virtual="numeric-constants.sxml" depth="0" -->
-		<!--#include virtual="circle.sxml" depth="0" -->
-		<!--#include virtual="basic-layout.sxml" depth="0" -->
-		<!--#include virtual="metapostarrow.sxml" depth="0" -->
-		<!--#include virtual="shiftoff.sxml" depth="0" -->
-		<!--#include virtual="centering-X.sxml" depth="0" -->
-		<!--#include virtual="arrowheads.sxml" depth="0" -->
-		<!--#include virtual="conssupport.sxml" depth="0" -->
-		<!--#include virtual="linkpaths.sxml" depth="0" -->
-		<!--#include virtual="blockdraw.sxml" depth="0" -->
-		<!--#include virtual="bondgraph.sxml" depth="0" -->
-	</external>
+			<system-binding identifier="golden">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>The golden ratio, approximately <eq>1.618</eq>.</p>
+					</description>
+				</simple-value>
+			</system-binding>
+
+			<system-binding identifier="Golden">
+				<simple-value>
+					<type><named-type name="Float" /></type>
+					<description>
+						<p>The inverse of the golden ratio, approximately <eq>0.618</eq>.</p>
+					</description>
+				</simple-value>
+			</system-binding>
+
+		</body>
+	</section> <!-- End of all -->
 </book>

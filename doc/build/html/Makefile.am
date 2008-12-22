@@ -55,9 +55,10 @@ SHEXT_FILES=$(addprefix example/, $(SHEXT_LIST))
 html_FILES = algo-tol.html bindings.html dynamic.html install.html \
              man.html state-types.html states.html structure.html syntax.html types.html \
              tutorial.html index.html \
-             $(addprefix extensions/, arrowheads.html blockdraw_wfo.html \
-               bondgraph.html centering.html circle.html conssupport.html \
-               linkpaths.html pathmapping.html shiftoff.html index.html )
+             $(addprefix extensions/, numeric-constants.html basic-layout.html circle.html metapostarrow.html \
+               arrowheads.html blockdraw.html \
+               bondgraph.html conssupport.html \
+               linkpaths.html pathmapping.html shiftoff.html centering-X.html index.html )
 
 nobase_dist_html_DATA = ${html_FILES} shapes.css
 
