@@ -1,5 +1,5 @@
 ALLSHAPE := $(patsubst %.shape,%.pdf, $(filter-out static_errors.shape, $(wildcard *.shape) ) )
-SHAPESFLAGS = -N../../resources/extensions --tmp*=yes --tmpdir /tmp/shapes-$(USER)
+SHAPESFLAGS = --resources=no -N../../resources/extensions -M../../resources/fontmetrics --tmp*=yes --tmpdir /tmp/shapes-$(USER)
 
 all: $(ALLSHAPE)
 

@@ -1,4 +1,4 @@
-SUBDIRS = features applications misc showcase
+SUBDIRS = features doc applications misc showcase
 
 all:
 	for d in $(SUBDIRS); do\
