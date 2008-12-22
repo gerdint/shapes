@@ -103,3 +103,9 @@ enlargebbox: \ pic xy →
   bb: [bbox pic]
   [bboxed pic [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)]]
 }
+
+enlargebleedbox: \ pic xy →
+{
+  bb: [bbox pic 'bleed]
+  [bboxed pic [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)] 'bleed]
+}

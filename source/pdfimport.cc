@@ -104,7 +104,8 @@ Kernel::Import::addPagesAsXObjects( RefCountPtr< PDF_in > pdfi )
 			bboxpath->close( );
 
 			RefCountPtr< PDF_Object > indirection = SimplePDF::indirect( newObj, & Kernel::theIndirectObjectCount );
-			res->push_back( RefCountPtr< Lang::XObject >( new Lang::XObject( indirection, RefCountPtr< const Lang::ElementaryPath2D >( bboxpath ), Kernel::THE_DEFAULT_STATE ) ) );
+			RefCountPtr< const Lang::ElementaryPath2D > bbox = RefCountPtr< const Lang::ElementaryPath2D >( bboxpath );
+			res->push_back( RefCountPtr< Lang::XObject >( new Lang::XObject( indirection, bbox, bbox, Kernel::THE_DEFAULT_STATE ) ) );
 		}
 	return RefCountPtr< const std::vector< RefCountPtr< const Lang::XObject > > >( res );
 }

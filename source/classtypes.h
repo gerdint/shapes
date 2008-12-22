@@ -77,7 +77,7 @@ namespace Shapes
 		virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
 
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 
 		virtual const RefCountPtr< const Lang::Class > & getClass( ) const;
 		static RefCountPtr< const char > staticTypeName( );
@@ -100,7 +100,7 @@ namespace Shapes
 		virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
 
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 
 		TYPEINFODECL;
 		virtual void show( std::ostream & os ) const;

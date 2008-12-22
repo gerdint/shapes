@@ -49,6 +49,7 @@ namespace Shapes
 			RefCountPtr< const Kernel::FacetState > facetState_;
 			RefCountPtr< const Kernel::TextState > textState_;
 			Concrete::Length eyez_;
+			Concrete::Length TeX_bleed_;
 			RefCountPtr< const Kernel::PolarHandlePromise > defaultUnit_;
 			RefCountPtr< const Lang::ColorSpace > blendSpace_;
 		};
@@ -96,6 +97,7 @@ namespace Shapes
 			RefCountPtr< const Kernel::FacetState > getFacetState( ) const;
 			RefCountPtr< const Kernel::TextState > getTextState( ) const;
 			Concrete::Length getEyeZ( ) const;
+			Concrete::Length getTeXBleed( ) const;
 			RefCountPtr< const Kernel::PolarHandlePromise > getDefaultUnit( ) const;
 			Kernel::ContRef getEscapeContinuation( const char * id, const Ast::SourceLocation & loc ) const;
 			RefCountPtr< const Lang::ColorSpace > getBlendSpace( ) const;
@@ -142,6 +144,19 @@ namespace Shapes
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};
 
+		class TeXBleedBinding : public Lang::DynamicBindings
+		{
+			Ast::SourceLocation loc_;
+			Concrete::Length val_;
+			const char * id_;
+		public:
+			TeXBleedBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val );
+			virtual ~TeXBleedBinding( );
+			virtual void bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const;
+			virtual void show( std::ostream & os ) const;
+			virtual void gcMark( Kernel::GCMarkedSet & marked );
+		};
+
 		class DefaultUnitBinding : public Lang::DynamicBindings
 		{
 			Ast::SourceLocation loc_;
@@ -179,7 +194,16 @@ namespace Shapes
 			EyeZDynamicVariableProperties( const char * name );
 			virtual ~EyeZDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
+		};
+
+		class TeXBleedDynamicVariableProperties : public Kernel::DynamicVariableProperties
+		{
+		public:
+			TeXBleedDynamicVariableProperties( const char * name );
+			virtual ~TeXBleedDynamicVariableProperties( );
+			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class DefaultUnitDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -189,7 +213,7 @@ namespace Shapes
 			virtual ~DefaultUnitDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
 			virtual bool forceValue( ) const { return false; };
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class BlendSpaceDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -198,7 +222,7 @@ namespace Shapes
 			BlendSpaceDynamicVariableProperties( const char * name );
 			virtual ~BlendSpaceDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 	}

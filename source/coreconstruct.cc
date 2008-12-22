@@ -1085,7 +1085,7 @@ namespace Shapes
 				typedef const Lang::Drawable2D ArgType;
 				RefCountPtr< ArgType > arg = Helpers::down_cast_CoreArgument< ArgType >( title_, args, 0, callLoc );
 
-				RefCountPtr< const Lang::ElementaryPath2D > theBBox = arg->bbox( );
+				RefCountPtr< const Lang::ElementaryPath2D > theBBox = arg->bbox( Lang::Drawable2D::BOUNDING );
 				Concrete::Coords2D llcorner( 0, 0 );
 				Concrete::Coords2D urcorner( 0, 0 );
 				if( ! theBBox->boundingRectangle( & llcorner, & urcorner ) )

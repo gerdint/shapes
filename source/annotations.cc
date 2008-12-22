@@ -97,7 +97,7 @@ Lang::AnnotationSite::getDictionary( const char * subtype, const RefCountPtr< Si
 	{
 		Concrete::Coords2D llcorner( 0, 0 );
 		Concrete::Coords2D urcorner( 0, 0 );
-		RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( );
+		RefCountPtr< const Lang::ElementaryPath2D > theBBox = target_->bbox( Lang::Drawable2D::BOUNDING );
 		if( theBBox->empty( ) )
 			{
 				throw Exceptions::MiscellaneousRequirement( "The annotation target produced an empty bounding box." );

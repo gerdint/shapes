@@ -35,7 +35,7 @@ namespace Shapes
 			Type4Shading( RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox );
 			virtual ~Type4Shading( );
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 			virtual void show( std::ostream & os ) const;
 			virtual void gcMark( Kernel::GCMarkedSet & marked );
 		};

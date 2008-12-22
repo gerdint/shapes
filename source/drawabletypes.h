@@ -665,10 +665,12 @@ namespace Shapes
 	class Drawable2D : public Lang::Geometric2D
 	{
 	public:
+		typedef enum { BOUNDING, BLEED } BoxType;
+	public:
 		Drawable2D( );
 		virtual ~Drawable2D( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const = 0;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const = 0;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const = 0;
 		RefCountPtr< const Lang::Transformed2D > typed_transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Drawable2D > & self ) const;
 		virtual RefCountPtr< const Lang::Geometric2D > transformed( const Lang::Transform2D & tf, const RefCountPtr< const Lang::Geometric2D > & self ) const;
 		virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
@@ -700,11 +702,13 @@ namespace Shapes
 		virtual ~GroupPair2D( );
 		virtual bool isNull( ) const;
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual RefCountPtr< const Lang::Group2D > removeShallow( Lang::Symbol::KeyType key ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
+	protected:
+		RefCountPtr< const Lang::ElementaryPath2D > bbox( const RefCountPtr< const Lang::ElementaryPath2D > & carbbox, const RefCountPtr< const Lang::ElementaryPath2D > & cdrbbox ) const;
 	};
 
 	class GroupNull2D : public Lang::Group2D
@@ -715,22 +719,23 @@ namespace Shapes
 		virtual bool isNull( ) const;
 		virtual RefCountPtr< const Lang::Group2D > removeShallow( Lang::Symbol::KeyType key ) const;
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 	};
 
 	class XObject : public Lang::Drawable2D
 	{
 		RefCountPtr< const Kernel::GraphicsState > metaState_;
 		RefCountPtr< SimplePDF::PDF_Object > resource_;
-		RefCountPtr< const Lang::ElementaryPath2D > mybbox_;
+		RefCountPtr< const Lang::ElementaryPath2D > boundingbox_;
+		RefCountPtr< const Lang::ElementaryPath2D > bleedbox_;
 		std::string debugStr_;
 	public:
-		XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox );
-		XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox, const RefCountPtr< const Kernel::GraphicsState > & metaState );
+		XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, const RefCountPtr< const Lang::ElementaryPath2D > & boundingbox );
+		XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, const RefCountPtr< const Lang::ElementaryPath2D > & boundingbox, const RefCountPtr< const Lang::ElementaryPath2D > & bleedbox, const RefCountPtr< const Kernel::GraphicsState > & metaState );
 		virtual ~XObject( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
-		RefCountPtr< const Lang::XObject > cloneWithState( const RefCountPtr< const Kernel::GraphicsState > & _metaState ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
+		RefCountPtr< const Lang::XObject > cloneWithState( const RefCountPtr< const Kernel::GraphicsState > & _metaState, Concrete::Length bleedMargin ) const;
 		void setDebugStr( const std::string & _debugStr );
 		const std::string & getDebugStr( ) const;
 		virtual void show( std::ostream & os ) const;
@@ -769,7 +774,7 @@ namespace Shapes
 		TYPEINFODECL;
 		void addSubPath( RefCountPtr< const Lang::ElementaryPath2D > subpath );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 		bool isContainedIn( const Lang::Clipped2D * clipping ) const;
 	};
@@ -784,13 +789,17 @@ namespace Shapes
 
 	class BBoxed2D : public Lang::PaintedPolygon2D
 	{
+	public:
+		typedef enum { BOUNDING = 0, BLEED, BOTH } BoxType;
+	private:
 		RefCountPtr< const Lang::ElementaryPath2D > mybbox_;
 		RefCountPtr< const Lang::Drawable2D > element_;
+		BoxType boxType_;
 	public:
-		BBoxed2D( RefCountPtr< const Lang::Drawable2D > element, RefCountPtr< const Lang::ElementaryPath2D > mybbox );
+		BBoxed2D( RefCountPtr< const Lang::Drawable2D > element, RefCountPtr< const Lang::ElementaryPath2D > mybbox, BoxType boxType = BOUNDING );
 		virtual ~BBoxed2D( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -804,7 +813,7 @@ namespace Shapes
 		Transformed2D( RefCountPtr< const Lang::Drawable2D > element, const Lang::Transform2D & mytf );
 		virtual ~Transformed2D( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -820,13 +829,15 @@ namespace Shapes
 		virtual ~Clipped2D( );
 		void addSubPath( const RefCountPtr< const Lang::ElementaryPath2D > & subpath );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 		RefCountPtr< const Lang::Drawable2D > debugPolys( ) const;
 		bool isSingleConvexPoly( Concrete::Length tol ) const;
 		bool convexPolyContains( const Concrete::Coords2D & p, Concrete::Length tol ) const;
+	protected:
+		RefCountPtr< const Lang::ElementaryPath2D > bbox( const RefCountPtr< const Lang::ElementaryPath2D > & elem_bbox ) const;
 	};
 
 	class SoftMasked2D : public Lang::Drawable2D
@@ -837,7 +848,7 @@ namespace Shapes
 		SoftMasked2D( const RefCountPtr< const Lang::Drawable2D > & element, const RefCountPtr< const Lang::SoftMask > & mask );
 		virtual ~SoftMasked2D( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
@@ -1101,7 +1112,7 @@ namespace Shapes
 		Text( const RefCountPtr< const Kernel::GraphicsState > & metaState, const RefCountPtr< const Kernel::TextState > & textState, const RefCountPtr< const std::list< RefCountPtr< const Lang::TextOperation > > > & elements, const RefCountPtr< const Lang::ElementaryPath2D > & mybbox );
 		virtual ~Text( );
 		virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+		virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 		virtual void gcMark( Kernel::GCMarkedSet & marked );
 	};
 

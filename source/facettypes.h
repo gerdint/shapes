@@ -118,7 +118,7 @@ namespace Shapes
 			ReflectionsDynamicVariableProperties( const char * name );
 			virtual ~ReflectionsDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class AutoIntensityDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -127,7 +127,7 @@ namespace Shapes
 			AutoIntensityDynamicVariableProperties( const char * name );
 			virtual ~AutoIntensityDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class AutoScatteringDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -136,7 +136,7 @@ namespace Shapes
 			AutoScatteringDynamicVariableProperties( const char * name );
 			virtual ~AutoScatteringDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class ViewResolutionDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -145,7 +145,7 @@ namespace Shapes
 			ViewResolutionDynamicVariableProperties( const char * name );
 			virtual ~ViewResolutionDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class ShadeOrderDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -154,7 +154,7 @@ namespace Shapes
 			ShadeOrderDynamicVariableProperties( const char * name );
 			virtual ~ShadeOrderDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class FacetState

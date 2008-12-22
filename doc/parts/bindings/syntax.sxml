@@ -23,7 +23,7 @@
 <p>The user should generally <em>not</em> use these functions directly.</p>
 </top>
 
-<system-binding identifier="coords2D">
+<system-binding identifier="coords">
 	<function>
 		<case constructor-of="FloatPair">
 			<arguments>
@@ -97,7 +97,7 @@
 	</function>
 </system-binding>
 
-<system-binding identifier="cornercoords2D">
+<system-binding identifier="cornercoords">
 	<function>
 		<case constructor-of="Coords">
 			<arguments>
@@ -152,8 +152,11 @@
 	<function>
 		<case constructor-of="Drawable">
 			<arguments>
+				<arg>
 					<type><named-type name="String" /></type>
+				</arg>
 			</arguments>
+			<dynamic-references><dynvar name="TeX_bleed" /></dynamic-references>
 			<description>
 				<p>Implements <syntax name="tex-expr" />.  Using the syntax <syntax name="tex-expr" /> is much more efficient when the argument is known beforehand, since this allows the preprocessor to collect several strings to be sent to <str-LaTeX />, and process all at once.</p>
 			</description>

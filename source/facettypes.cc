@@ -57,7 +57,7 @@ Lang::ReflectionsBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 
 	if( newState->reflections_ != NullPtr< const Lang::SpecularReflection >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< facet state reflections >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->reflections_ = reflections_;
@@ -110,7 +110,7 @@ Lang::AutoIntensityBinding::bind( MapType & bindings, Kernel::SystemDynamicVaria
 
 	if( newState->autoIntensity_ != NullPtr< const Lang::Color >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< facet state auto-intensity >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->autoIntensity_ = color_;
@@ -163,7 +163,7 @@ Lang::AutoScatteringBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 
 	if( newState->autoScattering_ != NullPtr< const Lang::SpecularReflection >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< facet state auto-scattering >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->autoScattering_ = reflections_;
@@ -215,7 +215,7 @@ Lang::ViewResolutionBinding::bind( MapType & bindings, Kernel::SystemDynamicVari
 
 	if( ! IS_NAN( newState->viewResolution_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< facet state view resolution >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->viewResolution_ = resolution_;
@@ -265,7 +265,7 @@ Lang::ShadeOrderBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 
 	if( newState->shadeOrder_ != -1 )
 		{
-			throw Exceptions::MultipleDynamicBind( "< facet state shade order >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->shadeOrder_ = order_;
@@ -300,11 +300,11 @@ Kernel::ReflectionsDynamicVariableProperties::fetch( const Kernel::PassedDyn & d
 }
 
 void
-Kernel::ReflectionsDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ReflectionsDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( loc );
+	RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::ReflectionsBinding( name_, loc, reflection ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::ReflectionsBinding( name_, idLoc, reflection ) ),
 									 evalState );
 }
 
@@ -324,11 +324,11 @@ Kernel::AutoIntensityDynamicVariableProperties::fetch( const Kernel::PassedDyn &
 }
 
 void
-Kernel::AutoIntensityDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AutoIntensityDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Color > color = val->getVal< const Lang::Color >( loc );
+	RefCountPtr< const Lang::Color > color = val->getVal< const Lang::Color >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::AutoIntensityBinding( name_, loc, color ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::AutoIntensityBinding( name_, idLoc, color ) ),
 									 evalState );
 }
 
@@ -348,11 +348,11 @@ Kernel::AutoScatteringDynamicVariableProperties::fetch( const Kernel::PassedDyn 
 }
 
 void
-Kernel::AutoScatteringDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::AutoScatteringDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( loc );
+	RefCountPtr< const Lang::SpecularReflection > reflection = val->getVal< const Lang::SpecularReflection >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::AutoScatteringBinding( name_, loc, reflection ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::AutoScatteringBinding( name_, idLoc, reflection ) ),
 									 evalState );
 }
 
@@ -372,15 +372,15 @@ Kernel::ViewResolutionDynamicVariableProperties::fetch( const Kernel::PassedDyn 
 }
 
 void
-Kernel::ViewResolutionDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ViewResolutionDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Length > res = val->getVal< const Lang::Length >( loc );
+	RefCountPtr< const Lang::Length > res = val->getVal< const Lang::Length >( exprLoc );
 	if( res->get( ) <= 0 )
 		{
-			throw Exceptions::OutOfRange( loc, strrefdup( "The length must be non-negative." ) );
+			throw Exceptions::OutOfRange( exprLoc, strrefdup( "The length must be non-negative." ) );
 		}
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::ViewResolutionBinding( name_, loc, res->get( ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::ViewResolutionBinding( name_, idLoc, res->get( ) ) ),
 									 evalState );
 }
 
@@ -399,15 +399,15 @@ Kernel::ShadeOrderDynamicVariableProperties::fetch( const Kernel::PassedDyn & dy
 }
 
 void
-Kernel::ShadeOrderDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::ShadeOrderDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Integer > order = val->getVal< const Lang::Integer >( loc );
+	RefCountPtr< const Lang::Integer > order = val->getVal< const Lang::Integer >( exprLoc );
 	if( order->val_ < 0 || order->val_ > 2 )
 		{
-			throw Exceptions::OutOfRange( loc, strrefdup( "The shade order integer must be one of { 0, 1, 2 }." ) );
+			throw Exceptions::OutOfRange( exprLoc, strrefdup( "The shade order integer must be one of { 0, 1, 2 }." ) );
 		}
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::ShadeOrderBinding( name_, loc, order->val_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::ShadeOrderBinding( name_, idLoc, order->val_ ) ),
 									 evalState );
 }
 

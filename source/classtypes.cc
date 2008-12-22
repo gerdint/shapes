@@ -283,7 +283,7 @@ Lang::Instance::shipout( std::ostream & os, Kernel::PageContentStates * pdfState
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::Instance::bbox( ) const
+Lang::Instance::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	if( ! myClass->method_isa( Lang::Drawable2D::TypeID ) )
 		{
@@ -295,7 +295,7 @@ Lang::Instance::bbox( ) const
 			throw Exceptions::InternalError( "Instance::shipout: warm2D == 0." );
 		}
 
-	return warm2D->getPile( )->bbox( );
+	return warm2D->getPile( )->bbox( boxType );
 }
 
 RefCountPtr< const char >
@@ -364,9 +364,9 @@ Lang::TransformedInstance::shipout( std::ostream & os, Kernel::PageContentStates
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::TransformedInstance::bbox( ) const
+Lang::TransformedInstance::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return obj->bbox( )->elementaryTransformed( tf );
+	return obj->bbox( boxType )->elementaryTransformed( tf );
 }
 
 RefCountPtr< const Lang::Class > Lang::TransformedInstance::TypeID( new Lang::SystemFinalClass( strrefdup( "TransformedInstance" ) ) );

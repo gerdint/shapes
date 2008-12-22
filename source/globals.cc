@@ -65,7 +65,7 @@ Computation::BasicSimplex Computation::theTwoTriangleSimplex( 3, 6 ); // 3 varia
 Ast::Expression * Ast::theProgram;
 PtrOwner_back_Access< std::list< Ast::AnalysisEnvironment * > > Ast::theAnalysisEnvironmentList;
 Ast::AnalysisEnvironment * Ast::theGlobalAnalysisEnvironment;
-Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION( "" );	// This is a special value.	See SourceLocation.
+Ast::SourceLocation Ast::THE_UNKNOWN_LOCATION;	// This is a special value.	See SourceLocation.
 Ast::DummyExpression Ast::THE_CORE_DEFAULT_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< core function default value >" ) );
 Ast::DummyExpression Ast::THE_INTERNAL_VALUE_EXPRESSION = Ast::DummyExpression( Ast::SourceLocation( "< internally passed value >" ) );
 

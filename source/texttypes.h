@@ -297,7 +297,7 @@ namespace Shapes
 			CharacterSpacingDynamicVariableProperties( const char * name );
 			virtual ~CharacterSpacingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class WordSpacingDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -306,7 +306,7 @@ namespace Shapes
 			WordSpacingDynamicVariableProperties( const char * name );
 			virtual ~WordSpacingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class HorizontalScalingDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -315,7 +315,7 @@ namespace Shapes
 			HorizontalScalingDynamicVariableProperties( const char * name );
 			virtual ~HorizontalScalingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class LeadingDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -324,7 +324,7 @@ namespace Shapes
 			LeadingDynamicVariableProperties( const char * name );
 			virtual ~LeadingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class FontDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -333,7 +333,7 @@ namespace Shapes
 			FontDynamicVariableProperties( const char * name );
 			virtual ~FontDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class TextSizeDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -342,7 +342,7 @@ namespace Shapes
 			TextSizeDynamicVariableProperties( const char * name );
 			virtual ~TextSizeDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class TextRenderingModeDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -351,7 +351,7 @@ namespace Shapes
 			TextRenderingModeDynamicVariableProperties( const char * name );
 			virtual ~TextRenderingModeDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class TextRiseDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -360,7 +360,7 @@ namespace Shapes
 			TextRiseDynamicVariableProperties( const char * name );
 			virtual ~TextRiseDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class TextKnockoutDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -369,7 +369,7 @@ namespace Shapes
 			TextKnockoutDynamicVariableProperties( const char * name );
 			virtual ~TextKnockoutDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class TextState

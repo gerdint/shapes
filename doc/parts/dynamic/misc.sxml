@@ -23,10 +23,20 @@
 
 <dynamic-variable identifier="eyez">
 	<type><named-type name="Length" /></type>
-	<constraint><self /> > <physical><scalar>0</scalar><unit>bp</unit></physical> <b>or</b> <self /> = <eq>∞</eq></constraint>
+	<constraint><self /> &gt; <physical><scalar>0</scalar><unit>bp</unit></physical> <b>or</b> <self /> = <eq>∞</eq></constraint>
 	<default><physical><scalar>50</scalar><unit>cm</unit></physical></default>
 	<description>
 		<p>When a <str-3D /> world is viewed through a pin-hole camera to obtain <str-2D /> image, the pin-hole camera (the eye) is located at <eq>( 0, 0, z<sub><rm>eye</rm></sub> )</eq>, and the image plane is <eq>z = 0</eq>.  The special float value <eq>∞</eq> can be used to place the eye at infinity, which will make the projection independent of <eq>z</eq> coordinates.</p>
+	</description>
+</dynamic-variable>
+
+<dynamic-variable identifier="TeX_bleed">
+	<type><named-type name="Length" /></type>
+	<default><physical><scalar>1</scalar><unit>bp</unit></physical></default>
+	<description>
+		<p>The bounding boxes computed by <str-pdfLaTeX /> are generally too small to completely contain the glyph marks.  The reason appears to be that font designers tend to intentionally lie about the bounding box in order to achieve better type setting given existing type setting algorithms.</p>
+		<p>This causes a problem when such objects are at the boundary of the bounding box of page, since the page will then be slightly too small.  While perhaps just mildly irritating when the page is the end media, but when the output is included as a picture in a bigger document, the cropped glyphs become really disturbing.</p>
+		<p>The solution to this is to define a <em>bleed box</em> which is larger than the bounding box.  The bounding box will be used for layout as usual, but the bleed box is used when determining the crop box for the page.  To keep things simple, the size of the bleed box is controlled using this dynamic variable alone, which specifies how much the bleed box extends outside the bounding box in the <eq>x</eq> and <eq>y</eq> directions.</p>
 	</description>
 </dynamic-variable>
 

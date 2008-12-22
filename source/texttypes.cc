@@ -1079,7 +1079,7 @@ Lang::CharacterSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVa
 
 	if( newState->hasCharacterSpacing( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state character spacing >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	if( isRelative_ )
@@ -1161,7 +1161,7 @@ Lang::WordSpacingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 
 	if( newState->hasWordSpacing( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state word spacing >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	if( isRelative_ )
@@ -1225,7 +1225,7 @@ Lang::HorizontalScalingBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 
 	if( ! IS_NAN( newState->horizontalScaling_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state horizontal scaling >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->horizontalScaling_ = scaling_;
@@ -1293,7 +1293,7 @@ Lang::LeadingBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables *
 
 	if( newState->hasLeading( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state leading >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	if( isRelative_ )
@@ -1357,7 +1357,7 @@ Lang::FontBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 
 	if( newState->font_ != NullPtr< const Lang::Font >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state font >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->font_ = font_;
@@ -1409,7 +1409,7 @@ Lang::TextSizeBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 
 	if( ! IS_NAN( newState->size_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state font size >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->size_ = size_;
@@ -1459,7 +1459,7 @@ Lang::TextRenderingModeBinding::bind( MapType & bindings, Kernel::SystemDynamicV
 
 	if( newState->mode_ != Lang::TextRenderingMode::UNDEFINED )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state rendering mode >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->mode_ = mode_;
@@ -1527,7 +1527,7 @@ Lang::TextRiseBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables 
 
 	if( newState->hasRise( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state rise >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	if( isRelative_ )
@@ -1591,7 +1591,7 @@ Lang::TextKnockoutBinding::bind( MapType & bindings, Kernel::SystemDynamicVariab
 
 	if( ( newState->knockout_ & Kernel::TextState::KNOCKOUT_UNDEFINED_BIT ) != 0 )
 		{
-			throw Exceptions::MultipleDynamicBind( "< text state knockout >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	newState->knockout_ = ( knockout_ ? Kernel::TextState::KNOCKOUT_FLAG_BIT : 0 );
@@ -1625,7 +1625,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::fetch( const Kernel::PassedDy
 }
 
 void
-Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1635,7 +1635,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::Variable
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, loc, spacing->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, idLoc, spacing->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1649,7 +1649,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::Variable
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, loc, spacing->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::CharacterSpacingBinding( name_, idLoc, spacing->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1659,7 +1659,7 @@ Kernel::CharacterSpacingDynamicVariableProperties::makeBinding( Kernel::Variable
 			 */
 		}
 
-	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1678,7 +1678,7 @@ Kernel::WordSpacingDynamicVariableProperties::fetch( const Kernel::PassedDyn & d
 }
 
 void
-Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1688,7 +1688,7 @@ Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, loc, spacing->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, idLoc, spacing->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1702,7 +1702,7 @@ Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > spacing = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, loc, spacing->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::WordSpacingBinding( name_, idLoc, spacing->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1712,7 +1712,7 @@ Kernel::WordSpacingDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 			 */
 		}
 
-	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1731,11 +1731,11 @@ Kernel::HorizontalScalingDynamicVariableProperties::fetch( const Kernel::PassedD
 }
 
 void
-Kernel::HorizontalScalingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::HorizontalScalingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Float > scaling = val->getVal< const Lang::Float >( loc );
+	RefCountPtr< const Lang::Float > scaling = val->getVal< const Lang::Float >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::HorizontalScalingBinding( name_, loc, scaling->val_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::HorizontalScalingBinding( name_, idLoc, scaling->val_ ) ),
 									 evalState );
 }
 
@@ -1755,7 +1755,7 @@ Kernel::LeadingDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn )
 }
 
 void
-Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1765,7 +1765,7 @@ Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle va
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, loc, ty->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, idLoc, ty->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1779,7 +1779,7 @@ Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle va
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, loc, ty->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::LeadingBinding( name_, idLoc, ty->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1789,7 +1789,7 @@ Kernel::LeadingDynamicVariableProperties::makeBinding( Kernel::VariableHandle va
 			 */
 		}
 
-	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1808,10 +1808,10 @@ Kernel::FontDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::FontDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::FontDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::FontBinding( name_, loc, val->getVal< const Lang::Font >( loc ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::FontBinding( name_, idLoc, val->getVal< const Lang::Font >( exprLoc ) ) ),
 									 evalState );
 }
 
@@ -1831,11 +1831,11 @@ Kernel::TextSizeDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn 
 }
 
 void
-Kernel::TextSizeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextSizeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Length > size = val->getVal< const Lang::Length >( loc );
+	RefCountPtr< const Lang::Length > size = val->getVal< const Lang::Length >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextSizeBinding( name_, loc, size->get( ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextSizeBinding( name_, idLoc, size->get( ) ) ),
 									 evalState );
 }
 
@@ -1855,11 +1855,11 @@ Kernel::TextRenderingModeDynamicVariableProperties::fetch( const Kernel::PassedD
 }
 
 void
-Kernel::TextRenderingModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextRenderingModeDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::TextRenderingMode > mode = val->getVal< const Lang::TextRenderingMode >( loc );
+	RefCountPtr< const Lang::TextRenderingMode > mode = val->getVal< const Lang::TextRenderingMode >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextRenderingModeBinding( name_, loc, mode->mode_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextRenderingModeBinding( name_, idLoc, mode->mode_ ) ),
 									 evalState );
 }
 
@@ -1879,7 +1879,7 @@ Kernel::TextRiseDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn 
 }
 
 void
-Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	RefCountPtr< const Lang::Value > valUntyped = val->getUntyped( );
 
@@ -1889,7 +1889,7 @@ Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			typedef const Lang::Length ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, loc, ty->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, idLoc, ty->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -1903,7 +1903,7 @@ Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 		{
 			typedef const Lang::Float ArgType;
 			RefCountPtr< ArgType > ty = Helpers::try_cast_CoreArgument< ArgType >( valUntyped );
-			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, loc, ty->val_ ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::TextRiseBinding( name_, idLoc, ty->val_ ) ),
 											 evalState );
 			return;
 		}
@@ -1913,7 +1913,7 @@ Kernel::TextRiseDynamicVariableProperties::makeBinding( Kernel::VariableHandle v
 			 */
 		}
 
-	throw Exceptions::TypeMismatch( loc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, valUntyped->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -1932,11 +1932,11 @@ Kernel::TextKnockoutDynamicVariableProperties::fetch( const Kernel::PassedDyn & 
 }
 
 void
-Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::TextKnockoutDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::Boolean > mode = val->getVal< const Lang::Boolean >( loc );
+	RefCountPtr< const Lang::Boolean > mode = val->getVal< const Lang::Boolean >( exprLoc );
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::TextKnockoutBinding( name_, loc, mode->val_ ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::TextKnockoutBinding( name_, idLoc, mode->val_ ) ),
 									 evalState );
 }
 

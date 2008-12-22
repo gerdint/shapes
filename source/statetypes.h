@@ -464,7 +464,7 @@ namespace Shapes
 			virtual ~UserDynamicVariableProperties( );
 
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class UserDynamicStateProperties : public Kernel::DynamicStateProperties
@@ -487,7 +487,7 @@ namespace Shapes
 			WidthDynamicVariableProperties( const char * name );
 			virtual ~WidthDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class MiterLimitDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -495,7 +495,7 @@ namespace Shapes
 			MiterLimitDynamicVariableProperties( const char * name );
 			virtual ~MiterLimitDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class StrokingDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -504,7 +504,7 @@ namespace Shapes
 			StrokingDynamicVariableProperties( const char * name );
 			virtual ~StrokingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class NonStrokingDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -512,7 +512,7 @@ namespace Shapes
 			NonStrokingDynamicVariableProperties( const char * name );
 			virtual ~NonStrokingDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class AlphaDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -521,7 +521,7 @@ namespace Shapes
 			AlphaDynamicVariableProperties( const char * name, bool isStroking );
 			virtual ~AlphaDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class DashDynamicVariableProperties : public Kernel::DynamicVariableProperties
@@ -530,7 +530,7 @@ namespace Shapes
 			DashDynamicVariableProperties( const char * name );
 			virtual ~DashDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class CapStyleDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -538,7 +538,7 @@ namespace Shapes
 			CapStyleDynamicVariableProperties( const char * name );
 			virtual ~CapStyleDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class JoinStyleDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -546,7 +546,7 @@ namespace Shapes
 			JoinStyleDynamicVariableProperties( const char * name );
 			virtual ~JoinStyleDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 		class BlendModeDynamicVariableProperties : public Kernel::DynamicVariableProperties
 		{
@@ -554,7 +554,7 @@ namespace Shapes
 			BlendModeDynamicVariableProperties( const char * name );
 			virtual ~BlendModeDynamicVariableProperties( );
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const;
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const;
 		};
 
 		class GraphicsState

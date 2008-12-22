@@ -189,7 +189,7 @@ namespace Shapes
 			const char * getName( ) const { return name_; }
 			virtual Kernel::VariableHandle fetch( const Kernel::PassedDyn & dyn ) const = 0;
 			virtual bool forceValue( ) const { return true; };
-			virtual void makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const = 0;
+			virtual void makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const = 0;
 		};
 
 		class DynamicStateProperties

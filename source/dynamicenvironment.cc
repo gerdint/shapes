@@ -140,6 +140,7 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 Kernel::SystemDynamicVariables::SystemDynamicVariables( )
 	: graphicsState_( NullPtr< const Kernel::GraphicsState >( ) ),
 		eyez_( std::numeric_limits< double >::signaling_NaN( ) ),
+		TeX_bleed_( std::numeric_limits< double >::signaling_NaN( ) ),
 		defaultUnit_( NullPtr< const Kernel::PolarHandlePromise >( ) ),
 		blendSpace_( NullPtr< const Lang::ColorSpace >( ) )
 { }
@@ -149,6 +150,7 @@ Kernel::SystemDynamicVariables::SystemDynamicVariables( const RefCountPtr< const
 		facetState_( true ),
 		textState_( true ),
 		eyez_( 50 * 72 / 2.54 ), /* 50 cm */
+		TeX_bleed_( 0.5 ), /* 0.5 bp */
 		defaultUnit_( new Kernel::PolarHandleEmptyPromise( ) ),
 		blendSpace_( Lang::THE_INHERITED_COLOR_SPACE )
 { }
@@ -189,6 +191,11 @@ Kernel::SystemDynamicVariables::addFrom( const SystemDynamicVariables & other )
 	if( IS_NAN( eyez_ ) )
 		{
 			eyez_ = other.eyez_;
+		}
+
+	if( IS_NAN( TeX_bleed_ ) )
+		{
+			TeX_bleed_ = other.TeX_bleed_;
 		}
 
 	if( defaultUnit_ == NullPtr< const Kernel::PolarHandlePromise >( ) )
@@ -417,6 +424,22 @@ Kernel::DynamicEnvironment::getEyeZ( ) const
 	return sysBindings_->eyez_;
 }
 
+Concrete::Length
+Kernel::DynamicEnvironment::getTeXBleed( ) const
+{
+	if( sysBindings_ == 0 ||
+			IS_NAN( sysBindings_->TeX_bleed_ ) )
+		{
+			if( parent_ == NullPtr< Kernel::DynamicEnvironment >( ) )
+				{
+					throw Exceptions::InternalError( "@TeX_bleed should allways be bound." );
+				}
+			return parent_->getTeXBleed( );
+		}
+
+	return sysBindings_->TeX_bleed_;
+}
+
 RefCountPtr< const Kernel::PolarHandlePromise >
 Kernel::DynamicEnvironment::getDefaultUnit( ) const
 {
@@ -508,7 +531,7 @@ Lang::EyeZBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** s
 
 	if( ! IS_NAN( (*sysBindings)->eyez_ ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< eye's z-coordinate >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->eyez_ = val_;
@@ -541,13 +564,13 @@ Kernel::EyeZDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) co
 }
 
 void
-Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	try
 		{
 			RefCountPtr< const Lang::Length > len = val->tryVal< const Lang::Length >( );
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, len->get( ) ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, idLoc, len->get( ) ) ),
 											 evalState );
 			return;
 		}
@@ -561,10 +584,10 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 			RefCountPtr< const Lang::Float > maybeInfinity = val->tryVal< const Lang::Float >( );
 			if( maybeInfinity->val_ < HUGE_VAL )
 				{
-					throw Exceptions::OutOfRange( loc, strrefdup( "The only float value allowed here is infinity." ) );
+					throw Exceptions::OutOfRange( exprLoc, strrefdup( "The only float value allowed here is infinity." ) );
 				}
 			Kernel::ContRef cont = evalState->cont_;
-			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, loc, Concrete::HUGE_LENGTH ) ),
+			cont->takeValue( Kernel::ValueRef( new Lang::EyeZBinding( name_, idLoc, Concrete::HUGE_LENGTH ) ),
 											 evalState );
 			return;
 		}
@@ -573,7 +596,7 @@ Kernel::EyeZDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, 
 			/* never mind */
 		}
 
-	throw Exceptions::TypeMismatch( loc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
+	throw Exceptions::TypeMismatch( exprLoc, val->getUntyped( )->getTypeName( ), Helpers::typeSetString( Lang::Length::staticTypeName( ), Lang::Float::staticTypeName( ) ) );
 }
 
 
@@ -596,7 +619,7 @@ Lang::DefaultUnitBinding::bind( MapType & bindings, Kernel::SystemDynamicVariabl
 
 	if( (*sysBindings)->defaultUnit_ != NullPtr< const Kernel::PolarHandlePromise >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< default unit >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->defaultUnit_ = val_;
@@ -629,7 +652,7 @@ Kernel::DefaultUnitDynamicVariableProperties::fetch( const Kernel::PassedDyn & d
 }
 
 void
-Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
 	if( ! val->isThunk( ) )
 		{
@@ -637,9 +660,70 @@ Kernel::DefaultUnitDynamicVariableProperties::makeBinding( Kernel::VariableHandl
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( name_, loc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::DefaultUnitBinding( name_, idLoc, RefCountPtr< const Kernel::PolarHandlePromise >( new Kernel::PolarHandleTruePromise( val->copyThunk( ) ) ) ) ),
 									 evalState );
 	return;
+}
+
+
+Lang::TeXBleedBinding::TeXBleedBinding( const char * id, const Ast::SourceLocation & loc, Concrete::Length val )
+	: loc_( loc ), val_( val ), id_( id )
+{ }
+
+Lang::TeXBleedBinding::~TeXBleedBinding( )
+{ }
+
+void
+Lang::TeXBleedBinding::bind( MapType & bindings, Kernel::SystemDynamicVariables ** sysBindings ) const
+{
+	if( *sysBindings == 0 )
+		{
+			*sysBindings = new Kernel::SystemDynamicVariables( );
+			(*sysBindings)->TeX_bleed_ = val_;
+			return;
+		}
+
+	if( ! IS_NAN( (*sysBindings)->TeX_bleed_ ) )
+		{
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
+		}
+
+	(*sysBindings)->TeX_bleed_ = val_;
+}
+
+void
+Lang::TeXBleedBinding::show( std::ostream & os ) const
+{
+	os << Interaction::DYNAMIC_VARIABLE_PREFIX << id_ << ":"
+		 << val_ / Interaction::displayUnit << Interaction::displayUnitName ;
+}
+
+void
+Lang::TeXBleedBinding::gcMark( Kernel::GCMarkedSet & marked )
+{ }
+
+
+
+Kernel::TeXBleedDynamicVariableProperties::TeXBleedDynamicVariableProperties( const char * _name )
+	: Kernel::DynamicVariableProperties( _name )
+{ }
+
+Kernel::TeXBleedDynamicVariableProperties::~TeXBleedDynamicVariableProperties( )
+{ }
+
+Kernel::VariableHandle
+Kernel::TeXBleedDynamicVariableProperties::fetch( const Kernel::PassedDyn & dyn ) const
+{
+	return Helpers::newValHandle( new Lang::Length( dyn->getTeXBleed( ) ) );
+}
+
+void
+Kernel::TeXBleedDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
+{
+	RefCountPtr< const Lang::Length > len = val->getVal< const Lang::Length >( exprLoc );
+	Kernel::ContRef cont = evalState->cont_;
+	cont->takeValue( Kernel::ValueRef( new Lang::TeXBleedBinding( name_, idLoc, len->get( ) ) ),
+									 evalState );
 }
 
 
@@ -662,7 +746,7 @@ Lang::BlendSpaceBinding::bind( MapType & bindings, Kernel::SystemDynamicVariable
 
 	if( (*sysBindings)->blendSpace_ != NullPtr< const Lang::ColorSpace >( ) )
 		{
-			throw Exceptions::MultipleDynamicBind( "< blend space >", loc_, Ast::THE_UNKNOWN_LOCATION );
+			throw Exceptions::MultipleDynamicBind( id_, loc_, Ast::THE_UNKNOWN_LOCATION );
 		}
 
 	(*sysBindings)->blendSpace_ = space_;
@@ -695,16 +779,16 @@ Kernel::BlendSpaceDynamicVariableProperties::fetch( const Kernel::PassedDyn & dy
 }
 
 void
-Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, Ast::SourceLocation loc, Kernel::EvalState * evalState ) const
+Kernel::BlendSpaceDynamicVariableProperties::makeBinding( Kernel::VariableHandle val, const Ast::SourceLocation & idLoc, const Ast::SourceLocation & exprLoc, Kernel::EvalState * evalState ) const
 {
-	RefCountPtr< const Lang::ColorSpace > space = val->getVal< const Lang::ColorSpace >( loc );
+	RefCountPtr< const Lang::ColorSpace > space = val->getVal< const Lang::ColorSpace >( exprLoc );
 	if( ! space->isBlendable( ) )
 		{
-			throw Exceptions::OutOfRange( loc, strrefdup( "This color space cannot be used in blending." ) );
+			throw Exceptions::OutOfRange( exprLoc, strrefdup( "This color space cannot be used in blending." ) );
 		}
 
 	Kernel::ContRef cont = evalState->cont_;
-	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( name_, loc, space ) ),
+	cont->takeValue( Kernel::ValueRef( new Lang::BlendSpaceBinding( name_, idLoc, space ) ),
 									 evalState );
 }
 
@@ -774,9 +858,10 @@ Kernel::registerDynamic( Kernel::Environment * env )
 	env->initDefineDynamic( new Kernel::TextRiseDynamicVariableProperties( "text_rise" ) );
 	env->initDefineDynamic( new Kernel::TextKnockoutDynamicVariableProperties( "text_knockout" ) );
 
+	env->initDefineDynamic( new Kernel::TeXBleedDynamicVariableProperties( "TeX_bleed" ) );
+
 	env->initDefineDynamic( new Kernel::EyeZDynamicVariableProperties( Lang::DYNAMIC_VARIABLE_ID_EYEZ ) );
 	env->initDefineDynamic( new Kernel::DefaultUnitDynamicVariableProperties( "defaultunit" ) );
-	//	env->initDefineDynamic( new Kernel::DefaultDestinationDynamicVariableProperties( "<<" ) );
 	env->initDefineDynamic( new Kernel::BlendSpaceDynamicVariableProperties( "blendspace" ) );
 }
 

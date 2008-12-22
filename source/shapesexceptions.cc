@@ -378,7 +378,7 @@ Exceptions::TypeMismatch::display( std::ostream & os ) const
 		{
 			os << hint_ << ": " ;
 		}
-	os << "Expected " << expectedType << ", got a " << valueType << std::endl ;
+	os << "Expected a " << expectedType << ", got a " << valueType << "." << std::endl ;
 }
 
 Exceptions::PDFVersionError::PDFVersionError( SimplePDF::PDF_Version::Version version, SimplePDF::PDF_Version::Version required, const RefCountPtr< const char > & msg )
@@ -1157,7 +1157,7 @@ Exceptions::CoreTypeMismatch::display( std::ostream & os ) const
 	//		{
 	//			os << "\"" << argName_ << "\" " ;
 	//		}
-	os << "at " << argLoc_ << ": expected a " << expectedType_ << ", got a " << valueType_ << std::endl ;
+	os << "at " << argLoc_ << ": expected a " << expectedType_ << ", got a " << valueType_ << "." << std::endl ;
 }
 
 
@@ -1224,7 +1224,7 @@ Exceptions::CoreStateTypeMismatch::display( std::ostream & os ) const
 	//		{
 	//			os << "\"" << argName_ << "\" " ;
 	//		}
-	os << "at " << argLoc_ << ": expected a " << expectedType_ << ", got a " << valueType_ << std::endl ;
+	os << "at " << argLoc_ << ": expected a " << expectedType_ << ", got a " << valueType_ << "." << std::endl ;
 }
 
 
@@ -1249,7 +1249,7 @@ void
 Exceptions::CoreDynamicTypeMismatch::display( std::ostream & os ) const
 {
 	os << "Core function " << title_ << " encountered a type mismatch in the dynamic variable @" << id_
-		 << ": expected a " << expectedType_ << ", got a " << valueType_ << std::endl ;
+		 << ": expected a " << expectedType_ << ", got a " << valueType_ << "." << std::endl ;
 }
 
 Exceptions::ContinuationTypeMismatch::ContinuationTypeMismatch( const Kernel::Continuation * locationCont,

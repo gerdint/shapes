@@ -46,7 +46,7 @@ Lang::Type4Shading::shipout( std::ostream & os, Kernel::PageContentStates * pdfS
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::Type4Shading::bbox( ) const
+Lang::Type4Shading::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	return mybbox_;
 }

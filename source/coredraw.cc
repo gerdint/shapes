@@ -876,12 +876,17 @@ namespace Shapes
 		class Core_bboxed : public Lang::CoreFunction
 		{
 		public:
-			Core_bboxed( const char * title ) : CoreFunction( title ) { }
+			Core_bboxed( const char * title )
+				: CoreFunction( title, new Kernel::EvaluatedFormals( title, true ) )
+			{
+				formals_->appendEvaluatedCoreFormal( "obj", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "path", Kernel::THE_SLOT_VARIABLE );
+				formals_->appendEvaluatedCoreFormal( "type", Helpers::newValHandle( new Lang::Symbol( "bounding" ) ) );
+			}
 			virtual void
 			call( Kernel::EvalState * evalState, Kernel::Arguments & args, const Ast::SourceLocation & callLoc ) const
 			{
-				const size_t ARITY = 2;
-				CHECK_ARITY( args, ARITY, title_ );
+				args.applyDefaults( );
 
 				size_t argsi = 0;
 
@@ -893,8 +898,40 @@ namespace Shapes
 				typedef const Lang::ElementaryPath2D ArgType2;
 				RefCountPtr< ArgType2 > p = Helpers::elementaryPathCast2D( title_, args, argsi, callLoc );
 
+				++argsi;
+				typedef const Lang::Symbol TypeType;
+				RefCountPtr< TypeType > type = Helpers::down_cast_CoreArgument< TypeType >( title_, args, argsi, callLoc );
+				Lang::BBoxed2D::BoxType bt = Lang::BBoxed2D::BOUNDING;
+				static Lang::Symbol BOUNDING( "bounding" );
+				static Lang::Symbol BLEED( "bleed" );
+				static Lang::Symbol BOTH( "both" );
+				if( *type == BOUNDING )
+					{
+						bt = Lang::BBoxed2D::BOUNDING;
+					}
+				else if( *type == BLEED )
+					{
+						bt = Lang::BBoxed2D::BLEED;
+					}
+				else if( *type == BOTH )
+					{
+						bt = Lang::BBoxed2D::BOTH;
+					}
+				else
+					{
+						std::ostringstream msg;
+						msg << "The only allowed symbols are { " ;
+						BOUNDING.show( msg );
+						msg << " , " ;
+						BLEED.show( msg );
+						msg << " , " ;
+						BOTH.show( msg );
+						msg << " }." ;
+						throw Exceptions::CoreOutOfRange( title_, args, argsi, strrefdup( msg ) );
+					}
+
 				Kernel::ContRef cont = evalState->cont_;
-				cont->takeValue( Kernel::ValueRef( new Lang::BBoxed2D( obj, p ) ),
+				cont->takeValue( Kernel::ValueRef( new Lang::BBoxed2D( obj, p, bt ) ),
 												 evalState );
 			}
 		};

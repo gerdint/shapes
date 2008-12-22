@@ -58,7 +58,7 @@ Lang::TaggedValue2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::TaggedValue2D::bbox( ) const
+Lang::TaggedValue2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	return Lang::THE_EMPTYPATH2D;
 }
@@ -137,7 +137,7 @@ Lang::TaggedGeometric2D::shipout( std::ostream & os, Kernel::PageContentStates *
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::TaggedGeometric2D::bbox( ) const
+Lang::TaggedGeometric2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	return Lang::THE_EMPTYPATH2D;
 }
@@ -210,9 +210,9 @@ Lang::TaggedDrawable2D::shipout( std::ostream & os, Kernel::PageContentStates * 
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::TaggedDrawable2D::bbox( ) const
+Lang::TaggedDrawable2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return val_->bbox( );
+	return val_->bbox( boxType );
 }
 
 RefCountPtr< const Lang::Geometric3D >

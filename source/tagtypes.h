@@ -46,7 +46,7 @@ namespace Shapes
 			TaggedValue2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Value > & val );
 			virtual ~TaggedValue2D( );
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 			virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
 			virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 			virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
@@ -63,7 +63,7 @@ namespace Shapes
 			TaggedGeometric2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Geometric2D > & val );
 			virtual ~TaggedGeometric2D( );
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 			virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
 			virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 			virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
@@ -79,7 +79,7 @@ namespace Shapes
 			TaggedDrawable2D( const Lang::Symbol::KeyType key, const RefCountPtr< const Lang::Drawable2D > & val );
 			virtual ~TaggedDrawable2D( );
 			virtual void shipout( std::ostream & os, Kernel::PageContentStates * pdfState, const Lang::Transform2D & tf ) const;
-			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( ) const;
+			virtual RefCountPtr< const Lang::ElementaryPath2D > bbox( Lang::Drawable2D::BoxType boxType ) const;
 			virtual RefCountPtr< const Lang::Geometric3D > to3D( const RefCountPtr< const Lang::Geometric2D > & self ) const;
 			virtual void findTags( std::vector< Kernel::ValueRef > * dst, const Kernel::PassedDyn & dyn, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;
 			virtual bool findOneTag( Kernel::EvalState * evalState, Lang::Symbol::KeyType key, const Lang::Transform2D & tf ) const;

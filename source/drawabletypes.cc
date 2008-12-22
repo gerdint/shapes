@@ -157,10 +157,10 @@ Lang::GroupPair2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfSt
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::GroupPair2D::bbox( ) const
+Lang::GroupPair2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	RefCountPtr< const Lang::ElementaryPath2D > carbbox = car_->bbox( );
-	RefCountPtr< const Lang::ElementaryPath2D > cdrbbox = cdr_->bbox( );
+	RefCountPtr< const Lang::ElementaryPath2D > carbbox = car_->bbox( boxType );
+	RefCountPtr< const Lang::ElementaryPath2D > cdrbbox = cdr_->bbox( boxType );
 
 	if( cdrbbox->empty( ) )
 		{
@@ -272,18 +272,18 @@ Lang::GroupNull2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfSt
 { }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::GroupNull2D::bbox( ) const
+Lang::GroupNull2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	return Lang::THE_EMPTYPATH2D;
 }
 
 
-Lang::XObject::XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox )
-	: metaState_( Kernel::THE_NO_STATE ), resource_( resource ), mybbox_( mybbox )
+Lang::XObject::XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, const RefCountPtr< const Lang::ElementaryPath2D > & boundingbox )
+	: metaState_( Kernel::THE_NO_STATE ), resource_( resource ), boundingbox_( boundingbox ), bleedbox_( boundingbox )
 { }
 
-Lang::XObject::XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, RefCountPtr< const Lang::ElementaryPath2D > mybbox, const RefCountPtr< const Kernel::GraphicsState > & metaState )
-	: metaState_( metaState ), resource_( resource ), mybbox_( mybbox )
+Lang::XObject::XObject( const RefCountPtr< SimplePDF::PDF_Object > & resource, const RefCountPtr< const Lang::ElementaryPath2D > & boundingbox, const RefCountPtr< const Lang::ElementaryPath2D > & bleedbox, const RefCountPtr< const Kernel::GraphicsState > & metaState )
+	: metaState_( metaState ), resource_( resource ), boundingbox_( boundingbox ), bleedbox_( bleedbox )
 { }
 
 Lang::XObject::~XObject( )
@@ -313,15 +313,34 @@ Lang::XObject::getResource( ) const
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::XObject::bbox( ) const
+Lang::XObject::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return mybbox_;
+	switch( boxType )
+		{
+		case Lang::Drawable2D::BOUNDING:
+			return boundingbox_;
+		case Lang::Drawable2D::BLEED:
+			return bleedbox_;
+		}
+	throw Exceptions::InternalError( "Lang::XObject::bbox: boxType out of range." );
 }
 
 RefCountPtr< const Lang::XObject >
-Lang::XObject::cloneWithState( const RefCountPtr< const Kernel::GraphicsState > & metaState ) const
+Lang::XObject::cloneWithState( const RefCountPtr< const Kernel::GraphicsState > & metaState, Concrete::Length bleedMargin ) const
 {
-	return RefCountPtr< const Lang::XObject >( new Lang::XObject( resource_, mybbox_, metaState ) );
+	Concrete::Coords2D llcorner( 0, 0 );
+	Concrete::Coords2D urcorner( 0, 0 );
+	boundingbox_->boundingRectangle( & llcorner, & urcorner );
+
+	Lang::ElementaryPath2D * bleedBox = new Lang::ElementaryPath2D;
+
+	bleedBox->push_back( new Concrete::PathPoint2D( llcorner.x_ - bleedMargin, llcorner.y_ - bleedMargin ) );
+	bleedBox->push_back( new Concrete::PathPoint2D( urcorner.x_ + bleedMargin, llcorner.y_ - bleedMargin ) );
+	bleedBox->push_back( new Concrete::PathPoint2D( urcorner.x_ + bleedMargin, urcorner.y_ + bleedMargin ) );
+	bleedBox->push_back( new Concrete::PathPoint2D( llcorner.x_ - bleedMargin, urcorner.y_ + bleedMargin ) );
+	bleedBox->close( );
+
+	return RefCountPtr< const Lang::XObject >( new Lang::XObject( resource_, boundingbox_, RefCountPtr< const Lang::ElementaryPath2D >( bleedBox ), metaState ) );
 }
 
 void
@@ -371,7 +390,7 @@ Lang::TransparencyGroup::getPDF_Object( ) const
 RefCountPtr< const Lang::TransparencyGroup >
 Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & content, bool isolated, bool knockout, const RefCountPtr< const Lang::ColorSpace > & blendSpace )
 {
-	RefCountPtr< const Lang::ElementaryPath2D > theBBox = content->bbox( );
+	RefCountPtr< const Lang::ElementaryPath2D > theBBox = content->bbox( Lang::Drawable2D::BOUNDING );
 	Concrete::Coords2D llcorner( 0, 0 );
 	Concrete::Coords2D urcorner( 0, 0 );
 	if( ! theBBox->boundingRectangle( & llcorner, & urcorner ) )
@@ -426,7 +445,7 @@ Helpers::newTransparencyGroup( const RefCountPtr< const Lang::Group2D > & conten
 	content->shipout( form->data, & pdfState, Lang::Transform2D( 1, 0, 0, 1, Concrete::ZERO_LENGTH, Concrete::ZERO_LENGTH ) );
 
 	Lang::TransparencyGroup * res = new Lang::TransparencyGroup( SimplePDF::indirect( form, & Kernel::theIndirectObjectCount ),
-																															 content->bbox( ),
+																															 content->bbox( Lang::Drawable2D::BOUNDING ),
 																															 blendSpace );
 	res->setDebugStr( "transparency group" );
 	return RefCountPtr< const Lang::TransparencyGroup >( res );
@@ -549,7 +568,7 @@ Lang::PaintedPath2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::PaintedPath2D::bbox( ) const
+Lang::PaintedPath2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	if( path_.empty( ) )
 		{
@@ -618,9 +637,9 @@ Lang::Transformed2D::shipout( std::ostream & os, Kernel::PageContentStates * pdf
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::Transformed2D::bbox( ) const
+Lang::Transformed2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return element_->bbox( )->elementaryTransformed( mytf_ );
+	return element_->bbox( boxType )->elementaryTransformed( mytf_ );
 }
 
 void
@@ -643,8 +662,8 @@ Lang::Transformed2D::gcMark( Kernel::GCMarkedSet & marked )
 }
 
 
-Lang::BBoxed2D::BBoxed2D( RefCountPtr< const Lang::Drawable2D > element, RefCountPtr< const Lang::ElementaryPath2D > mybbox )
-	: Lang::PaintedPolygon2D( Kernel::THE_NO_STATE, mybbox ), mybbox_( mybbox ), element_( element )
+Lang::BBoxed2D::BBoxed2D( RefCountPtr< const Lang::Drawable2D > element, RefCountPtr< const Lang::ElementaryPath2D > mybbox, BoxType boxType )
+	: Lang::PaintedPolygon2D( Kernel::THE_NO_STATE, mybbox ), mybbox_( mybbox ), element_( element ), boxType_( boxType )
 { }
 
 Lang::BBoxed2D::~BBoxed2D( )
@@ -659,9 +678,15 @@ Lang::BBoxed2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfState
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::BBoxed2D::bbox( ) const
+Lang::BBoxed2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return mybbox_;
+	if( boxType_ == BOTH
+			|| ( boxType == Lang::Drawable2D::BOUNDING && boxType_ == BOUNDING )
+			|| ( boxType == Lang::Drawable2D::BLEED    && boxType_ == BLEED ) )
+		{
+			return mybbox_;
+		}
+	return element_->bbox( boxType );
 }
 
 void
@@ -717,14 +742,15 @@ Lang::Clipped2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfStat
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::Clipped2D::bbox( ) const
+Lang::Clipped2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
+	RefCountPtr< const Lang::ElementaryPath2D > elem_bbox = element_->bbox( boxType );
+
 	if( clipList_.empty( ) )
 		{
 			return RefCountPtr< const Lang::ElementaryPath2D >( new Lang::ElementaryPath2D );
 		}
 
-	RefCountPtr< const Lang::ElementaryPath2D > elem_bbox = element_->bbox( );
 	Concrete::Coords2D llElemBbox( 0, 0 );
 	Concrete::Coords2D urElemBbox( 0, 0 );
 	elem_bbox->boundingRectangle( & llElemBbox, & urElemBbox );
@@ -851,9 +877,9 @@ Lang::SoftMasked2D::shipout( std::ostream & os, Kernel::PageContentStates * pdfS
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::SoftMasked2D::bbox( ) const
+Lang::SoftMasked2D::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
-	return element_->bbox( );
+	return element_->bbox( boxType );
 }
 
 void
@@ -2610,7 +2636,7 @@ Lang::Text::shipout( std::ostream & os, Kernel::PageContentStates * pdfState, co
 }
 
 RefCountPtr< const Lang::ElementaryPath2D >
-Lang::Text::bbox( ) const
+Lang::Text::bbox( Lang::Drawable2D::BoxType boxType ) const
 {
 	return mybbox_;
 }
