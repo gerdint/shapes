@@ -1,8 +1,38 @@
-0.4.2.1
+0.4.3
 The first line of this file shall be the last tagged version string.  The version history may be filled in at any time, but when a version is tagged, the current date shall be added on the first line of the release notes for the version being tagged.
 
   Version history
 ===================
+
+====( 0.4.3 )====
+2008-12-22
+
+This release comes with many long awaited, but backwards incompatible changes.  Merry Christmas!
+
+New string construction syntax.  There are now three ways to enter strings, two of which have no escape characters, and a third that is only partly human-readable.  Most notably, the newline is now entered as the four character construct "{n} (having no special meaning inside the human-readable strings).
+
+New operator for sending one argument through a function from the left.  For instance, the following two lines are equivalent:
+  [stroke [immerse [circle 1cm]]]
+  [circle 1cm] >> immerse >> stroke
+Note that the operator is left associative.
+
+Changed operator precedence and associativity rules.  Biggest change is that [] is now left associative to give good support for hard-wired curry functions.  This means that all old chains of [], changes into chains of >> (in reversed left-right order).  The new priority of | allows many old parentheses to be removed, but needs only a few new to be inserted.  Operator precedence and associativity can now be found in the syntax documentation.
+
+There is now a prelude.  The standard prelude relieves the user from bringing in the most common extensions with ##needs.
+
+Many functions in the standard prelude were renamed.
+
+Bleed boxes are used instead of bounding boxes to determine size of final page.  Used by TeX (which takes a setting from @TeX_bleed) to remedy an old problems with bounding boxes coming out slightly too small from pdfLaTeX.
+
+Improved Emacs support.
+
+More documentation.
+
+Buxfixes include:
+-  Prevention of endless elementary path computation.
+-  Problems with thunks in user dynamic variable declarations.
+-  Character encoding setting in the Emacs shapes-mode.
+
 
 ====( 0.4.2.1 )====
 2008-12-13
