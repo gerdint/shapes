@@ -74,6 +74,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						Concrete::Coords2D * newMid = new Concrete::Coords2D( basePoint, *(pathPoint->mid_) );
 						basePoint = *newMid;
 						Concrete::PathPoint2D * newPoint = new Concrete::PathPoint2D( newMid );
+
 						{
 							const Lang::CornerCoords2D * tmp = dynamic_cast< const Lang::CornerCoords2D * >( pathPoint->mid_.getPtr( ) );
 							if( tmp != 0 )
@@ -264,7 +265,7 @@ Lang::CompositePath2D::computeElementaryPath( ) const
 						isnan( (*i)->defaultAngle_ ) )
 					{
 						/* There are no handles at this point.
-						 * Set angles in direction to neighboring coordinates.
+						 * Set angles in direction to neighboring coordinates
 						 */
 						if( (*i)->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
 							{

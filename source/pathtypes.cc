@@ -276,16 +276,19 @@ Concrete::PathPoint2D::PathPoint2D( const Concrete::PathPoint2D & orig )
 		}
 }
 
+/* The initial state is set to COMPLETE, even though theoretically, the angle towards the neighboring pathpoints should be computed.
+ * However, by setting the default rearAngle_ and frontAngle_ to NaN, we can replace an atan2 computation by an IS_NAN test.
+ */
 Concrete::PathPoint2D::PathPoint2D( Concrete::Coords2D * mid )
-	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
-		frontState_( COMPLETE ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
+	: rearState_( COMPLETE ), rearAngle_( std::numeric_limits< double >::signaling_NaN( ) ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
+		frontState_( COMPLETE ), frontAngle_( std::numeric_limits< double >::signaling_NaN( ) ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		defaultAngle_( 0 ),
 		rear_( mid ), mid_( mid ), front_( mid )
 { }
 
 Concrete::PathPoint2D::PathPoint2D( Concrete::Length midx, Concrete::Length midy )
-	: rearState_( COMPLETE ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
-		frontState_( COMPLETE ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
+	: rearState_( COMPLETE ), rearAngle_( std::numeric_limits< double >::signaling_NaN( ) ), rearModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
+		frontState_( COMPLETE ), frontAngle_( std::numeric_limits< double >::signaling_NaN( ) ), frontModulusPromise_( NullPtr< Kernel::PolarHandlePromise >( ) ),
 		defaultAngle_( 0 ),
 		rear_( new Concrete::Coords2D( midx, midy ) ), mid_( rear_ ), front_( rear_ )
 { }

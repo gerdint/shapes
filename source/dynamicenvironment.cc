@@ -26,6 +26,7 @@
 #include "shapescore.h"
 #include "ast.h"
 #include "isnan.h"
+#include "check.h"
 
 #include <limits>
 
@@ -74,13 +75,25 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 
 	if( p0_->frontState_ & Concrete::PathPoint2D::FREE_ANGLE )
 		{
-			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
+			throw Exceptions::InternalError( "Found a free angle in specialUnitService." );
 		}
 
 	if( p1_->rearState_ & Concrete::PathPoint2D::FREE_ANGLE )
 		{
-			throw Exceptions::InternalError( "Found a free angle in specialUnitService" );
+			throw Exceptions::InternalError( "Found a free angle in specialUnitService." );
 		}
+
+	CHECK(
+				if( IS_NAN( ag0 ) )
+					{
+						std::ostringstream msg;
+						msg << "Using uninitialized adjacent angle in "
+								<< "(" << Concrete::Length::offtype( x0 ) << "bp," << Concrete::Length::offtype( y0 ) << "bp)"
+								<< "--"
+								<< "(" << Concrete::Length::offtype( x3 ) << "bp," << Concrete::Length::offtype( y3 ) << "bp)" ;
+						throw Exceptions::InternalError( strrefdup( msg ) );
+					}
+				);
 
 	double ar0 = aRef - ag0;
 	if( ar0 < - M_PI )
@@ -100,19 +113,28 @@ Kernel::SpecialUnitVariables::specialUnitService( Concrete::Length * d, double *
 		}
 
 	double ar1 = ag1 - aRef - M_PI;
-	if( ar1 < - M_PI )
+	if( IS_NAN( ag1 ) )
 		{
-			do
-				{
-					ar1 += 2 * M_PI;
-				}
-			while( ar1 < - M_PI );
+			/* The angle is NaN is there is no opposite angle.  The implicit direction is then towards the neighboring point.
+			 */
+			ar1 = 0;
 		}
 	else
 		{
-			while( ar1 > M_PI )
+			if( ar1 < - M_PI )
 				{
-					ar1 -= 2 * M_PI;
+					do
+						{
+							ar1 += 2 * M_PI;
+						}
+					while( ar1 < - M_PI );
+				}
+			else
+				{
+					while( ar1 > M_PI )
+						{
+							ar1 -= 2 * M_PI;
+						}
 				}
 		}
 
