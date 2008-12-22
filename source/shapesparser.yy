@@ -144,7 +144,7 @@ void shapeserror( char * msg )
  * in the generated y.tab.h header file.
  */
 
-%token <tokenID> T_EOF T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_atat T_projection T_angle T_ampersandMore
+%token <tokenID> T_EOF T_preludesep T_minusminus T_plusplus T_ddot T_dddot T_assign T_eqeq T_eqneq T_atat T_projection T_angle T_ampersandMore
 %token <tokenID> T_cycle T_and T_or T_xor T_not T_mapsto T_emptybrackets T_dddotbrackets T_bangbrackets T_bangdddotbrackets T_compose T_surrounding T_lesseq T_greatereq T_llthan T_ggthan T_declaretype T_bangbang
 %token <tokenID> T_tex T_dynamic T_continuation T_continue T_esc_continuation T_esc_continue
 %token <tokenID> T_class T_members T_prepare T_abstract T_overrides T_gr__
@@ -240,9 +240,11 @@ void shapeserror( char * msg )
  */
 
 Program
-: Group T_EOF
+: Group T_preludesep Group T_EOF
 {
-	$$ = new Ast::CodeBracket( @1, $1 );
+	/* Note that the source location of the prelude is discarded. */
+	$1->push_back( new Ast::CodeBracket( @3, $3 ) );
+	$$ = new Ast::CodeBracket( @3, $1 );
 	Ast::theProgram = $$;
 	YYACCEPT;
 }

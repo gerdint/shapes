@@ -1,0 +1,30 @@
+<!-- This file is part of Shapes.                                           -->
+<!--                                                                        -->
+<!-- Shapes is free software: you can redistribute it and/or modify         -->
+<!-- it under the terms of the GNU General Public License as published by   -->
+<!-- the Free Software Foundation, either version 3 of the License, or      -->
+<!-- any later version.                                                     -->
+<!--                                                                        -->
+<!-- Shapes is distributed in the hope that it will be useful,              -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of         -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          -->
+<!-- GNU General Public License for more details.                           -->
+<!--                                                                        -->
+<!-- You should have received a copy of the GNU General Public License      -->
+<!-- along with Shapes.  If not, see <http://www.gnu.org/licenses/>.        -->
+<!--                                                                        -->
+<!-- Copyright 2008 Henrik Tidefelt                                         -->
+
+<section id="chap-prelude">
+	<title>The <em>prelude</em></title>
+	<body>
+		<p>The set of global bindings available to a <str-Shapes /> program consists in two parts.  First, there are the <em>kernel bindings</em>, set up by binary code in the compiler alone.  Second, the <em>prelude</em> adds bindings defined in the <str-Shapes /> language.  The prelude resides in the parent environment to the environmet of the input source file, and the kernel bindings reside in the prelude's parent environment.</p>
+		<p>While the kernel bindings are uniquely defined by the compiler version, the exact contents of the prelude depends on the user's setup.  However, there comes a <em>standard prelude</em> with the compiler, so if the user makes no changes to the default, the distinction between kernel bindings and the prelude is of minor importance — except for where to find documentation.</p>
+
+		<p>The prelude consists of the result of evaluating certain files.  The files, named <filename>Shapes-Prelude</filename> may appear in every directory in the need search path (see <a part="syntax" id="syntax/include/include" /> and <a part="man" id="needpath">man page</a>), and is just like any other <str-Shapes /> extension except for the naming convention.  The files are read in the order of appearance in the need search path, although the prelude should be designed so that the order does not matter.</p>
+
+		<p>It is recommended that the <filename>Shapes-Prelude</filename> files should contain only <inline>##needs</inline> directives.  This way, the contents of the standard prelude may simply be shadowed by adding a new file in a directory that appears before the standard prelude in the need search path.</p>
+
+		<p>The standard extensions that are part of the standard prelude are marked clearly in the documentation, so these need not be included explicitly.</p>
+	</body>
+</section><!-- end of chap-prelude -->

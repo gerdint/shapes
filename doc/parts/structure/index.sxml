@@ -29,6 +29,7 @@
 		<p>This part should give an idea of the over-all look of a <str-Shapes /> program.  Only the first section below is defining the language; the subsequent sections are just advisory.</p>
 	</top>
 
+	<!--#include virtual="chap-prelude.sxml" -->
 	<!--#include virtual="chap-result.sxml" -->
 	<!--#include virtual="chap-guidelines.sxml" -->
 </book>

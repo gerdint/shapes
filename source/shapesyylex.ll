@@ -756,15 +756,48 @@ TypeMark "//"|"§"
 
 	if( stateStack.empty( ) )
 	{
-		if( appendStream_ != 0 )
+		if( inPrelude_ )
 			{
-				yy_switch_to_buffer( yy_create_buffer( appendStream_, YY_BUF_SIZE ) );
-				appendStream_ = 0;
+				delete preludeFile_;
+				for( ; preludeIterator_ != needSearchPath.end( ); ++preludeIterator_ )
+					{
+						std::string filename = needpathWithSuffix( *preludeIterator_, "Shapes-Prelude" );
+						struct stat theStatDummy;
+						if( stat( filename.c_str( ), & theStatDummy ) == 0 )
+							{
+								preludeFile_ = new std::ifstream( filename.c_str( ) );
+								yy_switch_to_buffer( yy_create_buffer( preludeFile_, YY_BUF_SIZE ) );
+								shapeslloc = Ast::SourceLocation( strdup( filename.c_str( ) ) );
+								break;
+							}
+					}
+
+				if( preludeIterator_ == needSearchPath.end( ) )
+					{
+						goto noMorePreludes;
+					}
+
+				goto done;
+			}
+
+	noMorePreludes:
+		if( ! yyinQueue_.empty( ) )
+			{
+				yy_switch_to_buffer( yy_create_buffer( yyinQueue_.front( ).first, YY_BUF_SIZE ) );
+				shapeslloc = Ast::SourceLocation( yyinQueue_.front( ).second );
+				yyinQueue_.pop_front( );
+				if( inPrelude_ )
+					{
+						inPrelude_ = false;
+						return T_preludesep;
+					}
 			}
 		else
 			{
 				return T_EOF;
 			}
+	done:
+		++preludeIterator_; /* We do this here instead of before the "goto done;", so we get something to jump to.*/
 	}
 	else
 	{
@@ -896,6 +929,16 @@ shapes_hexToChar( char c1, char c2 )
 }
 
 void
+ShapesScanner::start( )
+{
+	inPrelude_ = true;
+	preludeIterator_ = needSearchPath.begin( );
+	preludeFile_ = new std::istringstream( "" ); /* This will result in EOF immediately, and then we turn to the first real file. */
+	yy_switch_to_buffer( yy_create_buffer( preludeFile_, YY_BUF_SIZE ) );
+	shapeslloc.filename = "<start-null>";
+}
+
+void
 ShapesScanner::doInclusion( )
 {
 	std::string path;
@@ -947,9 +990,8 @@ ShapesScanner::doInclusion( )
 }
 
 void
-ShapesScanner::prependStream( std::istream * is )
+ShapesScanner::queueStream( std::istream * is, const char * yyinName )
 {
-	appendStream_ = yyin;
-	yy_switch_to_buffer( yy_create_buffer( is, YY_BUF_SIZE ) );
+	yyinQueue_.push_back( std::pair< std::istream * , const char * >( is, yyinName ) );
 }
 
