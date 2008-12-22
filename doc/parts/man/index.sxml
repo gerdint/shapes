@@ -107,7 +107,7 @@
 							<p>Permission to create directory for temporary files if it does not exist.  Defaults to no.  See also --tmpdir.</p>
 						</description>
 					</command-line-item>
-					<command-line-item>
+					<command-line-item id="needpath">
 						<parameters flag="--needpath"> <replacable>dir</replacable></parameters>
 						<nosep-parameter flag="-N">dir</nosep-parameter>
 						<description>

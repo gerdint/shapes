@@ -39,6 +39,9 @@
 </p>
 
 <p>Note that the <em>leading</em> whitespace is eaten up, while the whitespace in the directory name is kept.</p>
+
+<p>The interpreation of the <filename>filenamebase</filename> is with respect to the <em>need search path</em>, see the <a part="man" id="needpath">man page</a>.</p>
+
 </body>
 </section>
 
