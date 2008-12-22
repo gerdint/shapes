@@ -122,7 +122,7 @@ rnd2: (•rnd)]]>
 <tr> <td><syntax name="dynamic-variable-declaration" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>dynamic <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <syntax name="expr" /></inline></td></tr>
 <tr> <td></td> <td><bnf>|</bnf></td> <td><inline>dynamic <syntax name="dyn-var" /> <bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> dynamic <syntax name="expr" /></inline></td></tr>
 </syntax-table>
-<p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.</p>
+<p>To declare a dynamic variable one needs to provide a <em>filter</em> and a top level value.  The filter is applied to each new value the dynamic variable is bound to, and is primarily indended for type and range checks, but may also be used to transform values before they are actually bound.  The filter must be a function of one argument.  The top level value is the value of the dynamic variable until it is changed further down in the dynamic environment.  The top level value is <em>not</em> passed through the filter.  The evaluation of the top level value is delayed, which has some nice applications.</p>
 
 <p>A dynamic variable may also be bound to a dynamic expression at the top level, and this is obtained using the second form of the declaration.</p>
 

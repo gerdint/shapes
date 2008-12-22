@@ -18,6 +18,8 @@
 
 /**
  ** First, let's have a look at some basic use of dynamic binding.
+ ** If the first parameter after the name of the variable is the special <identity> function it is optimized away by the kernel.
+ ** The second parameter after the name is the default value, and is not sent through the filter.
  **/
 
 dynamic @a identity 8
@@ -25,6 +27,20 @@ f: \ b → @a + b
 •stdout << [f 2] << `¢n´
 •stdout << @a:6 | [f 2] << `¢n´
 •stdout << [f 2] << `¢n´
+
+/**
+ ** Note that the default value is delayed, so we can require that a dynamic variable must be bound by the user.
+ ** This is also nice to know if the default expression would be expensive to compute but rarely used.
+ ** Another application would be to detect whether the default value is ever used.
+ **
+ ** However, the filter is evaluated immediately -- this simplifies the kernel business.
+ **/
+
+dynamic @a_noDefault identity [error `Dynamic variable has no default binding.´]
+•stdout << @a_noDefault:9 | @a_noDefault << ` No error, see?´ << `¢n´
+
+dynamic @a_logDefault identity [debuglog_before `The default value was used.´+`¢n´ ~9]
+•stdout << @a_logDefault << ` Check out the debug log!´ << `¢n´
 
 
 /**
