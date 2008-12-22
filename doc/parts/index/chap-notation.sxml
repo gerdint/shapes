@@ -25,16 +25,20 @@
 <title>Fonts and color</title>
 <body>
 <loose-table>
-<tr> <th>Concept</th> <th>Example</th> <th>Remark</th> </tr>
-<tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
-<tr> <td>Binding (a “variable”) or state</td> <td><binding name="stroke" />, <state name="page" /></td> <td></td> </tr>
-<tr> <td>Formal parameter</td> <td><arg name="some_var" />, <state-arg name="destination" /></td> <td></td> </tr>
-<tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
-<tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
-<tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td></td> </tr>
-<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
-<tr> <td>Syntax rule name</td> <td><syntax name="call-expr" /></td> <td></td> </tr>
-<tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
+	<head>
+		<tr> <td>Concept</td> <td>Example</td> <td>Remark</td> </tr>
+	</head>
+	<body>
+		<tr> <td>Example code</td> <td><inline>[stroke pth head:someArrow]</inline></td> <td>No syntax highlighting of code elements.</td> </tr>
+		<tr> <td>Binding (a “variable”) or state</td> <td><binding name="stroke" />, <state name="page" /></td> <td></td> </tr>
+		<tr> <td>Formal parameter</td> <td><arg name="some_var" />, <state-arg name="destination" /></td> <td></td> </tr>
+		<tr> <td>Filename</td> <td><filename>hello.shape</filename></td> <td></td> </tr>
+		<tr> <td>Replacable dito</td> <td><filename class="replacable">filename.shape</filename></td> <td></td> </tr>
+		<tr> <td>Type name</td> <td><named-type name="Path2D" /></td> <td></td> </tr>
+		<tr> <td>Regular expression</td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?</lexerregexp></td> <td>Like flex version 2.5.4, but generalized to UTF-8.</td> </tr>
+		<tr> <td>Syntax rule name</td> <td><syntax name="call-expr" /></td> <td></td> </tr>
+		<tr> <td>BNF structure</td> <td><bnf>?</bnf></td> <td></td> </tr>
+	</body>
 </loose-table>
 
 <p>In the BNF notation, entities separated by whitespace matches source code possibly separated by whitespace.  However, there is sometimes a need to indicate that whitespace is not allowed.  This can be done by simply omitting the whitespace from the BNF notation, but if this is impossible for readability reasons, the special BNF syntax <bnf>;</bnf> will be used, like this: <inline><syntax name="basicf-float" /><bnf>;</bnf><syntax name="unit" /></inline>.  Conversely, mandatory whitespace is denoted <bnf>_</bnf>, which will be surrounded by ordinary whitespace for readability.</p>

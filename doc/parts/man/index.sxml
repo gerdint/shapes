@@ -181,7 +181,7 @@
 							<p>Since the user may write charater data on the special file <filename>stdout</filename>, <filename>stdout</filename> cannot be used for the produced <str-PDF /> file.  This should not be a major inconvenience since the <str-PDF /> format is not suited for stream editing anyway.  Consider using the --out option when the input is taken from <filename>stdin</filename>.</p>
 						</description>
 					</command-line-item>
-					<command-line-item>
+					<command-line-item id="debuglog">
 						<parameters flag="--debuglog"> <replacable>file</replacable></parameters>
 						<parameters flag="--debuglog-stderr"></parameters>
 						<parameters flag="--debuglog-stdout"></parameters>

@@ -23,9 +23,9 @@ r: 1cm
 mask: @blendspace: DEVICE_GRAY | [tgroup
        @blend: BLEND_LIGHTEN
        |
-       ( newGroup << @nonstroking:RGB_RED   | fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-                  << @nonstroking:RGB_GREEN | fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
-                  << @nonstroking:RGB_BLUE  | fill [] [shift r*[dir 2*120°]] [] [circle 1.2*r]
+       ( newGroup << @nonstroking:RGB_RED   | [circle 1.2*r] >> [shift r*[dir 0*120°]] >> fill
+                  << @nonstroking:RGB_GREEN | [circle 1.2*r] >> [shift r*[dir 1*120°]] >> fill
+                  << @nonstroking:RGB_BLUE  | [circle 1.2*r] >> [shift r*[dir 2*120°]] >> fill
        )
       ]
 
@@ -34,5 +34,5 @@ mask: @blendspace: DEVICE_GRAY | [tgroup
 •page << [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [alphamask mask] ]
 •page << [shift (0,~1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
 |**•page << [shift (0*4*r,1*5*r)] [] [clip @nonstroking:RGB_GREEN | [fill [bbox mask]] [luminositymask mask] ]
-|**•page << [shift (1*4*r,1*5*r)] [] formxo [] ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] )
+|**•page << ( @softmask:[alphamask mask] & @nonstroking:RGB_GREEN | [fill [bbox mask]] ) >> formxo >> [shift (1*4*r,1*5*r)]
 

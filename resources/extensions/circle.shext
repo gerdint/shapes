@@ -50,7 +50,7 @@ generic_arc3D: \ arc2D z0 zStart zEnd r →
   n: [normalized [cross dStart dEnd]]
   tf: [affinetransform3D dStart [cross n dStart] n z0]
 	itf: [inverse tf]
-	tf [] immerse [] [arc2D [view [itf z0]] [view [itf zStart]] [view [itf zEnd]] r]
+	[arc2D [view [itf z0]] [view [itf zStart]] [view [itf zEnd]] r] >> immerse >> tf
 }
 
 ccw_arc3D: [generic_arc3D ccw_arc ...]

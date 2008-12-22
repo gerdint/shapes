@@ -69,9 +69,9 @@ armPath: \ tfStart tfEnd →
   pEnd: tfEnd [] (0u,0u,0u)
   hr: 0.4 * [abs pEnd - pStart]
 
-  pStart > (tfStart [] ([rotate3D (0,0,1) ~armTwist] [] (hr,0u,0u)))
+  pStart > [tfStart [rotate3D (0,0,1) ~armTwist] [] (hr,0u,0u)]
   --
-  (tfEnd [] ([rotate3D (0,0,1) armTwist] [] (~hr,0u,0u))) < pEnd
+  [tfEnd [rotate3D (0,0,1) armTwist] [] (~hr,0u,0u)] < pEnd
 }
 
 edgyCylinder: \ pth0 pth1 →

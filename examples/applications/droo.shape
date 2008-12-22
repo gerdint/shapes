@@ -64,7 +64,7 @@ o_radius: 1.2mm
 {
   radius: o_radius
   sl: r_ray.begin
-  c: [shift sl.p][][rotate 180°+[angle sl.T]][][shift (0,radius-0.5*t2+0.5*@width)][][circle radius]
+  c: [shift sl.p]*[rotate 180°+[angle sl.T]]*[shift (0,radius-0.5*t2+0.5*@width)] [] [circle radius]
   •page << fillColor | [fill c]
   •page << [stroke c]
 }

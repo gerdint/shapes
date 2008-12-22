@@ -40,4 +40,4 @@ zbuf: •zbuf;
 
 tf: [rotate3D (1,0,0) 60°]
 |**tf: [affinetransform3D (0,4,7) (2,5,8) (3,6,9) (0cm,0cm,0cm)]
-•page << [view  tf [] zbuf]
+[view  tf [] zbuf]

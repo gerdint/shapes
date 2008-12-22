@@ -60,24 +60,40 @@ textGreater: \ x y .> [if x > y `true´ `false´]
 </pre>
     The <em>formal parameters</em> appear between <inline>\</inline> and <inline>.&gt;</inline>, and the expression that follows is the <em>body</em> of the function.  The result of calling the function is obtained by evaluating the body, with the formal parameters added to the <em>lexical scope</em>  For instance,
 <pre>
-•stdout &lt;&lt; [textGreater 4 5]
+<![CDATA[•stdout << [textGreater 4 5]]]>
 </pre>
     would result in <em>false</em> being written to <filename>stdout</filename>.
 	</p>
 
 	<p>The above example code shows what a typical function call looks like, with the callee and arguments enclosed in square brackets.  When there is only one argument, one may reorder things a little:
 <pre>
-•stdout &lt;&lt; sin [] 30°
+<![CDATA[•stdout << sin [] 30°]]>
 </pre>
-	</p>
+or
+<pre>
+<![CDATA[•stdout << 30° >> sin]]>
+</pre>
+Please read the short discussion about <a part="syntax" id="syntax/fun-apply/unary">unary calls</a> at this time.</p>
 
 	<p>
-		Let us also show how <em>evaluated cuts</em> can be used to bind just some of the arguments of a function:
+		Let us also show how <a part="syntax" id="syntax/fun-apply/cute-basic">evaluated cuts</a> can be used to bind just some of the arguments of a function:
 <pre>
-textGreaterThanEight: [textGreater y:8 ...]
+<![CDATA[textGreaterThanEight: [textGreater y:8 ...]]]>
 </pre>
-    There is much more to say about evaluated cuts, but we shall just include links to <a part="syntax" id="syntax/fun-apply/cute-basic" />,  <a part="syntax" id="syntax/fun-apply/cute-unary" />, <a part="syntax" id="syntax/fun-apply/cute-structure" />, and an example here.
+In combination with evaluated cuts of <binding name="debuglog_after" />, <operator name="&gt;&gt;" /> provides a rather clean way to write stuff to the log file at an arbitrary location in the program.  Here is an exmaple:
+<pre>
+<![CDATA[fun: \ a →
+  {
+    b: 10 * a
+    a + b
+      >> [debuglog_after ( newString << `The value of a is ´ << a << `¢n´ ) ...]
+      >> [debuglog_after ( newString << `The value of b is ´ << b << `¢n´ ) ...]
+  }]]>
+</pre>
+Recall that global states such as <state name="stderr" /> is not in scope inside the function body, but by making <filename>stderr</filename> the debug log file (see <a part="man" id="debuglog">man page</a>), this is a way to get around the function's scoping barrier.
 	</p>
+
+  <p>There is much more to say about evaluated cuts, but we refer to the language reference (including the section linked above, but please note that there are other related sections as well), and just include an example here.</p>
 
 <example-with-output title="Evaluated cuts" internal-id="example/cute">
 <source file="features/curry.shape">
@@ -241,7 +257,7 @@ mark: \ •dst .> { •dst &lt;&lt; [stroke (0cm,0cm)--(1cm,1cm)] }
 \ pth .>
   (&gt;
     cut: 2mm
-    picture: [shift pth.begin.p] [] [fill [circle 1mm]]
+    picture: [fill [circle 1mm]] >> [shift pth.begin.p]
   &lt;)
 </pre>
    Note that the names of the field in the structure is part of the structure's type, and hence of the function's signature.

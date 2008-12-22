@@ -18,7 +18,7 @@
 
 ##needs centering
 
-pic: [import `davidvin.pdf´] [] '0   |** import all pages, and select page 0
+pic: [import `multipage.pdf´] [] '0   |** import all pages, and select page 0
 
 {
  bb: [bbox pic]

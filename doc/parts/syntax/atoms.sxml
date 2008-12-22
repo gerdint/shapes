@@ -29,7 +29,7 @@
 		<tr> <td><syntax name="basic-float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
 		<tr> <td><syntax name="basic-float" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[~]?[0-9]+([.][0-9]*)?([*]^[~]?[0-9]+)?</lexerregexp></td></tr>
 		<tr> <td><syntax name="float" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Float" /></td></tr>
-		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" /><lexerregexp>("°"|"^^")</lexerregexp></inline></td></tr>
+		<tr> <td><syntax name="float" /></td> <td><bnf>→</bnf></td> <td><syntax name="basic-float" /> <bnf>|</bnf> <syntax name="basic-float" /><lexerregexp>("°"|"^^")</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 <p>
@@ -57,11 +57,15 @@
 <note>
 	<p>Many users complain that they cannot type the degree character, but this useful character has been present on all keyboard layouts that I (Henrik) has encountered.  To you Emacs users, note that you must type <em>ctrl-q</em> (that is, pressing the <em>q</em> key while holding down the <em>control</em> key), before you can use the <em>meta</em> key as a modifier.  The following table gives a few examples of where the degree character can be found:
 		<loose-table>
-			<tr> <th>OS</th> <th>Keyboard layout</th> <th>Key sequence</th> </tr>
-			<tr> <td>Mac OS X</td> <td>U.S.</td> <td>alt-shift-8</td> </tr>
-			<tr> <td>Cent OS</td> <td>U.S.</td> <td>alt-0</td> </tr>
-			<tr> <td>Mac OS X</td> <td>Swedish — Pro</td> <td>shift-§</td> </tr>
-			<tr> <td>Mac OS X</td> <td>Tiddish (see below)</td> <td>shift-§</td> </tr>
+			<head>
+				<tr> <td>OS</td> <td>Keyboard layout</td> <td>Key sequence</td> </tr>
+			</head>
+			<body>
+				<tr> <td>Mac OS X</td> <td>U.S.</td> <td>alt-shift-8</td> </tr>
+				<tr> <td>Cent OS</td> <td>U.S.</td> <td>alt-0</td> </tr>
+				<tr> <td>Mac OS X</td> <td>Swedish — Pro</td> <td>shift-§</td> </tr>
+				<tr> <td>Mac OS X</td> <td>Tiddish (see below)</td> <td>shift-§</td> </tr>
+			</body>
 		</loose-table>
 	</p>
 	<p>Note that, on the Mac OS U.S. layout, the key sequence <em>alt-0</em> yields the <em>masculine ordinal indicator</em> (º) which looks very similar to the degree sign (°) — don't confuse the two!</p>
@@ -79,7 +83,7 @@
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="length" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Length" /></td></tr>
-		<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></inline></td></tr>
+		<tr> <td><syntax name="length" /></td> <td><bnf>→</bnf></td> <td><syntax name="basic-float" /><bnf>;</bnf><syntax name="length-unit" /></td></tr>
 	</syntax-table>
 </p>
 <p>Length tokens are formed by a float (not ending with the degree sign) followed by the name of a length.  New lengths can be defined as multiples of existing ones, as long as all definitions agree.  Length definitions are evaluated by the program scanner, which makes them very efficient in use.  The effect of a length unit defined as a more complicated expression in existing lengths, say one centimeter plus one inch, must be simulated by storing the length in a variable, which is then multiplied with a float to denote a length in this new unit.</p>
@@ -128,16 +132,20 @@
 <p>
 	Special lengths can be viewed as a function taken from a particular (parameterized) set of functions.  There are only eight special units of lengths, and currently, there is no support for defining new ones.  Here is the list of them all:
 	<loose-table>
-		<tr align="left"> <th>Name</th> <th>Distance</th> <th>No inflexion</th> <th>Circelish</th> <th>Correction</th> </tr>
-		<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
-		<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
-		<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+		<head>
+			<tr align="left"> <td>Name</td> <td>Distance</td> <td>No inflexion</td> <td>Circelish</td> <td>Correction</td> </tr>
+		</head>
+		<body>
+			<tr> <td><lexerregexp>%[D0]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[C1]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[M2]</lexerregexp></td> <td>√</td> <td></td> <td></td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[F3]</lexerregexp></td> <td>√</td> <td></td> <td>√</td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[d4]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[c5]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td></td> </tr>
+			<tr> <td><lexerregexp>%[m6]</lexerregexp></td> <td>√</td> <td>√</td> <td></td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[f7]</lexerregexp></td> <td>√</td> <td>√</td> <td>√</td> <td>√</td> </tr>
+			<tr> <td><lexerregexp>%[i9]</lexerregexp></td> <td></td> <td>√</td> <td></td> <td></td> </tr>
+		</body>
 	</loose-table>
 </p>
 <p>The meaning of the columns is the following.  If there is a check mark in the <em>Distance</em> column, then the distance between the first and last interpolation point is used as a base length.  If there is a check mark in the <em>Circelish</em> column, then the base length is multiplied by a factor based on the near angle, in such a way that circles are approximated well.  If there is a check mark under <em>Correction</em>, a correction factor is applied based on the difference between the near angle and the far angle; if both angles are the same, there is no correction.  If there is a check mark in the <em>No inflexion</em> column, then the distance to the intermediate control point is truncated to avoid inflexions, if necessary.  The unit which is not based on the distance between the first and last interpolation point is based on the inflexion limit instead.</p>
@@ -227,7 +235,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="boolean" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Boolean" /></td></tr>
-		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><inline>true <bnf>|</bnf> false</inline></td></tr>
+		<tr> <td><syntax name="boolean" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>true</lexerregexp> <bnf>|</bnf> <lexerregexp>false</lexerregexp></td></tr>
 	</syntax-table>
 </p>
 
@@ -318,7 +326,7 @@ Multi-line...´
 <body>
 <p>
 	<syntax-table>
-		<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="dyn-var" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>@</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 </p>
 </body>
@@ -330,9 +338,9 @@ Multi-line...´
 <p>
 	Note that state references are not expressions:
 	<syntax-table>
-		<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></inline></td></tr>
-		<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
-		<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="state" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="lex-state" /> <bnf>|</bnf> <syntax name="dyn-state" /></td></tr>
+		<tr> <td><syntax name="lex-state" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>[•#]</lexerregexp><syntax name="identifier" /></td></tr>
+		<tr> <td><syntax name="dyn-state" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>@[•#]</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 </p>
 </body>
@@ -344,7 +352,7 @@ Multi-line...´
 <p>
 	<syntax-table>
 		<tr> <td><syntax name="symbol" class="new" /></td> <td><bnf>::</bnf></td> <td><named-type name="Symbol" /></td></tr>
-		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><inline>'<syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="symbol" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>'</lexerregexp><syntax name="identifier" /></td></tr>
 	</syntax-table>
 	Note that there must not be any whitespace after the apostrophe.
 </p>

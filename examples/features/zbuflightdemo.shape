@@ -40,7 +40,7 @@ leaf: \ a →
 facetProperties
 |
 {
-  •zbuf << @nonstroking:[gray 0.2] | [facet [shift (0cm,0cm,~1cm)] [] immerse [] [rectangle (~6cm,~5cm) (9cm,5.4cm)]]
+  •zbuf << @nonstroking:[gray 0.2] | [facet [rectangle (~6cm,~5cm) (9cm,5.4cm)] >> immerse >> [shift (0cm,0cm,~1cm)]]
 }
 
 •zbuf << facetProperties | [facet (3cm,~2cm,0cm)--(3cm,2cm,0cm)--(7cm,0cm,2cm)--cycle]

@@ -57,6 +57,6 @@ world: •world;
   eyew: 5.0cm
 	lift: 0.5*@eyez
   world: [scale3D 0.4]*[rotate3D (1,1,1) 30°] [] ../world
-  •page << [shift (~0.5*eyew,0cm)] [] view [] [shift (0.5*eyew,0cm,lift)] [] world
-  •page << [shift (0.5*eyew,0cm)] [] view [] [shift (~0.5*eyew,0cm,lift)] [] world
+  •page << world >> [shift (0.5*eyew,0cm,lift)] >> view >> [shift (~0.5*eyew,0cm)]
+  •page << world >> [shift (~0.5*eyew,0cm,lift)] >> view >> [shift (0.5*eyew,0cm)]
 }

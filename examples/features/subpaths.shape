@@ -28,7 +28,7 @@ cstroke: \ pth → ( newGroup << @stroking:RGB_RED|[stroke [controlling pth]] <<
 
 |** •page <<
 |** {
-|**   c0: immerse [] [shift (4cm,0)] [] [circle 3cm]
+|**   c0: [circle 3cm] >> [shift (4cm,0)] >> immerse
 |**   c: c0.begin--[c0 3.5]
 |**   ( @stroking:RGB_BLUE | view [] [stroke c] )
 |**   &

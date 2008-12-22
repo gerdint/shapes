@@ -9,7 +9,7 @@
 <body>
 <p>
 	<syntax-table>
-		<tr> <td><syntax name="field-ref" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="expr" /> . <syntax name="identifier" /></inline></td></tr>
+		<tr> <td><syntax name="field-ref" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="expr" /> <lexerregexp>"."</lexerregexp> <syntax name="identifier" /></td></tr>
 	</syntax-table>
 </p>
 <p>Any type of value in <str-Shapes /> may have <em>fields</em> which are referenced using identifiers.  For instance, any value of type <named-type name="Coords" /> has a field called <varname>x</varname>:

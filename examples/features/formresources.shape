@@ -35,17 +35,16 @@ obj:
     &
     @nonstroking:[gray 0.5]
     |
-    ( newGroup << fill [] [shift r*[dir 0*120°]] [] [circle 1.2*r]
-               << fill [] [shift r*[dir 1*120°]] [] [circle 1.2*r]
+    ( newGroup << [circle 1.2*r] >> [shift r*[dir 0*120°]] >> fill
+               << [circle 1.2*r] >> [shift r*[dir 1*120°]] >> fill
     )
   )
  [luminositymask mask]]
 
 •page << obj
 
-•page << formxo [] [shift ~(1*4*r,0)] [] obj
+•page << obj >> [shift ~(1*4*r,0)] >> formxo
 
-•page << [shift (1*4*r,0)] [] formxo [] [shift ~(1*4*r,0)] [] obj
+•page << obj >> [shift ~(1*4*r,0)] >> formxo >> [shift (1*4*r,0)]
 
-•page << [shift (1*4*r,0)] [] formxo [] obj
-
+•page << obj >> formxo >> [shift (1*4*r,0)]

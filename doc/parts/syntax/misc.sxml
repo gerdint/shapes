@@ -22,40 +22,97 @@
 
 <p>The following breaks down <syntax name="expr" />:</p>
 <syntax-table>
-<tr> <td><syntax name="expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( <syntax name="expr" /> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="constant" /> <bnf>|</bnf> <syntax name="reference" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="tuple" /> <bnf>|</bnf> <syntax name="structure" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="function" /> <bnf>|</bnf> <syntax name="procedure" /> <bnf>|</bnf> <syntax name="application" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="reach-out" /> <bnf>|</bnf> <syntax name="immediate-expr" /> <bnf>|</bnf> <syntax name="tex-expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="dynamic-binding" /> <bnf>|</bnf> <syntax name="with-dynamic" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="with-escape-continuation" /> <bnf>|</bnf> <syntax name="invoke-escape-continuation" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="insertion-expr" /> <bnf>|</bnf> <syntax name="empty-expr" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="unary" /> <bnf>|</bnf> <syntax name="binary-arithmetic" /> <bnf>|</bnf> <syntax name="binary-relational" /></inline></td></tr>
+<tr> <td><syntax name="expr" class="new" /></td> <td><bnf>→</bnf></td> <td>( <syntax name="expr" /> )</td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="constant" /> <bnf>|</bnf> <syntax name="reference" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="tuple" /> <bnf>|</bnf> <syntax name="structure" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="function" /> <bnf>|</bnf> <syntax name="procedure" /> <bnf>|</bnf> <syntax name="application" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="reach-out" /> <bnf>|</bnf> <syntax name="immediate-expr" /> <bnf>|</bnf> <syntax name="tex-expr" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="dynamic-binding" /> <bnf>|</bnf> <syntax name="with-dynamic" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="with-escape-continuation" /> <bnf>|</bnf> <syntax name="invoke-escape-continuation" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="insertion-expr" /> <bnf>|</bnf> <syntax name="empty-expr" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="unary" /> <bnf>|</bnf> <syntax name="binary-arithmetic" /> <bnf>|</bnf> <syntax name="binary-relational" /></td></tr>
 
-<tr> <td><syntax name="reference" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="identifier" /> <bnf>|</bnf> <syntax name="dyn-var" /> <bnf>|</bnf> <syntax name="peek-state" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="field-ref" /> <bnf>|</bnf> <syntax name="lookup-symbol" /> <bnf>|</bnf> <syntax name="typename" /></inline></td></tr>
+<tr> <td><syntax name="reference" class="new" /></td> <td><bnf>→</bnf></td> <td> <syntax name="identifier" /> <bnf>|</bnf> <syntax name="dyn-var" /> <bnf>|</bnf> <syntax name="peek-state" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="field-ref" /> <bnf>|</bnf> <syntax name="lookup-symbol" /> <bnf>|</bnf> <syntax name="typename" /></td></tr>
 
-<tr> <td><syntax name="application" class="new" /></td> <td><bnf>→</bnf></td> <td><inline> <syntax name="basic-call" /> <bnf>|</bnf> <syntax name="proc-call" /> <bnf>|</bnf> <syntax name="mutator-call" /> <bnf>|</bnf> <syntax name="unary-call" /> <bnf>|</bnf> <syntax name="split-call" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline> <syntax name="basic-cute" /> <bnf>|</bnf> <syntax name="unary-cute" /> <bnf>|</bnf> <syntax name="split-cute" /></inline></td></tr>
+<tr> <td><syntax name="application" class="new" /></td> <td><bnf>→</bnf></td> <td> <syntax name="basic-call" /> <bnf>|</bnf> <syntax name="proc-call" /> <bnf>|</bnf> <syntax name="mutator-call" /> <bnf>|</bnf> <syntax name="unary-call" /> <bnf>|</bnf> <syntax name="split-call" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td> <syntax name="basic-cute" /> <bnf>|</bnf> <syntax name="unary-cute" /> <bnf>|</bnf> <syntax name="split-cute" /></td></tr>
 
-<tr> <td><syntax name="constant" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float" /> <bnf>|</bnf> <syntax name="length" /> <bnf>|</bnf> <syntax name="string" /> <bnf>|</bnf> <syntax name="boolean" /> <bnf>|</bnf> <syntax name="integer" /> <bnf>|</bnf> <syntax name="symbol" /></inline></td></tr>
+<tr> <td><syntax name="constant" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="float" /> <bnf>|</bnf> <syntax name="length" /> <bnf>|</bnf> <syntax name="string" /> <bnf>|</bnf> <syntax name="boolean" /> <bnf>|</bnf> <syntax name="integer" /> <bnf>|</bnf> <syntax name="symbol" /></td></tr>
 
-<tr> <td><syntax name="tuple" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="float-pair" /> <bnf>|</bnf> <syntax name="float-triple" /> <bnf>|</bnf> <syntax name="coords-2D" /> <bnf>|</bnf> <syntax name="coords-3D" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="polar-handle-2D" /> <bnf>|</bnf> <syntax name="corner-point-2D" /></inline></td></tr>
+<tr> <td><syntax name="tuple" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="float-pair" /> <bnf>|</bnf> <syntax name="float-triple" /> <bnf>|</bnf> <syntax name="coords-2D" /> <bnf>|</bnf> <syntax name="coords-3D" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="polar-handle-2D" /> <bnf>|</bnf> <syntax name="corner-point-2D" /></td></tr>
 
-<tr> <td><syntax name="unary" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="not-expr" /> <bnf>|</bnf> <syntax name="cycle" /> <bnf>|</bnf> <syntax name="abs-call" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="negation" /> <bnf>|</bnf> <syntax name="relative" /></inline></td></tr>
+<tr> <td><syntax name="unary" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="not-expr" /> <bnf>|</bnf> <syntax name="cycle" /> <bnf>|</bnf> <syntax name="abs-call" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="negation" /> <bnf>|</bnf> <syntax name="relative" /></td></tr>
 
-<tr> <td><syntax name="binary-arithmetic" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="plus" /> <bnf>|</bnf> <syntax name="minus" /> <bnf>|</bnf> <syntax name="star" /> <bnf>|</bnf> <syntax name="slash" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="plus-plus" /> <bnf>|</bnf> <syntax name="minus-minus" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="angle" /> <bnf>|</bnf> <syntax name="projection" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="ampersand" /> <bnf>|</bnf> <syntax name="compose" /></inline></td></tr>
+<tr> <td><syntax name="binary-arithmetic" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="plus" /> <bnf>|</bnf> <syntax name="minus" /> <bnf>|</bnf> <syntax name="star" /> <bnf>|</bnf> <syntax name="slash" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="plus-plus" /> <bnf>|</bnf> <syntax name="minus-minus" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="angle" /> <bnf>|</bnf> <syntax name="projection" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="ampersand" /> <bnf>|</bnf> <syntax name="compose" /></td></tr>
 
-<tr> <td><syntax name="binary-relational" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><syntax name="less" /> <bnf>|</bnf> <syntax name="less-equal" /> <bnf>|</bnf> <syntax name="greater" /> <bnf>|</bnf> <syntax name="greater-equal" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="equal" /> <bnf>|</bnf> <syntax name="not-equal" /></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="and" /> <bnf>|</bnf> <syntax name="or" /> <bnf>|</bnf> <syntax name="xor" /></inline></td></tr>
+<tr> <td><syntax name="binary-relational" class="new" /></td> <td><bnf>→</bnf></td> <td><syntax name="less" /> <bnf>|</bnf> <syntax name="less-equal" /> <bnf>|</bnf> <syntax name="greater" /> <bnf>|</bnf> <syntax name="greater-equal" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="equal" /> <bnf>|</bnf> <syntax name="not-equal" /></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="and" /> <bnf>|</bnf> <syntax name="or" /> <bnf>|</bnf> <syntax name="xor" /></td></tr>
 </syntax-table>
 </top>
+
+<section id="syntax/misc-expr/precedence">
+<title>Operator precedence and associativity</title>
+<body>
+<p>This section just gives the operator precedence and associativity.  It is just a polished version of the corresponding segment of the Bison parser input.</p>
+<p>In the table below, the operators have higher precedence (binds stronger) towards the bottom, and the precedence is equal in each row.  Each regexp corresponds to one operator, so the rexexps with alternatives typically give an ASCII fallback for a pretty non-ASCII character.  The table may contain unused operators.</p>
+<loose-table>
+	<head>
+		<tr> <td>Associativity</td> <td>Operators</td></tr>
+	</head>
+	<body>
+		<tr> <td>non</td> <td><lexerregexp>:</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>≪|"&lt;&lt;"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>!!</lexerregexp></td> </tr>
+
+		<tr> <td>non</td> <td><lexerregexp>→|"-&gt;"</lexerregexp></td> </tr>
+		<tr> <td>right</td> <td><lexerregexp>"|"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"[]"</lexerregexp>   <lexerregexp>"[!]"</lexerregexp>   <lexerregexp>"[...]"</lexerregexp>   <lexerregexp>"[!...]"</lexerregexp>   <lexerregexp>≫|"&gt;&gt;"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"&amp;|"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&amp;</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>:</lexerregexp> <em>(dynamic variable binding)</em></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>⋁|"or"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>⊻|"xor"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>⋀|"and"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>¬|"not"</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>=</lexerregexp>   <lexerregexp>≠|"/="</lexerregexp>   <lexerregexp>≤|"&lt;="</lexerregexp>   <lexerregexp>≥|"&gt;="</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"++"</lexerregexp>   <lexerregexp>--</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&lt;</lexerregexp>   <lexerregexp>&gt;</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"+"</lexerregexp>   <lexerregexp>-</lexerregexp></td> </tr>
+		<tr> <td>non</td> <td><lexerregexp>∠|"/_"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>"*"</lexerregexp>   <lexerregexp>/</lexerregexp>   <lexerregexp>∥|"*/"</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>~</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>⊙|"()"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>"."</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>#</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>&lt;&gt;</lexerregexp></td> </tr>
+		<tr> <td>left</td> <td><lexerregexp>@@</lexerregexp>   <lexerregexp>"../"</lexerregexp></td> </tr>
+
+		<tr> <td>left</td> <td><lexerregexp>,</lexerregexp></td> </tr>
+	</body>
+</loose-table>
+<p>The higher precedence of <operator name=":" /> is additionally used in for the rule
+	<syntax-table>
+		<tr> <td><syntax name="unary-cute" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Function" /><bnf>&gt;</bnf> <lexerregexp>"[...]"</lexerregexp> <syntax name="named-expr" /></td></tr>
+	</syntax-table>
+	where it appears as part of <syntax name="named-expr" />.</p>
+
+<p>The precedence and associativity of <operator name="&lt;" /> and <operator name="&gt;" /> is non-standard, but is necessary to allow for convenient path construction.</p>
+</body>
+</section>
 
 <section id="syntax/misc-expr/path-constr">
 <title>Path construction</title>
@@ -69,8 +126,8 @@
 	<syntax-table>
 		<tr> <td><syntax name="path-point-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="PathPoint2D" /></td></tr>
 		<tr> <td><syntax name="path-point-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="Coords2D" /><bnf>&gt;</bnf></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> &lt; <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></inline></td></tr>
-		<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> &gt; <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></inline></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf> <lexerregexp>&lt;</lexerregexp> <bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></td></tr>
+		<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf> <lexerregexp>&gt;</lexerregexp> <bnf>&lt;</bnf><named-type name="Handle2D" /><bnf>&gt;</bnf></td></tr>
 		<tr> <td><named-type name="Handle2D" /></td> <td><bnf>=</bnf></td> <td><named-type name="Coords2D" /> <bnf>|</bnf> <named-type name="PolarHandle2D" /></td></tr>
 	</syntax-table>
 	It is illegal to put a handle on a pathpoint which already has a handle in the same direction.
@@ -79,7 +136,7 @@
 <p>
 	Often, paths are constructed according to the pattern
 <pre>
-<syntax name="path-point-2D" /> <bnf>(</bnf> -- <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> -- cycle <bnf>)?</bnf>
+<syntax name="path-point-2D" /> <bnf>(</bnf> <lexerregexp>--</lexerregexp> <syntax name="path-point-2D" /> <bnf>)*</bnf> <bnf>(</bnf> <lexerregexp>--</lexerregexp> <lexerregexp>cycle</lexerregexp> <bnf>)?</bnf>
 </pre>
 	but this is just a special case of the general
 </p>
@@ -87,9 +144,9 @@
 <syntax-table>
 <tr> <td><syntax name="simple-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="SimplePath2D" /></td></tr>
 <tr> <td><syntax name="simple-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="PathPoint2D" /><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><syntax name="cycle" /></inline></td></tr>
-<tr> <td><syntax name="cycle" class="new" /></td> <td><bnf>→</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> -- cycle</inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> <lexerregexp>--</lexerregexp> <bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><syntax name="cycle" /></td></tr>
+<tr> <td><syntax name="cycle" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf> <lexerregexp>--</lexerregexp> <lexerregexp>cycle</lexerregexp></td></tr>
 </syntax-table>
 <p>It is illegal to close a path that is already closed, or to extend a closed path.</p>
 
@@ -125,7 +182,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <syntax-table>
 <tr> <td><syntax name="composite-path-2D" /></td> <td><bnf>::</bnf></td> <td><named-type name="Path2D" /></td></tr>
 <tr> <td><syntax name="composite-path-2D" class="new" /></td> <td><bnf>→</bnf></td> <td><bnf>&lt;</bnf><named-type name="SimplePath2D" /><bnf>&gt;</bnf></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> &amp; <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></inline></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf> <lexerregexp>&amp;</lexerregexp> <bnf>&lt;</bnf><named-type name="CompositePath2D" /><bnf>&gt;</bnf></td></tr>
 </syntax-table>
 
 <p>Paths in <str-3D /> are constructed in the same way as in <str-2D />, although their path points cannot have polar handles.</p>
@@ -138,7 +195,7 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <body>
 <p>While sequential construction does assure functional binding semantics, even when evaluation is delayed due to laziness, it makes delayed evaluation not completely transparent.  <em>Order of evaluation</em> also becomes important under some circumstances.  Further, prohibiting delayed evaluation may be important for efficiency reasons.  Delayed evaluation is prohibited by flagging an expression as <em>immediate</em>:</p>
 <syntax-table>
-<tr> <td><syntax name="immediate-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>!! <syntax name="expr" /></inline></td></tr>
+<tr> <td><syntax name="immediate-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>!!</lexerregexp> <syntax name="expr" /></td></tr>
 </syntax-table>
 <p>The double exclamation mark is meant to remind that everything involving states — procedures calls (where there is a single exclamation mark) in particular — are never delayed, and therefore does not need to be flagged immediate.</p>
 
@@ -159,11 +216,11 @@ p2: @defaultunit:1%C | (^)<(0cm,0cm)>(^)]]>
 <body>
 <p>The expansions of <syntax name="unary" /> which have not been described elsewhere are given here.  Note that the unary plus and minus signs are completely unrelated operations.  The special syntax for calling the <binding name="abs" /> function is also included here.</p>
 <syntax-table>
-<tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( - <syntax name="expr" /> )</inline></td></tr>
-<tr> <td></td> <td><bnf>|</bnf></td> <td><inline>~ <syntax name="expr" /></inline></td></tr>
-<tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>( + <syntax name="expr" /> )</inline></td></tr>
-<tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>not <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></inline></td></tr>
-<tr> <td><syntax name="abs-call" class="new" /></td> <td><bnf>→</bnf></td> <td><inline>(| <syntax name="expr" /> |)</inline></td></tr>
+<tr> <td><syntax name="negation" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"("</lexerregexp> <lexerregexp>-</lexerregexp> <syntax name="expr" /> <lexerregexp>")"</lexerregexp></td></tr>
+<tr> <td></td> <td><bnf>|</bnf></td> <td><lexerregexp>~</lexerregexp> <syntax name="expr" /></td></tr>
+<tr> <td><syntax name="relative" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"("</lexerregexp> <lexerregexp>"+"</lexerregexp> <syntax name="expr" /> <lexerregexp>")"</lexerregexp></td></tr>
+<tr> <td><syntax name="not-expr" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>not</lexerregexp> <bnf>&lt;</bnf><named-type name="Boolean" /><bnf>&gt;</bnf></td></tr>
+<tr> <td><syntax name="abs-call" class="new" /></td> <td><bnf>→</bnf></td> <td><lexerregexp>"(|"</lexerregexp> <syntax name="expr" /> <lexerregexp>"|)"</lexerregexp></td></tr>
 </syntax-table>
 </body>
 </section>

@@ -32,10 +32,10 @@
   •page << [view @dash:[dashpattern]|[stroke [viewRot [immerse [[rotate 10°]*[shift (~r,~r)] [circle 7mm]]]]]]
   a: 5°
   •page << [view [stroke [viewRot [immerse @defaultunit:1%c|[[rotate 10°] (^~a)<(~r,~r)>(^90°+a)--(^~90°-a)<(~r,r)>(^a)--(^180°-a)<(r,r)>(^~90°+a)--(^90°-a)<(r,~r)>(^~180°+a)--cycle]]]]]
-  •page << view [] stroke [] viewRot [] immerse [] [circle 5mm]
-  •page << view [] stroke [] viewRot [] immerse [] [circle 10mm]
-  •page << view [] stroke [] viewRot [] immerse [] [circle 15mm]
-  •page << view [] stroke [] viewRot [] immerse [] [circle 20mm]
-  •page << view [] stroke [] viewRot [] immerse [] [circle 25mm]
-  •page << view () stroke [] viewRot [] immerse [] [circle 30mm]
+  •page << [circle 5mm] >> immerse >> viewRot >> stroke >> view
+  •page << [circle 10mm] >> immerse >> viewRot >> stroke >> view
+  •page << [circle 15mm] >> immerse >> viewRot >> stroke >> view
+  •page << [circle 20mm] >> immerse >> viewRot >> stroke >> view
+  •page << [circle 25mm] >> immerse >> viewRot >> stroke >> view
+  •page << [circle 30mm] >> immerse >> viewRot >> stroke >> view
 }

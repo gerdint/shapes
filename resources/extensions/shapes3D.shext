@@ -26,7 +26,7 @@ cylinderWall: \ radius height sides →
 
   [[range '0 sides-'1].foldl
    \ p e →
-      p & ( [rotate3D (0,0,1) e*deltaAngle] [] oneSide )
+      p & [[rotate3D (0,0,1) e*deltaAngle] oneSide]
     null3D]
 }
 

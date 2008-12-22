@@ -38,9 +38,9 @@ surfit: \ f p → ( p.x, p.y, [f p] )
 surfaceCircle: \ f r c sides:'12 →
 {
   mid: [surfit f c]
-	[[range '0 sides-'1].foldl
+  [[range '0 sides-'1].foldl
    \ p e → p & [fill mid--[surfit f c+r*[dir (360°*e)/sides]]--[surfit f c+r*[dir (360°*(e+'1))/sides]]--cycle]
-	 null3D]
+   null3D]
 }
 
 
@@ -50,8 +50,8 @@ foldpairsl:
 
   \ op nullRes lst →
     [if [null? lst]
-			lst
-		 	[helper op nullRes lst.car lst.cdr]]
+      lst
+      [helper op nullRes lst.car lst.cdr]]
 }
 
 foldtriplesl:
@@ -60,10 +60,10 @@ foldtriplesl:
 
   \ op nullRes lst →
     [if [null? lst]
-			lst
+      lst
       [if [null? lst.cdr]
-	  		[list]
-		   	[helper op nullRes lst.car lst.cdr.car lst.cdr.cdr]]]
+        [list]
+        [helper op nullRes lst.car lst.cdr.car lst.cdr.cdr]]]
 }
 
 functionMesh: \ zMap xRange yRange step:'1 →
@@ -71,67 +71,67 @@ functionMesh: \ zMap xRange yRange step:'1 →
   xyz: \ p → ( p.x, p.y, [zMap p] )
   [foldl
     \ p x →
-			p
-			&
-			[stroke
+      p
+      &
+      [stroke
         [yRange.foldl
            \ p y → p--[xyz (x,y)]
            emptypath3D
-			]]
+      ]]
     null3D
-		[sublist [consify xRange] step]
+    [sublist [consify xRange] step]
   ]
-	&
+  &
   [foldl
     \ p y →
-			p
-			&
-			[stroke
+      p
+      &
+      [stroke
         [xRange.foldl
            \ p x → p--[xyz (x,y)]
            emptypath3D
-			]]
+      ]]
     null3D
-		[sublist [consify yRange] step]
+    [sublist [consify yRange] step]
   ]
 }
 
 functionSurface: \ zMap xRange yRange →
 {
   xyz: \ p → ( p.x, p.y, [zMap p] )
-	xConsRange: [consify xRange]
-	yConsRange: [consify yRange]
+  xConsRange: [consify xRange]
+  yConsRange: [consify yRange]
   [foldpairsl
     \ p x1 x2 →
-			p
-			&
+      p
+      &
       [foldpairsl
          \ p y1 y2 →
           p
-					&
-					{
-					  p11: [xyz (x1,y1)]
-					  p12: [xyz (x1,y2)]
-					  p21: [xyz (x2,y1)]
-					  p22: [xyz (x2,y2)]
-					  pc: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
-						[fill pc--p11--p12--cycle]
-						&
-						[fill pc--p12--p22--cycle]
-						&
-						[fill pc--p22--p21--cycle]
-						&
-						[fill pc--p21--p11--cycle]
-					}
+          &
+          {
+            p11: [xyz (x1,y1)]
+            p12: [xyz (x1,y2)]
+            p21: [xyz (x2,y1)]
+            p22: [xyz (x2,y2)]
+            pc: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+            [fill pc--p11--p12--cycle]
+            &
+            [fill pc--p12--p22--cycle]
+            &
+            [fill pc--p22--p21--cycle]
+            &
+            [fill pc--p21--p11--cycle]
+          }
          null3D
-				yConsRange
-			]
+        yConsRange
+      ]
     null3D
-		xConsRange
+    xConsRange
   ]
 /**
-	&
-	[functionMesh zMap xRange yRange]
+  &
+  [functionMesh zMap xRange yRange]
 **/
 }
 
@@ -153,76 +153,76 @@ ridgeLines:
   {
     xyz: \ p → ( p.x, p.y, [zMap p] )
 
-  	xConsRange: [consify xRange]
-  	yConsRange: [consify yRange]
+    xConsRange: [consify xRange]
+    yConsRange: [consify yRange]
     [foldpairsl
       \ p x1 x2 →
         [foldpairsl
           \ p y1 y2 →
-  					{
-  					  p11: view [] tf [] [xyz (x1,y1)]
-  					  p12: view [] tf [] [xyz (x1,y2)]
-  					  p21: view [] tf [] [xyz (x2,y1)]
-  					  p22: view [] tf [] [xyz (x2,y2)]
+            {
+              p11: [xyz (x1,y1)] >> tf >> view
+              p12: [xyz (x1,y2)] >> tf >> view
+              p21: [xyz (x2,y1)] >> tf >> view
+              p22: [xyz (x2,y2)] >> tf >> view
 
-  					  pc:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
-  						pc3D: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
+              pc:  [xyz (0.5*(x1+x2),0.5*(y1+y2))] >> tf >> view
+              pc3D: [xyz (0.5*(x1+x2),0.5*(y1+y2))]
 
-  						p
-  						&
-    						  [if [ridgeTest p11 pc p12 p21] [stroke [xyz (x1,y1)]--pc3D] null3D]
-  						    &
-  						    [if [ridgeTest p12 pc p11 p22] [stroke [xyz (x1,y2)]--pc3D] null3D]
-  						    &
-  						    [if [ridgeTest p22 pc p12 p21] [stroke [xyz (x2,y2)]--pc3D] null3D]
-  						    &
-  						    [if [ridgeTest p21 pc p11 p22] [stroke [xyz (x2,y1)]--pc3D] null3D]
-  					}
+              p
+              &
+                  [if [ridgeTest p11 pc p12 p21] [stroke [xyz (x1,y1)]--pc3D] null3D]
+                  &
+                  [if [ridgeTest p12 pc p11 p22] [stroke [xyz (x1,y2)]--pc3D] null3D]
+                  &
+                  [if [ridgeTest p22 pc p12 p21] [stroke [xyz (x2,y2)]--pc3D] null3D]
+                  &
+                  [if [ridgeTest p21 pc p11 p22] [stroke [xyz (x2,y1)]--pc3D] null3D]
+            }
           p
-  				yConsRange
-  			]
+          yConsRange
+        ]
       null3D
-  		xConsRange
+      xConsRange
     ]
-  	&
+    &
     [foldtriplesl
       \ p x1 x2 x3 →
         [foldpairsl
           \ p y1 y2 →
-  					{
-  					  p1: view [] tf [] [xyz (x2,y1)]
-  					  p2: view [] tf [] [xyz (x2,y2)]
-  					  pc1:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
-  					  pc2:  view [] tf [] [xyz (0.5*(x2+x3),0.5*(y1+y2))]
-  						[if [ridgeTest p1 p2 pc1 pc2]
-  							p & [stroke [xyz (x2,y1)]--[xyz (x2,y2)]]
-  							p]
-  					}
+            {
+              p1: [xyz (x2,y1)] >> tf >> view
+              p2: [xyz (x2,y2)] >> tf >> view
+              pc1: [xyz (0.5*(x1+x2),0.5*(y1+y2))] >> tf >> view
+              pc2: [xyz (0.5*(x2+x3),0.5*(y1+y2))] >> tf >> view
+              [if [ridgeTest p1 p2 pc1 pc2]
+                p & [stroke [xyz (x2,y1)]--[xyz (x2,y2)]]
+                p]
+            }
           p
-  				yConsRange
-  			]
+          yConsRange
+        ]
       null3D
-  		xConsRange
+      xConsRange
     ]
-  	&
+    &
     [foldtriplesl
       \ p y1 y2 y3 →
         [foldpairsl
           \ p x1 x2 →
-  					{
-  					  p1: view [] tf [] [xyz (x1,y2)]
-  					  p2: view [] tf [] [xyz (x2,y2)]
-  					  pc1:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y1+y2))]
-  					  pc2:  view [] tf [] [xyz (0.5*(x1+x2),0.5*(y2+y3))]
-  						[if [ridgeTest p1 p2 pc1 pc2]
-  							p & [stroke [xyz (x1,y2)]--[xyz (x2,y2)]]
-  							p]
-  					}
+            {
+              p1: [xyz (x1,y2)] >> tf >> view
+              p2: [xyz (x2,y2)] >> tf >> view
+              pc1: [xyz (0.5*(x1+x2),0.5*(y1+y2))] >> tf >> view
+              pc2: [xyz (0.5*(x1+x2),0.5*(y2+y3))] >> tf >> view
+              [if [ridgeTest p1 p2 pc1 pc2]
+                p & [stroke [xyz (x1,y2)]--[xyz (x2,y2)]]
+                p]
+            }
           p
-  				xConsRange
-  			]
+          xConsRange
+        ]
       null3D
-  		yConsRange
+      yConsRange
     ]
   }
 }
@@ -243,38 +243,38 @@ world:
 •imagePlane: newGroup
 •imagePlane
       << @width:0.8bp
-			   |
-				 [view
-				   T_obj
-					 []
-					 ( newZSorter
-					   <<   @nonstroking:OCCLUDING
-					 	 		| [functionSurface surfz xRange yRange]
-					   << [functionMesh surfz xRange yRange N_minor]
-					   << [ridgeLines surfz xRange yRange T_obj]
-					 )
-				 ]
+         |
+         [view
+           T_obj
+           []
+           ( newZSorter
+             <<   @nonstroking:OCCLUDING
+                  | [functionSurface surfz xRange yRange]
+             << [functionMesh surfz xRange yRange N_minor]
+             << [ridgeLines surfz xRange yRange T_obj]
+           )
+         ]
 
 •imagePlane << @width:0.3bp | [stroke [rectangle (~3cm,~3cm) (3cm,3cm)]]
-						<< [shift (~3cm,~3cm)+(5mm,5mm)] [] (TeX `{\Huge Image plane}´)
+            << [shift (~3cm,~3cm)+(5mm,5mm)] [] (TeX `{\Huge Image plane}´)
 
 •world: newGroup3D
 len: 4cm
 •world << [immerse (•imagePlane)]
- 		 << [stroke (0cm,0cm,0cm)--(len,0cm,0cm) head:[MetaPostArrow3D ahLength:3mm normal:(0,0,1) ...]]
- 		 << [stroke (0cm,0cm,0cm)--(0cm,len,0cm) head:[MetaPostArrow3D ahLength:3mm normal:(0,0,1) ...]]
- 		 << [stroke (0cm,0cm,0cm)--(0cm,0cm,len) head:[MetaPostArrow3D ahLength:3mm normal:(1,0,0) ...]]
-		 << [shift (len,0cm,0cm)] [] [facing [putlabelAbove (TeX `$\hat{x}$´) (0cm,0cm) 1]]
-		 << [shift (0cm,len,0cm)] [] [facing [putlabelRight (TeX `$\hat{y}$´) (0cm,0cm) 1]]
-		 << [shift (0cm,0cm,len)] [] [facing [putlabelAbove (TeX `$\hat{z}$´) (0cm,0cm) 1]]
-		 << [shift (0cm,0cm,@eyez)] [] [facing [fill [circle 2bp]]]
-		 << [shift (0cm,0cm,@eyez)] [] [facing [putlabelAbove (TeX `eye´) (0cm,1mm) 0]]
-		 << [tag 'eye (0cm,0cm,@eyez)]
-		 << [tag 'origin (0cm,0cm,0cm)]
+     << [stroke (0cm,0cm,0cm)--(len,0cm,0cm) head:[MetaPostArrow3D ahLength:3mm normal:(0,0,1) ...]]
+     << [stroke (0cm,0cm,0cm)--(0cm,len,0cm) head:[MetaPostArrow3D ahLength:3mm normal:(0,0,1) ...]]
+     << [stroke (0cm,0cm,0cm)--(0cm,0cm,len) head:[MetaPostArrow3D ahLength:3mm normal:(1,0,0) ...]]
+     << [shift (len,0cm,0cm)] [] [facing [putlabelAbove (TeX `$\hat{x}$´) (0cm,0cm) 1]]
+     << [shift (0cm,len,0cm)] [] [facing [putlabelRight (TeX `$\hat{y}$´) (0cm,0cm) 1]]
+     << [shift (0cm,0cm,len)] [] [facing [putlabelAbove (TeX `$\hat{z}$´) (0cm,0cm) 1]]
+     << [shift (0cm,0cm,@eyez)] [] [facing [fill [circle 2bp]]]
+     << [shift (0cm,0cm,@eyez)] [] [facing [putlabelAbove (TeX `eye´) (0cm,1mm) 0]]
+     << [tag 'eye (0cm,0cm,@eyez)]
+     << [tag 'origin (0cm,0cm,0cm)]
 
-	bracePath: [rotate3D dir:(0,1,0) angle:~90°] [] [immerse [someClosedBrace (0cm,0cm) (@eyez,0cm)]]
+  bracePath: [rotate3D dir:(0,1,0) angle:~90°] [] [immerse [someClosedBrace (0cm,0cm) (@eyez,0cm)]]
   •world << [fill bracePath]
-	|** Next, I use that I happen to know that the tip of the brace is at path time 1.
+  |** Next, I use that I happen to know that the tip of the brace is at path time 1.
   •world << [shift [bracePath 1].p] [] [facing [putlabelBelow (TeX `$z_{\mathrm{eye}}$´) (0m,0m) 0]]
 
 •world;
@@ -293,14 +293,14 @@ theView:
 [view
   (T_view * T_obj)
   []
-	( newZSorter
-|**					   << @nonstroking:OCCLUDING | [functionSurface surfz xRange yRange]
-	  << [functionMesh surfz xRange yRange N_minor]
-		<< [ridgeLines surfz xRange yRange T_view * T_obj]
-	)
+  ( newZSorter
+|**            << @nonstroking:OCCLUDING | [functionSurface surfz xRange yRange]
+    << [functionMesh surfz xRange yRange N_minor]
+    << [ridgeLines surfz xRange yRange T_view * T_obj]
+  )
 ]
 
 •page << theView
-			<< [view (T_view * T_obj) [] [facing [putlabelBelow (TeX `{\huge $3^{\mathrm{D}}$ scene}´) (~2cm,~3cm) 0]]]
-			<< [view T_view [] world]
+      << [view (T_view * T_obj) [] [facing [putlabelBelow (TeX `{\huge $3^{\mathrm{D}}$ scene}´) (~2cm,~3cm) 0]]]
+      << [view T_view [] world]
 }

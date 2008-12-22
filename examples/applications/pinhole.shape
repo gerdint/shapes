@@ -113,7 +113,7 @@ rayWorld: •rayWorld;
 			 << [tag 'P0 P0]
 			 << [tag 'planePoint [shift (0u,0u,f)][][immerse (0.3u,~1u)]]
 
-flatWorld: view [] [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°]*[rotate3D dir:(0,1,0) angle:90°] [] (•world)
+flatWorld: (•world) >> [shift (~30u,~5u,0u)]*[rotate3D dir:(1,0,0) angle:180°]*[rotate3D dir:(0,1,0) angle:90°] >> view
 •page << flatWorld
 
   @width: 0.5bp

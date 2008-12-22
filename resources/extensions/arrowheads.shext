@@ -96,10 +96,10 @@ triangleArrow3D: \ p normal:(0,0,1) ahLength:void ahAngle:30° →
     (>
       picture:
         { rotDir: rotDir1
-          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) }
+          ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) >> [shift z] >> fill }
 	&
 	{ rotDir: [cross sl.T rotDir1]
-          fill [] [shift z] [] ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) }
+          ( (0m,0m,0m)--([rotate3D dir:rotDir angle:ahAngle*0.5][](l*sl.T))--([rotate3D dir:rotDir angle:~ahAngle*0.5][](l*sl.T))--cycle ) >> [shift z] >> fill}
       cut: 2*@width
     <)
   }

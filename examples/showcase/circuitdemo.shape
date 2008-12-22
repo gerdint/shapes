@@ -19,9 +19,9 @@
 ##needs blockdraw_wfo
 ##needs circuitparts
 
-##needs bookprefs : ../applications
+##needs demoprefs
 
-bookprefs & @defaultunit:1%c
+demoprefs & @defaultunit:1%c
 |
 { |** book preferences active
 
