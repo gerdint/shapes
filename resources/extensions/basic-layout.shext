@@ -31,7 +31,7 @@ ymin: \ p → [maximizer p (0,~1)].p.y
  ** Functions for positioning an object relative to it's bounding box.
  **/
 
-centerat: \ obj z →
+center: \ obj z:(0,0) →
  {
   thebb: [bbox obj]
   [if thebb.null?
@@ -41,7 +41,7 @@ centerat: \ obj z →
       obj]]
  }
 
-centerxat: \ obj x →
+center_x: \ obj x:0 →
  {
   thebb: [bbox obj]
   [[shift ( 0.5*([xmin thebb]*(x-1) - [xmax thebb]*(x+1)),
@@ -49,7 +49,7 @@ centerxat: \ obj x →
    obj]
  }
 
-centeryat: \ obj y →
+center_y: \ obj y:0 →
  {
   thebb: [bbox obj]
   [[shift ( 0cm,
@@ -57,16 +57,13 @@ centeryat: \ obj y →
    obj]
  }
 
-centerx: \ obj → [centerxat obj 0]
-centery: \ obj → [centeryat obj 0]
-
 centerof: \ obj → { thebb: [bbox obj]  (0.5*([xmin thebb]+[xmax thebb]),0.5*([ymin thebb]+[ymax thebb])) }
 
 
 dynamic @labelmargin identity 1mm
 
-|** The name of the following function is an abbreviation of "centerat, with label margin"
-centeratwlm: \ obj z →
+|** The name of the following function is an abbreviation of "center, with label margin"
+center_wlm: \ obj z →
  {
   thebb: [bbox obj]
   [[shift (0.5*(([xmin thebb]-@labelmargin)*(z.x-1) - ([xmax thebb]+@labelmargin)*(z.x+1)),
@@ -90,39 +87,39 @@ mspoint: \ pth mediation slide:0cm → [pth mediation * [abs pth] + slide].p
  **/
 
 |** This function enlarges the bbox so that its center coincides with the origin.
-symbboxed: \ pic →
+bboxed_sym: \ obj →
 {
-  bb: [bbox pic]
+  bb: [bbox obj]
   rx: [max ~[xmin bb] [xmax bb]]
   ry: [max ~[ymin bb] [ymax bb]]
-  [bboxed pic [rectangle (~rx,~ry) (rx,ry)]]
+  [bboxed obj [rectangle (~rx,~ry) (rx,ry)]]
 }
 
 |** This function enlarges the bbox vertically so that its vertical midpoint is 0.
-symbboxedy: \ pic →
+bboxed_sym_y: \ obj →
 {
-  bb: [bbox pic]
+  bb: [bbox obj]
   ry: [max ~[ymin bb] [ymax bb]]
-  [bboxed pic [rectangle (~[xmin bb],~ry) ([xmax bb],ry)]]
+  [bboxed obj [rectangle (~[xmin bb],~ry) ([xmax bb],ry)]]
 }
 
-|** This function enlarges the bbox horizontally.  Compare symbboxedy.
-symbboxedx: \ pic →
+|** This function enlarges the bbox horizontally.  Compare bboxed_sym_y.
+bboxed_sym_x: \ obj →
 {
-  bb: [bbox pic]
+  bb: [bbox obj]
   rx: [max ~[xmin bb] [xmax bb]]
-  [bboxed pic [rectangle (~rx,[ymin bb]) (rx,[ymax bb])]]
+  [bboxed obj [rectangle (~rx,[ymin bb]) (rx,[ymax bb])]]
 }
 
 |** This function enlarges the bbox in all directions.
-enlargebbox: \ pic xy →
+bboxed_enlarge: \ obj xy →
 {
-  bb: [bbox pic]
-  [bboxed pic [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)]]
+  bb: [bbox obj]
+  [bboxed obj [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)]]
 }
 
-enlargebleedbox: \ pic xy →
+enlarge_bleedbox: \ obj xy →
 {
-  bb: [bbox pic 'bleed]
-  [bboxed pic [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)] 'bleed]
+  bb: [bbox obj 'bleed]
+  [bboxed obj [rectangle ([xmin bb]-xy.x,[ymin bb]-xy.y) ([xmax bb]+xy.x,[ymax bb]+xy.y)] 'bleed]
 }

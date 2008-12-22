@@ -18,10 +18,7 @@
 
 ##needs basic-layout
 
-centeryX:
+Xcenter_y:
  {thebb: [bbox (TeX `$X$´)]
-  [shift (0cm, ~0.5*([ymax thebb] + [ymin thebb]))]}
-centeryatX:
- {thebb: [bbox (TeX `$X$´)]
-  \ obj y → [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
+  \ obj y:0 → [[shift (0cm, ~(y+1)/2*[ymax thebb])] obj]}
 

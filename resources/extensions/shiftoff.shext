@@ -67,5 +67,5 @@ to_dir: \ z →
 
 dir_to: \ d → [dir 180° + d * 45°]
 
-shiftoff: \ obj d → [centerat obj [dirtopoint d]]
-shiftoffwlm: \ obj d → [centeratwlm obj [dirtopoint d]]
+shiftoff: \ obj d → [center obj [dirtopoint d]]
+shiftoff_wlm: \ obj d → [center_wlm obj [dirtopoint d]]

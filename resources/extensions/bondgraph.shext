@@ -16,12 +16,13 @@
  ** Copyright 2008 Henrik Tidefelt
  **/
 
-##needs blockdraw_wfo
+##needs blockdraw
 ##needs basic-layout
 ##needs shiftoff
+##needs arrowheads
 
 
-junction: \ txt → [bboxed [centerat txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
+junction: \ txt → [bboxed [center txt (0,0)] [rectangle (~@smallblockr,~@smallblockr) (@smallblockr,@smallblockr)]]
 
 pjunction: [junction (TeX `p´)]
 sjunction: [junction (TeX `s´)]
@@ -44,7 +45,7 @@ junctionlbl: \ txt arrowdir lbl doArrow →
         [if arrowdir = to_top to_rt
 	 [error [sprintf `Bad arrowdir constant: %g´ arrowdir]]]]]]
 
-  [symbboxed
+  [bboxed_sym
     (newGroup
        << [if doArrow
 	      [stroke p head: [triangleArrow ahLength:ahLength ahAngle:ahAngle...]]
@@ -61,7 +62,7 @@ gyjunction: \ arrowdir lbl → [junctionlbl (TeX `GY´) arrowdir lbl false]
 putblockTerminal: \ newBlock pos oldBlock →
 {
   r: [normalized pos - [centerof oldBlock]]
-  res: [[shift pos] [symbboxed [shiftoffwlm newBlock [to_dir r]]>>[shift  ~r * @smallblockr]]]
+  res: [[shift pos] [bboxed_sym [shiftoff_wlm newBlock [to_dir r]]>>[shift  ~r * @smallblockr]]]
   res
 }
 
