@@ -47,7 +47,7 @@
 ;; with .sh(ape|ext), so that its encoding is not set to utf-8 correctly, that
 ;; is change the buffer encoding to utf-8 if it is something else.
 
-;;; Installation
+;;; Installation:
 
 ;; To install, put this file somewhere in your load path and just require
 ;; 'shapes-mode from your ~/.emacs or equivalent, like so:
@@ -55,6 +55,8 @@
 ;; (require 'shapes-mode)
 
 ;; Code tested only on GNU Emacs 22.
+
+;;; Code:
 
 (defcustom shapes-compile-command "shapes"
   "Name of the Shapes compiler executable, and any options to pass to it."
@@ -73,15 +75,14 @@ equivalents or not."
 ;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
 (modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
 
-;;; TBD
-;; (defvar shapes-mode-syntax-table
-;;   (let ((st (make-syntax-table)))
-;;     (modify-syntax-entry ?\" ".   " st)
+(defvar shapes-mode-syntax-table
+  (let ((st (make-syntax-table)))
+    ;; (modify-syntax-entry ?\" ".   " st)
 ;;     (modify-syntax-entry ?\\ ".   " st)
 ;;     ;; Add `p' so M-c on `hello' leads to `Hello', not `hello'.
 ;;     (modify-syntax-entry ?' "w p" st)
-;;     st)
-;;   "Syntax table used while in `text-mode'.")
+    st)
+  "Syntax table used while in `shapes-mode'.")
 
 (defvar shapes-mode-map
   (let ((map (make-sparse-keymap)))
@@ -129,56 +130,86 @@ doc-view."
 ;;   (interactive)
 ;;   ;; match identifier: \ arg1 .. argn -> body-expr
 ;;   (re-search-backward "^")
-  )
+;;  )
 
-(defun shapes-mode ()
-  "Major mode for editing Shapes programs.
+(defun shapes-indent-line ()
+  "Function that handles indentation of Shapes programs.
+
+The syntax tables will probably require some tweaking."
+  (let ((pos (- (point-max) (point)))	; We store pos relative to end of file,
+					; so that we can go back to it even
+					; after indentation has inserted (before
+					; point).
+	(beg (progn (beginning-of-line) (point))))
+    ;; We really want to indent w.r.t to the first thing on the line.
+    (goto-char beg)			
+    (let* ((state (syntax-ppss (point)))
+	   (open-pos (elt state 1)))
+      ;; Delete previous indent, if any.
+      (back-to-indentation)
+      (delete-region beg (point))
+      ;; Find column number of first expression after open-pos, indent to it.
+      (indent-to
+       (save-excursion
+	 (goto-char open-pos)
+	 ;; Move forward to the second argument, which is what we would like to
+	 ;; align with.
+	 (down-list)
+	 (forward-sexp)
+	 (skip-syntax-forward " ")
+	 (current-column))))
+    (goto-char (- (point-max) pos))))
+
+  (defun shapes-mode ()
+    "Major mode for editing Shapes programs.
 \\{shapes-mode-map}"
-  (interactive)
-  (kill-all-local-variables)
-  (setq major-mode 'shapes-mode)
-  (setq mode-name "Shapes")
-  (use-local-map shapes-mode-map)
-  ;(set-syntax-table shapes-mode-syntax-table)
+    (interactive)
+    (kill-all-local-variables)
+    (setq major-mode 'shapes-mode)
+    (setq mode-name "Shapes")
+    (use-local-map shapes-mode-map)
+    (set-syntax-table shapes-mode-syntax-table)
 
-  ;; Skeletons
-  (set (make-local-variable 'skeleton-pair-alist)
-       '((?` _ ?´)			; for strings
-	 (?{ \n _ \n ?})))			
+    ;; Skeletons
+    (set (make-local-variable 'skeleton-pair-alist)
+	 '((?` _ ?´)			; for strings
+	   (?{ \n _ \n ?})))			
 
-  ;; (define-skeleton shapes-lambda "Function template skeleton."
-;;     "Formal parameters: "
-;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
+    ;; (define-skeleton shapes-lambda "Function template skeleton."
+    ;;     "Formal parameters: "
+    ;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
-  (when shapes-unicode-pretty-print
-    (setq abbrev-mode t))
+    (when shapes-unicode-pretty-print
+      (setq abbrev-mode t))
   
-  (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
-  (setq comment-start "|**")
+    (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
+    (setq comment-start "|**")
 
-  ;; Compilation-mode support.
-  ;; Example data:
-  ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
-  (eval-after-load 'compile
-    '(progn
-       (add-to-list 'compilation-error-regexp-alist
-		    '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
-		      1 2 (3 . 4) nil 1))
-       ;; The Shapes compiler works this way
-       (setq compilation-error-screen-columns nil)))
+    (setq indent-line-function (function shapes-indent-line)) 
 
-  ;; Simplified recognition of a top-level Shapes identifier. Probably needs
-  ;; more work.
-  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
-				   (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
+    ;; Compilation-mode support.
+    ;; Example data:
+    ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
+    (eval-after-load 'compile
+      '(progn
+	 (add-to-list 'compilation-error-regexp-alist
+		      '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
+			1 2 (3 . 4) nil 1))
+	 ;; The Shapes compiler works this way
+	 (setq compilation-error-screen-columns nil)))
 
-  (unless (or (file-exists-p "makefile")
-	      (file-exists-p "Makefile"))
-    (set (make-local-variable 'compile-command)
-	 (concat shapes-compile-command " "
-		 (file-name-sans-extension buffer-file-name)))))
+    ;; Simplified recognition of a top-level Shapes identifier. Probably needs
+    ;; more work.
+    (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
+				     (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
 
-(provide 'shapes-mode)
+    (unless (or (file-exists-p "makefile")
+		(file-exists-p "Makefile"))
+      (set (make-local-variable 'compile-command)
+	   (concat shapes-compile-command " "
+		   (file-name-sans-extension buffer-file-name))))))
+
+  (provide 'shapes-mode))
 
 ;; Local Variables: **
 ;; coding:utf-8! **
