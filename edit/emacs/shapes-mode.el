@@ -67,6 +67,8 @@
 equivalents or not."
   :type 'boolean)
 
+(defconst shapes-basic-indent-width 2)
+
 (defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
   "Regular expression matching Shapes source files.")
 
@@ -140,76 +142,90 @@ The syntax tables will probably require some tweaking."
 					; so that we can go back to it even
 					; after indentation has inserted (before
 					; point).
-	(beg (progn (beginning-of-line) (point))))
+	(beg (line-beginning-position)))
     ;; We really want to indent w.r.t to the first thing on the line.
     (goto-char beg)			
     (let* ((state (syntax-ppss (point)))
 	   (open-pos (elt state 1)))
-      ;; Delete previous indent, if any.
-      (back-to-indentation)
-      (delete-region beg (point))
+      (delete-horizontal-space)
       ;; Find column number of first expression after open-pos, indent to it.
       (indent-to
        (save-excursion
-	 (goto-char open-pos)
-	 ;; Move forward to the second argument, which is what we would like to
-	 ;; align with.
-	 (down-list)
-	 (forward-sexp)
-	 (skip-syntax-forward " ")
-	 (current-column))))
-    (goto-char (- (point-max) pos))))
+	 (save-restriction
+	   (goto-char open-pos)
+	   (let ((open-col (current-column)))
+	     ;; We only want to scan this line.
+	     (narrow-to-region (point) (line-end-position))
+	     (forward-char)
+	     (skip-chars-forward " \t")
+	     ;; [           foo   bar
+	     ;; ^: open-pos ^: s1 ^: s2
+	     (let ((s1-col (current-column)))
+	       (forward-sexp)
+	       (if (= (current-column) s1-col) ; Did we not move over something?
+		   (+ open-col shapes-basic-indent-width)
+		 (progn
+		   (skip-chars-forward " \t")
+		   (let ((s2-col (current-column)))
+		     (forward-sexp)
+		     (if (= (current-column) s2-col)
+			 ;; No more expression.
+			 (+ s1-col shapes-basic-indent-width)
+		       ;; There was another expression, align with it.
+		       s2-col)))))))))
+      (goto-char (- (point-max) pos)))))
 
-  (defun shapes-mode ()
-    "Major mode for editing Shapes programs.
+
+(defun shapes-mode ()
+  "Major mode for editing Shapes programs.
 \\{shapes-mode-map}"
-    (interactive)
-    (kill-all-local-variables)
-    (setq major-mode 'shapes-mode)
-    (setq mode-name "Shapes")
-    (use-local-map shapes-mode-map)
-    (set-syntax-table shapes-mode-syntax-table)
+  (interactive)
+  (kill-all-local-variables)
+  (setq major-mode 'shapes-mode)
+  (setq mode-name "Shapes")
+  (use-local-map shapes-mode-map)
+  (set-syntax-table shapes-mode-syntax-table)
 
-    ;; Skeletons
-    (set (make-local-variable 'skeleton-pair-alist)
-	 '((?` _ ?´)			; for strings
-	   (?{ \n _ \n ?})))			
+  ;; Skeletons
+  (set (make-local-variable 'skeleton-pair-alist)
+       '((?` _ ?´)			; for strings
+	 (?{ \n _ \n ?})))			
 
-    ;; (define-skeleton shapes-lambda "Function template skeleton."
-    ;;     "Formal parameters: "
-    ;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
+  ;; (define-skeleton shapes-lambda "Function template skeleton."
+  ;;     "Formal parameters: "
+  ;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
-    (when shapes-unicode-pretty-print
-      (setq abbrev-mode t))
+  (when shapes-unicode-pretty-print
+    (setq abbrev-mode t))
   
-    (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
-    (setq comment-start "|**")
+  (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
+  (setq comment-start "|**")
 
-    (setq indent-line-function (function shapes-indent-line)) 
+  (setq indent-line-function (function shapes-indent-line)) 
 
-    ;; Compilation-mode support.
-    ;; Example data:
-    ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
-    (eval-after-load 'compile
-      '(progn
-	 (add-to-list 'compilation-error-regexp-alist
-		      '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
-			1 2 (3 . 4) nil 1))
-	 ;; The Shapes compiler works this way
-	 (setq compilation-error-screen-columns nil)))
+  ;; Compilation-mode support.
+  ;; Example data:
+  ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
+  (eval-after-load 'compile
+    '(progn
+       (add-to-list 'compilation-error-regexp-alist
+		    '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
+		      1 2 (3 . 4) nil 1))
+       ;; The Shapes compiler works this way
+       (setq compilation-error-screen-columns nil)))
 
-    ;; Simplified recognition of a top-level Shapes identifier. Probably needs
-    ;; more work.
-    (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
-				     (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
+  ;; Simplified recognition of a top-level Shapes identifier. Probably needs
+  ;; more work.
+  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
+				   (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
 
-    (unless (or (file-exists-p "makefile")
-		(file-exists-p "Makefile"))
-      (set (make-local-variable 'compile-command)
-	   (concat shapes-compile-command " "
-		   (file-name-sans-extension buffer-file-name))))))
+  (unless (or (file-exists-p "makefile")
+	      (file-exists-p "Makefile"))
+    (set (make-local-variable 'compile-command)
+	 (concat shapes-compile-command " "
+		 (file-name-sans-extension buffer-file-name)))))
 
-  (provide 'shapes-mode))
+(provide 'shapes-mode)
 
 ;; Local Variables: **
 ;; coding:utf-8! **
