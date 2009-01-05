@@ -193,7 +193,7 @@ This code could really use some clean-up."
 						 (open-pos (elt state 1)))
 				(unless (zerop depth)
 					;; Highlight opening brace, for debugging.
-					(when (boundp sm-debug)							; Ie shapes-mode-debug.
+					(when (boundp 'sm-debug)			; Ie shapes-mode-debug.
 						(princ state)
 						(let ((open-ov (make-overlay open-pos (1+ open-pos))))
 							(overlay-put open-ov 'face 'highlight)
