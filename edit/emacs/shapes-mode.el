@@ -238,6 +238,7 @@ This code could really use some clean-up."
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
+	(setq indent-tabs-mode nil)
   (setq indent-line-function (function shapes-indent-line))
 
   ;; Compilation-mode support.
