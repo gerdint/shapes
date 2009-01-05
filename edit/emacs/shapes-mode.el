@@ -19,15 +19,15 @@
 
 ;;; Commentary:
 
-;; This mode is very much work in progress. It does not handle automatic
+;; This mode is very much work in progress.  It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
-;; to such. That said, it does support compilation-mode, comment-dwim, Imenu,
+;; to such.  That said, it does support compilation-mode, comment-dwim, Imenu,
 ;; skeleton-pairs, and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
-;; - motion commands
-;; - automatic indentation
+;; - Motion commands
+;; - Handle automatic indentation of operators such as <<, &
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
@@ -40,12 +40,16 @@
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
-;;   Note: Emacs column 0 means that *point* is before the first char. Column 1
+;;   Note: Emacs column 0 means that *point* is before the first char.  Column 1
 ;; * point is after first char (and the cursor is ON char 2).
 ;; - Handle the case when shapes-mode is started in a buffer that isn't saved.
 ;; - Handle the case when shapes-mode is activated on a buffer that doesn't end
 ;; with .sh(ape|ext), so that its encoding is not set to utf-8 correctly, that
-;; is change the buffer encoding to utf-8 if it is something else.
+;; is change the buffer encoding to utf-8 if it is set to something else.
+;; - Code brackets are indented one column to much, since they are treated as
+;; function calls.
+;; - The use of forward-sexp for indentation means that some Shapes expressions
+;; are not moved over correctly, such as '[...].foldl'.
 
 ;;; Installation:
 
@@ -54,7 +58,7 @@
 ;;
 ;; (require 'shapes-mode)
 
-;; Code tested only on GNU Emacs 22.
+;; Code tested only on GNU Emacs 22 and 23.
 
 ;;; Code:
 
@@ -92,7 +96,7 @@ equivalents or not."
     (when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
-    (mapc (lambda (elt) 
+    (mapc (lambda (elt)
 	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
 	  "`([{")
     ;; (define-key map "\C-cl" 'shapes-lambda)
@@ -135,45 +139,77 @@ doc-view."
 ;;  )
 
 (defun shapes-indent-line ()
-  "Function that handles indentation of Shapes programs.
+  "Indents a line of Shapes code.
 
-The syntax tables will probably require some tweaking."
-  (let ((pos (- (point-max) (point)))	; We store pos relative to end of file,
-					; so that we can go back to it even
-					; after indentation has inserted (before
-					; point).
-	(beg (line-beginning-position)))
+This code could really use some clean-up."
+	(defun point-to-column (p)
+		(save-excursion
+			(goto-char p)
+			(current-column)))
+	(defun calc-function-indent ()
+		;; Extract dynamically scoped parameters?
+		(goto-char open-pos)
+		(narrow-to-region (point) (line-end-position))
+		(forward-char)
+		(skip-chars-forward " \t")
+		;;   [           foo   bar
+		;;   ^: open     ^: s1 ^: s2
+		(+ open-col													; We need to add this because
+																				; narrow-to-region will cause
+																				; current-column not to see it.
+			 (let ((s1-col (current-column)))
+				 (forward-sexp)									; I probably need to supply my own
+																				; forward-sexp function, as this one
+																				; fails on [...].foldl for instance.
+				 (if (= (current-column) s1-col) ; Did we not move over something?
+						 shapes-basic-indent-width
+					 (progn
+						 (skip-chars-forward " \t")
+						 (let ((s2-col (current-column)))
+							 (forward-sexp)
+							 (if (= (current-column) s2-col)
+									 ;; No more expression.
+									 (+ s1-col shapes-basic-indent-width)
+								 ;; There was another expression, align with it.
+								 s2-col)))))))
+  (let ((pos (- (point-max) (point)))		; We store pos relative to end of file,
+																				; so that we can go back to it even
+																				; after indentation has inserted (before
+																				; point).
+				(beg (line-beginning-position)))
     ;; We really want to indent w.r.t to the first thing on the line.
-    (goto-char beg)			
-    (let* ((state (syntax-ppss (point)))
-	   (open-pos (elt state 1)))
-      (delete-horizontal-space)
-      ;; Find column number of first expression after open-pos, indent to it.
-      (indent-to
-       (save-excursion
-	 (save-restriction
-	   (goto-char open-pos)
-	   (let ((open-col (current-column)))
-	     ;; We only want to scan this line.
-	     (narrow-to-region (point) (line-end-position))
-	     (forward-char)
-	     (skip-chars-forward " \t")
-	     ;; [           foo   bar
-	     ;; ^: open-pos ^: s1 ^: s2
-	     (let ((s1-col (current-column)))
-	       (forward-sexp)
-	       (if (= (current-column) s1-col) ; Did we not move over something?
-		   (+ open-col shapes-basic-indent-width)
-		 (progn
-		   (skip-chars-forward " \t")
-		   (let ((s2-col (current-column)))
-		     (forward-sexp)
-		     (if (= (current-column) s2-col)
-			 ;; No more expression.
-			 (+ s1-col shapes-basic-indent-width)
-		       ;; There was another expression, align with it.
-		       s2-col)))))))))
-      (goto-char (- (point-max) pos)))))
+    (goto-char beg)
+		;; Wipe previous identation.
+		(delete-horizontal-space)
+  	;; Note, the below 'looking-back'-based method is ugly! (and probably slow).
+		;; Should probably try to find a better one, possibly involving some real
+		;; parsing.
+		(if (looking-back "\\\\.*?\\(->\\|→\\)\n")		; Function definition?
+				(indent-to (+ (point-to-column (match-beginning 0))
+											shapes-basic-indent-width))
+			;; No, use normal braces-based indent.																	 
+			(let* ((state (syntax-ppss (point)))
+						 (depth (car state))
+						 (open-pos (elt state 1)))
+				(unless (zerop depth)
+					;; Highlight opening brace, for debugging.
+					(when (boundp sm-debug)							; Ie shapes-mode-debug.
+						(princ state)
+						(let ((open-ov (make-overlay open-pos (1+ open-pos))))
+							(overlay-put open-ov 'face 'highlight)
+							(sit-for 1)
+							(delete-overlay open-ov)))
+					(let ((open-col (point-to-column open-pos)))
+						(indent-to
+						 (save-excursion
+							 (save-restriction
+								 (if (looking-at "}\\|<)")
+										 ;; Closing braces for code brackets and structures.
+										 ;; Align with opening brace.
+										 open-col
+									 (calc-function-indent)))))))
+				;; Restore previous cursor position.
+				(goto-char (- (point-max) pos))))))
 
 
 (defun shapes-mode ()
@@ -188,8 +224,9 @@ The syntax tables will probably require some tweaking."
 
   ;; Skeletons
   (set (make-local-variable 'skeleton-pair-alist)
-       '((?` _ ?´)			; for strings
-	 (?{ \n _ \n ?})))			
+       '((?` _ ?´)											; for strings
+				 (?{ \n > _ \n ?} >))						; for code brackets
+			 )
 
   ;; (define-skeleton shapes-lambda "Function template skeleton."
   ;;     "Formal parameters: "
@@ -201,7 +238,7 @@ The syntax tables will probably require some tweaking."
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
-  (setq indent-line-function (function shapes-indent-line)) 
+  (setq indent-line-function (function shapes-indent-line))
 
   ;; Compilation-mode support.
   ;; Example data:
