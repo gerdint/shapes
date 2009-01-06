@@ -21,8 +21,8 @@
 
 ;; This mode is very much work in progress.  It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
-;; to such.  That said, it does support compilation-mode, comment-dwim, Imenu,
-;; skeleton-pairs, and viewing output through doc-view.
+;; to such.  That said, it does support compilation-mode, flymake-mode,
+;; comment-dwim, Imenu, skeleton-pairs, and viewing output through doc-view.
 ;;
 ;; TODO
 ;; - Syntax highlighting (first: comment and string faces)
@@ -36,7 +36,7 @@
 ;; - Skeletons?
 ;; - Eldoc mode?
 ;; - Some sort of camelCase support a la subword mode of cc-mode
-;; - Investigate Flymake support
+;; - Investigate Flymake column number support.
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
@@ -76,7 +76,12 @@ equivalents or not."
 (defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
   "Regular expression matching Shapes source files.")
 
-(add-to-list 'auto-mode-alist (cons shapes-file-regex 'shapes-mode))
+(defconst shapes-compiler-message-parse-element
+	'("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):" 1 2 (3 . 4))
+	"List containing regular expression and match indices for parsing Shapes
+	compiler messages.  Used by compilation- and flymake modes.")
+
+(push (cons shapes-file-regex 'shapes-mode) auto-mode-alist)
 
 ;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
 (modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
@@ -211,6 +216,13 @@ This code could really use some clean-up."
 				;; Restore previous cursor position.
 				(goto-char (- (point-max) pos))))))
 
+(defun shapes-flymake-init ()
+	(let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+				 (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+		(list shapes-compile-command (list local-file))))
 
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
@@ -241,21 +253,28 @@ This code could really use some clean-up."
 	(setq indent-tabs-mode nil)
   (setq indent-line-function (function shapes-indent-line))
 
-  ;; Compilation-mode support.
+  ;; Compilation-mode support
   ;; Example data:
   ;;  /Users/tger/stroke.shape:1(8-10): The unit b is unbound
   (eval-after-load 'compile
     '(progn
        (add-to-list 'compilation-error-regexp-alist
-		    '("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):"
-		      1 2 (3 . 4) nil 1))
+										shapes-compiler-message-parse-element)
        ;; The Shapes compiler works this way
        (setq compilation-error-screen-columns nil)))
+
+	;; Flymake support
+	(eval-after-load 'flymake
+		'(progn
+			 (add-to-list 'flymake-allowed-file-name-masks
+										(list shapes-file-regex 'shapes-flymake-init))
+			 (add-to-list 'flymake-err-line-patterns
+										shapes-compiler-message-parse-element)))
 
   ;; Simplified recognition of a top-level Shapes identifier. Probably needs
   ;; more work.
   (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
-				   (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
+																	 (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
