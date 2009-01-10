@@ -216,6 +216,7 @@ This code could really use some clean-up."
 				;; Restore previous cursor position.
 				(goto-char (- (point-max) pos))))))
 
+;; I ripped this one off from the Perl one in flymake.el.
 (defun shapes-flymake-init ()
 	(let* ((temp-file   (flymake-init-create-temp-buffer-copy
                        'flymake-create-temp-inplace))
