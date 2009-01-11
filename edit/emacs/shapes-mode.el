@@ -81,8 +81,12 @@ equivalents or not."
 	"List containing regular expression and match indices for parsing Shapes
 	compiler messages.  Used by compilation- and flymake modes.")
 
-(push (cons shapes-file-regex 'shapes-mode) auto-mode-alist)
+(defconst shapes-identifier-re
+	"[a-zA-Z0-9_?]+"
+	"Regular expression matching Shapes identifiers.")
 
+;; Associate Shapes source files with shapes-mode.
+(push (cons shapes-file-regex 'shapes-mode) auto-mode-alist)
 ;; The Shapes compiler wants its input utf-8, LF line-endings (for now).
 (modify-coding-system-alist 'file shapes-file-regex 'utf-8-unix)
 
@@ -272,10 +276,11 @@ This code could really use some clean-up."
 			 (add-to-list 'flymake-err-line-patterns
 										shapes-compiler-message-parse-element)))
 
-  ;; Simplified recognition of a top-level Shapes identifier. Probably needs
-  ;; more work.
-  (setq imenu-generic-expression '((nil "^\\([a-zA-Z0-9_?]+\\):" 1)
-																	 (nil "^dynamic\\s-+\\(@[a-zA-Z0-9_?]+\\)" 1)))
+  ;; Recognizes top-level Shapes identifiers.
+  (setq imenu-generic-expression `((nil ,(concat "^\\(" shapes-identifier-re "\\):") 1)
+																	 (nil ,(concat "^dynamic\\s-+\\(@"
+																								 shapes-identifier-re
+																								 "\\)") 1)))
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
