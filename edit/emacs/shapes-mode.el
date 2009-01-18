@@ -22,10 +22,10 @@
 ;; This mode is very much work in progress.  It does not handle automatic
 ;; indentation of Shapes programs nor does it offer any motion commands adapted
 ;; to such.  That said, it does support compilation-mode, flymake-mode,
-;; comment-dwim, Imenu, skeleton-pairs, and viewing output through doc-view.
+;; comment-dwim, Imenu, skeleton-pairs, outline-mode (but see documentation for
+;; `shapes-outline-regexp') and viewing output through doc-view.
 ;;
 ;; TODO
-;; - Syntax highlighting (first: comment and string faces)
 ;; - Motion commands
 ;; - Handle automatic indentation of operators such as <<, &
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
@@ -71,19 +71,30 @@
 equivalents or not."
   :type 'boolean)
 
-(defconst shapes-basic-indent-width 2)
+(defvar shapes-basic-indent-width 2)
 
-(defconst shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
+(defvar shapes-file-regex "\\.sh\\(ape\\|ext\\)$"
   "Regular expression matching Shapes source files.")
 
-(defconst shapes-compiler-message-parse-element
+(defvar shapes-compiler-message-parse-element
 	'("\\(.*\\):\\([0-9]+\\)(\\([0-9]+\\)-\\([0-9]+\\)):" 1 2 (3 . 4))
 	"List containing regular expression and match indices for parsing Shapes
 	compiler messages.  Used by compilation- and flymake modes.")
 
-(defconst shapes-identifier-re
+(defvar shapes-identifier-re
 	"[a-zA-Z0-9_?]+"
 	"Regular expression matching Shapes identifiers.")
+
+(defvar shapes-outline-regexp
+	(concat shapes-identifier-re ":")
+	"Regular expression matching an `outline-mode' header.
+
+We only attempt to match a top-level heading here, since outline-mode's
+\"ingenious\" use of the length of the match to calculate nesting does not work
+well with Shapes' binding syntax.
+
+This implies that it only makes sense to use work with the outline in terms of
+entries, since the nesting of headings will be random.")
 
 ;; Associate Shapes source files with shapes-mode.
 (push (cons shapes-file-regex 'shapes-mode) auto-mode-alist)
@@ -281,6 +292,7 @@ This code could really use some clean-up."
 																	 (nil ,(concat "^dynamic\\s-+\\(@"
 																								 shapes-identifier-re
 																								 "\\)") 1)))
+	(setq outline-regexp shapes-outline-regexp)
 
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
