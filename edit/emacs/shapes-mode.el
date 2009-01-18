@@ -36,7 +36,10 @@
 ;; - Skeletons?
 ;; - Eldoc mode?
 ;; - Some sort of camelCase support a la subword mode of cc-mode
-;; - Investigate Flymake column number support.
+;;
+;; LIMITATIONS
+;; - Flymake does not make use of column number information
+;; - Nested strings are not font-locked correctly
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
@@ -103,12 +106,66 @@ entries, since the nesting of headings will be random.")
 
 (defvar shapes-mode-syntax-table
   (let ((st (make-syntax-table)))
-    ;; (modify-syntax-entry ?\" ".   " st)
-;;     (modify-syntax-entry ?\\ ".   " st)
-;;     ;; Add `p' so M-c on `hello' leads to `Hello', not `hello'.
-;;     (modify-syntax-entry ?' "w p" st)
-    st)
+		;;; Strings
+		;; We make use of the generic string delimiter syntax class since the normal
+		;; string-quote syntax class requires opening and closing delimiters to be
+		;; the same.
+		;; Note: It seems impossible to handle nested string delimiters (apparently
+		;; it is on the Emacs todo list).
+		;; 
+		;; An alternative to this method would be to use search-based font-lock, but
+		;; I believe that it is not possible to write recursive regular expressions
+		;; in Emacs, so we could not handle nested delimiters this way either.
+		(modify-syntax-entry ?` "|" st)			; String start delimiter
+		(modify-syntax-entry ?´ "|" st)			; String close delimiter
+
+		;;; Multi-line Comments
+		;; Here we fake it by only looking at the first two characters, and use
+		;; C++ rules, as documented in the Elisp ref manual.  Otherwise we need to
+		;; mess around with font-lock extended regions, and it would me much slower
+		;; I guess.
+		(modify-syntax-entry ?/ ". 14n" st)
+		(modify-syntax-entry ?* ". 23" st)
+		
+		;;; Operators
+		;; Uses punctuation character syntax class.
+		(modify-syntax-entry ?| "." st)
+		;; add more here ...
+		st)
   "Syntax table used while in `shapes-mode'.")
+
+(defvar shapes-mode-font-lock-defaults
+	'((
+		 ;; We handle single-line comments here, since it is not possible with
+		 ;; syntax tables because the first character is not the same as multi-line comments.
+		 ("|\\*\\*.*" . font-lock-comment-face)
+
+		 ;; Operators should be painted as keywords, I guess.
+		 "\\\\" "->"
+
+		 ;; I guess it make some sense to use function-name-face for bindings
+		 ;; and variable-name-face for states.
+		 (eval
+			(lambda ()
+				(list (concat "\\(#" shapes-identifier-re "\\):")
+							1 'font-lock-variable-name-face)))
+		 (eval
+			(lambda ()
+				;; It should probably not match dynamic var bindings?
+				(list (concat "\\(" shapes-identifier-re "\\):")
+							1 'font-lock-function-name-face)))
+		 (eval
+			(lambda ()
+				;; newText, TeX et al.
+				(list (concat "(\\(" shapes-identifier-re "\\)")
+							1 'font-lock-keyword-face)))
+		 
+		 ;; Preprocessor directives
+		 ("##needs" . font-lock-preprocessor-face)
+
+		 ("~" . font-lock-negation-char-face) ; doesn't work?
+		 ))
+	"Shape keywords and their corresponding font-lock face.")
 
 (defvar shapes-mode-map
   (let ((map (make-sparse-keymap)))
@@ -249,6 +306,7 @@ This code could really use some clean-up."
   (setq mode-name "Shapes")
   (use-local-map shapes-mode-map)
   (set-syntax-table shapes-mode-syntax-table)
+	(setq font-lock-defaults shapes-mode-font-lock-defaults)
 
   ;; Skeletons
   (set (make-local-variable 'skeleton-pair-alist)
