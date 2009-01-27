@@ -118,6 +118,7 @@ entries, since the nesting of headings will be random.")
 		;; in Emacs, so we could not handle nested delimiters this way either.
 		(modify-syntax-entry ?` "|" st)			; String start delimiter
 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
+		(modify-syntax-entry ?\" "." st)		
 
 		;;; Multi-line Comments
 		;; Here we fake it by only looking at the first two characters, and use
@@ -142,6 +143,9 @@ entries, since the nesting of headings will be random.")
 
 		 ;; Operators should be painted as keywords, I guess.
 		 "\\\\" "->"
+
+		 ;; Data strings
+		 ("\"{.*?}" . font-lock-string-face)
 
 		 ;; I guess it make some sense to use function-name-face for bindings
 		 ;; and variable-name-face for states.
