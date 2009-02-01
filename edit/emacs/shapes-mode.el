@@ -31,7 +31,7 @@
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
 ;; - PDF sync between source and output (path control points etc).
-;; - Automatically pretty-print #, -> (use abbrevs!)
+;; - Automatically pretty-print #, -> (use abbrevs?)
 ;; - Convert Shapes ref manual to info and hook up to Info-Look
 ;; - Skeletons?
 ;; - Eldoc mode?
@@ -39,7 +39,7 @@
 ;;
 ;; LIMITATIONS
 ;; - Flymake does not make use of column number information
-;; - Nested strings are not font-locked correctly
+;; - Nested strings are not font-locked correctly (disabled)
 
 ;; BUGS
 ;; - Investigate mismatch between Shapes and Emacs column numbers.
@@ -69,10 +69,10 @@
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
-(defcustom shapes-unicode-pretty-print t
-  "Whether to pretty-print Shapes idenifiers using their Unicode
-equivalents or not."
-  :type 'boolean)
+;; (defcustom shapes-unicode-pretty-print t
+;;   "Whether to pretty-print Shapes idenifiers using their Unicode
+;; equivalents or not."
+;;   :type 'boolean)
 
 (defvar shapes-basic-indent-width 2)
 
@@ -116,9 +116,9 @@ entries, since the nesting of headings will be random.")
 		;; An alternative to this method would be to use search-based font-lock, but
 		;; I believe that it is not possible to write recursive regular expressions
 		;; in Emacs, so we could not handle nested delimiters this way either.
-		(modify-syntax-entry ?` "|" st)			; String start delimiter
-		(modify-syntax-entry ?´ "|" st)			; String close delimiter
-		(modify-syntax-entry ?\" "." st)		
+		;; (modify-syntax-entry ?` "|" st)			; String start delimiter
+;; 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
+;; 		(modify-syntax-entry ?\" "." st)		
 
 		;;; Multi-line Comments
 		;; Here we fake it by only looking at the first two characters, and use
@@ -130,7 +130,8 @@ entries, since the nesting of headings will be random.")
 		
 		;;; Operators
 		;; Uses punctuation character syntax class.
-		(modify-syntax-entry ?| "." st)
+		;; (modify-syntax-entry ?| "." st)
+
 		;; add more here ...
 		st)
   "Syntax table used while in `shapes-mode'.")
@@ -142,32 +143,32 @@ entries, since the nesting of headings will be random.")
 		 ("|\\*\\*.*" . font-lock-comment-face)
 
 		 ;; Operators should be painted as keywords, I guess.
-		 "\\\\" "->"
+		 ;; "\\\\" "->"
 
 		 ;; Data strings
-		 ("\"{.*?}" . font-lock-string-face)
+		 ;; ("\"{.*?}" . font-lock-string-face)
 
 		 ;; I guess it make some sense to use function-name-face for bindings
 		 ;; and variable-name-face for states.
-		 (eval
-			(lambda ()
-				(list (concat "\\(#" shapes-identifier-re "\\):")
-							1 'font-lock-variable-name-face)))
-		 (eval
-			(lambda ()
-				;; It should probably not match dynamic var bindings?
-				(list (concat "\\(" shapes-identifier-re "\\):")
-							1 'font-lock-function-name-face)))
-		 (eval
-			(lambda ()
-				;; newText, TeX et al.
-				(list (concat "(\\(" shapes-identifier-re "\\)")
-							1 'font-lock-keyword-face)))
+		 ;; (eval
+;; 			(lambda ()
+;; 				(list (concat "\\(#" shapes-identifier-re "\\):")
+;; 							1 'font-lock-variable-name-face)))
+;; 		 (eval
+;; 			(lambda ()
+;; 				;; It should probably not match dynamic var bindings?
+;; 				(list (concat "\\(" shapes-identifier-re "\\):")
+;; 							1 'font-lock-function-name-face)))
+;; 		 (eval
+;; 			(lambda ()
+;; 				;; newText, TeX et al.
+;; 				(list (concat "(\\(" shapes-identifier-re "\\)")
+;; 							1 'font-lock-keyword-face)))
 		 
 		 ;; Preprocessor directives
 		 ("##needs" . font-lock-preprocessor-face)
 
-		 ("~" . font-lock-negation-char-face) ; doesn't work?
+;;; 		 ("~" . font-lock-negation-char-face) ; doesn't work?
 		 ))
 	"Shape keywords and their corresponding font-lock face.")
 
@@ -322,8 +323,8 @@ This code could really use some clean-up."
   ;;     "Formal parameters: "
   ;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
-  (when shapes-unicode-pretty-print
-    (setq abbrev-mode t))
+  ;; (when shapes-unicode-pretty-print
+;;     (setq abbrev-mode t))
   
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
