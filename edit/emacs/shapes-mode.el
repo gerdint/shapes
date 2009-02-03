@@ -65,7 +65,7 @@
 
 ;;; Code:
 
-(defcustom shapes-compile-command "shapes"
+(defcustom shapes-compiler-command "shapes"
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
@@ -187,7 +187,7 @@ entries, since the nesting of headings will be random.")
 (defun shapes-compile ()
   "Compiles the source file."
   (interactive)
-  (compile (concat shapes-compile-command " " (buffer-file-name))))
+  (compile (concat shapes-compiler-command " " (buffer-file-name))))
 
 (defun shapes-view ()
   "Compiles the source file and, if compilation is successful, views it using
@@ -211,6 +211,19 @@ doc-view."
 					; the compilation buffer.
 	   (doc-view t output))))))
   (shapes-compile))
+
+(defun run-shapes ()
+  (interactive)
+	(make-comint "shapes" shapes-compiler-command nil "--interactive")
+	;; (setq shapes-buffer "*shapes*")
+	(pop-to-buffer "*shapes*"))
+
+;; (setq comint-preoutput-filter-functions
+;;       '((lambda (str)
+;; 					(insert-image swe-flag)
+;; 					(concat "::: " str))))
+;; (setq swe-flag (create-image "~/sweden.eps"))
+;; (insert-image swe-flag)
 
 ;; (defun shapes-beginning-of-defun ()
 ;;   "Move backward to the beginning of a defun.
@@ -300,7 +313,7 @@ This code could really use some clean-up."
 				 (local-file  (file-relative-name
                        temp-file
                        (file-name-directory buffer-file-name))))
-		(list shapes-compile-command (list local-file))))
+		(list shapes-compiler-command (list local-file))))
 
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
@@ -360,11 +373,12 @@ This code could really use some clean-up."
   (unless (or (file-exists-p "makefile")
 	      (file-exists-p "Makefile"))
     (set (make-local-variable 'compile-command)
-	 (concat shapes-compile-command " "
+	 (concat shapes-compiler-command " "
 		 (file-name-sans-extension buffer-file-name)))))
 
 (provide 'shapes-mode)
 
 ;; Local Variables: **
 ;; coding:utf-8! **
+;; tab-width:8
 ;; End: **
