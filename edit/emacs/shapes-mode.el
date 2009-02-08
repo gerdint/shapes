@@ -27,6 +27,7 @@
 ;;
 ;; TODO
 ;; - Motion commands
+;; - Bind mode context-menu to C-mouse 3, featuring send-to-region etc.
 ;; - Handle automatic indentation of operators such as <<, &
 ;; - Hide compilation buffer if a doc-view buffer is visible and there are no
 ;;errors when recompiling.
@@ -175,7 +176,8 @@ entries, since the nesting of headings will be random.")
 (defvar shapes-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-c" 'shapes-compile)
-    (when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
+		(define-key map "\C-c\C-r" 'shapes-send-region)
+		(when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
     (mapc (lambda (elt)
@@ -213,10 +215,39 @@ doc-view."
   (shapes-compile))
 
 (defun run-shapes ()
+	"Starts up Shapes.
+
+Also displays the Shapes window, and if run interactively, also
+selects it."
   (interactive)
-	(make-comint "shapes" shapes-compiler-command nil "--interactive")
-	;; (setq shapes-buffer "*shapes*")
-	(pop-to-buffer "*shapes*"))
+	(setq shapes-buffer
+				(make-comint "shapes" shapes-compiler-command nil
+										 "--interactive"
+										 "--i-format-prompt=shapes> "))
+	(funcall 
+	 (if (interactive-p)
+			 'pop-to-buffer
+		 'display-buffer)
+	 shapes-buffer))
+
+(defmacro with-shapes-running-and-visible (&rest body)
+	`(progn
+		 ;; We could possibly rely on the fact that comint-mode seems to check if
+		 ;; what you want to run is already running.
+		 (if (and (boundp 'shapes-buffer)
+							(buffer-live-p shapes-buffer))
+				 (display-buffer shapes-buffer)
+			 (run-shapes)) 
+		 ,@body))
+
+(defun shapes-send-region (start end)
+	"Send the current region to Shapes.
+
+Also displays the Shapes window, but does not select it."
+  (interactive "r")
+	(with-shapes-running-and-visible
+	 (comint-send-region shapes-buffer start end)
+	 (comint-send-string shapes-buffer "\n")))
 
 ;; (setq comint-preoutput-filter-functions
 ;;       '((lambda (str)
@@ -337,7 +368,7 @@ This code could really use some clean-up."
   ;;     "\\ " str (if shapes-unicode-pretty-print " → " " -> ") _)
 
   ;; (when shapes-unicode-pretty-print
-;;     (setq abbrev-mode t))
+	;;     (setq abbrev-mode t))
   
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
@@ -380,5 +411,5 @@ This code could really use some clean-up."
 
 ;; Local Variables: **
 ;; coding:utf-8! **
-;; tab-width:8
+;; tab-width:2 **
 ;; End: **
