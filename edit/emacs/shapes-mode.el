@@ -192,8 +192,8 @@ entries, since the nesting of headings will be random.")
   (compile (concat shapes-compiler-command " " (buffer-file-name))))
 
 (defun shapes-view ()
-  "Compiles the source file and, if compilation is successful, views it using
-doc-view."
+  "Compiles the source file and, if compilation is successful,
+views it using doc-view."
   (interactive)
   ;; Here we basically pass the code to view the output as a continuation to the
   ;; compile function since compilation is performed asynchronously in Emacs.
@@ -214,16 +214,61 @@ doc-view."
 	   (doc-view t output))))))
   (shapes-compile))
 
+(defun shapes-preoutput-filter (str)
+	"Parses output from Shapes looking for '#File' references, whose images are
+	inserted in the buffer."
+	(if (string-match "#File: \\(.*\\)" str)
+			(let* ((shapes-output-file (match-string 1 str))
+						 (shapes-mode-out-file-name
+							(concat temporary-file-directory
+											(make-temp-name "shapes-mode")
+											".png")))
+				;; Oddly, I cannot delete the image file just after inserting it, I need
+				;; to wait a while. So why not do it here? It does mean that I there
+				;; will probably be one stale image file lying around after the Shapes
+				;; process is finished, but I accept that for now.
+				(when (and (boundp 'prev-image-file-name)
+									 prev-image-file-name
+									 (file-exists-p prev-image-file-name))
+					(delete-file prev-image-file-name))
+				;; Inspired by doc-view
+				(call-process "gs"
+											nil nil nil
+											"-sDEVICE=png16m"	; PNG format
+											(concat "-sOutputFile="
+															shapes-mode-out-file-name)
+											shapes-output-file)
+				;; Apparently the image spec must be unique every time or
+				;; it will be cached, and all of the images will be
+				;; refreshed with the same image data.
+				(let ((image (create-image
+											shapes-mode-out-file-name
+											'png)))
+					(insert-image image))
+				;; It seems like fetching of image data is made
+				;; asynchronously, so we cannot delete the image file directly?
+				;; (delete-file shapes-mode-out-file-name). See above.
+				(setq prev-image-file-name shapes-mode-out-file-name)
+				"")
+		str)
+	)
+
 (defun run-shapes ()
 	"Starts up Shapes.
 
-Also displays the Shapes window, and if run interactively, also
+Also displays the Shapes window, and if run interactively,
 selects it."
   (interactive)
 	(setq shapes-buffer
 				(make-comint "shapes" shapes-compiler-command nil
 										 "--interactive"
 										 "--i-format-prompt=shapes> "))
+	(with-current-buffer shapes-buffer
+;;; 		(setq comint-prompt-regexp ...)			; What is the purpose of this?
+		(set (make-local-variable 'prev-image-file-name) nil)
+		(add-hook 'comint-preoutput-filter-functions
+							'shapes-preoutput-filter
+							nil t))
 	(funcall 
 	 (if (interactive-p)
 			 'pop-to-buffer
@@ -240,21 +285,24 @@ selects it."
 			 (run-shapes)) 
 		 ,@body))
 
+;; Apparently Shapes expect each input on a single line. Would be nice if it
+;; waited until it had something it was certain didn't make any sense (ie try to
+;; parse input until it is syntactially correct). Otherwise, there needs to be a
+;; continuation marker before EOL, or some explicit way of terminating the
+;; input.
 (defun shapes-send-region (start end)
 	"Send the current region to Shapes.
 
 Also displays the Shapes window, but does not select it."
   (interactive "r")
-	(with-shapes-running-and-visible
-	 (comint-send-region shapes-buffer start end)
-	 (comint-send-string shapes-buffer "\n")))
+	(run-shapes)
+	(comint-send-region shapes-buffer start end)
+	(comint-send-string shapes-buffer "\n"))
 
-;; (setq comint-preoutput-filter-functions
-;;       '((lambda (str)
-;; 					(insert-image swe-flag)
-;; 					(concat "::: " str))))
-;; (setq swe-flag (create-image "~/sweden.eps"))
-;; (insert-image swe-flag)
+(defun shapes-send-defun ()
+	"Sends the definition under point to Shapes."
+	'not-implemented)
+
 
 ;; (defun shapes-beginning-of-defun ()
 ;;   "Move backward to the beginning of a defun.
