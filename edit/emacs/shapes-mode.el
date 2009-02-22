@@ -206,8 +206,8 @@ views it using doc-view."
      (setq compilation-finish-functions (cdr compilation-finish-functions))
      (when (equal exit-msg "finished\n")
        (let ((output (concat (file-name-sans-extension
-			      (buffer-file-name (window-buffer)))
-			     ".pdf")))
+															(buffer-file-name (window-buffer)))
+														 ".pdf")))
 	 (with-selected-window
 	     (next-window)		; This way image will hopefully reuse
 					; the compilation buffer.
@@ -217,41 +217,29 @@ views it using doc-view."
 (defun shapes-preoutput-filter (str)
 	"Parses output from Shapes looking for '#File' references, whose images are
 	inserted in the buffer."
-	(if (string-match "#File: \\(.*\\)" str)
+	(if (string-match "#File: \\(.*\\)\\(\n.*\\)" str)
 			(let* ((shapes-output-file (match-string 1 str))
 						 (shapes-mode-out-file-name
-							(concat temporary-file-directory
-											(make-temp-name "shapes-mode")
+							(concat (file-name-sans-extension shapes-output-file)
 											".png")))
-				;; Oddly, I cannot delete the image file just after inserting it, I need
-				;; to wait a while. So why not do it here? It does mean that I there
-				;; will probably be one stale image file lying around after the Shapes
-				;; process is finished, but I accept that for now.
-				(when (and (boundp 'prev-image-file-name)
-									 prev-image-file-name
-									 (file-exists-p prev-image-file-name))
-					(delete-file prev-image-file-name))
 				;; Inspired by doc-view
 				(call-process "gs"
 											nil nil nil
-											"-sDEVICE=png16m"	; PNG format
+											"-sDEVICE=png16m"	; PNG format, of some sort.
 											(concat "-sOutputFile="
 															shapes-mode-out-file-name)
 											shapes-output-file)
-				;; Apparently the image spec must be unique every time or
-				;; it will be cached, and all of the images will be
-				;; refreshed with the same image data.
 				(let ((image (create-image
 											shapes-mode-out-file-name
-											'png)))
-					(insert-image image))
-				;; It seems like fetching of image data is made
-				;; asynchronously, so we cannot delete the image file directly?
-				;; (delete-file shapes-mode-out-file-name). See above.
-				(setq prev-image-file-name shapes-mode-out-file-name)
-				"")
-		str)
-	)
+											'png
+											nil
+											;; To prevent Emacs from fetching a cached copy. This way
+											;; the image spec will not be EQUAL to the former one.
+											:dummy-prop (random))))
+					(put-image image (point)))
+				;; Return the second submatch, ie a newline and the prompt.
+				(match-string 2 str))
+		str))
 
 (defun run-shapes ()
 	"Starts up Shapes.
@@ -264,7 +252,6 @@ selects it."
 										 "--interactive"
 										 "--i-format-prompt=shapes> "))
 	(with-current-buffer shapes-buffer
-;;; 		(setq comint-prompt-regexp ...)			; What is the purpose of this?
 		(set (make-local-variable 'prev-image-file-name) nil)
 		(add-hook 'comint-preoutput-filter-functions
 							'shapes-preoutput-filter
