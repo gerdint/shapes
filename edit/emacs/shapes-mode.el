@@ -299,14 +299,14 @@ Also displays the Shapes window, but does not select it."
 	"Sends the definition under point to Shapes."
 	'not-implemented)
 
+(defun shapes-beginning-of-defun (&optional arg)
+  "Move backward to the beginning of a defun.
 
-;; (defun shapes-beginning-of-defun ()
-;;   "Move backward to the beginning of a defun.
-;; Every top level binding of a function is considered to be a defun."
-;;   (interactive)
-;;   ;; match identifier: \ arg1 .. argn -> body-expr
-;;   (re-search-backward "^")
-;;  )
+A line beginning with a binding is considered to be a defun."
+  (interactive)
+  ;; Or shoulde we search for top-level bindings bound to functions
+	;; only?  I.e. match identifier: \ arg1 .. argn -> body-expr
+	(re-search-backward (concat "^" shapes-identifier-re) nil t (or arg 1)))
 
 (defun shapes-indent-line ()
   "Indents a line of Shapes code.
@@ -413,6 +413,9 @@ This code could really use some clean-up."
 
   ;; (when shapes-unicode-pretty-print
 	;;     (setq abbrev-mode t))
+
+	(set (make-local-variable 'beginning-of-defun-function)
+			 'shapes-beginning-of-defun)
   
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
