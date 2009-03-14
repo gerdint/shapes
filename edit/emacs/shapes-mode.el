@@ -180,6 +180,7 @@ entries, since the nesting of headings will be random.")
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-c" 'shapes-compile)
 		(define-key map "\C-c\C-r" 'shapes-send-region)
+		(define-key map "\M-\C-x" 'shapes-send-definition)
 		(when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
@@ -292,11 +293,21 @@ Also displays the Shapes window, but does not select it."
   (interactive "r")
 	(run-shapes)
 	(comint-send-region shapes-buffer start end)
-	(comint-send-string shapes-buffer "\n"))
+	(unless (char-equal (char-before end) ?\n)
+		(comint-send-string shapes-buffer "\n")))
 
-(defun shapes-send-defun ()
+(defun shapes-send-definition ()
 	"Sends the definition under point to Shapes."
-	'not-implemented)
+	(interactive)
+	(apply (function shapes-send-region)
+				 (save-excursion
+					 ;; In case we were already at the beginning of the defun,
+					 ;; and would have skipped back to the former one.
+					 (forward-char) 										
+					 (beginning-of-defun)						 
+					 (let ((start (point)))
+						 (end-of-defun)
+						 (list start (point))))))
 
 (defun shapes-beginning-of-defun (&optional arg)
   "Move backward to the beginning of a defun.
