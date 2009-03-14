@@ -221,28 +221,33 @@ views it using doc-view."
 	"Parses output from Shapes looking for '#File' references, and
 replaces them with the image contents.
 
-Images are displayed using the IMAGE text display property."
+Images are converted to PNG format using Ghostscript and
+displayed using the IMAGE text display property."
 	(if (string-match "\\(#File: \\(.*\\)\\)\n" output)
 			(let* ((shapes-output-file (match-string 2 output))
 						 (shapes-mode-out-file-name
 							(concat (file-name-sans-extension shapes-output-file)
 											".png")))
-				;; Inspired by doc-view
-				(call-process "gs"
-											nil nil nil
-											"-sDEVICE=png16m"	; PNG format, of some sort.
-											(concat "-sOutputFile="
-															shapes-mode-out-file-name)
-											shapes-output-file)
-				(let ((disp-spec (create-image
-													shapes-mode-out-file-name
-													'png
-													nil
-													;; To prevent Emacs from fetching a cached copy. This way
-													;; the image spec will not be EQUAL to the former one.
-													:dummy-prop (random))))
-					(put-text-property (match-beginning 1) (match-end 1)
-														 'display disp-spec output))))
+				(condition-case nil
+						(progn
+							;; Inspired by doc-view
+							(call-process "gs"
+														nil nil nil
+														"-sDEVICE=png16m"	; PNG format, of some sort.
+														(concat "-sOutputFile="
+																		shapes-mode-out-file-name)
+														shapes-output-file)
+							(let ((disp-spec (create-image
+																shapes-mode-out-file-name
+																'png
+																nil
+																;; To prevent Emacs from fetching a cached copy. This way
+																;; the image spec will not be EQUAL to the former one.
+																:dummy-prop (random))))
+								(put-text-property (match-beginning 1) (match-end 1)
+																	 'display disp-spec output)))
+					;; GS was probaly not found, fail silently.
+					(error))))
 	output)
 
 (defun run-shapes ()
