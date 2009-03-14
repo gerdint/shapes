@@ -288,7 +288,6 @@ selects it."
 ;; input.
 (defun shapes-send-region (start end)
 	"Send the current region to Shapes.
-
 Also displays the Shapes window, but does not select it."
   (interactive "r")
 	(run-shapes)
@@ -301,12 +300,35 @@ Also displays the Shapes window, but does not select it."
 
 (defun shapes-beginning-of-defun (&optional arg)
   "Move backward to the beginning of a defun.
+A line beginning with something apart from whitespace or a
+closing brace is considered to be the beginning of a defun.
 
-A line beginning with a binding is considered to be a defun."
-  (interactive)
+The above means that for now comments are not skipped."
+  (interactive "p")
   ;; Or shoulde we search for top-level bindings bound to functions
 	;; only?  I.e. match identifier: \ arg1 .. argn -> body-expr
-	(re-search-backward (concat "^" shapes-identifier-re) nil t (or arg 1)))
+	;;(re-search-backward (concat "^" shapes-identifier-re) nil t (or
+	;;arg 1)))
+	(re-search-backward "^[^[:blank:]\n}]" nil t (or arg 1)))
+
+(defun shapes-end-of-defun (&optional arg)
+	"Move forward to the end of a defun.
+A defun is considered to extend to next line beginning with a
+something apart from whitespace, minus any blank lines in between.
+
+The above means that for now comments are not skipped."
+	(interactive "p")
+	;; Right now we are at the beginning of the defun.
+	;; If we are on an opening brace, move to the matching one
+	(if (looking-at "{")
+			(forward-sexp)
+		(progn 
+			(forward-line)						 ; A defun must span at least one line
+			;; Find the next line beginning with non-whitespace
+			(re-search-forward "^[^[:blank:]\n]" nil t (or arg 1))
+			(beginning-of-line)
+			(re-search-backward "^.+")				; Skip emtpy lines
+			(end-of-line))))	
 
 (defun shapes-indent-line ()
   "Indents a line of Shapes code.
@@ -416,6 +438,8 @@ This code could really use some clean-up."
 
 	(set (make-local-variable 'beginning-of-defun-function)
 			 'shapes-beginning-of-defun)
+	(set (make-local-variable 'end-of-defun-function)
+			 'shapes-end-of-defun)
   
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
