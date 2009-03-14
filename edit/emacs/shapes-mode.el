@@ -61,6 +61,9 @@
 ;; 'shapes-mode from your ~/.emacs or equivalent, like so:
 ;;
 ;; (require 'shapes-mode)
+;;
+;; Ghostscript is required for display of inline drawable values in interactive
+;; mode.
 
 ;; Code tested only on GNU Emacs 22 and 23.
 
@@ -214,11 +217,13 @@ views it using doc-view."
 	   (doc-view t output))))))
   (shapes-compile))
 
-(defun shapes-preoutput-filter (str)
-	"Parses output from Shapes looking for '#File' references, whose images are
-	inserted in the buffer."
-	(if (string-match "#File: \\(.*\\)\\(\n.*\\)" str)
-			(let* ((shapes-output-file (match-string 1 str))
+(defun shapes-preoutput-filter (output)
+	"Parses output from Shapes looking for '#File' references, and
+replaces them with the image contents.
+
+Images are displayed using the IMAGE text display property."
+	(if (string-match "\\(#File: \\(.*\\)\\)\n" output)
+			(let* ((shapes-output-file (match-string 2 output))
 						 (shapes-mode-out-file-name
 							(concat (file-name-sans-extension shapes-output-file)
 											".png")))
@@ -229,17 +234,16 @@ views it using doc-view."
 											(concat "-sOutputFile="
 															shapes-mode-out-file-name)
 											shapes-output-file)
-				(let ((image (create-image
-											shapes-mode-out-file-name
-											'png
-											nil
-											;; To prevent Emacs from fetching a cached copy. This way
-											;; the image spec will not be EQUAL to the former one.
-											:dummy-prop (random))))
-					(put-image image (point)))
-				;; Return the second submatch, ie a newline and the prompt.
-				(match-string 2 str))
-		str))
+				(let ((disp-spec (create-image
+													shapes-mode-out-file-name
+													'png
+													nil
+													;; To prevent Emacs from fetching a cached copy. This way
+													;; the image spec will not be EQUAL to the former one.
+													:dummy-prop (random))))
+					(put-text-property (match-beginning 1) (match-end 1)
+														 'display disp-spec output))))
+	output)
 
 (defun run-shapes ()
 	"Starts up Shapes.
