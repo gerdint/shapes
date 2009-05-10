@@ -62,8 +62,9 @@
 ;;
 ;; (require 'shapes-mode)
 ;;
-;; Ghostscript is required for display of inline drawable values in interactive
-;; mode.
+;; - Ghostscript (with "gs" somewhere in your PATH) is required for display of inline
+;; drawable values in interactive mode.
+;; - doc-view.el is required for viewing Shapes output graphically in a separate buffer.
 
 ;; Code tested only on GNU Emacs 22 and 23.
 
@@ -180,7 +181,9 @@ entries, since the nesting of headings will be random.")
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-c" 'shapes-compile)
 		(define-key map "\C-c\C-r" 'shapes-send-region)
-		(define-key map "\M-\C-x" 'shapes-send-definition)
+		;; The below is disabled because it relies on shapes-end-of-defun, which is
+		;; not finished.
+		;;(define-key map "\M-\C-x" 'shapes-send-definition)
 		(when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
@@ -215,7 +218,8 @@ views it using doc-view."
 	 (with-selected-window
 	     (next-window)		; This way image will hopefully reuse
 					; the compilation buffer.
-	   (doc-view t output))))))
+	   (doc-view t output))))))						; I Emacs 23 one should make use of
+																				; find-file instead.
   (shapes-compile))
 
 (defun shapes-preoutput-filter (output)
@@ -327,7 +331,9 @@ The above means that for now comments are not skipped."
 A defun is considered to extend to next line beginning with a
 something apart from whitespace, minus any blank lines in between.
 
-The above means that for now comments are not skipped."
+The above means that for now comments are not skipped.
+
+Note: BUGGY, do not use."
 	(interactive "p")
 	;; Right now we are at the beginning of the defun.
 	;; If we are on an opening brace, move to the matching one
