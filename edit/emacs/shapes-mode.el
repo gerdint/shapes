@@ -347,78 +347,145 @@ Note: BUGGY, do not use."
 			(re-search-backward "^.+")				; Skip emtpy lines
 			(end-of-line))))	
 
-(defun shapes-indent-line ()
-  "Indents a line of Shapes code.
+;; (defun shapes-indent-line ()
+;;   "Indents a line of Shapes code.
 
-This code could really use some clean-up."
-	(defun point-to-column (p)
+;; Idea: Treat [, {, and ( as sexpressions and use pp-sexp!
+
+;; This code could really use some clean-up."
+;; 	(defun point-to-column (p)
+;; 		(save-excursion
+;; 			(goto-char p)
+;; 			(current-column)))
+;; 	(defun calc-function-indent ()
+;; 		;; Extract dynamically scoped parameters?
+;; 		(goto-char open-pos)
+;; 		(narrow-to-region (point) (line-end-position))
+;; 		(forward-char)
+;; 		(skip-chars-forward " \t")
+;; 		;;   [           foo   bar
+;; 		;;   ^: open     ^: s1 ^: s2
+;; 		(+ open-col													; We need to add this because
+;; 																				; narrow-to-region will cause
+;; 																				; current-column not to see it.
+;; 			 (let ((s1-col (current-column)))
+;; 				 (forward-sexp)									; I probably need to supply my own
+;; 																				; forward-sexp function, as this one
+;; 																				; fails on [...].foldl for instance.
+;; 				 (if (= (current-column) s1-col) ; Did we not move over something?
+;; 						 shapes-basic-indent-width
+;; 					 (progn
+;; 						 (skip-chars-forward " \t")
+;; 						 (let ((s2-col (current-column)))
+;; 							 (forward-sexp)
+;; 							 (if (= (current-column) s2-col)
+;; 									 ;; No more expression.
+;; 									 (+ s1-col shapes-basic-indent-width)
+;; 								 ;; There was another expression, align with it.
+;; 								 s2-col)))))))
+;;   (let ((pos (- (point-max) (point)))		; We store pos relative to end of file,
+;; 																				; so that we can go back to it even
+;; 																				; after indentation has inserted (before
+;; 																				; point).
+;; 				(beg (line-beginning-position)))
+;;     ;; We really want to indent w.r.t to the first thing on the line.
+;;     (goto-char beg)
+;; 		;; Wipe previous identation.
+;; 		(delete-horizontal-space)
+;;   	;; Note, the below 'looking-back'-based method is ugly! (and probably slow).
+;; 		;; Should probably try to find a better one, possibly involving some real
+;; 		;; parsing.
+;; 		(if (looking-back "\\\\.*?\\(->\\|→\\)\n")		; Function definition?
+;; 				(indent-to (+ (point-to-column (match-beginning 0))
+;; 											shapes-basic-indent-width))
+;; 			;; No, use normal braces-based indent.																	 
+;; 			(let* ((state (syntax-ppss (point)))
+;; 						 (depth (car state))
+;; 						 (open-pos (elt state 1)))
+;; 				(unless (zerop depth)
+;; 					;; Highlight opening brace, for debugging.
+;; 					(when (boundp 'sm-debug)			; Ie shapes-mode-debug.
+;; 						(princ state)
+;; 						(let ((open-ov (make-overlay open-pos (1+ open-pos))))
+;; 							(overlay-put open-ov 'face 'highlight)
+;; 							(sit-for 1)
+;; 							(delete-overlay open-ov)))
+;; 					(let ((open-col (point-to-column open-pos)))
+;; 						(indent-to
+;; 						 (save-excursion
+;; 							 (save-restriction
+;; 								 (if (looking-at "}\\|<)")
+;; 										 ;; Closing braces for code brackets and structures.
+;; 										 ;; Align with opening brace.
+;; 										 open-col
+;; 									 (calc-function-indent)))))))
+;; 				;; Restore previous cursor position.
+;; 				(goto-char (- (point-max) pos))))))
+
+(defun shapes-indent-line ()
+  "Indents current line according to Shapes indentation standards."
+
+  (defun prev-line-indent ()
+    "Returns indent of previous line. Moves point."
+    (beginning-of-line 0)
+    (back-to-indentation)
+    (current-column))
+
+  (defun point-to-column (p)
 		(save-excursion
 			(goto-char p)
 			(current-column)))
-	(defun calc-function-indent ()
-		;; Extract dynamically scoped parameters?
-		(goto-char open-pos)
-		(narrow-to-region (point) (line-end-position))
-		(forward-char)
-		(skip-chars-forward " \t")
-		;;   [           foo   bar
-		;;   ^: open     ^: s1 ^: s2
-		(+ open-col													; We need to add this because
-																				; narrow-to-region will cause
-																				; current-column not to see it.
-			 (let ((s1-col (current-column)))
-				 (forward-sexp)									; I probably need to supply my own
-																				; forward-sexp function, as this one
-																				; fails on [...].foldl for instance.
-				 (if (= (current-column) s1-col) ; Did we not move over something?
-						 shapes-basic-indent-width
-					 (progn
-						 (skip-chars-forward " \t")
-						 (let ((s2-col (current-column)))
-							 (forward-sexp)
-							 (if (= (current-column) s2-col)
-									 ;; No more expression.
-									 (+ s1-col shapes-basic-indent-width)
-								 ;; There was another expression, align with it.
-								 s2-col)))))))
-  (let ((pos (- (point-max) (point)))		; We store pos relative to end of file,
-																				; so that we can go back to it even
-																				; after indentation has inserted (before
-																				; point).
-				(beg (line-beginning-position)))
-    ;; We really want to indent w.r.t to the first thing on the line.
-    (goto-char beg)
-		;; Wipe previous identation.
-		(delete-horizontal-space)
-  	;; Note, the below 'looking-back'-based method is ugly! (and probably slow).
-		;; Should probably try to find a better one, possibly involving some real
-		;; parsing.
-		(if (looking-back "\\\\.*?\\(->\\|→\\)\n")		; Function definition?
-				(indent-to (+ (point-to-column (match-beginning 0))
-											shapes-basic-indent-width))
-			;; No, use normal braces-based indent.																	 
-			(let* ((state (syntax-ppss (point)))
-						 (depth (car state))
-						 (open-pos (elt state 1)))
-				(unless (zerop depth)
-					;; Highlight opening brace, for debugging.
-					(when (boundp 'sm-debug)			; Ie shapes-mode-debug.
-						(princ state)
-						(let ((open-ov (make-overlay open-pos (1+ open-pos))))
-							(overlay-put open-ov 'face 'highlight)
-							(sit-for 1)
-							(delete-overlay open-ov)))
-					(let ((open-col (point-to-column open-pos)))
-						(indent-to
-						 (save-excursion
-							 (save-restriction
-								 (if (looking-at "}\\|<)")
-										 ;; Closing braces for code brackets and structures.
-										 ;; Align with opening brace.
-										 open-col
-									 (calc-function-indent)))))))
-				;; Restore previous cursor position.
-				(goto-char (- (point-max) pos))))))
+
+  ;; We store pos relative to end of file so that we can go back to it even
+  ;; after indentation has been inserted (before point)
+  (let ((pos (- (point-max) (point))))
+    ;; We want to indent w.r.t to the first thing on the line.
+    (goto-char (line-beginning-position))
+    ;; Wipe previous identation.
+    (delete-horizontal-space)
+    (indent-to
+     (let* ((state (syntax-ppss (point)))
+            (depth (car state))
+            (open-pos (elt state 1)))
+       (save-excursion
+         (save-restriction
+           (cond
+            ;; closing brace, align with opening brace
+            ;; TODO: handle plethora of strings literals such as "{ str }, `string'
+            ((looking-at "\\(\\s)\\|<)\\)")
+             (point-to-column open-pos))
+            ;; continuing operator, add basic indent (could add more operators here)
+            ((and (looking-back "\\(→\\|.>\\|<<\\)\n" (- (point) 3))
+                  ;; this one may not be wanted? or maybe only if opening brace is in column 1?
+                  (not (looking-at "{")))
+             (+ (prev-line-indent) shapes-basic-indent-width))
+            ;; align with << on previous line (if present), otherwise add basic-indent to last
+            ;; line's indent
+            ((looking-at "<<")
+             (if (re-search-backward "<<" (line-beginning-position 0) t)
+                 (point-to-column (match-beginning 0))
+               (+ (prev-line-indent) shapes-basic-indent-width)))
+            ;; Default case, indent according to brace level
+            (t
+             (if (zerop depth)
+                 0
+               (+ (point-to-column open-pos) shapes-basic-indent-width))
+             ))))))
+    ;; Restore old pos
+    (goto-char (- (point-max) pos))))
+
+;; (defun shapes-indent-line ()
+;;   "Indents current line according to Shape indentation standards."
+;;   (interactive)
+;;   ;; We store pos relative to end of file so that we can go back to it even
+;;   ;; after indentation has been inserted (before point)
+;;   (let ((pos (- (point-max) (point)))
+;;         (beg (line-beginning-position))
+;;         (new-indent (shapes-calc-line-indent)))
+;;     (goto-char beg)
+;;     (indent-to new-indent)
+;;     ;; Restore old pos
+;;     (goto-char pos)))
 
 ;; I ripped this one off from the Perl one in flymake.el.
 (defun shapes-flymake-init ()
