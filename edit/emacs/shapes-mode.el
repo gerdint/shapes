@@ -121,9 +121,13 @@ entries, since the nesting of headings will be random.")
 		;; An alternative to this method would be to use search-based font-lock, but
 		;; I believe that it is not possible to write recursive regular expressions
 		;; in Emacs, so we could not handle nested delimiters this way either.
-		;; (modify-syntax-entry ?` "|" st)			; String start delimiter
-;; 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
-;; 		(modify-syntax-entry ?\" "." st)		
+
+    ;; Normal strings (does not handle nesting!)
+    (modify-syntax-entry ?` "|" st)			; String start delimiter
+		(modify-syntax-entry ?´ "|" st)			; String close delimiter
+    ;; Poor man's strings are handled using search-based font lock
+
+    ;; 		(modify-syntax-entry ?\" "." st)		
 
 		;;; Multi-line Comments
 		;; Here we fake it by only looking at the first two characters, and use
@@ -141,41 +145,51 @@ entries, since the nesting of headings will be random.")
 		st)
   "Syntax table used while in `shapes-mode'.")
 
-(defvar shapes-mode-font-lock-defaults
-	'((
-		 ;; We handle single-line comments here, since it is not possible with
-		 ;; syntax tables because the first character is not the same as multi-line comments.
-		 ("|\\*\\*.*" . font-lock-comment-face)
+(defconst shapes-mode-font-lock-keywords
+  '(
+    ;; We handle single-line comments here, since it is not possible with
+    ;; syntax tables because the first character is not the same as multi-line comments.
+    ("|\\*\\*.*" . font-lock-comment-face)
 
-		 ;; Operators should be painted as keywords, I guess.
-		 ;; "\\\\" "->"
+    ;; Operators should be painted as keywords, I guess.
+    ;; "\\\\" "->"
 
-		 ;; Data strings
-		 ;; ("\"{.*?}" . font-lock-string-face)
+    ;; Data strings
+    ;; ("\"{.*?}" . font-lock-string-face)
 
-		 ;; I guess it make some sense to use function-name-face for bindings
-		 ;; and variable-name-face for states.
-		 ;; (eval
-;; 			(lambda ()
-;; 				(list (concat "\\(#" shapes-identifier-re "\\):")
-;; 							1 'font-lock-variable-name-face)))
-;; 		 (eval
-;; 			(lambda ()
-;; 				;; It should probably not match dynamic var bindings?
-;; 				(list (concat "\\(" shapes-identifier-re "\\):")
-;; 							1 'font-lock-function-name-face)))
-;; 		 (eval
-;; 			(lambda ()
-;; 				;; newText, TeX et al.
-;; 				(list (concat "(\\(" shapes-identifier-re "\\)")
-;; 							1 'font-lock-keyword-face)))
+    ;; I guess it make some sense to use function-name-face for bindings
+    ;; and variable-name-face for states.
+    ;; (eval
+    ;; 			(lambda ()
+    ;; 				(list (concat "\\(#" shapes-identifier-re "\\):")
+    ;; 							1 'font-lock-variable-name-face)))
+    ;; 		 (eval
+    ;; 			(lambda ()
+    ;; 				;; It should probably not match dynamic var bindings?
+    ;; 				(list (concat "\\(" shapes-identifier-re "\\):")
+    ;; 							1 'font-lock-function-name-face)))
+    ;; 		 (eval
+    ;; 			(lambda ()
+    ;; 				;; newText, TeX et al.
+    ;; 				(list (concat "(\\(" shapes-identifier-re "\\)")
+    ;; 							1 'font-lock-keyword-face)))
 		 
-		 ;; Preprocessor directives
-		 ("##needs" . font-lock-preprocessor-face)
+    ;; Preprocessor directives
+    ("##needs" . font-lock-preprocessor-face)
 
 ;;; 		 ("~" . font-lock-negation-char-face) ; doesn't work?
-		 ))
-	"Shape keywords and their corresponding font-lock face.")
+     
+    ;;      ("\\(<\\))" 1 ")")
+	)
+  "Shape keywords and their corresponding font-lock face.")
+
+(defconst shapes-mode-syntactic-keywords
+  '(
+    ;; Poor man's strings: ("string")
+    ("\\((\\)\"" 1 "|")
+    ("\"\\()\\)" 1 "|")
+    )
+  "`font-lock-syntactic-keywords` for Shapes.")
 
 (defvar shapes-mode-map
   (let ((map (make-sparse-keymap)))
@@ -213,8 +227,8 @@ views it using doc-view."
      (setq compilation-finish-functions (cdr compilation-finish-functions))
      (when (equal exit-msg "finished\n")
        (let ((output (concat (file-name-sans-extension
-															(buffer-file-name (window-buffer)))
-														 ".pdf")))
+                              (buffer-file-name (window-buffer)))
+                             ".pdf")))
 	 (with-selected-window
 	     (next-window)		; This way image will hopefully reuse
 					; the compilation buffer.
@@ -422,6 +436,7 @@ Note: BUGGY, do not use."
 ;; 				;; Restore previous cursor position.
 ;; 				(goto-char (- (point-max) pos))))))
 
+; set parse-sexp-lookup-properties 
 (defun shapes-indent-line ()
   "Indents current line according to Shapes indentation standards."
 
@@ -505,7 +520,10 @@ Note: BUGGY, do not use."
   (setq mode-name "Shapes")
   (use-local-map shapes-mode-map)
   (set-syntax-table shapes-mode-syntax-table)
-	(setq font-lock-defaults shapes-mode-font-lock-defaults)
+	(setq font-lock-defaults
+        (list shapes-mode-font-lock-keywords
+              nil nil nil nil
+              '(font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
 
   ;; Skeletons
   (set (make-local-variable 'skeleton-pair-alist)
