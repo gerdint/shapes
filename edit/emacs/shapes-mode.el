@@ -127,19 +127,18 @@ entries, since the nesting of headings will be random.")
 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
     ;; Poor man's strings are handled using search-based font lock
 
+    ;; So that it doesn't interfere with syntax properties-based highlighting
+    ;; for strings:
     (modify-syntax-entry ?\" "." st)
 
-		;;; Multi-line Comments
-		;; Here we fake it by only looking at the first two characters, and use
-		;; C++ rules, as documented in the Elisp ref manual.  Otherwise we need to
-		;; mess around with font-lock extended regions, and it would me much slower
-		;; I guess.
-		(modify-syntax-entry ?/ ". 14n" st)
-		(modify-syntax-entry ?* ". 23" st)
-		
 		;;; Operators
 		;; Uses punctuation character syntax class.
 		;; (modify-syntax-entry ?| "." st)
+
+    ;; Remove the syntax flags from these characters as we handle comments using
+    ;; search-based fontification and syntax properties instead.
+    (modify-syntax-entry ?/ "." st)
+    (modify-syntax-entry ?* "." st)
 
 		;; add more here ...
 		st)
@@ -147,15 +146,11 @@ entries, since the nesting of headings will be random.")
 
 (defconst shapes-mode-font-lock-keywords
   '(
-    ;; We handle single-line comments here, since it is not possible with
-    ;; syntax tables because the first character is not the same as multi-line comments.
+    ;; Single-line comments.
     ("|\\*\\*.*" . font-lock-comment-face)
 
     ;; Operators should be painted as keywords, I guess.
     ;; "\\\\" "->"
-
-    ;; Data strings
-    ;; ("\"{.*?}" . font-lock-string-face)
 
     ;; I guess it make some sense to use function-name-face for bindings
     ;; and variable-name-face for states.
@@ -178,13 +173,14 @@ entries, since the nesting of headings will be random.")
     ("##needs" . font-lock-preprocessor-face)
 
 ;;; 		 ("~" . font-lock-negation-char-face) ; doesn't work?
-     
-    ;;      ("\\(<\\))" 1 ")")
 	)
   "Shape keywords and their corresponding font-lock face.")
 
 (defconst shapes-mode-syntactic-keywords
   '(
+    ;; Multi-line comments
+    ("\\(/\\)\\*\\*.*\\*\\*\\(/\\)" (1 "<") (2 ">"))
+    
     ;; Poor man's strings: ("string")
     ("\\((\\)\"" 1 "|")
     ("\"\\()\\)" 1 "|")
@@ -192,7 +188,6 @@ entries, since the nesting of headings will be random.")
     ;; Data strings: "{string}
     ;; Note: Nesting is not properly handled
     ("\\(\"\\){.*\\(}\\)" (1 "|") (2 "|"))
-    
     )
   "`font-lock-syntactic-keywords` for Shapes.")
 
@@ -529,6 +524,7 @@ Note: BUGGY, do not use."
         (list shapes-mode-font-lock-keywords
               nil nil nil nil
               '(font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
+  (set (make-local-variable 'parse-sexp-lookup-properties) t)
 
   ;; Skeletons
   (set (make-local-variable 'skeleton-pair-alist)
