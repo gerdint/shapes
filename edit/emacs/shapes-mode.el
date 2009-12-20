@@ -127,7 +127,7 @@ entries, since the nesting of headings will be random.")
 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
     ;; Poor man's strings are handled using search-based font lock
 
-    ;; 		(modify-syntax-entry ?\" "." st)		
+    (modify-syntax-entry ?\" "." st)
 
 		;;; Multi-line Comments
 		;; Here we fake it by only looking at the first two characters, and use
@@ -188,6 +188,11 @@ entries, since the nesting of headings will be random.")
     ;; Poor man's strings: ("string")
     ("\\((\\)\"" 1 "|")
     ("\"\\()\\)" 1 "|")
+
+    ;; Data strings: "{string}
+    ;; Note: Nesting is not properly handled
+    ("\\(\"\\){.*\\(}\\)" (1 "|") (2 "|"))
+    
     )
   "`font-lock-syntactic-keywords` for Shapes.")
 
