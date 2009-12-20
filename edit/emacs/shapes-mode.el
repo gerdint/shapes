@@ -178,8 +178,9 @@ entries, since the nesting of headings will be random.")
 
 (defconst shapes-mode-syntactic-keywords
   '(
-    ;; Multi-line comments
-    ("\\(/\\)\\*\\*.*\\*\\*\\(/\\)" (1 "<") (2 ">"))
+    ;; Multi-line comments (the way sgml-mode does it)
+    ("\\(/\\)\\*\\*" (1 "< b"))
+    ("\\*\\*\\(/\\)" (1 "> b"))
     
     ;; Poor man's strings: ("string")
     ("\\((\\)\"" 1 "|")
@@ -329,8 +330,9 @@ Also displays the Shapes window, but does not select it."
 
 (defun shapes-beginning-of-defun (&optional arg)
   "Move backward to the beginning of a defun.
-A line beginning with something apart from whitespace or a
-closing brace is considered to be the beginning of a defun.
+A line beginning with something apart from whitespace or an
+opening or closing brace is considered to be the beginning of a
+defun.
 
 The above means that for now comments are not skipped."
   (interactive "p")
@@ -338,7 +340,7 @@ The above means that for now comments are not skipped."
 	;; only?  I.e. match identifier: \ arg1 .. argn -> body-expr
 	;;(re-search-backward (concat "^" shapes-identifier-re) nil t (or
 	;;arg 1)))
-	(re-search-backward "^[^[:blank:]\n}]" nil t (or arg 1)))
+	(re-search-backward "^[^[:blank:]\n{}]" nil t (or arg 1)))
 
 (defun shapes-end-of-defun (&optional arg)
 	"Move forward to the end of a defun.
@@ -519,10 +521,14 @@ Note: BUGGY, do not use."
   (setq major-mode 'shapes-mode)
   (setq mode-name "Shapes")
   (use-local-map shapes-mode-map)
+	(set (make-local-variable 'beginning-of-defun-function)
+			 'shapes-beginning-of-defun)
+	(set (make-local-variable 'end-of-defun-function)
+			 'shapes-end-of-defun)
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
         (list shapes-mode-font-lock-keywords
-              nil nil nil nil
+              nil nil nil 'beginning-of-defun
               '(font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
 
@@ -538,12 +544,7 @@ Note: BUGGY, do not use."
 
   ;; (when shapes-unicode-pretty-print
 	;;     (setq abbrev-mode t))
-
-	(set (make-local-variable 'beginning-of-defun-function)
-			 'shapes-beginning-of-defun)
-	(set (make-local-variable 'end-of-defun-function)
-			 'shapes-end-of-defun)
-  
+ 
   (setq comment-start-skip "/\\*\\*+ *\\||\\*\\*+ *")
   (setq comment-start "|**")
 
