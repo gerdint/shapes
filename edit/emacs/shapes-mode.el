@@ -54,6 +54,10 @@
 ;; function calls.
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
+;; - unary, binary, | ops indent
+;; - greedy matching for closing brace of data strings
+;; - don't indent if inside string or comment (check with font-lock)
+;; - cursor goes to end of prev line when indenting
 
 ;;; Installation:
 
@@ -479,7 +483,9 @@ Note: BUGGY, do not use."
             ;; align with << on previous line (if present), otherwise add basic-indent to last
             ;; line's indent
             ((looking-at "<<")
-             (if (re-search-backward "<<" (line-beginning-position 0) t)
+             (if (save-excursion
+                   (beginning-of-line 0)
+                   (re-search-forward "<<" (line-end-position) t))
                  (point-to-column (match-beginning 0))
                (+ (prev-line-indent) shapes-basic-indent-width)))
             ;; Default case, indent according to brace level
