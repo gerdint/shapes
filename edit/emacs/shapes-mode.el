@@ -141,7 +141,8 @@ entries, since the nesting of headings will be random.")
     (modify-syntax-entry ?/ "." st)
     (modify-syntax-entry ?* "." st)
 
-		;; add more here ...
+		;; Don't treat backslash as espace construct.
+    (modify-syntax-entry ?\\ "." st)
 		st)
   "Syntax table used while in `shapes-mode'.")
 
@@ -149,9 +150,6 @@ entries, since the nesting of headings will be random.")
   '(
     ;; Single-line comments.
     ("|\\*\\*.*" . font-lock-comment-face)
-
-    ;; Operators should be painted as keywords, I guess.
-    ;; "\\\\" "->"
 
     ;; I guess it make some sense to use function-name-face for bindings
     ;; and variable-name-face for states.
