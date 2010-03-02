@@ -55,7 +55,6 @@
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
 ;; - unary, binary, | ops indent
-;; - cursor goes to end of prev line when indenting
 
 ;;; Installation:
 
@@ -452,54 +451,57 @@ only work correctly if font-lock is enabled."
   
   (defun prev-line-indent ()
     "Returns indent of previous line. Moves point."
-    (beginning-of-line 0)
-    (back-to-indentation)
-    (current-column))
+    (save-excursion
+      (beginning-of-line 0)
+      (back-to-indentation)
+      (current-column)))
   
   (defun point-to-column (p)
 		(save-excursion
 			(goto-char p)
-			(current-column)))
+      (current-column)))
 
   ;; We store pos relative to end of file so that we can go back to it even
   ;; after indentation has been inserted (before point)
   (let ((pos (- (point-max) (point))))
-    ;; We want to indent w.r.t to the first thing on the line.
+    ;; We want to indent w.r.t to the beginning of the line.
     (goto-char (line-beginning-position))
-    (unless (inside-string)
-      ;; Wipe previous identation.
-      (delete-horizontal-space)
+    (if (inside-string)
+        (goto-char (- (point-max) pos))
+      (skip-chars-forward " \t")
       (indent-to
        (let* ((state (syntax-ppss (point)))
               (depth (car state))
               (open-pos (elt state 1)))
-         (save-excursion
-           (save-restriction
-             (cond
-              ;; closing brace, align with opening brace
-              ((looking-at "\\(\\s)\\|<)\\)")
-               (point-to-column open-pos))
-              ;; continuing operator, add basic indent (could add more operators here)
-              ((and (looking-back "\\(→\\|.>\\|<<\\)\n" (- (point) 3))
-                    ;; this one may not be wanted? or maybe only if opening brace is in column 1?
-                    (not (looking-at "{")))
-               (+ (prev-line-indent) shapes-basic-indent-width))
-              ;; align with << on previous line (if present), otherwise add basic-indent to last
-              ;; line's indent
-              ((looking-at "<<")
-               (if (save-excursion
-                     (beginning-of-line 0)
-                     (re-search-forward "<<" (line-end-position) t))
-                   (point-to-column (match-beginning 0))
-                 (+ (prev-line-indent) shapes-basic-indent-width)))
-              ;; Default case, indent according to brace level
-              (t
-               (if (zerop depth)
-                   0
-                 (+ (point-to-column open-pos) shapes-basic-indent-width))
-               )))))))
-    ;; Restore old pos
-    (goto-char (- (point-max) pos))))
+         (cond
+          ;; closing brace, align with opening brace
+          ((looking-at "\\(\\s)\\|<)\\)")
+           (point-to-column open-pos))
+          ;; continuing operator, add basic indent (could add more operators here)
+          ((and (save-excursion
+                  (beginning-of-line)
+                  (looking-back "\\(→\\|.>\\|<<\\)\n" (- (point) 3)))
+                ;; this one may not be wanted? or maybe only if opening brace is in column 1?
+                (not (looking-at "{")))
+           (+ (prev-line-indent) shapes-basic-indent-width))
+          ;; align with << on previous line (if present), otherwise add basic-indent to last
+          ;; line's indent
+          ((looking-at "<<")
+           (if (save-excursion
+                 (beginning-of-line 0)
+                 (re-search-forward "<<" (line-end-position) t))
+               (point-to-column (match-beginning 0))
+             (+ (prev-line-indent) shapes-basic-indent-width)))
+          ;; Default case, indent according to brace level
+          (t
+           (if (zerop depth)
+               0
+             (+ (point-to-column open-pos) shapes-basic-indent-width))
+           ))))
+      ;; If initial point was within line's indentation, position after the
+      ;; indentation. Else stay at same point in text.
+      (if (> (- (point-max) pos) (point))
+          (goto-char (- (point-max) pos))))))
 
 ;; (defun shapes-indent-line ()
 ;;   "Indents current line according to Shape indentation standards."
@@ -515,13 +517,13 @@ only work correctly if font-lock is enabled."
 ;;     (goto-char pos)))
 
 ;; I ripped this one off from the Perl one in flymake.el.
-(defun shapes-flymake-init ()
-	(let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-				 (local-file  (file-relative-name
-                       temp-file
-                       (file-name-directory buffer-file-name))))
-		(list shapes-compiler-command (list local-file))))
+    (defun shapes-flymake-init ()
+      (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                           'flymake-create-temp-inplace))
+             (local-file  (file-relative-name
+                           temp-file
+                           (file-name-directory buffer-file-name))))
+        (list shapes-compiler-command (list local-file)))))
 
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
