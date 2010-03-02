@@ -55,7 +55,6 @@
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
 ;; - unary, binary, | ops indent
-;; - greedy matching for closing brace of data strings
 ;; - don't indent if inside string or comment (check with font-lock)
 ;; - cursor goes to end of prev line when indenting
 
@@ -192,7 +191,7 @@ entries, since the nesting of headings will be random.")
 
     ;; Data strings: "{string}
     ;; Note: Nesting is not properly handled
-    ("\\(\"\\){.*\\(}\\)" (1 "|") (2 "|"))
+    ("\\(\"\\){.*?\\(}\\)" (1 "|") (2 "|"))
     )
   "`font-lock-syntactic-keywords` for Shapes.")
 
