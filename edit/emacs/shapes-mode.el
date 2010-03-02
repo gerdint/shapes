@@ -55,7 +55,6 @@
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
 ;; - unary, binary, | ops indent
-;; - don't indent if inside string or comment (check with font-lock)
 ;; - cursor goes to end of prev line when indenting
 
 ;;; Installation:
@@ -445,12 +444,18 @@ Note: BUGGY, do not use."
 (defun shapes-indent-line ()
   "Indents current line according to Shapes indentation standards."
 
+  (defun inside-string ()
+    "Returns true if point is inside a string.
+Uses the face text property, as set by font-lock, meaning it will
+only work correctly if font-lock is enabled."
+    (eq (get-text-property (point) 'face) 'font-lock-string-face))
+  
   (defun prev-line-indent ()
     "Returns indent of previous line. Moves point."
     (beginning-of-line 0)
     (back-to-indentation)
     (current-column))
-
+  
   (defun point-to-column (p)
 		(save-excursion
 			(goto-char p)
@@ -461,38 +466,38 @@ Note: BUGGY, do not use."
   (let ((pos (- (point-max) (point))))
     ;; We want to indent w.r.t to the first thing on the line.
     (goto-char (line-beginning-position))
-    ;; Wipe previous identation.
-    (delete-horizontal-space)
-    (indent-to
-     (let* ((state (syntax-ppss (point)))
-            (depth (car state))
-            (open-pos (elt state 1)))
-       (save-excursion
-         (save-restriction
-           (cond
-            ;; closing brace, align with opening brace
-            ;; TODO: handle plethora of strings literals such as "{ str }, `string'
-            ((looking-at "\\(\\s)\\|<)\\)")
-             (point-to-column open-pos))
-            ;; continuing operator, add basic indent (could add more operators here)
-            ((and (looking-back "\\(→\\|.>\\|<<\\)\n" (- (point) 3))
-                  ;; this one may not be wanted? or maybe only if opening brace is in column 1?
-                  (not (looking-at "{")))
-             (+ (prev-line-indent) shapes-basic-indent-width))
-            ;; align with << on previous line (if present), otherwise add basic-indent to last
-            ;; line's indent
-            ((looking-at "<<")
-             (if (save-excursion
-                   (beginning-of-line 0)
-                   (re-search-forward "<<" (line-end-position) t))
-                 (point-to-column (match-beginning 0))
-               (+ (prev-line-indent) shapes-basic-indent-width)))
-            ;; Default case, indent according to brace level
-            (t
-             (if (zerop depth)
-                 0
-               (+ (point-to-column open-pos) shapes-basic-indent-width))
-             ))))))
+    (unless (inside-string)
+      ;; Wipe previous identation.
+      (delete-horizontal-space)
+      (indent-to
+       (let* ((state (syntax-ppss (point)))
+              (depth (car state))
+              (open-pos (elt state 1)))
+         (save-excursion
+           (save-restriction
+             (cond
+              ;; closing brace, align with opening brace
+              ((looking-at "\\(\\s)\\|<)\\)")
+               (point-to-column open-pos))
+              ;; continuing operator, add basic indent (could add more operators here)
+              ((and (looking-back "\\(→\\|.>\\|<<\\)\n" (- (point) 3))
+                    ;; this one may not be wanted? or maybe only if opening brace is in column 1?
+                    (not (looking-at "{")))
+               (+ (prev-line-indent) shapes-basic-indent-width))
+              ;; align with << on previous line (if present), otherwise add basic-indent to last
+              ;; line's indent
+              ((looking-at "<<")
+               (if (save-excursion
+                     (beginning-of-line 0)
+                     (re-search-forward "<<" (line-end-position) t))
+                   (point-to-column (match-beginning 0))
+                 (+ (prev-line-indent) shapes-basic-indent-width)))
+              ;; Default case, indent according to brace level
+              (t
+               (if (zerop depth)
+                   0
+                 (+ (point-to-column open-pos) shapes-basic-indent-width))
+               )))))))
     ;; Restore old pos
     (goto-char (- (point-max) pos))))
 
