@@ -425,28 +425,15 @@ only work correctly if font-lock is enabled."
       ;; indentation. Else stay at same point in text.
       (if (> (- (point-max) pos) (point))
           (goto-char (- (point-max) pos))))))
-
-;; (defun shapes-indent-line ()
-;;   "Indents current line according to Shape indentation standards."
-;;   (interactive)
-;;   ;; We store pos relative to end of file so that we can go back to it even
-;;   ;; after indentation has been inserted (before point)
-;;   (let ((pos (- (point-max) (point)))
-;;         (beg (line-beginning-position))
-;;         (new-indent (shapes-calc-line-indent)))
-;;     (goto-char beg)
-;;     (indent-to new-indent)
-;;     ;; Restore old pos
-;;     (goto-char pos)))
-
+ 
 ;; I ripped this one off from the Perl one in flymake.el.
-    (defun shapes-flymake-init ()
-      (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                           'flymake-create-temp-inplace))
-             (local-file  (file-relative-name
-                           temp-file
-                           (file-name-directory buffer-file-name))))
-        (list shapes-compiler-command (list local-file)))))
+(defun shapes-flymake-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+    (list shapes-compiler-command (list local-file))))
 
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
