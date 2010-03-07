@@ -55,6 +55,7 @@
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
 ;; - unary, binary, | ops indent
+;; - consider paren grouping when indenting <<
 
 ;;; Installation:
 
@@ -141,39 +142,47 @@ entries, since the nesting of headings will be random.")
     (modify-syntax-entry ?/ "." st)
     (modify-syntax-entry ?* "." st)
 
+    (modify-syntax-entry ?? "_" st)
+    (modify-syntax-entry ?# "_" st)
+    (modify-syntax-entry ?@ "_" st)
+    
 		;; Don't treat backslash as espace construct.
     (modify-syntax-entry ?\\ "." st)
 		st)
   "Syntax table used while in `shapes-mode'.")
 
-(defconst shapes-mode-font-lock-keywords
+(defconst shapes-font-lock-keywords-1
   '(
     ;; Single-line comments.
     ("|\\*\\*.*" . font-lock-comment-face)
-
-    ;; I guess it make some sense to use function-name-face for bindings
-    ;; and variable-name-face for states.
-    ;; (eval
-    ;; 			(lambda ()
-    ;; 				(list (concat "\\(#" shapes-identifier-re "\\):")
-    ;; 							1 'font-lock-variable-name-face)))
-    ;; 		 (eval
-    ;; 			(lambda ()
-    ;; 				;; It should probably not match dynamic var bindings?
-    ;; 				(list (concat "\\(" shapes-identifier-re "\\):")
-    ;; 							1 'font-lock-function-name-face)))
-    ;; 		 (eval
-    ;; 			(lambda ()
-    ;; 				;; newText, TeX et al.
-    ;; 				(list (concat "(\\(" shapes-identifier-re "\\)")
-    ;; 							1 'font-lock-keyword-face)))
 		 
     ;; Preprocessor directives
-    ("##needs" . font-lock-preprocessor-face)
-
-;;; 		 ("~" . font-lock-negation-char-face) ; doesn't work?
+    ("##[[:ascii:]]+" . font-lock-preprocessor-face)
 	)
-  "Shape keywords and their corresponding font-lock face.")
+  "Subdued level highlighting for `shapes-mode'.")
+
+(defconst shapes-font-lock-keywords-2
+  (append
+    shapes-font-lock-keywords-1
+    `(
+      ;; Dynamic bindings declarations
+      (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
+       font-lock-variable-name-face)
+      
+      ;; Lexical bindings
+      (,(concat "[^@]\\<\\(" shapes-identifier-re "\\):") 1
+       font-lock-variable-name-face)
+
+      ;; States
+      (,(concat "\\_<[•#]" shapes-identifier-re) .
+       font-lock-variable-name-face)
+
+      ("~" . font-lock-negation-char-face)
+      ))
+  "Less subdued level highlighting for `shapes-mode'.")
+
+(defvar shapes-font-lock-keywords shapes-font-lock-keywords-2
+  "Default expressions to highlight in `shapes-mode'.")
 
 (defconst shapes-mode-syntactic-keywords
   '(
@@ -449,9 +458,9 @@ only work correctly if font-lock is enabled."
 			 'shapes-end-of-defun)
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
-        (list shapes-mode-font-lock-keywords
-              nil nil nil 'beginning-of-defun
-              '(font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
+        '((shapes-font-lock-keywords shapes-font-lock-keywords-1 shapes-font-lock-keywords-2)
+          nil nil nil beginning-of-defun
+          (font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
 
   ;; Skeletons
