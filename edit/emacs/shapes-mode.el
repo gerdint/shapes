@@ -125,29 +125,12 @@ entries, since the nesting of headings will be random.")
 		;; in Emacs, so we could not handle nested delimiters this way either.
 
     ;; Normal strings (does not handle nesting!)
-    (modify-syntax-entry ?` "|" st)			; String start delimiter
-		(modify-syntax-entry ?´ "|" st)			; String close delimiter
+;;     (modify-syntax-entry ?` "|" st)			; String start delimiter
+;; 		(modify-syntax-entry ?´ "|" st)			; String close delimiter
     ;; Poor man's strings are handled using search-based font lock
-
-    ;; So that it doesn't interfere with syntax properties-based highlighting
-    ;; for strings:
-    (modify-syntax-entry ?\" "." st)
-
-		;;; Operators
-		;; Uses punctuation character syntax class.
-		;; (modify-syntax-entry ?| "." st)
-
-    ;; Remove the syntax flags from these characters as we handle comments using
-    ;; search-based fontification and syntax properties instead.
-    (modify-syntax-entry ?/ "." st)
-    (modify-syntax-entry ?* "." st)
-
-    (modify-syntax-entry ?? "_" st)
-    (modify-syntax-entry ?# "_" st)
-    (modify-syntax-entry ?@ "_" st)
-    
+ 
 		;; Don't treat backslash as espace construct.
-    (modify-syntax-entry ?\\ "." st)
+;;     (modify-syntax-entry ?\\ "." st)
 		st)
   "Syntax table used while in `shapes-mode'.")
 
@@ -459,7 +442,13 @@ only work correctly if font-lock is enabled."
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
         '((shapes-font-lock-keywords shapes-font-lock-keywords-1 shapes-font-lock-keywords-2)
-          nil nil nil beginning-of-defun
+          nil nil
+          ;; Font lock syntax table
+          ;; Should some of these be moved to the mode syntax table?
+          (("`´" . "|")                ; string delimiters
+           ("\"/*\\" . ".")            ; punctuation
+           ("?•#@" . "_"))             ; symbols
+          beginning-of-defun
           (font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
 
