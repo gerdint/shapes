@@ -54,8 +54,13 @@
 ;; function calls.
 ;; - The use of forward-sexp for indentation means that some Shapes expressions
 ;; are not moved over correctly, such as '[...].foldl'.
+;;
 ;; - unary, binary, | ops indent
 ;; - consider paren grouping when indenting <<
+;;
+;; The below two probaly requires using something else than regexps for the fontification:
+;; - correctly highlight lexical identifiers introduced by lambda
+;; - don't highlight keyword applications
 
 ;;; Installation:
 
@@ -141,9 +146,14 @@ entries, since the nesting of headings will be random.")
 		 
     ;; Preprocessor directives
     ("##[[:alpha:]]+" . font-lock-preprocessor-face)
+
+    ("~" . font-lock-negation-char-face)
 	)
   "Subdued level highlighting for `shapes-mode'.")
 
+;; Buggy, so not used right now.
+;; Probably need something more powerful than regular expressions. Might
+;; investigate how cc-mode does it.
 (defconst shapes-font-lock-keywords-2
   (append
     shapes-font-lock-keywords-1
@@ -159,12 +169,10 @@ entries, since the nesting of headings will be random.")
       ;; States
       (,(concat "\\_<[•#]" shapes-identifier-re) .
        font-lock-variable-name-face)
-
-      ("~" . font-lock-negation-char-face)
       ))
   "Less subdued level highlighting for `shapes-mode'.")
 
-(defvar shapes-font-lock-keywords shapes-font-lock-keywords-2
+(defvar shapes-font-lock-keywords shapes-font-lock-keywords-1
   "Default expressions to highlight in `shapes-mode'.")
 
 (defconst shapes-mode-syntactic-keywords
@@ -441,7 +449,7 @@ only work correctly if font-lock is enabled."
 			 'shapes-end-of-defun)
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
-        '((shapes-font-lock-keywords shapes-font-lock-keywords-1 shapes-font-lock-keywords-2)
+        '((shapes-font-lock-keywords shapes-font-lock-keywords-1) ; shapes-font-lock-keywords-2)
           nil nil
           ;; Font lock syntax table
           ;; Should some of these be moved to the mode syntax table?
