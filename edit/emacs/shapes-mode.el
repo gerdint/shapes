@@ -140,7 +140,7 @@ entries, since the nesting of headings will be random.")
     ("|\\*\\*.*" . font-lock-comment-face)
 		 
     ;; Preprocessor directives
-    ("##[[:ascii:]]+" . font-lock-preprocessor-face)
+    ("##[[:alpha:]]+" . font-lock-preprocessor-face)
 	)
   "Subdued level highlighting for `shapes-mode'.")
 
