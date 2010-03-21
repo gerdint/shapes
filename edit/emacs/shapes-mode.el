@@ -151,9 +151,14 @@ entries, since the nesting of headings will be random.")
   '(
     ("|\\*\\*.*" . font-lock-comment-face)
     ("##[^[:blank:]]+". font-lock-preprocessor-face)
-    ("~" . font-lock-negation-char-face)
  	)
   "Subdued level highlighting for `shapes-mode'.")
+
+(defconst shapes-font-lock-keywords-2
+  (append
+   shapes-font-lock-keywords-1
+   `(("\\<dynamic\\>" . font-lock-keyword-face)
+     ("~" . font-lock-negation-char-face))))
 
 (defun shapes--match-colon-binding-name (limit)
   "Returns non-nil if match found and set match data."
@@ -178,12 +183,12 @@ entries, since the nesting of headings will be random.")
 
 (defconst shapes-font-lock-keywords-3
   (append
-    shapes-font-lock-keywords-1
+    shapes-font-lock-keywords-2
     `(
       ;; Dynamic bindings declarations
 ;;       (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
       ;; Dynamic binding declarations and assignments
-       (,(concat "\\_<@\\(" shapes-identifier-re "\\):") 1
+       (,(concat "\\_<@\\(" shapes-identifier-re "\\)") 1
         font-lock-shapes-dynamic-variable-name-face)
 
       ;; Idea: Match an identifier followed by a colon if the start of the
@@ -487,7 +492,9 @@ only work correctly if font-lock is enabled."
 			 'shapes--beginning-of-syntax)
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
-        '((shapes-font-lock-keywords shapes-font-lock-keywords-1 shapes-font-lock-keywords-3)
+        '((shapes-font-lock-keywords shapes-font-lock-keywords-1
+                                     shapes-font-lock-keywords-2
+                                     shapes-font-lock-keywords-3)
           nil nil
           ;; Font lock syntax table
           ;; Should some of these be moved to the mode syntax table?
