@@ -81,6 +81,11 @@
   "Name of the Shapes compiler executable, and any options to pass to it."
   :type 'string)
 
+;; Perhaps I should defface these
+(defvar font-lock-shapes-state-name-face font-lock-variable-name-face)
+(defvar font-lock-shapes-lexical-variable-name-face font-lock-constant-face)
+(defvar font-lock-shapes-dynamic-variable-name-face font-lock-constant-face)
+
 ;; (defcustom shapes-unicode-pretty-print t
 ;;   "Whether to pretty-print Shapes idenifiers using their Unicode
 ;; equivalents or not."
@@ -177,23 +182,24 @@ entries, since the nesting of headings will be random.")
     `(
       ;; Dynamic bindings declarations
 ;;       (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
-;;        font-lock-variable-name-face)
+      ;; Dynamic binding declarations and assignments
+       (,(concat "\\_<@\\(" shapes-identifier-re "\\):") 1
+        font-lock-shapes-dynamic-variable-name-face)
 
       ;; Idea: Match an identifier followed by a colon if the start of the
       ;; innermost containing list is an opening code bracket.
-      (shapes--match-colon-binding-name 1 font-lock-variable-name-face)
+      (shapes--match-colon-binding-name 1 font-lock-shapes-lexical-variable-name-face)
 
       ;; Non-keyword bindings introduced by lambda form.
       ;; Keywords bindings are handled by the previous rule. However, the case
       ;; of keyword arguments in a lambda form created inside an application is
       ;; not handled.
       (,(concat "\\\\[ \t]*\\(\\(?:" shapes-identifier-re "[ \t]+\\)*\\)") 1
-       font-lock-variable-name-face)
+       font-lock-shapes-lexical-variable-name-face)
 
       ;; States
-      ;; TODO: Add new face for states
-      ;; (,(concat "\\_<[•#]" shapes-identifier-re) .
-;;        font-lock-variable-name-face)
+      (,(concat "\\_<[•#]" shapes-identifier-re) .
+       font-lock-shapes-state-name-face)
       ))
   "Less subdued level highlighting for `shapes-mode'.")
 
@@ -419,7 +425,7 @@ only work correctly if font-lock is enabled."
   (let ((pos (- (point-max) (point))))
     ;; We want to indent w.r.t to the beginning of the line.
     (goto-char (line-beginning-position))
-    (if (shapes--inside-string)
+    (if (shapes--inside-string-p)
         (goto-char (- (point-max) pos))
       (skip-chars-forward " \t")
       (indent-to
