@@ -100,6 +100,9 @@
 	"[a-zA-Z0-9_?]+"
 	"Regular expression matching Shapes identifiers.")
 
+(defvar shapes-arrow-re
+  "\\(→\\|->\\)")
+
 (defvar shapes-outline-regexp
 	(concat shapes-identifier-re ":")
 	"Regular expression matching an `outline-mode' header.
@@ -141,38 +144,60 @@ entries, since the nesting of headings will be random.")
 
 (defconst shapes-font-lock-keywords-1
   '(
-    ;; Single-line comments.
     ("|\\*\\*.*" . font-lock-comment-face)
-		 
-    ;; Preprocessor directives
-    ("##[[:alpha:]]+" . font-lock-preprocessor-face)
-
+    ("##[^[:blank:]]+". font-lock-preprocessor-face)
     ("~" . font-lock-negation-char-face)
-	)
+ 	)
   "Subdued level highlighting for `shapes-mode'.")
 
-;; Buggy, so not used right now.
-;; Probably need something more powerful than regular expressions. Might
-;; investigate how cc-mode does it.
-(defconst shapes-font-lock-keywords-2
+(defun shapes--match-colon-binding-name (limit)
+  "Returns non-nil if match found and set match data."
+;;   (message "%S %S" (point) limit)
+  ;; Loop until we matched the regexp but is not inside an application:
+  (condition-case nil
+			(progn
+				(while
+            (progn
+              (re-search-forward (concat "\\_<\\(" shapes-identifier-re "\\):")
+                                 limit)
+              (save-match-data
+                ;; To properly check for keyword params here should check if a
+                ;; ?\\ appears after the starting ?[.
+                (eq (char-after (nth 1 (syntax-ppss))) ?\[))))
+				t)
+    (error nil)))
+
+(defun shapes--inside-preprocessor-directive-p ()
+  (eq (get-text-property (line-beginning-position) 'face)
+      'font-lock-preprocessor-face))
+
+(defconst shapes-font-lock-keywords-3
   (append
     shapes-font-lock-keywords-1
     `(
       ;; Dynamic bindings declarations
-      (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
-       font-lock-variable-name-face)
-      
-      ;; Lexical bindings
-      (,(concat "[^@]\\<\\(" shapes-identifier-re "\\):") 1
+;;       (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
+;;        font-lock-variable-name-face)
+
+      ;; Idea: Match an identifier followed by a colon if the start of the
+      ;; innermost containing list is an opening code bracket.
+      (shapes--match-colon-binding-name 1 font-lock-variable-name-face)
+
+      ;; Non-keyword bindings introduced by lambda form.
+      ;; Keywords bindings are handled by the previous rule. However, the case
+      ;; of keyword arguments in a lambda form created inside an application is
+      ;; not handled.
+      (,(concat "\\\\[ \t]*\\(\\(?:" shapes-identifier-re "[ \t]+\\)*\\)") 1
        font-lock-variable-name-face)
 
       ;; States
-      (,(concat "\\_<[•#]" shapes-identifier-re) .
-       font-lock-variable-name-face)
+      ;; TODO: Add new face for states
+      ;; (,(concat "\\_<[•#]" shapes-identifier-re) .
+;;        font-lock-variable-name-face)
       ))
   "Less subdued level highlighting for `shapes-mode'.")
 
-(defvar shapes-font-lock-keywords shapes-font-lock-keywords-1
+(defvar shapes-font-lock-keywords shapes-font-lock-keywords-3
   "Default expressions to highlight in `shapes-mode'.")
 
 (defconst shapes-mode-syntactic-keywords
@@ -186,7 +211,8 @@ entries, since the nesting of headings will be random.")
     ("\"\\()\\)" 1 "|")
 
     ;; Data strings: "{string}
-    ;; Note: Nesting is not properly handled
+    ;; Note: Nesting is not properly handled --- could we use function instead of
+    ;; regexp here?
     ("\\(\"\\){.*?\\(}\\)" (1 "|") (2 "|"))
     )
   "`font-lock-syntactic-keywords` for Shapes.")
@@ -362,15 +388,19 @@ Note: BUGGY, do not use."
 			(re-search-backward "^.+")				; Skip emtpy lines
 			(end-of-line))))	
 
+(defun shapes--beginning-of-syntax ()
+  "Looks backwards for the first line beginning with non-whitespace."
+  (re-search-backward "^[^[:blank:]]" nil t))
+
+(defun shapes--inside-string-p ()
+  "Returns true if point is inside a string.
+Uses the face text property, as set by font-lock, meaning it will
+only work correctly if font-lock is enabled."
+  (eq (get-text-property (point) 'face) 'font-lock-string-face))
+
 ; set parse-sexp-lookup-properties 
 (defun shapes-indent-line ()
   "Indents current line according to Shapes indentation standards."
-
-  (defun inside-string ()
-    "Returns true if point is inside a string.
-Uses the face text property, as set by font-lock, meaning it will
-only work correctly if font-lock is enabled."
-    (eq (get-text-property (point) 'face) 'font-lock-string-face))
   
   (defun prev-line-indent ()
     "Returns indent of previous line. Moves point."
@@ -389,7 +419,7 @@ only work correctly if font-lock is enabled."
   (let ((pos (- (point-max) (point))))
     ;; We want to indent w.r.t to the beginning of the line.
     (goto-char (line-beginning-position))
-    (if (inside-string)
+    (if (shapes--inside-string)
         (goto-char (- (point-max) pos))
       (skip-chars-forward " \t")
       (indent-to
@@ -447,16 +477,18 @@ only work correctly if font-lock is enabled."
 			 'shapes-beginning-of-defun)
 	(set (make-local-variable 'end-of-defun-function)
 			 'shapes-end-of-defun)
+  (set (make-local-variable 'syntax-begin-function)
+			 'shapes--beginning-of-syntax)
   (set-syntax-table shapes-mode-syntax-table)
 	(setq font-lock-defaults
-        '((shapes-font-lock-keywords shapes-font-lock-keywords-1) ; shapes-font-lock-keywords-2)
+        '((shapes-font-lock-keywords shapes-font-lock-keywords-1 shapes-font-lock-keywords-3)
           nil nil
           ;; Font lock syntax table
           ;; Should some of these be moved to the mode syntax table?
           (("`´" . "|")                ; string delimiters
            ("\"/*\\" . ".")            ; punctuation
            ("?•#@" . "_"))             ; symbols
-          beginning-of-defun
+          nil
           (font-lock-syntactic-keywords . shapes-mode-syntactic-keywords)))
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
 
