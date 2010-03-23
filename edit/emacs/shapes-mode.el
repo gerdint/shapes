@@ -185,10 +185,12 @@ entries, since the nesting of headings will be random.")
   (append
     shapes-font-lock-keywords-2
     `(
-      ;; Dynamic bindings declarations
-;;       (,(concat "\\(@" shapes-identifier-re "\\)[ \t]+") 1
-      ;; Dynamic binding declarations and assignments
-       (,(concat "\\_<@\\(" shapes-identifier-re "\\)") 1
+      ;; Dynamic variable declarations
+      (,(concat "dynamic[ \t]+\\(@" shapes-identifier-re "\\)") 1
+       font-lock-shapes-dynamic-variable-name-face)
+      
+      ;; Dynamic variable bindings
+       (,(concat "\\_<\\(@" shapes-identifier-re "\\):") 1
         font-lock-shapes-dynamic-variable-name-face)
 
       ;; Idea: Match an identifier followed by a colon if the start of the
