@@ -105,6 +105,11 @@
 	"[a-zA-Z0-9_?]+"
 	"Regular expression matching Shapes identifiers.")
 
+(defvar shapes-keywords
+  '("dynamic" "true" "false" "continuation" "continue" "escape_continuation"
+    "escape_continue" "escape_backtrace" "cycle" "indexof" "depthof"
+    "VARNAME" "TeX"))
+
 (defvar shapes-arrow-re
   "\\(→\\|->\\)")
 
@@ -157,7 +162,7 @@ entries, since the nesting of headings will be random.")
 (defconst shapes-font-lock-keywords-2
   (append
    shapes-font-lock-keywords-1
-   `(("\\<dynamic\\>" . font-lock-keyword-face)
+   `((,(concat "\\<" (regexp-opt shapes-keywords) "\\>") . font-lock-keyword-face)
      ("~" . font-lock-negation-char-face))))
 
 (defun shapes--match-colon-binding-name (limit)
