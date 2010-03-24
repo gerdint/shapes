@@ -83,7 +83,7 @@
 
 ;; Perhaps I should defface these
 (defvar font-lock-shapes-state-name-face font-lock-variable-name-face)
-(defvar font-lock-shapes-lexical-variable-name-face font-lock-constant-face)
+(defvar font-lock-shapes-lexical-variable-name-face font-lock-function-name-face)
 (defvar font-lock-shapes-dynamic-variable-name-face font-lock-constant-face)
 
 ;; (defcustom shapes-unicode-pretty-print t
