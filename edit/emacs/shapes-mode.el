@@ -154,7 +154,7 @@ entries, since the nesting of headings will be random.")
 
 (defconst shapes-font-lock-keywords-1
   '(
-    ("|\\*\\*.*" . font-lock-comment-face)
+    ("|\\*\\*.*" 0 font-lock-comment-face t)
     ("##[^[:blank:]]+". font-lock-preprocessor-face)
  	)
   "Subdued level highlighting for `shapes-mode'.")
