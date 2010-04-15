@@ -252,9 +252,11 @@ entries, since the nesting of headings will be random.")
     map))
 
 (defun shapes-compile ()
-  "Compiles the source file."
+  "Compiles the source file using the Shape compiler. "
   (interactive)
-  (compile (concat shapes-compiler-command " " (buffer-file-name))))
+  (unless buffer-file-name
+    (save-buffer))
+  (compile (concat shapes-compiler-command " " "\"" (buffer-file-name) "\"")))
 
 (defun shapes-view ()
   "Compiles the source file and, if compilation is successful,
@@ -554,13 +556,7 @@ only work correctly if font-lock is enabled."
 																	 (nil ,(concat "^dynamic\\s-+\\(@"
 																								 shapes-identifier-re
 																								 "\\)") 1)))
-	(setq outline-regexp shapes-outline-regexp)
-
-  (unless (or (file-exists-p "makefile")
-	      (file-exists-p "Makefile"))
-    (set (make-local-variable 'compile-command)
-	 (concat shapes-compiler-command " "
-		 (file-name-sans-extension buffer-file-name)))))
+	(setq outline-regexp shapes-outline-regexp))
 
 (provide 'shapes-mode)
 
