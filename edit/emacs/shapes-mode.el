@@ -556,7 +556,8 @@ only work correctly if font-lock is enabled."
 																	 (nil ,(concat "^dynamic\\s-+\\(@"
 																								 shapes-identifier-re
 																								 "\\)") 1)))
-	(setq outline-regexp shapes-outline-regexp))
+	(setq outline-regexp shapes-outline-regexp)
+  (run-hooks 'shapes-mode-hook))
 
 (provide 'shapes-mode)
 
