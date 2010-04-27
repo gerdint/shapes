@@ -516,9 +516,7 @@ only work correctly if font-lock is enabled."
 
   ;; Skeletons
   (set (make-local-variable 'skeleton-pair-alist)
-       '((?` _ ?´)											; for strings
-				 (?{ \n > _ \n ?} >))						; for code brackets
-			 )
+       '((?` _ ?´)))                    ; for strings
 
   ;; (define-skeleton shapes-lambda "Function template skeleton."
   ;;     "Formal parameters: "
