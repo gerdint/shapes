@@ -487,6 +487,27 @@ only work correctly if font-lock is enabled."
 
 (defun shapes-mode ()
   "Major mode for editing Shapes programs.
+
+The main features are automatic indentation, syntactic
+fontification, and commands for compiling Shapes programs,
+jumping to errors and viewing the program output.
+
+Viewing program output depends on `doc-view-mode', which comes
+with GNU Emacs as of version 23, but needs separate installation
+for earlier versions.
+
+There is also support for running the Shapes compiler in
+interactive mode, including inline viewing of Shapes expression
+values. This mode is accessed using `run-shapes', and requires
+Ghostscript to be installed.
+
+The mode supports Imenu, Flymake, and outline-minor-mode (but see
+note for `shapes-outline-regexp').
+
+The hook `shapes-mode-hook' is run at the end of mode initialization.
+
+Key bindings:
+
 \\{shapes-mode-map}"
   (interactive)
   (kill-all-local-variables)
