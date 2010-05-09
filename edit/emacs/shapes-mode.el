@@ -242,7 +242,7 @@ entries, since the nesting of headings will be random.")
 		;; The below is disabled because it relies on shapes-end-of-defun, which is
 		;; not finished.
 		;;(define-key map "\M-\C-x" 'shapes-send-definition)
-		(when (featurep 'doc-view)		; Emacs 22 and lower does not ship with
+		(when (or (>= emacs-major-version 23) (featurep 'doc-view)) ; Emacs 22 and lower does not ship with
 					; doc-view
       (define-key map "\C-c\C-v" 'shapes-view))
     (mapc (lambda (elt)
@@ -257,6 +257,12 @@ entries, since the nesting of headings will be random.")
   (unless buffer-file-name
     (save-buffer))
   (compile (concat shapes-compiler-command " " "\"" (buffer-file-name) "\"")))
+
+(defmacro aif (test-form then-form &rest else-forms)
+  "Anaphoric if. Temporary variable `it' is the result of test-form."
+  `(let ((it ,test-form))
+     (if it ,then-form ,@else-forms)))  
+(put 'aif 'lisp-indent-function 2)
 
 (defun shapes-view ()
   "Compiles the source file and, if compilation is successful,
@@ -275,11 +281,18 @@ views it using doc-view."
        (let ((output (concat (file-name-sans-extension
                               (buffer-file-name (window-buffer)))
                              ".pdf")))
-	 (with-selected-window
-	     (next-window)		; This way image will hopefully reuse
-					; the compilation buffer.
-	   (doc-view t output))))))						; I Emacs 23 one should make use of
-																				; find-file instead.
+         (with-selected-window
+             (next-window)		; This way image will hopefully reuse
+                                        ; the compilation buffer.
+           (if (< emacs-major-version 23)
+               (doc-view t output)
+             ;; Remove previous buffer to avoid Emacs asking us if we want to
+             ;; refresh the buffer, which we obviously want.
+             ;; Is there any way to programactially supply interactive args to
+             ;; functions so we needn't do this?
+             (aif (find-buffer-visiting output)
+                 (kill-buffer it))
+             (find-file-read-only output)))))))
   (shapes-compile))
 
 (defun shapes-preoutput-filter (output)
