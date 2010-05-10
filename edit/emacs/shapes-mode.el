@@ -247,8 +247,12 @@ entries, since the nesting of headings will be random.")
             (define-key map (string elt) 'skeleton-pair-insert-maybe))
           "`([{")
     ;; (define-key map "\C-cl" 'shapes-lambda)
+    (define-key map "\C-x8#"
+      (lambda () (interactive) (insert "•")))
+    (define-key map (kbd "C-x 8 <right>")
+      (lambda () (interactive) (insert "→")))
     map))
-
+ 
 (defun shapes-compile ()
   "Compiles the source file using the Shape compiler. "
   (interactive)
