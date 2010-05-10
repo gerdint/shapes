@@ -242,12 +242,10 @@ entries, since the nesting of headings will be random.")
 		;; The below is disabled because it relies on shapes-end-of-defun, which is
 		;; not finished.
 		;;(define-key map "\M-\C-x" 'shapes-send-definition)
-		(when (or (>= emacs-major-version 23) (featurep 'doc-view)) ; Emacs 22 and lower does not ship with
-					; doc-view
-      (define-key map "\C-c\C-v" 'shapes-view))
+		(define-key map "\C-c\C-v" 'shapes-view)
     (mapc (lambda (elt)
-	    (define-key map (string elt) 'skeleton-pair-insert-maybe))
-	  "`([{")
+            (define-key map (string elt) 'skeleton-pair-insert-maybe))
+          "`([{")
     ;; (define-key map "\C-cl" 'shapes-lambda)
     map))
 
@@ -268,6 +266,8 @@ entries, since the nesting of headings will be random.")
   "Compiles the source file and, if compilation is successful,
 views it using doc-view."
   (interactive)
+  (unless (or (>= emacs-major-version 23) (featurep 'doc-view))
+    (error "Doc-view is required for this functionality."))
   ;; Here we basically pass the code to view the output as a continuation to the
   ;; compile function since compilation is performed asynchronously in Emacs.
   (add-to-list
