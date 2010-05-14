@@ -502,6 +502,18 @@ only work correctly if font-lock is enabled."
                        (file-name-directory buffer-file-name))))
     (list shapes-compiler-command (list local-file))))
 
+;;; Input method for easily inserting common Unicode symbols.
+(quail-define-package
+ "shapes-pretty" "Shapes" "SP" t
+ "Shapes programming language input method (rule: \"->\" -> →   \"#\" -> •)"
+ nil t nil nil nil nil nil nil nil nil t)
+
+(quail-define-rules
+ ("->" ?→)
+ ("#" ?•)
+ )
+
+;;; The mode function.
 (defun shapes-mode ()
   "Major mode for editing Shapes extensions and programs.
 
