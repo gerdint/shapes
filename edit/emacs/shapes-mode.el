@@ -251,8 +251,9 @@ entries, since the nesting of headings will be random.")
       (lambda () (interactive) (insert "•")))
     (define-key map (kbd "C-x 8 <right>")
       (lambda () (interactive) (insert "→")))
+    (define-key map "\C-c\C-\\" 'shapes-toggle-input-method)
     map))
- 
+
 (defun shapes-compile ()
   "Compiles the source file using the Shape compiler. "
   (interactive)
@@ -512,6 +513,16 @@ only work correctly if font-lock is enabled."
  ("->" ?→)
  ("#" ?•)
  )
+
+(defun shapes-toggle-input-method (&optional arg)
+  "Activate or deactivate the \"shapes-pretty\" input method.
+
+With ARG, always activate the input method if ARG is non-nil."
+  (interactive "P")
+  (if (and (not prefix)
+           (string= current-input-method "shapes-pretty"))
+      (inactivate-input-method)
+    (set-input-method "shapes-pretty")))
 
 ;;; The mode function.
 (defun shapes-mode ()
